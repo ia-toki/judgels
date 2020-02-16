@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router';
+import { Route, Switch } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
 import { setGAUser } from '../ga';
@@ -19,7 +19,7 @@ import { getAppRoutes, getHomeRoute, getVisibleAppRoutes, preloadRoutes } from '
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
 import { selectRole } from './jophiel/modules/userWebSelectors';
-import { userWebActions as injectedUserWebActions } from './jophiel/modules/userWebActions';
+import * as userWebActions from './jophiel/modules/userWebActions';
 
 interface AppProps {
   title: string;
@@ -65,16 +65,12 @@ class App extends React.PureComponent<AppProps> {
   }
 }
 
-export function createApp(userWebActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-    title: selectDocumentTitle(state),
-    role: selectRole(state),
-  });
-  const mapDispatchToProps = {
-    onGetUserWebConfig: userWebActions.getWebConfig,
-  };
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(App));
-}
-
-export default createApp(injectedUserWebActions);
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+  title: selectDocumentTitle(state),
+  role: selectRole(state),
+});
+const mapDispatchToProps = {
+  onGetUserWebConfig: userWebActions.getWebConfig,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(App);

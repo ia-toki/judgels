@@ -1,73 +1,44 @@
-import { mount, ReactWrapper, shallow, ShallowWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import thunk from 'redux-thunk';
 
-import { createForgotPasswordPage, ForgotPasswordPage, ForgotPasswordPageProps } from './ForgotPasswordPage';
-import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
+import ForgotPasswordPage from './ForgotPasswordPage';
+import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
-describe('ForgotPasswordPageShallow', () => {
-  let wrapper: ShallowWrapper;
-
-  let onForgetPassword: jest.Mock<any>;
-
-  const render = () => {
-    const props: ForgotPasswordPageProps = {
-      onForgetPassword,
-    };
-
-    wrapper = shallow(<ForgotPasswordPage {...props} />);
-  };
-
-  beforeEach(() => {
-    onForgetPassword = jest.fn();
-    render();
-  });
-
-  it('shows the instruction page after request', async () => {
-    const form = wrapper.find(ForgotPasswordForm);
-    expect(form).toHaveLength(1);
-
-    (form.props().onSubmit as any)({ email: 'email@domain.com' });
-
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
-    expect(wrapper.find(ForgotPasswordForm)).toHaveLength(0);
-    expect(wrapper.find('[data-key="instruction"]')).toHaveLength(1);
-  });
-});
+jest.mock('../modules/forgotPasswordActions');
 
 describe('ForgotPasswordPage', () => {
-  let forgotPasswordActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    forgotPasswordActions = {
-      requestToResetPassword: jest.fn().mockReturnValue({ type: 'mock-requestToReset' }),
-    };
+    (forgotPasswordActions.requestToResetPassword as jest.Mock).mockReturnValue(() => Promise.resolve());
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
-    const ForgotPasswordPageLocal = createForgotPasswordPage(forgotPasswordActions);
+    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <ForgotPasswordPageLocal />
+          <ForgotPasswordPage />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  test('forgot password form', () => {
+  test('forgot password form', async () => {
     const email = wrapper.find('input[name="email"]');
     email.simulate('change', { target: { value: 'email@domain.com' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');
 
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
+
     expect(forgotPasswordActions.requestToResetPassword).toHaveBeenCalledWith('email@domain.com');
+    expect(wrapper.find('[data-key="instruction"]')).toHaveLength(1);
   });
 });

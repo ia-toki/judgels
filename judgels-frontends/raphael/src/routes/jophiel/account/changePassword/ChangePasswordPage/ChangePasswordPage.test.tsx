@@ -2,22 +2,22 @@ import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import thunk from 'redux-thunk';
 
-import { createChangePasswordPage } from './ChangePasswordPage';
+import ChangePasswordPage from './ChangePasswordPage';
+import * as changePasswordActions from '../modules/changePasswordActions';
+
+jest.mock('../modules/changePasswordActions');
 
 describe('ChangePasswordPage', () => {
-  let changePasswordActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    changePasswordActions = {
-      updateMyPassword: jest.fn().mockReturnValue({ type: 'mock-changePassword' }),
-    };
+    (changePasswordActions.updateMyPassword as jest.Mock).mockReturnValue(() => Promise.resolve());
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
-    const ChangePasswordPage = createChangePasswordPage(changePasswordActions);
+    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     wrapper = mount(
       <Provider store={store}>

@@ -1,66 +1,56 @@
-import { UnauthorizedError } from '../../../../modules/api/error';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import { JophielRole } from '../../../../modules/api/jophiel/role';
 import { DelSession } from '../../../../modules/session/sessionReducer';
-import { AppState } from '../../../../modules/store';
-import { sessionState, token } from '../../../../fixtures/state';
-
-import { logoutActions } from './logoutActions';
+import { APP_CONFIG } from '../../../../conf';
+import * as logoutActions from './logoutActions';
 import { PutWebConfig } from '../../modules/userWebReducer';
 
-describe('logoutActions', () => {
-  let dispatch: jest.Mock<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
+const path = 'path';
+const mockStore = configureMockStore([thunk]);
 
-  let sessionAPI: jest.Mocked<any>;
-  let legacySessionAPI: jest.Mocked<any>;
+describe('logoutActions', () => {
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    sessionAPI = {
-      logOut: jest.fn(),
-    };
-    legacySessionAPI = {
-      postLogout: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('logOut()', () => {
-    const { logOut } = logoutActions;
-    const doLogOut = async () => logOut('path')(dispatch, getState, { sessionAPI, legacySessionAPI });
-
-    it('calls API to log out', async () => {
-      await doLogOut();
-
-      expect(sessionAPI.logOut).toHaveBeenCalledWith(token);
-    });
-
     describe('when the logout is successful', () => {
-      beforeEach(async () => {
-        await doLogOut();
-      });
+      it('succeeds', async () => {
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/session/logout`)
+          .reply(200)
+          .post(`/session/logout`)
+          .reply(200);
 
-      it('deletes the session', () => {
-        expect(dispatch).toHaveBeenCalledWith(DelSession.create());
-        expect(dispatch).toHaveBeenCalledWith(PutWebConfig.create({ role: JophielRole.Guest }));
-      });
+        await store.dispatch(logoutActions.logOut(path));
 
-      it('redirects to post logout url', () => {
-        expect(legacySessionAPI.postLogout).toHaveBeenCalledWith('path');
+        expect(store.getActions()).toContainEqual(DelSession.create());
+        expect(store.getActions()).toContainEqual(PutWebConfig.create({ role: JophielRole.Guest }));
       });
     });
 
     describe('when the current token is already invalid', () => {
-      beforeEach(async () => {
-        sessionAPI.logOut.mockImplementation(() => {
-          throw new UnauthorizedError();
-        });
+      it('ends the session anyway', async () => {
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/session/logout`)
+          .reply(200)
+          .post(`/session/logout`)
+          .reply(401);
 
-        await doLogOut();
-      });
+        await store.dispatch(logoutActions.logOut(path));
 
-      it('ends to session anyway', () => {
-        expect(dispatch).toHaveBeenCalledWith(DelSession.create());
+        expect(store.getActions()).toContainEqual(DelSession.create());
       });
     });
   });

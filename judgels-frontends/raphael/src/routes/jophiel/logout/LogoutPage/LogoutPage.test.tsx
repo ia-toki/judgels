@@ -2,20 +2,19 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import createMockStore from 'redux-mock-store';
+import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
 
-import { createLogoutPage } from './LogoutPage';
+import LogoutPage from './LogoutPage';
+import * as logoutActions from '../modules/logoutActions';
+
+jest.mock('../modules/logoutActions');
 
 describe('LogoutPage', () => {
-  let logoutActions: jest.Mocked<any>;
-
   beforeEach(() => {
-    logoutActions = {
-      logOut: jest.fn().mockReturnValue({ type: 'mock-logout' }),
-    };
+    (logoutActions.logOut as jest.Mock).mockReturnValue(() => Promise.resolve());
 
-    const store = createMockStore()({});
-    const LogoutPage = createLogoutPage(logoutActions);
+    const store: any = createStore(() => {}, applyMiddleware(thunk));
 
     mount(
       <Provider store={store}>

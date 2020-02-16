@@ -1,42 +1,49 @@
 import { NotFoundError } from '../../../../modules/api/error';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { forgotPasswordActions } from './forgotPasswordActions';
+import { APP_CONFIG } from '../../../../conf';
+import * as forgotPasswordActions from './forgotPasswordActions';
+
+const email = 'email@domain.com';
+const mockStore = configureMockStore([thunk]);
 
 describe('forgotPasswordActions', () => {
-  let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
-
-  let userAccountAPI: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
-    getState = jest.fn();
+    store = mockStore({});
+  });
 
-    userAccountAPI = {
-      requestToResetPassword: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('requestToResetPassword()', () => {
-    const { requestToResetPassword } = forgotPasswordActions;
-    const doRequestToResetPassword = async () =>
-      requestToResetPassword('email@domain.com')(dispatch, getState, { userAccountAPI });
-
     it('calls API to request to reset password', async () => {
-      await doRequestToResetPassword();
+      nock(APP_CONFIG.apiUrls.jophiel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/user-account/request-reset-password/${email}`)
+        .reply(200)
+        .post(`/user-account/request-reset-password/${email}`)
+        .reply(200);
 
-      expect(userAccountAPI.requestToResetPassword).toHaveBeenCalledWith('email@domain.com');
+      await store.dispatch(forgotPasswordActions.requestToResetPassword(email));
     });
 
     describe('when the email is not found', () => {
-      beforeEach(async () => {
-        userAccountAPI.requestToResetPassword.mockImplementation(() => {
-          throw new NotFoundError();
-        });
-      });
-
       it('throws with descriptive error', async () => {
-        await expect(doRequestToResetPassword()).rejects.toEqual(new Error('Email not found.'));
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/user-account/request-reset-password/${email}`)
+          .reply(200)
+          .post(`/user-account/request-reset-password/${email}`)
+          .reply(404);
+
+        await expect(store.dispatch(forgotPasswordActions.requestToResetPassword(email))).rejects.toEqual(
+          new Error('Email not found.')
+        );
       });
     });
   });

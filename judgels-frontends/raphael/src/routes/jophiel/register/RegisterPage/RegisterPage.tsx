@@ -5,10 +5,10 @@ import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
 import { UserRegistrationWebConfig } from '../../../../modules/api/jophiel/userRegistration';
-import ResendActivationEmailButton from '../../../../routes/jophiel/components/ResendActivationEmailButton/ResendActivationEmailButton';
+import ResendActivationEmailButton from '../../components/ResendActivationEmailButton/ResendActivationEmailButton';
 
 import RegisterForm, { RegisterFormData } from '../RegisterForm/RegisterForm';
-import { registerActions as injectedRegisterActions } from '../modules/registerActions';
+import * as registerActions from '../modules/registerActions';
 
 import './RegisterPage.css';
 
@@ -80,22 +80,18 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
   };
 }
 
-export function createRegisterPage(registerActions) {
-  const mapDispatchToProps = {
-    onGetWebConfig: registerActions.getWebConfig,
-    onRegisterUser: (data: RegisterFormData) => {
-      const userRegistrationData: UserRegistrationData = {
-        username: data.username,
-        password: data.password,
-        email: data.email,
-        name: data.name,
-        recaptchaResponse: data.recaptchaResponse,
-      };
-      return registerActions.registerUser(userRegistrationData);
-    },
-  };
+const mapDispatchToProps = {
+  onGetWebConfig: registerActions.getWebConfig,
+  onRegisterUser: (data: RegisterFormData) => {
+    const userRegistrationData: UserRegistrationData = {
+      username: data.username,
+      password: data.password,
+      email: data.email,
+      name: data.name,
+      recaptchaResponse: data.recaptchaResponse,
+    };
+    return registerActions.registerUser(userRegistrationData);
+  },
+};
 
-  return connect(undefined, mapDispatchToProps)(RegisterPage);
-}
-
-export default createRegisterPage(injectedRegisterActions);
+export default connect(undefined, mapDispatchToProps)(RegisterPage);

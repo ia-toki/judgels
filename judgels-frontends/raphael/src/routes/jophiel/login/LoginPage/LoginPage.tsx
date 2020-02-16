@@ -5,7 +5,7 @@ import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/Si
 import { Card } from '../../../../components/Card/Card';
 
 import LoginForm, { LoginFormData } from '../LoginForm/LoginForm';
-import { loginActions as injectedLoginActions } from '../modules/loginActions';
+import * as loginActions from '../modules/loginActions';
 
 import './LoginPage.css';
 
@@ -21,12 +21,8 @@ const LoginPage = (props: LoginPageProps) => (
   </SingleColumnLayout>
 );
 
-export function createLoginPage(loginActions) {
-  const mapDispatchToProps = {
-    onLogIn: (data: LoginFormData) => loginActions.logIn(window.location.href, data.usernameOrEmail, data.password),
-  };
+const mapDispatchToProps = {
+  onLogIn: (data: LoginFormData) => loginActions.logIn(window.location.href, data.usernameOrEmail, data.password),
+};
 
-  return connect(undefined, mapDispatchToProps)(LoginPage);
-}
-
-export default createLoginPage(injectedLoginActions);
+export default connect(undefined, mapDispatchToProps)(LoginPage);

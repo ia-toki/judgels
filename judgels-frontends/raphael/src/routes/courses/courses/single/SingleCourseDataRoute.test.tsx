@@ -1,6 +1,3 @@
-jest.mock('../modules/courseActions');
-jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
-
 import { mount } from 'enzyme';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import * as React from 'react';
@@ -14,6 +11,9 @@ import { courseReducer } from '../modules/courseReducer';
 import SingleCourseDataRoute from './SingleCourseDataRoute';
 import * as courseActions from '../modules/courseActions';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
+
+jest.mock('../modules/courseActions');
+jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleCourseDataRoute', () => {
   let history: MemoryHistory;

@@ -1,103 +1,81 @@
-import { ForbiddenError } from '../../../../modules/api/error';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import { JophielRole } from '../../../../modules/api/jophiel/role';
+import { User } from '../../../../modules/api/jophiel/user';
 import { UserWebConfig } from '../../../../modules/api/jophiel/userWeb';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
-import { token, user, userJid } from '../../../../fixtures/state';
-
-import { loginActions } from './loginActions';
+import { APP_CONFIG } from '../../../../conf';
+import * as loginActions from './loginActions';
 import { PutWebConfig } from '../../modules/userWebReducer';
 
+const path = 'path';
+const usernameOrEmail = 'user';
+const password = 'password';
+const authCode = 'authCode';
+const userJid = 'userJid';
+const token = 'token123';
+const user: User = { jid: userJid, username: usernameOrEmail, email: 'email' };
+const config: UserWebConfig = { role: JophielRole.User };
+const mockStore = configureMockStore([thunk]);
+
 describe('loginActions', () => {
-  const authCode = 'authCode';
-  const config: UserWebConfig = { role: JophielRole.User };
-
-  let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
-
-  let legacySessionAPI: jest.Mocked<any>;
-  let myUserAPI: jest.Mocked<any>;
-  let userWebAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
-    getState = jest.fn();
+    store = mockStore({});
+  });
 
-    legacySessionAPI = {
-      logIn: jest.fn(),
-      preparePostLogin: jest.fn(),
-    };
-    myUserAPI = {
-      getMyself: jest.fn(),
-    };
-    userWebAPI = {
-      getWebConfig: jest.fn(),
-    };
-    toastActions = {
-      showToast: jest.fn(),
-      showErrorToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('logIn()', () => {
-    const { logIn } = loginActions;
-    const doLogIn = async () =>
-      logIn('path', 'user', 'pass')(dispatch, getState, {
-        legacySessionAPI,
-        myUserAPI,
-        userWebAPI,
-        toastActions,
-      });
-
-    it('calls API to logs in', async () => {
-      legacySessionAPI.logIn.mockImplementation(() => Promise.resolve({ authCode, token }));
-      myUserAPI.getMyself.mockImplementation(() => Promise.resolve<any>({ jid: userJid }));
-      userWebAPI.getWebConfig.mockImplementation(() => Promise.resolve(config));
-
-      await doLogIn();
-
-      expect(legacySessionAPI.logIn).toHaveBeenCalledWith('user', 'pass');
-    });
-
     describe('when the credentials is valid', () => {
-      beforeEach(async () => {
-        legacySessionAPI.logIn.mockImplementation(() => Promise.resolve({ authCode, token }));
-        myUserAPI.getMyself.mockImplementation(() => Promise.resolve(user));
-        userWebAPI.getWebConfig.mockImplementation(() => Promise.resolve(config));
+      it('succeeds', async () => {
+        nock(APP_CONFIG.apiUrls.legacyJophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/session/login`)
+          .reply(200)
+          .post(`/session/login`, { usernameOrEmail, password })
+          .reply(200, { authCode, token });
 
-        await doLogIn();
-      });
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization' })
+          .options(`/users/me`)
+          .reply(200)
+          .get(`/users/me`)
+          .matchHeader('authorization', `Bearer ${token}`)
+          .reply(200, user);
 
-      it('succeeds with toast', () => {
-        expect(toastActions.showToast).toHaveBeenCalledWith('Welcome, user.');
-      });
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization' })
+          .options(`/user-web/config`)
+          .reply(200)
+          .get(`/user-web/config`)
+          .matchHeader('authorization', `Bearer ${token}`)
+          .reply(200, config);
 
-      it('redirects to legacy prepare post login url', () => {
-        expect(legacySessionAPI.preparePostLogin).toHaveBeenCalledWith(authCode, 'path');
-      });
-
-      it('puts the session', () => {
-        expect(dispatch).toHaveBeenCalledWith(PutToken.create(token));
-        expect(dispatch).toHaveBeenCalledWith(PutUser.create(user));
-      });
-
-      it('puts the web config', () => {
-        expect(dispatch).toHaveBeenCalledWith(PutWebConfig.create(config));
+        await store.dispatch(loginActions.logIn(path, usernameOrEmail, password));
+        expect(store.getActions()).toContainEqual(PutToken.create(token));
+        expect(store.getActions()).toContainEqual(PutUser.create(user));
+        expect(store.getActions()).toContainEqual(PutWebConfig.create(config));
       });
     });
 
     describe('when the credentials is invalid', () => {
-      let error: any;
-
-      beforeEach(async () => {
-        error = new ForbiddenError();
-        legacySessionAPI.logIn.mockImplementation(() => {
-          throw error;
-        });
-      });
-
       it('throws a more descriptive error', async () => {
-        await expect(doLogIn()).rejects.toEqual(new Error('Invalid username/password.'));
+        nock(APP_CONFIG.apiUrls.legacyJophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/session/login`)
+          .reply(200)
+          .post(`/session/login`, { usernameOrEmail, password })
+          .reply(403);
+
+        await expect(store.dispatch(loginActions.logIn(path, usernameOrEmail, password))).rejects.toEqual(
+          new Error('Invalid username/password.')
+        );
       });
     });
   });

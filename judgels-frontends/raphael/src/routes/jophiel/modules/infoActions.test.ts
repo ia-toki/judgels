@@ -1,65 +1,52 @@
-import { UserInfo } from '../../../modules/api/jophiel/userInfo';
-import { AppState } from '../../../modules/store';
-import { sessionState, token, userJid } from '../../../fixtures/state';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { infoActions } from './infoActions';
+import { APP_CONFIG } from '../../../conf';
+import { UserInfo } from '../../../modules/api/jophiel/userInfo';
+import * as infoActions from './infoActions';
+
+const userJid = 'user-jid';
+const mockStore = configureMockStore([thunk]);
 
 describe('infoActions', () => {
-  let dispatch: jest.Mock<any>;
-
-  const getState = (): Partial<AppState> => ({ session: sessionState });
-
-  let userInfoAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    userInfoAPI = {
-      getInfo: jest.fn(),
-      updateInfo: jest.fn(),
-    };
-    toastActions = {
-      showSuccessToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('getInfo()', () => {
-    const { getInfo } = infoActions;
-    const doGetInfo = async () => getInfo(userJid)(dispatch, getState, { userInfoAPI });
-
     const info: UserInfo = { name: 'First Last' };
 
-    beforeEach(async () => {
-      userInfoAPI.getInfo.mockImplementation(() => info);
+    it('calls API to get user info', async () => {
+      nock(APP_CONFIG.apiUrls.jophiel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/users/${userJid}/info`)
+        .reply(200, info);
 
-      await doGetInfo();
-    });
-
-    it('calls API to get user info', () => {
-      expect(userInfoAPI.getInfo).toHaveBeenCalledWith(token, userJid);
+      const response = await store.dispatch(infoActions.getInfo(userJid));
+      expect(response).toEqual(info);
     });
   });
 
   describe('updateInfo()', () => {
-    const { updateInfo } = infoActions;
-    const doUpdateInfo = async () => updateInfo(userJid, info)(dispatch, getState, { userInfoAPI, toastActions });
-
-    const info: UserInfo = { name: 'First Last' };
+    const info = { name: 'First Last' };
     const newInfo: UserInfo = { name: 'Last First' };
 
-    beforeEach(async () => {
-      userInfoAPI.updateInfo.mockImplementation(() => newInfo);
+    it('calls API to update user info', async () => {
+      nock(APP_CONFIG.apiUrls.jophiel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/users/${userJid}/info`)
+        .reply(200)
+        .put(`/users/${userJid}/info`, info)
+        .reply(200, newInfo);
 
-      await doUpdateInfo();
-    });
-
-    it('calls API to update user info', () => {
-      expect(userInfoAPI.updateInfo).toHaveBeenCalledWith(token, userJid, info);
-    });
-
-    it('shows success toast', () => {
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Info updated.');
+      await store.dispatch(infoActions.updateInfo(userJid, info));
     });
   });
 });

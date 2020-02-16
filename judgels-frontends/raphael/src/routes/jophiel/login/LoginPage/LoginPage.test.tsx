@@ -6,19 +6,18 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { createLoginPage } from './LoginPage';
+import LoginPage from './LoginPage';
+import * as loginActions from '../modules/loginActions';
+
+jest.mock('../modules/loginActions.ts');
 
 describe('LoginPage', () => {
-  let loginActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    loginActions = {
-      logIn: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
+    (loginActions.logIn as jest.Mock).mockReturnValue(() => Promise.resolve());
 
     const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
-    const LoginPage = createLoginPage(loginActions);
 
     wrapper = mount(
       <Provider store={store}>

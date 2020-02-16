@@ -27,6 +27,6 @@ export const userAPI = {
 
   getUsers: (token: string, page?: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {
     const params = stringify({ page, orderBy, orderDir });
-    return get(`${baseUsersURL}/?${params}`, token);
+    return get(`${baseUsersURL}?${params}`, token);
   },
 };

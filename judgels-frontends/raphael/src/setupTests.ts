@@ -1,15 +1,19 @@
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import nock from 'nock';
 
 configure({ adapter: new Adapter() });
+
+nock.disableNetConnect();
 
 (window as any).conf = {
   name: 'Judgels',
   slogan: 'Judgment Angels',
   apiUrls: {
-    jophiel: 'http://localhost:9001/api/v2',
-    legacyJophiel: 'http://localhost:9001/api/legacy',
-    uriel: 'http://localhost:9004/api/v2',
+    jophiel: 'http://jophiel',
+    legacyJophiel: 'http://jophiel-legacy',
+    uriel: 'http://uriel',
+    jerahmeel: 'http://jerahmeel',
   },
   welcomeBanner: {
     title: 'Welcome to Judgels',

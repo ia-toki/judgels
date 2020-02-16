@@ -1,7 +1,7 @@
-export const activateActions = {
-  activateUser: (emailCode: string) => {
-    return async (dispatch, getState, { userAccountAPI }) => {
-      await userAccountAPI.activateUser(emailCode);
-    };
-  },
-};
+import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
+
+export function activateUser(emailCode: string) {
+  return async () => {
+    await userAccountAPI.activateUser(emailCode);
+  };
+}

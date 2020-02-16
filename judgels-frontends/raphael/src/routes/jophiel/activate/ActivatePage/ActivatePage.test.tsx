@@ -2,23 +2,21 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import createMockStore, { MockStore } from 'redux-mock-store';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import thunk from 'redux-thunk';
 
-import { AppState } from '../../../../modules/store';
+import ActivatePage from './ActivatePage';
+import * as activateActions from '../modules/activateActions';
 
-import { createActivatePage } from './ActivatePage';
+jest.mock('../modules/activateActions');
 
 describe('ActivatePage', () => {
-  let activateActions: jest.Mocked<any>;
-  let store: MockStore<Partial<AppState>>;
+  let store: any;
 
   beforeEach(() => {
-    activateActions = {
-      activateUser: jest.fn(code => ({ type: 'mock-activate', emailCode: code })),
-    };
+    (activateActions.activateUser as jest.Mock).mockReturnValue(() => Promise.resolve());
 
-    store = createMockStore<Partial<AppState>>()({});
-    const ActivatePage = createActivatePage(activateActions);
+    store = createStore(() => {}, applyMiddleware(thunk));
 
     mount(
       <Provider store={store}>
@@ -29,10 +27,7 @@ describe('ActivatePage', () => {
     );
   });
 
-  it('dispatches activate()', () => {
-    expect(store.getActions()).toContainEqual({
-      type: 'mock-activate',
-      emailCode: 'code123',
-    });
+  test('activate', () => {
+    expect(activateActions.activateUser).toHaveBeenCalledWith('code123');
   });
 });

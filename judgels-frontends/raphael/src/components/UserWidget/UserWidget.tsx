@@ -4,15 +4,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { APP_CONFIG, Mode } from '../../conf';
-
+import MenuItemLink from '../MenuItemLink/MenuItemLink';
 import { User } from '../../modules/api/jophiel/user';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
 import { Profile } from '../../modules/api/jophiel/profile';
 import { AppState } from '../../modules/store';
-import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/modules/avatarActions';
 import { selectUserProfile, selectIsUserWebConfigLoaded } from '../../routes/jophiel/modules/userWebSelectors';
-
-import MenuItemLink from '../MenuItemLink/MenuItemLink';
+import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
 
 import './UserWidget.css';
 
@@ -136,18 +134,14 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
   };
 }
 
-export function createUserWidget(avatarActions) {
-  const mapStateToProps = (state: AppState) => ({
-    user: state.session.user,
-    isWebConfigLoaded: selectIsUserWebConfigLoaded(state),
-    profile: selectUserProfile(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  user: state.session.user,
+  isWebConfigLoaded: selectIsUserWebConfigLoaded(state),
+  profile: selectUserProfile(state),
+});
 
-  const mapDispatchToProps = {
-    onRenderAvatar: avatarActions.renderAvatar,
-  };
+const mapDispatchToProps = {
+  onRenderAvatar: avatarActions.renderAvatar,
+};
 
-  return connect<any>(mapStateToProps, mapDispatchToProps)(UserWidget);
-}
-
-export default createUserWidget(injectedAvatarActions);
+export default connect(mapStateToProps, mapDispatchToProps)(UserWidget);

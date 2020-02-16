@@ -6,17 +6,6 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
 
-import { sessionAPI } from './api/jophiel/session';
-import { legacySessionAPI } from './api/jophiel/legacySession';
-import { profileAPI } from './api/jophiel/profile';
-import { userAPI } from './api/jophiel/user';
-import { myUserAPI } from './api/jophiel/myUser';
-import { userAccountAPI } from './api/jophiel/userAccount';
-import { userAvatarAPI } from './api/jophiel/userAvatar';
-import { userInfoAPI } from './api/jophiel/userInfo';
-import { userRegistrationWebAPI } from './api/jophiel/userRegistration';
-import { userSearchAPI } from './api/jophiel/userSearch';
-import { userWebAPI } from './api/jophiel/userWeb';
 import { urielAdminAPI } from './api/uriel/admin';
 import { contestAPI } from './api/uriel/contest';
 import { contestWebAPI } from './api/uriel/contestWeb';
@@ -76,17 +65,6 @@ export const store: any = createStore<AppState>(
       toastMiddleware,
       tokenGateMiddleware,
       thunk.withExtraArgument({
-        sessionAPI,
-        legacySessionAPI,
-        profileAPI,
-        userAPI,
-        myUserAPI,
-        userAccountAPI,
-        userAvatarAPI,
-        userInfoAPI,
-        userRegistrationWebAPI,
-        userSearchAPI,
-        userWebAPI,
         urielAdminAPI,
         contestAPI,
         contestWebAPI,

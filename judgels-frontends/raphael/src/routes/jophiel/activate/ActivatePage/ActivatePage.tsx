@@ -7,8 +7,7 @@ import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/Si
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { Card } from '../../../../components/Card/Card';
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
-
-import { activateActions as injectedActivateActions } from '../modules/activateActions';
+import * as activateActions from '../modules/activateActions';
 
 interface ActivatePageProps {
   isLoading: boolean;
@@ -55,12 +54,8 @@ class ActivatePageContainer extends React.PureComponent<ActivatePageContainerPro
   }
 }
 
-export function createActivatePage(activateActions) {
-  const mapDispatchToProps = {
-    onActivateUser: activateActions.activateUser,
-  };
+const mapDispatchToProps = {
+  onActivateUser: activateActions.activateUser,
+};
 
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(ActivatePageContainer));
-}
-
-export default createActivatePage(injectedActivateActions);
+export default withRouter(connect(undefined, mapDispatchToProps)(ActivatePageContainer));

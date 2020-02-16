@@ -10,7 +10,7 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { Page } from '../../../../modules/api/pagination';
 import { Profile } from '../../../../modules/api/jophiel/profile';
-import { profileActions as injectedProfileActions } from '../../../../routes/jophiel/modules/profileActions';
+import * as profileActions from '../../../jophiel/modules/profileActions';
 
 import './RatingsPage.css';
 
@@ -76,11 +76,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
   };
 }
 
-function createRatingsPage(profileActions) {
-  const mapDispatchToProps = {
-    onGetTopRatedProfiles: profileActions.getTopRatedProfiles,
-  };
-  return connect(undefined, mapDispatchToProps)(RatingsPage);
-}
-
-export default withRouter<any, any>(createRatingsPage(injectedProfileActions));
+const mapDispatchToProps = {
+  onGetTopRatedProfiles: profileActions.getTopRatedProfiles,
+};
+export default withRouter(connect(undefined, mapDispatchToProps)(RatingsPage));

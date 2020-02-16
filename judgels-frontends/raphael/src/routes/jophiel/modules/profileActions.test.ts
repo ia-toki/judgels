@@ -1,53 +1,52 @@
-import { user } from '../../../fixtures/state';
-import { AppState } from '../../../modules/store';
-import { NotFoundError } from '../../../modules/api/error';
-import { UsernamesMap } from '../../../modules/api/jophiel/user';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { profileActions } from './profileActions';
+import { APP_CONFIG } from '../../../conf';
+import { NotFoundError } from '../../../modules/api/error';
+import * as profileActions from './profileActions';
 import { PutUser } from './profileReducer';
 
+const userJid = 'user-jid';
+const username = 'username';
+const mockStore = configureMockStore([thunk]);
+
 describe('profileActions', () => {
-  let dispatch: jest.Mock<any>;
-  let userSearchAPI: jest.Mocked<any>;
-  const getState = (): Partial<AppState> => ({});
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    userSearchAPI = {
-      translateUsernamesToJids: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('getUser()', () => {
-    const { getUser } = profileActions;
-    const doGetUser = async () => getUser(user.username)(dispatch, getState, { userSearchAPI });
-
     describe('when user found', () => {
-      beforeEach(async () => {
-        const userJidsByUsername: UsernamesMap = { [user.username]: user.jid };
-        userSearchAPI.translateUsernamesToJids.mockReturnValue(userJidsByUsername);
+      it('calls API to get user', async () => {
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/user-search/username-to-jid`)
+          .reply(200)
+          .post(`/user-search/username-to-jid`)
+          .reply(200, { username: userJid });
 
-        await doGetUser();
-      });
-
-      it('calls API to get user', () => {
-        expect(userSearchAPI.translateUsernamesToJids).toHaveBeenCalledWith([user.username]);
-      });
-
-      it('puts the user jid', () => {
-        expect(dispatch).toHaveBeenCalledWith(PutUser.create({ userJid: user.jid, username: user.username }));
+        await store.dispatch(profileActions.getUser(username));
+        expect(store.getActions()).toContainEqual(PutUser.create({ userJid, username }));
       });
     });
 
     describe('when user not found', () => {
-      beforeEach(async () => {
-        const users: UsernamesMap = {};
-        userSearchAPI.translateUsernamesToJids.mockReturnValue(users);
-      });
-
       it('throws NotFoundError', async () => {
-        await expect(doGetUser()).rejects.toBeInstanceOf(NotFoundError);
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/user-search/username-to-jid`)
+          .reply(200)
+          .post(`/user-search/username-to-jid`)
+          .reply(200, {});
+
+        await expect(store.dispatch(profileActions.getUser(username))).rejects.toBeInstanceOf(NotFoundError);
       });
     });
   });

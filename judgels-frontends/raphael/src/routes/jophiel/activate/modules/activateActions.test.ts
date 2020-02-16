@@ -1,31 +1,34 @@
-import { activateActions } from './activateActions';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { APP_CONFIG } from '../../../../conf';
+import * as activateActions from './activateActions';
+
+const emailCode = 'code';
+const mockStore = configureMockStore([thunk]);
 
 describe('activateActions', () => {
-  let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
-
-  let userAccountAPI: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
-    getState = jest.fn();
+    store = mockStore({});
+  });
 
-    userAccountAPI = {
-      activateUser: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('activateUser()', () => {
-    const { activateUser } = activateActions;
-    const emailCode = 'code';
-    const doActivateUser = async () => activateUser(emailCode)(dispatch, getState, { userAccountAPI });
-
-    beforeEach(async () => {
-      await doActivateUser();
-    });
-
     it('calls API to activate user', async () => {
-      expect(userAccountAPI.activateUser).toHaveBeenCalledWith(emailCode);
+      nock(APP_CONFIG.apiUrls.jophiel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/user-account/activate/${emailCode}`)
+        .reply(200)
+        .post(`/user-account/activate/${emailCode}`)
+        .reply(200);
+
+      await store.dispatch(activateActions.activateUser(emailCode));
     });
   });
 });

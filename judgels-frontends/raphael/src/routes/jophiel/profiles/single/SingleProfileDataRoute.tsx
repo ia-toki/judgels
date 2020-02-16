@@ -2,9 +2,8 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../modules/breadcrumbs/breadcrumbsActions';
-
-import { profileActions as injectedProfileActions } from '../../modules/profileActions';
+import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as profileActions from '../../modules/profileActions';
 
 export interface SingleProfileDataRouteProps extends RouteComponentProps<{ username: string }> {
   onGetUser: (username: string) => void;
@@ -42,15 +41,11 @@ class SingleProfileDataRoute extends React.Component<SingleProfileDataRouteProps
   }
 }
 
-export function createSingleProfileDataRoute(profileActions, breadcrumbsActions) {
-  const mapDispatchToProps = {
-    onGetUser: profileActions.getUser,
-    onClearUser: profileActions.clearUser,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetUser: profileActions.getUser,
+  onClearUser: profileActions.clearUser,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(SingleProfileDataRoute));
-}
-
-export default createSingleProfileDataRoute(injectedProfileActions, injectedBreadcrumbsActions);
+export default withRouter(connect(undefined, mapDispatchToProps)(SingleProfileDataRoute));

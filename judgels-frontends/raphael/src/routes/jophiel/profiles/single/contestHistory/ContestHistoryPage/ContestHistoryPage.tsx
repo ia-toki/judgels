@@ -1,7 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
@@ -10,7 +9,7 @@ import { AppState } from '../../../../../../modules/store';
 import { getRatingClass, UserRating } from '../../../../../../modules/api/jophiel/userRating';
 import { ContestHistoryResponse } from '../../../../../../modules/api/uriel/contestHistory';
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
-import { profileActions as injectedProfileActions } from '../../modules/profileActions';
+import * as profileActions from '../../modules/profileActions';
 
 import './ContestHistoryPage.css';
 
@@ -117,16 +116,12 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
   };
 }
 
-function createContestHistoryPage(profileActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
-    username: selectUsername(state),
-  });
-  const mapDispatchToProps = {
-    onGetContestPublicHistory: profileActions.getContestPublicHistory,
-  };
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectUserJid(state),
+  username: selectUsername(state),
+});
+const mapDispatchToProps = {
+  onGetContestPublicHistory: profileActions.getContestPublicHistory,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestHistoryPage));
-}
-
-export default createContestHistoryPage(injectedProfileActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ContestHistoryPage);

@@ -12,8 +12,7 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { Page, OrderDir } from '../../../../modules/api/pagination';
 import { User } from '../../../../modules/api/jophiel/user';
-
-import { userActions as injectedUserActions } from '../../modules/userActions';
+import * as userActions from '../../modules/userActions';
 
 import './UsersPage.css';
 
@@ -135,15 +134,11 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
   };
 }
 
-function createUsersPage(userActions) {
-  const mapDispatchToProps = {
-    onGetUsers: userActions.getUsers,
-    onAppendRoute: (queries: any) => {
-      return push({ search: stringify(queries) });
-    },
-  };
+const mapDispatchToProps = {
+  onGetUsers: userActions.getUsers,
+  onAppendRoute: (queries: any) => {
+    return push({ search: stringify(queries) });
+  },
+};
 
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(UsersPage));
-}
-
-export default withBreadcrumb('Users')(createUsersPage(injectedUserActions));
+export default withBreadcrumb('Users')(withRouter<any, any>(connect(undefined, mapDispatchToProps)(UsersPage)));

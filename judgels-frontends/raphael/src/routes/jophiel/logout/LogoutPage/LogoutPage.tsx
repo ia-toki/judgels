@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { logoutActions as injectedLogoutActions } from '../modules/logoutActions';
+import * as logoutActions from '../modules/logoutActions';
 
 interface LogoutPageProps {
   onLogOut: () => void;
@@ -17,11 +17,7 @@ class LogoutPage extends React.Component<LogoutPageProps> {
   }
 }
 
-export function createLogoutPage(logoutActions) {
-  const mapDispatchToProps = {
-    onLogOut: () => logoutActions.logOut(window.location.href),
-  };
-  return connect(undefined, mapDispatchToProps)(LogoutPage);
-}
-
-export default createLogoutPage(injectedLogoutActions);
+const mapDispatchToProps = {
+  onLogOut: () => logoutActions.logOut(window.location.href),
+};
+export default connect(undefined, mapDispatchToProps)(LogoutPage);

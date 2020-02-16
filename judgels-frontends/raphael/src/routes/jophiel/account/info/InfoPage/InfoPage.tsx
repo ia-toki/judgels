@@ -9,8 +9,8 @@ import { AppState } from '../../../../../modules/store';
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
-import { infoActions as injectedInfoActions } from '../../../modules/infoActions';
-import { userActions as injectedUserActions } from '../../../../system/modules/userActions';
+import * as infoActions from '../../../modules/infoActions';
+import * as userActions from '../../../../system/modules/userActions';
 
 interface InfoPageProps {
   onGetUser: () => Promise<User>;
@@ -49,21 +49,17 @@ class InfoPage extends React.PureComponent<InfoPageProps, InfoPageState> {
   };
 }
 
-export function createInfoPage(userActions, infoActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
-  });
-  const mapDispatchToProps = {
-    onGetUser: userActions.getUser,
-    onGetInfo: infoActions.getInfo,
-    onUpdateInfo: infoActions.updateInfo,
-  };
-  const mergeProps = (stateProps, dispatchProps) => ({
-    onGetUser: () => dispatchProps.onGetUser(stateProps.userJid),
-    onGetInfo: () => dispatchProps.onGetInfo(stateProps.userJid),
-    onUpdateInfo: (info: UserInfo) => dispatchProps.onUpdateInfo(stateProps.userJid, info),
-  });
-  return connect<any>(mapStateToProps, mapDispatchToProps, mergeProps)(InfoPage);
-}
-
-export default withBreadcrumb('Info')(createInfoPage(injectedUserActions, injectedInfoActions));
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectUserJid(state),
+});
+const mapDispatchToProps = {
+  onGetUser: userActions.getUser,
+  onGetInfo: infoActions.getInfo,
+  onUpdateInfo: infoActions.updateInfo,
+};
+const mergeProps = (stateProps, dispatchProps) => ({
+  onGetUser: () => dispatchProps.onGetUser(stateProps.userJid),
+  onGetInfo: () => dispatchProps.onGetInfo(stateProps.userJid),
+  onUpdateInfo: (info: UserInfo) => dispatchProps.onUpdateInfo(stateProps.userJid, info),
+});
+export default withBreadcrumb('Info')(connect(mapStateToProps, mapDispatchToProps, mergeProps)(InfoPage));

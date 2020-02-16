@@ -1,16 +1,15 @@
 import { NotFoundError } from '../../../../modules/api/error';
+import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
 
-export const forgotPasswordActions = {
-  requestToResetPassword: (email: string) => {
-    return async (dispatch, getState, { userAccountAPI }) => {
-      try {
-        await userAccountAPI.requestToResetPassword(email);
-      } catch (error) {
-        if (error instanceof NotFoundError) {
-          throw new Error('Email not found.');
-        }
-        throw error;
+export function requestToResetPassword(email: string) {
+  return async () => {
+    try {
+      await userAccountAPI.requestToResetPassword(email);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw new Error('Email not found.');
       }
-    };
-  },
-};
+      throw error;
+    }
+  };
+}

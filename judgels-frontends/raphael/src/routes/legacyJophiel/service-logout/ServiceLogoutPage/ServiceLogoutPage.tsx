@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { serviceLogoutActions as injectedServiceLogoutActions } from '../modules/serviceLogoutActions';
+import * as serviceLogoutActions from '../modules/serviceLogoutActions';
 
 interface ServiceLogoutPageProps extends RouteComponentProps<{ returnUri: string }> {
   onLogOut: (redirectUri: string) => void;
@@ -18,11 +18,7 @@ class ServiceLogoutPage extends React.Component<ServiceLogoutPageProps> {
   }
 }
 
-export function createServiceLogoutPage(serviceLogoutActions) {
-  const mapDispatchToProps = {
-    onLogOut: serviceLogoutActions.logOut,
-  };
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(ServiceLogoutPage));
-}
-
-export default createServiceLogoutPage(injectedServiceLogoutActions);
+const mapDispatchToProps = {
+  onLogOut: serviceLogoutActions.logOut,
+};
+export default withRouter(connect(undefined, mapDispatchToProps)(ServiceLogoutPage));

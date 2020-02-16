@@ -4,9 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-
 import ResetPasswordForm, { ResetPasswordFormData } from '../ResetPasswordForm/ResetPasswordForm';
-import { resetPasswordActions as injectedResetPasswordActions } from '../modules/resetPasswordActions';
+import * as resetPasswordActions from '../modules/resetPasswordActions';
 
 export interface ResetPasswordPageProps {
   onResetPassword: (data: ResetPasswordFormData) => Promise<void>;
@@ -29,13 +28,9 @@ const ResetPasswordPageContainer = (props: ResetPasswordContainerProps) => {
   return <ResetPasswordPage onResetPassword={onResetPassword} />;
 };
 
-export function createResetPasswordPage(resetPasswordActions) {
-  const mapDispatchToProps = {
-    onResetPassword: (emailCode: string, data: ResetPasswordFormData) =>
-      resetPasswordActions.resetPassword(emailCode, data.password),
-  };
+const mapDispatchToProps = {
+  onResetPassword: (emailCode: string, data: ResetPasswordFormData) =>
+    resetPasswordActions.resetPassword(emailCode, data.password),
+};
 
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(ResetPasswordPageContainer));
-}
-
-export default createResetPasswordPage(injectedResetPasswordActions);
+export default withRouter(connect(undefined, mapDispatchToProps)(ResetPasswordPageContainer));

@@ -1,43 +1,62 @@
-import { AppState } from '../../../modules/store';
-import { Page, OrderDir } from '../../../modules/api/pagination';
-import { User } from '../../../modules/api/jophiel/user';
-import { user } from '../../../fixtures/state';
-import { sessionState, token } from '../../../fixtures/state';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { userActions } from './userActions';
+import { APP_CONFIG } from '../../../conf';
+import { OrderDir } from '../../../modules/api/pagination';
+import * as userActions from './userActions';
+
+const userJid = 'user-jid';
+const mockStore = configureMockStore([thunk]);
 
 describe('userActions', () => {
-  let dispatch: jest.Mock<any>;
-  let userAPI: jest.Mocked<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    userAPI = {
-      getUsers: jest.fn(),
+  afterEach(function() {
+    nock.cleanAll();
+  });
+
+  describe('getUser()', () => {
+    const user = {
+      name: 'User',
     };
+
+    it('calls API to get users', async () => {
+      nock(APP_CONFIG.apiUrls.jophiel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/users/${userJid}`)
+        .reply(200, user);
+
+      const response = await store.dispatch(userActions.getUser(userJid));
+      expect(response).toEqual(user);
+    });
   });
 
   describe('getUsers()', () => {
-    const currentPage = 1;
+    const page = 1;
     const orderBy = 'username';
     const orderDir = OrderDir.ASC;
-    const { getUsers } = userActions;
-    const doGetUsers = async () => getUsers(currentPage, orderBy, orderDir)(dispatch, getState, { userAPI });
+    const user = {
+      name: 'User',
+    };
+    const users = {
+      totalCount: 1,
+      page: [user],
+    };
 
-    beforeEach(async () => {
-      const users: Page<User> = {
-        totalCount: 1,
-        page: [user],
-      };
-      userAPI.getUsers.mockReturnValue(users);
+    it('calls API to get users', async () => {
+      nock(APP_CONFIG.apiUrls.jophiel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get('/users')
+        .query({ page, orderBy, orderDir })
+        .reply(200, users);
 
-      await doGetUsers();
-    });
-
-    it('calls API to get users', () => {
-      expect(userAPI.getUsers).toHaveBeenCalledWith(token, currentPage, orderBy, orderDir);
+      const response = await store.dispatch(userActions.getUsers(page, orderBy, orderDir));
+      expect(response).toEqual(users);
     });
   });
 });

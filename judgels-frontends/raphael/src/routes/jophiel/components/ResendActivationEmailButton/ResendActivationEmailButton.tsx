@@ -2,7 +2,7 @@ import { Intent, Button } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { userAccountActions as injectedUserAccountActions } from '../../modules/userAccountActions';
+import * as userAccountActions from '../../modules/userAccountActions';
 
 export interface ResendActivationEmailButtonProps {
   email: string;
@@ -60,12 +60,8 @@ class ResendActivationEmailButton extends React.PureComponent<
   };
 }
 
-export function createResendActivationEmailButton(userAccountActions) {
-  const mapDispatchToProps = {
-    onResendActivationEmail: userAccountActions.resendActivationEmail,
-  };
+const mapDispatchToProps = {
+  onResendActivationEmail: userAccountActions.resendActivationEmail,
+};
 
-  return connect(undefined, mapDispatchToProps)(ResendActivationEmailButton);
-}
-
-export default createResendActivationEmailButton(injectedUserAccountActions);
+export default connect(undefined, mapDispatchToProps)(ResendActivationEmailButton);

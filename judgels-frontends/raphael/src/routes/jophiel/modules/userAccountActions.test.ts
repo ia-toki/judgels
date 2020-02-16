@@ -1,41 +1,35 @@
-import { userAccountActions } from './userAccountActions';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { APP_CONFIG } from '../../../conf';
+
+import * as userAccountActions from './userAccountActions';
+
+const email = 'email@domain.com';
+const mockStore = configureMockStore([thunk]);
 
 describe('userAccountActions', () => {
-  let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
-
-  let userAccountAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
-    getState = jest.fn();
+    store = mockStore({});
+  });
 
-    userAccountAPI = {
-      registerUser: jest.fn(),
-      resendActivationEmail: jest.fn(),
-    };
-    toastActions = {
-      showToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('resendActivationEmail()', () => {
-    const { resendActivationEmail } = userAccountActions;
-    const email = 'email@domain.com';
-    const doResendActivationEmail = async () =>
-      resendActivationEmail(email)(dispatch, getState, { userAccountAPI, toastActions });
-
-    beforeEach(async () => {
-      doResendActivationEmail();
-    });
-
     it('calls API to resend activation email', async () => {
-      expect(userAccountAPI.resendActivationEmail).toHaveBeenCalledWith(email);
-    });
+      nock(APP_CONFIG.apiUrls.jophiel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/user-account/resend-activation-email/${email}`)
+        .reply(200)
+        .post(`/user-account/resend-activation-email/${email}`)
+        .reply(200);
 
-    it('succeeds with toast', () => {
-      expect(toastActions.showToast).toHaveBeenCalledWith('Email has been sent');
+      await store.dispatch(userAccountActions.resendActivationEmail(email));
     });
   });
 });

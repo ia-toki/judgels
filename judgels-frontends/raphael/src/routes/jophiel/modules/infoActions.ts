@@ -1,20 +1,19 @@
 import { selectToken } from '../../../modules/session/sessionSelectors';
-import { UserInfo } from '../../../modules/api/jophiel/userInfo';
+import { UserInfo, userInfoAPI } from '../../../modules/api/jophiel/userInfo';
+import * as toastActions from '../../../modules/toast/toastActions';
 
-export const infoActions = {
-  getInfo: (userJid: string) => {
-    return async (dispatch, getState, { userInfoAPI }) => {
-      const token = selectToken(getState());
-      return await userInfoAPI.getInfo(token, userJid);
-    };
-  },
+export function getInfo(userJid: string) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    return await userInfoAPI.getInfo(token, userJid);
+  };
+}
 
-  updateInfo: (userJid: string, info: UserInfo) => {
-    return async (dispatch, getState, { userInfoAPI, toastActions }) => {
-      const token = selectToken(getState());
-      await userInfoAPI.updateInfo(token, userJid, info);
+export function updateInfo(userJid: string, info: UserInfo) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    await userInfoAPI.updateInfo(token, userJid, info);
 
-      toastActions.showSuccessToast('Info updated.');
-    };
-  },
-};
+    toastActions.showSuccessToast('Info updated.');
+  };
+}

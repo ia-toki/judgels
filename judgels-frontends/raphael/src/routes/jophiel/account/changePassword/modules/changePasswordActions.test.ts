@@ -1,74 +1,53 @@
 import { push } from 'connected-react-router';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { BadRequestError } from '../../../../../modules/api/error';
-import { AppState } from '../../../../../modules/store';
-import { sessionState, token } from '../../../../../fixtures/state';
+import { APP_CONFIG } from '../../../../../conf';
+import * as changePasswordActions from './changePasswordActions';
 
-import { changePasswordActions } from './changePasswordActions';
+const oldPassword = 'oldPass';
+const newPassword = 'newPass';
+const mockStore = configureMockStore([thunk]);
 
 describe('changePasswordActions', () => {
-  let dispatch: jest.Mock<any>;
-
-  const getState = (): Partial<AppState> => ({ session: sessionState });
-
-  let myUserAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    myUserAPI = {
-      updateMyPassword: jest.fn(),
-    };
-    toastActions = {
-      showSuccessToast: jest.fn(),
-      showErrorToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('updateMyPassword()', () => {
-    const { updateMyPassword } = changePasswordActions;
-    const doUpdateMyPassword = async () =>
-      updateMyPassword('oldPass', 'newPass')(dispatch, getState, {
-        myUserAPI,
-        toastActions,
-      });
-
-    it('tries to change password', async () => {
-      await doUpdateMyPassword();
-
-      expect(myUserAPI.updateMyPassword).toHaveBeenCalledWith(token, {
-        oldPassword: 'oldPass',
-        newPassword: 'newPass',
-      });
-    });
-
     describe('when the old password is correct', () => {
-      beforeEach(async () => {
-        await doUpdateMyPassword();
-      });
+      it('tries to change password', async () => {
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/users/me/password`)
+          .reply(200)
+          .post(`/users/me/password`, { oldPassword, newPassword })
+          .reply(200);
 
-      it('succeeds with toast', () => {
-        expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Password updated.');
-      });
-
-      it('redirects to /info', () => {
-        expect(dispatch).toHaveBeenCalledWith(push('/account/info'));
+        await store.dispatch(changePasswordActions.updateMyPassword(oldPassword, newPassword));
+        expect(store.getActions()).toContainEqual(push('/account/info'));
       });
     });
 
     describe('when the old password is incorrect', () => {
-      let error: any;
-
-      beforeEach(async () => {
-        error = new BadRequestError();
-        myUserAPI.updateMyPassword.mockImplementation(() => {
-          throw error;
-        });
-      });
-
       it('throws a more descriptive error', async () => {
-        await expect(doUpdateMyPassword()).rejects.toEqual(new Error('Incorrect old password.'));
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/users/me/password`)
+          .reply(200)
+          .post(`/users/me/password`, { oldPassword, newPassword })
+          .reply(400);
+
+        await expect(store.dispatch(changePasswordActions.updateMyPassword(oldPassword, newPassword))).rejects.toEqual(
+          new Error('Incorrect old password.')
+        );
       });
     });
   });

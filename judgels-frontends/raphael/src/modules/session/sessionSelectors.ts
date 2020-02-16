@@ -5,7 +5,7 @@ export function selectIsLoggedIn(state: AppState) {
 }
 
 export function selectToken(state: AppState) {
-  return state.session.token!;
+  return state.session && state.session.token;
 }
 
 export function selectUserJid(state: AppState) {

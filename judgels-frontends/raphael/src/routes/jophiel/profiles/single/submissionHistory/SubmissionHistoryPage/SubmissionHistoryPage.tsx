@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { RouteComponentProps } from 'react-router-dom';
 
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import { Card } from '../../../../../../components/Card/Card';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { AppState } from '../../../../../../modules/store';
 import { SubmissionsResponse } from '../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { selectUserJid } from '../../../../modules/profileSelectors';
-import { profileActions as injectedProfileActions } from '../../modules/profileActions';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
-import Pagination from '../../../../../../components/Pagination/Pagination';
+import * as profileActions from '../../modules/profileActions';
 
-interface SubmissionHistoryPageProps extends RouteComponentProps<{}> {
+interface SubmissionHistoryPageProps {
   userJid: string;
   sessionUserJid?: string;
   onGetSubmissions: (userJid: string, page: number) => Promise<SubmissionsResponse>;
@@ -86,16 +84,12 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
   };
 }
 
-function createSubmissionHistoryPage(profileActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
-    sessionUserJid: selectMaybeUserJid(state),
-  });
-  const mapDispatchToProps = {
-    onGetSubmissions: profileActions.getSubmissions,
-  };
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectUserJid(state),
+  sessionUserJid: selectMaybeUserJid(state),
+});
+const mapDispatchToProps = {
+  onGetSubmissions: profileActions.getSubmissions,
+};
 
-  return withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionHistoryPage));
-}
-
-export default createSubmissionHistoryPage(injectedProfileActions);
+export default connect(mapStateToProps, mapDispatchToProps)(SubmissionHistoryPage);

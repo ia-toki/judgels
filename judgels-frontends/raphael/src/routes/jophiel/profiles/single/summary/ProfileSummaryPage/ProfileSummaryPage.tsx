@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
@@ -9,8 +8,8 @@ import { AppState } from '../../../../../../modules/store';
 import { BasicProfile } from '../../../../../../modules/api/jophiel/profile';
 import { UserStats } from '../../../../../../modules/api/jerahmeel/user';
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
-import { avatarActions as injectedAvatarActions } from '../../../../modules/avatarActions';
-import { profileActions as injectedProfileActions } from '../../modules/profileActions';
+import * as avatarActions from '../../../../modules/avatarActions';
+import * as profileActions from '../../modules/profileActions';
 
 import './ProfileSummaryPage.css';
 
@@ -78,18 +77,14 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   };
 }
 
-function createProfileSummaryPage(avatarActions, profileActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
-    username: selectUsername(state),
-  });
-  const mapDispatchToProps = {
-    onRenderAvatar: avatarActions.renderAvatar,
-    onGetBasicProfile: profileActions.getBasicProfile,
-    onGetUserStats: profileActions.getUserStats,
-  };
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectUserJid(state),
+  username: selectUsername(state),
+});
+const mapDispatchToProps = {
+  onRenderAvatar: avatarActions.renderAvatar,
+  onGetBasicProfile: profileActions.getBasicProfile,
+  onGetUserStats: profileActions.getUserStats,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage));
-}
-
-export default createProfileSummaryPage(injectedAvatarActions, injectedProfileActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage);

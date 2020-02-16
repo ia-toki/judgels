@@ -6,31 +6,27 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { AppState } from '../../../../modules/store';
-
-import { createRegisterPage } from './RegisterPage';
+import RegisterPage from './RegisterPage';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import { jophielReducer } from '../../../../modules/jophiel/jophielReducer';
+import * as registerActions from '../modules/registerActions';
+
+jest.mock('../modules/registerActions');
 
 describe('RegisterPage', () => {
-  let registerActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    registerActions = {
-      getWebConfig: jest.fn().mockReturnValue(() => Promise.resolve({ useRecaptcha: false })),
-      registerUser: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
+    (registerActions.getWebConfig as jest.Mock).mockReturnValue(() => Promise.resolve({ useRecaptcha: false }));
+    (registerActions.registerUser as jest.Mock).mockReturnValue(() => Promise.resolve());
 
-    const store: any = createStore<Partial<AppState>>(
+    const store: any = createStore(
       combineReducers({
         form: formReducer,
         jophiel: jophielReducer,
       }),
       applyMiddleware(thunk)
     );
-
-    const RegisterPage = createRegisterPage(registerActions);
 
     wrapper = mount(
       <Provider store={store}>
@@ -63,7 +59,7 @@ describe('RegisterPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(registerActions.registerUser.mock.calls[0][0]).toEqual({
+    expect(registerActions.registerUser).toHaveBeenCalledWith({
       username: 'user',
       name: 'name',
       email: 'email@domain.com',

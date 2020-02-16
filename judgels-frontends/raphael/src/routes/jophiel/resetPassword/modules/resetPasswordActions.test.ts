@@ -1,70 +1,54 @@
 import { push } from 'connected-react-router';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { BadRequestError } from '../../../../modules/api/error';
+import { APP_CONFIG } from '../../../../conf';
+import * as resetPasswordActions from './resetPasswordActions';
 
-import { resetPasswordActions } from './resetPasswordActions';
+const emailCode = 'code123';
+const newPassword = 'pass';
+const mockStore = configureMockStore([thunk]);
 
 describe('resetPasswordActions', () => {
-  let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
-
-  let userAccountAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
-    getState = jest.fn();
+    store = mockStore({});
+  });
 
-    userAccountAPI = {
-      resetPassword: jest.fn(),
-    };
-    toastActions = {
-      showSuccessToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('resetPassword()', () => {
-    const { resetPassword } = resetPasswordActions;
-    const doResetPassword = async () =>
-      resetPassword('code123', 'pass')(dispatch, getState, { userAccountAPI, toastActions });
-
-    it('calls API to reset password', async () => {
-      await doResetPassword();
-
-      expect(userAccountAPI.resetPassword).toHaveBeenCalledWith({
-        emailCode: 'code123',
-        newPassword: 'pass',
-      });
-    });
-
     describe('when the email code is valid', () => {
-      beforeEach(async () => {
-        userAccountAPI.resetPassword.mockImplementation(() => Promise.resolve());
+      it('succeeds', async () => {
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/user-account/reset-password`)
+          .reply(200)
+          .post(`/user-account/reset-password`, { emailCode, newPassword })
+          .reply(200);
 
-        await doResetPassword();
-      });
+        await store.dispatch(resetPasswordActions.resetPassword(emailCode, newPassword));
 
-      it('succeeds with toast', () => {
-        expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Password has been reset.');
-      });
-
-      it('redirects to /login', () => {
-        expect(dispatch).toHaveBeenCalledWith(push('/login'));
+        expect(store.getActions()).toContainEqual(push('/login'));
       });
     });
 
     describe('when the email code is invalid', () => {
-      let error: any;
-
-      beforeEach(async () => {
-        error = new BadRequestError();
-        userAccountAPI.resetPassword.mockImplementation(() => {
-          throw error;
-        });
-      });
-
       it('throws a more descriptive error', async () => {
-        await expect(doResetPassword()).rejects.toEqual(new Error('Invalid code.'));
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/user-account/reset-password`)
+          .reply(200)
+          .post(`/user-account/reset-password`, { emailCode, newPassword })
+          .reply(400);
+
+        await expect(store.dispatch(resetPasswordActions.resetPassword(emailCode, newPassword))).rejects.toEqual(
+          new Error('Invalid code.')
+        );
       });
     });
   });

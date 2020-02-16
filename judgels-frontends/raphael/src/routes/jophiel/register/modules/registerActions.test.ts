@@ -1,73 +1,85 @@
+import nock from 'nock';
 import { SubmissionError } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
+import { APP_CONFIG } from '../../../../conf';
 import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
+import * as registerActions from './registerActions';
 
-import { registerActions } from './registerActions';
+const mockStore = configureMockStore([thunk]);
 
 describe('registerActions', () => {
-  let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
-
-  let userSearchAPI: jest.Mocked<any>;
-  let userAccountAPI: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
-    getState = jest.fn();
+    store = mockStore({});
+  });
 
-    userSearchAPI = {
-      usernameExists: jest.fn(),
-      emailExists: jest.fn(),
-    };
-    userAccountAPI = {
-      registerUser: jest.fn(),
-      resendActivationEmail: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('registerUser()', () => {
-    const { registerUser } = registerActions;
-    const userRegistrationData: UserRegistrationData = {
+    const data: UserRegistrationData = {
       username: 'user',
       name: 'name',
       email: 'email@domain.com',
       password: 'pass',
     };
-    const doRegisterUser = async () =>
-      registerUser(userRegistrationData)(dispatch, getState, { userSearchAPI, userAccountAPI });
 
     describe('when username already exists', () => {
-      beforeEach(async () => {
-        userSearchAPI.usernameExists.mockImplementation(() => Promise.resolve(true));
-        userSearchAPI.emailExists.mockImplementation(() => Promise.resolve(false));
-      });
-
       it('throws SubmissionError', async () => {
-        await expect(doRegisterUser()).rejects.toBeInstanceOf(SubmissionError);
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .get(`/user-search/username-exists/${data.username}`)
+          .reply(200, 'true');
+
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .get(`/user-search/email-exists/${data.email}`)
+          .reply(200, 'false');
+
+        await expect(store.dispatch(registerActions.registerUser(data))).rejects.toBeInstanceOf(SubmissionError);
       });
     });
 
     describe('when email already exists', () => {
-      beforeEach(async () => {
-        userSearchAPI.usernameExists.mockImplementation(() => Promise.resolve(false));
-        userSearchAPI.emailExists.mockImplementation(() => Promise.resolve(true));
-      });
-
       it('throws SubmissionError', async () => {
-        await expect(doRegisterUser()).rejects.toBeInstanceOf(SubmissionError);
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .get(`/user-search/username-exists/${data.username}`)
+          .reply(200, 'false');
+
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .get(`/user-search/email-exists/${data.email}`)
+          .reply(200, 'true');
+
+        await expect(store.dispatch(registerActions.registerUser(data))).rejects.toBeInstanceOf(SubmissionError);
       });
     });
 
     describe('when the form is valid', () => {
-      beforeEach(async () => {
-        userSearchAPI.usernameExists.mockImplementation(() => Promise.resolve(false));
-        userSearchAPI.emailExists.mockImplementation(() => Promise.resolve(false));
-
-        await doRegisterUser();
-      });
-
       it('tries to register user', async () => {
-        expect(userAccountAPI.registerUser).toHaveBeenCalledWith(userRegistrationData);
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .get(`/user-search/username-exists/${data.username}`)
+          .reply(200, 'false');
+
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .get(`/user-search/email-exists/${data.email}`)
+          .reply(200, 'false');
+
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/user-account/register`)
+          .reply(200)
+          .post(`/user-account/register`, data as any)
+          .reply(200);
+
+        await store.dispatch(registerActions.registerUser(data));
       });
     });
   });
