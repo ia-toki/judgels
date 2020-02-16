@@ -59,7 +59,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
     public ContestSupervisorsResponse getSupervisors(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(roleChecker.canManage(actorJid, contest));
+        checkAllowed(roleChecker.canSupervise(actorJid, contest));
 
         Page<ContestSupervisor> supervisors = supervisorStore.getSupervisors(contestJid, page);
         Set<String> userJids =
