@@ -150,8 +150,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         if (canSupervise) {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
             userJids.addAll(supervisorStore
-                    .getSupervisors(contestJid, Optional.empty())
-                    .getPage()
+                    .getAllSupervisors(contestJid)
                     .stream()
                     .map(ContestSupervisor::getUserJid)
                     .collect(Collectors.toSet()));

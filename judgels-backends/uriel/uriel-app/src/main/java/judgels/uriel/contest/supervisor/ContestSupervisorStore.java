@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
@@ -104,6 +105,15 @@ public class ContestSupervisorStore {
         page.ifPresent(options::page);
         return supervisorDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
                 p -> Lists.transform(p, this::fromModel));
+    }
+
+    public Set<ContestSupervisor> getAllSupervisors(String contestJid) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        return supervisorDao
+                .selectAllByContestJid(contestJid, options.build())
+                .stream()
+                .map(this::fromModel)
+                .collect(Collectors.toSet());
     }
 
     public void importDump(String contestJid, ContestSupervisorDump dump) {
