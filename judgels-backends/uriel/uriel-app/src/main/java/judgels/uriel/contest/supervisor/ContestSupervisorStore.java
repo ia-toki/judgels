@@ -106,12 +106,12 @@ public class ContestSupervisorStore {
                 p -> Lists.transform(p, this::fromModel));
     }
 
-    public Set<ContestSupervisor> getAllSupervisors(String contestJid) {
+    public Set<String> getAllSupervisorJids(String contestJid) {
         SelectionOptions.Builder options = new SelectionOptions.Builder();
         return supervisorDao
                 .selectAllByContestJid(contestJid, options.build())
                 .stream()
-                .map(this::fromModel)
+                .map(model -> model.userJid)
                 .collect(Collectors.toSet());
     }
 

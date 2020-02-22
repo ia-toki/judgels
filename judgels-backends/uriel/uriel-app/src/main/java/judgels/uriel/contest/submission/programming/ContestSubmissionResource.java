@@ -53,7 +53,6 @@ import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.programming.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.programming.ContestSubmissionsResponse;
-import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -149,11 +148,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
-            userJids.addAll(supervisorStore
-                    .getAllSupervisors(contestJid)
-                    .stream()
-                    .map(ContestSupervisor::getUserJid)
-                    .collect(Collectors.toSet()));
+            userJids.addAll(supervisorStore.getAllSupervisorJids(contestJid));
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
             problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
