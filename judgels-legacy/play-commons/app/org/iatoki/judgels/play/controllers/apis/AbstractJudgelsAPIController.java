@@ -107,16 +107,14 @@ public abstract class AbstractJudgelsAPIController extends Controller {
             try {
                 BufferedImage in = ImageIO.read(imageFile);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                baos.write(Files.toByteArray(imageFile));
 
                 if (in == null) {
-                    baos.write(Files.toByteArray(imageFile));
                     response().setContentType(URLConnection.guessContentTypeFromName(imageFile.getName()));
                     return ok(baos.toByteArray());
                 }
 
                 String type = FilenameUtils.getExtension(imageFile.getAbsolutePath());
-
-                ImageIO.write(in, type, baos);
 
                 response().setContentType("image/" + type);
                 return ok(baos.toByteArray());
