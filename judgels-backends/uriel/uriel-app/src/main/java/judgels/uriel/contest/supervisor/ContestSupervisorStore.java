@@ -106,6 +106,15 @@ public class ContestSupervisorStore {
                 p -> Lists.transform(p, this::fromModel));
     }
 
+    public Set<String> getAllSupervisorJids(String contestJid) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        return supervisorDao
+                .selectAllByContestJid(contestJid, options.build())
+                .stream()
+                .map(model -> model.userJid)
+                .collect(Collectors.toSet());
+    }
+
     public void importDump(String contestJid, ContestSupervisorDump dump) {
         Set<SupervisorManagementPermission> managementPermissions = dump.getManagementPermissions();
         SupervisorManagementPermissions permissions = managementPermissions.contains(SupervisorManagementPermission.ALL)

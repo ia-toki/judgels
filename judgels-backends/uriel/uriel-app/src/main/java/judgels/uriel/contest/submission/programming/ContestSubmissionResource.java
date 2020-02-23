@@ -60,6 +60,7 @@ import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
+import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
@@ -77,6 +78,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
+    private final ContestSupervisorStore supervisorStore;
     private final ContestProblemStore problemStore;
     private final ProfileService profileService;
     private final ProblemClient problemClient;
@@ -95,6 +97,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ContestProblemRoleChecker problemRoleChecker,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
+            ContestSupervisorStore supervisorStore,
             ContestProblemStore problemStore,
             ProfileService profileService,
             ProblemClient problemClient) {
@@ -111,6 +114,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.problemRoleChecker = problemRoleChecker;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
+        this.supervisorStore = supervisorStore;
         this.problemStore = problemStore;
         this.profileService = profileService;
         this.problemClient = problemClient;
@@ -144,6 +148,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
+            userJids.addAll(supervisorStore.getAllSupervisorJids(contestJid));
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
             problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);

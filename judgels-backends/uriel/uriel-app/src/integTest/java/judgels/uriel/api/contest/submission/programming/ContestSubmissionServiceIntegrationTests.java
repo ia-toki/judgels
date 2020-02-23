@@ -9,6 +9,7 @@ import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_JID;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
@@ -96,10 +97,10 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
 
         config = response.getConfig();
         assertThat(config.getCanSupervise()).isTrue();
-        assertThat(config.getUserJids()).containsOnly(CONTESTANT_JID, USER_A_JID, USER_B_JID);
+        assertThat(config.getUserJids()).containsOnly(CONTESTANT_JID, USER_A_JID, USER_B_JID, SUPERVISOR_JID);
         assertThat(config.getProblemJids()).containsOnly(PROBLEM_1_JID);
 
-        assertThat(response.getProfilesMap()).containsOnlyKeys(CONTESTANT_JID, USER_A_JID, USER_B_JID);
+        assertThat(response.getProfilesMap()).containsOnlyKeys(CONTESTANT_JID, USER_A_JID, USER_B_JID, SUPERVISOR_JID);
         assertThat(response.getProblemAliasesMap()).containsOnly(new AbstractMap.SimpleEntry<>(PROBLEM_1_JID, "A"));
 
         // as user
