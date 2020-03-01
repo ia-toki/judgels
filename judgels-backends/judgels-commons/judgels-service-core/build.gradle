@@ -15,9 +15,9 @@ dependencies {
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
-    testCompile "com.google.guava:guava:$guavaVersion"
-    testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "com.google.guava:guava:$guavaVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"

@@ -33,7 +33,7 @@ dependencies {
     integTestImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     integTestImplementation "org.subethamail:subethasmtp-wiser:$wiserVersion"
 
-    integTestRuntime "javax.servlet:javax.servlet-api:$servletApiVersion"
+    integTestRuntimeOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
 
     integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 

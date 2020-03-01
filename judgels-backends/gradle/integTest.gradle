@@ -11,7 +11,7 @@ sourceSets {
 
 configurations {
     integTestImplementation.extendsFrom testImplementation
-    integTestRuntime.extendsFrom testRuntime
+    integTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 idea.module {
@@ -39,7 +39,7 @@ task integTest(type: Test) {
 
     dependencies {
         testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
-        testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
     }
 
     testClassesDirs = sourceSets.integTest.output.classesDirs

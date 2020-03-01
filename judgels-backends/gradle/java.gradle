@@ -7,7 +7,7 @@ tasks.withType(Test) {
 
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
 }
 
 idea.module {

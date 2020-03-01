@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    runtime project(':gabriel:gabriel-app')
+    runtimeOnly project(':gabriel:gabriel-app')
 }
 
 distribution {
