@@ -11,5 +11,6 @@ public abstract class AbstractBundleSubmissionModel extends JudgelsModel {
     @Column(nullable = false)
     public String problemJid;
 
+    @Column(nullable = true)
     public String containerJid;
 }
