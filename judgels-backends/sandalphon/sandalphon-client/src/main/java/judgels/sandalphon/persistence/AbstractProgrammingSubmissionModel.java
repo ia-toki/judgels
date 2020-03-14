@@ -12,7 +12,6 @@ public abstract class AbstractProgrammingSubmissionModel extends JudgelsModel {
     @Column(nullable = false)
     public String problemJid;
 
-    @Column(nullable = false)
     public String containerJid;
 
     @Column(nullable = false)
