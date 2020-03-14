@@ -1,6 +1,4 @@
-apply plugin: 'play'
-apply plugin: 'idea'
-apply plugin: 'org.iatoki.play-idea'
+apply plugin: 'org.gradle.playframework'
 
 repositories {
     maven {
@@ -14,18 +12,11 @@ repositories {
     }
 }
 
-model {
-    components {
-        play {
-            platform play: '2.4.6', scala: '2.11', java: '1.8'
-            injectedRoutesGenerator = true
-
-            sources {
-                twirlTemplates {
-                    defaultImports = TwirlImports.JAVA
-                }
-            }
-
-        }
+play {
+    platform {
+        playVersion = '2.4.6'
+        scalaVersion = '2.11'
+        javaVersion = JavaVersion.VERSION_1_8
     }
+    injectedRoutesGenerator = true
 }

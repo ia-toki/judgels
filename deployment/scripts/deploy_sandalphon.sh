@@ -4,9 +4,9 @@ set -ex
 
 cd "$(dirname "$0")"/../../judgels-legacy/sandalphon
 
-../gradlew stagePlayBinaryDist
-rm -rf build/stage/playBinary/conf
-rm -rf build/stage/playBinary/lib/org.webjars-*
+../gradlew stage
+rm -rf build/stage/main/conf
+rm -rf build/stage/main/lib/org.webjars-*
 
 cd ../../deployment/ansible
 

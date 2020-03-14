@@ -7,7 +7,7 @@ USER judgels
 
 WORKDIR /judgels/jerahmeel
 
-EXPOSE 9006
+EXPOSE 9005
 
 ARG VCS_REF
 
@@ -16,6 +16,6 @@ LABEL org.label-schema.name="judgels/jerahmeel"
 LABEL org.label-schema.vcs-url="https://github.com/ia-toki/judgels"
 LABEL org.label-schema.vcs-ref=$VCS_REF
 
-COPY build/stage/playBinary .
+COPY build/stage/main .
 
-ENTRYPOINT ["./bin/playBinary"]
+ENTRYPOINT ["./bin/main"]

@@ -1,5 +1,16 @@
+plugins {
+    id 'idea'
+    id 'java-library'
+}
+
 apply from: '../gradle/play.gradle'
 
+sourceSets.main {
+    twirl {
+        defaultImports = org.gradle.playframework.sourcesets.TwirlImports.JAVA
+    }
+}
+
 dependencies {
-    play project(':sandalphon-commons')
+    api project(':sandalphon-commons')
 }

@@ -11,6 +11,7 @@ buildscript {
 
     dependencies {
         classpath "com.palantir.sls-packaging:gradle-sls-packaging:$gradleSlsPackagingVersion"
+        classpath 'org.iatoki:gradle-playframework:0.12'
         classpath 'org.iatoki:gradle-play-idea:0.4.1'
         classpath 'org.iatoki:gradle-play-webjars:0.1.0'
         classpath 'org.iatoki:gradle-play-less:0.3.0'
