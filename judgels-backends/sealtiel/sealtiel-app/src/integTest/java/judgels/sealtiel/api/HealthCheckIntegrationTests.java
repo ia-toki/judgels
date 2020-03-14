@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 class HealthCheckIntegrationTests extends AbstractServiceIntegrationTests {
     @Test
     void rabbitmq_healthcheck() {
-        Map<String, Map<String, Boolean>> result = createAdminWebTarget()
+        Map<String, Map<String, String>> result = createAdminWebTarget()
                 .path("/healthcheck")
                 .request(APPLICATION_JSON)
                 .get()
-                .readEntity(new GenericType<HashMap<String, Map<String, Boolean>>>() {});
+                .readEntity(new GenericType<HashMap<String, Map<String, String>>>() {});
 
-        assertThat(result.get("rabbitmq").get("healthy")).isTrue();
+        assertThat(result.get("rabbitmq").get("healthy")).isEqualTo("true");
     }
 }

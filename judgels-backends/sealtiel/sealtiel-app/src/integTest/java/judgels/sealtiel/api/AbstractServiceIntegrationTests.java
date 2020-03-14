@@ -22,7 +22,7 @@ public abstract class AbstractServiceIntegrationTests {
     private static GenericContainer rabbitmq;
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() throws Exception {
         rabbitmq = new GenericContainer("rabbitmq:3.7.8-management-alpine").withExposedPorts(5672, 15672);
         rabbitmq.start();
 

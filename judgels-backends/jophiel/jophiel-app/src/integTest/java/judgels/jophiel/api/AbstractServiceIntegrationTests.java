@@ -39,7 +39,7 @@ public abstract class AbstractServiceIntegrationTests {
     protected static AuthHeader adminHeader;
 
     @BeforeAll
-    static void beforeAll() throws IOException {
+    static void beforeAll() throws Exception {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
         dbConfig.setUrl("jdbc:h2:mem:./" + UUID.randomUUID().toString());

@@ -3,11 +3,11 @@ package judgels.jerahmeel.submission.programming;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-import com.google.common.collect.ImmutableMultimap;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.servlets.tasks.Task;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -26,12 +26,12 @@ public class StatsTask extends Task {
 
     @Override
     @UnitOfWork
-    public void execute(ImmutableMultimap<String, String> parameters, PrintWriter output) throws Exception {
-        List<String> lastSubmissionIds = parameters.get("lastSubmissionId").asList();
+    public void execute(Map<String, List<String>> parameters, PrintWriter output) throws Exception {
+        List<String> lastSubmissionIds = parameters.get("lastSubmissionId");
         Optional<Long> lastSubmissionId =
                 lastSubmissionIds.isEmpty() ? empty() : of(Long.parseLong(lastSubmissionIds.get(0)));
 
-        List<String> limits = parameters.get("limit").asList();
+        List<String> limits = parameters.get("limit");
         Optional<Integer> limit = limits.isEmpty() ? empty() : of(Integer.parseInt(limits.get(0)));
 
         Page<Submission> submissions = submissionStore.getSubmissionsForStats(lastSubmissionId, limit.orElse(1000));
