@@ -1,4 +1,5 @@
 import { mount, ReactWrapper } from 'enzyme';
+import { createMemoryHistory, MemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -10,58 +11,54 @@ import thunk from 'redux-thunk';
 import { webPrefsReducer } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid } from '../../../../../../../../fixtures/state';
-
-import { createContestProblemPage } from './ContestProblemPage';
+import ContestProblemPage from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
-import { createMemoryHistory, MemoryHistory } from 'history';
+import * as contestProblemActions from '../../../modules/contestProblemActions';
+import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
+import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+
+jest.mock('../../../modules/contestProblemActions');
+jest.mock('../../../../submissions/Programming/modules/contestSubmissionActions');
+jest.mock('../../../../../../../../modules/webPrefs/webPrefsActions');
+jest.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('ProgrammingContestProblemPage', () => {
-  let contestProblemActions: jest.Mocked<any>;
-  let contestSubmissionActions: jest.Mocked<any>;
-  let breadcrumbsActions: jest.Mocked<any>;
-  let webPrefsActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
   let history: MemoryHistory;
 
   beforeEach(() => {
-    contestProblemActions = {
-      getProgrammingProblemWorksheet: jest.fn().mockReturnValue(() =>
-        Promise.resolve({
-          problem: {
-            problemJid,
-            alias: 'C',
-            status: ContestProblemStatus.Open,
-            submissionsLimit: 0,
+    (contestProblemActions.getProgrammingProblemWorksheet as jest.Mock).mockReturnValue(() =>
+      Promise.resolve({
+        problem: {
+          problemJid,
+          alias: 'C',
+          status: ContestProblemStatus.Open,
+          submissionsLimit: 0,
+        },
+        totalSubmissions: 2,
+        worksheet: {
+          statement: {
+            name: 'Problem',
+            text: 'Lorem ipsum',
           },
-          totalSubmissions: 2,
-          worksheet: {
-            statement: {
-              name: 'Problem',
-              text: 'Lorem ipsum',
-            },
-            limits: {
-              timeLimit: 2000,
-              memoryLimit: 65536,
-            },
-            submissionConfig: {
-              sourceKeys: { encoder: 'Encoder', decoder: 'Decoder' },
-              gradingEngine: 'Batch',
-              gradingLanguageRestriction: { allowedLanguageNames: ['Cpp11', 'Pascal'] },
-            },
+          limits: {
+            timeLimit: 2000,
+            memoryLimit: 65536,
           },
-        })
-      ),
-    };
-    webPrefsActions = {
-      updateGradingLanguage: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
-    contestSubmissionActions = {
-      createSubmission: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
-    breadcrumbsActions = {
-      pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
-      popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
-    };
+          submissionConfig: {
+            sourceKeys: { encoder: 'Encoder', decoder: 'Decoder' },
+            gradingEngine: 'Batch',
+            gradingLanguageRestriction: { allowedLanguageNames: ['Cpp11', 'Pascal'] },
+          },
+        },
+      })
+    );
+
+    (webPrefsActions.updateGradingLanguage as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    (contestSubmissionActions.createSubmission as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
+    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
 
     history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/C`] });
 
@@ -75,13 +72,6 @@ describe('ProgrammingContestProblemPage', () => {
       applyMiddleware(thunk, routerMiddleware(history))
     );
     store.dispatch(PutContest.create(contest));
-
-    const ContestProblemPage = createContestProblemPage(
-      contestProblemActions,
-      contestSubmissionActions,
-      breadcrumbsActions,
-      webPrefsActions
-    );
 
     wrapper = mount(
       <Provider store={store}>

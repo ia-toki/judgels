@@ -9,13 +9,14 @@ import thunk from 'redux-thunk';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestFile, ContestFilesResponse } from '../../../../../../modules/api/uriel/contestFile';
-
-import { createContestFilesPage } from './ContestFilesPage';
+import ContestFilesPage from './ContestFilesPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestFileActions from '../modules/contestFileActions';
+
+jest.mock('../modules/contestFileActions');
 
 describe('ContestFilesPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestFileActions: jest.Mocked<any>;
 
   const response: ContestFilesResponse = {
     data: [],
@@ -29,7 +30,6 @@ describe('ContestFilesPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestFilesPage = createContestFilesPage(contestFileActions);
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
@@ -42,10 +42,8 @@ describe('ContestFilesPage', () => {
   };
 
   beforeEach(() => {
-    contestFileActions = {
-      getFiles: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-      uploadFile: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
+    (contestFileActions.getFiles as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    (contestFileActions.uploadFile as jest.Mock).mockReturnValue(() => Promise.resolve({}));
     render();
   });
 
@@ -77,7 +75,7 @@ describe('ContestFilesPage', () => {
           lastModifiedTime: 12345,
         } as ContestFile,
       ];
-      contestFileActions.getFiles.mockReturnValue(() => Promise.resolve({ ...response, data: files }));
+      (contestFileActions.getFiles as jest.Mock).mockReturnValue(() => Promise.resolve({ ...response, data: files }));
 
       render();
     });

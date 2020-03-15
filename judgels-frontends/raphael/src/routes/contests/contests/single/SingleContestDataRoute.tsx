@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import { AppState } from '../../../../modules/store';
 import { Contest } from '../../../../modules/api/uriel/contest';
 import { ContestWithWebConfig } from '../../../../modules/api/uriel/contestWeb';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../modules/breadcrumbs/breadcrumbsActions';
-
 import { selectContest } from '../modules/contestSelectors';
-import { contestActions as injectedContestActions } from '../modules/contestActions';
-import { contestWebActions as injectedContestWebActions } from './modules/contestWebActions';
+import * as contestActions from '../modules/contestActions';
+import * as contestWebActions from './modules/contestWebActions';
+import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestSlug: string }> {
   contest?: Contest;
@@ -74,26 +73,17 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
   };
 }
 
-export function createSingleContestDataRoute(contestActions, contestWebActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      contest: selectContest(state),
-    } as Partial<SingleContestDataRouteProps>);
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
 
-  const mapDispatchToProps = {
-    onGetContestBySlugWithWebConfig: contestWebActions.getContestBySlugWithWebConfig,
-    onGetContestWebConfig: contestWebActions.getWebConfig,
-    onClearContestWebConfig: contestWebActions.clearWebConfig,
-    onClearContest: contestActions.clearContest,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetContestBySlugWithWebConfig: contestWebActions.getContestBySlugWithWebConfig,
+  onGetContestWebConfig: contestWebActions.getWebConfig,
+  onClearContestWebConfig: contestWebActions.clearWebConfig,
+  onClearContest: contestActions.clearContest,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));
-}
-
-export default createSingleContestDataRoute(
-  injectedContestActions,
-  injectedContestWebActions,
-  injectedBreadcrumbsActions
-);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));

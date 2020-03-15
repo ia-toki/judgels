@@ -1,19 +1,19 @@
 import { SubmissionError } from 'redux-form';
 
 import { NotFoundError } from '../api/error';
-import { createToastMiddleware } from './toastMiddleware';
+import { toastMiddleware } from './toastMiddleware';
+import * as toastActions from './toastActions';
+
+jest.mock('./toastActions');
 
 describe('toastMiddleware', () => {
-  let toastAction: jest.Mocked<any>;
   let store: jest.Mock<any>;
 
   const myAction = { type: 'action ' };
   const nextAction = { type: 'next_action ' };
 
   beforeEach(() => {
-    toastAction = {
-      showErrorToast: jest.fn(),
-    };
+    (toastActions.showErrorToast as jest.Mock).mockClear();
     store = jest.fn();
   });
 
@@ -22,11 +22,11 @@ describe('toastMiddleware', () => {
     const next = async action => {
       throw error;
     };
-    const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
+    const applyMiddleware = action => toastMiddleware(store)(next)(action);
 
     it('shows the error toast', async () => {
       await applyMiddleware(myAction);
-      expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
+      expect(toastActions.showErrorToast).toHaveBeenCalledWith(error);
     });
   });
 
@@ -35,11 +35,11 @@ describe('toastMiddleware', () => {
     const next = async action => {
       throw error;
     };
-    const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
+    const applyMiddleware = action => toastMiddleware(store)(next)(action);
 
     it('rethrows the error and shows the error toast', async () => {
       await expect(applyMiddleware(myAction)).rejects.toMatchObject(error);
-      expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
+      expect(toastActions.showErrorToast).toHaveBeenCalledWith(error);
     });
   });
 
@@ -48,21 +48,21 @@ describe('toastMiddleware', () => {
     const next = async action => {
       throw error;
     };
-    const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
+    const applyMiddleware = action => toastMiddleware(store)(next)(action);
 
     it('rethrows the error and shows the error toast', async () => {
       await expect(applyMiddleware(myAction)).rejects.toMatchObject(error);
-      expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
+      expect(toastActions.showErrorToast).toHaveBeenCalledWith(error);
     });
   });
 
   describe('when the action does not throw any error', () => {
     const next = async action => nextAction;
-    const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
+    const applyMiddleware = action => toastMiddleware(store)(next)(action);
 
     it('just passes the action through', async () => {
       expect(await applyMiddleware(myAction)).toEqual(nextAction);
-      expect(toastAction.showErrorToast).not.toHaveBeenCalled();
+      expect(toastActions.showErrorToast).not.toHaveBeenCalled();
     });
   });
 });

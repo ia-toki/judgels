@@ -11,68 +11,65 @@ import thunk from 'redux-thunk';
 import { webPrefsReducer } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid, problemAlias } from '../../../../../../../../fixtures/state';
-
-import { createContestProblemPage } from './ContestProblemPage';
+import ContestProblemPage from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
 import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
+import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as contestProblemActions from '../../../modules/contestProblemActions';
+import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
+
+jest.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
+jest.mock('../../../modules/contestProblemActions');
+jest.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
 
 describe('BundleContestProblemPage', () => {
-  let contestProblemActions: jest.Mocked<any>;
-  let contestSubmissionActions: jest.Mocked<any>;
-  let breadcrumbsActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
   let history: MemoryHistory;
 
   beforeEach(() => {
-    contestProblemActions = {
-      getBundleProblemWorksheet: jest.fn().mockReturnValue(() =>
-        Promise.resolve({
-          defaultLanguage: 'fakelang',
-          languages: ['fakelang'],
-          problem: {
-            problemJid,
-            alias: 'C',
-            status: ContestProblemStatus.Open,
-            submissionsLimit: 0,
+    (contestProblemActions.getBundleProblemWorksheet as jest.Mock).mockReturnValue(() =>
+      Promise.resolve({
+        defaultLanguage: 'fakelang',
+        languages: ['fakelang'],
+        problem: {
+          problemJid,
+          alias: 'C',
+          status: ContestProblemStatus.Open,
+          submissionsLimit: 0,
+        },
+        totalSubmissions: 0,
+        worksheet: {
+          statement: {
+            name: 'Fake Name',
+            text: 'Lorem ipsum dos color sit amet',
           },
-          totalSubmissions: 0,
-          worksheet: {
-            statement: {
-              name: 'Fake Name',
-              text: 'Lorem ipsum dos color sit amet',
-            },
-            reasonNotAllowedToSubmit: 'no reason',
-            items: [
-              {
-                jid: 'fakeitemjid',
-                type: ItemType.MultipleChoice,
-                meta: 'somemeta',
-                config: {
-                  statement: 'somestatement',
-                  choices: [
-                    {
-                      alias: 'a',
-                      content: 'answer a',
-                    },
-                  ],
-                },
+          reasonNotAllowedToSubmit: 'no reason',
+          items: [
+            {
+              jid: 'fakeitemjid',
+              type: ItemType.MultipleChoice,
+              meta: 'somemeta',
+              config: {
+                statement: 'somestatement',
+                choices: [
+                  {
+                    alias: 'a',
+                    content: 'answer a',
+                  },
+                ],
               },
-            ],
-          },
-        })
-      ),
-    };
+            },
+          ],
+        },
+      })
+    );
 
-    contestSubmissionActions = {
-      createItemSubmission: jest.fn().mockReturnValue(() => Promise.resolve({})),
-      getLatestSubmissions: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
+    (contestSubmissionActions.createItemSubmission as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    (contestSubmissionActions.getLatestSubmissions as jest.Mock).mockReturnValue(() => Promise.resolve({}));
 
-    breadcrumbsActions = {
-      pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
-      popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
-    };
+    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
+    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
 
     history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/${problemAlias}`] });
 
@@ -86,12 +83,6 @@ describe('BundleContestProblemPage', () => {
       applyMiddleware(thunk, routerMiddleware(history))
     );
     store.dispatch(PutContest.create({ ...contest, style: ContestStyle.Bundle }));
-
-    const ContestProblemPage = createContestProblemPage(
-      contestProblemActions,
-      contestSubmissionActions,
-      breadcrumbsActions
-    );
 
     wrapper = mount(
       <Provider store={store}>

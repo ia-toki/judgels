@@ -9,15 +9,16 @@ import { contest, user } from '../../../../../../fixtures/state';
 import { PutUser, sessionReducer } from '../../../../../../modules/session/sessionReducer';
 import { ContestScoreboardResponse } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
-
-import { createContestScoreboardPage } from './ContestScoreboardPage';
+import ContestScoreboardPage from './ContestScoreboardPage';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestScoreboardActions from '../modules/contestScoreboardActions';
+
+jest.mock('../modules/contestScoreboardActions');
 
 describe('ContestScoreboardPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestScoreboardActions: jest.Mocked<any>;
 
   const render = () => {
     const store: any = createStore(
@@ -26,8 +27,6 @@ describe('ContestScoreboardPage', () => {
     );
     store.dispatch(PutUser.create(user));
     store.dispatch(PutContest.create(contest));
-
-    const ContestScoreboardPage = createContestScoreboardPage(contestScoreboardActions);
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -40,15 +39,9 @@ describe('ContestScoreboardPage', () => {
     );
   };
 
-  beforeEach(() => {
-    contestScoreboardActions = {
-      getScoreboard: jest.fn(),
-    };
-  });
-
   describe('when there is no scoreboard', () => {
     beforeEach(() => {
-      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(null));
+      (contestScoreboardActions.getScoreboard as jest.Mock).mockReturnValue(() => Promise.resolve(null));
       render();
     });
 
@@ -80,9 +73,9 @@ describe('ContestScoreboardPage', () => {
           updatedTime: 0,
         },
         profilesMap: {},
-        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, pageSize: 0 },
+        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, canRefresh: true, pageSize: 0 },
       };
-      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
+      (contestScoreboardActions.getScoreboard as jest.Mock).mockReturnValue(() => Promise.resolve(response));
 
       render();
     });
@@ -115,9 +108,9 @@ describe('ContestScoreboardPage', () => {
           updatedTime: 0,
         },
         profilesMap: {},
-        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, pageSize: 0 },
+        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, canRefresh: true, pageSize: 0 },
       };
-      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
+      (contestScoreboardActions.getScoreboard as jest.Mock).mockReturnValue(() => Promise.resolve(response));
 
       render();
     });

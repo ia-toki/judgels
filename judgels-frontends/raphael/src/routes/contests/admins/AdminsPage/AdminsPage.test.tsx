@@ -8,12 +8,13 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { Admin, AdminsResponse } from '../../../../modules/api/uriel/admin';
+import AdminsPage from './AdminsPage';
+import * as adminActions from '../modules/adminActions';
 
-import { createAdminsPage } from './AdminsPage';
+jest.mock('../modules/adminActions');
 
 describe('AdminsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let adminActions: jest.Mocked<any>;
 
   const response: AdminsResponse = {
     data: { page: [], totalCount: 0 },
@@ -25,8 +26,6 @@ describe('AdminsPage', () => {
 
   const render = () => {
     const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
-
-    const AdminsPage = createAdminsPage(adminActions);
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -40,9 +39,7 @@ describe('AdminsPage', () => {
   };
 
   beforeEach(() => {
-    adminActions = {
-      getAdmins: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-    };
+    (adminActions.getAdmins as jest.Mock).mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no admins', () => {
@@ -69,7 +66,7 @@ describe('AdminsPage', () => {
           userJid: 'userJid2',
         } as Admin,
       ];
-      adminActions.getAdmins.mockReturnValue(() =>
+      (adminActions.getAdmins as jest.Mock).mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: admins, totalCount: 2 } })
       );
 

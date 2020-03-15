@@ -21,11 +21,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps>
   }
 }
 
-export function createContestProblemPage() {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
-  return withRouter<any, any>(connect(mapStateToProps)(ContestProblemPage));
-}
-
-export default createContestProblemPage();
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+});
+export default withRouter<any, any>(connect(mapStateToProps)(ContestProblemPage));

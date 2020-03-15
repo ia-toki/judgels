@@ -1,37 +1,43 @@
-import { contestJid, sessionState, token } from '../../../../../../fixtures/state';
-import { ContestScoreboardResponse } from '../../../../../../modules/api/uriel/contestScoreboard';
-import { AppState } from '../../../../../../modules/store';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { contestScoreboardActions } from './contestScoreboardActions';
+import { APP_CONFIG } from '../../../../../../conf';
+import * as contestScoreboardActions from './contestScoreboardActions';
+
+const contestJid = 'contest-jid';
+const mockStore = configureMockStore([thunk]);
 
 describe('contestScoreboardActions', () => {
-  let dispatch: jest.Mock<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
-
-  let contestScoreboardAPI: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    contestScoreboardAPI = {
-      getScoreboard: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('getScoreboard()', () => {
-    const { getScoreboard } = contestScoreboardActions;
-    const doGetScoreboard = async () =>
-      getScoreboard(contestJid, true, false, 1)(dispatch, getState, { contestScoreboardAPI });
+    const frozen = true;
+    const showClosedProblems = false;
+    const page = 1;
+    const responseBody = {
+      data: {},
+    };
 
-    beforeEach(async () => {
-      const scoreboard = {} as ContestScoreboardResponse;
-      contestScoreboardAPI.getScoreboard.mockReturnValue(scoreboard);
+    it('calls API to get scoreboard', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/${contestJid}/scoreboard`)
+        .query({ frozen, showClosedProblems, page })
+        .reply(200, responseBody);
 
-      await doGetScoreboard();
-    });
-
-    it('calls API to get scoreboard', () => {
-      expect(contestScoreboardAPI.getScoreboard).toHaveBeenCalledWith(token, contestJid, true, false, 1);
+      const response = await store.dispatch(
+        contestScoreboardActions.getScoreboard(contestJid, frozen, showClosedProblems, page)
+      );
+      expect(response).toEqual(responseBody);
     });
   });
 });

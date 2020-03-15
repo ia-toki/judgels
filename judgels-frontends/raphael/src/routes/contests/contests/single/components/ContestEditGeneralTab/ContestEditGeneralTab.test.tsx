@@ -11,22 +11,20 @@ import { contest, contestJid, contestSlug, contestStyle } from '../../../../../.
 import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
 
-import { createContestEditGeneralTab } from './ContestEditGeneralTab';
+import ContestEditGeneralTab from './ContestEditGeneralTab';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestActions from '../../../modules/contestActions';
+import * as contestWebActions from '../../modules/contestWebActions';
+
+jest.mock('../../../modules/contestActions');
+jest.mock('../../modules/contestWebActions');
 
 describe('ContestEditGeneralTab', () => {
-  let contestWebActions: jest.Mocked<any>;
-  let contestActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    contestWebActions = {
-      getContestByJidWithWebConfig: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
-    contestActions = {
-      updateContest: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
-    const ContestEditGeneralTab = createContestEditGeneralTab(contestWebActions, contestActions);
+    (contestWebActions.getContestByJidWithWebConfig as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    (contestActions.updateContest as jest.Mock).mockReturnValue(() => Promise.resolve({}));
 
     const store: any = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),

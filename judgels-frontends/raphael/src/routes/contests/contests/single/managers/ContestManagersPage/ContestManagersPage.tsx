@@ -16,7 +16,7 @@ import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTab
 import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManagerAddDialog';
 import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestManagerActions as injectedContestManagerActions } from '../modules/contestManagerActions';
+import * as contestManagerActions from '../modules/contestManagerActions';
 
 import './ContestManagersPage.css';
 
@@ -118,18 +118,14 @@ class ContestManagersPage extends React.Component<ContestManagersPageProps, Cont
   };
 }
 
-export function createContestManagersPage(contestManagerActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+});
 
-  const mapDispatchToProps = {
-    onGetManagers: contestManagerActions.getManagers,
-    onUpsertManagers: contestManagerActions.upsertManagers,
-    onDeleteManagers: contestManagerActions.deleteManagers,
-  };
+const mapDispatchToProps = {
+  onGetManagers: contestManagerActions.getManagers,
+  onUpsertManagers: contestManagerActions.upsertManagers,
+  onDeleteManagers: contestManagerActions.deleteManagers,
+};
 
-  return withBreadcrumb('Managers')(connect(mapStateToProps, mapDispatchToProps)(ContestManagersPage));
-}
-
-export default createContestManagersPage(injectedContestManagerActions);
+export default withBreadcrumb('Managers')(connect(mapStateToProps, mapDispatchToProps)(ContestManagersPage));

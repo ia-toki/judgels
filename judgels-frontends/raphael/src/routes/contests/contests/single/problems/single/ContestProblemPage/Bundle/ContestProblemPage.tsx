@@ -13,12 +13,12 @@ import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { ContestProblem } from '../../../../../../../../modules/api/uriel/contestProblem';
 import { ContestProblemWorksheet } from '../../../../../../../../modules/api/uriel/contestProblemBundle';
 import { ProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemBundle';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import { contestProblemActions as injectedContestProblemActions } from '../../../modules/contestProblemActions';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../../submissions/Bundle/modules/contestSubmissionActions';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectContest } from '../../../../../modules/contestSelectors';
+import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as contestProblemActions from '../../../modules/contestProblemActions';
+import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
 
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
@@ -125,25 +125,17 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 }
 
-export function createContestProblemPage(contestProblemActions, contestSubmissionActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
-    onCreateSubmission: contestSubmissionActions.createItemSubmission,
-    onGetLatestSubmissions: contestSubmissionActions.getLatestSubmissions,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
+  onCreateSubmission: contestSubmissionActions.createItemSubmission,
+  onGetLatestSubmissions: contestSubmissionActions.getLatestSubmissions,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
-}
-
-export default createContestProblemPage(
-  injectedContestProblemActions,
-  injectedContestSubmissionActions,
-  injectedBreadcrumbsActions
-);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));

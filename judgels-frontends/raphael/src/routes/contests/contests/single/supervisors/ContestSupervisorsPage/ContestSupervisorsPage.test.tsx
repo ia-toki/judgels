@@ -9,13 +9,14 @@ import thunk from 'redux-thunk';
 
 import { contest } from '../../../../../../fixtures/state';
 import { ContestSupervisor, ContestSupervisorsResponse } from '../../../../../../modules/api/uriel/contestSupervisor';
-
-import { createContestSupervisorsPage } from './ContestSupervisorsPage';
+import ContestSupervisorsPage from './ContestSupervisorsPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
+
+jest.mock('../../modules/contestSupervisorActions');
 
 describe('ContestSupervisorsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestSupervisorActions: jest.Mocked<any>;
 
   const response: ContestSupervisorsResponse = {
     data: { page: [], totalCount: 0 },
@@ -32,8 +33,6 @@ describe('ContestSupervisorsPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestSupervisorsPage = createContestSupervisorsPage(contestSupervisorActions);
-
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
@@ -46,9 +45,7 @@ describe('ContestSupervisorsPage', () => {
   };
 
   beforeEach(() => {
-    contestSupervisorActions = {
-      getSupervisors: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-    };
+    (contestSupervisorActions.getSupervisors as jest.Mock).mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no supervisors', () => {
@@ -75,7 +72,7 @@ describe('ContestSupervisorsPage', () => {
           userJid: 'userJid2',
         } as ContestSupervisor,
       ];
-      contestSupervisorActions.getSupervisors.mockReturnValue(() =>
+      (contestSupervisorActions.getSupervisors as jest.Mock).mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: supervisors, totalCount: 2 } })
       );
 

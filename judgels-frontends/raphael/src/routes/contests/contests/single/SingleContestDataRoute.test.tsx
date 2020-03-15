@@ -8,13 +8,17 @@ import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-reac
 import thunk from 'redux-thunk';
 
 import { contestReducer } from '../modules/contestReducer';
-import { createSingleContestDataRoute } from './SingleContestDataRoute';
+import SingleContestDataRoute from './SingleContestDataRoute';
+import * as contestActions from '../modules/contestActions';
+import * as contestWebActions from './modules/contestWebActions';
+import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
+
+jest.mock('../modules/contestActions');
+jest.mock('./modules/contestWebActions');
+jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleContestDataRoute', () => {
   let history: MemoryHistory;
-  let contestActions: jest.Mocked<any>;
-  let contestWebActions: jest.Mocked<any>;
-  let breadcrumbsActions: jest.Mocked<any>;
 
   const render = (currentPath: string) => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
@@ -27,7 +31,6 @@ describe('SingleContestDataRoute', () => {
       applyMiddleware(thunk, routerMiddleware(history))
     );
 
-    const SingleContestDataRoute = createSingleContestDataRoute(contestActions, contestWebActions, breadcrumbsActions);
     mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -38,20 +41,13 @@ describe('SingleContestDataRoute', () => {
   };
 
   beforeEach(() => {
-    contestActions = {
-      clearContest: jest.fn().mockReturnValue({ type: 'clear' }),
-    };
-    contestWebActions = {
-      getContestBySlugWithWebConfig: jest
-        .fn()
-        .mockReturnValue(() => Promise.resolve({ contest: { jid: 'jid123', name: 'Contest 123' } })),
-      clearWebConfig: jest.fn().mockReturnValue({ type: 'clear' }),
-    };
-
-    breadcrumbsActions = {
-      pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
-      popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
-    };
+    (contestActions.clearContest as jest.Mock).mockReturnValue({ type: 'clear' });
+    (contestWebActions.getContestBySlugWithWebConfig as jest.Mock).mockReturnValue(() =>
+      Promise.resolve({ contest: { jid: 'jid123', name: 'Contest 123' } })
+    );
+    (contestWebActions.clearWebConfig as jest.Mock).mockReturnValue({ type: 'clear' });
+    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
+    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
   });
 
   test('navigation', async () => {

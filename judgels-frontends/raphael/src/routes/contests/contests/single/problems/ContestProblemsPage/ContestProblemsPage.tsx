@@ -21,7 +21,7 @@ import { AppState } from '../../../../../../modules/store';
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
 import { ContestProblemCard, ContestProblemCardProps } from '../ContestProblemCard/ContestProblemCard';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestProblemActions as injectedContestProblemActions } from '../modules/contestProblemActions';
+import * as contestProblemActions from '../modules/contestProblemActions';
 
 import './ContestProblemsPage.css';
 
@@ -29,7 +29,7 @@ export interface ContestProblemsPageProps {
   contest: Contest;
   statementLanguage: string;
   onGetProblems: (contestJid: string) => Promise<ContestProblemsResponse>;
-  onSetProblems: (contestJid: string, data: ContestProblemData) => Promise<void>;
+  onSetProblems: (contestJid: string, data: ContestProblemData[]) => Promise<any>;
 }
 
 interface ContestProblemsPageState {
@@ -181,18 +181,14 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
   };
 }
 
-export function createContestProblemsPage(contestProblemActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProblems: contestProblemActions.getProblems,
-    onSetProblems: contestProblemActions.setProblems,
-  };
+const mapDispatchToProps = {
+  onGetProblems: contestProblemActions.getProblems,
+  onSetProblems: contestProblemActions.setProblems,
+};
 
-  return withBreadcrumb('Problems')(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));
-}
-
-export default createContestProblemsPage(injectedContestProblemActions);
+export default withBreadcrumb('Problems')(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));

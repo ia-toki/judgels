@@ -28,7 +28,7 @@ import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable'
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
 import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardPage';
-import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
+import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.css';
 
@@ -276,20 +276,16 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
   };
 }
 
-export function createContestScoreboardPage(contestScoreboardActions) {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      userJid: selectMaybeUserJid(state),
-      contest: selectContest(state)!,
-    } as Partial<ContestScoreboardPageProps>);
+const mapStateToProps = (state: AppState) =>
+  ({
+    userJid: selectMaybeUserJid(state),
+    contest: selectContest(state)!,
+  } as Partial<ContestScoreboardPageProps>);
 
-  const mapDispatchToProps = {
-    onGetScoreboard: contestScoreboardActions.getScoreboard,
-    onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
-    onAppendRoute: (queries: any) => push({ search: stringify(queries) }),
-  };
+const mapDispatchToProps = {
+  onGetScoreboard: contestScoreboardActions.getScoreboard,
+  onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
+  onAppendRoute: (queries: any) => push({ search: stringify(queries) }),
+};
 
-  return withBreadcrumb('Scoreboard')(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));
-}
-
-export default createContestScoreboardPage(injectedContestScoreboardActions);
+export default withBreadcrumb('Scoreboard')(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));

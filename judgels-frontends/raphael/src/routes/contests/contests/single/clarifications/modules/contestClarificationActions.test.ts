@@ -1,81 +1,95 @@
-import { contestJid, sessionState, token } from '../../../../../../fixtures/state';
-import {
-  ContestClarificationData,
-  ContestClarificationsResponse,
-} from '../../../../../../modules/api/uriel/contestClarification';
-import { AppState } from '../../../../../../modules/store';
+import nock from 'nock';
+import { SubmissionError } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { contestClarificationActions } from './contestClarificationActions';
+import { APP_CONFIG } from '../../../../../../conf';
+import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
+import * as contestClarificationActions from './contestClarificationActions';
+
+const contestJid = 'contest-jid';
+const clarificationJid = 'clarification-jid';
+const mockStore = configureMockStore([thunk]);
 
 describe('contestClarificationActions', () => {
-  let dispatch: jest.Mock<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
-
-  let contestClarificationAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    contestClarificationAPI = {
-      createClarification: jest.fn(),
-      getClarifications: jest.fn(),
-      answerClarification: jest.fn(),
-    };
-    toastActions = {
-      showSuccessToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('createClarification()', () => {
-    const data = { title: 'Clarification' } as ContestClarificationData;
-    const { createClarification } = contestClarificationActions;
-    const doCreateClarification = async () =>
-      createClarification(contestJid, data)(dispatch, getState, { contestClarificationAPI, toastActions });
+    const params = {
+      title: 'Clarification',
+      topicJid: 'topic-jid',
+      question: 'Question',
+    };
 
-    beforeEach(async () => {
-      await doCreateClarification();
-    });
+    it('calls API to create clarification', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/contests/${contestJid}/clarifications`)
+        .reply(200)
+        .post(`/contests/${contestJid}/clarifications`, params)
+        .reply(200);
 
-    it('calls API to create clarification', () => {
-      expect(contestClarificationAPI.createClarification).toHaveBeenCalledWith(token, contestJid, data);
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Clarification submitted.');
+      await store.dispatch(contestClarificationActions.createClarification(contestJid, params));
     });
   });
 
   describe('getClarifications()', () => {
-    const { getClarifications } = contestClarificationActions;
-    const doGetMyClarifications = async () =>
-      getClarifications(contestJid, 'id', 3)(dispatch, getState, { contestClarificationAPI });
+    const language = 'id';
+    const page = 3;
+    const responseBody = {
+      data: [],
+    };
 
-    beforeEach(async () => {
-      const response = {} as ContestClarificationsResponse;
-      contestClarificationAPI.getClarifications.mockReturnValue(response);
+    it('calls API to get clarifications', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/${contestJid}/clarifications`)
+        .query({ language, page })
+        .reply(200, responseBody);
 
-      await doGetMyClarifications();
-    });
-
-    it('calls API to get clarifications', () => {
-      expect(contestClarificationAPI.getClarifications).toHaveBeenCalledWith(token, contestJid, 'id', 3);
+      const response = await store.dispatch(contestClarificationActions.getClarifications(contestJid, language, page));
+      expect(response).toEqual(responseBody);
     });
   });
 
-  describe('createClarification()', () => {
-    const { answerClarification } = contestClarificationActions;
-    const doAnswerClarification = async () =>
-      answerClarification(contestJid, 'clarificationJid123', 'Yes.')(dispatch, getState, { contestClarificationAPI });
+  describe('answerClarification()', () => {
+    const answer = 'Yes';
 
-    beforeEach(async () => {
-      await doAnswerClarification();
+    describe('when the clarification has not been answered yet', () => {
+      it('calls API to answer clarification', async () => {
+        nock(APP_CONFIG.apiUrls.uriel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`)
+          .reply(200)
+          .put(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`, { answer })
+          .reply(200);
+
+        await store.dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, answer));
+      });
     });
+    describe('when the clarification has already been answered', () => {
+      it('calls API to answer clarification', async () => {
+        nock(APP_CONFIG.apiUrls.uriel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`)
+          .reply(200)
+          .put(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`, { answer })
+          .reply(400, { errorName: ContestErrors.ClarificationAlreadyAnswered });
 
-    it('calls API to answer clarification', () => {
-      expect(contestClarificationAPI.answerClarification).toHaveBeenCalledWith(
-        token,
-        contestJid,
-        'clarificationJid123',
-        { answer: 'Yes.' }
-      );
+        await expect(
+          store.dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, answer))
+        ).rejects.toEqual(
+          new SubmissionError({ _error: 'This clarification has already been answered. Please refresh this page.' })
+        );
+      });
     });
   });
 });

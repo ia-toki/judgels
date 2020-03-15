@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import { AppState } from '../../modules/store';
 import { selectStatementLanguage } from '../../modules/webPrefs/webPrefsSelectors';
 import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
-import { webPrefsActions as injectedWebPrefsActions } from '../../modules/webPrefs/webPrefsActions';
-
 import StatementLanguageForm, { StatementLanguageFormData } from './StatementLanguageForm/StatementLanguageForm';
+import * as webPrefsActions from '../../modules/webPrefs/webPrefsActions';
 
 import './StatementLanguageWidget.css';
 
@@ -49,17 +48,13 @@ class StatementLanguageWidget extends React.Component<
   }
 }
 
-export function createStatementLanguageWidget(webPrefsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onChangeLanguage: (data: StatementLanguageFormData) =>
-      webPrefsActions.switchStatementLanguage(data.statementLanguage),
-  };
+const mapDispatchToProps = {
+  onChangeLanguage: (data: StatementLanguageFormData) =>
+    webPrefsActions.switchStatementLanguage(data.statementLanguage),
+};
 
-  return connect(mapStateToProps, mapDispatchToProps)(StatementLanguageWidget);
-}
-
-export default createStatementLanguageWidget(injectedWebPrefsActions);
+export default connect(mapStateToProps, mapDispatchToProps)(StatementLanguageWidget);

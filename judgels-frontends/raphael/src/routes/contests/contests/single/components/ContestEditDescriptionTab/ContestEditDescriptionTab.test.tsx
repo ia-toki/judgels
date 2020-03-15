@@ -8,20 +8,19 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-
-import { createContestEditDescriptionTab } from './ContestEditDescriptionTab';
+import ContestEditDescriptionTab from './ContestEditDescriptionTab';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestActions from '../../../modules/contestActions';
+
+jest.mock('../../../modules/contestActions');
 
 describe('ContestEditDescriptionTab', () => {
-  let contestActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    contestActions = {
-      getContestDescription: jest.fn().mockReturnValue(() => Promise.resolve('current description')),
-      updateContestDescription: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
-    const ContestEditDescriptionTab = createContestEditDescriptionTab(contestActions);
+    (contestActions.getContestDescription as jest.Mock).mockReturnValue(() => Promise.resolve('current description'));
+
+    (contestActions.updateContestDescription as jest.Mock).mockReturnValue(() => Promise.resolve({}));
 
     const store: any = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),

@@ -26,11 +26,7 @@ const ContestSubmissionRoutes: React.FunctionComponent<ContestSubmissionRoutesPr
   );
 };
 
-export const createContestSubmissionRoutes = () => {
-  const mapStateToProps = state => ({
-    webConfig: selectContestWebConfig(state),
-  });
-  return withRouter<any, any>(connect(mapStateToProps)(ContestSubmissionRoutes));
-};
-
-export default createContestSubmissionRoutes();
+const mapStateToProps = state => ({
+  webConfig: selectContestWebConfig(state),
+});
+export default withRouter<any, any>(connect(mapStateToProps)(ContestSubmissionRoutes));

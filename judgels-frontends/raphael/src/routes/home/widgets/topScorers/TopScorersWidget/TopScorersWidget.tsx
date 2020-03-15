@@ -6,7 +6,7 @@ import { Card } from '../../../../../components/Card/Card';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { UserTopStatsResponse } from '../../../../../modules/api/jerahmeel/user';
-import { widgetActions as injectedWidgetActions } from '../../modules/widgetActions';
+import * as widgetActions from '../../modules/widgetActions';
 
 import './TopScorersWidget.css';
 
@@ -74,11 +74,7 @@ class TopScorersWidget extends React.PureComponent<TopScorersWidgetProps, TopSco
   };
 }
 
-function createTopScorersWidget(widgetActions) {
-  const mapDispatchToProps = {
-    onGetTopUserStats: widgetActions.getTopUserStats,
-  };
-  return connect(undefined, mapDispatchToProps)(TopScorersWidget);
-}
-
-export default createTopScorersWidget(injectedWidgetActions);
+const mapDispatchToProps = {
+  onGetTopUserStats: widgetActions.getTopUserStats,
+};
+export default connect(undefined, mapDispatchToProps)(TopScorersWidget);

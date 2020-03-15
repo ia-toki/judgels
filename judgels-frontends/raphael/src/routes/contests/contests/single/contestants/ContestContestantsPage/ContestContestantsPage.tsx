@@ -17,8 +17,8 @@ import { ContestContestantsTable } from '../ContestContestantsTable/ContestConte
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
-import { contestActions as injectedContestActions } from '../../../modules/contestActions';
+import * as contestContestantActions from '../../modules/contestContestantActions';
+import * as contestActions from '../../../modules/contestActions';
 
 import './ContestContestantsPage.css';
 
@@ -145,19 +145,15 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
   };
 }
 
-export function createContestContestantsPage(contestContestantActions, contestActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+});
 
-  const mapDispatchToProps = {
-    onGetContestants: contestContestantActions.getContestants,
-    onUpsertContestants: contestContestantActions.upsertContestants,
-    onDeleteContestants: contestContestantActions.deleteContestants,
-    onResetVirtualContest: contestActions.resetVirtualContest,
-  };
+const mapDispatchToProps = {
+  onGetContestants: contestContestantActions.getContestants,
+  onUpsertContestants: contestContestantActions.upsertContestants,
+  onDeleteContestants: contestContestantActions.deleteContestants,
+  onResetVirtualContest: contestActions.resetVirtualContest,
+};
 
-  return withBreadcrumb('Contestants')(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));
-}
-
-export default createContestContestantsPage(injectedContestContestantActions, injectedContestActions);
+export default withBreadcrumb('Contestants')(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));

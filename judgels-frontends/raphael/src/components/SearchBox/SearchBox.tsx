@@ -35,11 +35,7 @@ const SearchBoxContainer = (props: SearchBoxProps & SearchBoxRouteProps) => {
   return <SearchBoxForm onSubmit={handleSubmit} {...formProps} />;
 };
 
-function createSearchBox() {
-  const mapDispatchToProps = {
-    onAppendRoute: queries => push({ search: stringify(queries) }),
-  };
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(SearchBoxContainer));
-}
-
-export default createSearchBox();
+const mapDispatchToProps = {
+  onAppendRoute: queries => push({ search: stringify(queries) }),
+};
+export default withRouter<any, any>(connect(undefined, mapDispatchToProps)(SearchBoxContainer));

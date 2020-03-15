@@ -13,10 +13,10 @@ import {
   ContestAnnouncementsResponse,
 } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
+import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
@@ -158,18 +158,14 @@ class ContestAnnouncementsPage extends React.PureComponent<
   };
 }
 
-export function createContestAnnouncementsPage(contestAnnouncementActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+});
 
-  const mapDispatchToProps = {
-    onGetAnnouncements: contestAnnouncementActions.getAnnouncements,
-    onCreateAnnouncement: contestAnnouncementActions.createAnnouncement,
-    onUpdateAnnouncement: contestAnnouncementActions.updateAnnouncement,
-  };
+const mapDispatchToProps = {
+  onGetAnnouncements: contestAnnouncementActions.getAnnouncements,
+  onCreateAnnouncement: contestAnnouncementActions.createAnnouncement,
+  onUpdateAnnouncement: contestAnnouncementActions.updateAnnouncement,
+};
 
-  return withBreadcrumb('Announcements')(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));
-}
-
-export default createContestAnnouncementsPage(injectedContestAnnouncementActions);
+export default withBreadcrumb('Announcements')(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));

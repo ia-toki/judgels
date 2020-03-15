@@ -17,7 +17,7 @@ import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webP
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestClarificationActions as injectedContestClarificationActions } from '../modules/contestClarificationActions';
+import * as contestClarificationActions from '../modules/contestClarificationActions';
 
 import './ContestClarificationsPage.css';
 
@@ -167,20 +167,18 @@ class ContestClarificationsPage extends React.Component<
   };
 }
 
-export function createContestClarificationsPage(contestClarificationActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-    contest: selectContest(state)!,
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+  contest: selectContest(state)!,
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetClarifications: contestClarificationActions.getClarifications,
-    onCreateClarification: contestClarificationActions.createClarification,
-    onAnswerClarification: contestClarificationActions.answerClarification,
-  };
+const mapDispatchToProps = {
+  onGetClarifications: contestClarificationActions.getClarifications,
+  onCreateClarification: contestClarificationActions.createClarification,
+  onAnswerClarification: contestClarificationActions.answerClarification,
+};
 
-  return withBreadcrumb('Clarifications')(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));
-}
-
-export default createContestClarificationsPage(injectedContestClarificationActions);
+export default withBreadcrumb('Clarifications')(
+  connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage)
+);

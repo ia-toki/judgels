@@ -49,11 +49,7 @@ const ContestsRoutes = (props: ContestRoutesProps) => {
   );
 };
 
-function createContestsRoutes() {
-  const mapStateToProps = (state: AppState) => ({
-    role: selectRole(state),
-  });
-  return withRouter<any, any>(connect(mapStateToProps)(ContestsRoutes));
-}
-
-export default createContestsRoutes();
+const mapStateToProps = (state: AppState) => ({
+  role: selectRole(state),
+});
+export default withRouter<any, any>(connect(mapStateToProps)(ContestsRoutes));

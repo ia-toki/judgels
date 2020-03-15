@@ -12,7 +12,7 @@ import { formatDuration, parseDuration } from '../../../../../../utils/duration'
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
 import ContestEditConfigsForm, { ContestEditConfigsFormData } from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestModuleActions as injectedContestModuleActions } from '../../modules/contestModuleActions';
+import * as contestModuleActions from '../../modules/contestModuleActions';
 
 interface ContestEditConfigsTabProps {
   contest: Contest;
@@ -243,15 +243,11 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
   };
 }
 
-export function createContestEditConfigsTab(contestModuleActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state),
-  });
-  const mapDispatchToProps = {
-    onGetConfig: contestModuleActions.getConfig,
-    onUpsertConfig: contestModuleActions.upsertConfig,
-  };
-  return connect(mapStateToProps, mapDispatchToProps)(ContestEditConfigsTab);
-}
-
-export default createContestEditConfigsTab(injectedContestModuleActions);
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
+const mapDispatchToProps = {
+  onGetConfig: contestModuleActions.getConfig,
+  onUpsertConfig: contestModuleActions.upsertConfig,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ContestEditConfigsTab);

@@ -15,9 +15,3 @@ export function updateGradingLanguage(language: string) {
     dispatch(PutGradingLanguage.create(language));
   };
 }
-
-export const webPrefsActions = {
-  switchStatementLanguage,
-
-  updateGradingLanguage,
-};

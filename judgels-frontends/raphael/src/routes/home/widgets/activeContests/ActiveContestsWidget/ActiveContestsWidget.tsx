@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Card } from '../../../../../components/Card/Card';
 import { ActiveContestsResponse } from '../../../../../modules/api/uriel/contest';
-import { contestActions as injectedContestActions } from '../../../../contests/contests/modules/contestActions';
+import * as contestActions from '../../../../contests/contests/modules/contestActions';
 
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
@@ -59,11 +59,7 @@ class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps
   };
 }
 
-export function createActiveContestsWidget(contestActions) {
-  const mapDispatchToProps = {
-    onGetActiveContests: contestActions.getActiveContests,
-  };
-  return connect(undefined, mapDispatchToProps)(ActiveContestsWidget);
-}
-
-export default createActiveContestsWidget(injectedContestActions);
+const mapDispatchToProps = {
+  onGetActiveContests: contestActions.getActiveContests,
+};
+export default connect(undefined, mapDispatchToProps)(ActiveContestsWidget);

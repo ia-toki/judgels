@@ -183,18 +183,14 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   );
 };
 
-function createSingleContestRoutes() {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      contest: selectContest(state),
-      isEditingContest: selectIsEditingContest(state),
-      contestWebConfig: selectContestWebConfig(state),
-    } as Partial<SingleContestRoutesProps>);
+const mapStateToProps = (state: AppState) =>
+  ({
+    contest: selectContest(state),
+    isEditingContest: selectIsEditingContest(state),
+    contestWebConfig: selectContestWebConfig(state),
+  } as Partial<SingleContestRoutesProps>);
 
-  const mapDispatchToProps = {
-    onSetNotEditingContest: () => EditContest.create(false),
-  };
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));
-}
-
-export default createSingleContestRoutes();
+const mapDispatchToProps = {
+  onSetNotEditingContest: () => EditContest.create(false),
+};
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));

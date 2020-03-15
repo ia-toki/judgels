@@ -9,13 +9,14 @@ import thunk from 'redux-thunk';
 
 import { contest } from '../../../../../../fixtures/state';
 import { ContestManager, ContestManagersResponse } from '../../../../../../modules/api/uriel/contestManager';
-
-import { createContestManagersPage } from './ContestManagersPage';
+import ContestManagersPage from './ContestManagersPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestManagerActions from '../modules/contestManagerActions';
+
+jest.mock('../modules/contestManagerActions');
 
 describe('ContestManagersPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestManagerActions: jest.Mocked<any>;
 
   const response: ContestManagersResponse = {
     data: { page: [], totalCount: 0 },
@@ -33,8 +34,6 @@ describe('ContestManagersPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestManagersPage = createContestManagersPage(contestManagerActions);
-
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
@@ -47,9 +46,7 @@ describe('ContestManagersPage', () => {
   };
 
   beforeEach(() => {
-    contestManagerActions = {
-      getManagers: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-    };
+    (contestManagerActions.getManagers as jest.Mock).mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no managers', () => {
@@ -76,7 +73,7 @@ describe('ContestManagersPage', () => {
           userJid: 'userJid2',
         } as ContestManager,
       ];
-      contestManagerActions.getManagers.mockReturnValue(() =>
+      (contestManagerActions.getManagers as jest.Mock).mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: managers, totalCount: 2 } })
       );
 

@@ -9,14 +9,16 @@ import thunk from 'redux-thunk';
 
 import { contest } from '../../../../../../fixtures/state';
 import { ContestContestant, ContestContestantsResponse } from '../../../../../../modules/api/uriel/contestContestant';
-
-import { createContestContestantsPage } from './ContestContestantsPage';
+import ContestContestantsPage from './ContestContestantsPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestContestantActions from '../../modules/contestContestantActions';
+import * as contestActions from '../../../modules/contestActions';
+
+jest.mock('../../modules/contestContestantActions');
+jest.mock('../../../modules/contestActions');
 
 describe('ContestContestantsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestContestantActions: jest.Mocked<any>;
-  let contestActions: jest.Mocked<any>;
 
   const response: ContestContestantsResponse = {
     data: { page: [], totalCount: 0 },
@@ -36,8 +38,6 @@ describe('ContestContestantsPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestContestantsPage = createContestContestantsPage(contestContestantActions, contestActions);
-
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
@@ -50,12 +50,8 @@ describe('ContestContestantsPage', () => {
   };
 
   beforeEach(() => {
-    contestContestantActions = {
-      getContestants: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-    };
-    contestActions = {
-      resetVirtualContest: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
+    (contestContestantActions.getContestants as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    (contestActions.resetVirtualContest as jest.Mock).mockReturnValue(() => Promise.resolve({}));
   });
 
   describe('when there are no contestants', () => {
@@ -82,7 +78,7 @@ describe('ContestContestantsPage', () => {
           userJid: 'userJid2',
         } as ContestContestant,
       ];
-      contestContestantActions.getContestants.mockReturnValue(() =>
+      (contestContestantActions.getContestants as jest.Mock).mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: contestants, totalCount: 2 } })
       );
 

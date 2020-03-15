@@ -10,13 +10,14 @@ import thunk from 'redux-thunk';
 import { contest, contestJid } from '../../../../../../../fixtures/state';
 import { Submission } from '../../../../../../../modules/api/sandalphon/submissionProgramming';
 import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
-
-import { createContestSubmissionsPage } from './ContestSubmissionsPage';
+import ContestSubmissionsPage from './ContestSubmissionsPage';
 import { contestReducer, PutContest } from '../../../../modules/contestReducer';
+import * as contestSubmissionActions from '../modules/contestSubmissionActions';
+
+jest.mock('../modules/contestSubmissionActions');
 
 describe('ContestSubmissionsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestProgrammingSubmissionActions: jest.Mocked<any>;
 
   const response: ContestSubmissionsResponse = {
     data: { page: [], totalCount: 0 },
@@ -43,8 +44,6 @@ describe('ContestSubmissionsPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestSubmissionsPage = createContestSubmissionsPage(contestProgrammingSubmissionActions);
-
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
@@ -57,9 +56,7 @@ describe('ContestSubmissionsPage', () => {
   };
 
   beforeEach(() => {
-    contestProgrammingSubmissionActions = {
-      getSubmissions: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-    };
+    (contestSubmissionActions.getSubmissions as jest.Mock).mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no submissions', () => {
@@ -98,7 +95,7 @@ describe('ContestSubmissionsPage', () => {
           time: 456,
         } as Submission,
       ];
-      contestProgrammingSubmissionActions.getSubmissions.mockReturnValue(() =>
+      (contestSubmissionActions.getSubmissions as jest.Mock).mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: submissions, totalCount: 2 } })
       );
 

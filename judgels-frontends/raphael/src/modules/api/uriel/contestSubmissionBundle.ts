@@ -33,7 +33,7 @@ export const contestSubmissionBundleAPI = {
   },
 
   createItemSubmission: (token: string, data: ItemSubmissionData): Promise<void> => {
-    return post(`${baseURL}/`, token, data);
+    return post(baseURL, token, data);
   },
 
   getSubmissionSummary: (

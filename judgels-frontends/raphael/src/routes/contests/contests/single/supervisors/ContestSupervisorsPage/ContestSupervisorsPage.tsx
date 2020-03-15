@@ -17,7 +17,7 @@ import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSuper
 import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/ContestSupervisorAddDialog';
 import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/ContestSupervisorRemoveDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestSupervisorActions as injectedContestSupervisorActions } from '../../modules/contestSupervisorActions';
+import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
 
 import './ContestSupervisorsPage.css';
 
@@ -124,18 +124,14 @@ class ContestSupervisorsPage extends React.Component<ContestSupervisorsPageProps
   };
 }
 
-export function createContestSupervisorsPage(contestSupervisorActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSupervisors: contestSupervisorActions.getSupervisors,
-    onUpsertSupervisors: contestSupervisorActions.upsertSupervisors,
-    onDeleteSupervisors: contestSupervisorActions.deleteSupervisors,
-  };
+const mapDispatchToProps = {
+  onGetSupervisors: contestSupervisorActions.getSupervisors,
+  onUpsertSupervisors: contestSupervisorActions.upsertSupervisors,
+  onDeleteSupervisors: contestSupervisorActions.deleteSupervisors,
+};
 
-  return withBreadcrumb('Supervisors')(connect(mapStateToProps, mapDispatchToProps)(ContestSupervisorsPage));
-}
-
-export default createContestSupervisorsPage(injectedContestSupervisorActions);
+export default withBreadcrumb('Supervisors')(connect(mapStateToProps, mapDispatchToProps)(ContestSupervisorsPage));

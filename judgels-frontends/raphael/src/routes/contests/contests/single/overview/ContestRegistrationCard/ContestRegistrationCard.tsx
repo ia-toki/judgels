@@ -8,11 +8,10 @@ import { ContestContestantState } from '../../../../../../modules/api/uriel/cont
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../modules/store';
 import { selectIsLoggedIn } from '../../../../../../modules/session/sessionSelectors';
-
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
-import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
+import * as contestWebActions from '../../modules/contestWebActions';
+import * as contestContestantActions from '../../modules/contestContestantActions';
 
 import './ContestRegistrationCard.css';
 
@@ -170,19 +169,15 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   };
 }
 
-function createContestRegistrationCard(contestWebActions, contestContestantActions) {
-  const mapStateToProps = (state: AppState) => ({
-    isLoggedIn: selectIsLoggedIn(state),
-    contest: selectContest(state)!,
-  });
-  const mapDispatchToProps = {
-    onGetContestWebConfig: contestWebActions.getWebConfig,
-    onGetMyContestantState: contestContestantActions.getMyContestantState,
-    onGetApprovedContestantsCount: contestContestantActions.getApprovedContestantsCount,
-    onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
-    onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
-  };
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
-}
-
-export default createContestRegistrationCard(injectedContestWebActions, injectedContestContestantActions);
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: selectIsLoggedIn(state),
+  contest: selectContest(state)!,
+});
+const mapDispatchToProps = {
+  onGetContestWebConfig: contestWebActions.getWebConfig,
+  onGetMyContestantState: contestContestantActions.getMyContestantState,
+  onGetApprovedContestantsCount: contestContestantActions.getApprovedContestantsCount,
+  onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
+  onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
+};
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));

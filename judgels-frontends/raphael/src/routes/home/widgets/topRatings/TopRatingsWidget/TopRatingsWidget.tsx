@@ -7,7 +7,7 @@ import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { Page } from '../../../../../modules/api/pagination';
 import { Profile } from '../../../../../modules/api/jophiel/profile';
-import { widgetActions as injectedWidgetActions } from '../../modules/widgetActions';
+import * as widgetActions from '../../modules/widgetActions';
 
 import './TopRatingsWidget.css';
 
@@ -74,11 +74,7 @@ class TopRatingsWidget extends React.PureComponent<TopRatingsWidgetProps, TopRat
   };
 }
 
-function createTopRatingsWidget(widgetActions) {
-  const mapDispatchToProps = {
-    onGetTopRatedProfiles: widgetActions.getTopRatedProfiles,
-  };
-  return connect(undefined, mapDispatchToProps)(TopRatingsWidget);
-}
-
-export default createTopRatingsWidget(injectedWidgetActions);
+const mapDispatchToProps = {
+  onGetTopRatedProfiles: widgetActions.getTopRatedProfiles,
+};
+export default connect(undefined, mapDispatchToProps)(TopRatingsWidget);

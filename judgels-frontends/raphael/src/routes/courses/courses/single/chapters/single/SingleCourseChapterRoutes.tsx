@@ -86,14 +86,10 @@ const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
   );
 };
 
-function createSingleCourseChapterRoutes() {
-  const mapStateToProps = (state: AppState) => ({
-    chapter: selectCourseChapter(state),
-    chapterName: selectCourseChapterName(state),
-    courseSlug: selectCourseSlug(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  chapter: selectCourseChapter(state),
+  chapterName: selectCourseChapterName(state),
+  courseSlug: selectCourseSlug(state),
+});
 
-  return withRouter<any, any>(connect(mapStateToProps)(SingleCourseChapterRoutes));
-}
-
-export default createSingleCourseChapterRoutes();
+export default withRouter<any, any>(connect(mapStateToProps)(SingleCourseChapterRoutes));

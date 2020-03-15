@@ -6,15 +6,14 @@ import { AppState } from '../../../../../../modules/store';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { allModules, ContestModuleType } from '../../../../../../modules/api/uriel/contestModule';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
-import { contestModuleActions as injectedContestModuleActions } from '../../modules/contestModuleActions';
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
+import * as contestWebActions from '../../modules/contestWebActions';
+import * as contestModuleActions from '../../modules/contestModuleActions';
 
 interface ContestEditModulesTabProps {
   contest: Contest;
-  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<void>;
+  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<any>;
   onGetModules: (contestJid: string) => Promise<ContestModuleType[]>;
   onEnableModule: (contestJid: string, type: ContestModuleType) => Promise<void>;
   onDisableModule: (contestJid: string, type: ContestModuleType) => Promise<void>;
@@ -122,17 +121,13 @@ class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, 
   };
 }
 
-export function createContestEditModulesTab(contestWebActions, contestModuleActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state),
-  });
-  const mapDispatchToProps = {
-    onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
-    onGetModules: contestModuleActions.getModules,
-    onEnableModule: contestModuleActions.enableModule,
-    onDisableModule: contestModuleActions.disableModule,
-  };
-  return connect(mapStateToProps, mapDispatchToProps)(ContestEditModulesTab);
-}
-
-export default createContestEditModulesTab(injectedContestWebActions, injectedContestModuleActions);
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
+const mapDispatchToProps = {
+  onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
+  onGetModules: contestModuleActions.getModules,
+  onEnableModule: contestModuleActions.enableModule,
+  onDisableModule: contestModuleActions.disableModule,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ContestEditModulesTab);

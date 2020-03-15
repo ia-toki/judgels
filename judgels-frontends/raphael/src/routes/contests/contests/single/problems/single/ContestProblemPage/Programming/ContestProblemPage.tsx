@@ -14,13 +14,13 @@ import { ContestProblem } from '../../../../../../../../modules/api/uriel/contes
 import { ContestProblemWorksheet } from '../../../../../../../../modules/api/uriel/contestProblemProgramming';
 import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 import { ProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemProgramming';
-import { contestProblemActions as injectedContestProblemActions } from '../../../modules/contestProblemActions';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../../submissions/Programming/modules/contestSubmissionActions';
-import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../../../modules/webPrefs/webPrefsActions';
 import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { selectContest } from '../../../../../modules/contestSelectors';
+import * as contestProblemActions from '../../../modules/contestProblemActions';
+import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
+import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 import './ContestProblemPage.css';
 
@@ -148,32 +148,18 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 }
 
-export function createContestProblemPage(
-  contestProblemActions,
-  contestSubmissionActions,
-  breadcrumbsActions,
-  webPrefsActions
-) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-    statementLanguage: selectStatementLanguage(state),
-    gradingLanguage: selectGradingLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+  statementLanguage: selectStatementLanguage(state),
+  gradingLanguage: selectGradingLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
-    onCreateSubmission: contestSubmissionActions.createSubmission,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-    onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
-  };
+const mapDispatchToProps = {
+  onGetProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
+  onCreateSubmission: contestSubmissionActions.createSubmission,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+  onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
-}
-
-export default createContestProblemPage(
-  injectedContestProblemActions,
-  injectedContestSubmissionActions,
-  injectedBreadcrumbsActions,
-  injectedWebPrefsActions
-);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));

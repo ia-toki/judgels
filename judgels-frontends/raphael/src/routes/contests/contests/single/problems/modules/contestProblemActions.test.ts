@@ -1,90 +1,77 @@
+import nock from 'nock';
 import { SubmissionError } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { contestJid, sessionState, token } from '../../../../../../fixtures/state';
-import { ForbiddenError } from '../../../../../../modules/api/error';
+import { APP_CONFIG } from '../../../../../../conf';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
-import { ContestProblemData, ContestProblemsResponse } from '../../../../../../modules/api/uriel/contestProblem';
-import { AppState } from '../../../../../../modules/store';
-import { contestProblemActions } from './contestProblemActions';
-import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from '../../../../../../modules/api/uriel/contestProblemProgramming';
-import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from '../../../../../../modules/api/uriel/contestProblemBundle';
+import { ContestProblemData } from '../../../../../../modules/api/uriel/contestProblem';
+import * as contestProblemActions from './contestProblemActions';
+
+const contestJid = 'contest-jid';
+const mockStore = configureMockStore([thunk]);
 
 describe('contestProblemActions', () => {
-  let dispatch: jest.Mock<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
-
-  let contestProblemAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    contestProblemAPI = {
-      getProblems: jest.fn(),
-      setProblems: jest.fn(),
-      getBundleProblemWorksheet: jest.fn(),
-      getProgrammingProblemWorksheet: jest.fn(),
-    };
-    toastActions = {
-      showSuccessToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('getProblems()', () => {
-    const { getProblems } = contestProblemActions;
-    const doGetProblems = async () => getProblems(contestJid)(dispatch, getState, { contestProblemAPI });
+    const responseBody = {
+      data: [],
+    };
 
-    beforeEach(async () => {
-      const problems = {} as ContestProblemsResponse;
-      contestProblemAPI.getProblems.mockReturnValue(problems);
+    it('calls API to get problems', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/${contestJid}/problems`)
+        .reply(200, responseBody);
 
-      await doGetProblems();
-    });
-
-    it('calls API to get problems', () => {
-      expect(contestProblemAPI.getProblems).toHaveBeenCalledWith(token, contestJid);
+      const response = await store.dispatch(contestProblemActions.getProblems(contestJid));
+      expect(response).toEqual(responseBody);
     });
   });
 
   describe('setProblems()', () => {
-    const { setProblems } = contestProblemActions;
     const data: ContestProblemData[] = [
       { slug: 'slug1' } as ContestProblemData,
       { slug: 'slug2' } as ContestProblemData,
       { slug: 'slug3' } as ContestProblemData,
       { slug: 'slug4' } as ContestProblemData,
     ];
-    const doSetProblems = async () =>
-      setProblems(contestJid, data)(dispatch, getState, { contestProblemAPI, toastActions });
 
     describe('when all slugs are valid', () => {
-      beforeEach(async () => {
-        contestProblemAPI.setProblems.mockReturnValue(Promise.resolve({}));
+      it('calls API to set problems', async () => {
+        nock(APP_CONFIG.apiUrls.uriel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/contests/${contestJid}/problems`)
+          .reply(200)
+          .put(`/contests/${contestJid}/problems`, data as any)
+          .reply(200);
 
-        await doSetProblems();
-      });
-
-      it('calls API to set problems', () => {
-        expect(contestProblemAPI.setProblems).toHaveBeenCalledWith(token, contestJid, data);
-      });
-
-      it('shows success toast', () => {
-        expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Problems updated.');
+        await store.dispatch(contestProblemActions.setProblems(contestJid, data));
       });
     });
 
     describe('when not all slugs are valid', () => {
-      beforeEach(async () => {
-        contestProblemAPI.setProblems.mockImplementation(() => {
-          throw new ForbiddenError({
+      it('throws SubmissionError', async () => {
+        nock(APP_CONFIG.apiUrls.uriel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/contests/${contestJid}/problems`)
+          .reply(200)
+          .put(`/contests/${contestJid}/problems`, data as any)
+          .reply(403, {
             errorName: ContestErrors.ProblemSlugsNotAllowed,
             parameters: { slugs: 'slug2, slug4' },
           });
-        });
-      });
 
-      it('throws SubmissionError', async () => {
-        await expect(doSetProblems()).rejects.toEqual(
+        await expect(store.dispatch(contestProblemActions.setProblems(contestJid, data))).rejects.toEqual(
           new SubmissionError({ problems: 'Problems not found/allowed: slug2, slug4' })
         );
       });
@@ -92,36 +79,44 @@ describe('contestProblemActions', () => {
   });
 
   describe('getBundleProblemWorksheet()', () => {
-    const { getBundleProblemWorksheet } = contestProblemActions;
-    const doGetProblemWorksheet = async () =>
-      getBundleProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
+    const problemAlias = 'C';
+    const language = 'id';
+    const responseBody = {
+      worksheet: {},
+    };
 
-    beforeEach(async () => {
-      const worksheet = {} as ContestBundleProblemWorksheet;
-      contestProblemAPI.getBundleProblemWorksheet.mockReturnValue(worksheet);
+    it('calls API to get bundle problem worksheet', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/${contestJid}/problems/${problemAlias}/bundle/worksheet`)
+        .query({ language })
+        .reply(200, responseBody);
 
-      await doGetProblemWorksheet();
-    });
-
-    it('calls API to get bundle problem worksheet', () => {
-      expect(contestProblemAPI.getBundleProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
+      const response = await store.dispatch(
+        contestProblemActions.getBundleProblemWorksheet(contestJid, problemAlias, language)
+      );
+      expect(response).toEqual(responseBody);
     });
   });
 
   describe('getProgrammingProblemWorksheet()', () => {
-    const { getProgrammingProblemWorksheet } = contestProblemActions;
-    const doGetProblemWorksheet = async () =>
-      getProgrammingProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
+    const problemAlias = 'C';
+    const language = 'id';
+    const responseBody = {
+      worksheet: {},
+    };
 
-    beforeEach(async () => {
-      const worksheet = {} as ContestProgrammingProblemWorksheet;
-      contestProblemAPI.getProgrammingProblemWorksheet.mockReturnValue(worksheet);
+    it('calls API to get programming problem worksheet', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/${contestJid}/problems/${problemAlias}/programming/worksheet`)
+        .query({ language })
+        .reply(200, responseBody);
 
-      await doGetProblemWorksheet();
-    });
-
-    it('calls API to get programming problem worksheet', () => {
-      expect(contestProblemAPI.getProgrammingProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
+      const response = await store.dispatch(
+        contestProblemActions.getProgrammingProblemWorksheet(contestJid, problemAlias, language)
+      );
+      expect(response).toEqual(responseBody);
     });
   });
 });

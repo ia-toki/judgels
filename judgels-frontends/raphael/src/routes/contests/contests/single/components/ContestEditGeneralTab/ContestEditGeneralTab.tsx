@@ -9,13 +9,13 @@ import { formatDuration, parseDuration } from '../../../../../../utils/duration'
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
 import ContestEditGeneralForm, { ContestEditGeneralFormData } from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestActions as injectedContestActions } from '../../../modules/contestActions';
-import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
+import * as contestActions from '../../../modules/contestActions';
+import * as contestWebActions from '../../modules/contestWebActions';
 
 interface ContestEditGeneralTabProps {
   contest: Contest;
-  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<void>;
-  onUpdateContest: (contestJid: string, contestSlug: string, data: ContestUpdateData) => Promise<void>;
+  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<any>;
+  onUpdateContest: (contestJid: string, contestSlug: string, data: ContestUpdateData) => Promise<any>;
 }
 
 interface ContestEditGeneralTabState {
@@ -86,15 +86,11 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   };
 }
 
-export function createContestEditGeneralTab(contestWebActions, contestActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state),
-  });
-  const mapDispatchToProps = {
-    onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
-    onUpdateContest: contestActions.updateContest,
-  };
-  return connect(mapStateToProps, mapDispatchToProps)(ContestEditGeneralTab);
-}
-
-export default createContestEditGeneralTab(injectedContestWebActions, injectedContestActions);
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
+const mapDispatchToProps = {
+  onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
+  onUpdateContest: contestActions.updateContest,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ContestEditGeneralTab);

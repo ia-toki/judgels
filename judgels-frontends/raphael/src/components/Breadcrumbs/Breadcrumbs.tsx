@@ -36,11 +36,7 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
   );
 };
 
-export function createBreadcrumbs() {
-  const mapStateToProps = (state: AppState) => ({
-    breadcrumbs: selectSortedBreadcrumbs(state),
-  });
-  return connect(mapStateToProps)(Breadcrumbs);
-}
-
-export default createBreadcrumbs();
+const mapStateToProps = (state: AppState) => ({
+  breadcrumbs: selectSortedBreadcrumbs(state),
+});
+export default connect(mapStateToProps)(Breadcrumbs);

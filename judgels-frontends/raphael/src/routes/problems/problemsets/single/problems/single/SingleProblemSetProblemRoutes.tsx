@@ -109,17 +109,13 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
   };
 }
 
-function createSingleProblemSetProblemRoutes() {
-  const mapStateToProps = (state: AppState) => ({
-    problemSet: selectProblemSet(state),
-    problem: selectProblemSetProblem(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+  problem: selectProblemSetProblem(state),
+});
 
-  const mapDispatchToProps = {
-    onClickBack: problemSetSlug => push(`/problems/${problemSetSlug}`),
-  };
+const mapDispatchToProps = {
+  onClickBack: problemSetSlug => push(`/problems/${problemSetSlug}`),
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetProblemRoutes));
-}
-
-export default createSingleProblemSetProblemRoutes();
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetProblemRoutes));

@@ -16,7 +16,7 @@ import {
   ProblemSubmissionCard,
   ProblemSubmissionCardProps,
 } from '../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
+import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 interface ContestSubmissionSummaryPageRoute {
   username?: string;
@@ -98,18 +98,14 @@ class SubmissionSummaryPage extends React.Component<
   };
 }
 
-export function createContestSubmissionSummaryPage(contestSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-    language: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+  language: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissionSummary: contestSubmissionActions.getSubmissionSummary,
-    onRegradeAll: contestSubmissionActions.regradeSubmissions,
-  };
+const mapDispatchToProps = {
+  onGetSubmissionSummary: contestSubmissionActions.getSubmissionSummary,
+  onRegradeAll: contestSubmissionActions.regradeSubmissions,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
-}
-
-export default createContestSubmissionSummaryPage(injectedContestSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));

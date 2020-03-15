@@ -13,13 +13,15 @@ import {
   ContestAnnouncementsResponse,
 } from '../../../../../../modules/api/uriel/contestAnnouncement';
 
-import { createContestAnnouncementsPage } from './ContestAnnouncementsPage';
+import ContestAnnouncementsPage from './ContestAnnouncementsPage';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
+
+jest.mock('../modules/contestAnnouncementActions');
 
 describe('ContestAnnouncementsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestAnnouncementActions: jest.Mocked<any>;
 
   const response: ContestAnnouncementsResponse = {
     data: { page: [], totalCount: 0 },
@@ -37,8 +39,6 @@ describe('ContestAnnouncementsPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestAnnouncementsPage = createContestAnnouncementsPage(contestAnnouncementActions);
-
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
@@ -51,11 +51,9 @@ describe('ContestAnnouncementsPage', () => {
   };
 
   beforeEach(() => {
-    contestAnnouncementActions = {
-      getAnnouncements: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-      createAnnouncement: jest.fn().mockReturnValue(() => Promise.resolve({})),
-      updateAnnouncement: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
+    (contestAnnouncementActions.getAnnouncements as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    (contestAnnouncementActions.createAnnouncement as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    (contestAnnouncementActions.updateAnnouncement as jest.Mock).mockReturnValue(() => Promise.resolve({}));
   });
 
   describe('when there are no announcements', () => {
@@ -90,7 +88,7 @@ describe('ContestAnnouncementsPage', () => {
           updatedTime: 0,
         } as ContestAnnouncement,
       ];
-      contestAnnouncementActions.getAnnouncements.mockReturnValue(() =>
+      (contestAnnouncementActions.getAnnouncements as jest.Mock).mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: announcements, totalCount: 2 } })
       );
 

@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { push } from 'connected-react-router';
 
 import { Contest } from '../../modules/api/uriel/contest';
-
-import { contestActions as injectedContestActions } from '../contests/contests/modules/contestActions';
+import * as contestActions from '../contests/contests/modules/contestActions';
 
 interface LegacyCompetitionRouteProps extends RouteComponentProps<{ contestSlug: string }> {
   onGetContest: (contestSlug: string) => Promise<Contest>;
@@ -23,12 +22,8 @@ class LegacyCompetitionRoute extends React.Component<LegacyCompetitionRouteProps
   }
 }
 
-function createLegacyCompetitionRoute(contestActions) {
-  const mapDispatchToProps = {
-    onGetContest: contestActions.getContestBySlug,
-    onRedirect: push,
-  };
-  return connect(undefined, mapDispatchToProps)(LegacyCompetitionRoute);
-}
-
-export default withRouter<any, any>(createLegacyCompetitionRoute(injectedContestActions));
+const mapDispatchToProps = {
+  onGetContest: contestActions.getContestBySlug,
+  onRedirect: push,
+};
+export default connect(undefined, mapDispatchToProps)(LegacyCompetitionRoute);

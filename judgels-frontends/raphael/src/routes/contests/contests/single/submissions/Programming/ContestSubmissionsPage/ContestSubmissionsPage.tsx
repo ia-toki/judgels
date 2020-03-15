@@ -15,7 +15,7 @@ import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { selectContest } from '../../../../modules/contestSelectors';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
+import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
   contest: Contest;
@@ -216,19 +216,15 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 }
 
-export function createContestSubmissionsPage(contestProgrammingSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProgrammingSubmissions: contestProgrammingSubmissionActions.getSubmissions,
-    onRegrade: contestProgrammingSubmissionActions.regradeSubmission,
-    onRegradeAll: contestProgrammingSubmissionActions.regradeSubmissions,
-    onAppendRoute: queries => push({ search: stringify(queries) }),
-  };
+const mapDispatchToProps = {
+  onGetProgrammingSubmissions: contestSubmissionActions.getSubmissions,
+  onRegrade: contestSubmissionActions.regradeSubmission,
+  onRegradeAll: contestSubmissionActions.regradeSubmissions,
+  onAppendRoute: queries => push({ search: stringify(queries) }),
+};
 
-  return withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
-}
-
-export default createContestSubmissionsPage(injectedContestSubmissionActions);
+export default withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));

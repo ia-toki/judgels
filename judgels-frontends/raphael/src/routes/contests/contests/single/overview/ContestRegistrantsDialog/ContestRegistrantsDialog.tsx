@@ -12,7 +12,7 @@ import { AppState } from '../../../../../../modules/store';
 import { getCountryName } from '../../../../../../assets/data/countries';
 
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
+import * as contestContestantActions from '../../modules/contestContestantActions';
 
 import './ContestRegistrantsDialog.css';
 
@@ -106,14 +106,10 @@ class ContestRegistrantsDialog extends React.PureComponent<
   };
 }
 
-function createContestRegistrantsDialog(contestContestantActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
-  const mapDispatchToProps = {
-    onGetApprovedContestants: contestContestantActions.getApprovedContestants,
-  };
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));
-}
-
-export default createContestRegistrantsDialog(injectedContestContestantActions);
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+});
+const mapDispatchToProps = {
+  onGetApprovedContestants: contestContestantActions.getApprovedContestants,
+};
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));

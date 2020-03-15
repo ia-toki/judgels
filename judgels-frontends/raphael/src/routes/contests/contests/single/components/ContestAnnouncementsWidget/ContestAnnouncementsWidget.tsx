@@ -3,9 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from '../../../../../../modules/store';
-
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
-import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../../announcements/modules/contestAnnouncementActions';
+import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
 
 interface ContestAnnouncementsWidgetProps {
   announcementCount: number;
@@ -27,15 +26,11 @@ class ContestAnnouncementsWidget extends React.Component<ContestAnnouncementsWid
   }
 }
 
-function createContestAnnouncementsWidget(contestAnnouncementActions) {
-  const mapStateToProps = (state: AppState) => ({
-    announcementCount: selectContestWebConfig(state)!.announcementCount,
-  });
-  const mapDispatchToProps = {
-    onAlertNewAnnouncements: contestAnnouncementActions.alertNewAnnouncements,
-  };
+const mapStateToProps = (state: AppState) => ({
+  announcementCount: selectContestWebConfig(state).announcementCount,
+});
+const mapDispatchToProps = {
+  onAlertNewAnnouncements: contestAnnouncementActions.alertNewAnnouncements,
+};
 
-  return connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsWidget);
-}
-
-export default createContestAnnouncementsWidget(injectedContestAnnouncementActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsWidget);

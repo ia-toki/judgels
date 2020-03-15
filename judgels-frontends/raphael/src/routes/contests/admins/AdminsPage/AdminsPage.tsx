@@ -10,7 +10,7 @@ import { AdminsDeleteResponse, AdminsResponse, AdminsUpsertResponse } from '../.
 import { AdminsTable } from '../AdminsTable/AdminsTable';
 import { AdminAddDialog } from '../AdminAddDialog/AdminAddDialog';
 import { AdminRemoveDialog } from '../AdminRemoveDialog/AdminRemoveDialog';
-import { adminActions as injectedAdminActions } from '../modules/adminActions';
+import * as adminActions from '../modules/adminActions';
 
 import './AdminsPage.css';
 
@@ -105,14 +105,10 @@ class AdminsPage extends React.Component<AdminsPageProps, AdminsPageState> {
   };
 }
 
-export function createAdminsPage(adminActions) {
-  const mapDispatchToProps = {
-    onGetAdmins: adminActions.getAdmins,
-    onUpsertAdmins: adminActions.upsertAdmins,
-    onDeleteAdmins: adminActions.deleteAdmins,
-  };
+const mapDispatchToProps = {
+  onGetAdmins: adminActions.getAdmins,
+  onUpsertAdmins: adminActions.upsertAdmins,
+  onDeleteAdmins: adminActions.deleteAdmins,
+};
 
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(AdminsPage));
-}
-
-export default createAdminsPage(injectedAdminActions);
+export default withRouter<any, any>(connect(undefined, mapDispatchToProps)(AdminsPage));

@@ -11,7 +11,7 @@ import { ContestFileUploadCard } from '../ContestFileUploadCard/ContestFileUploa
 import { ContestFileUploadFormData } from '../ContestFileUploadForm/ContestFileUploadForm';
 import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestFileActions as injectedContestFileActions } from '../modules/contestFileActions';
+import * as contestFileActions from '../modules/contestFileActions';
 
 export interface ContestFilesPageProps {
   contest: Contest;
@@ -82,17 +82,13 @@ class ContestFilesPage extends React.Component<ContestFilesPageProps, ContestFil
   };
 }
 
-export function createContestFilesPage(contestFileActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
 
-  const mapDispatchToProps = {
-    onGetFiles: contestFileActions.getFiles,
-    onUploadFile: contestFileActions.uploadFile,
-  };
+const mapDispatchToProps = {
+  onGetFiles: contestFileActions.getFiles,
+  onUploadFile: contestFileActions.uploadFile,
+};
 
-  return withBreadcrumb('Files')(connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage));
-}
-
-export default createContestFilesPage(injectedContestFileActions);
+export default withBreadcrumb('Files')(connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage));

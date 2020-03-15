@@ -1,77 +1,99 @@
-import { AppState } from '../../../../../../../modules/store';
-import { sessionState, contestJid, token } from '../../../../../../../fixtures/state';
-import { contestSubmissionActions } from './contestSubmissionActions';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-describe('bundle contestSubmissionActions', () => {
-  let dispatch: jest.Mock<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
+import { APP_CONFIG } from '../../../../../../../conf';
+import * as contestSubmissionActions from './contestSubmissionActions';
 
-  let contestSubmissionBundleAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+const contestJid = 'contest-jid';
+const problemJid = 'problem-jid';
+const mockStore = configureMockStore([thunk]);
+
+describe('contestSubmissionBundleActions', () => {
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    contestSubmissionBundleAPI = {
-      getSubmissions: jest.fn(),
-      createItemSubmission: jest.fn(),
-      getSubmissionSummary: jest.fn(),
-      getLatestSubmissions: jest.fn(),
-    };
-
-    toastActions = {
-      showToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('getSubmissions()', () => {
-    const { getSubmissions } = contestSubmissionActions;
+    const username = 'username';
+    const problemAlias = 'alias';
+    const page = 3;
+    const responseBody = {
+      data: [],
+    };
+
     it('calls API to get bundle submissions', async () => {
-      const action = getSubmissions(contestJid, 'username', 'alias', 3);
-      contestSubmissionBundleAPI.getSubmissions.mockReturnValue({});
-      await expect(action(dispatch, getState, { contestSubmissionBundleAPI })).resolves.toBeDefined();
-      expect(contestSubmissionBundleAPI.getSubmissions).toHaveBeenCalledWith(token, contestJid, 'username', 'alias', 3);
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/submissions/bundle`)
+        .query({ contestJid, username, problemAlias, page })
+        .reply(200, responseBody);
+
+      const response = await store.dispatch(
+        contestSubmissionActions.getSubmissions(contestJid, username, problemAlias, page)
+      );
+      expect(response).toEqual(responseBody);
     });
   });
 
   describe('createItemSubmission()', () => {
-    const { createItemSubmission } = contestSubmissionActions;
+    const itemJid = 'item-jid';
+    const answer = 'answer';
+
     it('calls API to create submission', async () => {
-      const action = createItemSubmission('testcontestjid', 'testprobjid', 'testitemjid', 'testans');
-      contestSubmissionBundleAPI.createItemSubmission.mockResolvedValue({});
-      await action(dispatch, getState, { contestSubmissionBundleAPI, toastActions });
-      expect(contestSubmissionBundleAPI.createItemSubmission).toHaveBeenCalledWith(token, {
-        containerJid: 'testcontestjid',
-        problemJid: 'testprobjid',
-        itemJid: 'testitemjid',
-        answer: 'testans',
-      });
-      expect(toastActions.showToast).toHaveBeenCalledWith('Answer saved.');
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/contests/submissions/bundle`)
+        .reply(200)
+        .post(`/contests/submissions/bundle`, { containerJid: contestJid, problemJid, itemJid, answer })
+        .reply(200);
+
+      await store.dispatch(contestSubmissionActions.createItemSubmission(contestJid, problemJid, itemJid, answer));
     });
   });
 
   describe('getSubmissionSummary()', () => {
-    const { getSubmissionSummary } = contestSubmissionActions;
+    const username = 'username';
+    const language = 'id';
+    const responseBody = {
+      itemJidsByProblemJid: {},
+    };
+
     it('calls API to get summary', async () => {
-      const action = getSubmissionSummary('contestjid', 'username', 'language');
-      contestSubmissionBundleAPI.getSubmissionSummary.mockResolvedValue({});
-      await action(dispatch, getState, { contestSubmissionBundleAPI });
-      expect(contestSubmissionBundleAPI.getSubmissionSummary).toHaveBeenCalledWith(
-        token,
-        'contestjid',
-        'username',
-        'language'
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/submissions/bundle/summary`)
+        .query({ contestJid, username, language })
+        .reply(200, responseBody);
+
+      const response = await store.dispatch(
+        contestSubmissionActions.getSubmissionSummary(contestJid, username, language)
       );
+      expect(response).toEqual(responseBody);
     });
   });
 
   describe('getLatestSubmissions()', () => {
-    const { getLatestSubmissions } = contestSubmissionActions;
+    const problemAlias = 'alias';
+    const responseBody = {
+      id: {},
+    };
+
     it('calls API to get latest submissions', async () => {
-      const action = getLatestSubmissions('contestjid', 'alias');
-      contestSubmissionBundleAPI.getLatestSubmissions.mockResolvedValue({});
-      await action(dispatch, getState, { contestSubmissionBundleAPI });
-      expect(contestSubmissionBundleAPI.getLatestSubmissions).toHaveBeenCalledWith(token, 'contestjid', 'alias');
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/submissions/bundle/answers`)
+        .query({ contestJid, problemAlias })
+        .reply(200, responseBody);
+
+      const response = await store.dispatch(contestSubmissionActions.getLatestSubmissions(contestJid, problemAlias));
+      expect(response).toEqual(responseBody);
     });
   });
 });

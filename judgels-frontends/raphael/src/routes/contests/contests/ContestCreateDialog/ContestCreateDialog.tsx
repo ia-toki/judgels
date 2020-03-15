@@ -1,12 +1,11 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Contest, ContestCreateData } from '../../../../modules/api/uriel/contest';
-
+import { ContestCreateData } from '../../../../modules/api/uriel/contest';
 import ContestCreateForm from '../ContestCreateForm/ContestCreateForm';
 
 interface ContestCreateDialogProps {
-  onCreateContest: (data: ContestCreateData) => Promise<Contest>;
+  onCreateContest: (data: ContestCreateData) => Promise<void>;
 }
 
 interface ContestCreateDialogState {

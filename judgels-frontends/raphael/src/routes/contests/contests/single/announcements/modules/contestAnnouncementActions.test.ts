@@ -1,91 +1,79 @@
-import { contestJid, sessionState, token, announcementJid } from '../../../../../../fixtures/state';
-import {
-  ContestAnnouncementData,
-  ContestAnnouncementStatus,
-  ContestAnnouncementsResponse,
-} from '../../../../../../modules/api/uriel/contestAnnouncement';
-import { AppState } from '../../../../../../modules/store';
+import nock from 'nock';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { contestAnnouncementActions } from './contestAnnouncementActions';
+import { APP_CONFIG } from '../../../../../../conf';
+import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
+import * as contestAnnouncementActions from './contestAnnouncementActions';
+
+const contestJid = 'contest-jid';
+const announcementJid = 'announcement-jid';
+const mockStore = configureMockStore([thunk]);
 
 describe('contestAnnouncementActions', () => {
-  let dispatch: jest.Mock<any>;
-  let toastActions: jest.Mocked<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
-
-  let contestAnnouncementAPI: jest.Mocked<any>;
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    contestAnnouncementAPI = {
-      getAnnouncements: jest.fn(),
-      createAnnouncement: jest.fn(),
-      getAnnouncementConfig: jest.fn(),
-      updateAnnouncement: jest.fn(),
-    };
-    toastActions = {
-      showSuccessToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('getAnnouncements()', () => {
-    const { getAnnouncements } = contestAnnouncementActions;
-    const doGetAnnouncements = async () =>
-      getAnnouncements(contestJid, 3)(dispatch, getState, { contestAnnouncementAPI });
+    const page = 3;
+    const responseBody = {
+      data: [],
+    };
 
-    beforeEach(async () => {
-      const response = {} as ContestAnnouncementsResponse;
-      contestAnnouncementAPI.getAnnouncements.mockReturnValue(response);
+    it('calls API to get announcements', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/${contestJid}/announcements`)
+        .query({ page })
+        .reply(200, responseBody);
 
-      await doGetAnnouncements();
-    });
-
-    it('calls API to get announcements', () => {
-      expect(contestAnnouncementAPI.getAnnouncements).toHaveBeenCalledWith(token, contestJid, 3);
+      const response = await store.dispatch(contestAnnouncementActions.getAnnouncements(contestJid, page));
+      expect(response).toEqual(responseBody);
     });
   });
 
   describe('createAnnouncement()', () => {
-    const { createAnnouncement } = contestAnnouncementActions;
-    const data = {
+    const params = {
       title: 'announcement title',
       content: 'announcement content',
       status: ContestAnnouncementStatus.Published,
-    } as ContestAnnouncementData;
-    const doCreateAnnouncement = async () =>
-      createAnnouncement(contestJid, data)(dispatch, getState, { contestAnnouncementAPI, toastActions });
+    };
 
-    beforeEach(async () => {
-      await doCreateAnnouncement();
-    });
+    it('calls API to create announcements', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/contests/${contestJid}/announcements`)
+        .reply(200)
+        .post(`/contests/${contestJid}/announcements`, params)
+        .reply(200);
 
-    it('calls API to create announcements', () => {
-      expect(contestAnnouncementAPI.createAnnouncement).toHaveBeenCalledWith(token, contestJid, data);
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement created.');
+      await store.dispatch(contestAnnouncementActions.createAnnouncement(contestJid, params));
     });
   });
 
   describe('updateAnnouncement()', () => {
-    const { updateAnnouncement } = contestAnnouncementActions;
-    const data = {
+    const params = {
       title: 'announcement title',
       content: 'announcement content',
       status: ContestAnnouncementStatus.Published,
-    } as ContestAnnouncementData;
-    const doUpdateAnnouncement = async () =>
-      updateAnnouncement(contestJid, announcementJid, data)(dispatch, getState, {
-        contestAnnouncementAPI,
-        toastActions,
-      });
+    };
 
-    beforeEach(async () => {
-      await doUpdateAnnouncement();
-    });
+    it('calls API to update announcements', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/contests/${contestJid}/announcements/${announcementJid}`)
+        .reply(200)
+        .put(`/contests/${contestJid}/announcements/${announcementJid}`, params)
+        .reply(200);
 
-    it('calls API to update announcements', () => {
-      expect(contestAnnouncementAPI.updateAnnouncement).toHaveBeenCalledWith(token, contestJid, announcementJid, data);
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement updated.');
+      await store.dispatch(contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, params));
     });
   });
 });

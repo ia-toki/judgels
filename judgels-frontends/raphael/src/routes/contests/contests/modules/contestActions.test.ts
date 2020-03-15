@@ -1,141 +1,118 @@
 import { push } from 'connected-react-router';
+import nock from 'nock';
 import { SubmissionError } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { BadRequestError } from '../../../../modules/api/error';
-import { ContestErrors, ContestPage } from '../../../../modules/api/uriel/contest';
-import { AppState } from '../../../../modules/store';
-import { contest, contestId, sessionState, token, contestJid } from '../../../../fixtures/state';
-
-import { contestActions } from './contestActions';
+import { APP_CONFIG } from '../../../../conf';
+import { ContestErrors, Contest, ContestStyle } from '../../../../modules/api/uriel/contest';
+import * as contestActions from './contestActions';
 import { EditContest, PutContest } from './contestReducer';
 
-describe('contestActions', () => {
-  let dispatch: jest.Mock<any>;
-  const getState = (): Partial<AppState> => ({ session: sessionState });
+const contestJid = 'contest-jid';
+const contest: Contest = {
+  id: 1,
+  jid: contestJid,
+  slug: 'ioi',
+  style: ContestStyle.IOI,
+  name: 'IOI',
+  beginTime: 100,
+  duration: 5,
+};
+const mockStore = configureMockStore([thunk]);
 
-  let contestAPI: jest.Mocked<any>;
-  let toastActions: jest.Mocked<any>;
+describe('contestActions', () => {
+  let store;
 
   beforeEach(() => {
-    dispatch = jest.fn();
+    store = mockStore({});
+  });
 
-    contestAPI = {
-      createContest: jest.fn(),
-      updateContest: jest.fn(),
-      getActiveContests: jest.fn(),
-      getContests: jest.fn(),
-      getContestBySlug: jest.fn(),
-      startVirtualContest: jest.fn(),
-      getContestDescription: jest.fn(),
-      updateContestDescription: jest.fn(),
-      resetVirtualContest: jest.fn(),
-    };
-
-    toastActions = {
-      showSuccessToast: jest.fn(),
-    };
+  afterEach(function() {
+    nock.cleanAll();
   });
 
   describe('createContest()', () => {
-    const { createContest } = contestActions;
-    const doCreateContest = async () =>
-      createContest({ slug: 'new-contest' })(dispatch, getState, { contestAPI, toastActions });
+    const params = { slug: 'new-contest' };
 
     describe('when the slug does not already exist', () => {
-      beforeEach(async () => {
-        contestAPI.createContest.mockReturnValue(Promise.resolve({}));
-        await doCreateContest();
-      });
+      it('calls API to create contest', async () => {
+        nock(APP_CONFIG.apiUrls.uriel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/contests`)
+          .reply(200)
+          .post(`/contests`, params)
+          .reply(200);
 
-      it('calls API to create contest', () => {
-        expect(contestAPI.createContest).toHaveBeenCalledWith(token, { slug: 'new-contest' });
-      });
+        await store.dispatch(contestActions.createContest(params));
 
-      it('pushes the history to the contest page', () => {
-        expect(dispatch).toHaveBeenCalledWith(push('/contests/new-contest'));
-      });
-
-      it('immediately opens the edit dialog', () => {
-        expect(dispatch).toHaveBeenCalledWith(EditContest.create(true));
-      });
-
-      it('shows the success toast', () => {
-        expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Contest created.');
+        expect(store.getActions()).toContainEqual(push('/contests/new-contest'));
+        expect(store.getActions()).toContainEqual(EditContest.create(true));
       });
     });
 
     describe('when the slug already exists', () => {
-      beforeEach(() => {
-        contestAPI.createContest.mockImplementation(() => {
-          throw new BadRequestError({ errorName: ContestErrors.SlugAlreadyExists });
-        });
-      });
-
       it('throws SubmissionError', async () => {
-        await expect(doCreateContest()).rejects.toEqual(new SubmissionError({ slug: ContestErrors.SlugAlreadyExists }));
+        nock(APP_CONFIG.apiUrls.uriel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/contests`)
+          .reply(200)
+          .post(`/contests`, params)
+          .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
+
+        await expect(store.dispatch(contestActions.createContest(params))).rejects.toEqual(
+          new SubmissionError({ slug: ContestErrors.SlugAlreadyExists })
+        );
       });
     });
   });
 
   describe('updateContest()', () => {
-    const { updateContest } = contestActions;
+    const slug = 'old-slug';
 
     describe('when the slug is not updated', () => {
-      const doUpdateContest = async () =>
-        updateContest(contestJid, 'old-slug', { name: 'New Name' })(dispatch, getState, { contestAPI, toastActions });
+      const params = { name: 'New Name' };
 
-      beforeEach(async () => {
-        contestAPI.createContest.mockReturnValue(Promise.resolve({}));
-        await doUpdateContest();
-      });
+      it('calls API to update contest', async () => {
+        nock(APP_CONFIG.apiUrls.uriel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/contests/${contestJid}`)
+          .reply(200)
+          .post(`/contests/${contestJid}`, params)
+          .reply(200);
 
-      it('calls API to update contest', () => {
-        expect(contestAPI.updateContest).toHaveBeenCalledWith(token, contestJid, { name: 'New Name' });
-      });
-
-      it('shows the success toast', () => {
-        expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Contest updated.');
+        await store.dispatch(contestActions.updateContest(contestJid, slug, params));
       });
     });
 
     describe('when the slug is updated', () => {
-      const doUpdateContest = async () =>
-        updateContest(contestJid, 'old-slug', { slug: 'new-slug', name: 'New Name' })(dispatch, getState, {
-          contestAPI,
-          toastActions,
-        });
+      const params = { slug: 'new-slug', name: 'New Name' };
 
       describe('when the slug does not already exist', () => {
-        beforeEach(async () => {
-          contestAPI.createContest.mockReturnValue(Promise.resolve({}));
-          await doUpdateContest();
-        });
+        it('calls API to update contest', async () => {
+          nock(APP_CONFIG.apiUrls.uriel)
+            .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+            .options(`/contests/${contestJid}`)
+            .reply(200)
+            .post(`/contests/${contestJid}`, params)
+            .reply(200);
 
-        it('calls API to update contest', () => {
-          expect(contestAPI.updateContest).toHaveBeenCalledWith(token, contestJid, {
-            slug: 'new-slug',
-            name: 'New Name',
-          });
-        });
+          await store.dispatch(contestActions.updateContest(contestJid, slug, params));
 
-        it('pushes the history to the new contest page', () => {
-          expect(dispatch).toHaveBeenCalledWith(push('/contests/new-slug'));
-        });
-
-        it('shows the success toast', () => {
-          expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Contest updated.');
+          expect(store.getActions()).toContainEqual(push('/contests/new-slug'));
         });
       });
 
       describe('when the slug already exists', () => {
-        beforeEach(() => {
-          contestAPI.updateContest.mockImplementation(() => {
-            throw new BadRequestError({ errorName: ContestErrors.SlugAlreadyExists });
-          });
-        });
-
         it('throws SubmissionError', async () => {
-          await expect(doUpdateContest()).rejects.toEqual(
+          nock(APP_CONFIG.apiUrls.uriel)
+            .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+            .options(`/contests/${contestJid}`)
+            .reply(200)
+            .post(`/contests/${contestJid}`, params)
+            .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
+
+          await expect(store.dispatch(contestActions.updateContest(contestJid, slug, params))).rejects.toEqual(
             new SubmissionError({ slug: ContestErrors.SlugAlreadyExists })
           );
         });
@@ -144,129 +121,107 @@ describe('contestActions', () => {
   });
 
   describe('getContests()', () => {
-    const { getContests } = contestActions;
-    const doGetContests = async () => getContests('contest-name', 2)(dispatch, getState, { contestAPI });
+    const name = 'contest-name';
+    const page = 2;
+    const responseBody = {
+      totalCount: 3,
+      page: [],
+    };
 
-    beforeEach(async () => {
-      const contestPage: ContestPage = {
-        totalCount: 3,
-        page: [],
-      };
-      contestAPI.getContests.mockReturnValue(Promise.resolve({ data: contestPage }));
+    it('calls API to get contests', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests`)
+        .query({ name, page })
+        .reply(200, responseBody);
 
-      await doGetContests();
-    });
-
-    it('calls API to get contests', () => {
-      expect(contestAPI.getContests).toHaveBeenCalledWith(token, 'contest-name', 2);
+      const response = await store.dispatch(contestActions.getContests(name, page));
+      expect(response).toEqual(responseBody);
     });
   });
 
   describe('getActiveContests()', () => {
-    const { getActiveContests } = contestActions;
-    const doGetActiveContests = async () => getActiveContests()(dispatch, getState, { contestAPI });
+    const responseBody = {
+      data: [],
+    };
 
-    beforeEach(async () => {
-      contestAPI.getContests.mockReturnValue(Promise.resolve({ data: [] }));
+    it('calls API to get active contests', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/active`)
+        .reply(200, responseBody);
 
-      await doGetActiveContests();
-    });
-
-    it('calls API to get active contests', () => {
-      expect(contestAPI.getActiveContests).toHaveBeenCalledWith(token);
+      const response = await store.dispatch(contestActions.getActiveContests());
+      expect(response).toEqual(responseBody);
     });
   });
 
   describe('getContestBySlug()', () => {
-    const { getContestBySlug } = contestActions;
-    const doGetContestBySlug = async () => getContestBySlug('ioi')(dispatch, getState, { contestAPI });
+    it('calls API to get contest', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/slug/ioi`)
+        .reply(200, contest);
 
-    beforeEach(async () => {
-      contestAPI.getContestBySlug.mockReturnValue(Promise.resolve(contest));
+      const response = await store.dispatch(contestActions.getContestBySlug('ioi'));
+      expect(response).toEqual(contest);
 
-      await doGetContestBySlug();
-    });
-
-    it('calls API to get contest', () => {
-      expect(contestAPI.getContestBySlug).toHaveBeenCalledWith(token, 'ioi');
-    });
-
-    it('puts the contest', () => {
-      expect(dispatch).toHaveBeenCalledWith(PutContest.create(contest));
+      expect(store.getActions()).toContainEqual(PutContest.create(contest));
     });
   });
 
   describe('startVirtualContest()', () => {
-    const { startVirtualContest } = contestActions;
-    const doStartVirtualContest = async () => startVirtualContest(contestId)(dispatch, getState, { contestAPI });
+    it('calls API to start virtual contest', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/contests/${contestJid}/virtual`)
+        .reply(200)
+        .post(`/contests/${contestJid}/virtual`)
+        .reply(200);
 
-    beforeEach(async () => {
-      await doStartVirtualContest();
-    });
-
-    it('calls API to start virtual contest', () => {
-      expect(contestAPI.startVirtualContest).toHaveBeenCalledWith(token, contestId);
+      await store.dispatch(contestActions.startVirtualContest(contestJid));
     });
   });
 
   describe('resetVirtualContest()', () => {
-    const { resetVirtualContest } = contestActions;
-    const doResetVirtualContest = async () =>
-      resetVirtualContest(contestId)(dispatch, getState, { contestAPI, toastActions });
+    it('calls API to reset virtual contest', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/contests/${contestJid}/virtual/reset`)
+        .reply(200)
+        .put(`/contests/${contestJid}/virtual/reset`)
+        .reply(200);
 
-    beforeEach(async () => {
-      contestAPI.resetVirtualContest.mockReturnValue(Promise.resolve({}));
-
-      await doResetVirtualContest();
-    });
-
-    it('calls API to reset virtual contest', () => {
-      expect(contestAPI.resetVirtualContest).toHaveBeenCalledWith(token, contestId);
-    });
-
-    it('shows the success toast', () => {
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('All contestant virtual start time has been reset.');
+      await store.dispatch(contestActions.resetVirtualContest(contestJid));
     });
   });
 
   describe('getContestDescription()', () => {
-    const { getContestDescription } = contestActions;
-    const doGetContestDescription = async () => getContestDescription(contestJid)(dispatch, getState, { contestAPI });
-
     const description = 'This is a contest';
 
-    let contestDescription: string;
+    it('calls API to get contest description', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/contests/${contestJid}/description`)
+        .reply(200, { description });
 
-    beforeEach(async () => {
-      contestAPI.getContestDescription.mockReturnValue(Promise.resolve({ description }));
-
-      contestDescription = await doGetContestDescription();
-    });
-
-    it('calls API to get contest description', () => {
-      expect(contestAPI.getContestDescription).toHaveBeenCalledWith(token, contestJid);
-      expect(contestDescription).toEqual(description);
+      const response = await store.dispatch(contestActions.getContestDescription(contestJid));
+      expect(response).toEqual(description);
     });
   });
 
   describe('updateContestDescription()', () => {
-    const { updateContestDescription } = contestActions;
     const description = 'This is a contest';
-    const doUpdateContestDescription = async () =>
-      updateContestDescription(contestJid, description)(dispatch, getState, { contestAPI, toastActions });
 
-    beforeEach(async () => {
-      contestAPI.updateContestDescription.mockReturnValue(Promise.resolve({}));
+    it('calls API to update contest description', async () => {
+      nock(APP_CONFIG.apiUrls.uriel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/contests/${contestJid}/description`)
+        .reply(200)
+        .post(`/contests/${contestJid}/description`, { description })
+        .reply(200, { description });
 
-      await doUpdateContestDescription();
-    });
-
-    it('calls API to update contest description', () => {
-      expect(contestAPI.updateContestDescription).toHaveBeenCalledWith(token, contestJid, { description });
-    });
-
-    it('shows the success toast', () => {
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Description updated.');
+      await store.dispatch(contestActions.updateContestDescription(contestJid, description));
     });
   });
 });

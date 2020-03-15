@@ -7,17 +7,16 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
-import { Contest, ContestCreateData, ContestsResponse } from '../../../../modules/api/uriel/contest';
-
+import { ContestCreateData, ContestsResponse } from '../../../../modules/api/uriel/contest';
 import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
-import { contestActions as injectedContestActions } from '../modules/contestActions';
+import * as contestActions from '../modules/contestActions';
 
 import './ContestsPage.css';
 
 export interface ContestsPageProps extends RouteComponentProps<{ name: string }> {
   onGetContests: (name?: string, page?: number) => Promise<ContestsResponse>;
-  onCreateContest: (data: ContestCreateData) => Promise<Contest>;
+  onCreateContest: (data: ContestCreateData) => Promise<void>;
 }
 
 interface ContestsFilter {
@@ -168,12 +167,8 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   };
 }
 
-export function createContestsPage(contestActions) {
-  const mapDispatchToProps = {
-    onGetContests: contestActions.getContests,
-    onCreateContest: contestActions.createContest,
-  };
-  return connect(undefined, mapDispatchToProps)(ContestsPage);
-}
-
-export default createContestsPage(injectedContestActions);
+const mapDispatchToProps = {
+  onGetContests: contestActions.getContests,
+  onCreateContest: contestActions.createContest,
+};
+export default connect(undefined, mapDispatchToProps)(ContestsPage);

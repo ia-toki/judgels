@@ -18,7 +18,7 @@ import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
+import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
@@ -254,19 +254,15 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
   };
 }
 
-export function createContestSubmissionsPage(contestSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissions: contestSubmissionActions.getSubmissions,
-    onRegrade: contestSubmissionActions.regradeSubmission,
-    onRegradeAll: contestSubmissionActions.regradeSubmissions,
-    onAppendRoute: queries => push({ search: stringify(queries) }),
-  };
+const mapDispatchToProps = {
+  onGetSubmissions: contestSubmissionActions.getSubmissions,
+  onRegrade: contestSubmissionActions.regradeSubmission,
+  onRegradeAll: contestSubmissionActions.regradeSubmissions,
+  onAppendRoute: queries => push({ search: stringify(queries) }),
+};
 
-  return withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
-}
-
-export default createContestSubmissionsPage(injectedContestSubmissionActions);
+export default withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));

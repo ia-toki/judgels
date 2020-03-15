@@ -10,7 +10,7 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
 
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestActions as injectedContestActions } from '../../../modules/contestActions';
+import * as contestActions from '../../../modules/contestActions';
 
 import './ContestOverviewPage.css';
 
@@ -65,15 +65,11 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps, 
   };
 }
 
-function createContestOverviewPage(contestActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-  });
-  const mapDispatchToProps = {
-    onGetContestDescription: contestActions.getContestDescription,
-  };
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+});
+const mapDispatchToProps = {
+  onGetContestDescription: contestActions.getContestDescription,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));
-}
-
-export default createContestOverviewPage(injectedContestActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));

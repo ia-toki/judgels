@@ -6,7 +6,7 @@ import { AppState } from '../../../../../../modules/store';
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
-import { contestClarificationActions as injectedContestClarificationsActions } from '../../clarifications/modules/contestClarificationActions';
+import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
 
 interface ContestClarificationsWidgetProps {
   clarificationCount: number;
@@ -34,16 +34,12 @@ class ContestClarificationsWidget extends React.Component<ContestClarificationsW
   }
 }
 
-function createContestClarificationsWidget(contestClarificationActions) {
-  const mapStateToProps = (state: AppState) => ({
-    clarificationCount: selectContestWebConfig(state)!.clarificationCount,
-    clarificationStatus: selectContestWebConfig(state)!.clarificationStatus,
-  });
-  const mapDispatchToProps = {
-    onAlertNewClarifications: contestClarificationActions.alertNewClarifications,
-  };
+const mapStateToProps = (state: AppState) => ({
+  clarificationCount: selectContestWebConfig(state).clarificationCount,
+  clarificationStatus: selectContestWebConfig(state).clarificationStatus,
+});
+const mapDispatchToProps = {
+  onAlertNewClarifications: contestClarificationActions.alertNewClarifications,
+};
 
-  return connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsWidget);
-}
-
-export default createContestClarificationsWidget(injectedContestClarificationsActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsWidget);

@@ -12,7 +12,7 @@ import ContestEditDescriptionForm, {
   ContestEditDescriptionFormData,
 } from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestActions as injectedContestActions } from '../../../modules/contestActions';
+import * as contestActions from '../../../modules/contestActions';
 
 interface ContestEditDescriptionTabProps {
   contest: Contest;
@@ -114,15 +114,11 @@ class ContestEditDescriptionTab extends React.Component<
   };
 }
 
-export function createContestEditDescriptionTab(contestActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state),
-  });
-  const mapDispatchToProps = {
-    onGetContestDescription: contestActions.getContestDescription,
-    onUpdateContestDescription: contestActions.updateContestDescription,
-  };
-  return connect(mapStateToProps, mapDispatchToProps)(ContestEditDescriptionTab);
-}
-
-export default createContestEditDescriptionTab(injectedContestActions);
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state),
+});
+const mapDispatchToProps = {
+  onGetContestDescription: contestActions.getContestDescription,
+  onUpdateContestDescription: contestActions.updateContestDescription,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ContestEditDescriptionTab);

@@ -132,19 +132,15 @@ class PaginationContainer extends React.PureComponent<
   };
 }
 
-function createPagination() {
-  const mapDispatchToProps = {
-    onAppendRoute: (nextPage: number, queries: any) => {
-      let query = '';
-      if (nextPage > 1) {
-        query = stringify({ ...queries, page: nextPage });
-      } else {
-        query = stringify({ ...queries, page: undefined });
-      }
-      return push({ search: query });
-    },
-  };
-  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(PaginationContainer));
-}
-
-export default createPagination();
+const mapDispatchToProps = {
+  onAppendRoute: (nextPage: number, queries: any) => {
+    let query = '';
+    if (nextPage > 1) {
+      query = stringify({ ...queries, page: nextPage });
+    } else {
+      query = stringify({ ...queries, page: undefined });
+    }
+    return push({ search: query });
+  },
+};
+export default withRouter<any, any>(connect(undefined, mapDispatchToProps)(PaginationContainer));

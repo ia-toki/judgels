@@ -10,22 +10,19 @@ import thunk from 'redux-thunk';
 import { ContestModulesConfig } from '../../../../../../modules/api/uriel/contestModule';
 import { contest, contestJid } from '../../../../../../fixtures/state';
 import { parseDuration } from '../../../../../../utils/duration';
-
-import { createContestEditConfigsTab } from './ContestEditConfigsTab';
+import ContestEditConfigsTab from './ContestEditConfigsTab';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestModuleActions from '../../modules/contestModuleActions';
+
+jest.mock('../../modules/contestModuleActions');
 
 describe('ContestEditConfigsTab', () => {
-  let contestModuleActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
   let config: ContestModulesConfig;
 
   const render = () => {
-    contestModuleActions = {
-      getConfig: jest.fn().mockReturnValue(() => Promise.resolve(config)),
-      upsertConfig: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
-
-    const ContestEditConfigsTab = createContestEditConfigsTab(contestModuleActions);
+    (contestModuleActions.getConfig as jest.Mock).mockReturnValue(() => Promise.resolve(config));
+    (contestModuleActions.upsertConfig as jest.Mock).mockReturnValue(() => Promise.resolve({}));
 
     const store: any = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),

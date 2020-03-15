@@ -6,11 +6,10 @@ import { FormattedDuration } from '../../../../../../components/FormattedDuratio
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
 import { AppState } from '../../../../../../modules/store';
-
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
-import { contestWebActions as injectedContestWebConfigActions } from '../../modules/contestWebActions';
-import { contestActions as injectedContestActions } from '../../../modules/contestActions';
+import * as contestWebActions from '../../modules/contestWebActions';
+import * as contestActions from '../../../modules/contestActions';
 
 import './ContestStateWidget.css';
 
@@ -168,20 +167,15 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   };
 }
 
-export function createContestStateWidget(contestWebActions, contestActions) {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      contest: selectContest(state)!,
-      state: selectContestWebConfig(state)!.state,
-      remainingStateDuration: selectContestWebConfig(state)!.remainingStateDuration,
-    } as Partial<ContestStateWidgetProps>);
+const mapStateToProps = (state: AppState) => ({
+  contest: selectContest(state)!,
+  state: selectContestWebConfig(state)!.state,
+  remainingStateDuration: selectContestWebConfig(state)!.remainingStateDuration,
+});
 
-  const mapDispatchToProps = {
-    onGetContestWebConfig: contestWebActions.getWebConfig,
-    onStartVirtualContest: contestActions.startVirtualContest,
-  };
+const mapDispatchToProps = {
+  onGetContestWebConfig: contestWebActions.getWebConfig,
+  onStartVirtualContest: contestActions.startVirtualContest,
+};
 
-  return connect(mapStateToProps, mapDispatchToProps)(ContestStateWidget);
-}
-
-export default createContestStateWidget(injectedContestWebConfigActions, injectedContestActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ContestStateWidget);

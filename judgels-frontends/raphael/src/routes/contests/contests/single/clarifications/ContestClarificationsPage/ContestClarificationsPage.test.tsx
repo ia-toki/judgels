@@ -15,13 +15,15 @@ import {
 import { PutUser, sessionReducer } from '../../../../../../modules/session/sessionReducer';
 import { PutStatementLanguage, webPrefsReducer } from '../../../../../../modules/webPrefs/webPrefsReducer';
 
-import { createContestClarificationsPage } from './ContestClarificationsPage';
+import ContestClarificationsPage from './ContestClarificationsPage';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import * as contestClarificationActions from '../modules/contestClarificationActions';
+
+jest.mock('../modules/contestClarificationActions');
 
 describe('ContestClarificationsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestClarificationActions: jest.Mocked<any>;
 
   const response: ContestClarificationsResponse = {
     data: { page: [], totalCount: 0 },
@@ -50,8 +52,6 @@ describe('ContestClarificationsPage', () => {
     store.dispatch(PutContest.create(contest));
     store.dispatch(PutStatementLanguage.create('en'));
 
-    const ContestClarificationsPage = createContestClarificationsPage(contestClarificationActions);
-
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
@@ -64,11 +64,9 @@ describe('ContestClarificationsPage', () => {
   };
 
   beforeEach(() => {
-    contestClarificationActions = {
-      getClarifications: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-      createClarification: jest.fn().mockReturnValue(() => Promise.resolve({})),
-      answerClarification: jest.fn().mockReturnValue(() => Promise.resolve({})),
-    };
+    (contestClarificationActions.getClarifications as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    (contestClarificationActions.createClarification as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    (contestClarificationActions.answerClarification as jest.Mock).mockReturnValue(() => Promise.resolve({}));
   });
 
   describe('when there are no clarifications', () => {
@@ -99,7 +97,7 @@ describe('ContestClarificationsPage', () => {
           time: 12345,
         } as ContestClarification,
       ];
-      contestClarificationActions.getClarifications.mockReturnValue(() =>
+      (contestClarificationActions.getClarifications as jest.Mock).mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: clarifications, totalCount: 2 } })
       );
 
