@@ -17,7 +17,6 @@ import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 
 import { getAppRoutes, getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
-import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
 import { selectRole } from './jophiel/modules/userWebSelectors';
 import * as userWebActions from './jophiel/modules/userWebActions';
 
@@ -55,7 +54,6 @@ class App extends React.PureComponent<AppProps> {
                 <Route {...homeRoute.route} />
               </Switch>
               <Route component={LegacyJophielRoutes} />
-              <Route path="/competition/contests/:contestSlug" component={LegacyCompetitionRoute} />
               <Footer />
             </AppContent>
           </div>
