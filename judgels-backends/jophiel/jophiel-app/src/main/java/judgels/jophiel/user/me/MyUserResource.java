@@ -4,22 +4,22 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
-import judgels.jophiel.api.role.Role;
+import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.me.MyUserService;
 import judgels.jophiel.api.user.me.PasswordUpdateData;
-import judgels.jophiel.role.RoleStore;
+import judgels.jophiel.role.UserRoleStore;
 import judgels.jophiel.user.UserStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class MyUserResource implements MyUserService {
     private final ActorChecker actorChecker;
-    private final RoleStore roleStore;
+    private final UserRoleStore roleStore;
     private final UserStore userStore;
 
     @Inject
-    public MyUserResource(ActorChecker actorChecker, RoleStore roleStore, UserStore userStore) {
+    public MyUserResource(ActorChecker actorChecker, UserRoleStore roleStore, UserStore userStore) {
         this.actorChecker = actorChecker;
         this.roleStore = roleStore;
         this.userStore = userStore;
@@ -43,8 +43,8 @@ public class MyUserResource implements MyUserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Role getMyRole(AuthHeader authHeader) {
+    public UserRole getMyRole(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        return roleStore.getUserRole(actorJid);
+        return roleStore.getRole(actorJid);
     }
 }

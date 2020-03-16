@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
-import judgels.jophiel.api.role.Role;
+import judgels.jophiel.api.role.JophielRole;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.UserData;
@@ -55,9 +55,9 @@ class MyUserServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @Test
     void get_role() {
-        assertThat(myUserService.getMyRole(adminHeader)).isEqualTo(Role.SUPERADMIN);
+        assertThat(myUserService.getMyRole(adminHeader).getJophiel()).isEqualTo(JophielRole.SUPERADMIN);
 
         AuthHeader charlieHeader = AuthHeader.of(sessionService.logIn(Credentials.of("charlie", "newPass")).getToken());
-        assertThat(myUserService.getMyRole(charlieHeader)).isEqualTo(Role.USER);
+        assertThat(myUserService.getMyRole(charlieHeader).getJophiel()).isEqualTo(JophielRole.USER);
     }
 }

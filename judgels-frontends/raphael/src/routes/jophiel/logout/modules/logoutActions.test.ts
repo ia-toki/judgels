@@ -35,7 +35,7 @@ describe('logoutActions', () => {
         await store.dispatch(logoutActions.logOut(path));
 
         expect(store.getActions()).toContainEqual(DelSession.create());
-        expect(store.getActions()).toContainEqual(PutWebConfig.create({ role: JophielRole.Guest }));
+        expect(store.getActions()).toContainEqual(PutWebConfig.create({ role: { jophiel: JophielRole.Guest } }));
       });
     });
 

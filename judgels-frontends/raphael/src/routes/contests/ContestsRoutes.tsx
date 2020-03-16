@@ -8,14 +8,14 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { AppState } from '../../modules/store';
-import { JophielRole } from '../../modules/api/jophiel/role';
+import { UserRole, JophielRole } from '../../modules/api/jophiel/role';
 
 import ContestsPage from './contests/ContestsPage/ContestsPage';
 import LazyAdminsRoutes from './admins/LazyAdminsRoutes';
 import { selectRole } from '../jophiel/modules/userWebSelectors';
 
 interface ContestRoutesProps {
-  role: JophielRole;
+  role: UserRole;
 }
 
 const ContestsRoutes = (props: ContestRoutesProps) => {
@@ -33,7 +33,7 @@ const ContestsRoutes = (props: ContestRoutesProps) => {
       title: 'Admins',
       routeComponent: Route,
       component: LazyAdminsRoutes,
-      disabled: props.role !== JophielRole.Superadmin,
+      disabled: props.role.jophiel !== JophielRole.Superadmin,
     },
   ];
 

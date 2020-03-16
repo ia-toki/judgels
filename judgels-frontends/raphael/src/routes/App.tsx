@@ -10,7 +10,7 @@ import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
-import { JophielRole } from '../modules/api/jophiel/role';
+import { UserRole } from '../modules/api/jophiel/role';
 import { AppState } from '../modules/store';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
@@ -23,7 +23,7 @@ import * as userWebActions from './jophiel/modules/userWebActions';
 interface AppProps {
   title: string;
   userJid?: string;
-  role: JophielRole;
+  role: UserRole;
   onGetUserWebConfig: () => void;
 }
 

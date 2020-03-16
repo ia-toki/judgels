@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.role.Role;
+import judgels.jophiel.api.role.JophielRole;
+import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.user.me.MyUserService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
@@ -48,8 +49,8 @@ public class AdminResource implements AdminService {
     @Override
     @UnitOfWork(readOnly = true)
     public AdminsResponse getAdmins(AuthHeader authHeader, Optional<Integer> page) {
-        Role role = myUserService.getMyRole(authHeader);
-        checkAllowed(role == Role.SUPERADMIN);
+        UserRole role = myUserService.getMyRole(authHeader);
+        checkAllowed(role.getJophiel() == JophielRole.SUPERADMIN);
 
         Page<Admin> admins = roleStore.getAdmins(page);
         Set<String> userJids = admins.getPage().stream().map(Admin::getUserJid).collect(Collectors.toSet());
@@ -66,8 +67,8 @@ public class AdminResource implements AdminService {
     @Override
     @UnitOfWork
     public AdminsUpsertResponse upsertAdmins(AuthHeader authHeader, Set<String> usernames) {
-        Role role = myUserService.getMyRole(authHeader);
-        checkAllowed(role == Role.SUPERADMIN);
+        UserRole role = myUserService.getMyRole(authHeader);
+        checkAllowed(role.getJophiel() == JophielRole.SUPERADMIN);
 
         checkArgument(usernames.size() <= 100, "Cannot add more than 100 users.");
 
@@ -101,8 +102,8 @@ public class AdminResource implements AdminService {
     @Override
     @UnitOfWork
     public AdminsDeleteResponse deleteAdmins(AuthHeader authHeader, Set<String> usernames) {
-        Role role = myUserService.getMyRole(authHeader);
-        checkAllowed(role == Role.SUPERADMIN);
+        UserRole role = myUserService.getMyRole(authHeader);
+        checkAllowed(role.getJophiel() == JophielRole.SUPERADMIN);
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 

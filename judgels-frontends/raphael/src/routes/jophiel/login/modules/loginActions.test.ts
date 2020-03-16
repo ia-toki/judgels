@@ -17,7 +17,7 @@ const authCode = 'authCode';
 const userJid = 'userJid';
 const token = 'token123';
 const user: User = { jid: userJid, username: usernameOrEmail, email: 'email' };
-const config: UserWebConfig = { role: JophielRole.User };
+const config: UserWebConfig = { role: { jophiel: JophielRole.User } };
 const mockStore = configureMockStore([thunk]);
 
 describe('loginActions', () => {

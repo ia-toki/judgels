@@ -16,7 +16,7 @@ export function logOut(currentPath: string) {
       }
     }
     dispatch(DelSession.create());
-    dispatch(PutWebConfig.create({ role: JophielRole.Guest }));
+    dispatch(PutWebConfig.create({ role: { jophiel: JophielRole.Guest } }));
 
     legacySessionAPI.postLogout(encodeURIComponent(currentPath));
   };

@@ -11,7 +11,7 @@ export function getWebConfig() {
     if (token) {
       config = await userWebAPI.getWebConfig(token);
     } else {
-      config = { role: JophielRole.Guest };
+      config = { role: { jophiel: JophielRole.Guest } };
     }
     dispatch(PutWebConfig.create(config));
   };

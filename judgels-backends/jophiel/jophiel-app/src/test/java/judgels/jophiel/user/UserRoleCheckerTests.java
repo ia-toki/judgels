@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import judgels.jophiel.role.AdminRoleStore;
-import judgels.jophiel.role.SuperadminRoleStore;
+import judgels.jophiel.api.role.JophielRole;
+import judgels.jophiel.api.role.UserRole;
+import judgels.jophiel.role.UserRoleStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,17 +17,20 @@ class UserRoleCheckerTests {
     private static final String USER = "userJid";
     private static final String ANOTHER_USER = "anotherUserJid";
 
-    @Mock private SuperadminRoleStore superadminRoleStore;
-    @Mock private AdminRoleStore adminRoleStore;
+    @Mock private UserRoleStore userRoleStore;
     private UserRoleChecker checker;
 
     @BeforeEach
     void before() {
         initMocks(this);
-        checker = new UserRoleChecker(superadminRoleStore, adminRoleStore);
+        checker = new UserRoleChecker(userRoleStore);
 
-        when(superadminRoleStore.isSuperadmin(SUPERADMIN)).thenReturn(true);
-        when(adminRoleStore.isAdmin(ADMIN)).thenReturn(true);
+        when(userRoleStore.getRole(SUPERADMIN))
+                .thenReturn(new UserRole.Builder().jophiel(JophielRole.SUPERADMIN).build());
+        when(userRoleStore.getRole(ADMIN))
+                .thenReturn(new UserRole.Builder().jophiel(JophielRole.ADMIN).build());
+        when(userRoleStore.getRole(USER))
+                .thenReturn(new UserRole.Builder().jophiel(JophielRole.USER).build());
     }
 
     @Test

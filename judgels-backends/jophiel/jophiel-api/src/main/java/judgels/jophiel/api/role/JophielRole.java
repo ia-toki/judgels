@@ -1,6 +1,6 @@
 package judgels.jophiel.api.role;
 
-public enum Role {
+public enum JophielRole {
     SUPERADMIN,
     ADMIN,
     USER

@@ -1,5 +1,5 @@
 import { APP_CONFIG, Mode } from '../conf';
-import { JophielRole } from '../modules/api/jophiel/role';
+import { UserRole, JophielRole } from '../modules/api/jophiel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
 import LazySystemRoutes from './system/LazySystemRoutes';
@@ -9,9 +9,9 @@ import LazyProblemsRoutes from './problems/LazyProblemsRoutes';
 import LazySubmissionsRoutes from './submissions/LazySubmissionsRoutes';
 import LazyRankingRoutes from './ranking/LazyRankingRoutes';
 
-function shouldShowRoute(id: string, role: JophielRole) {
+function shouldShowRoute(id: string, role: UserRole) {
   if (id === 'system') {
-    return role === JophielRole.Superadmin || role === JophielRole.Admin;
+    return role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin;
   }
   if (id === 'courses' || id === 'problems' || id === 'submissions') {
     return APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS;
@@ -91,7 +91,7 @@ export function getAppRoutes() {
   return appRoutes;
 }
 
-export function getVisibleAppRoutes(role: JophielRole) {
+export function getVisibleAppRoutes(role: UserRole) {
   return appRoutes.filter(route => shouldShowRoute(route.id, role));
 }
 

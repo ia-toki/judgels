@@ -1,27 +1,28 @@
 package judgels.jophiel.user;
 
 import javax.inject.Inject;
-import judgels.jophiel.role.AdminRoleStore;
-import judgels.jophiel.role.SuperadminRoleStore;
+import judgels.jophiel.api.role.JophielRole;
+import judgels.jophiel.api.role.UserRole;
+import judgels.jophiel.role.UserRoleStore;
 
 public class UserRoleChecker {
-    private final SuperadminRoleStore superadminRoleStore;
-    private final AdminRoleStore adminRoleStore;
+    private final UserRoleStore userRoleStore;
 
     @Inject
-    public UserRoleChecker(SuperadminRoleStore superadminRoleStore, AdminRoleStore adminRoleStore) {
-        this.superadminRoleStore = superadminRoleStore;
-        this.adminRoleStore = adminRoleStore;
+    public UserRoleChecker(UserRoleStore userRoleStore) {
+        this.userRoleStore = userRoleStore;
     }
 
     public boolean canAdminister(String actorJid) {
-        return superadminRoleStore.isSuperadmin(actorJid)
-                || adminRoleStore.isAdmin(actorJid);
+        UserRole role = userRoleStore.getRole(actorJid);
+        return role.getJophiel() == JophielRole.SUPERADMIN
+                || role.getJophiel() == JophielRole.ADMIN;
     }
 
     public boolean canManage(String actorJid, String userJid) {
-        return superadminRoleStore.isSuperadmin(actorJid)
-                || adminRoleStore.isAdmin(actorJid)
+        UserRole role = userRoleStore.getRole(actorJid);
+        return role.getJophiel() == JophielRole.SUPERADMIN
+                || role.getJophiel() == JophielRole.ADMIN
                 || actorJid.equals(userJid);
     }
 }

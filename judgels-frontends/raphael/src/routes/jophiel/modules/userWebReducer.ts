@@ -10,7 +10,9 @@ export interface UserWebState {
 
 export const INITIAL_STATE: UserWebState = {
   config: {
-    role: JophielRole.Guest,
+    role: {
+      jophiel: JophielRole.Guest,
+    },
   },
 };
 

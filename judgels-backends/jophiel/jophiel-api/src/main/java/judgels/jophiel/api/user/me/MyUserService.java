@@ -9,7 +9,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import judgels.jophiel.api.role.Role;
+import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.user.User;
 import judgels.service.api.actor.AuthHeader;
 
@@ -28,5 +28,5 @@ public interface MyUserService {
     @GET
     @Path("/role")
     @Produces(APPLICATION_JSON)
-    Role getMyRole(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
+    UserRole getMyRole(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
 }

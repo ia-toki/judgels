@@ -4,7 +4,6 @@ import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.legacy.session.LegacySessionModel;
-import judgels.jophiel.persistence.AdminRoleModel;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.UserInfoModel;
 import judgels.jophiel.persistence.UserModel;
@@ -12,11 +11,11 @@ import judgels.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.persistence.UserRatingModel;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.jophiel.persistence.UserResetPasswordModel;
+import judgels.jophiel.persistence.UserRoleModel;
 
 public class JophielHibernateBundle extends HibernateBundle<JophielApplicationConfiguration> {
     public JophielHibernateBundle() {
         super(
-                AdminRoleModel.class,
                 LegacySessionModel.class,
                 SessionModel.class,
                 UserModel.class,
@@ -24,7 +23,8 @@ public class JophielHibernateBundle extends HibernateBundle<JophielApplicationCo
                 UserRatingModel.class,
                 UserRatingEventModel.class,
                 UserRegistrationEmailModel.class,
-                UserResetPasswordModel.class);
+                UserResetPasswordModel.class,
+                UserRoleModel.class);
     }
 
     @Override

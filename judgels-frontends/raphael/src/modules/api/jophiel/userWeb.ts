@@ -1,10 +1,10 @@
 import { Profile } from './profile';
-import { JophielRole } from './role';
+import { UserRole } from './role';
 import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
 
 export interface UserWebConfig {
-  role: JophielRole;
+  role: UserRole;
   profile?: Profile;
 }
 
