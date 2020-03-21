@@ -2,7 +2,6 @@ package judgels.uriel.hibernate;
 
 import dagger.Module;
 import dagger.Provides;
-import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestClarificationDao;
@@ -24,11 +23,6 @@ import judgels.uriel.persistence.ContestSupervisorDao;
 @Module
 public class UrielHibernateDaoModule {
     private UrielHibernateDaoModule() {}
-
-    @Provides
-    static AdminRoleDao adminRoleDao(AdminRoleHibernateDao dao) {
-        return dao;
-    }
 
     @Provides
     static ContestDao contestDao(ContestHibernateDao dao) {

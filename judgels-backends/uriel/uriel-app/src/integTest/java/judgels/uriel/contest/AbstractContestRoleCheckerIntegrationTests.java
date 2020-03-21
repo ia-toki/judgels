@@ -1,25 +1,25 @@
-package judgels.uriel.contest.role;
+package judgels.uriel.contest;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 import static judgels.persistence.TestClock.NOW;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
+import judgels.jophiel.api.role.UserRole;
 import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielCacheUtils;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.uriel.contest.ContestStore;
+import judgels.uriel.api.role.UrielRole;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
-import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestManagerModel;
 import judgels.uriel.persistence.ContestModel;
@@ -27,11 +27,11 @@ import judgels.uriel.persistence.ContestModuleModel;
 import judgels.uriel.persistence.ContestProblemModel;
 import judgels.uriel.persistence.ContestScoreboardModel;
 import judgels.uriel.persistence.ContestSupervisorModel;
-import judgels.uriel.role.AdminRoleStore;
+import judgels.uriel.role.AbstractRoleCheckerIntegrationTests;
+import judgels.uriel.role.RoleChecker;
 import org.hibernate.SessionFactory;
 
 @WithHibernateSession(models = {
-        AdminRoleModel.class,
         ContestModel.class,
         ContestModuleModel.class,
         ContestContestantModel.class,
@@ -39,7 +39,7 @@ import org.hibernate.SessionFactory;
         ContestScoreboardModel.class,
         ContestSupervisorModel.class,
         ContestManagerModel.class})
-public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegrationTests {
+public abstract class AbstractContestRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
     protected static final String USER = "userJid";
     protected static final String ADMIN = "adminJid";
     protected static final String CONTESTANT = "contestantJid";
@@ -57,31 +57,42 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
 
     protected UrielIntegrationTestComponent component;
 
+    protected RoleChecker roleChecker;
     protected ContestStore contestStore;
     protected ContestModuleStore moduleStore;
     protected ContestContestantStore contestantStore;
     protected ContestSupervisorStore supervisorStore;
     protected ContestManagerStore managerStore;
 
-    protected AbstractRoleCheckerIntegrationTests() {
+    protected AbstractContestRoleCheckerIntegrationTests() {
         UrielCacheUtils.removeDurations();
     }
 
     protected void prepare(SessionFactory sessionFactory) {
         component = createComponent(sessionFactory, new TestClock());
 
-        AdminRoleStore adminRoleStore = component.adminRoleStore();
+        roleChecker = component.roleChecker();
         contestStore = component.contestStore();
         moduleStore = component.contestModuleStore();
         contestantStore = component.contestContestantStore();
         supervisorStore = component.contestSupervisorStore();
         managerStore = component.contestManagerStore();
 
-        adminRoleStore.upsertAdmin(ADMIN);
-
+        prepareRoles();
         prepareContestA();
         prepareContestB();
         prepareContestC();
+    }
+
+    protected void prepareRoles() {
+        setRoles(roleChecker, ImmutableMap.<String, UserRole>builder()
+                .put(ADMIN, new UserRole.Builder().uriel(UrielRole.ADMIN.name()).build())
+                .put(USER, new UserRole.Builder().build())
+                .put(CONTESTANT, new UserRole.Builder().build())
+                .put(ANOTHER_CONTESTANT, new UserRole.Builder().build())
+                .put(SUPERVISOR, new UserRole.Builder().build())
+                .put(MANAGER, new UserRole.Builder().build())
+                .build());
     }
 
     protected void prepareContestA() {

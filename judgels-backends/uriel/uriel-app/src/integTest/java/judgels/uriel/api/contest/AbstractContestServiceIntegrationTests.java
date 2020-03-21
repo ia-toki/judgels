@@ -1,10 +1,8 @@
 package judgels.uriel.api.contest;
 
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
 import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
@@ -14,7 +12,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
-import judgels.uriel.api.admin.AdminService;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.manager.ContestManagerService;
 import judgels.uriel.api.contest.module.ContestModuleService;
@@ -22,7 +19,6 @@ import judgels.uriel.api.contest.supervisor.ContestSupervisorService;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
@@ -50,12 +46,6 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         mockJophiel.shutdown();
         mockSandalphon.shutdown();
         mockSealtiel.shutdown();
-    }
-
-    @BeforeEach
-    void setUpAdmin() {
-        AdminService adminService = createService(AdminService.class);
-        adminService.upsertAdmins(SUPERADMIN_HEADER, ImmutableSet.of(ADMIN));
     }
 
     protected Contest createContest(String slug) {

@@ -20,19 +20,16 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
-import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestManagerModel;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModuleModel;
 import judgels.uriel.persistence.ContestSupervisorModel;
-import judgels.uriel.role.AdminRoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {
-        AdminRoleModel.class,
         ContestModel.class,
         ContestContestantModel.class,
         ContestSupervisorModel.class,
@@ -45,7 +42,6 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_3 = "user3Jid";
 
     private ContestStore store;
-    private AdminRoleStore adminRoleStore;
     private ContestModuleStore moduleStore;
     private ContestContestantStore contestantStore;
     private ContestSupervisorStore supervisorStore;
@@ -55,7 +51,6 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     void setUpSession(SessionFactory sessionFactory) {
         UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
-        adminRoleStore = component.adminRoleStore();
         moduleStore = component.contestModuleStore();
         contestantStore = component.contestContestantStore();
         supervisorStore = component.contestSupervisorStore();
@@ -90,7 +85,6 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
                 .isInstanceOf(ServiceException.class)
                 .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
 
-        adminRoleStore.upsertAdmin(ADMIN);
         moduleStore.upsertRegistrationModule(contestD.getJid());
         moduleStore.upsertRegistrationModule(contestE.getJid());
         moduleStore.upsertHiddenModule(contestE.getJid());
@@ -128,6 +122,6 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     private List<Contest> getContests(String userJid) {
-        return store.getContests(userJid, Optional.empty(), Optional.empty()).getPage();
+        return store.getContests(userJid, userJid.equals(ADMIN), Optional.empty(), Optional.empty()).getPage();
     }
 }

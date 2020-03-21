@@ -129,11 +129,41 @@ public class MockJophiel {
 
         mockJophiel.stubFor(get("/api/v2/users/me/role")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
-                .willReturn(okForJson(ImmutableMap.of("jophiel", "ADMIN"))));
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "ADMIN", "uriel", "ADMIN"))));
 
         mockJophiel.stubFor(get("/api/v2/users/me/role")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + SUPERADMIN_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "SUPERADMIN"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + ADMIN_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "ADMIN", "uriel", "ADMIN"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + MANAGER_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + SUPERVISOR_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + CONTESTANT_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + USER_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + USER_A_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + USER_B_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/nonadminJid/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/guest/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "GUEST"))));
 
         mockJophiel.stubFor(post("/api/v2/user-search/username-to-jid")
                 .willReturn(aResponse().withStatus(200).withTransformers("username-to-jid")));

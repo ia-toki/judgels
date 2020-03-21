@@ -12,12 +12,12 @@ import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.module.DivisionModuleConfig;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
+import judgels.uriel.contest.AbstractContestRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
+class ContestContestantRoleCheckerIntegrationTests extends AbstractContestRoleCheckerIntegrationTests {
     private ContestContestantRoleChecker checker;
 
     @BeforeEach

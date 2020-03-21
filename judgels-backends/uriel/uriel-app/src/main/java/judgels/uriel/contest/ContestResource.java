@@ -109,8 +109,9 @@ public class ContestResource implements ContestService {
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
+        boolean isAdmin = contestRoleChecker.canAdminister(actorJid);
 
-        Page<Contest> contests = contestStore.getContests(actorJid, name, page);
+        Page<Contest> contests = contestStore.getContests(actorJid, isAdmin, name, page);
         Map<String, ContestRole> rolesMap = contests.getPage()
                 .stream()
                 .collect(Collectors.toMap(
@@ -132,8 +133,9 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public ActiveContestsResponse getActiveContests(Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
+        boolean isAdmin = contestRoleChecker.canAdminister(actorJid);
 
-        List<Contest> contests = contestStore.getActiveContests(actorJid);
+        List<Contest> contests = contestStore.getActiveContests(actorJid, isAdmin);
         Map<String, ContestRole> rolesMap = contests
                 .stream()
                 .collect(Collectors.toMap(

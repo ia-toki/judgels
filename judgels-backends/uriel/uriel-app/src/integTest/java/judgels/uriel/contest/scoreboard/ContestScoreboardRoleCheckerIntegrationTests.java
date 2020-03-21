@@ -8,13 +8,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.contest.AbstractContestRoleCheckerIntegrationTests;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
+class ContestScoreboardRoleCheckerIntegrationTests extends AbstractContestRoleCheckerIntegrationTests {
     private ContestScoreboardRoleChecker checker;
     private ContestScoreboardStore scoreboardStore;
     private ContestProblemStore problemStore;

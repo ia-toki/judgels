@@ -9,7 +9,6 @@ import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
-import judgels.uriel.admin.AdminResource;
 import judgels.uriel.contest.ContestResource;
 import judgels.uriel.contest.announcement.ContestAnnouncementResource;
 import judgels.uriel.contest.clarification.ContestClarificationResource;
@@ -58,7 +57,6 @@ import judgels.uriel.submission.programming.SubmissionModule;
         ContestScoreboardUpdaterModule.class})
 @Singleton
 public interface UrielComponent {
-    AdminResource adminResource();
     ContestAnnouncementResource contestAnnouncementResource();
     ContestClarificationResource contestClarificationResource();
     ContestContestantResource contestContestantResource();

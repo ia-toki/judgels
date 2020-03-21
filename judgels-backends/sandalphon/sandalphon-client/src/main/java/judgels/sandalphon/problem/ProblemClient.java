@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
@@ -26,6 +27,7 @@ import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
 import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.service.api.client.BasicAuthHeader;
 
+@Singleton
 public class ProblemClient {
     private final SandalphonClientConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;

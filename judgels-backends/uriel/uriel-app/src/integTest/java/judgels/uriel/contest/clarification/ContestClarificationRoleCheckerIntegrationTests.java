@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
-import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
+import judgels.uriel.contest.AbstractContestRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
+class ContestClarificationRoleCheckerIntegrationTests extends AbstractContestRoleCheckerIntegrationTests {
     private ContestClarificationRoleChecker checker;
 
     @BeforeEach

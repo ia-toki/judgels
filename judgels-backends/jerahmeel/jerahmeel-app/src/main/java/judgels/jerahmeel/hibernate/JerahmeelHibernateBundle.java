@@ -3,7 +3,6 @@ package judgels.jerahmeel.hibernate;
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import judgels.jerahmeel.JerahmeelApplicationConfiguration;
-import judgels.jerahmeel.persistence.AdminRoleModel;
 import judgels.jerahmeel.persistence.ArchiveModel;
 import judgels.jerahmeel.persistence.BundleItemSubmissionModel;
 import judgels.jerahmeel.persistence.ChapterLessonModel;
@@ -25,7 +24,6 @@ import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
 public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicationConfiguration> {
     public JerahmeelHibernateBundle() {
         super(
-                AdminRoleModel.class,
                 ArchiveModel.class,
                 CurriculumModel.class,
                 ChapterModel.class,

@@ -1,10 +1,12 @@
 package judgels.uriel;
 
 import java.time.Clock;
+import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.TestActorProvider;
 import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.uriel.jophiel.JophielModule;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -32,6 +34,7 @@ public abstract class AbstractIntegrationTests {
         return DaggerUrielIntegrationTestComponent.builder()
                 .judgelsHibernateModule(new JudgelsHibernateModule(sessionFactory))
                 .judgelsPersistenceModule(new JudgelsPersistenceModule(clock, actorProvider))
+                .jophielModule(new JophielModule(JophielClientConfiguration.DEFAULT))
                 .build();
     }
 

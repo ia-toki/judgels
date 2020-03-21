@@ -8,10 +8,9 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { AppState } from '../../modules/store';
-import { UserRole, JophielRole } from '../../modules/api/jophiel/role';
+import { UserRole } from '../../modules/api/jophiel/role';
 
 import ContestsPage from './contests/ContestsPage/ContestsPage';
-import LazyAdminsRoutes from './admins/LazyAdminsRoutes';
 import { selectRole } from '../jophiel/modules/userWebSelectors';
 
 interface ContestRoutesProps {
@@ -26,14 +25,6 @@ const ContestsRoutes = (props: ContestRoutesProps) => {
       title: 'Contests',
       routeComponent: Route,
       component: ContestsPage,
-    },
-    {
-      id: '_admins',
-      titleIcon: 'id-number',
-      title: 'Admins',
-      routeComponent: Route,
-      component: LazyAdminsRoutes,
-      disabled: props.role.jophiel !== JophielRole.Superadmin,
     },
   ];
 

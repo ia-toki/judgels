@@ -1,11 +1,9 @@
 package judgels.uriel.api.contest;
 
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
@@ -25,7 +23,6 @@ import java.time.Instant;
 import java.util.Optional;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
-import judgels.uriel.api.admin.AdminService;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
@@ -63,14 +60,12 @@ import judgels.uriel.api.contest.supervisor.ContestSupervisorService;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ContestServiceDumpIntegrationTests extends AbstractServiceIntegrationTests  {
     private static WireMockServer mockJophiel;
     private static WireMockServer mockSandalphon;
 
-    private AdminService adminService = createService(AdminService.class);
     private ContestService contestService = createService(ContestService.class);
     private ContestModuleService contestModuleService = createService(ContestModuleService.class);
     private ContestProblemService contestProblemService = createService(ContestProblemService.class);
@@ -400,11 +395,6 @@ public class ContestServiceDumpIntegrationTests extends AbstractServiceIntegrati
     static void tearDownMocks() {
         mockJophiel.shutdown();
         mockSandalphon.shutdown();
-    }
-
-    @BeforeEach
-    void setUpAdmin() {
-        adminService.upsertAdmins(SUPERADMIN_HEADER, ImmutableSet.of(ADMIN));
     }
 
     @Test

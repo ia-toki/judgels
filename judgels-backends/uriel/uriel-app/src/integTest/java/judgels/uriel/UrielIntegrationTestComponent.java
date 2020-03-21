@@ -26,19 +26,21 @@ import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
-import judgels.uriel.role.AdminRoleStore;
+import judgels.uriel.jophiel.JophielModule;
+import judgels.uriel.role.RoleChecker;
 
 @Component(modules = {
         JudgelsModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
+        JophielModule.class,
         UrielModule.class,
         UrielHibernateDaoModule.class})
 @Singleton
 public interface UrielIntegrationTestComponent {
     SubmissionStore submissionStore();
 
-    AdminRoleStore adminRoleStore();
+    RoleChecker roleChecker();
     ContestStore contestStore();
     ContestModuleStore contestModuleStore();
     ContestAnnouncementStore contestAnnouncementStore();

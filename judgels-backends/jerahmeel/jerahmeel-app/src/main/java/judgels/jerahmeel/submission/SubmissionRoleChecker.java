@@ -1,24 +1,24 @@
 package judgels.jerahmeel.submission;
 
 import javax.inject.Inject;
-import judgels.jerahmeel.persistence.AdminRoleDao;
+import judgels.jerahmeel.role.RoleChecker;
 
 public class SubmissionRoleChecker {
-    private final AdminRoleDao adminRoleDao;
+    private final RoleChecker roleChecker;
 
     @Inject
-    public SubmissionRoleChecker(AdminRoleDao adminRoleDao) {
-        this.adminRoleDao = adminRoleDao;
+    public SubmissionRoleChecker(RoleChecker roleChecker) {
+        this.roleChecker = roleChecker;
     }
 
     public boolean canView(String userJid, String submissionUserJid) {
-        if (adminRoleDao.isAdmin(userJid)) {
+        if (roleChecker.isAdmin(userJid)) {
             return true;
         }
         return userJid.equals(submissionUserJid);
     }
 
     public boolean canManage(String userJid) {
-        return adminRoleDao.isAdmin(userJid);
+        return roleChecker.isAdmin(userJid);
     }
 }

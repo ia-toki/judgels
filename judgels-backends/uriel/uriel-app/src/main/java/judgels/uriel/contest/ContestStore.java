@@ -37,13 +37,11 @@ import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
-import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 
 @Singleton
 public class ContestStore {
-    private final AdminRoleDao adminRoleDao;
     private final ContestDao contestDao;
 
     private final ContestModuleStore moduleStore;
@@ -59,7 +57,6 @@ public class ContestStore {
 
     @Inject
     public ContestStore(
-            AdminRoleDao adminRoleDao,
             ContestDao contestDao,
             ContestModuleStore moduleStore,
             ContestProblemStore problemStore,
@@ -69,7 +66,6 @@ public class ContestStore {
             ContestAnnouncementStore announcementStore,
             ContestClarificationStore clarificationStore) {
 
-        this.adminRoleDao = adminRoleDao;
         this.contestDao = contestDao;
         this.moduleStore = moduleStore;
         this.problemStore = problemStore;
@@ -118,7 +114,7 @@ public class ContestStore {
         return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel).orElse(null);
     }
 
-    public Page<Contest> getContests(String userJid, Optional<String> name, Optional<Integer> page) {
+    public Page<Contest> getContests(String userJid, boolean isAdmin, Optional<String> name, Optional<Integer> page) {
         SearchOptions.Builder searchOptions = new SearchOptions.Builder();
         name.ifPresent(e -> searchOptions.putTerms("name", e));
 
@@ -126,20 +122,20 @@ public class ContestStore {
         selectionOptions.orderBy("beginTime");
         page.ifPresent(selectionOptions::page);
 
-        Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
+        Page<ContestModel> models = isAdmin
                 ? contestDao.selectPaged(searchOptions.build(), selectionOptions.build())
                 : contestDao.selectPagedByUserJid(userJid, searchOptions.build(), selectionOptions.build());
         return models.mapPage(p -> Lists.transform(p, ContestStore::fromModel));
     }
 
-    public List<Contest> getActiveContests(String userJid) {
+    public List<Contest> getActiveContests(String userJid, boolean isAdmin) {
         SelectionOptions options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_ALL)
                 .orderBy("beginTime")
                 .orderDir(OrderDir.ASC)
                 .build();
 
-        List<ContestModel> models = adminRoleDao.isAdmin(userJid)
+        List<ContestModel> models = isAdmin
                 ? contestDao.selectAllActive(options)
                 : contestDao.selectAllActiveByUserJid(userJid, options);
         return Lists.transform(models, ContestStore::fromModel);

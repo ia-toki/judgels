@@ -3,12 +3,12 @@ package judgels.uriel.contest.file;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.FILE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
+import judgels.uriel.contest.AbstractContestRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestFileRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
+class ContestFileRoleCheckerIntegrationTests extends AbstractContestRoleCheckerIntegrationTests {
     private ContestFileRoleChecker checker;
 
     @BeforeEach
