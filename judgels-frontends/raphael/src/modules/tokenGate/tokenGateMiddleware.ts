@@ -1,6 +1,6 @@
-import { UnauthorizedError } from '../../modules/api/error';
+import { replace } from 'connected-react-router';
 
-import * as tokenGateActions from './tokenGateActions';
+import { UnauthorizedError } from '../../modules/api/error';
 
 export const tokenGateMiddleware: any = store => next => async action => {
   try {
@@ -8,7 +8,7 @@ export const tokenGateMiddleware: any = store => next => async action => {
   } catch (error) {
     // redirects to /logout if receiving UnauthorizedError
     if (error instanceof UnauthorizedError) {
-      return await tokenGateActions.redirectToLogout();
+      return await next(replace('/logout'));
     }
 
     throw error;
