@@ -9,10 +9,6 @@ export interface Course {
   description?: string;
 }
 
-export interface CourseConfig {
-  canAdminister: boolean;
-}
-
 export interface CourseProgress {
   solvedChapters: number;
   totalChapters: number;
@@ -23,7 +19,6 @@ export interface CoursesResponse {
   data: Course[];
   curriculumDescription?: string;
   courseProgressesMap: { [courseJid: string]: CourseProgress };
-  config: CourseConfig;
 }
 
 export interface CourseCreateData {

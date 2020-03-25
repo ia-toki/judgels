@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.course.Course;
-import judgels.jerahmeel.api.course.CourseConfig;
 import judgels.jerahmeel.api.course.CourseCreateData;
 import judgels.jerahmeel.api.course.CourseProgress;
 import judgels.jerahmeel.api.course.CourseService;
@@ -55,14 +54,10 @@ public class CourseResource implements CourseService {
         Set<String> courseJids = courses.stream().map(Course::getJid).collect(Collectors.toSet());
         Optional<String> curriculumDescription = curriculumStore.getCurriculumDescription();
         Map<String, CourseProgress> courseProgressMap = statsStore.getCourseProgressesMap(actorJid, courseJids);
-        CourseConfig config = new CourseConfig.Builder()
-                .canAdminister(isAdmin)
-                .build();
         return new CoursesResponse.Builder()
                 .data(courses)
                 .curriculumDescription(curriculumDescription)
                 .courseProgressesMap(courseProgressMap)
-                .config(config)
                 .build();
     }
 

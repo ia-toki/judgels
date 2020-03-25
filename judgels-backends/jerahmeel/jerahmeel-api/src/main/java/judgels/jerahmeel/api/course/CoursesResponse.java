@@ -12,7 +12,6 @@ public interface CoursesResponse {
     List<Course> getData();
     Optional<String> getCurriculumDescription();
     Map<String, CourseProgress> getCourseProgressesMap();
-    CourseConfig getConfig();
 
     class Builder extends ImmutableCoursesResponse.Builder {}
 }
