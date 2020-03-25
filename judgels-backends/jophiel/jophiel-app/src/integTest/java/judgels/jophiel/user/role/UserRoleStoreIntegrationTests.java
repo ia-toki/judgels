@@ -43,6 +43,9 @@ class UserRoleStoreIntegrationTests extends AbstractIntegrationTests {
 
         assertThat(store.getRole(SUPERADMIN)).isEqualTo(new UserRole.Builder()
                 .jophiel(JophielRole.SUPERADMIN)
+                .sandalphon("ADMIN")
+                .uriel("ADMIN")
+                .jerahmeel("ADMIN")
                 .build());
 
         assertThat(store.getRole(ADMIN)).isEqualTo(new UserRole.Builder()

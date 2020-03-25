@@ -39,25 +39,29 @@ public class UserRoleStore {
 
     public UserRole getRole(String userJid) {
         UserRole.Builder role = new UserRole.Builder();
-        Optional<UserRoleModel> maybeModel = userRoleDao.selectByUserJid(userJid);
-        if (maybeModel.isPresent()) {
-            UserRoleModel model = maybeModel.get();
-            if (model.jophiel != null) {
-                role.jophiel(JophielRole.valueOf(model.jophiel));
-            }
-            if (model.sandalphon != null) {
-                role.sandalphon(model.sandalphon);
-            }
-            if (model.uriel != null) {
-                role.uriel(model.uriel);
-            }
-            if (model.jerahmeel != null) {
-                role.jerahmeel(model.jerahmeel);
-            }
-        }
 
         if (superadminRoleStore.isSuperadmin(userJid)) {
             role.jophiel(JophielRole.SUPERADMIN);
+            role.sandalphon("ADMIN");
+            role.uriel("ADMIN");
+            role.jerahmeel("ADMIN");
+        } else {
+            Optional<UserRoleModel> maybeModel = userRoleDao.selectByUserJid(userJid);
+            if (maybeModel.isPresent()) {
+                UserRoleModel model = maybeModel.get();
+                if (model.jophiel != null) {
+                    role.jophiel(JophielRole.valueOf(model.jophiel));
+                }
+                if (model.sandalphon != null) {
+                    role.sandalphon(model.sandalphon);
+                }
+                if (model.uriel != null) {
+                    role.uriel(model.uriel);
+                }
+                if (model.jerahmeel != null) {
+                    role.jerahmeel(model.jerahmeel);
+                }
+            }
         }
 
         return role.build();
