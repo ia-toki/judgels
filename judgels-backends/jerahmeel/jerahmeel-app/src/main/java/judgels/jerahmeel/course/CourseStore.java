@@ -10,6 +10,8 @@ import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.course.Course;
 import judgels.jerahmeel.api.course.CourseCreateData;
+import judgels.jerahmeel.api.course.CourseErrors;
+import judgels.jerahmeel.api.course.CourseUpdateData;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
 import judgels.jerahmeel.persistence.CourseModel_;
@@ -63,11 +65,41 @@ public class CourseStore {
     }
 
     public Course createCourse(CourseCreateData data) {
+        if (courseDao.selectBySlug(data.getSlug()).isPresent()) {
+            throw CourseErrors.slugAlreadyExists(data.getSlug());
+        }
+
         CourseModel model = new CourseModel();
         model.slug = data.getSlug();
         model.name = data.getSlug();
         model.description = "";
         return fromModel(courseDao.insert(model));
+    }
+
+    public Optional<Course> updateCourse(String courseJid, CourseUpdateData data) {
+        return courseDao.selectByJid(courseJid).map(model -> {
+            if (data.getSlug().isPresent()) {
+                String newSlug = data.getSlug().get();
+                if (model.slug == null || !model.slug.equals(newSlug)) {
+                    if (courseDao.selectBySlug(newSlug).isPresent()) {
+                        throw CourseErrors.slugAlreadyExists(newSlug);
+                    }
+                }
+            }
+
+            courseByJidCache.invalidate(courseJid);
+            if (model.slug != null) {
+                courseBySlugCache.invalidate(model.slug);
+            }
+            if (data.getSlug().isPresent()) {
+                courseBySlugCache.invalidate(data.getSlug().get());
+            }
+
+            data.getSlug().ifPresent(slug -> model.slug = slug);
+            data.getName().ifPresent(name -> model.name = name);
+            data.getDescription().ifPresent(description -> model.description = description);
+            return fromModel(courseDao.update(model));
+        });
     }
 
     private static Course fromModel(CourseModel model) {

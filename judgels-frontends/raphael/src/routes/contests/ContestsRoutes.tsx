@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -7,17 +6,9 @@ import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
 } from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { AppState } from '../../modules/store';
-import { UserRole } from '../../modules/api/jophiel/role';
-
 import ContestsPage from './contests/ContestsPage/ContestsPage';
-import { selectRole } from '../jophiel/modules/userWebSelectors';
 
-interface ContestRoutesProps {
-  role: UserRole;
-}
-
-const ContestsRoutes = (props: ContestRoutesProps) => {
+const ContestsRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: '@',
@@ -40,7 +31,4 @@ const ContestsRoutes = (props: ContestRoutesProps) => {
   );
 };
 
-const mapStateToProps = (state: AppState) => ({
-  role: selectRole(state),
-});
-export default withRouter<any, any>(connect(mapStateToProps)(ContestsRoutes));
+export default withRouter<any, any>(ContestsRoutes);

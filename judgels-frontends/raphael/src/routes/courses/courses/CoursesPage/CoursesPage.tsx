@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { Card } from '../../../../components/Card/Card';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import { CoursesResponse } from '../../../../modules/api/jerahmeel/course';
+import { CoursesResponse, CourseCreateData } from '../../../../modules/api/jerahmeel/course';
 import { CourseCard } from '../CourseCard/CourseCard';
+import { CourseCreateDialog } from '../CourseCreateDialog/CourseCreateDialog';
 import * as courseActions from '../modules/courseActions';
 
 export interface CoursePageProps {
   onGetCourses: () => Promise<CoursesResponse>;
+  onCreateCourse: (data: CourseCreateData) => Promise<void>;
 }
 
 export interface CoursesPageState {
@@ -25,8 +27,25 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
   }
 
   render() {
-    return <Card title="Courses">{this.renderCourses()}</Card>;
+    return (
+      <Card title="Courses">
+        {this.renderCreateDialog()}
+        {this.renderCourses()}
+      </Card>
+    );
   }
+
+  private renderCreateDialog = () => {
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+    const config = response.config;
+    if (!config.canAdminister) {
+      return null;
+    }
+    return <CourseCreateDialog onCreateCourse={this.props.onCreateCourse} />;
+  };
 
   private renderCourses = () => {
     const { response } = this.state;
@@ -58,5 +77,6 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
 
 const mapDispatchToProps = {
   onGetCourses: courseActions.getCourses,
+  onCreateCourse: courseActions.createCourse,
 };
 export default connect(undefined, mapDispatchToProps)(CoursesPage);
