@@ -48,4 +48,5 @@ const CourseEditForm = (props: CourseEditFormProps) => {
 export default reduxForm<CourseEditFormData>({
   form: 'course-edit',
   touchOnBlur: false,
+  enableReinitialize: true,
 })(CourseEditForm);

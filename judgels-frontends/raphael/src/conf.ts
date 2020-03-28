@@ -6,7 +6,7 @@ export interface ApiUrlsConfig {
   jophiel: string;
   legacyJophiel: string;
   uriel: string;
-  jerahmeel: string;
+  jerahmeel?: string;
 }
 
 export interface WelcomeBannerConfig {
@@ -28,3 +28,11 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG = (window as any).conf as AppConfig;
+
+export function hasJerahmeel() {
+  return !!APP_CONFIG.apiUrls.jerahmeel;
+}
+
+export function isInPrivateContestsMode() {
+  return APP_CONFIG.mode === Mode.PRIVATE_CONTESTS;
+}

@@ -1,0 +1,19 @@
+@import '../../../../styles/table';
+
+.courses-table {
+  .col-id {
+    width: 60px;
+  }
+
+  .col-slug {
+    width: 200px;
+  }
+
+  .col-actions {
+    width: 50px;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+}

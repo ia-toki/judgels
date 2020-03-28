@@ -15,7 +15,7 @@ import { AppState } from '../modules/store';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 
-import { getAppRoutes, getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
+import { getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import { selectRole } from './jophiel/modules/userWebSelectors';
 import * as userWebActions from './jophiel/modules/userWebActions';
@@ -35,7 +35,6 @@ class App extends React.PureComponent<AppProps> {
   }
 
   render() {
-    const appRoutes = getAppRoutes();
     const visibleAppRoutes = getVisibleAppRoutes(this.props.role);
     const homeRoute = getHomeRoute();
 
@@ -48,7 +47,7 @@ class App extends React.PureComponent<AppProps> {
             <AppContent>
               <Breadcrumbs />
               <Switch>
-                {appRoutes.map(item => (
+                {visibleAppRoutes.map(item => (
                   <Route key={item.id} {...item.route} />
                 ))}
                 <Route {...homeRoute.route} />
