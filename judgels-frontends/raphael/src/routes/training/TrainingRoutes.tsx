@@ -10,6 +10,7 @@ import ContentWithSidebar, {
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import CoursesPage from './courses/CoursesPage/CoursesPage';
+import ChaptersPage from './chapters/ChaptersPage/ChaptersPage';
 
 const TrainingRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
@@ -19,6 +20,13 @@ const TrainingRoutes = () => {
       title: 'Courses',
       routeComponent: Route,
       component: CoursesPage,
+    },
+    {
+      id: 'chapters',
+      titleIcon: 'properties',
+      title: 'Chapters',
+      routeComponent: Route,
+      component: ChaptersPage,
     },
   ];
 

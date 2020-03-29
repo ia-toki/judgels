@@ -19,13 +19,20 @@ class CourseServiceIntegrationTests extends AbstractTrainingServiceIntegrationTe
         Course courseA = courseService.createCourse(ADMIN_HEADER, new CourseCreateData.Builder()
                 .slug("course-a")
                 .build());
-        courseService.updateCourse(ADMIN_HEADER, courseA.getJid(), new CourseUpdateData.Builder()
+        courseA = courseService.updateCourse(ADMIN_HEADER, courseA.getJid(), new CourseUpdateData.Builder()
                 .name("Course A")
                 .description("This is course A")
                 .build());
+
+        assertThat(courseA.getSlug()).isEqualTo("course-a");
+        assertThat(courseA.getName()).isEqualTo("Course A");
+        assertThat(courseA.getDescription()).isEqualTo("This is course A");
+
         Course courseB = courseService.createCourse(ADMIN_HEADER, new CourseCreateData.Builder()
                 .slug("course-b")
                 .build());
+
+        assertThat(courseB.getSlug()).isEqualTo("course-b");
 
         assertThatRemoteExceptionThrownBy(() -> courseService
                 .createCourse(ADMIN_HEADER, new CourseCreateData.Builder().slug("course-a").build()))
@@ -36,7 +43,7 @@ class CourseServiceIntegrationTests extends AbstractTrainingServiceIntegrationTe
                 .isGeneratedFromErrorType(SLUG_ALREADY_EXISTS);
 
         CoursesResponse response = courseService.getCourses(Optional.of(ADMIN_HEADER));
-        assertThat(response.getData().size()).isEqualTo(2);
+        assertThat(response.getData()).containsExactly(courseA, courseB);
 
         // as user
 
@@ -45,13 +52,8 @@ class CourseServiceIntegrationTests extends AbstractTrainingServiceIntegrationTe
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         response = courseService.getCourses(Optional.of(USER_HEADER));
-        assertThat(response.getData().size()).isEqualTo(2);
+        assertThat(response.getData()).containsExactly(courseA, courseB);
 
-        courseA = courseService.getCourseBySlug(Optional.empty(), "course-a");
-        assertThat(courseA.getSlug()).isEqualTo("course-a");
-        assertThat(courseA.getName()).isEqualTo("Course A");
-        assertThat(courseA.getDescription()).isEqualTo("This is course A");
-
-        assertThat(courseService.getCourseBySlug(Optional.empty(), "course-b")).isEqualTo(courseB);
+        assertThat(courseService.getCourseBySlug(Optional.empty(), "course-a")).isEqualTo(courseA);
     }
 }

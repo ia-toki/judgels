@@ -4,8 +4,6 @@ import * as React from 'react';
 import { CourseUpdateData, Course } from '../../../../modules/api/jerahmeel/course';
 import CourseEditForm, { CourseEditFormData } from '../CourseEditForm/CourseEditForm';
 
-import './CourseEditDialog.css';
-
 interface CourseEditDialogProps {
   isOpen: boolean;
   course?: Course;

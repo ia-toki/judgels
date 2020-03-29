@@ -1,0 +1,53 @@
+import { mount, ReactWrapper } from 'enzyme';
+import * as React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { reducer as formReducer } from 'redux-form';
+import thunk from 'redux-thunk';
+
+import { Chapter } from '../../../../modules/api/jerahmeel/chapter';
+import { ChapterEditDialog } from './ChapterEditDialog';
+
+const chapter: Chapter = {
+  id: 1,
+  jid: 'chapterJid',
+  name: 'Chapter',
+};
+
+describe('ChapterEditDialog', () => {
+  let onUpdateChapter: jest.Mock<any>;
+  let wrapper: ReactWrapper<any, any>;
+
+  beforeEach(() => {
+    onUpdateChapter = jest.fn().mockReturnValue(() => Promise.resolve({}));
+
+    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+
+    const props = {
+      isOpen: true,
+      chapter,
+      onCloseDialog: jest.fn(),
+      onUpdateChapter,
+    };
+    wrapper = mount(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ChapterEditDialog {...props} />
+        </MemoryRouter>
+      </Provider>
+    );
+  });
+
+  test('edit dialog form', async () => {
+    const name = wrapper.find('input[name="name"]');
+    name.simulate('change', { target: { value: 'New chapter' } });
+
+    const form = wrapper.find('form');
+    form.simulate('submit');
+
+    expect(onUpdateChapter).toHaveBeenCalledWith(chapter.jid, {
+      name: 'New chapter',
+    });
+  });
+});

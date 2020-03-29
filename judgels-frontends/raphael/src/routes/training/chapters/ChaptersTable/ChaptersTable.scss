@@ -1,0 +1,15 @@
+@import '../../../../styles/table';
+
+.chapters-table {
+  .col-id {
+    width: 60px;
+  }
+
+  .col-actions {
+    width: 50px;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+}

@@ -6,12 +6,10 @@ import { LoadingContentCard } from '../../../../components/LoadingContentCard/Lo
 import { CourseCreateDialog } from '../CourseCreateDialog/CourseCreateDialog';
 import { CourseEditDialog } from '../CourseEditDialog/CourseEditDialog';
 import { CoursesTable } from '../CoursesTable/CoursesTable';
-import { UserRole } from '../../../../modules/api/jophiel/role';
 import { CoursesResponse, CourseCreateData, Course, CourseUpdateData } from '../../../../modules/api/jerahmeel/course';
 import * as courseActions from '../modules/courseActions';
 
 export interface CoursePageProps {
-  role: UserRole;
   onGetCourses: () => Promise<CoursesResponse>;
   onCreateCourse: (data: CourseCreateData) => Promise<void>;
   onUpdateCourse: (courseJid: string, data: CourseUpdateData) => Promise<void>;

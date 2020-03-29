@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,14 @@ import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterCreateData;
 import judgels.jerahmeel.api.chapter.ChapterInfo;
+import judgels.jerahmeel.api.chapter.ChapterUpdateData;
 import judgels.jerahmeel.persistence.ChapterDao;
 import judgels.jerahmeel.persistence.ChapterModel;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
+import judgels.persistence.api.SelectionOptions;
 
 public class ChapterStore {
     private final ChapterDao chapterDao;
@@ -40,6 +43,10 @@ public class ChapterStore {
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build(this::getChapterByJidUncached);
+    }
+
+    public List<Chapter> getChapters() {
+        return Lists.transform(chapterDao.selectAll(SelectionOptions.DEFAULT_ALL), ChapterStore::fromModel);
     }
 
     public Optional<Chapter> getChapterByJid(String chapterJid) {
@@ -96,6 +103,16 @@ public class ChapterStore {
         model.name = data.getName();
         model.description = "";
         return fromModel(chapterDao.insert(model));
+    }
+
+
+    public Optional<Chapter> updateChapter(String chapterJid, ChapterUpdateData data) {
+        return chapterDao.selectByJid(chapterJid).map(model -> {
+            chapterByJidCache.invalidate(chapterJid);
+
+            data.getName().ifPresent(name -> model.name = name);
+            return fromModel(chapterDao.update(model));
+        });
     }
 
     private static Chapter fromModel(ChapterModel model) {
