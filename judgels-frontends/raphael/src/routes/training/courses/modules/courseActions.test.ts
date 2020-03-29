@@ -119,4 +119,35 @@ describe('courseActions', () => {
       expect(response).toEqual(responseBody);
     });
   });
+
+  describe('getChapters()', () => {
+    const responseBody = {
+      data: [],
+    };
+
+    it('calls API to get chapters', async () => {
+      nock(APP_CONFIG.apiUrls.jerahmeel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/courses/${courseJid}/chapters`)
+        .reply(200, responseBody);
+
+      const response = await store.dispatch(courseActions.getChapters(courseJid));
+      expect(response).toEqual(responseBody);
+    });
+  });
+
+  describe('setChapters()', () => {
+    const params = [];
+
+    it('calls API to set chapters', async () => {
+      nock(APP_CONFIG.apiUrls.jerahmeel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/courses/${courseJid}/chapters`)
+        .reply(200)
+        .put(`/courses/${courseJid}/chapters`, params)
+        .reply(200);
+
+      await store.dispatch(courseActions.setChapters(courseJid, params));
+    });
+  });
 });

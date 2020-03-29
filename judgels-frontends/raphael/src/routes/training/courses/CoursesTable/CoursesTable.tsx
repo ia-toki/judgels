@@ -8,6 +8,7 @@ import './CoursesTable.css';
 export interface CoursesTableProps {
   courses: Course[];
   onEditCourse: (course: Course) => any;
+  onEditCourseChapters: (course: Course) => any;
 }
 
 export class CoursesTable extends React.PureComponent<CoursesTableProps> {
@@ -43,6 +44,12 @@ export class CoursesTable extends React.PureComponent<CoursesTableProps> {
         <td>{course.name}</td>
         <td>
           <Icon className="action" icon="edit" intent="primary" onClick={() => this.props.onEditCourse(course)} />
+          <Icon
+            className="action"
+            icon="properties"
+            intent="primary"
+            onClick={() => this.props.onEditCourseChapters(course)}
+          />
         </td>
       </tr>
     ));

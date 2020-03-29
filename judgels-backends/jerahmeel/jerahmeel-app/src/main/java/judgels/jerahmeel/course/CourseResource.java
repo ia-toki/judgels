@@ -48,7 +48,6 @@ public class CourseResource implements CourseService {
     @UnitOfWork(readOnly = true)
     public CoursesResponse getCourses(Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        boolean isAdmin = roleChecker.isAdmin(actorJid);
 
         List<Course> courses = courseStore.getCourses();
         Set<String> courseJids = courses.stream().map(Course::getJid).collect(Collectors.toSet());

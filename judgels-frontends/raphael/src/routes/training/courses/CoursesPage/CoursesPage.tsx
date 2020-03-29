@@ -7,23 +7,29 @@ import { CourseCreateDialog } from '../CourseCreateDialog/CourseCreateDialog';
 import { CourseEditDialog } from '../CourseEditDialog/CourseEditDialog';
 import { CoursesTable } from '../CoursesTable/CoursesTable';
 import { CoursesResponse, CourseCreateData, Course, CourseUpdateData } from '../../../../modules/api/jerahmeel/course';
+import { CourseChaptersResponse, CourseChapter } from '../../../../modules/api/jerahmeel/courseChapter';
+import { CourseChapterEditDialog } from '../CourseChapterEditDialog/CourseChapterEditDialog';
 import * as courseActions from '../modules/courseActions';
 
 export interface CoursePageProps {
   onGetCourses: () => Promise<CoursesResponse>;
   onCreateCourse: (data: CourseCreateData) => Promise<void>;
   onUpdateCourse: (courseJid: string, data: CourseUpdateData) => Promise<void>;
+  onGetChapters: (courseJid: string) => Promise<CourseChaptersResponse>;
+  onSetChapters: (courseJid: string, data: CourseChapter[]) => Promise<void>;
 }
 
 export interface CoursesPageState {
   response?: CoursesResponse;
   isEditDialogOpen: boolean;
+  isEditChaptersDialogOpen: boolean;
   editedCourse?: Course;
 }
 
 class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
   state: CoursesPageState = {
     isEditDialogOpen: false,
+    isEditChaptersDialogOpen: false,
   };
 
   componentDidMount() {
@@ -37,6 +43,7 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
         <hr />
         {this.renderCreateDialog()}
         {this.renderEditDialog()}
+        {this.renderEditChaptersDialog()}
         {this.renderCourses()}
       </ContentCard>
     );
@@ -63,6 +70,19 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
     );
   };
 
+  private renderEditChaptersDialog = () => {
+    const { isEditChaptersDialogOpen, editedCourse } = this.state;
+    return (
+      <CourseChapterEditDialog
+        isOpen={isEditChaptersDialogOpen}
+        course={editedCourse}
+        onGetChapters={this.props.onGetChapters}
+        onSetChapters={this.props.onSetChapters}
+        onCloseDialog={() => this.editCourseChapters(undefined)}
+      />
+    );
+  };
+
   private renderCourses = () => {
     const { response } = this.state;
     if (!response) {
@@ -78,7 +98,9 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
       );
     }
 
-    return <CoursesTable courses={courses} onEditCourse={this.editCourse} />;
+    return (
+      <CoursesTable courses={courses} onEditCourse={this.editCourse} onEditCourseChapters={this.editCourseChapters} />
+    );
   };
 
   private createCourse = async (data: CourseCreateData) => {
@@ -98,11 +120,20 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
     this.editCourse(undefined);
     await this.refreshCourses();
   };
+
+  private editCourseChapters = async (course?: Course) => {
+    this.setState({
+      isEditChaptersDialogOpen: !!course,
+      editedCourse: course,
+    });
+  };
 }
 
 const mapDispatchToProps = {
   onGetCourses: courseActions.getCourses,
   onCreateCourse: courseActions.createCourse,
   onUpdateCourse: courseActions.updateCourse,
+  onGetChapters: courseActions.getChapters,
+  onSetChapters: courseActions.setChapters,
 };
 export default connect(undefined, mapDispatchToProps)(CoursesPage);

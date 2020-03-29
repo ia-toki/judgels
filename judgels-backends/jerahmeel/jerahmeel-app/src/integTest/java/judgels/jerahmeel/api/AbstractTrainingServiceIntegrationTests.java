@@ -5,6 +5,7 @@ import static judgels.jerahmeel.api.mocks.MockJophiel.mockJophiel;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import judgels.jerahmeel.api.chapter.ChapterService;
 import judgels.jerahmeel.api.course.CourseService;
+import judgels.jerahmeel.api.course.chapter.CourseChapterService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -13,6 +14,7 @@ public class AbstractTrainingServiceIntegrationTests extends AbstractServiceInte
 
     protected CourseService courseService = createService(CourseService.class);
     protected ChapterService chapterService = createService(ChapterService.class);
+    protected CourseChapterService courseChapterService = createService(CourseChapterService.class);
 
     @BeforeAll
     static void setUpMocks() {

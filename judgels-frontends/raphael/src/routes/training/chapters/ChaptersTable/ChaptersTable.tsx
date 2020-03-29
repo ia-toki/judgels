@@ -25,6 +25,7 @@ export class ChaptersTable extends React.PureComponent<ChaptersTableProps> {
       <thead>
         <tr>
           <th className="col-id">ID</th>
+          <th className="col-jid">JID</th>
           <th>Name</th>
           <th className="col-actions" />
         </tr>
@@ -38,6 +39,7 @@ export class ChaptersTable extends React.PureComponent<ChaptersTableProps> {
     const rows = chapters.map(chapter => (
       <tr key={chapter.jid}>
         <td>{chapter.id}</td>
+        <td>{chapter.jid}</td>
         <td>{chapter.name}</td>
         <td>
           <Icon className="action" icon="edit" intent="primary" onClick={() => this.props.onEditChapter(chapter)} />
