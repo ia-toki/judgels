@@ -1,8 +1,9 @@
 import { statementLanguageDisplayNamesMap } from '../../modules/api/sandalphon/language';
 import { PutStatementLanguage, PutGradingLanguage } from './webPrefsReducer';
+import * as toastActions from '../toast/toastActions';
 
 export function switchStatementLanguage(language: string) {
-  return async (dispatch, getState, { toastActions }) => {
+  return async dispatch => {
     dispatch(PutStatementLanguage.create(language));
     toastActions.showSuccessToast(
       'Switched default statement language to ' + statementLanguageDisplayNamesMap[language] + '.'
