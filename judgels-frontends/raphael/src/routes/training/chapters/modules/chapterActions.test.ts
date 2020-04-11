@@ -95,4 +95,35 @@ describe('chapterActions', () => {
       await store.dispatch(chapterActions.setProblems(chapterJid, params));
     });
   });
+
+  describe('getLessons()', () => {
+    const responseBody = {
+      data: [],
+    };
+
+    it('calls API to get lessons', async () => {
+      nock(APP_CONFIG.apiUrls.jerahmeel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/chapters/${chapterJid}/lessons`)
+        .reply(200, responseBody);
+
+      const response = await store.dispatch(chapterActions.getLessons(chapterJid));
+      expect(response).toEqual(responseBody);
+    });
+  });
+
+  describe('setLessons()', () => {
+    const params = [];
+
+    it('calls API to set lessons', async () => {
+      nock(APP_CONFIG.apiUrls.jerahmeel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/chapters/${chapterJid}/lessons`)
+        .reply(200)
+        .put(`/chapters/${chapterJid}/lessons`, params)
+        .reply(200);
+
+      await store.dispatch(chapterActions.setLessons(chapterJid, params));
+    });
+  });
 });

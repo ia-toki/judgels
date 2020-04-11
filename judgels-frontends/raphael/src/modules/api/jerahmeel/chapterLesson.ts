@@ -1,12 +1,17 @@
 import { stringify } from 'query-string';
 
-import { get } from '../../../modules/api/http';
+import { get, put } from '../../../modules/api/http';
 import { LessonInfo, LessonStatement } from '../sandalphon/lesson';
 import { baseChapterURL } from './chapter';
 
 export interface ChapterLesson {
   alias: string;
   lessonJid: string;
+}
+
+export interface ChapterLessonData {
+  alias: string;
+  slug: string;
 }
 
 export interface ChapterLessonsResponse {
@@ -24,6 +29,10 @@ export interface ChapterLessonStatement {
 const baseURL = (chapterJid: string) => `${baseChapterURL(chapterJid)}/lessons`;
 
 export const chapterLessonAPI = {
+  setLessons: (token: string, chapterJid: string, data: ChapterLessonData[]): Promise<void> => {
+    return put(baseURL(chapterJid), token, data);
+  },
+
   getLessons: (token: string, chapterJid: string): Promise<ChapterLessonsResponse> => {
     return get(baseURL(chapterJid), token);
   },

@@ -18,6 +18,13 @@ public class ChapterLessonHibernateDao extends HibernateDao<ChapterLessonModel> 
     }
 
     @Override
+    public Optional<ChapterLessonModel> selectByLessonJid(String lessonJid) {
+        return selectByFilter(new FilterOptions.Builder<ChapterLessonModel>()
+                .putColumnsEq(ChapterLessonModel_.lessonJid, lessonJid)
+                .build());
+    }
+
+    @Override
     public Optional<ChapterLessonModel> selectByChapterJidAndLessonAlias(String chapterJid, String lessonAlias) {
         return selectByFilter(new FilterOptions.Builder<ChapterLessonModel>()
                 .putColumnsEq(ChapterLessonModel_.chapterJid, chapterJid)

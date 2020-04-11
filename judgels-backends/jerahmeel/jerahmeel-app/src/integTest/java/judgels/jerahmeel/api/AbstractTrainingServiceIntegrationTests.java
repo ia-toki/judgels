@@ -5,6 +5,7 @@ import static judgels.jerahmeel.api.mocks.MockSandalphon.mockSandalphon;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import judgels.jerahmeel.api.chapter.ChapterService;
+import judgels.jerahmeel.api.chapter.lesson.ChapterLessonService;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemService;
 import judgels.jerahmeel.api.course.CourseService;
 import judgels.jerahmeel.api.course.chapter.CourseChapterService;
@@ -19,6 +20,7 @@ public class AbstractTrainingServiceIntegrationTests extends AbstractServiceInte
     protected ChapterService chapterService = createService(ChapterService.class);
     protected CourseChapterService courseChapterService = createService(CourseChapterService.class);
     protected ChapterProblemService chapterProblemService = createService(ChapterProblemService.class);
+    protected ChapterLessonService chapterLessonService = createService(ChapterLessonService.class);
 
     @BeforeAll
     static void setUpMocks() {

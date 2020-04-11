@@ -8,6 +8,7 @@ import './ChaptersTable.css';
 export interface ChaptersTableProps {
   chapters: Chapter[];
   onEditChapter: (chapter: Chapter) => any;
+  onEditChapterLessons: (chapter: Chapter) => any;
   onEditChapterProblems: (chapter: Chapter) => any;
 }
 
@@ -44,6 +45,12 @@ export class ChaptersTable extends React.PureComponent<ChaptersTableProps> {
         <td>{chapter.name}</td>
         <td>
           <Icon className="action" icon="edit" intent="primary" onClick={() => this.props.onEditChapter(chapter)} />
+          <Icon
+            className="action"
+            icon="presentation"
+            intent="primary"
+            onClick={() => this.props.onEditChapterLessons(chapter)}
+          />
           <Icon
             className="action"
             icon="manual"

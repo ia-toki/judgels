@@ -5,6 +5,8 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { ChapterCreateDialog } from '../ChapterCreateDialog/ChapterCreateDialog';
 import { ChapterEditDialog } from '../ChapterEditDialog/ChapterEditDialog';
+import { ChapterLessonEditDialog } from '../ChapterLessonEditDialog/ChapterLessonEditDialog';
+import { ChapterProblemEditDialog } from '../ChapterProblemEditDialog/ChapterProblemEditDialog';
 import { ChaptersTable } from '../ChaptersTable/ChaptersTable';
 import {
   Chapter,
@@ -13,13 +15,15 @@ import {
   ChapterUpdateData,
 } from '../../../../modules/api/jerahmeel/chapter';
 import { ChapterProblemsResponse, ChapterProblemData } from '../../../../modules/api/jerahmeel/chapterProblem';
+import { ChapterLessonsResponse, ChapterLessonData } from '../../../../modules/api/jerahmeel/chapterLesson';
 import * as chapterActions from '../modules/chapterActions';
-import { ChapterProblemEditDialog } from '../ChapterProblemEditDialog/ChapterProblemEditDialog';
 
 export interface ChapterPageProps {
   onGetChapters: () => Promise<ChaptersResponse>;
   onCreateChapter: (data: ChapterCreateData) => Promise<void>;
   onUpdateChapter: (chapterJid: string, data: ChapterUpdateData) => Promise<void>;
+  onGetLessons: (chapterJid: string) => Promise<ChapterLessonsResponse>;
+  onSetLessons: (chapterJid: string, data: ChapterLessonData[]) => Promise<void>;
   onGetProblems: (chapterJid: string) => Promise<ChapterProblemsResponse>;
   onSetProblems: (chapterJid: string, data: ChapterProblemData[]) => Promise<void>;
 }
@@ -27,6 +31,7 @@ export interface ChapterPageProps {
 export interface ChaptersPageState {
   response?: ChaptersResponse;
   isEditDialogOpen: boolean;
+  isEditLessonsDialogOpen: boolean;
   isEditProblemsDialogOpen: boolean;
   editedChapter?: Chapter;
 }
@@ -34,6 +39,7 @@ export interface ChaptersPageState {
 class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> {
   state: ChaptersPageState = {
     isEditDialogOpen: false,
+    isEditLessonsDialogOpen: false,
     isEditProblemsDialogOpen: false,
   };
 
@@ -48,6 +54,7 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
         <hr />
         {this.renderCreateDialog()}
         {this.renderEditDialog()}
+        {this.renderEditLessonsDialog()}
         {this.renderEditProblemsDialog()}
         {this.renderChapters()}
       </ContentCard>
@@ -71,6 +78,19 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
         chapter={editedChapter}
         onUpdateChapter={this.updateChapter}
         onCloseDialog={() => this.editChapter(undefined)}
+      />
+    );
+  };
+
+  private renderEditLessonsDialog = () => {
+    const { isEditLessonsDialogOpen, editedChapter } = this.state;
+    return (
+      <ChapterLessonEditDialog
+        isOpen={isEditLessonsDialogOpen}
+        chapter={editedChapter}
+        onGetLessons={this.props.onGetLessons}
+        onSetLessons={this.props.onSetLessons}
+        onCloseDialog={() => this.editChapterLessons(undefined)}
       />
     );
   };
@@ -107,6 +127,7 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
       <ChaptersTable
         chapters={chapters}
         onEditChapter={this.editChapter}
+        onEditChapterLessons={this.editChapterLessons}
         onEditChapterProblems={this.editChapterProblems}
       />
     );
@@ -130,6 +151,13 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
     await this.refreshChapters();
   };
 
+  private editChapterLessons = async (chapter?: Chapter) => {
+    this.setState({
+      isEditLessonsDialogOpen: !!chapter,
+      editedChapter: chapter,
+    });
+  };
+
   private editChapterProblems = async (chapter?: Chapter) => {
     this.setState({
       isEditProblemsDialogOpen: !!chapter,
@@ -142,6 +170,8 @@ const mapDispatchToProps = {
   onGetChapters: chapterActions.getChapters,
   onCreateChapter: chapterActions.createChapter,
   onUpdateChapter: chapterActions.updateChapter,
+  onGetLessons: chapterActions.getLessons,
+  onSetLessons: chapterActions.setLessons,
   onGetProblems: chapterActions.getProblems,
   onSetProblems: chapterActions.setProblems,
 };

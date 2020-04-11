@@ -1,6 +1,7 @@
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { chapterAPI, ChapterCreateData, ChapterUpdateData } from '../../../../modules/api/jerahmeel/chapter';
 import { chapterProblemAPI, ChapterProblemData } from '../../../../modules/api/jerahmeel/chapterProblem';
+import { chapterLessonAPI, ChapterLessonData } from '../../../../modules/api/jerahmeel/chapterLesson';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function createChapter(data: ChapterCreateData) {
@@ -38,5 +39,20 @@ export function setProblems(chapterJid: string, data: ChapterProblemData[]) {
     const token = selectToken(getState());
     await chapterProblemAPI.setProblems(token, chapterJid, data);
     toastActions.showSuccessToast('Chapter problems updated.');
+  };
+}
+
+export function getLessons(chapterJid: string) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    return await chapterLessonAPI.getLessons(token, chapterJid);
+  };
+}
+
+export function setLessons(chapterJid: string, data: ChapterLessonData[]) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    await chapterLessonAPI.setLessons(token, chapterJid, data);
+    toastActions.showSuccessToast('Chapter lessons updated.');
   };
 }

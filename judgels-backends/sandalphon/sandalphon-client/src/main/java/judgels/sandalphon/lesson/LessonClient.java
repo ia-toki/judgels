@@ -3,6 +3,7 @@ package judgels.sandalphon.lesson;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.util.Map;
@@ -39,6 +40,12 @@ public class LessonClient {
                 .maximumSize(1_000)
                 .expireAfterWrite(Duration.ofSeconds(10))
                 .build(new LessonCacheLoader());
+    }
+
+    public Map<String, String> translateAllowedSlugsToJids(String actorJid, Set<String> slugs) {
+        return slugs.isEmpty()
+                ? ImmutableMap.of()
+                : clientLessonService.translateAllowedSlugsToJids(sandalphonClientAuthHeader, actorJid, slugs);
     }
 
     public LessonInfo getLesson(String lessonJid) {

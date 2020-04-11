@@ -45,6 +45,16 @@ public class MockSandalphon {
     public static final String PROBLEM_3_TYPE = "BUNDLE";
     private static final String[] PROBLEM_TYPES = {PROBLEM_1_TYPE, PROBLEM_2_TYPE, PROBLEM_3_TYPE};
 
+    public static final String LESSON_1_JID = "lessonJid1";
+    public static final String LESSON_2_JID = "lessonJid2";
+    public static final String LESSON_3_JID = "lessonJid3";
+    private static final String[] LESSON_JIDS = {LESSON_1_JID, LESSON_2_JID, LESSON_3_JID};
+
+    public static final String LESSON_1_SLUG = "lessonSlug1";
+    public static final String LESSON_2_SLUG = "lessonSlug2";
+    public static final String LESSON_3_SLUG = "lessonSlug3";
+    private static final String[] LESSON_SLUGS = {LESSON_1_SLUG, LESSON_2_SLUG, LESSON_3_SLUG};
+
     public static final int SANDALPHON_PORT = 9002;
 
     private MockSandalphon() {}
@@ -55,11 +65,17 @@ public class MockSandalphon {
 
         WireMockServer mockSandalphon = new WireMockServer(wireMockConfig()
                 .port(SANDALPHON_PORT)
-                .extensions(new TranslateAllowedSlugToJidsTransformer()));
+                .extensions(
+                        new TranslateAllowedProblemSlugToJidsTransformer(),
+                        new TranslateAllowedLessonSlugToJidsTransformer()));
 
         mockSandalphon.stubFor(post(urlPathEqualTo("/api/v2/client/problems/allowed-slug-to-jid"))
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
-                .willReturn(aResponse().withStatus(200).withTransformers("allowed-slug-to-jid")));
+                .willReturn(aResponse().withStatus(200).withTransformers("allowed-problem-slug-to-jid")));
+
+        mockSandalphon.stubFor(post(urlPathEqualTo("/api/v2/client/lessons/allowed-slug-to-jid"))
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(aResponse().withStatus(200).withTransformers("allowed-lesson-slug-to-jid")));
 
         mockSandalphon.stubFor(post("/api/v2/client/problems/jids")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
@@ -79,6 +95,23 @@ public class MockSandalphon {
                                 "slug", PROBLEM_3_SLUG,
                                 "defaultLanguage", "en",
                                 "titlesByLanguage", ImmutableMap.of("en", "Problem 3"))))));
+
+
+        mockSandalphon.stubFor(post("/api/v2/client/lessons/jids")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        PROBLEM_1_JID, ImmutableMap.of(
+                                "slug", LESSON_1_SLUG,
+                                "defaultLanguage", "en",
+                                "titlesByLanguage", ImmutableMap.of("en", "Lesson 1")),
+                        PROBLEM_2_JID, ImmutableMap.of(
+                                "slug", LESSON_2_SLUG,
+                                "defaultLanguage", "en",
+                                "titlesByLanguage", ImmutableMap.of("en", "Lesson 2")),
+                        PROBLEM_3_JID, ImmutableMap.of(
+                                "slug", LESSON_3_SLUG,
+                                "defaultLanguage", "en",
+                                "titlesByLanguage", ImmutableMap.of("en", "Lesson 3"))))));
 
         /* Mocks for problem info */
 
@@ -105,6 +138,29 @@ public class MockSandalphon {
                         "slug", PROBLEM_3_SLUG,
                         "defaultLanguage", "en",
                         "titlesByLanguage", ImmutableMap.of("en", "Problem 3")))));
+
+        /* Mocks for lesson info */
+
+        mockSandalphon.stubFor(get("/api/v2/client/lessons/" + LESSON_1_JID)
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        "slug", LESSON_1_SLUG,
+                        "defaultLanguage", "en",
+                        "titlesByLanguage", ImmutableMap.of("en", "Lesson 1")))));
+
+        mockSandalphon.stubFor(get("/api/v2/client/lessons/" + LESSON_2_JID)
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        "slug", LESSON_2_SLUG,
+                        "defaultLanguage", "en",
+                        "titlesByLanguage", ImmutableMap.of("en", "Lesson 2")))));
+
+        mockSandalphon.stubFor(get("/api/v2/client/lessons/" + LESSON_3_JID)
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        "slug", LESSON_3_SLUG,
+                        "defaultLanguage", "en",
+                        "titlesByLanguage", ImmutableMap.of("en", "Lesson 3")))));
 
         /* Mocks for programming problem submission config */
 
@@ -226,7 +282,7 @@ public class MockSandalphon {
         return mockSandalphon;
     }
 
-    static class TranslateAllowedSlugToJidsTransformer extends ResponseDefinitionTransformer {
+    static class TranslateAllowedProblemSlugToJidsTransformer extends ResponseDefinitionTransformer {
         @Override
         public ResponseDefinition transform(
                 Request request,
@@ -262,7 +318,52 @@ public class MockSandalphon {
 
         @Override
         public String getName() {
-            return "allowed-slug-to-jid";
+            return "allowed-problem-slug-to-jid";
+        }
+
+        @Override
+        public boolean applyGlobally() {
+            return false;
+        }
+    }
+
+    static class TranslateAllowedLessonSlugToJidsTransformer extends ResponseDefinitionTransformer {
+        @Override
+        public ResponseDefinition transform(
+                Request request,
+                ResponseDefinition responseDefinition,
+                FileSource files,
+                Parameters parameters) {
+
+            Set<String> slugs;
+            try {
+                slugs = MAPPER.readValue(request.getBody(), new TypeReference<Set<String>>() {});
+            } catch (IOException e) {
+                return responseDefinition;
+            }
+
+            Map<String, String> res = new HashMap<>();
+            for (int i = 0; i < LESSON_SLUGS.length; i++) {
+                if (slugs.contains(LESSON_SLUGS[i])) {
+                    res.put(LESSON_SLUGS[i], LESSON_JIDS[i]);
+                }
+            }
+
+            byte[] body;
+            try {
+                body = MAPPER.writeValueAsBytes(res);
+            } catch (IOException e) {
+                return responseDefinition;
+            }
+
+            return new ResponseDefinitionBuilder()
+                    .withBody(body)
+                    .build();
+        }
+
+        @Override
+        public String getName() {
+            return "allowed-lesson-slug-to-jid";
         }
 
         @Override
