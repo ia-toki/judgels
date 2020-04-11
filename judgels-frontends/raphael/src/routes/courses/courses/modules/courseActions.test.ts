@@ -1,11 +1,9 @@
-import { push } from 'connected-react-router';
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
-import { CourseErrors, Course } from '../../../../modules/api/jerahmeel/course';
+import { Course } from '../../../../modules/api/jerahmeel/course';
 import * as courseActions from './courseActions';
 import { PutCourse } from './courseReducer';
 

@@ -10,10 +10,14 @@
   }
 
   .col-actions {
-    width: 50px;
+    width: 70px;
   }
 
   .action {
     cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 10px;
   }
 }

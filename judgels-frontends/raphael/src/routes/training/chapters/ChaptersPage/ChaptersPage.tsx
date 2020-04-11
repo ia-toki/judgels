@@ -12,23 +12,29 @@ import {
   ChapterCreateData,
   ChapterUpdateData,
 } from '../../../../modules/api/jerahmeel/chapter';
+import { ChapterProblemsResponse, ChapterProblemData } from '../../../../modules/api/jerahmeel/chapterProblem';
 import * as chapterActions from '../modules/chapterActions';
+import { ChapterProblemEditDialog } from '../ChapterProblemEditDialog/ChapterProblemEditDialog';
 
 export interface ChapterPageProps {
   onGetChapters: () => Promise<ChaptersResponse>;
   onCreateChapter: (data: ChapterCreateData) => Promise<void>;
   onUpdateChapter: (chapterJid: string, data: ChapterUpdateData) => Promise<void>;
+  onGetProblems: (chapterJid: string) => Promise<ChapterProblemsResponse>;
+  onSetProblems: (chapterJid: string, data: ChapterProblemData[]) => Promise<void>;
 }
 
 export interface ChaptersPageState {
   response?: ChaptersResponse;
   isEditDialogOpen: boolean;
+  isEditProblemsDialogOpen: boolean;
   editedChapter?: Chapter;
 }
 
 class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> {
   state: ChaptersPageState = {
     isEditDialogOpen: false,
+    isEditProblemsDialogOpen: false,
   };
 
   componentDidMount() {
@@ -42,6 +48,7 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
         <hr />
         {this.renderCreateDialog()}
         {this.renderEditDialog()}
+        {this.renderEditProblemsDialog()}
         {this.renderChapters()}
       </ContentCard>
     );
@@ -68,6 +75,19 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
     );
   };
 
+  private renderEditProblemsDialog = () => {
+    const { isEditProblemsDialogOpen, editedChapter } = this.state;
+    return (
+      <ChapterProblemEditDialog
+        isOpen={isEditProblemsDialogOpen}
+        chapter={editedChapter}
+        onGetProblems={this.props.onGetProblems}
+        onSetProblems={this.props.onSetProblems}
+        onCloseDialog={() => this.editChapterProblems(undefined)}
+      />
+    );
+  };
+
   private renderChapters = () => {
     const { response } = this.state;
     if (!response) {
@@ -83,7 +103,13 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
       );
     }
 
-    return <ChaptersTable chapters={chapters} onEditChapter={this.editChapter} />;
+    return (
+      <ChaptersTable
+        chapters={chapters}
+        onEditChapter={this.editChapter}
+        onEditChapterProblems={this.editChapterProblems}
+      />
+    );
   };
 
   private createChapter = async (data: ChapterCreateData) => {
@@ -103,11 +129,20 @@ class ChaptersPage extends React.Component<ChapterPageProps, ChaptersPageState> 
     this.editChapter(undefined);
     await this.refreshChapters();
   };
+
+  private editChapterProblems = async (chapter?: Chapter) => {
+    this.setState({
+      isEditProblemsDialogOpen: !!chapter,
+      editedChapter: chapter,
+    });
+  };
 }
 
 const mapDispatchToProps = {
   onGetChapters: chapterActions.getChapters,
   onCreateChapter: chapterActions.createChapter,
   onUpdateChapter: chapterActions.updateChapter,
+  onGetProblems: chapterActions.getProblems,
+  onSetProblems: chapterActions.setProblems,
 };
 export default connect(undefined, mapDispatchToProps)(ChaptersPage);

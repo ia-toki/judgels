@@ -1,6 +1,7 @@
 import { Classes, Button, Intent, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
+import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { CourseChaptersTable } from '../CourseChaptersTable/CourseChaptersTable';
 import { Course } from '../../../../modules/api/jerahmeel/course';
 import { CourseChaptersResponse, CourseChapter } from '../../../../modules/api/jerahmeel/courseChapter';
@@ -39,11 +40,6 @@ export class CourseChapterEditDialog extends React.Component<
   }
 
   render() {
-    const { response } = this.state;
-    if (!response) {
-      return null;
-    }
-
     const { isOpen } = this.props;
     return (
       <div className="content-card__section">
@@ -61,6 +57,10 @@ export class CourseChapterEditDialog extends React.Component<
 
   private renderDialogContent = () => {
     const { response, isEditing } = this.state;
+    if (!response) {
+      return this.renderDialogForm(<LoadingState />, null);
+    }
+
     if (isEditing) {
       const props: any = {
         validator: this.validateChapters,
@@ -81,7 +81,7 @@ export class CourseChapterEditDialog extends React.Component<
       <div className={Classes.DIALOG_BODY}>{content}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.props.onCloseDialog} />
+          <Button text="Cancel" onClick={this.closeDialog} />
           {submitButton}
         </div>
       </div>

@@ -1,5 +1,7 @@
 package judgels.jerahmeel.chapter.problem;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
@@ -10,11 +12,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
+import judgels.jerahmeel.api.chapter.problem.ChapterProblemData;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemService;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemWorksheet;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemsResponse;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.chapter.ChapterStore;
+import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -24,6 +28,7 @@ import judgels.service.api.actor.AuthHeader;
 
 public class ChapterProblemResource implements ChapterProblemService {
     private final ActorChecker actorChecker;
+    private final RoleChecker roleChecker;
     private final ChapterStore chapterStore;
     private final ChapterProblemStore problemStore;
     private final ProblemClient problemClient;
@@ -32,16 +37,45 @@ public class ChapterProblemResource implements ChapterProblemService {
     @Inject
     public ChapterProblemResource(
             ActorChecker actorChecker,
+            RoleChecker roleChecker,
             ChapterStore chapterStore,
             ChapterProblemStore problemStore,
             ProblemClient problemClient,
             StatsStore statsStore) {
 
         this.actorChecker = actorChecker;
+        this.roleChecker = roleChecker;
         this.chapterStore = chapterStore;
         this.problemStore = problemStore;
         this.problemClient = problemClient;
         this.statsStore = statsStore;
+    }
+
+    @Override
+    @UnitOfWork
+    public void setProblems(AuthHeader authHeader, String chapterJid, List<ChapterProblemData> data) {
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(chapterStore.getChapterByJid(chapterJid));
+        checkAllowed(roleChecker.isAdmin(actorJid));
+
+        Set<String> aliases = data.stream().map(ChapterProblemData::getAlias).collect(Collectors.toSet());
+        Set<String> slugs = data.stream().map(ChapterProblemData::getSlug).collect(Collectors.toSet());
+
+        checkArgument(data.size() <= 100, "Cannot set more than 100 problems.");
+        checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
+        checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
+
+        Map<String, String> slugToJidMap = problemClient.translateAllowedSlugsToJids(actorJid, slugs);
+
+        List<ChapterProblem> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(problem ->
+                new ChapterProblem.Builder()
+                        .alias(problem.getAlias())
+                        .problemJid(slugToJidMap.get(problem.getSlug()))
+                        .type(problem.getType())
+                        .build())
+                .collect(Collectors.toList());
+
+        problemStore.setProblems(chapterJid, setData);
     }
 
     @Override
