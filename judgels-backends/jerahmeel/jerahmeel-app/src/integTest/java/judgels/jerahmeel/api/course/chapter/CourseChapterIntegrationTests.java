@@ -19,9 +19,11 @@ class CourseChapterIntegrationTests extends AbstractTrainingServiceIntegrationTe
 
         Course courseA = courseService.createCourse(ADMIN_HEADER, new CourseCreateData.Builder()
                 .slug("course-a")
+                .name("Course A")
                 .build());
         Course courseB = courseService.createCourse(ADMIN_HEADER, new CourseCreateData.Builder()
                 .slug("course-b")
+                .name("Course B")
                 .build());
 
         Chapter chapterA = chapterService.createChapter(ADMIN_HEADER, new ChapterCreateData.Builder()

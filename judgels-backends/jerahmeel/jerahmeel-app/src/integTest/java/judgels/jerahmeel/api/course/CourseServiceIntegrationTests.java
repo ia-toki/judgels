@@ -18,8 +18,6 @@ class CourseServiceIntegrationTests extends AbstractTrainingServiceIntegrationTe
 
         Course courseA = courseService.createCourse(ADMIN_HEADER, new CourseCreateData.Builder()
                 .slug("course-a")
-                .build());
-        courseA = courseService.updateCourse(ADMIN_HEADER, courseA.getJid(), new CourseUpdateData.Builder()
                 .name("Course A")
                 .description("This is course A")
                 .build());
@@ -30,12 +28,13 @@ class CourseServiceIntegrationTests extends AbstractTrainingServiceIntegrationTe
 
         Course courseB = courseService.createCourse(ADMIN_HEADER, new CourseCreateData.Builder()
                 .slug("course-b")
+                .name("Course B")
                 .build());
 
         assertThat(courseB.getSlug()).isEqualTo("course-b");
 
         assertThatRemoteExceptionThrownBy(() -> courseService
-                .createCourse(ADMIN_HEADER, new CourseCreateData.Builder().slug("course-a").build()))
+                .createCourse(ADMIN_HEADER, new CourseCreateData.Builder().slug("course-a").name("Course A").build()))
                 .isGeneratedFromErrorType(SLUG_ALREADY_EXISTS);
 
         assertThatRemoteExceptionThrownBy(() -> courseService
@@ -48,7 +47,7 @@ class CourseServiceIntegrationTests extends AbstractTrainingServiceIntegrationTe
         // as user
 
         assertThatRemoteExceptionThrownBy(() -> courseService
-                .createCourse(USER_HEADER, new CourseCreateData.Builder().slug("course-c").build()))
+                .createCourse(USER_HEADER, new CourseCreateData.Builder().slug("course-c").name("Course C").build()))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         response = courseService.getCourses(Optional.of(USER_HEADER));

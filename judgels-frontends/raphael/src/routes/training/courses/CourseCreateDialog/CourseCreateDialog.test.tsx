@@ -43,9 +43,19 @@ describe('CourseCreateDialog', () => {
     const slug = wrapper.find('input[name="slug"]');
     slug.simulate('change', { target: { value: 'new-course' } });
 
+    const name = wrapper.find('input[name="name"]');
+    name.simulate('change', { target: { value: 'New course' } });
+
+    const description = wrapper.find('textarea[name="description"]');
+    description.simulate('change', { target: { value: 'New description' } });
+
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onCreateCourse).toHaveBeenCalledWith({ slug: 'new-course' });
+    expect(onCreateCourse).toHaveBeenCalledWith({
+      slug: 'new-course',
+      name: 'New course',
+      description: 'New description',
+    });
   });
 });

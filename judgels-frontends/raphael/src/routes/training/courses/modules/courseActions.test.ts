@@ -22,7 +22,7 @@ describe('courseActions', () => {
   });
 
   describe('createCourse()', () => {
-    const params = { slug: 'new-course' };
+    const params = { slug: 'new-course', name: 'New Course' };
 
     describe('when the slug does not already exist', () => {
       it('calls API to create course', async () => {

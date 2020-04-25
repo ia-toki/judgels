@@ -110,7 +110,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
 
     @Test
     void chapter_flow() {
-        Course course = courseStore.createCourse(new CourseCreateData.Builder().slug("course").build());
+        Course course = courseStore.createCourse(new CourseCreateData.Builder().slug("course").name("Course").build());
 
         Chapter chapter1 = chapterStore.createChapter(new ChapterCreateData.Builder().name("chapter1").build());
         Chapter chapter2 = chapterStore.createChapter(new ChapterCreateData.Builder().name("chapter2").build());

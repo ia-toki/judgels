@@ -71,8 +71,8 @@ public class CourseStore {
 
         CourseModel model = new CourseModel();
         model.slug = data.getSlug();
-        model.name = data.getSlug();
-        model.description = "";
+        model.name = data.getName();
+        model.description = data.getDescription().orElse("");
         return fromModel(courseDao.insert(model));
     }
 
