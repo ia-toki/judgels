@@ -23,6 +23,8 @@ export interface CoursesResponse {
 
 export interface CourseCreateData {
   slug: string;
+  name: string;
+  description?: string;
 }
 
 export interface CourseUpdateData {
