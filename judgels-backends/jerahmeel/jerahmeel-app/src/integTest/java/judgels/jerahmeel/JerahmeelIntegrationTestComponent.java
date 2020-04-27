@@ -2,6 +2,7 @@ package judgels.jerahmeel;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.jerahmeel.archive.ArchiveStore;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.course.CourseStore;
@@ -27,6 +28,7 @@ public interface JerahmeelIntegrationTestComponent {
     CourseChapterStore courseChapterStore();
     ChapterStore chapterStore();
     ChapterProblemStore chapterProblemStore();
+    ArchiveStore archiveStore();
     ProblemSetStore problemSetStore();
     ProblemSetProblemStore problemSetProblemStore();
     StatsProcessor statsProcessor();

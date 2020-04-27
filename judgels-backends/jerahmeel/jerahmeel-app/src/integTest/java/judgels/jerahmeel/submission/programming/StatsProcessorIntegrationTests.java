@@ -23,6 +23,8 @@ import judgels.gabriel.api.TestGroupResult;
 import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.AbstractIntegrationTests;
 import judgels.jerahmeel.JerahmeelIntegrationTestComponent;
+import judgels.jerahmeel.api.archive.Archive;
+import judgels.jerahmeel.api.archive.ArchiveCreateData;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterCreateData;
 import judgels.jerahmeel.api.chapter.ChapterProgress;
@@ -41,10 +43,12 @@ import judgels.jerahmeel.api.problemset.ProblemSetProgress;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.user.UserStats;
 import judgels.jerahmeel.api.user.UserTopStatsEntry;
+import judgels.jerahmeel.archive.ArchiveStore;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.course.CourseStore;
 import judgels.jerahmeel.course.chapter.CourseChapterStore;
+import judgels.jerahmeel.persistence.ArchiveModel;
 import judgels.jerahmeel.persistence.ChapterModel;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.CourseChapterModel;
@@ -67,6 +71,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {
+        ArchiveModel.class,
         CourseModel.class,
         CourseChapterModel.class,
         ChapterModel.class,
@@ -89,6 +94,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
     private CourseChapterStore courseChapterStore;
     private ChapterStore chapterStore;
     private ChapterProblemStore chapterProblemStore;
+    private ArchiveStore archiveStore;
     private ProblemSetStore problemSetStore;
     private ProblemSetProblemStore problemSetProblemStore;
     private StatsProcessor statsProcessor;
@@ -102,6 +108,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         courseChapterStore = component.courseChapterStore();
         chapterStore = component.chapterStore();
         chapterProblemStore = component.chapterProblemStore();
+        archiveStore = component.archiveStore();
         problemSetStore = component.problemSetStore();
         problemSetProblemStore = component.problemSetProblemStore();
         statsProcessor = component.statsProcessor();
@@ -163,7 +170,16 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
 
     @Test
     void problem_set_flow() {
-        ProblemSet problemSet = problemSetStore.createProblemSet(new ProblemSetCreateData.Builder().slug("ps").build());
+        Archive archive = archiveStore.createArchive(new ArchiveCreateData.Builder()
+                .slug("archive")
+                .name("Archive")
+                .category("Category")
+                .build());
+        ProblemSet problemSet = problemSetStore.createProblemSet(new ProblemSetCreateData.Builder()
+                .slug("ps")
+                .name("Problem Set")
+                .archiveSlug(archive.getSlug())
+                .build());
 
         problemSetProblemStore.setProblems(problemSet.getJid(), ImmutableList.of(
                 new ProblemSetProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_1).build(),

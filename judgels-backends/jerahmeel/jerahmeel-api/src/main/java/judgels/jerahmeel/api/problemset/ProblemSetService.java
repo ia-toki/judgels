@@ -4,8 +4,10 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.Optional;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -36,4 +38,19 @@ public interface ProblemSetService {
     ProblemSet getProblemSetBySlug(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("problemSetSlug") String problemSetSlug);
+
+    @POST
+    @Path("/")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    ProblemSet createProblemSet(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ProblemSetCreateData data);
+
+    @POST
+    @Path("/{problemSetJid}")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    ProblemSet updateProblemSet(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            ProblemSetUpdateData data);
 }

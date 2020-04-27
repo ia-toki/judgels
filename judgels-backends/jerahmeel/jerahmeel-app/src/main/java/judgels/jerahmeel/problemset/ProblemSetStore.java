@@ -14,6 +14,10 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
+import judgels.jerahmeel.api.problemset.ProblemSetErrors;
+import judgels.jerahmeel.api.problemset.ProblemSetUpdateData;
+import judgels.jerahmeel.persistence.ArchiveDao;
+import judgels.jerahmeel.persistence.ArchiveModel;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.persistence.SearchOptions;
@@ -22,13 +26,15 @@ import judgels.persistence.api.SelectionOptions;
 
 public class ProblemSetStore {
     private final ProblemSetDao problemSetDao;
+    private final ArchiveDao archiveDao;
 
     private final LoadingCache<String, ProblemSet> problemSetByJidCache;
     private final LoadingCache<String, ProblemSet> problemSetBySlugCache;
 
     @Inject
-    public ProblemSetStore(ProblemSetDao problemSetDao) {
+    public ProblemSetStore(ProblemSetDao problemSetDao, ArchiveDao archiveDao) {
         this.problemSetDao = problemSetDao;
+        this.archiveDao = archiveDao;
 
         this.problemSetByJidCache = Caffeine.newBuilder()
                 .maximumSize(100)
@@ -90,12 +96,56 @@ public class ProblemSetStore {
     }
 
     public ProblemSet createProblemSet(ProblemSetCreateData data) {
+        if (problemSetDao.selectBySlug(data.getSlug()).isPresent()) {
+            throw ProblemSetErrors.slugAlreadyExists(data.getSlug());
+        }
+
+        Optional<ArchiveModel> archiveModel = archiveDao.selectBySlug(data.getArchiveSlug());
+        if (!archiveModel.isPresent()) {
+            throw ProblemSetErrors.archiveSlugNotFound(data.getArchiveSlug());
+        }
+
         ProblemSetModel model = new ProblemSetModel();
-        model.archiveJid = "";
+        model.archiveJid = archiveModel.get().jid;
         model.slug = data.getSlug();
-        model.name = data.getSlug();
-        model.description = "";
+        model.name = data.getName();
+        model.description = data.getDescription().orElse("");
         return fromModel(problemSetDao.insert(model));
+    }
+
+    public Optional<ProblemSet> updateProblemSet(String problemSetJid, ProblemSetUpdateData data) {
+        return problemSetDao.selectByJid(problemSetJid).map(model -> {
+            if (data.getSlug().isPresent()) {
+                String newSlug = data.getSlug().get();
+                if (model.slug == null || !model.slug.equals(newSlug)) {
+                    if (problemSetDao.selectBySlug(newSlug).isPresent()) {
+                        throw ProblemSetErrors.slugAlreadyExists(newSlug);
+                    }
+                }
+            }
+
+            if (data.getArchiveSlug().isPresent()) {
+                String newArchiveSlug = data.getArchiveSlug().get();
+                Optional<ArchiveModel> archiveModel = archiveDao.selectBySlug(newArchiveSlug);
+                if (!archiveModel.isPresent()) {
+                    throw ProblemSetErrors.archiveSlugNotFound(newArchiveSlug);
+                }
+                model.archiveJid = archiveModel.get().jid;
+            }
+
+            problemSetByJidCache.invalidate(problemSetJid);
+            if (model.slug != null) {
+                problemSetBySlugCache.invalidate(model.slug);
+            }
+            if (data.getSlug().isPresent()) {
+                problemSetBySlugCache.invalidate(data.getSlug().get());
+            }
+
+            data.getSlug().ifPresent(slug -> model.slug = slug);
+            data.getName().ifPresent(name -> model.name = name);
+            data.getDescription().ifPresent(description -> model.description = description);
+            return fromModel(problemSetDao.update(model));
+        });
     }
 
     private static ProblemSet fromModel(ProblemSetModel model) {

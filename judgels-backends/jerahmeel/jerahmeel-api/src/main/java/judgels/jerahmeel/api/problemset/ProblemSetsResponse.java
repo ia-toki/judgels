@@ -10,6 +10,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableProblemSetsResponse.class)
 public interface ProblemSetsResponse {
     Page<ProblemSet> getData();
+    Map<String, String> getArchiveSlugsMap();
     Map<String, String> getArchiveDescriptionsMap();
     Optional<String> getArchiveName();
     Map<String, ProblemSetProgress> getProblemSetProgressesMap();

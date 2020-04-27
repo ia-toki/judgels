@@ -10,6 +10,7 @@ import judgels.jerahmeel.api.chapter.lesson.ChapterLessonService;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemService;
 import judgels.jerahmeel.api.course.CourseService;
 import judgels.jerahmeel.api.course.chapter.CourseChapterService;
+import judgels.jerahmeel.api.problemset.ProblemSetService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -23,6 +24,7 @@ public class AbstractTrainingServiceIntegrationTests extends AbstractServiceInte
     protected ChapterProblemService chapterProblemService = createService(ChapterProblemService.class);
     protected ChapterLessonService chapterLessonService = createService(ChapterLessonService.class);
     protected ArchiveService archiveService = createService(ArchiveService.class);
+    protected ProblemSetService problemSetService = createService(ProblemSetService.class);
 
     @BeforeAll
     static void setUpMocks() {

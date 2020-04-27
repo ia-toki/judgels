@@ -1,0 +1,23 @@
+@import '../../../../styles/table';
+
+.problem-sets-table {
+  .col-id {
+    width: 60px;
+  }
+
+  .col-slug {
+    width: 200px;
+  }
+
+  .col-actions {
+    width: 70px;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 10px;
+  }
+}
