@@ -1,4 +1,4 @@
-import { Classes, Button, Intent, Dialog } from '@blueprintjs/core';
+import { Callout, Classes, Button, Intent, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -78,7 +78,10 @@ export class CourseChapterEditDialog extends React.Component<
 
   private renderDialogForm = (content: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className={Classes.DIALOG_BODY}>{content}</div>
+      <div className={Classes.DIALOG_BODY}>
+        {content}
+        {this.renderInstructions()}
+      </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={this.closeDialog} />
@@ -87,6 +90,24 @@ export class CourseChapterEditDialog extends React.Component<
       </div>
     </>
   );
+
+  private renderInstructions = () => {
+    if (!this.state.isEditing) {
+      return null;
+    }
+
+    return (
+      <Callout icon={null}>
+        <p>
+          <strong>Format:</strong> <code>alias,chapterJid</code>
+        </p>
+        <p>
+          <strong>Example:</strong>
+        </p>
+        <pre>{'A,JIDSESS123\nB,JIDSESS456'}</pre>
+      </Callout>
+    );
+  };
 
   private refreshChapters = async () => {
     if (this.props.isOpen) {

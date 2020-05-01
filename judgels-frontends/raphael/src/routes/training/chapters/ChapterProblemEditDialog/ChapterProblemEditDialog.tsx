@@ -1,9 +1,10 @@
-import { Classes, Button, Intent, Dialog } from '@blueprintjs/core';
+import { Callout, Classes, Button, Intent, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ChapterProblemsTable } from '../ChapterProblemsTable/ChapterProblemsTable';
 import { Chapter } from '../../../../modules/api/jerahmeel/chapter';
+import { ProblemType } from '../../../../modules/api/sandalphon/problem';
 import {
   ChapterProblemsResponse,
   ChapterProblem,
@@ -82,7 +83,10 @@ export class ChapterProblemEditDialog extends React.Component<
 
   private renderDialogForm = (content: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className={Classes.DIALOG_BODY}>{content}</div>
+      <div className={Classes.DIALOG_BODY}>
+        {content}
+        {this.renderInstructions()}
+      </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={this.closeDialog} />
@@ -91,6 +95,24 @@ export class ChapterProblemEditDialog extends React.Component<
       </div>
     </>
   );
+
+  private renderInstructions = () => {
+    if (!this.state.isEditing) {
+      return null;
+    }
+
+    return (
+      <Callout icon={null}>
+        <p>
+          <strong>Format:</strong> <code>alias,slug[,type]</code>
+        </p>
+        <p>
+          <strong>Example:</strong>
+        </p>
+        <pre>{'A,hello\nB,tree,PROGRAMMING\nC,flow,BUNDLE'}</pre>
+      </Callout>
+    );
+  };
 
   private refreshProblems = async () => {
     if (this.props.isOpen) {
@@ -113,7 +135,15 @@ export class ChapterProblemEditDialog extends React.Component<
   };
 
   private serializeProblems = (problems: ChapterProblem[], problemsMap): string => {
-    return problems.map(c => `${c.alias},${problemsMap[c.problemJid].slug},${c.type}`).join('\n');
+    return problems
+      .map(p => {
+        if (p.type !== ProblemType.Programming) {
+          return `${p.alias},${problemsMap[p.problemJid].slug},${p.type}`;
+        } else {
+          return `${p.alias},${problemsMap[p.problemJid].slug}`;
+        }
+      })
+      .join('\n');
   };
 
   private deserializeProblems = (problems: string): ChapterProblemData[] => {
@@ -128,7 +158,7 @@ export class ChapterProblemEditDialog extends React.Component<
           ({
             alias: s[0],
             slug: s[1],
-            type: s[2],
+            type: s[2] || ProblemType.Programming,
           } as ChapterProblemData)
       );
   };
@@ -144,17 +174,17 @@ export class ChapterProblemEditDialog extends React.Component<
     const aliases: string[] = [];
     const slugs: string[] = [];
 
-    for (const c of problems) {
-      if (c.length !== 3) {
-        return 'Each line must contain 3 comma-separated elements';
+    for (const p of problems) {
+      if (p.length < 2 || p.length > 3) {
+        return 'Each line must contain 2-3 comma-separated elements';
       }
-      const alias = c[0];
+      const alias = p[0];
       const aliasValidation = Alias(alias);
       if (aliasValidation) {
         return 'Problem aliases: ' + aliasValidation;
       }
 
-      const slug = c[1];
+      const slug = p[1];
 
       aliases.push(alias);
       slugs.push(slug);

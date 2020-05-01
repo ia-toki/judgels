@@ -65,9 +65,9 @@ describe('ProblemSetProblemEditDialog', () => {
     wrapper.update();
 
     const problemsField = wrapper.find('textarea[name="problems"]');
-    expect(problemsField.prop('value')).toEqual('A,slug-1,PROGRAMMING\nB,slug-2,BUNDLE');
+    expect(problemsField.prop('value')).toEqual('A,slug-1\nB,slug-2,BUNDLE');
 
-    problemsField.simulate('change', { target: { value: 'P, slug-3,PROGRAMMING\n  Q,slug-4,BUNDLE  ' } });
+    problemsField.simulate('change', { target: { value: 'P, slug-3\n  Q,slug-4,BUNDLE  ' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');
