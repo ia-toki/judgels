@@ -145,9 +145,6 @@ def check(branch_to_compare):
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael ci && \\')
             elif project == ':sandalphon':
                 print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check && \\'.format(project.replace(':', '/'))) 
-            elif project == ':jerahmeel':
-                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check && \\'.format(project.replace(':', '/'))) 
-                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check && \\'.format(project.replace(':', '/'))) 
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check && \\'.format(project.replace(':', '/')))
     print('true')
