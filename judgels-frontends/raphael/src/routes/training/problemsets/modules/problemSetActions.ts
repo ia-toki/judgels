@@ -8,6 +8,7 @@ import {
   ProblemSetUpdateData,
   ProblemSetErrors,
 } from '../../../../modules/api/jerahmeel/problemSet';
+import { problemSetProblemAPI, ProblemSetProblemData } from '../../../../modules/api/jerahmeel/problemSetProblem';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function createProblemSet(data: ProblemSetCreateData) {
@@ -50,5 +51,20 @@ export function getProblemSets(page: number) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await problemSetAPI.getProblemSets(token, undefined, undefined, page);
+  };
+}
+
+export function getProblems(problemSetJid: string) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    return await problemSetProblemAPI.getProblems(token, problemSetJid);
+  };
+}
+
+export function setProblems(problemSetJid: string, data: ProblemSetProblemData[]) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    await problemSetProblemAPI.setProblems(token, problemSetJid, data);
+    toastActions.showSuccessToast('Problemset problems updated.');
   };
 }

@@ -1,7 +1,6 @@
 import { stringify } from 'query-string';
 
-import { get } from '../../../modules/api/http';
-
+import { get, put } from '../../../modules/api/http';
 import { Profile } from '../jophiel/profile';
 import { ProblemInfo, ProblemType } from '../sandalphon/problem';
 import { baseProblemSetURL } from './problemSet';
@@ -10,6 +9,12 @@ import { ProblemProgress, ProblemStats, ProblemTopStats } from './problem';
 export interface ProblemSetProblem {
   alias: string;
   problemJid: string;
+  type: ProblemType;
+}
+
+export interface ProblemSetProblemData {
+  alias: string;
+  slug: string;
   type: ProblemType;
 }
 
@@ -36,6 +41,10 @@ export interface ProblemStatsResponse {
 const baseURL = (problemSetJid: string) => `${baseProblemSetURL(problemSetJid)}/problems`;
 
 export const problemSetProblemAPI = {
+  setProblems: (token: string, problemSetJid: string, data: ProblemSetProblemData[]): Promise<void> => {
+    return put(baseURL(problemSetJid), token, data);
+  },
+
   getProblems: (token: string, problemSetJid: string): Promise<ProblemSetProblemsResponse> => {
     return get(baseURL(problemSetJid), token);
   },

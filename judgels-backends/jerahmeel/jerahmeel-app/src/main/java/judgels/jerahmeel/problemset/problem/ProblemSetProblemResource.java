@@ -1,5 +1,7 @@
 package judgels.jerahmeel.problemset.problem;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
@@ -15,11 +17,13 @@ import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemStats;
 import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
+import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemData;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemService;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemWorksheet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemsResponse;
 import judgels.jerahmeel.api.problemset.problem.ProblemStatsResponse;
 import judgels.jerahmeel.problemset.ProblemSetStore;
+import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
@@ -31,6 +35,7 @@ import judgels.service.api.actor.AuthHeader;
 
 public class ProblemSetProblemResource implements ProblemSetProblemService {
     private final ActorChecker actorChecker;
+    private final RoleChecker roleChecker;
     private final ProblemSetStore problemSetStore;
     private final ProblemSetProblemStore problemStore;
     private final ProblemClient problemClient;
@@ -40,6 +45,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     @Inject
     public ProblemSetProblemResource(
             ActorChecker actorChecker,
+            RoleChecker roleChecker,
             ProblemSetStore problemSetStore,
             ProblemSetProblemStore problemStore,
             ProblemClient problemClient,
@@ -47,11 +53,39 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
             ProfileService profileService) {
 
         this.actorChecker = actorChecker;
+        this.roleChecker = roleChecker;
         this.problemSetStore = problemSetStore;
         this.problemStore = problemStore;
         this.problemClient = problemClient;
         this.statsStore = statsStore;
         this.profileService = profileService;
+    }
+
+    @Override
+    @UnitOfWork
+    public void setProblems(AuthHeader authHeader, String problemSetJid, List<ProblemSetProblemData> data) {
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
+        checkAllowed(roleChecker.isAdmin(actorJid));
+
+        Set<String> aliases = data.stream().map(ProblemSetProblemData::getAlias).collect(Collectors.toSet());
+        Set<String> slugs = data.stream().map(ProblemSetProblemData::getSlug).collect(Collectors.toSet());
+
+        checkArgument(data.size() <= 100, "Cannot set more than 100 problems.");
+        checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
+        checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
+
+        Map<String, String> slugToJidMap = problemClient.translateAllowedSlugsToJids(actorJid, slugs);
+
+        List<ProblemSetProblem> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(p ->
+                new ProblemSetProblem.Builder()
+                        .alias(p.getAlias())
+                        .problemJid(slugToJidMap.get(p.getSlug()))
+                        .type(p.getType())
+                        .build())
+                .collect(Collectors.toList());
+
+        problemStore.setProblems(problemSetJid, setData);
     }
 
     @Override

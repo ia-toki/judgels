@@ -6,6 +6,7 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
 import { ProblemSetEditDialog } from '../ProblemSetEditDialog/ProblemSetEditDialog';
+import { ProblemSetProblemEditDialog } from '../ProblemSetProblemEditDialog/ProblemSetProblemEditDialog';
 import { ProblemSetsTable } from '../ProblemSetsTable/ProblemSetsTable';
 import {
   ProblemSetsResponse,
@@ -13,17 +14,21 @@ import {
   ProblemSet,
   ProblemSetUpdateData,
 } from '../../../../modules/api/jerahmeel/problemSet';
+import { ProblemSetProblemsResponse, ProblemSetProblemData } from '../../../../modules/api/jerahmeel/problemSetProblem';
 import * as problemSetActions from '../modules/problemSetActions';
 
 export interface ProblemSetsPageProps {
   onGetProblemSets: (page: number) => Promise<ProblemSetsResponse>;
   onCreateProblemSet: (data: ProblemSetCreateData) => Promise<void>;
   onUpdateProblemSet: (problemSetJid: string, data: ProblemSetUpdateData) => Promise<void>;
+  onGetProblems: (problemSetJid: string) => Promise<ProblemSetProblemsResponse>;
+  onSetProblems: (problemSetJid: string, data: ProblemSetProblemData[]) => Promise<void>;
 }
 
 interface ProblemSetsPageState {
   response?: ProblemSetsResponse;
   isEditDialogOpen: boolean;
+  isEditProblemsDialogOpen: boolean;
   editedProblemSet?: ProblemSet;
 }
 
@@ -32,6 +37,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
 
   state: ProblemSetsPageState = {
     isEditDialogOpen: false,
+    isEditProblemsDialogOpen: false,
   };
 
   render() {
@@ -41,6 +47,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
         <hr />
         {this.renderCreateDialog()}
         {this.renderEditDialog()}
+        {this.renderEditProblemsDialog()}
         {this.renderProblemSets()}
         {this.renderPagination()}
       </ContentCard>
@@ -65,6 +72,19 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     );
   };
 
+  private renderEditProblemsDialog = () => {
+    const { isEditProblemsDialogOpen, editedProblemSet } = this.state;
+    return (
+      <ProblemSetProblemEditDialog
+        isOpen={isEditProblemsDialogOpen}
+        problemSet={editedProblemSet}
+        onGetProblems={this.props.onGetProblems}
+        onSetProblems={this.props.onSetProblems}
+        onCloseDialog={() => this.editProblemSetProblems(undefined)}
+      />
+    );
+  };
+
   private renderProblemSets = () => {
     const { response } = this.state;
     if (!response) {
@@ -85,7 +105,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
         problemSets={problemSets.page}
         archiveSlugsMap={archiveSlugsMap}
         onEditProblemSet={this.editProblemSet}
-        onEditProblemSetProblems={() => {}}
+        onEditProblemSetProblems={this.editProblemSetProblems}
       />
     );
   };
@@ -117,11 +137,20 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     this.editProblemSet(undefined);
     await this.onChangePage(1);
   };
+
+  private editProblemSetProblems = async (problemSet?: ProblemSet) => {
+    this.setState({
+      isEditProblemsDialogOpen: !!problemSet,
+      editedProblemSet: problemSet,
+    });
+  };
 }
 
 const mapDispatchToProps = {
   onGetProblemSets: problemSetActions.getProblemSets,
   onCreateProblemSet: problemSetActions.createProblemSet,
   onUpdateProblemSet: problemSetActions.updateProblemSet,
+  onGetProblems: problemSetActions.getProblems,
+  onSetProblems: problemSetActions.setProblems,
 };
 export default connect(undefined, mapDispatchToProps)(ProblemSetsPage);

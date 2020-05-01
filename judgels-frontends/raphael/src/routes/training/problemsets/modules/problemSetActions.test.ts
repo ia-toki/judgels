@@ -151,4 +151,35 @@ describe('problemSetActions', () => {
       expect(response).toEqual(responseBody);
     });
   });
+
+  describe('getProblems()', () => {
+    const responseBody = {
+      data: [],
+    };
+
+    it('calls API to get problems', async () => {
+      nock(APP_CONFIG.apiUrls.jerahmeel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .get(`/problemsets/${problemSetJid}/problems`)
+        .reply(200, responseBody);
+
+      const response = await store.dispatch(problemSetActions.getProblems(problemSetJid));
+      expect(response).toEqual(responseBody);
+    });
+  });
+
+  describe('setProblems()', () => {
+    const params = [];
+
+    it('calls API to set problems', async () => {
+      nock(APP_CONFIG.apiUrls.jerahmeel)
+        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        .options(`/problemsets/${problemSetJid}/problems`)
+        .reply(200)
+        .put(`/problemsets/${problemSetJid}/problems`, params)
+        .reply(200);
+
+      await store.dispatch(problemSetActions.setProblems(problemSetJid, params));
+    });
+  });
 });
