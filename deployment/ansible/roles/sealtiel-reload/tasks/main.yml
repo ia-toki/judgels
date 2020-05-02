@@ -1,0 +1,15 @@
+- block:
+  - name: Generate sealtiel config
+    template:
+      src: "{{ playbook_dir }}/../conf/sealtiel.yml.j2"
+      dest: /judgels/sealtiel/var/conf/sealtiel.yml
+
+  - name: Generate sealtiel launcher config
+    template:
+      src: "{{ playbook_dir }}/../conf/sealtiel-launcher.yml.j2"
+      dest: /judgels/sealtiel/var/conf/launcher-custom.yml
+
+  - name: Restart sealtiel
+    docker_container:
+      name: sealtiel
+      restart: yes
