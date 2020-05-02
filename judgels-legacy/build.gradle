@@ -20,8 +20,6 @@ buildscript {
 
 plugins {
     id 'idea'
-
-    id 'com.palantir.git-version' version '0.11.0'
 }
 
 allprojects {
@@ -35,7 +33,7 @@ allprojects {
     }
 
     group 'org.iatoki.judgels'
-    version gitVersion()
+    version '0.0.0'
 }
 
 subprojects {
