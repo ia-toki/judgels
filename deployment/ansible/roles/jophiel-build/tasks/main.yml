@@ -1,8 +1,8 @@
 - block:
-    - name: Build jophiel image and push it to Docker Package
+    - name: Build jophiel image and push it to DockerHub
       docker_image:
         path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
-        name: docker.pkg.github.com/ia-toki/judgels/jophiel
+        name: judgels/jophiel
         force: yes
         push: yes
         buildargs:

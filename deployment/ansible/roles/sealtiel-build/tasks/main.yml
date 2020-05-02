@@ -1,8 +1,8 @@
 - block:
-  - name: Build sealtiel image and push it to Docker Package
+  - name: Build sealtiel image and push it to DockerHub
     docker_image:
       path: "{{ playbook_dir }}/../../../judgels-backends/sealtiel/sealtiel-dist"
-      name: docker.pkg.github.com/ia-toki/judgels/sealtiel
+      name: judgels/sealtiel
       force: yes
       push: yes
       buildargs:

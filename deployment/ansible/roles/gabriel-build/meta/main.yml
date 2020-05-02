@@ -1,2 +1,2 @@
 dependencies:
-  - name: docker-login
+  - name: dockerhub-login

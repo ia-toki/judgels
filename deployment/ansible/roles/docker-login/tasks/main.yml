@@ -1,5 +1,0 @@
-- block:
-  - name: Log in to Docker
-    docker_login:
-      username: "{{ docker_username }}"
-      password: "{{ docker_token }}"

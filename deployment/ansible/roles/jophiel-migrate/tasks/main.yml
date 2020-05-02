@@ -15,14 +15,14 @@
 
   - name: Pull jophiel image
     docker_image:
-      name: docker.pkg.github.com/ia-toki/judgels/jophiel
+      name: judgels/jophiel
       tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a jophiel container to do db migration
     docker_container:
       name: jophiel-migrate
-      image: "docker.pkg.github.com/ia-toki/judgels/jophiel:{{ judgels_version | default('latest', true) }}"
+      image: "judgels/jophiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:

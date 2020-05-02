@@ -1,8 +1,8 @@
 - block:
-  - name: Build raphael image and push it to Docker Package
+  - name: Build raphael image and push it to DockerHub
     docker_image:
       path: "{{ playbook_dir }}/../../../judgels-frontends/raphael/dist"
-      name: docker.pkg.github.com/ia-toki/judgels/raphael
+      name: judgels/raphael
       force: yes
       push: yes
       buildargs:

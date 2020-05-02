@@ -21,14 +21,14 @@
 
   - name: Pull jophiel image
     docker_image:
-      name: docker.pkg.github.com/ia-toki/judgels/jophiel
+      name: judgels/jophiel
       tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a jophiel container
     docker_container:
       name: jophiel
-      image: "docker.pkg.github.com/ia-toki/judgels/jophiel:{{ judgels_version | default('latest', true) }}"
+      image: "judgels/jophiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       restart_policy: always
       log_driver: json-file

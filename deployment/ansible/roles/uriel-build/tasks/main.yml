@@ -1,8 +1,8 @@
 - block:
-  - name: Build uriel image and push it to Docker Package
+  - name: Build uriel image and push it to DockerHub
     docker_image:
       path: "{{ playbook_dir }}/../../../judgels-backends/uriel/uriel-dist"
-      name: docker.pkg.github.com/ia-toki/judgels/uriel
+      name: judgels/uriel
       force: yes
       push: yes
       buildargs:
