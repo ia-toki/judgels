@@ -6,8 +6,6 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
-import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -73,8 +71,6 @@ public final class LessonVersionController extends AbstractLessonController {
 
         lessonService.restore(lesson.getJid(), hash, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.RESTORE.construct(LESSON, lesson.getJid(), lesson.getSlug(), COMMIT, null, hash));
-
         return redirect(routes.LessonVersionController.listVersionHistory(lesson.getId()));
     }
 
@@ -124,8 +120,6 @@ public final class LessonVersionController extends AbstractLessonController {
                 // do nothing
             }
         }
-
-        SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.COMMIT.construct(LESSON, lesson.getJid(), lesson.getSlug(), COMMIT, null, versionCommitData.title));
 
         return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
     }

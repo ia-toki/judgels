@@ -4,12 +4,10 @@ import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.api.user.search.UserSearchService;
 import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
-import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.SandalphonUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authorized;
@@ -102,8 +100,6 @@ public final class UserController extends AbstractSandalphonController {
 
         userService.upsertUserFromJophielUser(userJid, userAddData.username, userAddData.getRolesAsList(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD.construct(USER, userJid, userAddData.username));
-
         return redirect(routes.UserController.index());
     }
 
@@ -145,8 +141,6 @@ public final class UserController extends AbstractSandalphonController {
         UserEditForm userEditData = userEditForm.get();
         userService.updateUser(user.getUserJid(), userEditData.getRolesAsList(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.EDIT.construct(USER, user.getUserJid(), JidCacheServiceImpl.getInstance().getDisplayName(user.getUserJid())));
-
         return redirect(routes.UserController.index());
     }
 
@@ -154,8 +148,6 @@ public final class UserController extends AbstractSandalphonController {
     public Result deleteUser(long userId) throws UserNotFoundException {
         User user = userService.findUserById(userId);
         userService.deleteUser(user.getUserJid());
-
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.REMOVE.construct(USER, user.getUserJid(), JidCacheServiceImpl.getInstance().getDisplayName(user.getUserJid())));
 
         return redirect(routes.UserController.index());
     }

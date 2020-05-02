@@ -5,8 +5,6 @@ import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
-import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -66,8 +64,6 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
         BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, ProblemControllerUtils.getCurrentStatementLanguage());
         String submissionJid = bundleSubmissionService.submit(problem.getJid(), null, bundleAnswer, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
         bundleSubmissionService.storeSubmissionFiles(bundleSubmissionFileSystemProvider, null, submissionJid, bundleAnswer);
-
-        SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.SUBMIT.construct(PROBLEM, problem.getJid(), problem.getSlug(), SUBMISSION, submissionJid, BUNDLE_ANSWER));
 
         return redirect(routes.BundleProblemSubmissionController.viewSubmissions(problem.getId()));
     }
@@ -137,8 +133,6 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
         }
         bundleSubmissionService.regrade(bundleSubmission.getJid(), bundleAnswer, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.REGRADE.construct(PROBLEM, problem.getJid(), problem.getSlug(), SUBMISSION, bundleSubmission.getJid(), bundleSubmission.getId() + ""));
-
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
 
@@ -170,8 +164,6 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
                 throw new RuntimeException(e);
             }
             bundleSubmissionService.regrade(bundleSubmission.getJid(), bundleAnswer, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
-            SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.REGRADE.construct(PROBLEM, problem.getJid(), problem.getSlug(), SUBMISSION, bundleSubmission.getJid(), bundleSubmission.getId() + ""));
         }
 
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));

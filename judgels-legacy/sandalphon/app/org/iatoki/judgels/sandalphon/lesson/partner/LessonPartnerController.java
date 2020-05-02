@@ -3,10 +3,8 @@ package org.iatoki.judgels.sandalphon.lesson.partner;
 import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.api.user.search.UserSearchService;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
-import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.*;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -137,8 +135,6 @@ public class LessonPartnerController extends AbstractLessonController {
 
         lessonService.createLessonPartner(lesson.getJid(), userJid, partnerConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(LESSON, lesson.getJid(), lesson.getSlug(), PARTNER, userJid, username));
-
         return redirect(routes.LessonPartnerController.viewPartners(lesson.getId()));
     }
 
@@ -203,8 +199,6 @@ public class LessonPartnerController extends AbstractLessonController {
               .build();
 
         lessonService.updateLessonPartner(partnerId, lessonConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.EDIT_IN.construct(LESSON, lesson.getJid(), lesson.getSlug(), PARTNER, lessonPartner.getPartnerJid(), JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getPartnerJid())));
 
         return redirect(routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
     }

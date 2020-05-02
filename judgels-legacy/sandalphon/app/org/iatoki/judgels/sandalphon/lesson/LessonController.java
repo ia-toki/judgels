@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
-import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -97,8 +96,6 @@ public final class LessonController extends AbstractLessonController {
 
         LessonControllerUtils.setCurrentStatementLanguage(lessonCreateData.initLanguageCode);
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.CREATE.construct(LESSON, lesson.getJid(), lessonCreateData.slug));
-
         return redirect(routes.LessonController.index());
     }
 
@@ -171,11 +168,6 @@ public final class LessonController extends AbstractLessonController {
 
         LessonEditForm lessonEditData = lessonEditForm.get();
         lessonService.updateLesson(lesson.getJid(), lessonEditData.slug, lessonEditData.additionalNote, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
-        if (!lesson.getSlug().equals(lessonEditData.slug)) {
-            SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.RENAME.construct(LESSON, lesson.getJid(), lesson.getSlug(), lessonEditData.slug));
-        }
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.EDIT.construct(LESSON, lesson.getJid(), lessonEditData.slug));
 
         return redirect(routes.LessonController.viewLesson(lesson.getId()));
     }

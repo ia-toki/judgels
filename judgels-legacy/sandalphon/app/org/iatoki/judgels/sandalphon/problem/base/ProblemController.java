@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
-import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -158,11 +157,6 @@ public final class ProblemController extends AbstractBaseProblemController {
 
         ProblemEditForm problemEditData = problemEditForm.get();
         problemService.updateProblem(problem.getJid(), problemEditData.slug, problemEditData.additionalNote, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
-        if (!problem.getSlug().equals(problemEditData.slug)) {
-            SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.RENAME.construct(PROBLEM, problem.getJid(), problem.getSlug(), problemEditData.slug));
-        }
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.EDIT.construct(PROBLEM, problem.getJid(), problemEditData.slug));
 
         return redirect(routes.ProblemController.viewProblem(problem.getId()));
     }

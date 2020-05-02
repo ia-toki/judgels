@@ -29,27 +29,12 @@ public abstract class AbstractJudgelsAPIImpl {
     private final String apiUrlPrefix;
     private final String baseUrl;
 
-    protected AbstractJudgelsAPIImpl(String baseUrl) {
-        this.baseUrl = baseUrl;
-        this.apiUrlPrefix = "/api/v1";
-    }
-
     protected AbstractJudgelsAPIImpl(String baseUrl, String apiUrlPrefix) {
         this.baseUrl = baseUrl;
         this.apiUrlPrefix = apiUrlPrefix;
     }
 
     protected abstract void setAuthorization(HttpRequestBase httpRequest);
-
-    protected final JudgelsAPIRawResponseBody sendGetRequest(String path) {
-        return sendGetRequest(path, null);
-    }
-
-    protected final JudgelsAPIRawResponseBody sendGetRequest(String path, Map<String, String> params) {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(constructDefaultRequestConfig()).build();
-        HttpGet httpGet = new HttpGet(getEndpoint(path, params));
-        return sendRequest(httpClient, httpGet);
-    }
 
     protected final JudgelsAPIRawResponseBody sendPostRequest(String path) {
         return sendPostRequest(path, null);

@@ -3,11 +3,9 @@ package org.iatoki.judgels.sandalphon.problem.bundle.partner;
 import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.api.user.search.UserSearchService;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
-import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -117,8 +115,6 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
         problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, bundleConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(PROBLEM, problem.getJid(), problem.getSlug(), PARTNER, userJid, username));
-
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.viewPartners(problem.getId()));
     }
 
@@ -195,8 +191,6 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         BundleProblemPartnerConfig bundleConfig = new BundleProblemPartnerConfig(bundleData.isAllowedToSubmit, bundleData.isAllowedToManageItems);
 
         problemService.updateProblemPartner(partnerId, problemConfig, bundleConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.EDIT_IN.construct(PROBLEM, problem.getJid(), problem.getSlug(), PARTNER, problemPartner.getPartnerJid(), JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid())));
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
     }

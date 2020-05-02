@@ -4,11 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
-import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -123,8 +121,6 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
         problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, programmingConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(PROBLEM, problem.getJid(), problem.getSlug(), PARTNER, userJid, username));
-
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.viewPartners(problem.getId()));
     }
 
@@ -206,8 +202,6 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
 
         problemService.updateProblemPartner(partnerId, problemConfig, programmingConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.EDIT_IN.construct(PROBLEM, problem.getJid(), problem.getSlug(), PARTNER, problemPartner.getPartnerJid(), JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid())));
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
     }

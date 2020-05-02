@@ -3,8 +3,6 @@ package org.iatoki.judgels.sandalphon.problem.base.version;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -73,8 +71,6 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         problemService.restore(problem.getJid(), hash, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.RESTORE.construct(PROBLEM, problem.getJid(), problem.getSlug(), COMMIT, null, hash));
-
         return redirect(routes.ProblemVersionController.listVersionHistory(problem.getId()));
     }
 
@@ -124,8 +120,6 @@ public final class ProblemVersionController extends AbstractProblemController {
                 // do nothing
             }
         }
-
-        SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.COMMIT.construct(PROBLEM, problem.getJid(), problem.getSlug(), COMMIT, null, versionCommitData.title));
 
         return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
     }

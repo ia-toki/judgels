@@ -1,11 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -90,8 +88,6 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
 
         ProblemControllerUtils.setCurrentStatementLanguage(ProblemControllerUtils.getJustCreatedProblemInitLanguageCode());
         ProblemControllerUtils.removeJustCreatedProblem();
-
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.CREATE.construct(PROBLEM, problem.getJid(), problem.getSlug()));
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()));
     }

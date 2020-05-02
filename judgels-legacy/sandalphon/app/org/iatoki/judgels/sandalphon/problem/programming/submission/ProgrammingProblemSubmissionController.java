@@ -12,10 +12,8 @@ import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
-import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFileSystemProvider;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -92,8 +90,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromNewSubmission(body);
             String submissionJid = programmingSubmissionService.submit(problem.getJid(), null, engine, gradingLanguage, allowedLanguageNames, submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
             ProgrammingSubmissionUtils.storeSubmissionFiles(programmingSubmissionFileSystemProvider, null, submissionJid, submissionSource);
-
-            SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.SUBMIT.construct(PROBLEM, problem.getJid(), problem.getSlug(), SUBMISSION, submissionJid, PROGRAMMING_FILES));
         } catch (ProgrammingSubmissionException e) {
             flash("submissionError", e.getMessage());
             return redirect(org.iatoki.judgels.sandalphon.problem.programming.statement.routes.ProgrammingProblemStatementController.viewStatement(problem.getId()));
@@ -165,8 +161,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
         programmingSubmissionService.regrade(programmingSubmission.getJid(), submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.REGRADE.construct(PROBLEM, problem.getJid(), problem.getSlug(), SUBMISSION, programmingSubmission.getJid(), programmingSubmission.getId() + ""));
-
         return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
 
@@ -193,8 +187,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         for (ProgrammingSubmission programmingSubmission : programmingSubmissions) {
             SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
             programmingSubmissionService.regrade(programmingSubmission.getJid(), submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
-            SandalphonControllerUtils.getInstance().addActivityLog(SandalphonActivityKeys.REGRADE.construct(PROBLEM, problem.getJid(), problem.getSlug(), SUBMISSION, programmingSubmission.getJid(), programmingSubmission.getId() + ""));
         }
 
         return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
