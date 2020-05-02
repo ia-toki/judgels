@@ -20,14 +20,14 @@
 
   - name: Pull sealtiel image
     docker_image:
-      name: judgels/sealtiel
+      name: docker.pkg.github.com/ia-toki/judgels/sealtiel
       tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a sealtiel container
     docker_container:
       name: sealtiel
-      image: "judgels/sealtiel:{{ judgels_version | default('latest', true) }}"
+      image: "docker.pkg.github.com/ia-toki/judgels/sealtiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       restart_policy: always
       log_driver: json-file

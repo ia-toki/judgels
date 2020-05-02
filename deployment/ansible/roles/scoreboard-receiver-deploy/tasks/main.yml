@@ -10,7 +10,7 @@
 
   - name: Pull scoreboard-receiver image
     docker_image:
-      name: judgels/scoreboard-receiver
+      name: docker.pkg.github.com/ia-toki/judgels/scoreboard-receiver
       force: yes
 
   - name: Run a scoreboard-receiver container

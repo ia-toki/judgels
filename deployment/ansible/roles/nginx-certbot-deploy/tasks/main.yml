@@ -29,7 +29,7 @@
 
   - name: Pull nginx-certbot image
     docker_image:
-      name: judgels/nginx-certbot
+      name: docker.pkg.github.com/ia-toki/judgels/nginx-certbot
       force: yes
 
   - name: Create a nginx-certbot container

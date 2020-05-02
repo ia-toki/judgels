@@ -1,8 +1,8 @@
 - block:
-  - name: Build sandalphon image and push it to DockerHub
+  - name: Build sandalphon image and push it to Docker Package
     docker_image:
       path: "{{ playbook_dir }}/../../../judgels-legacy/sandalphon"
-      name: judgels/sandalphon
+      name: docker.pkg.github.com/ia-toki/judgels/sandalphon
       force: yes
       push: yes
       buildargs:

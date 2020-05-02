@@ -1,8 +1,8 @@
 - block:
-  - name: Build gabriel image and push it to DockerHub
+  - name: Build gabriel image and push it to Docker Package
     docker_image:
       path: "{{ playbook_dir }}/../../../judgels-backends/gabriel/gabriel-dist"
-      name: judgels/gabriel
+      name: docker.pkg.github.com/ia-toki/judgels/gabriel
       force: yes
       push: yes
       buildargs:

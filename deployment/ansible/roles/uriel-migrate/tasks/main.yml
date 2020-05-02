@@ -15,14 +15,14 @@
 
   - name: Pull uriel image
     docker_image:
-      name: judgels/uriel
+      name: docker.pkg.github.com/ia-toki/judgels/uriel
       tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a uriel container to do db migration
     docker_container:
       name: uriel-migrate
-      image: "judgels/uriel:{{ judgels_version | default('latest', true) }}"
+      image: "docker.pkg.github.com/ia-toki/judgels/uriel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:

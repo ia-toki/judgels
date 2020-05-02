@@ -1,8 +1,8 @@
 - block:
-    - name: Build jerahmeel image and push it to DockerHub
+    - name: Build jerahmeel image and push it to Docker Package
       docker_image:
         path: "{{ playbook_dir }}/../../../judgels-backends/jerahmeel/jerahmeel-dist"
-        name: judgels/jerahmeel
+        name: docker.pkg.github.com/ia-toki/judgels/jerahmeel
         force: yes
         push: yes
         buildargs:

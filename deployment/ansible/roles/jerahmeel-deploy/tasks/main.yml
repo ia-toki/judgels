@@ -21,14 +21,14 @@
 
   - name: Pull jerahmeel image
     docker_image:
-      name: judgels/jerahmeel
+      name: docker.pkg.github.com/ia-toki/judgels/jerahmeel
       tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a jerahmeel container
     docker_container:
       name: jerahmeel
-      image: "judgels/jerahmeel:{{ judgels_version | default('latest', true) }}"
+      image: "docker.pkg.github.com/ia-toki/judgels/jerahmeel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       restart_policy: always
       log_driver: json-file

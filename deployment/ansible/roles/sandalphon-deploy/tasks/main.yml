@@ -16,14 +16,14 @@
 
   - name: Pull sandalphon image
     docker_image:
-      name: judgels/sandalphon
+      name: docker.pkg.github.com/ia-toki/judgels/sandalphon
       tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a sandalphon container
     docker_container:
       name: sandalphon
-      image: "judgels/sandalphon:{{ judgels_version | default('latest', true) }}"
+      image: "docker.pkg.github.com/ia-toki/judgels/sandalphon:{{ judgels_version | default('latest', true) }}"
       restart: yes
       restart_policy: always
       log_driver: json-file
