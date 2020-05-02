@@ -41,6 +41,9 @@ sealtiel:
 {% if sealtiel_gabriel_secret is defined %}
     - jid: JIDSECL-gabriel
       secret: {{ sealtiel_gabriel_secret }}
+
+    - jid: JIDSECL-competition-gabriel
+      secret: {{ sealtiel_gabriel_secret }}
 {% endif %}
 
   rabbitmq:
