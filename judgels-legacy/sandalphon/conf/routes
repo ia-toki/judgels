@@ -176,20 +176,6 @@ GET         /lessons/:lessonId/statements/media/:filename                       
 GET         /problems/programming/:problemId/grading/testdata/:filename             org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProgrammingProblemGradingAPIController.downloadGradingTestDataFile(problemId: Long, filename)
 GET         /problems/programming/:problemId/grading/helpers/:filename              org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProgrammingProblemGradingAPIController.downloadGradingHelperFile(problemId: Long, filename)
 
-# Client API
-
-GET         /api/v1/problems/:problemJid/statements/media/:filename                 org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientProblemStatementAPIControllerV1.renderMediaByJid(problemJid, filename)
-
-POST        /api/v1/problems/programming/:problemJid/statements                     org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientProgrammingProblemStatementAPIControllerV1.renderStatement(problemJid)
-GET         /api/v1/problems/programming/:problemJid                                org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientProgrammingProblemAPIControllerV1.getProgrammingProblemInfo(problemJid)
-GET         /api/v1/problems/programming/:problemJid/grading                        org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientProgrammingProblemGradingAPIControllerV1.downloadGradingFiles(problemJid)
-
-POST        /api/v1/problems/bundle/:problemJid/statements                          org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientBundleProblemStatementAPIControllerV1.renderStatement(problemJid)
-POST        /api/v1/problems/bundle/:problemJid/grade                               org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientBundleProblemGradingAPIControllerV1.grade(problemJid)
-
-GET         /api/v1/lessons/:lessonJid/statements/media/:filename                   org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientLessonStatementAPIControllerV1.renderMediaByJid(lessonJid, filename)
-POST        /api/v1/lessons/:lessonJid/statements                                   org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientLessonStatementAPIControllerV1.renderStatement(lessonJid)
-
 # Client API v2
 
 GET         /api/v2/client/problems/:problemJid                                     org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblem(problemJid)

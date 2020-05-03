@@ -19,8 +19,6 @@ import org.iatoki.judgels.play.general.GeneralVersion;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
 import org.iatoki.judgels.play.model.LegacyActorProvider;
 import org.iatoki.judgels.play.model.LegacySessionFactory;
-import org.iatoki.judgels.sandalphon.client.ClientService;
-import org.iatoki.judgels.sandalphon.client.ClientServiceImpl;
 import org.iatoki.judgels.sandalphon.lesson.LessonFileSystemProvider;
 import org.iatoki.judgels.sandalphon.lesson.LessonGitProvider;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
@@ -58,7 +56,6 @@ public final class SandalphonModule extends AbstractModule {
         bind(BundleProblemGrader.class).to(BundleProblemGraderImpl.class);
 
         bind(ClientChecker.class).toInstance(clientChecker(sandalphonConfig));
-        bind(ClientService.class).toInstance(clientService(sandalphonConfig));
 
         bind(JophielAuthAPI.class).toInstance(jophielAuthAPI(sandalphonConfig));
         bind(FileSystemProvider.class).annotatedWith(ProblemFileSystemProvider.class).toInstance(problemFileSystemProvider(sandalphonConfig));
@@ -75,10 +72,6 @@ public final class SandalphonModule extends AbstractModule {
 
     private ClientChecker clientChecker(SandalphonConfiguration config) {
         return new ClientChecker(config.getClients());
-    }
-
-    private ClientService clientService(SandalphonConfiguration config) {
-        return new ClientServiceImpl(config.getClients());
     }
 
     private JophielAuthAPI jophielAuthAPI(SandalphonConfiguration config) {
