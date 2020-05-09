@@ -2,7 +2,6 @@ apply from: '../judgels-backends/settings-legacy.gradle'
 
 rootProject.name = 'judgels-legacy'
 
-include ':api'
 include ':commons'
 include ':play-commons'
 include ':jophiel-commons'

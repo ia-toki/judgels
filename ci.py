@@ -38,7 +38,6 @@ MODULES = OrderedDict([
 
 
     (':commons', set()),
-    (':api', set()),
     (':play-commons', {':commons', ':judgels-commons:judgels-service-persistence'}),
     (':jophiel-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
 
@@ -47,7 +46,7 @@ MODULES = OrderedDict([
     (':sandalphon:sandalphon-app', {':sandalphon:sandalphon-client', ':jophiel:jophiel-client'}),
     (':sandalphon', {':sandalphon:sandalphon-app', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':sandalphon-commons', ':jophiel-commons', ':sandalphon-blackbox-adapters'}),
 
-    (':sandalphon-commons', {':play-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':gabriel:gabriel-engines', ':sealtiel:sealtiel-api'}),
+    (':sandalphon-commons', {':play-commons', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':gabriel:gabriel-engines', ':sealtiel:sealtiel-api'}),
     (':sandalphon-blackbox-adapters', {':sandalphon-commons'}),
 
     (':uriel:uriel-api', {':sandalphon:sandalphon-api'}),

@@ -1,9 +1,0 @@
-apply from: '../gradle/java.gradle'
-
-dependencies {
-    api "com.google.code.gson:gson:2.3.1"
-    api "com.google.guava:guava:$guavaVersion"
-    api "commons-io:commons-io:2.4"
-    api "org.apache.httpcomponents:httpclient:4.5"
-    api "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
-}

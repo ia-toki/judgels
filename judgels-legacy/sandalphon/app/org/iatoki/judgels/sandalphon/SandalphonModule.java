@@ -12,7 +12,6 @@ import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
 import org.iatoki.judgels.LocalGitProvider;
-import org.iatoki.judgels.jophiel.JophielAuthAPI;
 import org.iatoki.judgels.play.general.GeneralName;
 import org.iatoki.judgels.play.general.GeneralVersion;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
@@ -55,7 +54,6 @@ public final class SandalphonModule extends AbstractModule {
 
         bind(ClientChecker.class).toInstance(clientChecker(sandalphonConfig));
 
-        bind(JophielAuthAPI.class).toInstance(jophielAuthAPI(sandalphonConfig));
         bind(FileSystemProvider.class).annotatedWith(ProblemFileSystemProvider.class).toInstance(problemFileSystemProvider(sandalphonConfig));
         bind(FileSystemProvider.class).annotatedWith(SubmissionFileSystemProvider.class).toInstance(submissionFileSystemProvider(sandalphonConfig));
         bind(FileSystemProvider.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider(sandalphonConfig));
@@ -69,10 +67,6 @@ public final class SandalphonModule extends AbstractModule {
 
     private ClientChecker clientChecker(SandalphonConfiguration config) {
         return new ClientChecker(config.getClients());
-    }
-
-    private JophielAuthAPI jophielAuthAPI(SandalphonConfiguration config) {
-        return new JophielAuthAPI(config.getRaphaelBaseUrl(), config.getJophielConfig().getBaseUrl());
     }
 
     private LocalFileSystemProvider problemFileSystemProvider(SandalphonConfiguration config) {

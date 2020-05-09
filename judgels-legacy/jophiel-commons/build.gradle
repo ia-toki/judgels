@@ -13,7 +13,6 @@ sourceSets.main {
 
 dependencies {
     api project(':play-commons')
-    api project(':api')
 
     api project(':judgels-commons:judgels-service-persistence')
     api project(':jophiel:jophiel-api')
