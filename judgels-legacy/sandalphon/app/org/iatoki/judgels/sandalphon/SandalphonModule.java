@@ -13,7 +13,6 @@ import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
 import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.jophiel.JophielAuthAPI;
-import org.iatoki.judgels.jophiel.user.BaseUserService;
 import org.iatoki.judgels.play.general.GeneralName;
 import org.iatoki.judgels.play.general.GeneralVersion;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
@@ -30,7 +29,6 @@ import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionS
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionServiceImpl;
-import org.iatoki.judgels.sandalphon.user.UserServiceImpl;
 
 import java.io.File;
 import java.time.Clock;
@@ -63,7 +61,6 @@ public final class SandalphonModule extends AbstractModule {
         bind(FileSystemProvider.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider(sandalphonConfig));
         bind(GitProvider.class).annotatedWith(ProblemGitProvider.class).toInstance(problemGitProvider(sandalphonConfig));
         bind(GitProvider.class).annotatedWith(LessonGitProvider.class).toInstance(lessonGitProvider(sandalphonConfig));
-        bind(BaseUserService.class).to(UserServiceImpl.class);
 
         bind(SessionFactory.class).to(LegacySessionFactory.class);
         bind(ActorProvider.class).to(LegacyActorProvider.class);

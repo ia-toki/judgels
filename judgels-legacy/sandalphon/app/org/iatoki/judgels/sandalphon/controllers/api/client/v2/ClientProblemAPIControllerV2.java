@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
+import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -24,7 +25,6 @@ import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemService;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
-import org.iatoki.judgels.sandalphon.user.UserService;
 import play.data.DynamicForm;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
@@ -40,7 +40,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
 
     private final ClientChecker clientChecker;
-    private final UserService userService;
+    private final ClientUserService userService;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
     private final BundleItemService bundleItemService;
@@ -49,7 +49,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     @Inject
     public ClientProblemAPIControllerV2(
             ClientChecker clientChecker,
-            UserService userService,
+            ClientUserService userService,
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService,
             BundleItemService bundleItemService,
@@ -232,7 +232,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     private boolean isPartnerOrAbove(String userJid, Problem problem) {
         return problem.getAuthorJid().equals(userJid)
             || problemService.isUserPartnerForProblem(problem.getJid(), userJid)
-            || userService.findUserByJid(userJid).getRoles().contains("admin");
+            || userService.getUserRole(userJid).getSandalphon().orElse("").equals("ADMIN");
     }
 
     private String getGradingEngine(String problemJid) {

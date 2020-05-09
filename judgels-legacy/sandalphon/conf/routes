@@ -146,15 +146,6 @@ POST        /lessons/:lessonId/versions/local                                   
 GET         /lessons/:lessonId/versions/local/rebase                                org.iatoki.judgels.sandalphon.lesson.version.LessonVersionController.editVersionLocalChanges(lessonId: Long)
 GET         /lessons/:lessonId/versions/local/discard                               org.iatoki.judgels.sandalphon.lesson.version.LessonVersionController.discardVersionLocalChanges(lessonId: Long)
 
-GET         /users                                                                  org.iatoki.judgels.sandalphon.user.UserController.index()
-GET         /users/                                                                 org.iatoki.judgels.sandalphon.user.UserController.listUsers(page: Long ?= 0, orderBy ?= "id", orderDir ?= "asc", filterString ?= "")
-GET         /users/add                                                              org.iatoki.judgels.sandalphon.user.UserController.addUser()
-POST        /users                                                                  org.iatoki.judgels.sandalphon.user.UserController.postAddUser()
-GET         /users/:userId                                                          org.iatoki.judgels.sandalphon.user.UserController.viewUser(userId: Long)
-GET         /users/:userId/edit                                                     org.iatoki.judgels.sandalphon.user.UserController.editUser(userId: Long)
-POST        /users/:userId                                                          org.iatoki.judgels.sandalphon.user.UserController.postEditUser(userId: Long)
-GET         /users/:userId/remove                                                   org.iatoki.judgels.sandalphon.user.UserController.deleteUser(userId: Long)
-
 # Internal API
 # Note: cannot use /api prefix
 

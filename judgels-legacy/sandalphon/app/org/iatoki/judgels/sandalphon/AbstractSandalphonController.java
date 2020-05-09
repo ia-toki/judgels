@@ -15,9 +15,6 @@ public abstract class AbstractSandalphonController extends AbstractJudgelsContro
     protected Result renderTemplate(HtmlTemplate template) {
         template.addSidebarMenu(Messages.get("problem.problems"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());
         template.addSidebarMenu(Messages.get("lesson.lessons"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.index());
-        if (isAdmin()) {
-            template.addSidebarMenu(Messages.get("user.users"), org.iatoki.judgels.sandalphon.user.routes.UserController.index());
-        }
 
         template.addUpperSidebarWidget(profileView.render(
                 JophielClientControllerUtils.getInstance().getUserAvatarUrl(IdentityUtils.getUserJid()),

@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.palantir.conjure.java.api.config.service.UserAgent;
 import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.jophiel.api.play.PlaySessionService;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.me.MyUserService;
@@ -24,6 +25,12 @@ public final class JophielModule extends AbstractModule {
     PlaySessionService sessionService(JophielClientConfiguration config) {
         UserAgent userAgent = UserAgent.of(UserAgent.Agent.of("sandalphon", UserAgent.Agent.DEFAULT_VERSION));
         return JaxRsClients.create(PlaySessionService.class, config.getBaseUrl(), userAgent);
+    }
+
+    @Provides
+    ClientUserService clientService(JophielClientConfiguration config) {
+        UserAgent userAgent = UserAgent.of(UserAgent.Agent.of("sandalphon", UserAgent.Agent.DEFAULT_VERSION));
+        return JaxRsClients.create(ClientUserService.class, config.getBaseUrl(), userAgent);
     }
 
     @Provides

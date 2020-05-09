@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
@@ -10,7 +11,6 @@ import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
-import org.iatoki.judgels.sandalphon.user.UserService;
 import play.data.DynamicForm;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
 @Singleton
 public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIController {
     private final ClientChecker clientChecker;
-    private final UserService userService;
+    private final ClientUserService userService;
     private final LessonService lessonService;
 
     @Inject
-    public ClientLessonAPIControllerV2(ClientChecker clientChecker, UserService userService, LessonService lessonService) {
+    public ClientLessonAPIControllerV2(ClientChecker clientChecker, ClientUserService userService, LessonService lessonService) {
         this.clientChecker = clientChecker;
         this.userService = userService;
         this.lessonService = lessonService;
@@ -131,7 +131,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     private boolean isPartnerOrAbove(String userJid, Lesson lesson) {
         return lesson.getAuthorJid().equals(userJid)
             || lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)
-            || userService.findUserByJid(userJid).getRoles().contains("admin");
+            || userService.getUserRole(userJid).getSandalphon().orElse("").equals("ADMIN");
     }
 
 
