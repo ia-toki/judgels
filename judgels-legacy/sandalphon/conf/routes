@@ -2,10 +2,6 @@
 ->          /                                                                       jophielcommons.Routes
 
 GET         /                                                                       org.iatoki.judgels.sandalphon.ApplicationController.index()
-GET         /auth                                                                   org.iatoki.judgels.sandalphon.ApplicationController.auth(returnUri ?= "")
-GET         /authRole                                                               org.iatoki.judgels.sandalphon.ApplicationController.authRole(returnUri ?= "")
-GET         /afterLogin                                                             org.iatoki.judgels.sandalphon.ApplicationController.afterLogin(returnUri ?= "")
-GET         /localLogout                                                            org.iatoki.judgels.sandalphon.ApplicationController.logout(returnUri ?= "")
 
 GET         /problems                                                               org.iatoki.judgels.sandalphon.problem.base.ProblemController.index()
 GET         /problems/                                                              org.iatoki.judgels.sandalphon.problem.base.ProblemController.listProblems(pageIndex: Long ?= 0, orderBy ?= "id", orderDir ?= "asc", filterString ?= "")

@@ -3,19 +3,19 @@ package judgels.jophiel.session;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.session.Session;
-import judgels.jophiel.legacy.session.LegacySessionDao;
-import judgels.jophiel.legacy.session.LegacySessionModel;
 import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
+import judgels.jophiel.play.PlaySessionDao;
+import judgels.jophiel.play.PlaySessionModel;
 
 public class SessionStore {
     private final SessionDao sessionDao;
-    private final LegacySessionDao legacySessionDao;
+    private final PlaySessionDao playSessionDao;
 
     @Inject
-    public SessionStore(SessionDao sessionDao, LegacySessionDao legacySessionDao) {
+    public SessionStore(SessionDao sessionDao, PlaySessionDao playSessionDao) {
         this.sessionDao = sessionDao;
-        this.legacySessionDao = legacySessionDao;
+        this.playSessionDao = playSessionDao;
     }
 
     public Session createSession(String token, String userJid) {
@@ -25,10 +25,10 @@ public class SessionStore {
     }
 
     public void createAuthCode(String token, String authCode) {
-        LegacySessionModel model = new LegacySessionModel();
+        PlaySessionModel model = new PlaySessionModel();
         model.token = token;
         model.authCode = authCode;
-        legacySessionDao.insert(model);
+        playSessionDao.insert(model);
     }
 
     public Optional<Session> getSessionByToken(String token) {
@@ -36,12 +36,12 @@ public class SessionStore {
     }
 
     public Optional<Session> getSessionByAuthCode(String authCode) {
-        return legacySessionDao.getByAuthCode(authCode).flatMap(legacyModel ->
+        return playSessionDao.getByAuthCode(authCode).flatMap(legacyModel ->
                 sessionDao.selectByToken(legacyModel.token).map(SessionStore::fromModel));
     }
 
     public void deleteAuthCode(String authCode) {
-        legacySessionDao.getByAuthCode(authCode).ifPresent(legacySessionDao::delete);
+        playSessionDao.getByAuthCode(authCode).ifPresent(playSessionDao::delete);
     }
 
     public void deleteSessionByToken(String token) {

@@ -5,9 +5,9 @@ import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.client.user.ClientUserResource;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
-import judgels.jophiel.legacy.session.LegacySessionResource;
 import judgels.jophiel.legacy.user.LegacyUserResource;
 import judgels.jophiel.mailer.MailerModule;
+import judgels.jophiel.play.PlaySessionResource;
 import judgels.jophiel.profile.ProfileResource;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
@@ -46,7 +46,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 @Singleton
 public interface JophielComponent {
     LegacyUserResource legacyUserResource();
-    LegacySessionResource legacySessionResource();
+    PlaySessionResource playSessionResource();
     MyUserResource myUserResource();
     ProfileResource profileResource();
     SessionResource sessionResource();

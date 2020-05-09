@@ -1,53 +1,71 @@
 package org.iatoki.judgels.jophiel;
 
-import judgels.jophiel.api.profile.BasicProfile;
-import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.me.MyUserService;
-import judgels.service.api.actor.AuthHeader;
-import org.iatoki.judgels.jophiel.user.BaseUserService;
-import play.db.jpa.Transactional;
-import play.mvc.Controller;
-import play.mvc.Result;
-
+import com.palantir.conjure.java.api.errors.RemoteException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.net.URI;
-import java.net.URISyntaxException;
+import judgels.jophiel.api.play.PlaySession;
+import judgels.jophiel.api.play.PlaySessionErrors;
+import judgels.jophiel.api.play.PlaySessionService;
+import judgels.jophiel.api.session.Credentials;
+import org.iatoki.judgels.jophiel.account.LoginForm;
+import org.iatoki.judgels.jophiel.account.html.loginView;
+import org.iatoki.judgels.play.AbstractJudgelsController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import play.data.Form;
+import play.db.jpa.Transactional;
+import play.filters.csrf.AddCSRFToken;
+import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Http;
+import play.mvc.Result;
 
 @Singleton
-public final class JophielClientController extends Controller {
-
-    private final JophielAuthAPI jophielAuthAPI;
-    private final MyUserService myUserService;
-    private final ProfileService profileService;
-    private final BaseUserService userService;
+public final class JophielClientController extends AbstractJudgelsController {
+    private final PlaySessionService sessionService;
 
     @Inject
-    public JophielClientController(JophielAuthAPI jophielAuthAPI, MyUserService myUserService, ProfileService profileService, BaseUserService userService) {
-        this.jophielAuthAPI = jophielAuthAPI;
-        this.myUserService = myUserService;
-        this.profileService = profileService;
-        this.userService = userService;
+    public JophielClientController(PlaySessionService sessionService) {
+        this.sessionService = sessionService;
     }
 
-    public Result login(String returnUri) {
-        return redirect(jophielAuthAPI.getAuthRequestUri(getRedirectUri().toString(), returnUri));
+    @AddCSRFToken
+    public Result login() {
+        Form<LoginForm> form = Form.form(LoginForm.class);
+        return showLogin(form);
     }
 
+    @RequireCSRFCheck
     @Transactional
-    public Result postLogin(String authCode, String returnUri) {
-        JophielSession session = jophielAuthAPI.postLogin(authCode);
+    public Result postLogin() {
+        Form<LoginForm> form = Form.form(LoginForm.class).bindFromRequest();
+        if (form.hasErrors()) {
+            return showLogin(form);
+        }
 
-        session("userJid", session.getUserJid());
-        session("token", session.getToken());
+        LoginForm data = form.get();
+
+        PlaySession session;
+        try {
+            session = sessionService.logIn(Credentials.of(data.username, data.password));
+        } catch (RemoteException e) {
+            if (e.getError().errorName().equals(PlaySessionErrors.ROLE_NOT_ALLOWED.name())) {
+                form.reject("User role not allowed to log in.");
+            } else if (e.getStatus() == 403) {
+                form.reject("Username or password incorrect.");
+            }
+            return showLogin(form);
+        }
+
         session("version", JophielSessionUtils.getSessionVersion());
+        session("token", session.getToken());
+        session("userJid", session.getUserJid());
+        session("username", session.getUsername());
+        session("role", session.getRole());
+        session("avatar", JophielClientControllerUtils.getInstance().getUserAvatarUrl(session.getUserJid()));
+        if (session.getName().isPresent()) {
+            session("name", session.getName().get());
+        }
 
-        userService.upsertUser(session.getUserJid(), session.getToken(), "unused", "unused", 0);
-
-        refreshUserInfo(session);
-
-        return redirect(returnUri);
+        return redirect(JophielClientControllerUtils.getInstance().getServiceLoginUrl(session.getAuthCode(), getRootUrl(Http.Context.current().request())));
     }
 
     public Result profile() {
@@ -59,25 +77,15 @@ public final class JophielClientController extends Controller {
         return redirect(JophielClientControllerUtils.getInstance().getServiceLogoutUrl(returnUri));
     }
 
-    private void refreshUserInfo(JophielSession session) {
-        User user = myUserService.getMyself(AuthHeader.of(session.getToken()));
-        BasicProfile profile = profileService.getBasicProfile(session.getUserJid());
+    private Result showLogin(Form<LoginForm> form) {
+        HtmlTemplate template = getBaseHtmlTemplate();
 
-        if (profile.getName().isPresent()) {
-            session("name", profile.getName().get());
-        }
+        template.setSingleColumn();
+        template.setContent(loginView.render(form));
+        template.setMainTitle("Log in");
+        template.markBreadcrumbLocation("Log in", routes.JophielClientController.login());
+        template.setPageTitle("Log in");
 
-        session("username", user.getUsername());
-        session("avatar", JophielClientControllerUtils.getInstance().getUserAvatarUrl(user.getJid()));
-    }
-
-    private URI getRedirectUri() {
-        try {
-            String uri = routes.JophielClientController.postLogin("", "").absoluteURL(request(), request().secure());
-            String baseUri = uri.substring(0, uri.length() - 2);
-            return new URI(baseUri);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        return renderTemplate(template);
     }
 }

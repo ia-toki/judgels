@@ -1,7 +1,4 @@
-package judgels.jophiel.legacy.session;
-
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+package judgels.jophiel.play;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -10,94 +7,96 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import judgels.jophiel.api.play.PlaySession;
+import judgels.jophiel.api.play.PlaySessionErrors;
+import judgels.jophiel.api.play.PlaySessionService;
+import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.info.UserInfo;
+import judgels.jophiel.role.UserRoleStore;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.account.UserRegistrationEmailStore;
+import judgels.jophiel.user.info.UserInfoStore;
 import judgels.service.RandomCodeGenerator;
-import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/legacy/session")
-public class LegacySessionResource {
+public class PlaySessionResource implements PlaySessionService {
     private static final String COOKIE_NAME = "JOPHIEL_USER_JID";
 
     private final SessionStore sessionStore;
     private final UserStore userStore;
+    private final UserInfoStore userInfoStore;
+    private final UserRoleStore userRoleStore;
     private final UserRegistrationEmailStore userRegistrationEmailStore;
 
     @Inject
-    public LegacySessionResource(
+    public PlaySessionResource(
             SessionStore sessionStore,
             UserStore userStore,
+            UserInfoStore userInfoStore,
+            UserRoleStore userRoleStore,
             UserRegistrationEmailStore userRegistrationEmailStore) {
         this.sessionStore = sessionStore;
         this.userStore = userStore;
+        this.userInfoStore = userInfoStore;
+        this.userRoleStore = userRoleStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
     }
 
-    @POST
-    @Path("/login")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public LegacySession logIn(Credentials credentials) {
+    public PlaySession logIn(Credentials credentials) {
         User user = userStore.getUserByUsernameAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
-                .orElseGet(() ->
-                    userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
-                    .orElseThrow(ForbiddenException::new));
+                    .orElseThrow(ForbiddenException::new);
 
         if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
             throw SessionErrors.userNotActivated(user.getEmail());
         }
 
+        UserRole role = userRoleStore.getRole(user.getJid());
+
+        // TODO(fushar): generalize later when there is another Play client
+        Optional<String> playRole = role.getSandalphon();
+
+        if (!playRole.isPresent()) {
+            throw PlaySessionErrors.roleNotAllowed();
+        }
+
         Session session = sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
+
         String authCode = RandomCodeGenerator.newCode();
         sessionStore.createAuthCode(session.getToken(), authCode);
-        return new LegacySession.Builder()
+
+        UserInfo info = userInfoStore.getInfo(user.getJid());
+
+        return new PlaySession.Builder()
                 .authCode(authCode)
                 .token(session.getToken())
                 .userJid(session.getUserJid())
-                .build();
-    }
-
-    @POST
-    @Path("/propagate-login")
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork
-    public LegacySession propagateLogin(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
-        String token = authHeader.getBearerToken();
-        String authCode = RandomCodeGenerator.newCode();
-        sessionStore.createAuthCode(token, authCode);
-        return new LegacySession.Builder()
-                .authCode(authCode)
-                .token(token)
-                .userJid("unused")
+                .username(user.getUsername())
+                .role(playRole.get())
+                .name(info.getName())
                 .build();
     }
 
     @GET
-    @Path("/prepare-post-login/{authCode}/{redirectUri}")
-    @UnitOfWork(readOnly = true)
-    public Response preparePostLogIn(
+    @Path("/client-login/{authCode}/{redirectUri}")
+    @UnitOfWork
+    public Response serviceLogIn(
             @Context UriInfo uriInfo,
             @PathParam("authCode") String authCode,
             @PathParam("redirectUri") String redirectUri) {
@@ -116,6 +115,8 @@ public class LegacySessionResource {
             throw new IllegalArgumentException();
         }
 
+        sessionStore.deleteAuthCode(authCode);
+
         return Response.seeOther(URI.create(redirectUri))
                 .cookie(new NewCookie(
                         COOKIE_NAME,
@@ -127,16 +128,6 @@ public class LegacySessionResource {
                         false,
                         true))
                 .build();
-    }
-
-    @POST
-    @Path("/post-login/{authCode}")
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork
-    public Session postLogIn(@PathParam("authCode") String authCode) {
-        Session session = sessionStore.getSessionByAuthCode(authCode).orElseThrow(IllegalArgumentException::new);
-        sessionStore.deleteAuthCode(authCode);
-        return session;
     }
 
     @GET
@@ -151,9 +142,9 @@ public class LegacySessionResource {
     }
 
     @GET
-    @Path("/post-logout/{redirectUri}")
+    @Path("/client-logout/{redirectUri}")
     @UnitOfWork(readOnly = true)
-    public Response postLogout(@Context UriInfo uriInfo, @PathParam("redirectUri") String redirectUri) {
+    public Response serviceLogOut(@Context UriInfo uriInfo, @PathParam("redirectUri") String redirectUri) {
         return Response.seeOther(URI.create(redirectUri))
                 .cookie(new NewCookie(
                         COOKIE_NAME,

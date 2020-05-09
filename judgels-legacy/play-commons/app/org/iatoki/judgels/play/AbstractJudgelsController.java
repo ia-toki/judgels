@@ -70,6 +70,10 @@ public abstract class AbstractJudgelsController extends Controller {
         }
     }
 
+    protected static String getRootUrl(Http.Request request) {
+        return "http" + (request.secure() ? "s" : "") + "://" + request.host();
+    }
+
     protected static String getCurrentUrl(Http.Request request) {
         return "http" + (request.secure() ? "s" : "") + "://" + request.host() + request.uri();
     }

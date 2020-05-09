@@ -2,8 +2,6 @@ package judgels.jophiel.hibernate;
 
 import dagger.Module;
 import dagger.Provides;
-import judgels.jophiel.legacy.session.LegacySessionDao;
-import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
 import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserInfoDao;
@@ -12,13 +10,15 @@ import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserRoleDao;
+import judgels.jophiel.play.PlaySessionDao;
+import judgels.jophiel.play.PlaySessionHibernateDao;
 
 @Module
 public class JophielHibernateDaoModule {
     private JophielHibernateDaoModule() {}
 
     @Provides
-    static LegacySessionDao legacySessionDao(LegacySessionHibernateDao dao) {
+    static PlaySessionDao playSessionDao(PlaySessionHibernateDao dao) {
         return dao;
     }
 

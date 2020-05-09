@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon;
 
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
-import org.iatoki.judgels.jophiel.logincheck.html.isLoggedIn;
 import org.iatoki.judgels.jophiel.logincheck.html.isLoggedOut;
 import org.iatoki.judgels.play.AbstractJudgelsController;
 import org.iatoki.judgels.play.IdentityUtils;
@@ -27,10 +26,8 @@ public abstract class AbstractSandalphonController extends AbstractJudgelsContro
                 org.iatoki.judgels.jophiel.routes.JophielClientController.profile().absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()),
                 org.iatoki.judgels.jophiel.routes.JophielClientController.logout(routes.ApplicationController.index().absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure())
         ));
-        if (IdentityUtils.getUserJid() == null) {
-            template.addAdditionalScript(isLoggedIn.render(JophielClientControllerUtils.getInstance().getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.auth(getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedIn.js"));
-        } else {
-            template.addAdditionalScript(isLoggedOut.render(JophielClientControllerUtils.getInstance().getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.logout(getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedOut.js", SandalphonUtils.getRealUserJid()));
+        if (IdentityUtils.getUserJid() != null) {
+            template.addAdditionalScript(isLoggedOut.render(JophielClientControllerUtils.getInstance().getUserIsLoggedInAPIEndpoint(), org.iatoki.judgels.jophiel.routes.JophielClientController.logout(getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedOut.js", SandalphonUtils.getRealUserJid()));
         }
 
         return super.renderTemplate(template);

@@ -1,0 +1,21 @@
+@import org.iatoki.judgels.jophiel.account.LoginForm
+@import org.iatoki.judgels.play.template.html.formErrorView
+@import org.iatoki.judgels.jophiel.routes
+
+@(form: Form[LoginForm])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@formErrorView(form)
+
+<div class="row login-content">
+    <div class="col-md-12">
+        @b3.form(routes.JophielClientController.postLogin()) {
+            @helper.CSRF.formField
+
+            @b3.text(form("username"), '_label -> "Username")
+            @b3.password(form("password"), '_label -> "Password")
+            @b3.submit('class -> "btn btn-primary") { Log in }
+        }
+    </div>
+</div>

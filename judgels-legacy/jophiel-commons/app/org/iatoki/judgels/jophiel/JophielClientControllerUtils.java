@@ -24,7 +24,7 @@ public final class JophielClientControllerUtils {
     }
 
     public String getUserIsLoggedInAPIEndpoint() {
-        return jophielBaseUrl + "/api/legacy/session/is-logged-in";
+        return jophielBaseUrl + "/api/play/session/is-logged-in";
     }
 
     public String getUserAvatarUrl(String userJid) {
@@ -35,12 +35,23 @@ public final class JophielClientControllerUtils {
         return jophielBaseUrl + "/api/v2/users/autocomplete";
     }
 
+    public String getServiceLoginUrl(String authCode, String returnUri) {
+        if (returnUri == null || returnUri.isEmpty()) {
+            returnUri = raphaelBaseUrl;
+        }
+        try {
+            return jophielBaseUrl + "/api/play/session/client-login/" + URLEncoder.encode(authCode, "UTF-8") + "/" + URLEncoder.encode(returnUri, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public String getServiceLogoutUrl(String returnUri) {
         if (returnUri == null || returnUri.isEmpty()) {
             returnUri = raphaelBaseUrl;
         }
         try {
-            return raphaelBaseUrl + "/service-logout/" + URLEncoder.encode(returnUri, "UTF-8");
+            return jophielBaseUrl + "/api/play/session/client-logout/" + URLEncoder.encode(returnUri, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }
