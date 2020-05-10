@@ -3,6 +3,15 @@ package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
@@ -16,8 +25,6 @@ import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.service.client.ClientChecker;
-import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
-import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
@@ -28,12 +35,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemServi
 import play.data.DynamicForm;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import play.mvc.Results;
 
 @Singleton
 public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIController {
@@ -63,11 +65,11 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
-    public Result getProblem(String problemJid) {
+    public Result getProblem(String problemJid) throws IOException {
         authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemService.problemExistsByJid(problemJid)) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
         return okAsJson(getProblemInfo(problemJid));
@@ -78,23 +80,23 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemService.problemExistsByJid(problemJid)) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
         return okAsJson(getSubmissionConfig(problemJid));
     }
 
     @Transactional(readOnly = true)
-    public Result getProgrammingProblemWorksheet(String problemJid) {
+    public Result getProgrammingProblemWorksheet(String problemJid) throws IOException {
         authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemService.problemExistsByJid(problemJid)) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
         Problem problem = problemService.findProblemByJid(problemJid);
         if (ProblemType.valueOf(problem.getType().name()) != ProblemType.PROGRAMMING) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
         judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder result =
@@ -105,75 +107,66 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
         GradingConfig config = getBlackBoxGradingConfig(problemJid, submissionConfig.getGradingEngine());
 
-        try {
-            String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
 
-            ProblemStatement statement = problemService.getStatement(null, problemJid, language);
-            result.statement(statement);
+        ProblemStatement statement = problemService.getStatement(null, problemJid, language);
+        result.statement(statement);
 
-            ProblemLimits limits = new ProblemLimits.Builder()
-                    .timeLimit(config.getTimeLimit())
-                    .memoryLimit(config.getMemoryLimit())
-                    .build();
-            result.limits(limits);
+        ProblemLimits limits = new ProblemLimits.Builder()
+                .timeLimit(config.getTimeLimit())
+                .memoryLimit(config.getMemoryLimit())
+                .build();
+        result.limits(limits);
 
-            return okAsJson(result.build());
-
-        } catch (IOException e) {
-            throw new JudgelsAPIInternalServerErrorException(e);
-        }
+        return okAsJson(result.build());
     }
 
     @Transactional(readOnly = true)
-    public Result getBundleProblemWorksheet(String problemJid) {
+    public Result getBundleProblemWorksheet(String problemJid) throws IOException {
         authenticateAsJudgelsAppClient(clientChecker);
         if (!problemService.problemExistsByJid(problemJid)) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
         Problem problem = problemService.findProblemByJid(problemJid);
         if (ProblemType.valueOf(problem.getType().name()) != ProblemType.BUNDLE) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
-        try {
-            String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
 
-            ProblemStatement statement = problemService.getStatement(null, problemJid, language);
+        ProblemStatement statement = problemService.getStatement(null, problemJid, language);
 
-            List<BundleItem> items = bundleItemService.getBundleItemsInProblemWithClone(problemJid, null);
-            List<Item> itemsWithConfig = new ArrayList<>();
-            for (BundleItem item : items) {
-                String itemConfigString = bundleItemService.getItemConfInProblemWithCloneByJid(
-                        problemJid, null, item.getJid(), language);
-                ItemType type = ItemType.valueOf(item.getType().name());
-                Optional<Integer> number = item.getNumber() == null
-                        ? Optional.empty()
-                        : Optional.of(item.getNumber().intValue());
+        List<BundleItem> items = bundleItemService.getBundleItemsInProblemWithClone(problemJid, null);
+        List<Item> itemsWithConfig = new ArrayList<>();
+        for (BundleItem item : items) {
+            String itemConfigString = bundleItemService.getItemConfInProblemWithCloneByJid(
+                    problemJid, null, item.getJid(), language);
+            ItemType type = ItemType.valueOf(item.getType().name());
+            Optional<Integer> number = item.getNumber() == null
+                    ? Optional.empty()
+                    : Optional.of(item.getNumber().intValue());
 
-                Item itemWithConfig = new Item.Builder()
-                        .jid(item.getJid())
-                        .type(type)
-                        .number(number)
-                        .meta(item.getMeta())
-                        .config(itemProcessorRegistry.get(type).parseItemConfigFromString(MAPPER, itemConfigString))
-                        .build();
-                itemsWithConfig.add(itemWithConfig);
-            }
-
-            return okAsJson(
-                    new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                            .statement(statement)
-                            .items(itemsWithConfig)
-                            .build()
-            );
-        } catch (IOException e) {
-            throw new JudgelsAPIInternalServerErrorException(e);
+            Item itemWithConfig = new Item.Builder()
+                    .jid(item.getJid())
+                    .type(type)
+                    .number(number)
+                    .meta(item.getMeta())
+                    .config(itemProcessorRegistry.get(type).parseItemConfigFromString(MAPPER, itemConfigString))
+                    .build();
+            itemsWithConfig.add(itemWithConfig);
         }
+
+        return okAsJson(
+                new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
+                        .statement(statement)
+                        .items(itemsWithConfig)
+                        .build()
+        );
     }
 
     @Transactional(readOnly = true)
-    public Result findProblemsByJids() {
+    public Result findProblemsByJids() throws IOException {
         authenticateAsJudgelsAppClient(clientChecker);
 
         JsonNode problemJids = request().body().asJson();
@@ -212,21 +205,17 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return okAsJson(result);
     }
 
-    private ProblemInfo getProblemInfo(String problemJid) {
-        try {
-            Problem problem = problemService.findProblemByJid(problemJid);
+    private ProblemInfo getProblemInfo(String problemJid) throws IOException {
+        Problem problem = problemService.findProblemByJid(problemJid);
 
-            ProblemInfo.Builder res = new ProblemInfo.Builder();
-            res.slug(problem.getSlug());
-            res.type(ProblemType.valueOf(problem.getType().name()));
-            res.defaultLanguage(simplifyLanguageCode(problemService.getDefaultLanguage(null, problemJid)));
-            res.titlesByLanguage(problemService.getTitlesByLanguage(null, problemJid).entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
-            return res.build();
-        } catch (IOException e) {
-            throw new JudgelsAPIInternalServerErrorException(e);
-        }
+        ProblemInfo.Builder res = new ProblemInfo.Builder();
+        res.slug(problem.getSlug());
+        res.type(ProblemType.valueOf(problem.getType().name()));
+        res.defaultLanguage(simplifyLanguageCode(problemService.getDefaultLanguage(null, problemJid)));
+        res.titlesByLanguage(problemService.getTitlesByLanguage(null, problemJid).entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
+        return res.build();
     }
 
     private boolean isPartnerOrAbove(String userJid, Problem problem) {

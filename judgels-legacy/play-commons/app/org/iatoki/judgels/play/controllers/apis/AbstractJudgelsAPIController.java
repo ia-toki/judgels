@@ -3,53 +3,31 @@ package org.iatoki.judgels.play.controllers.apis;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import judgels.service.api.client.BasicAuthHeader;
-import judgels.service.api.client.Client;
-import judgels.service.client.ClientChecker;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.iatoki.judgels.play.api.JudgelsAPIBadRequestException;
-import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
-import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Result;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.imageio.ImageIO;
+import judgels.service.api.client.BasicAuthHeader;
+import judgels.service.client.ClientChecker;
+import org.apache.commons.io.FilenameUtils;
+import play.data.DynamicForm;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Results;
 
-@JudgelsAPIGuard
 public abstract class AbstractJudgelsAPIController extends Controller {
 
-    protected static Client authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
+    protected static void authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
         String authHeaderString = request().getHeader("Authorization");
         BasicAuthHeader authHeader = authHeaderString == null ? null : BasicAuthHeader.valueOf(authHeaderString);
-        return clientChecker.check(authHeader);
-    }
-
-    protected static <T> T parseRequestBody(Type type) {
-        try {
-            return new Gson().fromJson(request().body().asText(), type);
-        } catch (JsonSyntaxException e) {
-            throw new JudgelsAPIBadRequestException("Bad JSON request body.");
-        }
-    }
-
-    protected static <T> T parseRequestBodyAsUrlFormEncoded(Class<T> clazz) {
-        Form<T> form = Form.form(clazz).bindFromRequest();
-        return form.get();
+        clientChecker.check(authHeader);
     }
 
     protected static Result okAsJson(Object responseBody) {
@@ -79,7 +57,7 @@ public abstract class AbstractJudgelsAPIController extends Controller {
         } catch (MalformedURLException e) {
             File imageFile = new File(imageUrl);
             if (!imageFile.exists()) {
-                throw new JudgelsAPINotFoundException();
+                return Results.notFound();
             }
 
             response().setHeader("Cache-Control", "no-transform,public,max-age=300,s-maxage=900");
@@ -119,7 +97,7 @@ public abstract class AbstractJudgelsAPIController extends Controller {
                 response().setContentType("image/" + type);
                 return ok(baos.toByteArray());
             } catch (IOException e2) {
-                throw new JudgelsAPIInternalServerErrorException(e2);
+                return Results.internalServerError(e2.getMessage());
             }
         }
     }
@@ -131,7 +109,7 @@ public abstract class AbstractJudgelsAPIController extends Controller {
         } catch (MalformedURLException e) {
             File resource = new File(resourceUrl);
             if (!resource.exists()) {
-                throw new JudgelsAPINotFoundException();
+                return Results.notFound();
             }
 
             response().setContentType("application/x-download");
@@ -139,18 +117,5 @@ public abstract class AbstractJudgelsAPIController extends Controller {
 
             return ok(resource);
         }
-    }
-
-    protected static void setAccessControlOrigin(String domains, String methods, long maxAge) {
-        response().setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, domains);
-        response().setHeader(ACCESS_CONTROL_ALLOW_METHODS, methods);
-        response().setHeader(ACCESS_CONTROL_MAX_AGE, maxAge + "");
-        response().setHeader(ACCESS_CONTROL_ALLOW_HEADERS, StringUtils.join(new String[] {ORIGIN, X_REQUESTED_WITH, CONTENT_TYPE, ACCEPT, AUTHORIZATION}, ','));
-    }
-
-    protected static String createJsonPResponse(String callback, String json) {
-        StringBuilder sb = new StringBuilder(callback);
-        sb.append("(").append(json).append(")");
-        return sb.toString();
     }
 }

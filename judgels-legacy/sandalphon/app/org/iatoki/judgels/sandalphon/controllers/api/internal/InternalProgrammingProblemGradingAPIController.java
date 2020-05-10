@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon.controllers.api.internal;
 
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
@@ -16,6 +15,7 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import play.mvc.Results;
 
 @Singleton
 public final class InternalProgrammingProblemGradingAPIController extends AbstractJudgelsAPIController {
@@ -35,7 +35,7 @@ public final class InternalProgrammingProblemGradingAPIController extends Abstra
         Problem problem = problemService.findProblemById(problemId);
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
         String testDataUrl = programmingProblemService.getGradingTestDataFileURL(IdentityUtils.getUserJid(), problem.getJid(), filename);
@@ -49,7 +49,7 @@ public final class InternalProgrammingProblemGradingAPIController extends Abstra
         Problem problem = problemService.findProblemById(problemId);
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            throw new JudgelsAPINotFoundException();
+            return Results.notFound();
         }
 
         String helper = programmingProblemService.getGradingHelperFileURL(IdentityUtils.getUserJid(), problem.getJid(), filename);
