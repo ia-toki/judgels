@@ -1,8 +1,6 @@
 package org.iatoki.judgels.play.general;
 
-import org.iatoki.judgels.Config;
-
-import javax.inject.Inject;
+import com.typesafe.config.Config;
 import javax.inject.Singleton;
 
 @Singleton
@@ -15,14 +13,13 @@ public final class GeneralConfig {
     private final String canonicalUrl;
     private final String githubUrl;
 
-    @Inject
-    public GeneralConfig(@GeneralConfigSource Config config, @GeneralName String name, @GeneralVersion String version) {
+    public GeneralConfig(Config config, String name, String version) {
         this.name = name;
         this.version = version;
-        this.title = config.requireString("general.title");
-        this.copyright = config.requireString("general.copyright");
-        this.canonicalUrl = config.requireString("general.canonicalUrl");
-        this.githubUrl = config.requireString("general.githubUrl");
+        this.title = config.getString("general.title");
+        this.copyright = config.getString("general.copyright");
+        this.canonicalUrl = config.getString("general.canonicalUrl");
+        this.githubUrl = config.getString("general.githubUrl");
     }
 
     public String getName() {

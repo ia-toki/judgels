@@ -4,6 +4,8 @@ import com.google.inject.AbstractModule;
 import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import java.io.File;
+import java.time.Clock;
 import judgels.persistence.ActorProvider;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.service.client.ClientChecker;
@@ -12,8 +14,7 @@ import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
 import org.iatoki.judgels.LocalGitProvider;
-import org.iatoki.judgels.play.general.GeneralName;
-import org.iatoki.judgels.play.general.GeneralVersion;
+import org.iatoki.judgels.play.general.GeneralConfig;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
 import org.iatoki.judgels.play.model.LegacyActorProvider;
 import org.iatoki.judgels.play.model.LegacySessionFactory;
@@ -29,22 +30,19 @@ import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionS
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionServiceImpl;
 
-import java.io.File;
-import java.time.Clock;
-
 public final class SandalphonModule extends AbstractModule {
 
     @Override
     public void configure() {
-        bindConstant().annotatedWith(GeneralName.class).to("Sandalphon");
-        bindConstant().annotatedWith(GeneralVersion.class).to(UserAgent.Agent.DEFAULT_VERSION);
-
-        // <DEPRECATED>
         Config config = ConfigFactory.load();
+
+        GeneralConfig generalConfig = new GeneralConfig(config, "Sandalphon", UserAgent.Agent.DEFAULT_VERSION);
+        bind(GeneralConfig.class).toInstance(generalConfig);
+
         SandalphonConfiguration sandalphonConfig = SandalphonProperties.build(config);
         bind(SandalphonConfiguration.class).toInstance(sandalphonConfig);
+
         bind(SandalphonSingletonsBuilder.class).asEagerSingleton();
-        // </DEPRECATED>
 
         bind(JudgelsDataMigrator.class).to(SandalphonDataMigrator.class);
 
