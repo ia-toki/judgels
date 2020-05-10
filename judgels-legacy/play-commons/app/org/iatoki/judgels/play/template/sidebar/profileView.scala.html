@@ -1,6 +1,6 @@
 @import play.i18n.Messages
 
-@(avatarUrl: String, username: String, realName: String, editLink: String, logoutLink: String)
+@(avatarUrl: String, username: String, logoutLink: String)
 
 <div class="avatar clearfix">
     <div class="col-md-12">
@@ -12,13 +12,7 @@
                 <div class="avatar-username">
                     @username
                 </div>
-                <div class="avatar-real-name">
-                    @realName
-                </div>
                 <div class="row">
-                    <div class="col-md-3 col-xs-1 avatar-menu">
-                        <a href="@editLink" class="btn btn-xs">@Messages.get("commons.profile.edit")</a>
-                    </div>
                     <div class="col-md-9 col-xs-11 avatar-menu">
                         <a href="@logoutLink" class="btn btn-xs">@Messages.get("commons.profile.logout")</a>
                     </div>

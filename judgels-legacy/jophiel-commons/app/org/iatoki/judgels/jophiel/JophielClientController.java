@@ -9,7 +9,6 @@ import judgels.jophiel.api.play.PlaySessionService;
 import judgels.jophiel.api.session.Credentials;
 import org.iatoki.judgels.jophiel.account.LoginForm;
 import org.iatoki.judgels.jophiel.account.html.loginView;
-import org.iatoki.judgels.play.AbstractJudgelsController;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -19,7 +18,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class JophielClientController extends AbstractJudgelsController {
+public final class JophielClientController extends AbstractJophielClientController {
     private final PlaySessionService sessionService;
 
     @Inject
@@ -60,21 +59,17 @@ public final class JophielClientController extends AbstractJudgelsController {
         session("userJid", session.getUserJid());
         session("username", session.getUsername());
         session("role", session.getRole());
-        session("avatar", JophielClientControllerUtils.getInstance().getUserAvatarUrl(session.getUserJid()));
+        session("avatar", getUserAvatarUrl(session.getUserJid()));
         if (session.getName().isPresent()) {
             session("name", session.getName().get());
         }
 
-        return redirect(JophielClientControllerUtils.getInstance().getServiceLoginUrl(session.getAuthCode(), getRootUrl(Http.Context.current().request())));
-    }
-
-    public Result profile() {
-        return redirect(JophielClientControllerUtils.getInstance().getUserEditProfileUrl());
+        return redirect(getServiceLoginUrl(session.getAuthCode(), getRootUrl(Http.Context.current().request())));
     }
 
     public Result logout(String returnUri) {
         session().clear();
-        return redirect(JophielClientControllerUtils.getInstance().getServiceLogoutUrl(returnUri));
+        return redirect(getServiceLogoutUrl(returnUri));
     }
 
     private Result showLogin(Form<LoginForm> form) {

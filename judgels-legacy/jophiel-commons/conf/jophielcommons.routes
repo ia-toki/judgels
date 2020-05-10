@@ -2,5 +2,4 @@
 
 GET        /login                            @org.iatoki.judgels.jophiel.JophielClientController.login()
 POST       /login                            @org.iatoki.judgels.jophiel.JophielClientController.postLogin()
-GET        /profile                          @org.iatoki.judgels.jophiel.JophielClientController.profile()
 GET        /logout                           @org.iatoki.judgels.jophiel.JophielClientController.logout(returnUri: String ?= "")

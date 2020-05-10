@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.problem.bundle.partner;
 
 import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.api.user.search.UserSearchService;
-import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -197,7 +196,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
     private Result showAddPartner(Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<BundlePartnerUpsertForm> bundleForm, Problem problem) {
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(addPartnerView.render(usernameForm, problemForm, bundleForm, problem, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
+        template.setContent(addPartnerView.render(usernameForm, problemForm, bundleForm, problem, getUserAutocompleteAPIEndpoint()));
 
         template.setSecondaryTitle(Messages.get("problem.partner.add"));
         template.markBreadcrumbLocation(Messages.get("problem.partner.add"), routes.BundleProblemPartnerController.addPartner(problem.getId()));

@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.lesson.partner;
 
 import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.api.user.search.UserSearchService;
-import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.play.*;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
@@ -205,7 +204,7 @@ public class LessonPartnerController extends AbstractLessonController {
 
     private Result showAddPartner(Form<LessonPartnerUsernameForm> usernameForm, Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson) {
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(addPartnerView.render(usernameForm, lessonForm, lesson, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
+        template.setContent(addPartnerView.render(usernameForm, lessonForm, lesson, getUserAutocompleteAPIEndpoint()));
 
         template.setSecondaryTitle(Messages.get("lesson.partner.add"));
         template.markBreadcrumbLocation(Messages.get("lesson.partner.add"), routes.LessonPartnerController.addPartner(lesson.getId()));

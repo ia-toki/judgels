@@ -21,7 +21,6 @@ import org.iatoki.judgels.play.template.content.html.scriptsLayout;
 import org.iatoki.judgels.play.template.content.html.secondaryTabsLayout;
 import org.iatoki.judgels.play.template.content.html.secondaryTitleLayout;
 import org.iatoki.judgels.play.template.content.html.warningLayout;
-import play.api.mvc.Call;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -37,20 +36,8 @@ public abstract class AbstractJudgelsController extends Controller {
     @Inject
     protected GeneralConfig generalConfig;
 
-    protected static void flashInfo(String message) {
-        flash("flashInfo", message);
-    }
-
-    protected static void flashError(String message) {
-        flash("flashError", message);
-    }
-
     protected static boolean formHasErrors(Form form) {
         return form.hasErrors() || form.hasGlobalErrors();
-    }
-
-    protected static Result redirectToReferer() {
-        return redirect(request().getHeader(REFERER));
     }
 
     protected static Result lazyOk(LazyHtml content) {
@@ -76,14 +63,6 @@ public abstract class AbstractJudgelsController extends Controller {
 
     protected static String getCurrentUrl(Http.Request request) {
         return "http" + (request.secure() ? "s" : "") + "://" + request.host() + request.uri();
-    }
-
-    protected static String getCurrentUserIpAddress() {
-        return request().remoteAddress();
-    }
-
-    protected static String getAbsoluteUrl(Call call) {
-        return call.absoluteURL(request(), request().secure());
     }
 
     protected HtmlTemplate getBaseHtmlTemplate() {

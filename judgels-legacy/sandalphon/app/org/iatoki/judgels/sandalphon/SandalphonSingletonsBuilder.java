@@ -1,7 +1,5 @@
 package org.iatoki.judgels.sandalphon;
 
-import judgels.sandalphon.SandalphonConfiguration;
-import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.sandalphon.jid.JidCacheDao;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 
@@ -16,10 +14,9 @@ import javax.inject.Singleton;
 public final class SandalphonSingletonsBuilder {
 
     @Inject
-    public SandalphonSingletonsBuilder(JidCacheDao jidCacheDao, SandalphonConfiguration config) {
+    public SandalphonSingletonsBuilder(JidCacheDao jidCacheDao) {
         JidCacheServiceImpl.buildInstance(jidCacheDao);
 
-        JophielClientControllerUtils.buildInstance(config.getRaphaelBaseUrl(), config.getJophielConfig().getBaseUrl());
         SandalphonControllerUtils.buildInstance();
     }
 }

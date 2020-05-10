@@ -26,7 +26,5 @@ public interface SandalphonConfiguration {
     @JsonProperty("gabriel")
     Optional<GabrielClientConfiguration> getGabrielConfig();
 
-    String getRaphaelBaseUrl();
-
     class Builder extends ImmutableSandalphonConfiguration.Builder {}
 }

@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon;
 
-import com.google.common.collect.Sets;
 import com.typesafe.config.Config;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
@@ -27,7 +26,6 @@ public final class SandalphonProperties {
         SandalphonConfiguration.Builder sandalphonConfig = new SandalphonConfiguration.Builder()
                 .baseDataDir(config.getString("sandalphon.baseDataDir"))
                 .clients(clients)
-                .raphaelBaseUrl(config.getString("raphael.baseUrl"))
                 .jophielConfig(new JophielClientConfiguration.Builder()
                         .baseUrl(config.getString("jophiel.baseUrl"))
                         .build());
