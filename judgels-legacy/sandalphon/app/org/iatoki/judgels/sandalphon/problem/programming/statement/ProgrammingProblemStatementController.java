@@ -1,35 +1,30 @@
 package org.iatoki.judgels.sandalphon.problem.programming.statement;
 
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
+import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import play.db.jpa.Transactional;
 import play.i18n.Messages;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.Set;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public final class ProgrammingProblemStatementController extends AbstractProgrammingProblemController {
 

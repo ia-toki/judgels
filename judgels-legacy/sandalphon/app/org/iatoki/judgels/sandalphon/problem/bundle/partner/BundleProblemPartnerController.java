@@ -1,20 +1,25 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.partner;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.jophiel.api.user.search.UserSearchService;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.partner.*;
+import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
+import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
+import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfigBuilder;
+import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
+import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm;
+import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm;
 import org.iatoki.judgels.sandalphon.problem.bundle.partner.html.addPartnerView;
 import org.iatoki.judgels.sandalphon.problem.bundle.partner.html.editPartnerView;
 import org.iatoki.judgels.sandalphon.resource.PartnerControllerUtils;
@@ -25,11 +30,6 @@ import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.Map;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public final class BundleProblemPartnerController extends AbstractProblemController {
 

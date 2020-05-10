@@ -1,13 +1,14 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
+import java.io.IOException;
+import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -25,12 +26,6 @@ import play.db.jpa.Transactional;
 import play.i18n.Messages;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.List;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public final class BundleProblemSubmissionController extends AbstractBundleProblemController {
 

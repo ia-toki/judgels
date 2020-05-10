@@ -1,26 +1,31 @@
 package org.iatoki.judgels.sandalphon.problem.base.statement;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
-import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
-import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.listStatementLanguagesView;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.listStatementMediaFilesView;
 import org.iatoki.judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
+import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
+import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
+import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -31,17 +36,6 @@ import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import judgels.sandalphon.api.problem.ProblemStatement;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public class ProblemStatementController extends AbstractProblemController {
 

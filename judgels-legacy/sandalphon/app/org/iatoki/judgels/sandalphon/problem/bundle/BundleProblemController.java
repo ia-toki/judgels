@@ -1,24 +1,19 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
+import java.io.IOException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.IOException;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public final class BundleProblemController extends AbstractBundleProblemController {
 

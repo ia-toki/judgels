@@ -1,12 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.editProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.listProblemsView;
@@ -19,10 +18,6 @@ import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public final class ProblemController extends AbstractBaseProblemController {
 

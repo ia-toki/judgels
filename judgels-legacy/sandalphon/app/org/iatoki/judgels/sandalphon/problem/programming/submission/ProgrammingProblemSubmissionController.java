@@ -1,6 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.engines.GradingEngineRegistry;
@@ -10,19 +16,16 @@ import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
-import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFileSystemProvider;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
+import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.html.listSubmissionsView;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -30,14 +33,6 @@ import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public final class ProgrammingProblemSubmissionController extends AbstractProgrammingProblemController {
 

@@ -1,12 +1,13 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
+import java.io.IOException;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
@@ -22,12 +23,6 @@ import play.i18n.Messages;
 import play.mvc.Result;
 import play.twirl.api.Html;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.Set;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public final class BundleItemController extends AbstractBundleProblemController {
 

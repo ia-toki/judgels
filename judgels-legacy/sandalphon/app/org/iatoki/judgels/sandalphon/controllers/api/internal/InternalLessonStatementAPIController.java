@@ -1,21 +1,19 @@
 package org.iatoki.judgels.sandalphon.controllers.api.internal;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import play.mvc.Security;
 
 @Singleton
-@Authenticated(value = {LoggedIn.class, HasRole.class})
+@Security.Authenticated(Secured.class)
 public final class InternalLessonStatementAPIController extends AbstractJudgelsAPIController {
 
     private final LessonService lessonService;

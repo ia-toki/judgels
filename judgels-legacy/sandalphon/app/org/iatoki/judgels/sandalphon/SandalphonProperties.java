@@ -1,14 +1,13 @@
 package org.iatoki.judgels.sandalphon;
 
 import com.typesafe.config.Config;
+import java.util.HashSet;
+import java.util.Set;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.service.api.client.Client;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public final class SandalphonProperties {
 

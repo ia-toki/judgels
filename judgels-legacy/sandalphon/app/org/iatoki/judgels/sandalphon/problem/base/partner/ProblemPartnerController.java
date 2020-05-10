@@ -1,10 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -15,10 +14,6 @@ import play.db.jpa.Transactional;
 import play.i18n.Messages;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public class ProblemPartnerController extends AbstractProblemController {
 

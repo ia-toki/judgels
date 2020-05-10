@@ -1,12 +1,14 @@
 package org.iatoki.judgels.sandalphon.lesson.partner;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.jophiel.api.user.search.UserSearchService;
-import org.iatoki.judgels.play.*;
+import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.JudgelsPlayUtils;
+import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
@@ -24,11 +26,6 @@ import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.Map;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 public class LessonPartnerController extends AbstractLessonController {
 

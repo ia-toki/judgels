@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon;
 
 import org.iatoki.judgels.jophiel.AbstractJophielClientController;
+import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.jophiel.logincheck.html.isLoggedOut;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -8,7 +9,9 @@ import org.iatoki.judgels.play.template.sidebar.html.profileView;
 import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.Security;
 
+@Security.Authenticated(Secured.class)
 public abstract class AbstractSandalphonController extends AbstractJophielClientController {
     @Override
     protected Result renderTemplate(HtmlTemplate template) {

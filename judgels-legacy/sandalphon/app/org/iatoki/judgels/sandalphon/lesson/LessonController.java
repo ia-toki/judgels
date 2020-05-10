@@ -1,18 +1,18 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import java.io.IOException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
-import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
-import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
-import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
-import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.lesson.html.createLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.editLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.listLessonsView;
 import org.iatoki.judgels.sandalphon.lesson.html.viewLessonView;
+import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
+import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -22,14 +22,7 @@ import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
 import play.mvc.Result;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import java.io.IOException;
-
-@Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-@Named
 public final class LessonController extends AbstractLessonController {
 
     private static final long PAGE_SIZE = 20;
