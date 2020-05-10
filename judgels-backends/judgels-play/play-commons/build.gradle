@@ -13,8 +13,7 @@ sourceSets.main {
 }
 
 dependencies {
-    api project(':commons')
-
+    api project(':judgels-play:commons')
     api project(':judgels-commons:judgels-service-persistence')
 
     api "com.typesafe.play:play-java_${scalaVersion}:${playVersion}"

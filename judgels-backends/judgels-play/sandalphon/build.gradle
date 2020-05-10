@@ -20,12 +20,11 @@ runPlay {
 }
 
 dependencies {
-    webJar project(path: ':play-commons', configuration: 'webJar')
+    webJar project(path: ':judgels-play:play-commons', configuration: 'webJar')
 
-    implementation project(':sandalphon-commons')
-    implementation project(':jophiel-commons')
-    implementation project(':sandalphon-blackbox-adapters')
-
+    implementation project(':judgels-play:sandalphon-commons')
+    implementation project(':judgels-play:jophiel-commons')
+    implementation project(':judgels-play:sandalphon-blackbox-adapters')
     implementation project(':sandalphon:sandalphon-app')
 
     implementation "org.webjars:prettify:4-Mar-2013"

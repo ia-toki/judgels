@@ -12,5 +12,5 @@ sourceSets.main {
 }
 
 dependencies {
-    api project(':sandalphon-commons')
+    api project(':judgels-play:sandalphon-commons')
 }

@@ -1,4 +1,4 @@
-apply from: '../gradle/java.gradle'
+apply from: '../../gradle/java.gradle'
 
 dependencies {
     api "com.google.code.gson:gson:2.3.1"

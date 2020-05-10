@@ -12,16 +12,9 @@ sourceSets.main {
 }
 
 dependencies {
-    api project(':play-commons')
-
+    api project(':judgels-play:play-commons')
     api project(':judgels-commons:judgels-service-persistence')
-    api project(':sandalphon:sandalphon-api')
-    api project(':sandalphon:sandalphon-client')
-    api project(':gabriel:gabriel-engines')
-    api project(':sealtiel:sealtiel-api')
-
-    api "org.webjars:prettify:4-Mar-2013"
-    api "com.warrenstrange:googleauth:0.4.3"
+    api project(':jophiel:jophiel-api')
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
 }
