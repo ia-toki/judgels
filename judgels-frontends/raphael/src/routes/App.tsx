@@ -16,7 +16,6 @@ import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors
 import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 
 import { getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
-import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import { selectRole } from './jophiel/modules/userWebSelectors';
 import * as userWebActions from './jophiel/modules/userWebActions';
 
@@ -52,7 +51,6 @@ class App extends React.PureComponent<AppProps> {
                 ))}
                 <Route {...homeRoute.route} />
               </Switch>
-              <Route component={LegacyJophielRoutes} />
               <Footer />
             </AppContent>
           </div>

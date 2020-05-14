@@ -12,8 +12,8 @@ export enum SessionErrors {
 const baseUrl = `${APP_CONFIG.apiUrls.jophiel}/session`;
 
 export const sessionAPI = {
-  logIn: (username: string, password: string): Promise<Session> => {
-    return post(`${baseUrl}/login`, undefined, { username, password });
+  logIn: (usernameOrEmail: string, password: string): Promise<Session> => {
+    return post(`${baseUrl}/login`, undefined, { usernameOrEmail, password });
   },
 
   logOut: (token: string): Promise<void> => {

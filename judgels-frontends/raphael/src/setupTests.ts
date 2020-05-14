@@ -11,7 +11,6 @@ nock.disableNetConnect();
   slogan: 'Judgment Angels',
   apiUrls: {
     jophiel: 'http://jophiel',
-    legacyJophiel: 'http://jophiel-legacy',
     uriel: 'http://uriel',
     jerahmeel: 'http://jerahmeel',
   },

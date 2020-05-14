@@ -10,7 +10,6 @@ import { APP_CONFIG } from '../../../../conf';
 import * as loginActions from './loginActions';
 import { PutWebConfig } from '../../modules/userWebReducer';
 
-const path = 'path';
 const usernameOrEmail = 'user';
 const password = 'password';
 const authCode = 'authCode';
@@ -34,7 +33,7 @@ describe('loginActions', () => {
   describe('logIn()', () => {
     describe('when the credentials is valid', () => {
       it('succeeds', async () => {
-        nock(APP_CONFIG.apiUrls.legacyJophiel)
+        nock(APP_CONFIG.apiUrls.jophiel)
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/session/login`)
           .reply(200)
@@ -57,7 +56,7 @@ describe('loginActions', () => {
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(200, config);
 
-        await store.dispatch(loginActions.logIn(path, usernameOrEmail, password));
+        await store.dispatch(loginActions.logIn(usernameOrEmail, password));
         expect(store.getActions()).toContainEqual(PutToken.create(token));
         expect(store.getActions()).toContainEqual(PutUser.create(user));
         expect(store.getActions()).toContainEqual(PutWebConfig.create(config));
@@ -66,14 +65,14 @@ describe('loginActions', () => {
 
     describe('when the credentials is invalid', () => {
       it('throws a more descriptive error', async () => {
-        nock(APP_CONFIG.apiUrls.legacyJophiel)
+        nock(APP_CONFIG.apiUrls.jophiel)
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/session/login`)
           .reply(200)
           .post(`/session/login`, { usernameOrEmail, password })
           .reply(403);
 
-        await expect(store.dispatch(loginActions.logIn(path, usernameOrEmail, password))).rejects.toEqual(
+        await expect(store.dispatch(loginActions.logIn(usernameOrEmail, password))).rejects.toEqual(
           new Error('Invalid username/password.')
         );
       });

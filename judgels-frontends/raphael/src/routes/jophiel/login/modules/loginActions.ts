@@ -4,16 +4,16 @@ import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { PutWebConfig } from '../../modules/userWebReducer';
 import { SessionErrors } from '../../../../modules/api/jophiel/session';
-import { legacySessionAPI } from '../../../../modules/api/jophiel/legacySession';
+import { sessionAPI } from '../../../../modules/api/jophiel/session';
 import { myUserAPI } from '../../../../modules/api/jophiel/myUser';
 import { userWebAPI } from '../../../../modules/api/jophiel/userWeb';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function logIn(currentPath: string, usernameOrEmail: string, password: string) {
+export function logIn(usernameOrEmail: string, password: string) {
   return async dispatch => {
     let session;
     try {
-      session = await legacySessionAPI.logIn(usernameOrEmail, password);
+      session = await sessionAPI.logIn(usernameOrEmail, password);
     } catch (error) {
       if (error instanceof ForbiddenError) {
         if (error.message === SessionErrors.UserNotActivated) {
@@ -36,7 +36,5 @@ export function logIn(currentPath: string, usernameOrEmail: string, password: st
     dispatch(PutToken.create(session.token));
     dispatch(PutUser.create(user));
     dispatch(PutWebConfig.create(config));
-
-    legacySessionAPI.preparePostLogin(session.authCode, encodeURIComponent(currentPath));
   };
 }

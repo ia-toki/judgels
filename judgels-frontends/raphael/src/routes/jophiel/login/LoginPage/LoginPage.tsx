@@ -22,7 +22,7 @@ const LoginPage = (props: LoginPageProps) => (
 );
 
 const mapDispatchToProps = {
-  onLogIn: (data: LoginFormData) => loginActions.logIn(window.location.href, data.usernameOrEmail, data.password),
+  onLogIn: (data: LoginFormData) => loginActions.logIn(data.usernameOrEmail, data.password),
 };
 
 export default connect(undefined, mapDispatchToProps)(LoginPage);
