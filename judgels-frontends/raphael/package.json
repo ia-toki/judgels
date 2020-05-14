@@ -41,7 +41,7 @@
     "redux-persist": "^5.4.0",
     "redux-thunk": "^2.0.0",
     "reset-css": "^2.2.0",
-    "tinymce": "^4.9.7",
+    "tinymce": "^4.9.10",
     "typeface-open-sans": "^0.0.54",
     "typeface-roboto": "^0.0.54"
   },
