@@ -13,6 +13,7 @@ play {
     http {
         session {
             cookieName = "SANDALPHON_SESSION"
+            maxAge = 7d
             secure = false
         }
         filters = "org.iatoki.judgels.play.JudgelsFilters"

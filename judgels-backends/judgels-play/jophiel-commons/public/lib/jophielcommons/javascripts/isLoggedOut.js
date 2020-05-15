@@ -3,9 +3,6 @@ require(["jquery"], function( __tes__ ) {
         url: jophielIsLoggedInUrl,
         type: 'GET',
         dataType: "jsonp",
-        data: {
-            userJid: userJid
-        },
         success: function( data ) {
             if (!data) {
                 window.location.replace(logoutUrl);
@@ -17,9 +14,6 @@ require(["jquery"], function( __tes__ ) {
             url: jophielIsLoggedInUrl,
             type: 'GET',
             dataType: "jsonp",
-            data: {
-                userJid: userJid
-            },
             success: function( data ) {
                 if (!data) {
                     window.location.replace(logoutUrl);

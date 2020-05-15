@@ -3,6 +3,7 @@ package judgels.jophiel.play;
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.net.URI;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +37,7 @@ import judgels.jophiel.user.info.UserInfoStore;
 import judgels.service.RandomCodeGenerator;
 
 public class PlaySessionResource implements PlaySessionService {
-    private static final String COOKIE_NAME = "JOPHIEL_USER_JID";
+    private static final String COOKIE_NAME = "JOPHIEL_TOKEN";
 
     private final SessionStore sessionStore;
     private final UserStore userStore;
@@ -120,11 +121,11 @@ public class PlaySessionResource implements PlaySessionService {
         return Response.seeOther(URI.create(redirectUri))
                 .cookie(new NewCookie(
                         COOKIE_NAME,
-                        session.get().getUserJid(),
+                        session.get().getToken(),
                         "/",
                         uriInfo.getBaseUri().getHost(),
                         null,
-                        NewCookie.DEFAULT_MAX_AGE,
+                        (int) Duration.ofDays(7).getSeconds(),
                         false,
                         true))
                 .build();
@@ -132,19 +133,23 @@ public class PlaySessionResource implements PlaySessionService {
 
     @GET
     @Path("/is-logged-in")
+    @UnitOfWork(readOnly = true)
     public Response isLoggedIn(
-            @CookieParam(COOKIE_NAME) String userJidFromCookie,
-            @QueryParam("userJid") String userJid,
+            @CookieParam(COOKIE_NAME) String token,
             @QueryParam("callback") String callback) {
 
-        boolean res = userJidFromCookie != null && userJidFromCookie.equals(userJid);
+        boolean res = sessionStore.getSessionByToken(token).isPresent();
         return Response.ok(callback + "(" + res + ");", "application/javascript").build();
     }
 
     @GET
     @Path("/client-logout/{redirectUri}")
-    @UnitOfWork(readOnly = true)
-    public Response serviceLogOut(@Context UriInfo uriInfo, @PathParam("redirectUri") String redirectUri) {
+    @UnitOfWork
+    public Response serviceLogOut(
+            @Context UriInfo uriInfo,
+            @CookieParam(COOKIE_NAME) String token,
+            @PathParam("redirectUri") String redirectUri) {
+        sessionStore.deleteSessionByToken(token);
         return Response.seeOther(URI.create(redirectUri))
                 .cookie(new NewCookie(
                         COOKIE_NAME,
@@ -153,7 +158,7 @@ public class PlaySessionResource implements PlaySessionService {
                         uriInfo.getBaseUri().getHost(),
                         Cookie.DEFAULT_VERSION,
                         null,
-                        NewCookie.DEFAULT_MAX_AGE,
+                        (int) Duration.ofDays(7).getSeconds(),
                         new Date(0),
                         false,
                         true))

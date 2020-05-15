@@ -6,7 +6,7 @@ public final class JophielSessionUtils {
     private JophielSessionUtils() {}
 
     public static String getSessionVersion() {
-        return "3";
+        return "4";
     }
 
     public static boolean isSessionValid(Http.Context context) {
