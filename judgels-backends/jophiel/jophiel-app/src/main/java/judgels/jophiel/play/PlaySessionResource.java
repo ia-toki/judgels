@@ -20,7 +20,6 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import judgels.jophiel.api.play.PlaySession;
-import judgels.jophiel.api.play.PlaySessionErrors;
 import judgels.jophiel.api.play.PlaySessionService;
 import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.session.Credentials;
@@ -71,11 +70,7 @@ public class PlaySessionResource implements PlaySessionService {
         UserRole role = userRoleStore.getRole(user.getJid());
 
         // TODO(fushar): generalize later when there is another Play client
-        Optional<String> playRole = role.getSandalphon();
-
-        if (!playRole.isPresent()) {
-            throw PlaySessionErrors.roleNotAllowed();
-        }
+        String playRole = role.getSandalphon().orElse("USER");
 
         Session session = sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
 
@@ -89,7 +84,7 @@ public class PlaySessionResource implements PlaySessionService {
                 .token(session.getToken())
                 .userJid(session.getUserJid())
                 .username(user.getUsername())
-                .role(playRole.get())
+                .role(playRole)
                 .name(info.getName())
                 .build();
     }

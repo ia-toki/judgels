@@ -60,9 +60,6 @@ public final class JophielClientController extends AbstractJophielClientControll
         session("username", session.getUsername());
         session("role", session.getRole());
         session("avatar", getUserAvatarUrl(session.getUserJid()));
-        if (session.getName().isPresent()) {
-            session("name", session.getName().get());
-        }
 
         return redirect(getServiceLoginUrl(session.getAuthCode(), getRootUrl(Http.Context.current().request())));
     }
