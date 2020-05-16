@@ -5,7 +5,7 @@ public final class SandalphonControllerUtils {
     private static SandalphonControllerUtils INSTANCE;
 
     public boolean isAdmin() {
-        return SandalphonUtils.hasRole("admin");
+        return SandalphonUtils.hasRole("ADMIN");
     }
 
     public static synchronized void buildInstance() {
