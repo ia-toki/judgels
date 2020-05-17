@@ -137,6 +137,5 @@ class FunctionalGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
         assertThat(result.getScore()).isEqualTo(0);
 
         GradingResultDetails details = getDetails(result);
-        assertThat(details.getCompilationOutputs().get("source")).contains("duplicate symbol");
     }
 }
