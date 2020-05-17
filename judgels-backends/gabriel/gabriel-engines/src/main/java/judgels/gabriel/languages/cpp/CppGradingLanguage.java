@@ -18,14 +18,12 @@ public class CppGradingLanguage implements CppFamilyGradingLanguage {
     }
 
     @Override
-    public List<String> getCompilationCommand(String sourceFilename) {
-        String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/g++", "-o", executableFilename, sourceFilename);
-    }
-
-    @Override
-    public List<String> getCompilationOnlyCommand(String sourceFilename, String objectFilename) {
-        return ImmutableList.of("/usr/bin/g++", "-o", objectFilename, "-c", sourceFilename);
+    public List<String> getCompilationCommand(String sourceFilename, String... sourceFilenames) {
+        return new ImmutableList.Builder<String>()
+                .add("/usr/bin/g++", "-o", getExecutableFilename(sourceFilename))
+                .add(sourceFilename)
+                .add(sourceFilenames)
+                .build();
     }
 
     @Override

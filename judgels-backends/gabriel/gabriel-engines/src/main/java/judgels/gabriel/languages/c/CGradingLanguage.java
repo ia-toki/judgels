@@ -19,7 +19,7 @@ public class CGradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public List<String> getCompilationCommand(String sourceFilename) {
+    public List<String> getCompilationCommand(String sourceFilename, String... sourceFilenames) {
         String executableFilename = getExecutableFilename(sourceFilename);
         return ImmutableList.of("/usr/bin/gcc", "-std=gnu99", "-o", executableFilename, sourceFilename, "-O2", "-lm");
     }

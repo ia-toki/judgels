@@ -1,6 +1,8 @@
 #include "grader.h"
 #include "decoder.h"
 
+int duplicate_var;
+
 void decode(int nv, int nh) {
   int res = 0;
   for (int i = 0; i < 10; i++) {

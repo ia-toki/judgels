@@ -123,6 +123,20 @@ class FunctionalGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
         assertThat(result.getScore()).isEqualTo(0);
 
         GradingResultDetails details = getDetails(result);
-        assertThat(details.getCompilationOutputs().get("encoder")).contains("bogus");
+        assertThat(details.getCompilationOutputs().get("source")).contains("bogus");
+        assertThat(details.getCompilationOutputs().get("source")).contains("encoder-CE.cpp");
+    }
+
+    @Test
+    void ce_duplicate_symbol() throws GradingException {
+        addSourceFile("encoder", "encoder-CE-duplicate-symbol.cpp");
+        addSourceFile("decoder", "decoder-AC.cpp");
+
+        GradingResult result = runEngine(CONFIG);
+        assertThat(result.getVerdict()).isEqualTo(COMPILATION_ERROR);
+        assertThat(result.getScore()).isEqualTo(0);
+
+        GradingResultDetails details = getDetails(result);
+        assertThat(details.getCompilationOutputs().get("source")).contains("duplicate symbol");
     }
 }

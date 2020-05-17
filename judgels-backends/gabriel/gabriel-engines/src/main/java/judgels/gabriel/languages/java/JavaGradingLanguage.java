@@ -19,7 +19,7 @@ public class JavaGradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public List<String> getCompilationCommand(String sourceFilename) {
+    public List<String> getCompilationCommand(String sourceFilename, String... sourceFilenames) {
         String mainClassName = FilenameUtils.removeExtension(sourceFilename);
         return ImmutableList.of("/bin/bash", "-c", String.format("/usr/bin/javac %s ; /usr/bin/jar cfe %s %s *.class",
                 sourceFilename,

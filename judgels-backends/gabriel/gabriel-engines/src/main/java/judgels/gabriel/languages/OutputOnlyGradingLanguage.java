@@ -17,7 +17,7 @@ public class OutputOnlyGradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public List<String> getCompilationCommand(String sourceFilename) {
+    public List<String> getCompilationCommand(String sourceFilename, String... filenames) {
         throw new UnsupportedOperationException();
     }
 

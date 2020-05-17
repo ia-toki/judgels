@@ -18,7 +18,7 @@ public class Python3GradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public List<String> getCompilationCommand(String sourceFilename) {
+    public List<String> getCompilationCommand(String sourceFilename, String... sourceFilenames) {
         return ImmutableList.of("/bin/true");
     }
 
