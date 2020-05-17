@@ -1,8 +1,7 @@
 package judgels.gabriel.languages;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
-import java.util.Set;
 import judgels.gabriel.api.GradingLanguage;
 
 public class OutputOnlyGradingLanguage implements GradingLanguage {
@@ -12,8 +11,8 @@ public class OutputOnlyGradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("zip");
+    public List<String> getAllowedExtensions() {
+        return ImmutableList.of("zip");
     }
 
     @Override

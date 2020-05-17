@@ -44,6 +44,7 @@ public class BlackboxGradingEngineIntegrationTests {
 
     private File workerDir;
 
+    private File resourceDir;
     private File sourceDir;
     private File gradingDir;
     private File sandboxDir;
@@ -57,6 +58,7 @@ public class BlackboxGradingEngineIntegrationTests {
         URL url = Resources.getResource("engines/" + resourceDirname);
         File resourceDir = new File(url.getPath());
 
+        this.resourceDir = resourceDir;
         this.sourceDir = new File(resourceDir, "source");
 
         File testDataDir = new File(resourceDir, "testdata");
@@ -68,7 +70,6 @@ public class BlackboxGradingEngineIntegrationTests {
         this.engine = engine;
         this.language = new Cpp11GradingLanguage();
     }
-
 
     @BeforeEach
     public void before() throws IOException {
@@ -86,6 +87,11 @@ public class BlackboxGradingEngineIntegrationTests {
     @AfterEach
     public void after() throws IOException {
         FileUtils.forceDelete(workerDir);
+    }
+
+    protected void setCustomSources(GradingLanguage language, String sourceDirSuffix) {
+        this.language = language;
+        this.sourceDir = new File(resourceDir, "source-" + sourceDirSuffix);
     }
 
     protected void addSourceFile(String key, String filename) {

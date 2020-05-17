@@ -1,9 +1,7 @@
 package judgels.gabriel.languages.python;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import java.util.List;
-import java.util.Set;
 import judgels.gabriel.api.GradingLanguage;
 
 public class Python3GradingLanguage implements GradingLanguage {
@@ -13,8 +11,8 @@ public class Python3GradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("py");
+    public List<String> getAllowedExtensions() {
+        return ImmutableList.of("py");
     }
 
     @Override

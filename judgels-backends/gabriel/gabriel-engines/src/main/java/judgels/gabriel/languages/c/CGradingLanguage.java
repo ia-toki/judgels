@@ -1,9 +1,7 @@
 package judgels.gabriel.languages.c;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import java.util.List;
-import java.util.Set;
 import judgels.gabriel.api.GradingLanguage;
 import org.apache.commons.io.FilenameUtils;
 
@@ -14,14 +12,18 @@ public class CGradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("c");
+    public List<String> getAllowedExtensions() {
+        return ImmutableList.of("c");
     }
 
     @Override
     public List<String> getCompilationCommand(String sourceFilename, String... sourceFilenames) {
-        String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/gcc", "-std=gnu99", "-o", executableFilename, sourceFilename, "-O2", "-lm");
+        return new ImmutableList.Builder<String>()
+                .add("/usr/bin/gcc", "-std=gnu99", "-o", getExecutableFilename(sourceFilename))
+                .add(sourceFilename)
+                .add(sourceFilenames)
+                .add("-O2", "-lm")
+                .build();
     }
 
     @Override

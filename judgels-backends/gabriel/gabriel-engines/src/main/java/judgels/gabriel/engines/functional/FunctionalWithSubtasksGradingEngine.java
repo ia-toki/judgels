@@ -97,6 +97,7 @@ public class FunctionalWithSubtasksGradingEngine extends BlackboxGradingEngine {
                 scorer,
                 compilationDir,
                 evaluationDir,
+                language,
                 cfg.getTimeLimit(),
                 cfg.getMemoryLimit());
     }

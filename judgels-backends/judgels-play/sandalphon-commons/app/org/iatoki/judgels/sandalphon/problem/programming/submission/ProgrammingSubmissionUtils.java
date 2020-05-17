@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.problem.programming.submission;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.SourceFile;
@@ -142,7 +143,7 @@ public final class ProgrammingSubmissionUtils {
     }
 
     private static String verifyFile(judgels.gabriel.api.GradingLanguage language, String filename) {
-        Set<String> allowedExtensions = language.getAllowedExtensions();
+        Set<String> allowedExtensions = ImmutableSet.copyOf(language.getAllowedExtensions());
 
         int dotPos = filename.lastIndexOf('.');
         if (dotPos == -1) {

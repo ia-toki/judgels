@@ -1,9 +1,7 @@
 package judgels.gabriel.languages.cpp;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import java.util.List;
-import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 
 public class CppGradingLanguage implements CppFamilyGradingLanguage {
@@ -13,8 +11,8 @@ public class CppGradingLanguage implements CppFamilyGradingLanguage {
     }
 
     @Override
-    public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("cpp", "cc");
+    public List<String> getAllowedExtensions() {
+        return ImmutableList.of("cpp", "cc");
     }
 
     @Override

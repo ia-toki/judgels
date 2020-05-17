@@ -15,28 +15,24 @@ import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.gabriel.languages.cpp.CppFamilyGradingLanguage;
 import org.apache.commons.io.FileUtils;
 
 public class FunctionalCompiler implements Compiler {
     private static final String COMPILATION_OUTPUT_FILENAME = "_compilation.out";
     private static final String GRADER = "grader";
-    private static final String GRADER_FILENAME = "grader.cpp";
 
     private Sandbox sandbox;
     private File compilationDir;
-    private CppFamilyGradingLanguage language;
+    private GradingLanguage language;
     private Map<String, File> helperFiles;
+    private String graderFilename;
 
     public void prepare(Sandbox sandbox, File compilationDir, GradingLanguage language, Map<String, File> helperFiles)
             throws PreparationException {
 
-        if (!(language instanceof CppFamilyGradingLanguage)) {
-            throw new PreparationException("Grading language must be of C++ family");
-        }
-
-        if (!helperFiles.containsKey(GRADER_FILENAME)) {
-            throw new PreparationException(GRADER_FILENAME + " is missing");
+        this.graderFilename = GRADER + "." + language.getAllowedExtensions().get(0);
+        if (!helperFiles.containsKey(this.graderFilename)) {
+            throw new PreparationException(this.graderFilename + " is missing");
         }
 
         sandbox.setTimeLimitInMilliseconds(10 * 1000);
@@ -49,7 +45,7 @@ public class FunctionalCompiler implements Compiler {
         this.sandbox = sandbox;
         this.compilationDir = compilationDir;
         this.helperFiles = helperFiles;
-        this.language = (CppFamilyGradingLanguage) language;
+        this.language = language;
     }
 
     @Override
@@ -67,7 +63,8 @@ public class FunctionalCompiler implements Compiler {
         }
         String[] sourceFilenamesArray = sourceFilenames.toArray(new String[0]);
 
-        List<String> command = language.getCompilationCommand(GRADER_FILENAME, sourceFilenamesArray);
+        List<String> command = language.getCompilationCommand(graderFilename, sourceFilenamesArray);
+        String executableFilename = language.getExecutableFilename(graderFilename);
 
         SandboxExecutionResult result = sandbox.execute(command);
 
@@ -76,7 +73,7 @@ public class FunctionalCompiler implements Compiler {
             try {
                 String compilationOutput = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
                 FileUtils.forceDelete(outputFile);
-                FileUtils.copyFileToDirectory(sandbox.getFile(GRADER), compilationDir);
+                FileUtils.copyFileToDirectory(sandbox.getFile(executableFilename), compilationDir);
                 return new CompilationResult.Builder()
                         .isSuccessful(true)
                         .putOutputs(SubmissionSource.DEFAULT_KEY, compilationOutput)

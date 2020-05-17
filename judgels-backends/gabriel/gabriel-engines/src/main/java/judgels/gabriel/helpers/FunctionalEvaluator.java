@@ -1,6 +1,5 @@
 package judgels.gabriel.helpers;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import judgels.gabriel.api.EvaluationResult;
 import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GenerationException;
 import judgels.gabriel.api.GenerationResult;
+import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
@@ -21,8 +21,7 @@ import org.apache.commons.io.FileUtils;
 
 public class FunctionalEvaluator implements Evaluator {
     private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
-    private static final String EXECUTABLE_FILENAME = "grader";
-    private static final List<String> EVALUATION_COMMAND = ImmutableList.of("./grader");
+    private static final String GRADER = "grader";
 
     private TestCaseVerdictParser verdictParser;
     private Scorer scorer;
@@ -31,6 +30,9 @@ public class FunctionalEvaluator implements Evaluator {
 
     private File compilationDir;
     private File evaluationDir;
+
+    private String executableFilename;
+    private List<String> evaluationCommand;
 
     public FunctionalEvaluator() {
         this.verdictParser = new TestCaseVerdictParser();
@@ -41,6 +43,7 @@ public class FunctionalEvaluator implements Evaluator {
             Scorer scorer,
             File compilationDir,
             File evaluationDir,
+            GradingLanguage language,
             int timeLimitInMilliseconds,
             int memoryLimitInKilobytes) {
 
@@ -52,13 +55,17 @@ public class FunctionalEvaluator implements Evaluator {
         this.sandbox = sandbox;
         this.compilationDir = compilationDir;
         this.evaluationDir = evaluationDir;
+
+        String graderFilename = GRADER + "." + language.getAllowedExtensions().get(0);
+        this.executableFilename = language.getExecutableFilename(graderFilename);
+        this.evaluationCommand = language.getExecutionCommand(graderFilename);
     }
 
     @Override
     public EvaluationResult evaluate(File input, File output) throws EvaluationException {
-        if (!sandbox.containsFile(EXECUTABLE_FILENAME)) {
-            sandbox.addFile(new File(compilationDir, EXECUTABLE_FILENAME));
-            File executableFile = sandbox.getFile(EXECUTABLE_FILENAME);
+        if (!sandbox.containsFile(executableFilename)) {
+            sandbox.addFile(new File(compilationDir, executableFilename));
+            File executableFile = sandbox.getFile(executableFilename);
             if (!executableFile.setExecutable(true)) {
                 throw new EvaluationException("Cannot set " + executableFile.getAbsolutePath() + " as executable");
             }
@@ -88,7 +95,7 @@ public class FunctionalEvaluator implements Evaluator {
         sandbox.redirectStandardOutput(EVALUATION_OUTPUT_FILENAME);
         sandbox.redirectStandardError(EVALUATION_OUTPUT_FILENAME);
 
-        SandboxExecutionResult result = sandbox.execute(EVALUATION_COMMAND);
+        SandboxExecutionResult result = sandbox.execute(evaluationCommand);
         if (result.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {
             try {
                 FileUtils.copyFileToDirectory(sandbox.getFile(EVALUATION_OUTPUT_FILENAME), evaluationDir);
@@ -96,10 +103,10 @@ public class FunctionalEvaluator implements Evaluator {
                 throw new GenerationException(e);
             }
         } else if (result.getStatus() == SandboxExecutionStatus.INTERNAL_ERROR) {
-            throw new GenerationException(String.join(" ", EVALUATION_COMMAND) + " resulted in " + result);
+            throw new GenerationException(String.join(" ", evaluationCommand) + " resulted in " + result);
         }
 
-        sandbox.removeAllFilesExcept(ImmutableSet.of(EXECUTABLE_FILENAME));
+        sandbox.removeAllFilesExcept(ImmutableSet.of(executableFilename));
 
         return new GenerationResult.Builder()
                 .verdict(verdictParser.parseExecutionResult(result))

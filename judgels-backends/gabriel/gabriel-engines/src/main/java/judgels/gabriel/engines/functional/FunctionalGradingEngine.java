@@ -98,6 +98,7 @@ public class FunctionalGradingEngine extends BlackboxGradingEngine {
                 scorer,
                 compilationDir,
                 evaluationDir,
+                language,
                 cfg.getTimeLimit(),
                 cfg.getMemoryLimit());
     }

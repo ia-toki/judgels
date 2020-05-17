@@ -1,9 +1,7 @@
 package judgels.gabriel.languages.pascal;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import java.util.List;
-import java.util.Set;
 import judgels.gabriel.api.GradingLanguage;
 import org.apache.commons.io.FilenameUtils;
 
@@ -14,8 +12,8 @@ public class PascalGradingLanguage implements GradingLanguage {
     }
 
     @Override
-    public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("pas");
+    public List<String> getAllowedExtensions() {
+        return ImmutableList.of("pas");
     }
 
     @Override
