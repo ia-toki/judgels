@@ -42,7 +42,7 @@ public class JavaGradingLanguage implements GradingLanguage {
 
     @Override
     public List<String> getExecutionCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/java", "-jar", getExecutableFilename(sourceFilename));
+        return ImmutableList.of("/usr/bin/java", "-Xmx512M", "-Xss64M", "-jar", getExecutableFilename(sourceFilename));
     }
 
     private String quote(String filename) {

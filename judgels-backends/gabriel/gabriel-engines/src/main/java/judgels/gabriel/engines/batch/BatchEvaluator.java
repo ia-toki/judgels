@@ -18,7 +18,6 @@ import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.api.ScoringResult;
 import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.helpers.TestCaseVerdictParser;
-import judgels.gabriel.languages.java.JavaGradingLanguage;
 import org.apache.commons.io.FileUtils;
 
 public class BatchEvaluator implements Evaluator {
@@ -51,10 +50,6 @@ public class BatchEvaluator implements Evaluator {
 
         sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
-
-        if (language instanceof JavaGradingLanguage) {
-            sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes + 8000);
-        }
 
         this.verdictParser = new TestCaseVerdictParser();
         this.scorer = scorer;
