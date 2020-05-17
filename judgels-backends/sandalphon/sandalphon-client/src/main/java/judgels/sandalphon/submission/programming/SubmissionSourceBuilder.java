@@ -62,6 +62,10 @@ public class SubmissionSourceBuilder {
     }
 
     public SubmissionSource fromPastSubmission(String submissionJid) {
+        return fromPastSubmission(submissionJid, false);
+    }
+
+    public SubmissionSource fromPastSubmission(String submissionJid, boolean includeViewableSourcesOnly) {
         Map<String, SourceFile> sourceFiles = new HashMap<>();
         for (FileInfo key : submissionFs.listDirectoriesInDirectory(Paths.get(submissionJid))) {
             List<FileInfo> files = submissionFs.listFilesInDirectory(Paths.get(submissionJid, key.getName()));
@@ -72,7 +76,7 @@ public class SubmissionSourceBuilder {
             String name = file.getName();
             byte[] content;
 
-            if (name.toLowerCase().endsWith(".zip")) {
+            if (includeViewableSourcesOnly && name.toLowerCase().endsWith(".zip")) {
                 content = new byte[0];
             } else {
                 content = submissionFs.readByteArrayFromFile(Paths.get(submissionJid, key.getName(), name));

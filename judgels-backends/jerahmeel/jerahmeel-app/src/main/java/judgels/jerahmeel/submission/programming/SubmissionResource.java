@@ -199,7 +199,7 @@ public class SubmissionResource implements SubmissionService {
         String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(profileService.getProfile(userJid)));
 
-        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
                 .submission(submission)
                 .source(source)

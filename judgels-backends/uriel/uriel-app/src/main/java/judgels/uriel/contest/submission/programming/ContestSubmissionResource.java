@@ -209,7 +209,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Profile profile = checkFound(Optional.ofNullable(
                 profileService.getProfiles(ImmutableSet.of(userJid), contest.getBeginTime()).get(userJid)));
 
-        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
                 .submission(submission)
                 .source(source)
