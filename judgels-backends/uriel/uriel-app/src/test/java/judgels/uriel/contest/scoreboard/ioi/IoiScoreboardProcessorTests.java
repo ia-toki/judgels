@@ -488,7 +488,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
-                        .lastSubmissionId(Optional.empty())
+                        .lastSubmissionId(3)
                         .build());
             }
 

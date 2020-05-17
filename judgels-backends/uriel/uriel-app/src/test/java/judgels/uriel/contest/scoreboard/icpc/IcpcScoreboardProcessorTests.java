@@ -690,7 +690,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IcpcScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
-                        .lastSubmissionId(Optional.empty())
+                        .lastSubmissionId(3)
                         .build());
             }
 

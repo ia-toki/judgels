@@ -105,19 +105,17 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
 
         Map<String, String> currentFirstToSolveSubmissionJids = new HashMap<>(firstToSolveSubmissionJids);
 
-        Optional<Long> nextLastSubmissionId = Optional.empty();
-        boolean nextLastSubmissionIdFound = false;
+        Optional<Long> nextLastSubmissionId = maybeIncrementalContent.flatMap(ic -> ic.getLastSubmissionId());
         for (Submission s : programmingSubmissions) {
             if (!s.getLatestGrading().isPresent() || s.getLatestGrading().get().getVerdict() == Verdict.PENDING) {
-                nextLastSubmissionIdFound = true;
-            } else if (s.getLatestGrading().get().getVerdict() == Verdict.ACCEPTED) {
+                break;
+            }
+            if (s.getLatestGrading().get().getVerdict() == Verdict.ACCEPTED) {
                 currentFirstToSolveSubmissionJids.putIfAbsent(s.getProblemJid(), s.getJid());
             }
-            if (!nextLastSubmissionIdFound) {
-                nextLastSubmissionId = Optional.of(s.getId());
-                firstToSolveSubmissionJids = ImmutableMap.copyOf(currentFirstToSolveSubmissionJids);
-            }
+            nextLastSubmissionId = Optional.of(s.getId());
         }
+        firstToSolveSubmissionJids = ImmutableMap.copyOf(currentFirstToSolveSubmissionJids);
 
         List<IcpcScoreboardEntry> entries = new ArrayList<>();
         for (String contestantJid : submissionsMap.keySet()) {

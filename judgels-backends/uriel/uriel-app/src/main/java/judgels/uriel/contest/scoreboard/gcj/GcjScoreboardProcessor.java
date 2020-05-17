@@ -110,7 +110,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
         Map<String, Map<String, GcjScoreboardProblemState>> problemStateMapsByContestantJid = new HashMap<>(
                 maybeIncrementalContent.map(c -> c.getProblemStateMapsByContestantJid()).orElse(emptyMap()));
 
-        Optional<Long> nextLastSubmissionId = Optional.empty();
+        Optional<Long> nextLastSubmissionId = maybeIncrementalContent.flatMap(ic -> ic.getLastSubmissionId());
         for (Submission s : programmingSubmissions) {
             if (!s.getLatestGrading().isPresent() || s.getLatestGrading().get().getVerdict() == Verdict.PENDING) {
                 break;

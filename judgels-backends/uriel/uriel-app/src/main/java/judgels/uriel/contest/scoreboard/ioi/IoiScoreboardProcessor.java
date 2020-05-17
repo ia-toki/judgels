@@ -145,7 +145,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
         Map<String, Map<String, Map<Integer, Double>>> maxScorePerSubtaskMapsByContestantJid = new HashMap<>(
                 maybeIncrementalContent.map(c -> c.getMaxScorePerSubtaskMapsByContestantJid()).orElse(emptyMap()));
 
-        Optional<Long> nextLastSubmissionId = Optional.empty();
+        Optional<Long> nextLastSubmissionId = maybeIncrementalContent.flatMap(ic -> ic.getLastSubmissionId());
         for (Submission s : programmingSubmissions) {
             if (!s.getLatestGrading().isPresent() || s.getLatestGrading().get().getVerdict() == Verdict.PENDING) {
                 break;
