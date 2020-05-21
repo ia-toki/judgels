@@ -60,9 +60,6 @@ export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextSt
           ['\\[', '\\]'],
         ],
       },
-      svg: {
-        fontCache: 'global',
-      },
     };
   }
 
