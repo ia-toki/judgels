@@ -44,7 +44,7 @@ export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextSt
       // otherwise setup the mathjax.
       const publicUrl = process.env.PUBLIC_URL;
       this.setupMathjaxConfig();
-      this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-svg.js');
+      this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-chtml.js');
     }
   }
 

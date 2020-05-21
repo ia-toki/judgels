@@ -60,7 +60,7 @@
     "test:ts": "TZ=Asia/Jakarta react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "postinstall": "npm run prepare:mathjax",
-    "prepare:mathjax": "cp  -r node_modules/mathjax/es5 public/mathjax"
+    "prepare:mathjax": "./scripts/copy-mathjax-files.sh"
   },
   "devDependencies": {
     "@types/base-64": "^0.1.2",
