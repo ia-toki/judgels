@@ -37,6 +37,8 @@ dependencies {
     api 'org.jsoup:jsoup:1.8.3'
     api 'org.springframework:spring-context:4.1.6.RELEASE'
 
+    webJar 'org.webjars.bower:roboto-fontface:0.7.0'
+    webJar 'org.webjars.bower:open-sans:1.1.0'
     webJar ('org.webjars:bootstrap:3.3.4') {
         exclude group: 'org.webjars', module: 'jquery'
     }
@@ -57,3 +59,11 @@ dependencies {
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
 }
+
+task copyWebJarFonts(type: Copy, dependsOn: extractPlayWebJars) {
+    from extractPlayWebJars.outputDirectory.dir("lib/bootstrap/fonts")
+
+    into "public/lib/playcommons/fonts"
+}
+
+createPlayAssetsJar.dependsOn(copyWebJarFonts)
