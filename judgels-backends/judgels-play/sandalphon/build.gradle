@@ -27,7 +27,5 @@ dependencies {
     implementation project(':judgels-play:sandalphon-blackbox-adapters')
     implementation project(':sandalphon:sandalphon-app')
 
-    implementation "org.webjars:prettify:4-Mar-2013"
-
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
 }

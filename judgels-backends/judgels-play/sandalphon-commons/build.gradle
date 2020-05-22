@@ -19,7 +19,6 @@ dependencies {
     api project(':gabriel:gabriel-engines')
     api project(':sealtiel:sealtiel-api')
 
-    api "org.webjars:prettify:4-Mar-2013"
     api "com.warrenstrange:googleauth:0.4.3"
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"

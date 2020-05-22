@@ -28,7 +28,6 @@ requirejs.config({
         'jquery': '/assets/lib/jquery/jquery.min',
         'jquery-timer': '/assets/lib/playcommons/javascripts/jquery.timer',
         'jquery-ui': '/assets/lib/jquery-ui/jquery-ui.min',
-        'prettify': '/assets/lib/prettify/prettify',
         'moment': '/assets/lib/momentjs/min/moment-with-locales.min',
         'select2': '/assets/lib/select2/js/select2.min'
     }
