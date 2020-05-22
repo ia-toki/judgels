@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { ContentCard } from '../../components/ContentCard/ContentCard';
 import { LessonStatement } from '../../modules/api/sandalphon/lesson';
-import { MathjaxText } from '../MathjaxText/MathjaxText';
+import { KatexText } from '../KatexText/KatexText';
 
 import './LessonStatementCard.css';
 
@@ -20,7 +20,7 @@ export class LessonStatementCard extends React.PureComponent<LessonStatementCard
           {alias}. {statement.title}
         </h2>
         <div className="lesson-statement__text">
-          <MathjaxText>{statement.text}</MathjaxText>
+          <KatexText>{statement.text}</KatexText>
         </div>
       </ContentCard>
     );

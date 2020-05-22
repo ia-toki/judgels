@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { ProblemStatement } from '../../../../modules/api/sandalphon/problem';
 import { ProblemLimits } from '../../../../modules/api/sandalphon/problemProgramming';
-import { MathjaxText } from '../../../MathjaxText/MathjaxText';
+import { KatexText } from '../../../KatexText/KatexText';
 
 import './ProblemStatementCard.css';
 
@@ -36,7 +36,7 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
           </tbody>
         </HTMLTable>
         <div className="programming-problem-statement__text">
-          <MathjaxText>{statement.text}</MathjaxText>
+          <KatexText>{statement.text}</KatexText>
         </div>
       </ContentCard>
     );

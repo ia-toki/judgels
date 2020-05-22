@@ -24,7 +24,7 @@ import org.iatoki.judgels.sandalphon.lesson.statement.html.listStatementMediaFil
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
-import org.iatoki.judgels.sandalphon.resource.html.mathjaxView;
+import org.iatoki.judgels.sandalphon.resource.html.katexView;
 import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
 import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
 import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
@@ -71,7 +71,7 @@ public class LessonStatementController extends AbstractLessonController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(lessonStatementView.render(statement));
-        template.addAdditionalScript(mathjaxView.render());
+        template.addAdditionalScript(katexView.render());
 
         Set<String> allowedLanguages;
         try {

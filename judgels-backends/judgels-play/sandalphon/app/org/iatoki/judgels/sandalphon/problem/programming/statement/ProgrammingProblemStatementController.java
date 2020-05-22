@@ -21,7 +21,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemContr
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
-import org.iatoki.judgels.sandalphon.resource.html.mathjaxView;
+import org.iatoki.judgels.sandalphon.resource.html.katexView;
 import play.db.jpa.Transactional;
 import play.i18n.Messages;
 import play.mvc.Result;
@@ -95,7 +95,7 @@ public final class ProgrammingProblemStatementController extends AbstractProgram
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
-        template.addAdditionalScript(mathjaxView.render());
+        template.addAdditionalScript(katexView.render());
 
         Set<String> allowedLanguages;
         try {

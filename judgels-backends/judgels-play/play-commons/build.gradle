@@ -56,6 +56,7 @@ dependencies {
     webJar ('org.webjars:Eonasdan-bootstrap-datetimepicker:4.7.14') {
         exclude group: 'org.webjars', module: 'bootstrap'
     }
+    webJar 'org.webjars.npm:katex:0.11.0'
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
 }

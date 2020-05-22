@@ -25,6 +25,8 @@ requirejs.config({
     paths: {
         'bootstrap': '/assets/lib/bootstrap/js/bootstrap.min',
         'bootstrap-datetimepicker': '/assets/lib/Eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min',
+        'katex': '/assets/lib/katex/dist/katex.min',
+        'katex-contrib-auto-render': '/assets/lib/katex/dist/contrib/auto-render.min',
         'jquery': '/assets/lib/jquery/jquery.min',
         'jquery-timer': '/assets/lib/playcommons/javascripts/jquery.timer',
         'jquery-ui': '/assets/lib/jquery-ui/jquery-ui.min',
