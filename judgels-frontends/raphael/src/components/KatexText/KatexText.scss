@@ -1,3 +1,7 @@
 @import '../../styles/base';
 
-.katex-wrapper {}
+.katex-wrapper {
+  .katex {
+    font-size: 16px !important;
+  }
+}
