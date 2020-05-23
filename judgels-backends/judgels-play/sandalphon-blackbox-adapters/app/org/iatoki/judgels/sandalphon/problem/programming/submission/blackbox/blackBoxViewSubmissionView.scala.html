@@ -227,11 +227,9 @@
             <div class="panel-heading">@key - @sourceFile.getName</div>
             <div class="panel-body">
                 <pre>@IOUtils.toString(sourceFile.getContent)</pre>
-                <p>Compilation Output:</p>
                 @if(details != null && details.getCompilationOutputs.contains(key)) {
+                    <p>Compilation Output:</p>
                     <pre>@details.getCompilationOutputs.get(key)</pre>
-                } else {
-                    <p>(No info)</p>
                 }
             </div>
         </div>
@@ -248,14 +246,5 @@
                 </div>
             }
         }
-    }
-
-    @if(!sourceFiles.contains(SubmissionSource.DEFAULT_KEY) && details != null && details.getCompilationOutputs.contains(SubmissionSource.DEFAULT_KEY)) {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <p>Compilation Output:</p>
-                <pre>@details.getCompilationOutputs.get(SubmissionSource.DEFAULT_KEY)</pre>
-            </div>
-        </div>
     }
 }
