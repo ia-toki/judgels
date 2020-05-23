@@ -10,9 +10,9 @@ add_header X-Content-Type-Options "nosniff" always;
 # Only allow referrer headers to be sent over HTTPS, and also only the domain name (without path) when cross origin
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
-{% if jophiel_url is defined %}
+{% if nginx_jophiel_url is defined %}
 server {
-    server_name {{ jophiel_url }};
+    server_name {{ nginx_jophiel_url }};
 
     access_log off;
 
@@ -39,13 +39,13 @@ server {
 }
 {% endif %}
 
-{% if sandalphon_url is defined %}
+{% if nginx_sandalphon_url is defined %}
 
 # Configuration for Sandalphon cache
 proxy_cache_path /tmp/sandalphon_cache levels=1:2 keys_zone=sandalphon_cache:10m max_size=2g inactive=15m use_temp_path=off;
 
 server {
-    server_name {{ sandalphon_url }};
+    server_name {{ nginx_sandalphon_url }};
 
     access_log off;
 
@@ -84,9 +84,9 @@ server {
 }
 {% endif %}
 
-{% if sealtiel_url is defined %}
+{% if nginx_sealtiel_url is defined %}
 server {
-    server_name {{ sealtiel_url }};
+    server_name {{ nginx_sealtiel_url }};
 
     access_log off;
 
@@ -113,9 +113,9 @@ server {
 }
 {% endif %}
 
-{% if uriel_url is defined %}
+{% if nginx_uriel_url is defined %}
 server {
-    server_name {{ uriel_url }};
+    server_name {{ nginx_uriel_url }};
 
     access_log off;
 
@@ -142,9 +142,9 @@ server {
 }
 {% endif %}
 
-{% if jerahmeel_url is defined %}
+{% if nginx_jerahmeel_url is defined %}
 server {
-    server_name {{ jerahmeel_url }};
+    server_name {{ nginx_jerahmeel_url }};
 
     access_log off;
 
@@ -171,7 +171,7 @@ server {
 }
 {% endif %}
 
-{% if raphael_url is defined %}
+{% if nginx_raphael_url is defined %}
 
 map $sent_http_content_type $expires {
     default                    off;
@@ -183,7 +183,7 @@ map $sent_http_content_type $expires {
 }
 
 server {
-    server_name {{ raphael_url }};
+    server_name {{ nginx_raphael_url }};
 
     access_log off;
     proxy_buffering off;
@@ -212,9 +212,9 @@ server {
 }
 {% endif %}
 
-{% if rabbitmq_mgmt_url is defined %}
+{% if nginx_rabbitmq_mgmt_url is defined %}
 server {
-    server_name {{ rabbitmq_mgmt_url }};
+    server_name {{ nginx_rabbitmq_mgmt_url }};
 
     access_log off;
 
