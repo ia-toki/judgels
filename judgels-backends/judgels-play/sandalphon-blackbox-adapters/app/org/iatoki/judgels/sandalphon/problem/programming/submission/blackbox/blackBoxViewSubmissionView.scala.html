@@ -239,7 +239,7 @@
 
     @if(details != null) {
         @for((key, compilationOutput) <- details.getCompilationOutputs) {
-            @if(!sourceFiles.contains(key) {
+            @if(!sourceFiles.contains(key)) {
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <p>Compilation Output:</p>
