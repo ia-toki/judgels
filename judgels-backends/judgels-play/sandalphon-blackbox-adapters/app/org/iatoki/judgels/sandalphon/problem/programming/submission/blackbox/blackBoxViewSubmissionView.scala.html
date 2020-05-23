@@ -1,6 +1,7 @@
 @import judgels.gabriel.api.GradingResultDetails
 @import judgels.gabriel.api.OutputOnlyOverrides
 @import judgels.gabriel.api.SourceFile
+@import judgels.gabriel.api.SubmissionSource
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission
 @import org.apache.commons.io.IOUtils
@@ -227,11 +228,20 @@
             <div class="panel-body">
                 <pre>@IOUtils.toString(sourceFile.getContent)</pre>
                 <p>Compilation Output:</p>
-                @if(details != null) {
+                @if(details != null && details.getCompilationOutputs.contains(key)) {
                     <pre>@details.getCompilationOutputs.get(key)</pre>
                 } else {
                     <p>(No info)</p>
                 }
+            </div>
+        </div>
+    }
+
+    @if(!sourceFiles.contains(SubmissionSource.DEFAULT_KEY) && details != null && details.getCompilationOutputs.contains(SubmissionSource.DEFAULT_KEY)) {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>Compilation Output:</p>
+                <pre>@details.getCompilationOutputs.get(SubmissionSource.DEFAULT_KEY)</pre>
             </div>
         </div>
     }

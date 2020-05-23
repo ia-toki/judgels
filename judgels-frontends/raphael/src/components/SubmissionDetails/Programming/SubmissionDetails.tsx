@@ -16,7 +16,7 @@ import {
 } from '../../../modules/api/gabriel/language';
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
 import { TestCaseResult } from '../../../modules/api/gabriel/grading';
-import { SubmissionSource } from '../../../modules/api/gabriel/submission';
+import { SubmissionSource, DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
 import { Profile } from '../../../modules/api/jophiel/profile';
 
@@ -299,12 +299,12 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     const sourceFiles = Object.keys(source.submissionFiles).map(key => (
       <ContentCard key={key}>
         <h5>
-          {key === 'source' ? '' : key + ': '} {source.submissionFiles[key].name}
+          {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {source.submissionFiles[key].name}
         </h5>
         <SourceCode language={getGradingLanguageSyntaxHighlighterValue(submission.gradingLanguage)}>
           {base64.decode(source.submissionFiles[key].content)}
         </SourceCode>
-        {details && details.compilationOutputs && (
+        {details && details.compilationOutputs && details.compilationOutputs[key] !== undefined && (
           <div className="compilation-output">
             <h5>Compilation Output</h5>
             <pre>{details.compilationOutputs[key]}</pre>
@@ -313,10 +313,21 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       </ContentCard>
     ));
 
+    const defaultCompilationOutput = details.compilationOutputs[DEFAULT_SOURCE_KEY] !== undefined &&
+      source.submissionFiles[DEFAULT_SOURCE_KEY] === undefined && (
+        <ContentCard>
+          <div className="compilation-output">
+            <h5>Compilation Output</h5>
+            <pre>{details.compilationOutputs[DEFAULT_SOURCE_KEY]}</pre>
+          </div>
+        </ContentCard>
+      );
+
     return (
       <>
         <h4>Source Files</h4>
         {sourceFiles}
+        {defaultCompilationOutput}
       </>
     );
   };
