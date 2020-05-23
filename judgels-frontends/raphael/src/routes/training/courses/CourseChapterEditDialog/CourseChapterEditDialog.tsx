@@ -111,6 +111,7 @@ export class CourseChapterEditDialog extends React.Component<
 
   private refreshChapters = async () => {
     if (this.props.isOpen) {
+      this.setState({ response: undefined });
       const response = await this.props.onGetChapters(this.props.course.jid);
       this.setState({ response });
     }

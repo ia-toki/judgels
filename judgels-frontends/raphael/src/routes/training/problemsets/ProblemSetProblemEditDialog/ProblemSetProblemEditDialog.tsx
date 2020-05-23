@@ -123,6 +123,7 @@ export class ProblemSetProblemEditDialog extends React.Component<
 
   private refreshProblems = async () => {
     if (this.props.isOpen) {
+      this.setState({ response: undefined });
       const response = await this.props.onGetProblems(this.props.problemSet.jid);
       this.setState({ response });
     }
