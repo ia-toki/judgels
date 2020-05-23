@@ -68,26 +68,29 @@ public class StatsProcessor implements SubmissionConsumer {
 
     @Override
     public void accept(Submission submission) {
+        Optional<ChapterProblemModel> cm = chapterProblemDao.selectByProblemJid(submission.getProblemJid());
+        Optional<ProblemSetProblemModel> pm = problemSetProblemDao.selectByProblemJid(submission.getProblemJid());
+
+        if (!cm.isPresent() && !pm.isPresent()) {
+            return;
+        }
+
         ProblemStatsResult res = processProblemStats(submission);
         if (res == null) {
             return;
         }
 
-        Optional<ChapterProblemModel> cm = chapterProblemDao.selectByProblemJid(submission.getProblemJid());
         if (cm.isPresent()) {
             if (processChapterStats(submission, cm.get().chapterJid, res.becomesAccepted)) {
                 processCourseStats(submission, cm.get().chapterJid);
             }
         }
 
-        Optional<ProblemSetProblemModel> pm = problemSetProblemDao.selectByProblemJid(submission.getProblemJid());
         if (pm.isPresent()) {
             processProblemSetStats(submission,  pm.get().problemSetJid, res.scoreDiff);
         }
 
-        if (cm.isPresent() || pm.isPresent()) {
-            processUserStats(submission, res.scoreDiff);
-        }
+        processUserStats(submission, res.scoreDiff);
     }
 
     private ProblemStatsResult processProblemStats(Submission s) {

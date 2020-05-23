@@ -134,6 +134,8 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 new ChapterProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_2).build(),
                 new ChapterProblem.Builder().alias("B").type(PROGRAMMING).problemJid(PROBLEM_JID_3).build()));
 
+        submit(USER_JID_1, "randomJid", "randomJid", ACCEPTED, 100, 100, 32000);
+
         assertCourseProgress(course.getJid(), 0, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
@@ -184,6 +186,8 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         problemSetProblemStore.setProblems(problemSet.getJid(), ImmutableList.of(
                 new ProblemSetProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_1).build(),
                 new ProblemSetProblem.Builder().alias("B").type(PROGRAMMING).problemJid(PROBLEM_JID_2).build()));
+
+        submit(USER_JID_1, "randomJid", "randomJid", ACCEPTED, 100, 100, 32000);
 
         assertProblemProgresses(PENDING, 0, PENDING, 0);
         assertProblemStats(0, 0, 0);
