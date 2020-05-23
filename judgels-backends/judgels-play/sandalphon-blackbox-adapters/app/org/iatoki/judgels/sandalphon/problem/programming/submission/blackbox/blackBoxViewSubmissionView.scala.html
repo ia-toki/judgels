@@ -237,6 +237,19 @@
         </div>
     }
 
+    @if(details != null) {
+        @for((key, compilationOutput) <- details.getCompilationOutputs) {
+            if(!sourceFiles.contains(key) {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>Compilation Output:</p>
+                        <pre>@details.getCompilationOutputs.get(key)</pre>
+                    </div>
+                </div>
+            }
+        }
+    }
+
     @if(!sourceFiles.contains(SubmissionSource.DEFAULT_KEY) && details != null && details.getCompilationOutputs.contains(SubmissionSource.DEFAULT_KEY)) {
         <div class="panel panel-default">
             <div class="panel-body">

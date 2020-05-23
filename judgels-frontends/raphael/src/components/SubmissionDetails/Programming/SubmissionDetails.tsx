@@ -313,21 +313,22 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       </ContentCard>
     ));
 
-    const defaultCompilationOutput = details.compilationOutputs[DEFAULT_SOURCE_KEY] !== undefined &&
-      source.submissionFiles[DEFAULT_SOURCE_KEY] === undefined && (
-        <ContentCard>
-          <div className="compilation-output">
+    const defaultCompilationOutputs =
+      details &&
+      Object.keys(details.compilationOutputs)
+        .filter(key => source.submissionFiles[key] === undefined)
+        .map(key => (
+          <ContentCard>
             <h5>Compilation Output</h5>
-            <pre>{details.compilationOutputs[DEFAULT_SOURCE_KEY]}</pre>
-          </div>
-        </ContentCard>
-      );
+            <pre>{details.compilationOutputs[key]}</pre>
+          </ContentCard>
+        ));
 
     return (
       <>
         <h4>Source Files</h4>
         {sourceFiles}
-        {defaultCompilationOutput}
+        {defaultCompilationOutputs}
       </>
     );
   };
