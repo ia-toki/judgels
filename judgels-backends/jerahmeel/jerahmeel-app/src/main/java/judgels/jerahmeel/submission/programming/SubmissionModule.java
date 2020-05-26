@@ -16,6 +16,7 @@ import judgels.fs.aws.AwsConfiguration;
 import judgels.jerahmeel.JerahmeelBaseDataDir;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
+import judgels.sandalphon.submission.programming.NoOpSubmissionConsumer;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionConsumer;
 import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
@@ -103,8 +104,7 @@ public class SubmissionModule {
             ObjectMapper mapper,
             SubmissionStore submissionStore,
             @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
-            StatsProcessor statsProcessor) {
+            MessageService messageService) {
 
         return unitOfWorkAwareProxyFactory.create(
                 GradingResponseProcessor.class,
@@ -119,6 +119,6 @@ public class SubmissionModule {
                         submissionStore,
                         sealtielClientAuthHeader,
                         messageService,
-                        statsProcessor});
+                        new NoOpSubmissionConsumer()});
     }
 }
