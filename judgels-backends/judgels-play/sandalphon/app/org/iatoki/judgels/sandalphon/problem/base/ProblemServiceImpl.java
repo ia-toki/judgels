@@ -464,7 +464,7 @@ public final class ProblemServiceImpl implements ProblemService {
     }
 
     private static Problem createProblemFromModel(ProblemModel problemModel) {
-        return new Problem(problemModel.id, problemModel.jid, problemModel.slug, problemModel.createdBy, problemModel.additionalNote, new Date(problemModel.createdAt.toEpochMilli()), getProblemType(problemModel));
+        return new Problem(problemModel.id, problemModel.jid, problemModel.slug, problemModel.createdBy, problemModel.additionalNote, new Date(problemModel.updatedAt.toEpochMilli()), getProblemType(problemModel));
     }
 
     private static ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel problemPartnerModel) {
