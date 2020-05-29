@@ -123,7 +123,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   private refreshSubmissions = async (page?: number) => {
     const userJid = this.isUserFilterMine() ? this.props.userJid : undefined;
     const response = await this.props.onGetProgrammingSubmissions(
-      this.props.problemSet.jid,
+      undefined,
       userJid,
       this.props.problem.problemJid,
       page
