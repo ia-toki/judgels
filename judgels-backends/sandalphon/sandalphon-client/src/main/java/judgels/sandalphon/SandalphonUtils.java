@@ -29,6 +29,9 @@ public class SandalphonUtils {
                         "src=\"render/",
                         String.format("src=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid))
                 .replaceAll(
+                        "url=\"render/",
+                        String.format("url=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid))
+                .replaceAll(
                         "href=\"render/",
                         String.format("href=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid));
     }
@@ -38,6 +41,9 @@ public class SandalphonUtils {
                 .replaceAll(
                         "src=\"render/",
                         String.format("src=\"%s/api/v2/lessons/%s/render/", baseUrl, lessonJid))
+                .replaceAll(
+                        "url=\"render/",
+                        String.format("url=\"%s/api/v2/lessons/%s/render/", baseUrl, lessonJid))
                 .replaceAll(
                         "href=\"render/",
                         String.format("href=\"%s/api/v2/lessons/%s/render/", baseUrl, lessonJid));
