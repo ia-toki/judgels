@@ -55,6 +55,12 @@ public class GradingRequestPoller implements Runnable {
                             LOGGER.error("Failed to process message: " + message, e);
                             return null;
                         });
+
+                try {
+                    Thread.sleep((int) (Math.random() * 1000));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             } catch (Throwable e) {
                 LOGGER.error("Failed to run grading request poller", e);
             }
