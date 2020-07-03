@@ -20,6 +20,10 @@ public class PerRequestActorProvider {
         threadLocalIpAddress.set(ipAddress);
     }
 
+    public static void clearIpAddress() {
+        threadLocalIpAddress.remove();
+    }
+
     public static Optional<String> getJid() {
         return Optional.ofNullable(threadLocalJid.get());
     }

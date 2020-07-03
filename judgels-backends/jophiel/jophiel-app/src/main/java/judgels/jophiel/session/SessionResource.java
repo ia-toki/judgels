@@ -52,5 +52,6 @@ public class SessionResource implements SessionService {
     public void logOut(AuthHeader authHeader) {
         actorChecker.check(authHeader);
         sessionStore.deleteSessionByToken(authHeader.getBearerToken());
+        actorChecker.clear();
     }
 }
