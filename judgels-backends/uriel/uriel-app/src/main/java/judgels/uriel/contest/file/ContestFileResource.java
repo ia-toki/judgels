@@ -29,6 +29,7 @@ import judgels.uriel.api.contest.file.ContestFileConfig;
 import judgels.uriel.api.contest.file.ContestFileService;
 import judgels.uriel.api.contest.file.ContestFilesResponse;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.file.FileFs;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -37,6 +38,7 @@ public class ContestFileResource implements ContestFileService {
     private final ActorChecker actorChecker;
     private final ContestFileRoleChecker fileRoleChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final FileSystem fileFs;
 
     @Inject
@@ -44,11 +46,13 @@ public class ContestFileResource implements ContestFileService {
             ActorChecker actorChecker,
             ContestFileRoleChecker fileRoleChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             @FileFs FileSystem fileFs) {
 
         this.actorChecker = actorChecker;
         this.fileRoleChecker = fileRoleChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.fileFs = fileFs;
     }
 
@@ -71,6 +75,9 @@ public class ContestFileResource implements ContestFileService {
                         .size(f.getSize())
                         .lastModifiedTime(f.getLastModifiedTime())
                         .build());
+
+        contestLogger.log(contestJid, "OPEN_FILES");
+
         return new ContestFilesResponse.Builder()
                 .data(files)
                 .config(config)
@@ -82,7 +89,12 @@ public class ContestFileResource implements ContestFileService {
     @UnitOfWork(readOnly = true)
     public Response downloadFile(@PathParam("contestJid") String contestJid, @PathParam("filename") String filename) {
         checkFound(contestStore.getContestByJid(contestJid));
-        return ServiceUtils.buildDownloadResponse(fileFs.getPrivateFileUrl(Paths.get(contestJid, filename)));
+        Response response =
+                ServiceUtils.buildDownloadResponse(fileFs.getPrivateFileUrl(Paths.get(contestJid, filename)));
+
+        contestLogger.log(contestJid, "DOWNLOAD_FILE", filename);
+
+        return response;
     }
 
     @POST
@@ -101,5 +113,7 @@ public class ContestFileResource implements ContestFileService {
         checkAllowed(fileRoleChecker.canManage(actorJid, contest));
 
         fileFs.uploadPrivateFile(Paths.get(contestJid, fileDetails.getFileName()), fileStream);
+
+        contestLogger.log(contestJid, "UPLOAD_FILE", fileDetails.getFileName());
     }
 }

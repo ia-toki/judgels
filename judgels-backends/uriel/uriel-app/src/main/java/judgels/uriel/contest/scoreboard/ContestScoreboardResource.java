@@ -20,10 +20,12 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final ContestScoreboardPoller scoreboardUpdaterDispatcher;
@@ -35,6 +37,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     public ContestScoreboardResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
             ContestScoreboardPoller scoreboardUpdaterDispatcher,
@@ -43,6 +46,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.scoreboardFetcher = scoreboardFetcher;
         this.scoreboardUpdaterDispatcher = scoreboardUpdaterDispatcher;
@@ -77,6 +81,8 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             checkAllowed(canSupervise);
         }
 
+        contestLogger.log(contestJid, "OPEN_SCOREBOARD");
+
         return scoreboardFetcher
                 .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, page.orElse(1), PAGE_SIZE)
                 .map(scoreboard -> {
@@ -103,5 +109,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
         scoreboardIncrementalMarker.invalidateMark(contestJid);
         scoreboardUpdaterDispatcher.updateContestAsync(contest);
+
+        contestLogger.log(contestJid, "REFRESH_SCOREBOARD");
     }
 }

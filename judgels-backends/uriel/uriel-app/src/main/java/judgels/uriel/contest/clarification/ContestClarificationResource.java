@@ -27,11 +27,13 @@ import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationService;
 import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.problem.ContestProblemStore;
 
 public class ContestClarificationResource implements ContestClarificationService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestClarificationStore clarificationStore;
     private final ContestProblemStore problemStore;
@@ -42,6 +44,7 @@ public class ContestClarificationResource implements ContestClarificationService
     public ContestClarificationResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestClarificationStore clarificationStore,
             ContestProblemStore problemStore,
@@ -50,6 +53,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.clarificationRoleChecker = clarificationRoleChecker;
         this.clarificationStore = clarificationStore;
         this.problemStore = problemStore;
@@ -67,8 +71,11 @@ public class ContestClarificationResource implements ContestClarificationService
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canCreate(actorJid, contest));
+        ContestClarification clarification = clarificationStore.createClarification(contestJid, data);
 
-        return clarificationStore.createClarification(contestJid, data);
+        contestLogger.log(contestJid, "CREATE_CLARIFICATION", clarification.getJid(), clarification.getTopicJid());
+
+        return clarification;
     }
 
     @Override
@@ -126,6 +133,8 @@ public class ContestClarificationResource implements ContestClarificationService
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
         Map<String, String> problemNamesMap = problemClient.getProblemNames(problemJids, language);
 
+        contestLogger.log(contestJid, "OPEN_CLARIFICATIONS");
+
         return new ContestClarificationsResponse.Builder()
                 .data(clarifications)
                 .config(config)
@@ -147,9 +156,11 @@ public class ContestClarificationResource implements ContestClarificationService
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canManage(actorJid, contest));
 
-        checkFound(clarificationStore.answerClarification(
+        ContestClarification clarification = checkFound(clarificationStore.answerClarification(
                 contestJid,
                 clarificationJid,
                 data.getAnswer()));
+
+        contestLogger.log(contestJid, "ANSWER_CLARIFICATION", clarificationJid, clarification.getTopicJid());
     }
 }

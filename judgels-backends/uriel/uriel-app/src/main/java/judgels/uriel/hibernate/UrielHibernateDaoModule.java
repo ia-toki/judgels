@@ -10,6 +10,7 @@ import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestGroupContestDao;
 import judgels.uriel.persistence.ContestGroupDao;
 import judgels.uriel.persistence.ContestGroupScoreboardDao;
+import judgels.uriel.persistence.ContestLogDao;
 import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestProblemDao;
@@ -108,6 +109,11 @@ public class UrielHibernateDaoModule {
 
     @Provides
     static ContestGroupScoreboardDao contestGroupScoreboardDao(ContestGroupScoreboardHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ContestLogDao contestLogDao(ContestLogHibernateDao dao) {
         return dao;
     }
 }

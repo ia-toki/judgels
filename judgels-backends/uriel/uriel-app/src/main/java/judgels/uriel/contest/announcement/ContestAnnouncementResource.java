@@ -22,10 +22,12 @@ import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementsResponse;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestAnnouncementResource implements ContestAnnouncementService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestAnnouncementRoleChecker announcementRoleChecker;
     private final ContestAnnouncementStore announcementStore;
     private final ProfileService profileService;
@@ -34,6 +36,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     public ContestAnnouncementResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestAnnouncementRoleChecker announcementRoleChecker,
             ContestAnnouncementStore announcementStore,
             ProfileService profileService) {
@@ -42,6 +45,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         this.announcementRoleChecker = announcementRoleChecker;
         this.contestStore = contestStore;
         this.announcementStore = announcementStore;
+        this.contestLogger = contestLogger;
         this.profileService = profileService;
     }
 
@@ -76,6 +80,8 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
 
+        contestLogger.log(contestJid, "OPEN_ANNOUNCEMENTS");
+
         return new ContestAnnouncementsResponse.Builder()
                 .data(announcements)
                 .config(config)
@@ -92,8 +98,11 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canManage(actorJid, contest));
+        ContestAnnouncement announcement = announcementStore.createAnnouncement(contestJid, data);
 
-        return announcementStore.createAnnouncement(contestJid, data);
+        contestLogger.log(contestJid, "CREATE_ANNOUNCEMENT", announcement.getJid());
+
+        return announcement;
     }
 
     @Override
@@ -106,6 +115,8 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canManage(actorJid, contest));
+
+        contestLogger.log(contestJid, "UPDATE_ANNOUNCEMENT", announcementJid);
 
         return announcementStore.updateAnnouncement(contestJid, announcementJid, data);
     }

@@ -27,10 +27,12 @@ import judgels.uriel.api.contest.manager.ContestManagersDeleteResponse;
 import judgels.uriel.api.contest.manager.ContestManagersResponse;
 import judgels.uriel.api.contest.manager.ContestManagersUpsertResponse;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestManagerResource implements ContestManagerService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestManagerRoleChecker managerRoleChecker;
     private final ContestManagerStore managerStore;
     private final UserSearchService userSearchService;
@@ -40,6 +42,7 @@ public class ContestManagerResource implements ContestManagerService {
     public ContestManagerResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestManagerRoleChecker managerRoleChecker,
             ContestManagerStore managerStore,
             UserSearchService userSearchService,
@@ -47,6 +50,7 @@ public class ContestManagerResource implements ContestManagerService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.managerRoleChecker = managerRoleChecker;
         this.managerStore = managerStore;
         this.userSearchService = userSearchService;
@@ -70,6 +74,8 @@ public class ContestManagerResource implements ContestManagerService {
         ContestManagerConfig config = new ContestManagerConfig.Builder()
                 .canManage(canManage)
                 .build();
+
+        contestLogger.log(contestJid, "OPEN_MANAGERS");
 
         return new ContestManagersResponse.Builder()
                 .data(managers)
@@ -112,6 +118,8 @@ public class ContestManagerResource implements ContestManagerService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
+        contestLogger.log(contestJid, "ADD_MANAGERS");
+
         return new ContestManagersUpsertResponse.Builder()
                 .insertedManagerProfilesMap(insertedManagerProfilesMap)
                 .alreadyManagerProfilesMap(alreadyManagerProfilesMap)
@@ -145,6 +153,8 @@ public class ContestManagerResource implements ContestManagerService {
         Map<String, Profile> deletedManagerProfilesMap = deletedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
+
+        contestLogger.log(contestJid, "REMOVE_MANAGERS");
 
         return new ContestManagersDeleteResponse.Builder()
                 .deletedManagerProfilesMap(deletedManagerProfilesMap)

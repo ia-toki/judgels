@@ -29,10 +29,12 @@ import judgels.uriel.api.contest.contestant.ContestContestantsDeleteResponse;
 import judgels.uriel.api.contest.contestant.ContestContestantsResponse;
 import judgels.uriel.api.contest.contestant.ContestContestantsUpsertResponse;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestContestantResource implements ContestContestantService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestContestantRoleChecker contestantRoleChecker;
     private final ContestContestantStore contestantStore;
     private final UserSearchService userSearchService;
@@ -42,6 +44,7 @@ public class ContestContestantResource implements ContestContestantService {
     public ContestContestantResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestContestantRoleChecker contestantRoleChecker,
             ContestContestantStore contestantStore,
             UserSearchService userSearchService,
@@ -49,6 +52,7 @@ public class ContestContestantResource implements ContestContestantService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.contestantRoleChecker = contestantRoleChecker;
         this.contestantStore = contestantStore;
         this.userSearchService = userSearchService;
@@ -73,6 +77,8 @@ public class ContestContestantResource implements ContestContestantService {
         ContestContestantConfig config = new ContestContestantConfig.Builder()
                 .canManage(canManage)
                 .build();
+
+        contestLogger.log(contestJid, "OPEN_CONTESTANTS");
 
         return new ContestContestantsResponse.Builder()
                 .data(contestants)
@@ -117,6 +123,8 @@ public class ContestContestantResource implements ContestContestantService {
         Profile profile = profileService.getProfiles(ImmutableSet.of(actorJid)).get(actorJid);
         checkAllowed(contestantRoleChecker.canRegister(actorJid, profile.getRating(), contest));
 
+        contestLogger.log(contestJid, "REGISTER_CONTEST");
+
         contestantStore.upsertContestant(contestJid, actorJid);
     }
 
@@ -126,6 +134,8 @@ public class ContestContestantResource implements ContestContestantService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canUnregister(actorJid, contest));
+
+        contestLogger.log(contestJid, "UNREGISTER_CONTEST");
 
         contestantStore.deleteContestant(contestJid, actorJid);
     }
@@ -174,6 +184,8 @@ public class ContestContestantResource implements ContestContestantService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
+        contestLogger.log(contestJid, "ADD_CONTESTANTS");
+
         return new ContestContestantsUpsertResponse.Builder()
                 .insertedContestantProfilesMap(insertedContestantProfilesMap)
                 .alreadyContestantProfilesMap(alreadyContestantProfilesMap)
@@ -207,6 +219,8 @@ public class ContestContestantResource implements ContestContestantService {
         Map<String, Profile> deletedContestantProfilesMap = deletedContestantUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
+
+        contestLogger.log(contestJid, "REMOVE_CONTESTANTS");
 
         return new ContestContestantsDeleteResponse.Builder()
                 .deletedContestantProfilesMap(deletedContestantProfilesMap)

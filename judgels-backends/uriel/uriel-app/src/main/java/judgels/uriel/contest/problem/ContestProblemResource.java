@@ -29,11 +29,13 @@ import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemsResponse;
 import judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestModuleStore moduleStore;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
@@ -44,6 +46,7 @@ public class ContestProblemResource implements ContestProblemService {
     public ContestProblemResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestModuleStore moduleStore,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
@@ -52,6 +55,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.moduleStore = moduleStore;
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
@@ -99,6 +103,8 @@ public class ContestProblemResource implements ContestProblemService {
                 .collect(Collectors.toList());
 
         problemStore.setProblems(contestJid, setData);
+
+        contestLogger.log(contestJid, "SET_PROBLEMS");
     }
 
     @Override
@@ -118,6 +124,8 @@ public class ContestProblemResource implements ContestProblemService {
         ContestProblemConfig config = new ContestProblemConfig.Builder()
                 .canManage(canManage)
                 .build();
+
+        contestLogger.log(contestJid, "OPEN_PROBLEMS");
 
         return new ContestProblemsResponse.Builder()
                 .data(problems)
@@ -170,6 +178,8 @@ public class ContestProblemResource implements ContestProblemService {
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();
 
+        contestLogger.log(contestJid, "OPEN_PROBLEM", null, problemJid);
+
         return new judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet.Builder()
                 .defaultLanguage(problemInfo.getDefaultLanguage())
                 .languages(problemInfo.getTitlesByLanguage().keySet())
@@ -212,6 +222,8 @@ public class ContestProblemResource implements ContestProblemService {
                 .from(worksheet)
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();
+
+        contestLogger.log(contestJid, "OPEN_PROBLEM", null, problemJid);
 
         return new ContestProblemWorksheet.Builder()
                 .defaultLanguage(problemInfo.getDefaultLanguage())

@@ -77,6 +77,10 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
                 component.contestScoreboardPoller(),
                 Duration.ofSeconds(10));
 
+        component.scheduler().scheduleOnce(
+                "contest-log-poller",
+                component.contestLogPoller());
+
         if (urielConfig.getSealtielConfig().isPresent()) {
             component.scheduler().scheduleOnce(
                     "grading-response-poller",

@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="fushar" id="add-contest-log-1">
+        <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_log">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="contestJid" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="object" type="VARCHAR(100)"/>
+            <column name="problemJid" type="VARCHAR(32)"/>
+            <column name="createdAt" type="datetime(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar" id="add-contest-log-2">
+        <createIndex catalogName="judgels_uriel" indexName="contestJid_createdBy" schemaName="judgels_uriel" tableName="uriel_contest_log">
+            <column name="contestJid"/>
+            <column name="createdBy"/>
+        </createIndex>
+        <createIndex catalogName="judgels_uriel" indexName="contestJid_event" schemaName="judgels_uriel" tableName="uriel_contest_log">
+            <column name="contestJid"/>
+            <column name="event"/>
+        </createIndex>
+        <createIndex catalogName="judgels_uriel" indexName="contestJid_problemJid" schemaName="judgels_uriel" tableName="uriel_contest_log">
+            <column name="contestJid"/>
+            <column name="problemJid"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -55,6 +55,7 @@ import judgels.uriel.api.contest.submission.programming.ContestSubmissionService
 import judgels.uriel.api.contest.submission.programming.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
@@ -68,6 +69,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionDownloader submissionDownloader;
@@ -87,6 +89,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     public ContestSubmissionResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             SubmissionStore submissionStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionDownloader submissionDownloader,
@@ -104,6 +107,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.submissionStore = submissionStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionDownloader = submissionDownloader;
@@ -253,6 +257,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
+
+        contestLogger.log(contestJid, "SUBMIT", submission.getJid(), problemJid);
     }
 
     @Override
@@ -265,6 +271,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         submissionRegrader.regradeSubmission(submission);
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
+
+        contestLogger.log(contest.getJid(), "REGRADE_SUBMISSION", submissionJid, submission.getProblemJid());
     }
 
     @Override
@@ -290,6 +298,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             submissionRegrader.regradeSubmissions(submissions);
         }
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
+
+        contestLogger.log(contest.getJid(), "REGRADE_SUBMISSIONS", null, problemJid.orElse(null));
     }
 
     @GET

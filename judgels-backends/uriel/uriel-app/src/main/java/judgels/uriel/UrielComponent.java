@@ -15,6 +15,8 @@ import judgels.uriel.contest.clarification.ContestClarificationResource;
 import judgels.uriel.contest.contestant.ContestContestantResource;
 import judgels.uriel.contest.file.ContestFileResource;
 import judgels.uriel.contest.history.ContestHistoryResource;
+import judgels.uriel.contest.log.ContestLogModule;
+import judgels.uriel.contest.log.ContestLogPoller;
 import judgels.uriel.contest.manager.ContestManagerResource;
 import judgels.uriel.contest.module.ContestModuleResource;
 import judgels.uriel.contest.problem.ContestProblemResource;
@@ -54,6 +56,7 @@ import judgels.uriel.submission.programming.SubmissionModule;
         UrielModule.class,
         UrielHibernateDaoModule.class,
 
+        ContestLogModule.class,
         ContestScoreboardUpdaterModule.class})
 @Singleton
 public interface UrielComponent {
@@ -75,6 +78,7 @@ public interface UrielComponent {
     PingResource pingResource();
 
     JudgelsScheduler scheduler();
+    ContestLogPoller contestLogPoller();
     ContestScoreboardPoller contestScoreboardPoller();
     GradingResponsePoller gradingResponsePoller();
 }

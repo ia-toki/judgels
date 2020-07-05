@@ -27,12 +27,14 @@ import judgels.uriel.api.contest.dump.ImportContestsDumpResponse;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 
 public class ContestResource implements ContestService {
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
 
@@ -41,12 +43,14 @@ public class ContestResource implements ContestService {
             ActorChecker actorChecker,
             ContestRoleChecker contestRoleChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
     }
@@ -68,7 +72,11 @@ public class ContestResource implements ContestService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
-        return checkFound(contestStore.updateContest(contestJid, data));
+        contest = checkFound(contestStore.updateContest(contestJid, data));
+
+        contestLogger.log(contestJid, "UPDATE_CONTEST");
+
+        return contest;
     }
 
     @Override
@@ -89,6 +97,8 @@ public class ContestResource implements ContestService {
         checkAllowed(contestRoleChecker.canStartVirtual(actorJid, contest));
 
         contestantStore.startVirtualContest(contestJid, actorJid);
+
+        contestLogger.log(contestJid, "START_VIRTUAL_CONTEST");
     }
 
     @Override
@@ -99,6 +109,8 @@ public class ContestResource implements ContestService {
         checkAllowed(contestRoleChecker.canResetVirtual(actorJid, contest));
 
         contestantStore.resetVirtualContest(contestJid);
+
+        contestLogger.log(contestJid, "RESET_VIRTUAL_CONTEST");
     }
 
     @Override
@@ -157,6 +169,8 @@ public class ContestResource implements ContestService {
         Contest contest = contestStore.createContest(data);
         moduleStore.upsertIcpcStyleModule(contest.getJid(), new IcpcStyleModuleConfig.Builder().build());
 
+        contestLogger.log(contest.getJid(), "CREATE_CONTEST");
+
         return contest;
     }
 
@@ -166,6 +180,8 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canView(actorJid, contest));
+
+        contestLogger.log(contest.getJid(), "OPEN_CONTEST");
 
         return checkFound(contestStore.getContestDescription(contest.getJid()));
     }
@@ -181,7 +197,12 @@ public class ContestResource implements ContestService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
 
-        return checkFound(contestStore.updateContestDescription(contest.getJid(), description));
+        ContestDescription newDescription =
+                checkFound(contestStore.updateContestDescription(contest.getJid(), description));
+
+        contestLogger.log(contest.getJid(), "UPDATE_DESCRIPTION");
+
+        return newDescription;
     }
 
     @Override

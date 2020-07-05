@@ -10,6 +10,7 @@ import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestGroupContestModel;
 import judgels.uriel.persistence.ContestGroupModel;
 import judgels.uriel.persistence.ContestGroupScoreboardModel;
+import judgels.uriel.persistence.ContestLogModel;
 import judgels.uriel.persistence.ContestManagerModel;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModuleModel;
@@ -38,7 +39,8 @@ public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfig
                 ContestSupervisorModel.class,
                 ContestGroupModel.class,
                 ContestGroupContestModel.class,
-                ContestGroupScoreboardModel.class
+                ContestGroupScoreboardModel.class,
+                ContestLogModel.class
         );
     }
 

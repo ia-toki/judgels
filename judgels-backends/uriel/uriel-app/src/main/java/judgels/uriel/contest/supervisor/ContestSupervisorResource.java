@@ -28,10 +28,12 @@ import judgels.uriel.api.contest.supervisor.ContestSupervisorsResponse;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorsUpsertResponse;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestSupervisorResource implements ContestSupervisorService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestRoleChecker roleChecker;
     private final ContestSupervisorStore supervisorStore;
     private final UserSearchService userSearchService;
@@ -41,6 +43,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
     public ContestSupervisorResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestRoleChecker roleChecker,
             ContestSupervisorStore supervisorStore,
             UserSearchService userSearchService,
@@ -48,6 +51,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.roleChecker = roleChecker;
         this.supervisorStore = supervisorStore;
         this.userSearchService = userSearchService;
@@ -67,6 +71,8 @@ public class ContestSupervisorResource implements ContestSupervisorService {
         Map<String, Profile> profilesMap = userJids.isEmpty()
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
+
+        contestLogger.log(contestJid, "OPEN_SUPERVISORS");
 
         return new ContestSupervisorsResponse.Builder()
                 .data(supervisors)
@@ -101,6 +107,8 @@ public class ContestSupervisorResource implements ContestSupervisorService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
+        contestLogger.log(contestJid, "ADD_SUPERVISORS");
+
         return new ContestSupervisorsUpsertResponse.Builder()
                 .upsertedSupervisorProfilesMap(upsertedSupervisorProfilesMap)
                 .build();
@@ -133,6 +141,8 @@ public class ContestSupervisorResource implements ContestSupervisorService {
         Map<String, Profile> deletedSupervisorProfilesMap = deletedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
+
+        contestLogger.log(contestJid, "REMOVE_SUPERVISORS");
 
         return new ContestSupervisorsDeleteResponse.Builder()
                 .deletedSupervisorProfilesMap(deletedSupervisorProfilesMap)

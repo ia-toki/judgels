@@ -14,11 +14,13 @@ import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestModuleResource implements ContestModuleService {
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
     private final ContestStore contestStore;
+    private final ContestLogger contestLogger;
     private final ContestModuleStore moduleStore;
 
     @Inject
@@ -26,11 +28,13 @@ public class ContestModuleResource implements ContestModuleService {
             ActorChecker actorChecker,
             ContestRoleChecker contestRoleChecker,
             ContestStore contestStore,
+            ContestLogger contestLogger,
             ContestModuleStore moduleStore) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
         this.contestStore = contestStore;
+        this.contestLogger = contestLogger;
         this.moduleStore = moduleStore;
     }
 
@@ -41,6 +45,9 @@ public class ContestModuleResource implements ContestModuleService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canView(actorJid, contest));
+
+        contestLogger.log(contestJid, "OPEN_MODULES");
+
         return moduleStore.getEnabledModules(contest.getJid());
     }
 
@@ -52,6 +59,8 @@ public class ContestModuleResource implements ContestModuleService {
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
         moduleStore.enableModule(contest.getJid(), type);
+
+        contestLogger.log(contestJid, "ENABLE_MODULE", type.name());
     }
 
     @Override
@@ -62,6 +71,8 @@ public class ContestModuleResource implements ContestModuleService {
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
         moduleStore.disableModule(contest.getJid(), type);
+
+        contestLogger.log(contestJid, "DISABLE_MODULE", type.name());
     }
 
     @Override
@@ -82,5 +93,7 @@ public class ContestModuleResource implements ContestModuleService {
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
         moduleStore.upsertConfig(contest.getJid(), config);
+
+        contestLogger.log(contestJid, "UPDATE_MODULE_CONFIG");
     }
 }
