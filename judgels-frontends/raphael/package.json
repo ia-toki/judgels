@@ -89,6 +89,8 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
     "nock": "11.7.2",
     "npm-run-all": "^4.1.2",
     "prettier": "1.19.1",
@@ -105,6 +107,19 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md,yml,yaml,css,scss}": [
+      "prettier --write"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
     ]
   }
 }
