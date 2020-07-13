@@ -16,6 +16,7 @@ export enum ContestTab {
   Clarifications = 'CLARIFICATIONS',
   Scoreboard = 'SCOREBOARD',
   Files = 'FILES',
+  Logs = 'LOGS',
 }
 
 export enum ContestRole {

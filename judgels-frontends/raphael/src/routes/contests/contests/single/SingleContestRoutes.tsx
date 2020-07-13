@@ -28,6 +28,7 @@ import ContestClarificationsPage from './clarifications/ContestClarificationsPag
 import ContestProblemRoutes from './problems/ContestProblemRoutes';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import ContestFilesPage from './files/ContestFilesPage/ContestFilesPage';
+import ContestLogsPage from './logs/ContestLogsPage/ContestLogsPage';
 import ProgrammingSubmissionRoutes from './submissions/Programming/ContestSubmissionRoutes';
 import BundleSubmissionRoutes from './submissions/Bundle/ContestSubmissionRoutes';
 import { EditContest } from '../modules/contestReducer';
@@ -149,6 +150,14 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       routeComponent: Route,
       component: ContestFilesPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Files) === -1,
+    },
+    {
+      id: 'logs',
+      titleIcon: contestIcon[ContestTab.Logs],
+      title: 'Logs',
+      routeComponent: Route,
+      component: ContestLogsPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Logs) === -1,
     },
   ];
 

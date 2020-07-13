@@ -10,6 +10,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestLogsResponse.class)
 public interface ContestLogsResponse {
     Page<ContestLog> getData();
+    ContestLogConfig getConfig();
     Map<String, Profile> getProfilesMap();
     Map<String, String> getProblemAliasesMap();
 

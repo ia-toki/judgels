@@ -38,6 +38,7 @@ public class ContestLogStore {
 
         SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         selectionOptions.orderBy("createdAt");
+        selectionOptions.pageSize(100);
         page.ifPresent(selectionOptions::page);
 
         return dao.selectPaged(contestJid, userJid, problemJid, selectionOptions.build())

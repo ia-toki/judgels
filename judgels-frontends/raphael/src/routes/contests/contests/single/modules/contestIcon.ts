@@ -14,4 +14,5 @@ export const contestIcon = {
   [ContestTab.Clarifications]: 'chat',
   [ContestTab.Scoreboard]: 'th',
   [ContestTab.Files]: 'folder-close',
+  [ContestTab.Logs]: 'history',
 } as { [key: string]: IconName };

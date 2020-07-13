@@ -10,6 +10,7 @@ import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
 import static judgels.uriel.api.contest.web.ContestTab.FILES;
+import static judgels.uriel.api.contest.web.ContestTab.LOGS;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
@@ -109,6 +110,8 @@ class ContestWebConfigFetcherTests {
         when(roleChecker.getRole(USER, contest)).thenReturn(ContestRole.CONTESTANT);
 
         when(roleChecker.canAdminister(ADMIN)).thenReturn(true);
+        when(roleChecker.canManage(ADMIN, contest)).thenReturn(true);
+        when(roleChecker.canManage(MANAGER, contest)).thenReturn(true);
 
         when(problemRoleChecker.canView(USER, contest)).thenReturn(true);
         when(problemRoleChecker.canView(CONTESTANT, contest)).thenReturn(true);
@@ -167,7 +170,8 @@ class ContestWebConfigFetcherTests {
                 SUBMISSIONS,
                 CLARIFICATIONS,
                 SCOREBOARD,
-                FILES);
+                FILES,
+                LOGS);
 
         assertThat(webConfigFetcher.fetchConfig(ADMIN, contest).getVisibleTabs()).containsExactly(
                 ANNOUNCEMENTS,
@@ -178,7 +182,8 @@ class ContestWebConfigFetcherTests {
                 SUBMISSIONS,
                 CLARIFICATIONS,
                 SCOREBOARD,
-                FILES);
+                FILES,
+                LOGS);
     }
 
     @Test

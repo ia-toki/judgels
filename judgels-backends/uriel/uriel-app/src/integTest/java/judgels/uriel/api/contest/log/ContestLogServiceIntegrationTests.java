@@ -11,10 +11,13 @@ import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
+import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.palantir.conjure.java.api.errors.ErrorType;
@@ -28,11 +31,15 @@ import judgels.uriel.api.contest.clarification.ContestClarification;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationService;
 import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.problem.ContestProblemData;
+import judgels.uriel.api.contest.problem.ContestProblemService;
+import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
 import org.junit.jupiter.api.Test;
 
 class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private ContestLogService logService = createService(ContestLogService.class);
+    private ContestProblemService problemService = createService(ContestProblemService.class);
     private ContestClarificationService clarificationService = createService(ContestClarificationService.class);
 
     @Test
@@ -43,6 +50,12 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
                 .addUsernames(SUPERVISOR)
                 .build());
         contestantService.upsertContestants(MANAGER_HEADER, contest1.getJid(), ImmutableSet.of(CONTESTANT));
+
+        problemService.setProblems(MANAGER_HEADER, contest1.getJid(), ImmutableList.of(new ContestProblemData.Builder()
+                .slug(PROBLEM_1_SLUG)
+                .alias("A")
+                .status(ContestProblemStatus.OPEN)
+                .build()));
 
         moduleService.enableModule(MANAGER_HEADER, contest1.getJid(), ContestModuleType.CLARIFICATION);
         ContestClarification clarification = clarificationService
@@ -58,14 +71,23 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
 
         await().atMost(3, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).until(() -> logService
                 .getLogs(MANAGER_HEADER, contest1.getJid(), Optional.empty(), Optional.empty(), Optional.empty())
-                .getData().getTotalCount() == 7);
+                .getData().getTotalCount() == 8);
 
         ContestLogsResponse response = logService
                 .getLogs(MANAGER_HEADER, contest1.getJid(), Optional.empty(), Optional.empty(), Optional.empty());
 
+        assertThat(response.getConfig().getUserJids()).containsExactlyInAnyOrder(
+                CONTESTANT_JID,
+                SUPERVISOR_JID,
+                MANAGER_JID,
+                ADMIN_JID);
+
+        assertThat(response.getConfig().getProblemJids()).containsExactlyInAnyOrder(PROBLEM_1_JID);
+
         List<ContestLog> logs = response.getData().getPage();
 
         assertThat(Lists.transform(logs, ContestLog::getContestJid)).containsExactly(
+                contest1.getJid(),
                 contest1.getJid(),
                 contest1.getJid(),
                 contest1.getJid(),
@@ -79,6 +101,7 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
                 MANAGER_JID,
                 MANAGER_JID,
                 MANAGER_JID,
+                MANAGER_JID,
                 ADMIN_JID,
                 ADMIN_JID,
                 ADMIN_JID);
@@ -86,6 +109,7 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
         assertThat(Lists.transform(logs, ContestLog::getEvent)).containsExactly(
                 "CREATE_CLARIFICATION",
                 "ENABLE_MODULE",
+                "SET_PROBLEMS",
                 "ADD_CONTESTANTS",
                 "ADD_SUPERVISORS",
                 "ADD_MANAGERS",
@@ -99,10 +123,12 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
+                Optional.empty(),
                 Optional.empty());
 
         assertThat(logs.stream().map(ContestLog::getProblemJid).collect(Collectors.toList())).containsExactly(
                 Optional.of(PROBLEM_1_JID),
+                Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
@@ -113,6 +139,7 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
         response = logService.getLogs(
                 MANAGER_HEADER, contest1.getJid(), Optional.of(MANAGER_JID), Optional.empty(), Optional.empty());
         assertThat(Lists.transform(response.getData().getPage(), ContestLog::getUserJid)).containsExactly(
+                MANAGER_JID,
                 MANAGER_JID,
                 MANAGER_JID,
                 MANAGER_JID);

@@ -4,6 +4,7 @@ import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
 import static judgels.uriel.api.contest.web.ContestTab.FILES;
+import static judgels.uriel.api.contest.web.ContestTab.LOGS;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
@@ -107,6 +108,9 @@ public class ContestWebConfigFetcher {
         }
         if (fileRoleChecker.canSupervise(userJid, contest)) {
             visibleTabs.add(FILES);
+        }
+        if (canManage) {
+            visibleTabs.add(LOGS);
         }
 
         ContestState state;

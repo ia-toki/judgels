@@ -9,5 +9,5 @@
     <include file="migrations/000.xml"/>
     <include file="migrations/001-change-scoreboard-to-longtext.xml"/>
     <include file="migrations/002-add-contest-log.xml"/>
-    <include file="migrations/003-index-created-at-to-contest-log.xml"/>
+    <include file="migrations/003-add-index-created-at-to-contest-log.xml"/>
 </databaseChangeLog>

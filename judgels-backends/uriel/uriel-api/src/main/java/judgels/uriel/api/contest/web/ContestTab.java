@@ -10,4 +10,5 @@ public enum ContestTab {
     CLARIFICATIONS,
     SCOREBOARD,
     FILES,
+    LOGS,
 }
