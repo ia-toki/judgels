@@ -28,7 +28,7 @@ const appRoutes = [
       path: '/contests',
       component: LazyContestsRoutes,
     },
-    visible: () => !isInPrivateContestsMode(),
+    visible: () => true,
   },
   {
     id: 'training',
