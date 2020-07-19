@@ -18,7 +18,8 @@
     docker_image:
       name: judgels/sandalphon
       tag: "{{ judgels_version | default('latest', true) }}"
-      force: yes
+      source: pull
+      force_source: yes
 
   - name: Run a sandalphon container
     docker_container:
@@ -40,6 +41,6 @@
   - name: Allow Sandalphon traffic through the firewall
     ufw:
       rule: allow
-      to_port: 9002
+      to_port: "9002"
       proto: tcp
       comment: Judgels Sandalphon

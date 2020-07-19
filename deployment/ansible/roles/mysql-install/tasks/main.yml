@@ -42,6 +42,7 @@
       host: '%'
       priv: '*.*:ALL'
       state: present
+      no_log: True
 
   - name: Create judgels databases
     mysql_db:
@@ -58,7 +59,7 @@
   - name: Allow MySQL access from Docker containers
     ufw:
       rule: allow
-      to_port: 3306
+      to_port: "3306"
       src: 172.17.0.0/24
       proto: tcp
       comment: MySQL access from Docker containers

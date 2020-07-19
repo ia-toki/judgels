@@ -22,7 +22,8 @@
   - name: Pull gabriel image
     docker_image:
       name: "{{ gabriel_image }}"
-      force: yes
+      source: pull
+      force_source: yes
 
   - name: Run a gabriel container
     docker_container:

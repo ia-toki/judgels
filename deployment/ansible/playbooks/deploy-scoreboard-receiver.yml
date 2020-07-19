@@ -1,4 +1,4 @@
-- hosts: scoreboard-receiver
+- hosts: scoreboard_receiver
   gather_facts: false
   roles:
     - name: scoreboard-receiver-deploy

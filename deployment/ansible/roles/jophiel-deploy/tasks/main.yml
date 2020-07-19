@@ -23,7 +23,8 @@
     docker_image:
       name: judgels/jophiel
       tag: "{{ judgels_version | default('latest', true) }}"
-      force: yes
+      source: pull
+      force_source: yes
 
   - name: Run a jophiel container
     docker_container:
@@ -42,6 +43,6 @@
   - name: Allow Jophiel traffic through the firewall
     ufw:
       rule: allow
-      to_port: 9001
+      to_port: "9001"
       proto: tcp
       comment: Judgels Jophiel

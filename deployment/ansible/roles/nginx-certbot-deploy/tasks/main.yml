@@ -4,14 +4,14 @@
       domain: root
       limit_type: hard
       limit_item: nofile
-      value: 8192
+      value: "8192"
 
   - name: Add or modify nofile soft limit for the user root
     pam_limits:
       domain: root
       limit_type: soft
       limit_item: nofile
-      value: 8192
+      value: "8192"
 
   - name: Create nginx-cerbot container mount volume
     file:
@@ -30,7 +30,8 @@
   - name: Pull nginx-certbot image
     docker_image:
       name: judgels/nginx-certbot
-      force: yes
+      source: pull
+      force_source: yes
 
   - name: Create a nginx-certbot container
     docker_container:
@@ -53,13 +54,13 @@
   - name: Allow Nginx HTTP traffic through the firewall
     ufw:
       rule: allow
-      to_port: 80
+      to_port: "80"
       proto: tcp
       comment: Judgels Nginx HTTP
 
   - name: Allow Nginx HTTPS traffic through the firewall
     ufw:
       rule: allow
-      to_port: 443
+      to_port: "443"
       proto: tcp
       comment: Judgels Nginx HTTPS

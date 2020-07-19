@@ -23,7 +23,8 @@
     docker_image:
       name: judgels/uriel
       tag: "{{ judgels_version | default('latest', true) }}"
-      force: yes
+      source: pull
+      force_source: yes
 
   - name: Run a uriel container
     docker_container:
@@ -42,6 +43,6 @@
   - name: Allow Uriel traffic through the firewall
     ufw:
       rule: allow
-      to_port: 9004
+      to_port: "9004"
       proto: tcp
       comment: Judgels Uriel

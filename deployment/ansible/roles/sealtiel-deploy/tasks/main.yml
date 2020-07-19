@@ -22,7 +22,8 @@
     docker_image:
       name: judgels/sealtiel
       tag: "{{ judgels_version | default('latest', true) }}"
-      force: yes
+      source: pull
+      force_source: yes
 
   - name: Run a sealtiel container
     docker_container:
@@ -41,6 +42,6 @@
   - name: Allow Sealtiel traffic through the firewall
     ufw:
       rule: allow
-      to_port: 9003
+      to_port: "9003"
       proto: tcp
       comment: Judgels Sealtiel

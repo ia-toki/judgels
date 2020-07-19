@@ -2,6 +2,7 @@
   - name: Pull phpymyadmin image
     docker_image:
       name: phpmyadmin/phpmyadmin:4.8.5
+      source: pull
 
   - name: Run a phpmyadmin container
     docker_container:

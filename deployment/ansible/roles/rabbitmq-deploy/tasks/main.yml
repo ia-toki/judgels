@@ -2,6 +2,7 @@
   - name: Pull rabbitmq image
     docker_image:
       name: rabbitmq:3.7.8-management-alpine
+      source: pull
 
   - name: Run a rabbitmq container
     docker_container:
@@ -21,6 +22,6 @@
   - name: Allow RabbitMQ management traffic through the firewall
     ufw:
       rule: allow
-      to_port: 15672
+      to_port: "15672"
       proto: tcp
       comment: RabbitMQ management
