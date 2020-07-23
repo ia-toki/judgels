@@ -19,7 +19,7 @@ git:
 if: tag IS blank
 
 before_script:
-  - pip install --user ansible==2.5.5 docker
+  - pip install --user ansible==2.9 docker
   - nvm install 10.16.3
 
 script: python3 ci.py check | bash
