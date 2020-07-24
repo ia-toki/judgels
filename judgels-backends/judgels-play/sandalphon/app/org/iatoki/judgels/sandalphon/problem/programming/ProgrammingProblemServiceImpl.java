@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.problem.programming;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.google.gson.Gson;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
@@ -41,10 +40,10 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
         problemFileSystemProvider.createFile(ProblemServiceImplUtils.appendPath(getGradingHelpersDirPath(null, problemJid), ".gitkeep"));
 
         problemFileSystemProvider.writeToFile(getGradingEngineFilePath(null, problemJid), gradingEngine);
-        problemFileSystemProvider.writeToFile(getLanguageRestrictionFilePath(null, problemJid), new Gson().toJson(LanguageRestriction.noRestriction()));
+        problemFileSystemProvider.writeToFile(getLanguageRestrictionFilePath(null, problemJid), MAPPER.writeValueAsString(LanguageRestriction.noRestriction()));
 
         GradingConfig config = GradingEngineRegistry.getInstance().get(gradingEngine).createDefaultConfig();
-        problemFileSystemProvider.writeToFile(getGradingConfigFilePath(null, problemJid), new Gson().toJson(config));
+        problemFileSystemProvider.writeToFile(getGradingConfigFilePath(null, problemJid), MAPPER.writeValueAsString(config));
 
         updateGradingLastUpdateTime(null, problemJid);
     }
@@ -65,7 +64,7 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
 
     @Override
     public void updateGradingConfig(String userJid, String problemJid, GradingConfig gradingConfig) throws IOException {
-        problemFileSystemProvider.writeToFile(getGradingConfigFilePath(userJid, problemJid), new Gson().toJson(gradingConfig));
+        problemFileSystemProvider.writeToFile(getGradingConfigFilePath(userJid, problemJid), MAPPER.writeValueAsString(gradingConfig));
 
         updateGradingLastUpdateTime(userJid, problemJid);
     }
@@ -85,12 +84,12 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
     @Override
     public LanguageRestriction getLanguageRestriction(String userJid, String problemJid) throws IOException {
         String languageRestriction = problemFileSystemProvider.readFromFile(getLanguageRestrictionFilePath(userJid, problemJid));
-        return new ObjectMapper().readValue(languageRestriction, LanguageRestriction.class);
+        return MAPPER.readValue(languageRestriction, LanguageRestriction.class);
     }
 
     @Override
     public void updateLanguageRestriction(String userJid, String problemJid, LanguageRestriction languageRestriction) throws IOException {
-        problemFileSystemProvider.writeToFile(getLanguageRestrictionFilePath(userJid, problemJid), new Gson().toJson(languageRestriction));
+        problemFileSystemProvider.writeToFile(getLanguageRestrictionFilePath(userJid, problemJid), MAPPER.writeValueAsString(languageRestriction));
 
         updateGradingLastUpdateTime(userJid, problemJid);
     }
