@@ -5,4 +5,4 @@
       changed_when: False
   gather_facts: false
   roles:
-    - name: droplet-provision
+    - name: machine-provision
