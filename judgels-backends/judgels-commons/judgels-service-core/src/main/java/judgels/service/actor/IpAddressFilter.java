@@ -13,6 +13,10 @@ public class IpAddressFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        PerRequestActorProvider.setIpAddress(httpServletRequest.getRemoteAddr());
+        String address = httpServletRequest.getHeader("X-FORWARDED-FOR");
+        if (address == null || "".equals(address)) {
+            address = httpServletRequest.getRemoteAddr();
+        }
+        PerRequestActorProvider.setIpAddress(address);
     }
 }
