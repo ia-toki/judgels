@@ -8,6 +8,10 @@ public final class SandalphonControllerUtils {
         return SandalphonUtils.hasRole("ADMIN");
     }
 
+    public boolean isWriter() {
+        return !SandalphonUtils.hasRole("COACH");
+    }
+
     public static synchronized void buildInstance() {
         if (INSTANCE != null) {
             throw new UnsupportedOperationException("SandalphonControllerUtils instance has already been built");

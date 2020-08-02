@@ -42,12 +42,16 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result listLessons(long pageIndex, String sortBy, String orderBy, String filterString) {
-        Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), SandalphonControllerUtils.getInstance().isAdmin());
+        boolean isAdmin = SandalphonControllerUtils.getInstance().isAdmin();
+        boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
+        Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), isAdmin);
 
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listLessonsView.render(pageOfLessons, sortBy, orderBy, filterString));
+        template.setContent(listLessonsView.render(pageOfLessons, sortBy, orderBy, filterString, isWriter));
         template.setMainTitle(Messages.get("lesson.list"));
-        template.addMainButton(Messages.get("commons.create"), routes.LessonController.createLesson());
+        if (isWriter) {
+            template.addMainButton(Messages.get("commons.create"), routes.LessonController.createLesson());
+        }
         template.markBreadcrumbLocation(Messages.get("lesson.lessons"), routes.LessonController.index());
         template.setPageTitle("Lessons");
 

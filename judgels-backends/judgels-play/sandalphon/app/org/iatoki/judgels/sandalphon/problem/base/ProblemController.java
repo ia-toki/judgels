@@ -38,11 +38,15 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional(readOnly = true)
     public Result listProblems(long pageIndex, String sortBy, String orderBy, String filterString) {
-        Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), SandalphonControllerUtils.getInstance().isAdmin());
+        boolean isAdmin = SandalphonControllerUtils.getInstance().isAdmin();
+        boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
+        Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), isAdmin);
 
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listProblemsView.render(pageOfProblems, sortBy, orderBy, filterString));
-        template.addMainButton(Messages.get("commons.create"), routes.ProblemController.createProblem());
+        template.setContent(listProblemsView.render(pageOfProblems, sortBy, orderBy, filterString, isWriter));
+        if (isWriter) {
+            template.addMainButton(Messages.get("commons.create"), routes.ProblemController.createProblem());
+        }
         template.setMainTitle(Messages.get("problem.list"));
         template.setPageTitle("Problems");
         return renderTemplate(template);
