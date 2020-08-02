@@ -20,6 +20,9 @@ public class SessionHibernateDao extends UnmodifiableHibernateDao<SessionModel> 
 
     @Override
     public Optional<SessionModel> selectByToken(String token) {
+        if (token == null) {
+            return Optional.empty();
+        }
         return selectByUniqueColumn(SessionModel_.token, token);
     }
 
