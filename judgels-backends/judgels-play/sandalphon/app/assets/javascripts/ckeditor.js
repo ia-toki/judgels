@@ -23,6 +23,7 @@ require(["jquery", "ckeditor-jquery"], function( __jquery__ ) {
             classes: true
         }
     };
+    CKEDITOR.config.height = 600;
     CKEDITOR.config.extraAllowedContent = 'iframe embed';
     CKEDITOR.config.disallowedContent = 'script; *[on*]';
     $('.ckeditor').ckeditor();
