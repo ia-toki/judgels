@@ -20,11 +20,6 @@ public final class JudgelsController extends AbstractJudgelsController {
         return redirect(routes.Assets.at("lib/playcommons/images/logo-colored.png"));
     }
 
-    public Result changeLanguage(String newLang) {
-        ctx().changeLang(newLang);
-        return redirect(request().getHeader("Referer"));
-    }
-
     public Result showSidebar() {
         response().setCookie("sidebar", "true");
         return redirect(request().getHeader("Referer"));

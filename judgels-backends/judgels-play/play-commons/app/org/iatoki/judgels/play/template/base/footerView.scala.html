@@ -12,12 +12,7 @@
             <div class="col-md-12">
                 <div class="pull-left first">
                     <div class="copyright">
-                            &#169; @(new SimpleDateFormat("yyyy").format(new Date())) @generalConfig.getCopyright
-                    </div>
-                </div>
-                <div class="pull-right first">
-                    <div class="copyright">
-                        @Messages.get("commons.poweredBy") <a href="@generalConfig.getGithubUrl" target="_blank">@Messages.get("commons.judgels") @StringUtils.capitalize(generalConfig.getName) @generalConfig.getVersion</a>.
+                        &#169; @(new SimpleDateFormat("yyyy").format(new Date())) <a href="@generalConfig.getGithubUrl" target="_blank">@generalConfig.getCopyright</a>
                     </div>
                 </div>
             </div>

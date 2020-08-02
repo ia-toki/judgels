@@ -6,7 +6,6 @@ GET         /vassets/*file          controllers.Assets.versioned(path="/public",
 GET        /favicon                 @org.iatoki.judgels.play.JudgelsController.favicon()
 GET        /logo                    @org.iatoki.judgels.play.JudgelsController.logo()
 GET        /coloredLogo             @org.iatoki.judgels.play.JudgelsController.coloredLogo()
-GET        /language/:lang          @org.iatoki.judgels.play.JudgelsController.changeLanguage(lang: String)
 GET        /showSidebar             @org.iatoki.judgels.play.JudgelsController.showSidebar()
 GET        /hideSidebar             @org.iatoki.judgels.play.JudgelsController.hideSidebar()
 GET        /enterFullscreen         @org.iatoki.judgels.play.JudgelsController.enterFullscreen()

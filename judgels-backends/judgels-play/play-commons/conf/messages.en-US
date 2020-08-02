@@ -1,8 +1,5 @@
 commons.header.text.serverTime                  = Server Time
 
-commons.footer.text.poweredBy                   = Powered by
-commons.footer.text.judgels                     = Judgels
-
 commons.profile.text.edit                       = Edit
 commons.profile.text.logOut                     = Log Out
 
