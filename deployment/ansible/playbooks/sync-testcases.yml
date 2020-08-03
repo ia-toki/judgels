@@ -1,0 +1,24 @@
+- hosts: sandalphon
+  gather_facts: false
+  tasks:
+    - name: Generate Sandalphon public key
+      openssh_keypair:
+        path: ~/.ssh/id_rsa
+      register: sandalphon_key
+
+- hosts: gabriel
+  gather_facts: false
+  tasks:
+    - name: Add Sandalphon public key to Gabriel authorized keys list
+      authorized_key:
+        user: "{{ ansible_user }}"
+        key: "{{ hostvars[item]['sandalphon_key']['public_key'] }}"
+        comment: Sandalphon {{ item }}
+      with_inventory_hostnames: sandalphon
+
+    - name: Push testcase files from Sandalphon to Gabriel using rsync
+      synchronize:
+        src: /judgels/sandalphon/var/data/problems/
+        dest: /judgels/sandalphon/var/data/problems
+      delegate_to: "{{ item }}"
+      with_inventory_hostnames: sandalphon
