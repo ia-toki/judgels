@@ -4,16 +4,16 @@
       domain: root
       limit_type: hard
       limit_item: nofile
-      value: "8192"
+      value: "262144"
 
   - name: Add or modify nofile soft limit for the user root
     pam_limits:
       domain: root
       limit_type: soft
       limit_item: nofile
-      value: "8192"
+      value: "262144"
 
-  - name: Create nginx-cerbot container mount volume
+  - name: Create nginx-certbot container mount volume
     file:
       path: "{{ item }}"
       state: directory
