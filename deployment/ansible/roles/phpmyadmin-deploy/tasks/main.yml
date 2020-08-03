@@ -1,13 +1,13 @@
 - block:
   - name: Pull phpymyadmin image
     docker_image:
-      name: phpmyadmin/phpmyadmin:4.8.5
+      name: phpmyadmin/phpmyadmin:5.0
       source: pull
 
   - name: Run a phpmyadmin container
     docker_container:
       name: phpmyadmin
-      image: phpmyadmin/phpmyadmin:4.8.5
+      image: phpmyadmin/phpmyadmin:5.0
       restart: yes
       log_driver: json-file
       log_options:
