@@ -16,7 +16,7 @@
         comment: Sandalphon {{ item }}
       with_inventory_hostnames: sandalphon
 
-    - name: Push testcase files from Sandalphon to Gabriel using rsync
+    - name: Synchronize test data from Sandalphon to Gabriel
       synchronize:
         src: /judgels/sandalphon/var/data/problems/
         dest: /judgels/sandalphon/var/data/problems
