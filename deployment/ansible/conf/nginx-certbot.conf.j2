@@ -173,6 +173,9 @@ server {
 
 {% if nginx_raphael_url is defined %}
 
+# Configuration for Raphael cache
+proxy_cache_path /tmp/raphael_cache levels=1:2 keys_zone=raphael_cache:10m max_size=1g inactive=15m use_temp_path=off;
+
 map $sent_http_content_type $expires {
     default                    off;
     text/html                  epoch;
@@ -198,6 +201,17 @@ server {
     }
 
     location / {
+        # Use cache for Raphael
+        # (Prevent excessive communication between reverse proxy Nginx and Raphael Nginx)
+        proxy_cache raphael_cache;
+
+        # On cache miss, do not block incoming connections while waiting for a response from Raphael
+        # This is to prevent connections piling up at this Nginx instance.
+        proxy_cache_lock off;
+
+        # Try to serve Raphael responses from cache if Raphael is down
+        proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
+
         proxy_pass              http://localhost:5000;
         proxy_set_header        Host $host;
         proxy_set_header        X-Real-IP $remote_addr;

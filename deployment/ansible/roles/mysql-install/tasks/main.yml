@@ -28,11 +28,18 @@
       option: bind-address
       value: "0.0.0.0"
 
+  - name: Change mysql max_connections to support more concurrent users
+    ini_file:
+      path: /etc/mysql/mysql.conf.d/mysqld.cnf
+      section: mysqld
+      option: max_connections
+      value: "500"
+
   - name: Restart mysql
     service:
       name: mysql
       state: restarted
-  
+
   - name: Create judgels user
     mysql_user:
       login_user: root
@@ -42,7 +49,7 @@
       host: '%'
       priv: '*.*:ALL'
       state: present
-      no_log: True
+    no_log: True
 
   - name: Create judgels databases
     mysql_db:
