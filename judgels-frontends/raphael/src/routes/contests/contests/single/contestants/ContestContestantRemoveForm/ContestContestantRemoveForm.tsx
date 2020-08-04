@@ -19,6 +19,7 @@ const ContestContestantRemoveForm = (props: ContestContestantRemoveFormProps) =>
     label: 'Usernames',
     labelHelper: '(one username per line, max 1000 users)',
     rows: 20,
+    isCode: true,
     validate: [Required, Max1000Lines],
     autoFocus: true,
   };
