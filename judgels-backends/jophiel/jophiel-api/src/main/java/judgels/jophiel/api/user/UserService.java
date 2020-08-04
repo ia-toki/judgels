@@ -2,13 +2,16 @@ package judgels.jophiel.api.user;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -35,6 +38,13 @@ public interface UserService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     List<User> createUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<UserData> data);
+
+    @PUT
+    @Path("/batch-upsert")
+    @Consumes(TEXT_PLAIN)
+    @Produces(APPLICATION_JSON)
+    UsersUpsertResponse upsertUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, String csv)
+        throws IOException;
 
     @GET
     @Path("/")
