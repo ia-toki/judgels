@@ -161,7 +161,7 @@ public class ContestContestantResource implements ContestContestantService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canManage(actorJid, contest));
 
-        checkArgument(usernames.size() <= 100, "Cannot add more than 100 users.");
+        checkArgument(usernames.size() <= 1000, "Cannot add more than 1000 users.");
 
         Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
 

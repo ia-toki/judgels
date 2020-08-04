@@ -42,6 +42,15 @@ export const Max100Lines = value => {
     : 'Max 100 lines';
 };
 
+export const Max1000Lines = value => {
+  return value
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0).length <= 1000
+    ? undefined
+    : 'Max 1000 lines';
+};
+
 export function CompatibleFilenameExtensionForGradingLanguage(value: File, { gradingLanguage }) {
   if (!gradingLanguage || !value) {
     return undefined;
