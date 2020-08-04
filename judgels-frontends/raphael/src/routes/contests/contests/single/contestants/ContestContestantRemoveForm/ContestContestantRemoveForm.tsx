@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required, Max1000Lines} from '../../../../../../components/forms/validations';
+import { Required, Max1000Lines } from '../../../../../../components/forms/validations';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 
 export interface ContestContestantRemoveFormData {
