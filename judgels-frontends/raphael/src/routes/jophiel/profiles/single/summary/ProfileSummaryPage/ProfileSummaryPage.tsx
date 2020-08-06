@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { APP_CONFIG, Mode } from '../../../../../../conf';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
@@ -53,7 +54,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     const [avatarUrl, basicProfile, userStats] = await Promise.all([
       this.props.onRenderAvatar(this.props.userJid),
       this.props.onGetBasicProfile(this.props.userJid),
-      this.props.onGetUserStats(this.props.username),
+      this.getUserStats(this.props.username),
     ]);
     this.setState({ avatarUrl, basicProfile, userStats });
   };
@@ -69,11 +70,21 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
 
   private renderProblemStats = () => {
     const { userStats } = this.state;
+    if (APP_CONFIG.mode === Mode.PRIVATE_CONTESTS) {
+      return null;
+    }
     if (!userStats) {
       return <LoadingState />;
     }
 
     return <ProblemStatsPanel userStats={userStats} />;
+  };
+
+  private getUserStats = username => {
+    if (APP_CONFIG.mode === Mode.PRIVATE_CONTESTS) {
+      return Promise.resolve(null);
+    }
+    return this.props.onGetUserStats(username);
   };
 }
 
