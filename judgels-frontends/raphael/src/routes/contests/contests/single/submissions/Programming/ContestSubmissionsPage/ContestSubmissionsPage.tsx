@@ -64,9 +64,12 @@ export class ContestSubmissionsPage extends React.PureComponent<
       response,
       filter: { username, problemAlias },
     } = this.state;
+    const queries = parse(this.props.location.search);
+    const page = queries.page && +queries.page;
+
     if (!prevState.response && response && (username || problemAlias)) {
       this.setState({ isFilterLoading: true });
-      await this.refreshSubmissions(username, problemAlias);
+      await this.refreshSubmissions(username, problemAlias, page);
     }
   }
 
