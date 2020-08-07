@@ -279,6 +279,9 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     private static String simplifyLanguageCode(String code) {
+        if (code.startsWith("zh")) {
+            return code;
+        }
         String[] tokens = code.split("-");
         if (tokens.length < 2) {
             return code;

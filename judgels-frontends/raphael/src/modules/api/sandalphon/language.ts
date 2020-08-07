@@ -32,6 +32,8 @@ export const statementLanguageNamesMap = {
   ce: 'Chechen',
   ny: 'Chichewa',
   zh: 'Chinese',
+  'zh-Hans': 'Chinese (Simplified)',
+  'zh-Hant': 'Chinese (Traditional)',
   cv: 'Chuvash',
   kw: 'Cornish',
   co: 'Corsican',
