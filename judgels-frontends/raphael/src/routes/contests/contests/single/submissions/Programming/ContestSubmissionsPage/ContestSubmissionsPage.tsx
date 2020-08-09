@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { push } from 'connected-react-router';
 
+import { reallyConfirm } from '../../../../../../../utils/confirmation';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
@@ -197,7 +198,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 
   private onRegradeAll = async () => {
-    if (window.confirm('Regrade all submissions in all pages for the current filter?')) {
+    if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { username, problemAlias } = this.state.filter!;
       const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
       await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);

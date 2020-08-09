@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter, Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 
+import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
@@ -164,7 +165,7 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
   };
 
   private onRegradeAll = async () => {
-    if (window.confirm('Regrade all submissions in all pages?')) {
+    if (reallyConfirm('Regrade all submissions in all pages?')) {
       await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(queries.page);

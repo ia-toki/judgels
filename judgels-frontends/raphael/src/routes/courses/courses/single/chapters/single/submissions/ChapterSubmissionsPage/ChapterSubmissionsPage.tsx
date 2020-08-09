@@ -4,6 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
@@ -222,7 +223,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   };
 
   private onRegradeAll = async () => {
-    if (window.confirm('Regrade all submissions in all pages for the current filter?')) {
+    if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { problemAlias } = this.state.filter;
       const { problemJid } = this.getFilterJids(problemAlias);
       await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined, problemJid);

@@ -2,6 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { reallyConfirm } from '../../../../../../utils/confirmation';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -126,7 +127,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
   };
 
   private onResetVirtualContest = async () => {
-    if (window.confirm('Are you sure to reset all contestant virtual start times?')) {
+    if (reallyConfirm('Are you sure to reset all contestant virtual start times?')) {
       await this.props.onResetVirtualContest(this.props.contest.jid);
       this.setState({ lastRefreshContestantsTime: new Date().getTime() });
     }

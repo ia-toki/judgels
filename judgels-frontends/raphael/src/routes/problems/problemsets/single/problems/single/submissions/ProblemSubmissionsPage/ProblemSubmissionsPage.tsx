@@ -4,6 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
@@ -139,7 +140,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   };
 
   private onRegradeAll = async () => {
-    if (window.confirm('Regrade all submissions in all pages?')) {
+    if (reallyConfirm('Regrade all submissions in all pages?')) {
       await this.props.onRegradeAll(this.props.problemSet.jid, undefined, this.props.problem.problemJid);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(queries.page);
