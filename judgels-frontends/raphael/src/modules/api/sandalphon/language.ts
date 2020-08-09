@@ -34,6 +34,7 @@ export const statementLanguageNamesMap = {
   zh: 'Chinese',
   'zh-Hans': 'Chinese',
   'zh-Hant': 'Chinese',
+  'zh-Hant-MO': 'Chinese',
   cv: 'Chuvash',
   kw: 'Cornish',
   co: 'Corsican',
