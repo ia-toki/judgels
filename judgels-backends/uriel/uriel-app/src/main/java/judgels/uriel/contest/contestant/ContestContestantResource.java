@@ -28,8 +28,10 @@ import judgels.uriel.api.contest.contestant.ContestContestantState;
 import judgels.uriel.api.contest.contestant.ContestContestantsDeleteResponse;
 import judgels.uriel.api.contest.contestant.ContestContestantsResponse;
 import judgels.uriel.api.contest.contestant.ContestContestantsUpsertResponse;
+import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
+import judgels.uriel.contest.module.ContestModuleStore;
 
 public class ContestContestantResource implements ContestContestantService {
     private final ActorChecker actorChecker;
@@ -37,6 +39,7 @@ public class ContestContestantResource implements ContestContestantService {
     private final ContestLogger contestLogger;
     private final ContestContestantRoleChecker contestantRoleChecker;
     private final ContestContestantStore contestantStore;
+    private final ContestModuleStore moduleStore;
     private final UserSearchService userSearchService;
     private final ProfileService profileService;
 
@@ -47,6 +50,7 @@ public class ContestContestantResource implements ContestContestantService {
             ContestLogger contestLogger,
             ContestContestantRoleChecker contestantRoleChecker,
             ContestContestantStore contestantStore,
+            ContestModuleStore moduleStore,
             UserSearchService userSearchService,
             ProfileService profileService) {
 
@@ -55,6 +59,7 @@ public class ContestContestantResource implements ContestContestantService {
         this.contestLogger = contestLogger;
         this.contestantRoleChecker = contestantRoleChecker;
         this.contestantStore = contestantStore;
+        this.moduleStore = moduleStore;
         this.userSearchService = userSearchService;
         this.profileService = profileService;
     }
@@ -77,6 +82,7 @@ public class ContestContestantResource implements ContestContestantService {
         ContestContestantConfig config = new ContestContestantConfig.Builder()
                 .canManage(canManage)
                 .build();
+        Optional<VirtualModuleConfig> virtualModuleConfig = moduleStore.getVirtualModuleConfig(contestJid);
 
         contestLogger.log(contestJid, "OPEN_CONTESTANTS");
 
@@ -84,6 +90,7 @@ public class ContestContestantResource implements ContestContestantService {
                 .data(contestants)
                 .profilesMap(profilesMap)
                 .config(config)
+                .virtualModuleConfig(virtualModuleConfig)
                 .build();
     }
 

@@ -59,7 +59,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
       return <LoadingState />;
     }
 
-    const { data: contestants, profilesMap } = response;
+    const { data: contestants, virtualModuleConfig, profilesMap } = response;
     if (contestants.totalCount === 0) {
       return (
         <p>
@@ -68,7 +68,15 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
       );
     }
 
-    return <ContestContestantsTable contestants={contestants.page} profilesMap={profilesMap} />;
+    const { contest } = this.props;
+    return (
+      <ContestContestantsTable
+        contest={contest}
+        virtualModuleConfig={virtualModuleConfig}
+        contestants={contestants.page}
+        profilesMap={profilesMap}
+      />
+    );
   };
 
   private renderPagination = () => {

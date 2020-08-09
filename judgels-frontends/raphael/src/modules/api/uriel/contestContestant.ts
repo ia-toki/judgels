@@ -5,6 +5,7 @@ import { Page } from '../../../modules/api/pagination';
 import { ProfilesMap } from '../../../modules/api/jophiel/profile';
 
 import { baseContestURL } from './contest';
+import { VirtualModuleConfig } from './contestModule';
 
 export interface ContestContestant {
   userJid: string;
@@ -19,6 +20,7 @@ export interface ContestContestantsResponse {
   data: Page<ContestContestant>;
   profilesMap: ProfilesMap;
   config: ContestContestantConfig;
+  virtualModuleConfig?: VirtualModuleConfig;
 }
 
 export interface ApprovedContestContestantsResponse {

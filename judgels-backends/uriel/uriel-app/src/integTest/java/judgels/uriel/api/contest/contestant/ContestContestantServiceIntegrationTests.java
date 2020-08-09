@@ -3,6 +3,7 @@ package judgels.uriel.api.contest.contestant;
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
+import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
@@ -32,6 +33,7 @@ class ContestContestantServiceIntegrationTests extends AbstractContestServiceInt
     void end_to_end_flow() {
         Contest contest = createContest("contest");
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), REGISTRATION);
+        moduleService.enableModule(ADMIN_HEADER, contest.getJid(), VIRTUAL);
         managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(MANAGER));
         supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), new ContestSupervisorUpsertData.Builder()
                 .addUsernames(SUPERVISOR)
@@ -60,6 +62,7 @@ class ContestContestantServiceIntegrationTests extends AbstractContestServiceInt
                 new ContestContestant.Builder().userJid(USER_A_JID).status(ContestContestantStatus.APPROVED).build(),
                 new ContestContestant.Builder().userJid(USER_B_JID).status(ContestContestantStatus.APPROVED).build());
         assertThat(response.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
+        assertThat(response.getVirtualModuleConfig()).isNotEmpty();
         assertThat(response.getConfig().getCanManage()).isTrue();
 
         ContestContestantsDeleteResponse deleteResponse =
