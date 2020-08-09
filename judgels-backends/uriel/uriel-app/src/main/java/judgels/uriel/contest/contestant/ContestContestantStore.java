@@ -26,7 +26,7 @@ import judgels.uriel.persistence.ContestRoleDao;
 
 @Singleton
 public class ContestContestantStore {
-    private static final int PAGE_SIZE = 250;
+    private static final int PAGE_SIZE = 1000;
 
     private final ContestContestantDao contestantDao;
     private final ContestRoleDao roleDao;
