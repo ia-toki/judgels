@@ -3,6 +3,7 @@
     template:
       src: "{{ playbook_dir }}/../conf/raphael.js.j2"
       dest: /judgels/raphael/var/conf/raphael.js
+      mode: '0644'
 
   - name: Restart raphael
     docker_container:

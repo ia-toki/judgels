@@ -12,6 +12,7 @@
     template:
       src: "{{ playbook_dir }}/../conf/jophiel.yml.j2"
       dest: /judgels/jophiel/var/conf/jophiel.yml
+      mode: '0644'
 
   - name: Pull jophiel image
     docker_image:

@@ -12,6 +12,7 @@
     template:
       src: "{{ playbook_dir }}/../conf/uriel.yml.j2"
       dest: /judgels/uriel/var/conf/uriel.yml
+      mode: '0644'
 
   - name: Pull uriel image
     docker_image:

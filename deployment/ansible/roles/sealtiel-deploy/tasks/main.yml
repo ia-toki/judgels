@@ -12,11 +12,13 @@
     template:
       src: "{{ playbook_dir }}/../conf/sealtiel.yml.j2"
       dest: /judgels/sealtiel/var/conf/sealtiel.yml
+      mode: '0644'
   
   - name: Generate sealtiel launcher config
     template:
       src: "{{ playbook_dir }}/../conf/sealtiel-launcher.yml.j2"
       dest: /judgels/sealtiel/var/conf/launcher-custom.yml
+      mode: '0644'
 
   - name: Pull sealtiel image
     docker_image:
