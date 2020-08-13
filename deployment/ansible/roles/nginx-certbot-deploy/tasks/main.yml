@@ -26,6 +26,7 @@
     template:
       src: "{{ playbook_dir }}/../conf/nginx-certbot.conf.j2"
       dest: /judgels/sites/default.conf
+      mode: '0644'
 
   - name: Pull nginx-certbot image
     docker_image:

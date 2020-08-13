@@ -3,11 +3,13 @@
     template:
       src: "{{ playbook_dir }}/../conf/gabriel.yml.j2"
       dest: /judgels/gabriel/var/conf/gabriel.yml
+      mode: '0644'
 
   - name: Generate gabriel launcher config
     template:
       src: "{{ playbook_dir }}/../conf/gabriel-launcher.yml.j2"
       dest: /judgels/gabriel/var/conf/launcher-custom.yml
+      mode: '0644'
 
   - name: Restart gabriel
     docker_container:

@@ -3,11 +3,13 @@
     template:
       src: "{{ playbook_dir }}/../conf/jophiel.yml.j2"
       dest: /judgels/jophiel/var/conf/jophiel.yml
+      mode: '0644'
 
   - name: Generate jophiel launcher config
     template:
       src: "{{ playbook_dir }}/../conf/jophiel-launcher.yml.j2"
       dest: /judgels/jophiel/var/conf/launcher-custom.yml
+      mode: '0644'
 
   - name: Restart jophiel
     docker_container:

@@ -3,6 +3,7 @@
     template:
       src: "{{ playbook_dir }}/../conf/jerahmeel.yml.j2"
       dest: /judgels/jerahmeel/var/conf/jerahmeel.yml
+      mode: '0644'
 
   - name: Restart jerahmeel
     docker_container:

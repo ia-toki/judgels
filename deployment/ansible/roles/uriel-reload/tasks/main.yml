@@ -3,11 +3,13 @@
     template:
       src: "{{ playbook_dir }}/../conf/uriel.yml.j2"
       dest: /judgels/uriel/var/conf/uriel.yml
+      mode: '0644'
 
   - name: Generate uriel launcher config
     template:
       src: "{{ playbook_dir }}/../conf/uriel-launcher.yml.j2"
       dest: /judgels/uriel/var/conf/launcher-custom.yml
+      mode: '0644'
 
   - name: Restart uriel
     docker_container:
