@@ -16,7 +16,12 @@
         comment: Sandalphon {{ item }}
       with_inventory_hostnames: sandalphon
 
-    - name: Synchronize test data from Sandalphon to Gabriel
+    - name: Create problems directory
+      file: 
+        path: /judgels/sandalphon/var/data/problems
+        state: directory
+
+    - name: Push problems from Sandalphon to Gabriel using rsync
       synchronize:
         src: /judgels/sandalphon/var/data/problems/
         dest: /judgels/sandalphon/var/data/problems
