@@ -1,6 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
-import FlagIcon from 'react-flag-kit/lib/FlagIcon';
+import Flag from 'react-flags';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { BasicProfile } from '../../../../../../modules/api/jophiel/profile';
@@ -48,7 +48,14 @@ export class BasicProfilePanel extends React.PureComponent<BasicProfilePanelProp
     }
     return (
       <div>
-        <FlagIcon code={profile.country} size={24} className="basic-profile-card__flag" />
+        <Flag
+          basePath="/flags"
+          name={profile.country}
+          format="png"
+          pngSize={24}
+          shiny
+          className="basic-profile-card__flag"
+        />
         <span className="basic-profile-card__country">{getCountryName(profile.country)}</span>
       </div>
     );

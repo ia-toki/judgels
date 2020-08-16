@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import FlagIcon from 'react-flag-kit/lib/FlagIcon';
+import Flag from 'react-flags';
 import { Link } from 'react-router-dom';
 
 import { Profile } from '../../modules/api/jophiel/profile';
@@ -31,7 +31,7 @@ export class UserRef extends React.PureComponent<UserRefProps> {
     if (!profile || !profile.country) {
       return <div className="user-ref__flag-dummy" />;
     }
-    return <FlagIcon code={profile.country} size={20} className="user-ref__flag" />;
+    return <Flag basePath="/flags" name={profile.country} format="png" pngSize={24} shiny className="user-ref__flag" />;
   };
 
   private renderUsername = () => {

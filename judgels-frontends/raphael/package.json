@@ -23,7 +23,7 @@
     "react-document-title": "^2.0.3",
     "react-dom": "16.9.0",
     "react-dropzone": "^4.2.3",
-    "react-flag-kit": "0.2.3",
+    "react-flags": "^0.1.18",
     "react-ga": "2.7.0",
     "react-google-recaptcha": "^0.9.9",
     "react-intl": "3.3.0",
