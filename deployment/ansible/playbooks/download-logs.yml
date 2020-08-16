@@ -1,0 +1,127 @@
+- hosts: judgels
+  gather_facts: false
+  tasks:
+    - name: Create auth logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/auth"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download auth logs
+      synchronize:
+        mode: pull
+        src: /var/log/auth.log
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/auth/"
+
+- hosts: database
+  gather_facts: false
+  tasks:
+    - name: Create MySQL logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/mysql"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download MySQL logs
+      synchronize:
+        mode: pull
+        src: /var/log/mysql/
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/mysql"
+
+- hosts: uriel
+  gather_facts: false
+  tasks:
+    - name: Create uriel logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/uriel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download uriel logs
+      synchronize:
+        mode: pull
+        src: /judgels/uriel/var/log/
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/uriel"
+
+- hosts: jophiel
+  gather_facts: false
+  tasks:
+    - name: Create jophiel logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/jophiel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download jophiel logs
+      synchronize:
+        mode: pull
+        src: /judgels/jophiel/var/log/
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/jophiel"
+
+- hosts: sandalphon
+  gather_facts: false
+  tasks:
+    - name: Create sandalphon logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/sandalphon"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download sandalphon logs
+      synchronize:
+        mode: pull
+        src: /judgels/sandalphon/var/log/
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/sandalphon"
+
+- hosts: sealtiel
+  gather_facts: false
+  tasks:
+    - name: Create sealtiel logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/sealtiel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download sealtiel logs
+      synchronize:
+        mode: pull
+        src: /judgels/sealtiel/var/log/
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/sealtiel"
+
+- hosts: gabriel
+  gather_facts: false
+  tasks:
+    - name: Create gabriel logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/gabriel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download gabriel logs
+      synchronize:
+        mode: pull
+        src: /judgels/gabriel/var/log/
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/gabriel"
+
+- hosts: jerahmeel
+  gather_facts: false
+  tasks:
+    - name: Create jerahmeel logs directory
+      file: 
+        path: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/jerahmeel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download jerahmeel logs
+      synchronize:
+        mode: pull
+        src: /judgels/jerahmeel/var/log/
+        dest: "{{ downloaded_data_dir }}/logs/{{ inventory_hostname }}/jerahmeel"

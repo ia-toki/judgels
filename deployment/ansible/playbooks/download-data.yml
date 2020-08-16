@@ -1,0 +1,114 @@
+- hosts: database
+  gather_facts: true
+  vars:
+    db_dump_file: /judgels/db-dump-{{ ansible_date_time.epoch }}.sql
+  tasks:
+    - name: Dump judgels DBs to file
+      mysql_db:
+        state: dump
+        login_host: "{{ db_host }}"
+        login_user: "{{ db_username }}"
+        login_password: "{{ db_password }}"
+        name:
+          - judgels_sandalphon
+          - judgels_jophiel
+          - judgels_uriel
+          - judgels_jerahmeel
+        target: "{{ db_dump_file }}"
+
+    - name: Download judgels DB dump file
+      synchronize:
+        mode: pull
+        src: "{{ db_dump_file }}"
+        dest: "{{ downloaded_data_dir }}/"
+
+- hosts: sandalphon
+  gather_facts: false
+  tasks:
+    - name: Create sandalphon problems directory
+      file: 
+        path: "{{ downloaded_data_dir }}/problems/{{ inventory_hostname }}/sandalphon"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download sandalphon problems
+      synchronize:
+        mode: pull
+        src: /judgels/sandalphon/var/data/problems/
+        dest: "{{ downloaded_data_dir }}/problems/{{ inventory_hostname }}/sandalphon"
+
+- hosts: jophiel
+  gather_facts: false
+  tasks:
+    - name: Check whether jophiel user avatars directory exists
+      stat:
+        path: /judgels/jophiel/var/data/user-avatars
+      register: jophiel_user_avatars_dir
+
+    - name: Create jophiel user avatars directory
+      file: 
+        path: "{{ downloaded_data_dir }}/user-avatars/{{ inventory_hostname }}/jophiel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+      when: jophiel_user_avatars_dir.stat.exists
+
+    - name: Download jophiel user avatars
+      synchronize:
+        mode: pull
+        src: /judgels/jophiel/var/data/user-avatars/
+        dest: "{{ downloaded_data_dir }}/user-avatars/{{ inventory_hostname }}/jophiel"
+      when: jophiel_user_avatars_dir.stat.exists
+
+- hosts: uriel
+  gather_facts: false
+  tasks:
+    - name: Create uriel submissions directory
+      file: 
+        path: "{{ downloaded_data_dir }}/submissions/{{ inventory_hostname }}/uriel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download uriel submissions
+      synchronize:
+        mode: pull
+        src: /judgels/uriel/var/data/submissions/
+        dest: "{{ downloaded_data_dir }}/submissions/{{ inventory_hostname }}/uriel"
+
+    - name: Check whether uriel contest files directory exists
+      stat:
+        path: /judgels/uriel/var/data/files
+      register: uriel_contest_files_dir
+
+    - name: Create uriel contest files directory
+      file: 
+        path: "{{ downloaded_data_dir }}/contest-files/{{ inventory_hostname }}/uriel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+      when: uriel_contest_files_dir.stat.exists
+
+    - name: Download uriel contest files
+      synchronize:
+        mode: pull
+        src: /judgels/uriel/var/data/files/
+        dest: "{{ downloaded_data_dir }}/contest-files/{{ inventory_hostname }}/uriel"
+      when: uriel_contest_files_dir.stat.exists
+
+- hosts: jerahmeel
+  gather_facts: false
+  tasks:
+    - name: Create jerahmeel submissions directory
+      file: 
+        path: "{{ downloaded_data_dir }}/submissions/{{ inventory_hostname }}/jerahmeel"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download jerahmeel submissions
+      synchronize:
+        mode: pull
+        src: /judgels/jerahmeel/var/data/submissions/
+        dest: "{{ downloaded_data_dir }}/submissions/{{ inventory_hostname }}/jerahmeel"
