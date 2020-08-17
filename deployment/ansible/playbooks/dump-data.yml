@@ -20,14 +20,14 @@
       synchronize:
         mode: pull
         src: "{{ db_dump_file }}"
-        dest: "{{ dump_dir }}/"
+        dest: "{{ dump_dir }}/mysql/{{ inventory_hostname }}/"
 
 - hosts: sandalphon
   gather_facts: false
   tasks:
     - name: Create sandalphon problems directory
       file: 
-        path: "{{ dump_dir }}/problems/{{ inventory_hostname }}/sandalphon"
+        path: "{{ dump_dir }}/sandalphon/{{ inventory_hostname }}/problems"
         state: directory
       delegate_to: localhost
       connection: local
@@ -36,7 +36,7 @@
       synchronize:
         mode: pull
         src: /judgels/sandalphon/var/data/problems/
-        dest: "{{ dump_dir }}/problems/{{ inventory_hostname }}/sandalphon"
+        dest: "{{ dump_dir }}/sandalphon/{{ inventory_hostname }}/problems"
 
     - name: Check whether sandalphon submissions directory exists
       stat:
@@ -45,7 +45,7 @@
 
     - name: Create sandalphon submissions directory
       file: 
-        path: "{{ dump_dir }}/submissions/{{ inventory_hostname }}/sandalphon"
+        path: "{{ dump_dir }}/sandalphon/{{ inventory_hostname }}/submissions"
         state: directory
       delegate_to: localhost
       connection: local
@@ -55,7 +55,7 @@
       synchronize:
         mode: pull
         src: /judgels/sandalphon/var/data/submissions/
-        dest: "{{ dump_dir }}/submissions/{{ inventory_hostname }}/sandalphon"
+        dest: "{{ dump_dir }}/sandalphon/{{ inventory_hostname }}/submissions"
       when: sandalphon_submissions_dir.stat.exists
 
 - hosts: jophiel
@@ -68,7 +68,7 @@
 
     - name: Create jophiel user avatars directory
       file: 
-        path: "{{ dump_dir }}/user-avatars/{{ inventory_hostname }}/jophiel"
+        path: "{{ dump_dir }}/jophiel/{{ inventory_hostname }}/user-avatars"
         state: directory
       delegate_to: localhost
       connection: local
@@ -78,7 +78,7 @@
       synchronize:
         mode: pull
         src: /judgels/jophiel/var/data/user-avatars/
-        dest: "{{ dump_dir }}/user-avatars/{{ inventory_hostname }}/jophiel"
+        dest: "{{ dump_dir }}/jophiel/{{ inventory_hostname }}/user-avatars"
       when: jophiel_user_avatars_dir.stat.exists
 
 - hosts: uriel
@@ -86,7 +86,7 @@
   tasks:
     - name: Create uriel submissions directory
       file: 
-        path: "{{ dump_dir }}/submissions/{{ inventory_hostname }}/uriel"
+        path: "{{ dump_dir }}/uriel/{{ inventory_hostname }}/submissions"
         state: directory
       delegate_to: localhost
       connection: local
@@ -95,7 +95,7 @@
       synchronize:
         mode: pull
         src: /judgels/uriel/var/data/submissions/
-        dest: "{{ dump_dir }}/submissions/{{ inventory_hostname }}/uriel"
+        dest: "{{ dump_dir }}/uriel/{{ inventory_hostname }}/submissions"
 
     - name: Check whether uriel contest files directory exists
       stat:
@@ -104,7 +104,7 @@
 
     - name: Create uriel contest files directory
       file: 
-        path: "{{ dump_dir }}/contest-files/{{ inventory_hostname }}/uriel"
+        path: "{{ dump_dir }}/uriel/{{ inventory_hostname }}/contest-files"
         state: directory
       delegate_to: localhost
       connection: local
@@ -114,7 +114,7 @@
       synchronize:
         mode: pull
         src: /judgels/uriel/var/data/files/
-        dest: "{{ dump_dir }}/contest-files/{{ inventory_hostname }}/uriel"
+        dest: "{{ dump_dir }}/uriel/{{ inventory_hostname }}/contest-files"
       when: uriel_contest_files_dir.stat.exists
 
 - hosts: jerahmeel
@@ -122,7 +122,7 @@
   tasks:
     - name: Create jerahmeel submissions directory
       file: 
-        path: "{{ dump_dir }}/submissions/{{ inventory_hostname }}/jerahmeel"
+        path: "{{ dump_dir }}/jerahmeel/{{ inventory_hostname }}/submissions"
         state: directory
       delegate_to: localhost
       connection: local
@@ -131,4 +131,4 @@
       synchronize:
         mode: pull
         src: /judgels/jerahmeel/var/data/submissions/
-        dest: "{{ dump_dir }}/submissions/{{ inventory_hostname }}/jerahmeel"
+        dest: "{{ dump_dir }}/jerahmeel/{{ inventory_hostname }}/submissions"
