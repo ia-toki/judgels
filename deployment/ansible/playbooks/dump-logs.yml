@@ -2,7 +2,7 @@
   gather_facts: false
   tasks:
     - name: Create auth logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/auth/{{ inventory_hostname }}"
         state: directory
       delegate_to: localhost
@@ -18,7 +18,7 @@
   gather_facts: false
   tasks:
     - name: Create MySQL logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/mysql/{{ inventory_hostname }}/logs"
         state: directory
       delegate_to: localhost
@@ -34,7 +34,7 @@
   gather_facts: false
   tasks:
     - name: Create uriel logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/uriel/{{ inventory_hostname }}/logs"
         state: directory
       delegate_to: localhost
@@ -50,7 +50,7 @@
   gather_facts: false
   tasks:
     - name: Create jophiel logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/jophiel/{{ inventory_hostname }}/logs"
         state: directory
       delegate_to: localhost
@@ -66,7 +66,7 @@
   gather_facts: false
   tasks:
     - name: Create sandalphon logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/sandalphon/{{ inventory_hostname }}/logs"
         state: directory
       delegate_to: localhost
@@ -82,7 +82,7 @@
   gather_facts: false
   tasks:
     - name: Create sealtiel logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/sealtiel/{{ inventory_hostname }}/logs"
         state: directory
       delegate_to: localhost
@@ -98,7 +98,7 @@
   gather_facts: false
   tasks:
     - name: Create gabriel logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/gabriel/{{ inventory_hostname }}/logs"
         state: directory
       delegate_to: localhost
@@ -114,7 +114,7 @@
   gather_facts: false
   tasks:
     - name: Create jerahmeel logs directory
-      file: 
+      file:
         path: "{{ dump_dir }}/jerahmeel/{{ inventory_hostname }}/logs"
         state: directory
       delegate_to: localhost

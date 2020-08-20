@@ -16,6 +16,13 @@
           - judgels_jerahmeel
         target: "{{ db_dump_file }}"
 
+    - name: Create judgels DB dump directory
+      file:
+        path: "{{ dump_dir }}/mysql/{{ inventory_hostname }}"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
     - name: Download judgels DB dump file
       synchronize:
         mode: pull
@@ -26,7 +33,7 @@
   gather_facts: false
   tasks:
     - name: Create sandalphon problems directory
-      file: 
+      file:
         path: "{{ dump_dir }}/sandalphon/{{ inventory_hostname }}/problems"
         state: directory
       delegate_to: localhost
@@ -44,7 +51,7 @@
       register: sandalphon_submissions_dir
 
     - name: Create sandalphon submissions directory
-      file: 
+      file:
         path: "{{ dump_dir }}/sandalphon/{{ inventory_hostname }}/submissions"
         state: directory
       delegate_to: localhost
@@ -67,7 +74,7 @@
       register: jophiel_user_avatars_dir
 
     - name: Create jophiel user avatars directory
-      file: 
+      file:
         path: "{{ dump_dir }}/jophiel/{{ inventory_hostname }}/user-avatars"
         state: directory
       delegate_to: localhost
@@ -85,7 +92,7 @@
   gather_facts: false
   tasks:
     - name: Create uriel submissions directory
-      file: 
+      file:
         path: "{{ dump_dir }}/uriel/{{ inventory_hostname }}/submissions"
         state: directory
       delegate_to: localhost
@@ -103,7 +110,7 @@
       register: uriel_contest_files_dir
 
     - name: Create uriel contest files directory
-      file: 
+      file:
         path: "{{ dump_dir }}/uriel/{{ inventory_hostname }}/contest-files"
         state: directory
       delegate_to: localhost
@@ -121,7 +128,7 @@
   gather_facts: false
   tasks:
     - name: Create jerahmeel submissions directory
-      file: 
+      file:
         path: "{{ dump_dir }}/jerahmeel/{{ inventory_hostname }}/submissions"
         state: directory
       delegate_to: localhost
