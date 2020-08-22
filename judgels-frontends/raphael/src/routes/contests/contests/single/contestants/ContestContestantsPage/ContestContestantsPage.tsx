@@ -75,6 +75,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
         virtualModuleConfig={virtualModuleConfig}
         contestants={contestants.page}
         profilesMap={profilesMap}
+        now={new Date().getTime()}
       />
     );
   };

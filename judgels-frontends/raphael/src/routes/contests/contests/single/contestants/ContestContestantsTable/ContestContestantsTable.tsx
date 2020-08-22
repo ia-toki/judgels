@@ -16,6 +16,7 @@ export interface ContestContestantsTableProps {
   virtualModuleConfig?: VirtualModuleConfig;
   contestants: ContestContestant[];
   profilesMap: ProfilesMap;
+  now: number;
 }
 
 export class ContestContestantsTable extends React.PureComponent<ContestContestantsTableProps> {
@@ -43,7 +44,7 @@ export class ContestContestantsTable extends React.PureComponent<ContestContesta
   };
 
   private renderRows = () => {
-    const { contest, virtualModuleConfig, contestants, profilesMap } = this.props;
+    const { contest, virtualModuleConfig, contestants, profilesMap, now } = this.props;
     const isVirtualContest = !!virtualModuleConfig;
 
     const sortedContestants = contestants.slice().sort((c1, c2) => {
@@ -59,7 +60,6 @@ export class ContestContestantsTable extends React.PureComponent<ContestContesta
       return username1.localeCompare(username2);
     });
 
-    const now = new Date().getTime();
     const rows = sortedContestants.map((contestant, idx) => (
       <tr key={contestant.userJid}>
         <td>{idx + 1}</td>
