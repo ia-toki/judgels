@@ -3,7 +3,6 @@ package judgels.jerahmeel.user;
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Optional;
@@ -15,24 +14,20 @@ import judgels.jerahmeel.api.user.UserTopStatsEntry;
 import judgels.jerahmeel.api.user.UserTopStatsResponse;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
+import judgles.jophiel.user.UserClient;
 
 public class UserStatsResource implements UserStatsService {
     private final StatsStore statsStore;
-    private final UserSearchService userSearchService;
-    private final ProfileService profileService;
+    private final UserClient userClient;
 
     @Inject
     public UserStatsResource(
             StatsStore statsStore,
-            UserSearchService userSearchService,
-            ProfileService profileService) {
+            UserClient userClient) {
 
         this.statsStore = statsStore;
-        this.userSearchService = userSearchService;
-        this.profileService = profileService;
+        this.userClient = userClient;
     }
 
     @Override
@@ -40,7 +35,7 @@ public class UserStatsResource implements UserStatsService {
     public UserTopStatsResponse getTopUserStats(Optional<Integer> page, Optional<Integer> pageSize) {
         Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(page, pageSize);
         Set<String> userJids = stats.getPage().stream().map(UserTopStatsEntry::getUserJid).collect(toSet());
-        Map<String, Profile> profileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> profileMap = userClient.getProfiles(userJids);
 
         return new UserTopStatsResponse.Builder()
                 .data(stats)
@@ -51,8 +46,7 @@ public class UserStatsResource implements UserStatsService {
     @Override
     @UnitOfWork(readOnly = true)
     public UserStats getUserStats(String username) {
-        String userJid = checkFound(Optional.ofNullable(
-                userSearchService.translateUsernamesToJids(ImmutableSet.of(username)).get(username)));
+        String userJid = checkFound(userClient.translateUsernameToJid(username));
         return statsStore.getUserStats(userJid);
     }
 }

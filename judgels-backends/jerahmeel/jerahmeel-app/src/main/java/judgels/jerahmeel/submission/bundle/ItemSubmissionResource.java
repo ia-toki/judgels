@@ -7,7 +7,6 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +27,6 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
@@ -43,15 +40,15 @@ import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgles.jophiel.user.UserClient;
 
 public class ItemSubmissionResource implements ItemSubmissionService {
     private final ActorChecker actorChecker;
     private final ItemSubmissionStore submissionStore;
     private final SubmissionRoleChecker submissionRoleChecker;
-    private final ProfileService profileService;
-    private final UserSearchService userSearchService;
     private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     private final ItemSubmissionRegrader itemSubmissionRegrader;
+    private final UserClient userClient;
     private final ProblemClient problemClient;
 
     private final ProblemSetProblemStore problemSetProblemStore;
@@ -62,10 +59,9 @@ public class ItemSubmissionResource implements ItemSubmissionService {
             ActorChecker actorChecker,
             ItemSubmissionStore submissionStore,
             SubmissionRoleChecker submissionRoleChecker,
-            ProfileService profileService,
-            UserSearchService userSearchService,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
             ItemSubmissionRegrader itemSubmissionRegrader,
+            UserClient userClient,
             ProblemClient problemClient,
             ProblemSetProblemStore problemSetProblemStore,
             ChapterProblemStore chapterProblemStore) {
@@ -73,10 +69,9 @@ public class ItemSubmissionResource implements ItemSubmissionService {
         this.actorChecker = actorChecker;
         this.submissionStore = submissionStore;
         this.submissionRoleChecker = submissionRoleChecker;
-        this.profileService = profileService;
-        this.userSearchService = userSearchService;
         this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
         this.itemSubmissionRegrader = itemSubmissionRegrader;
+        this.userClient = userClient;
         this.problemClient = problemClient;
         this.problemSetProblemStore = problemSetProblemStore;
         this.chapterProblemStore = chapterProblemStore;
@@ -95,7 +90,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         Optional<String> userJid = username.map(
-                u -> userSearchService.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
+                u -> userClient.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
 
         Optional<String> problemJid = Optional.empty();
         if (problemAlias.isPresent()) {
@@ -107,9 +102,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
         Set<String> userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(toSet());
         Set<String> problemJids = submissions.getPage().stream().map(ItemSubmission::getProblemJid).collect(toSet());
 
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids);
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
@@ -180,8 +173,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         String userJid;
         if (canManage && username.isPresent()) {
-            userJid = checkFound(Optional.ofNullable(
-                    userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get())).get(username.get())));
+            userJid = checkFound(userClient.translateUsernameToJid(username.get()));
         } else {
             userJid = actorJid;
         }
@@ -212,8 +204,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         String userJid;
         if (canManage && username.isPresent()) {
-            userJid = checkFound(Optional.ofNullable(
-                    userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get())).get(username.get())));
+            userJid = checkFound(userClient.translateUsernameToJid(username.get()));
         } else {
             userJid = actorJid;
         }
@@ -250,7 +241,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
         }
 
         Map<String, String> problemNamesMap = problemClient.getProblemNames(ImmutableSet.copyOf(problemJids), language);
-        Profile profile = profileService.getProfile(userJid);
+        Profile profile = userClient.getProfile(userJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)

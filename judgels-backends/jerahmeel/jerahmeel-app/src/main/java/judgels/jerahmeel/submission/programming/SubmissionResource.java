@@ -9,7 +9,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,6 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.ProblemInfo;
@@ -51,6 +49,7 @@ import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgles.jophiel.user.UserClient;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class SubmissionResource implements SubmissionService {
@@ -60,7 +59,7 @@ public class SubmissionResource implements SubmissionService {
     private final SubmissionClient submissionClient;
     private final SubmissionRegrader submissionRegrader;
     private final SubmissionRoleChecker submissionRoleChecker;
-    private final ProfileService profileService;
+    private final UserClient userClient;
     private final ProblemClient problemClient;
 
     private final ProblemSetStore problemSetStore;
@@ -77,7 +76,7 @@ public class SubmissionResource implements SubmissionService {
             SubmissionClient submissionClient,
             SubmissionRegrader submissionRegrader,
             SubmissionRoleChecker submissionRoleChecker,
-            ProfileService profileService,
+            UserClient userClient,
             ProblemClient problemClient,
 
             ProblemSetStore problemSetStore,
@@ -92,7 +91,7 @@ public class SubmissionResource implements SubmissionService {
         this.submissionClient = submissionClient;
         this.submissionRegrader = submissionRegrader;
         this.submissionRoleChecker = submissionRoleChecker;
-        this.profileService = profileService;
+        this.userClient = userClient;
         this.problemClient = problemClient;
 
         this.problemSetStore = problemSetStore;
@@ -124,9 +123,7 @@ public class SubmissionResource implements SubmissionService {
             problemJids = ImmutableSet.copyOf(chapterProblemStore.getProgrammingProblemJids(containerJid.get()));
         }
 
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids);
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
@@ -197,7 +194,7 @@ public class SubmissionResource implements SubmissionService {
         ProblemInfo problem = problemClient.getProblem(submission.getProblemJid());
 
         String userJid = submission.getUserJid();
-        Profile profile = checkFound(Optional.ofNullable(profileService.getProfile(userJid)));
+        Profile profile = checkFound(Optional.ofNullable(userClient.getProfile(userJid)));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
