@@ -41,7 +41,7 @@ public class ContestContestantStore {
         this.clock = clock;
 
         this.contestantCache = Caffeine.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(1_000)
                 .expireAfterWrite(getShortDuration())
                 .build();
     }

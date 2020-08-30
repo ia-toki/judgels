@@ -1,9 +1,8 @@
 package judgels.jerahmeel.curriculum;
 
-import static judgels.jerahmeel.JerahmeelCacheUtils.getLongDuration;
-
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.CurriculumDao;
@@ -19,7 +18,7 @@ public class CurriculumStore {
 
         this.curriculumDescriptionCache =  Caffeine.newBuilder()
                 .maximumSize(1)
-                .expireAfterWrite(getLongDuration())
+                .expireAfterWrite(Duration.ofMinutes(30))
                 .build(this::getCurriculumDescriptionUncached);
     }
 

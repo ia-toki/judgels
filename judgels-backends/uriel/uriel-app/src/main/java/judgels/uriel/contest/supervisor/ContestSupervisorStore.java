@@ -37,7 +37,7 @@ public class ContestSupervisorStore {
         this.mapper = mapper;
 
         this.supervisorCache = Caffeine.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build();
     }

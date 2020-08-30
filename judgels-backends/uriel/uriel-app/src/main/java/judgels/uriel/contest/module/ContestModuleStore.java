@@ -88,7 +88,7 @@ public class ContestModuleStore {
         this.mapper = mapper;
 
         this.moduleCache = Caffeine.newBuilder()
-                .maximumSize(1_000)
+                .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build();
     }

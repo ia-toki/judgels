@@ -31,7 +31,7 @@ public class UserClient {
         this.profileService = profileService;
         this.usernameToJidCache = Caffeine.newBuilder()
                 .maximumSize(1_000)
-                .expireAfterWrite(Duration.ofMinutes(1))
+                .expireAfterWrite(Duration.ofMinutes(5))
                 .build(new UsernameToJidCacheLoader());
         this.profileCache = Caffeine.newBuilder()
                 .maximumSize(1_000)
