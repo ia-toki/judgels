@@ -4,14 +4,12 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -21,6 +19,7 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
+import judgles.jophiel.user.UserClient;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
     private final ActorChecker actorChecker;
@@ -30,7 +29,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final ContestScoreboardPoller scoreboardUpdaterDispatcher;
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
-    private final ProfileService profileService;
+    private final UserClient userClient;
     private static final int PAGE_SIZE = 250;
 
     @Inject
@@ -42,7 +41,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ContestScoreboardFetcher scoreboardFetcher,
             ContestScoreboardPoller scoreboardUpdaterDispatcher,
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
-            ProfileService profileService) {
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -51,7 +50,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         this.scoreboardFetcher = scoreboardFetcher;
         this.scoreboardUpdaterDispatcher = scoreboardUpdaterDispatcher;
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
-        this.profileService = profileService;
+        this.userClient = userClient;
     }
 
     @Override
@@ -88,9 +87,8 @@ public class ContestScoreboardResource implements ContestScoreboardService {
                 .map(scoreboard -> {
                     Set<String> contestantJids = scoreboard.getScoreboard().getContent().getEntries().stream()
                             .map(ScoreboardEntry::getContestantJid).collect(Collectors.toSet());
-                    Map<String, Profile> profilesMap = contestantJids.isEmpty()
-                            ? Collections.emptyMap()
-                            : profileService.getProfiles(contestantJids, scoreboard.getUpdatedTime());
+                    Map<String, Profile> profilesMap =
+                            userClient.getProfiles(contestantJids, scoreboard.getUpdatedTime());
 
                     return new ContestScoreboardResponse.Builder()
                             .data(scoreboard)

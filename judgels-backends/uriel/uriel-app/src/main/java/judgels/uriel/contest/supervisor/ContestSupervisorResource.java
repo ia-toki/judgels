@@ -7,15 +7,12 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -29,6 +26,7 @@ import judgels.uriel.api.contest.supervisor.ContestSupervisorsUpsertResponse;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
+import judgles.jophiel.user.UserClient;
 
 public class ContestSupervisorResource implements ContestSupervisorService {
     private final ActorChecker actorChecker;
@@ -36,8 +34,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
     private final ContestLogger contestLogger;
     private final ContestRoleChecker roleChecker;
     private final ContestSupervisorStore supervisorStore;
-    private final UserSearchService userSearchService;
-    private final ProfileService profileService;
+    private final UserClient userClient;
 
     @Inject
     public ContestSupervisorResource(
@@ -46,16 +43,14 @@ public class ContestSupervisorResource implements ContestSupervisorService {
             ContestLogger contestLogger,
             ContestRoleChecker roleChecker,
             ContestSupervisorStore supervisorStore,
-            UserSearchService userSearchService,
-            ProfileService profileService) {
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.contestLogger = contestLogger;
         this.roleChecker = roleChecker;
         this.supervisorStore = supervisorStore;
-        this.userSearchService = userSearchService;
-        this.profileService = profileService;
+        this.userClient = userClient;
     }
 
     @Override
@@ -68,9 +63,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
         Page<ContestSupervisor> supervisors = supervisorStore.getSupervisors(contestJid, page);
         Set<String> userJids =
                 supervisors.getPage().stream().map(ContestSupervisor::getUserJid).collect(Collectors.toSet());
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_SUPERVISORS");
 
@@ -93,7 +86,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
 
         checkArgument(data.getUsernames().size() <= 100, "Cannot add more than 100 users.");
 
-        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(data.getUsernames());
+        Map<String, String> usernameToJidMap = userClient.translateUsernamesToJids(data.getUsernames());
 
         Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> upsertedSupervisorUsernames = Sets.newHashSet();
@@ -102,7 +95,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
             upsertedSupervisorUsernames.add(username);
         });
 
-        Map<String, Profile> userJidToProfileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = userClient.getProfiles(userJids);
         Map<String, Profile> upsertedSupervisorProfilesMap = upsertedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -127,7 +120,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 
-        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userClient.translateUsernamesToJids(usernames);
 
         Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> deletedSupervisorUsernames = Sets.newHashSet();
@@ -137,7 +130,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = userClient.getProfiles(userJids);
         Map<String, Profile> deletedSupervisorProfilesMap = deletedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

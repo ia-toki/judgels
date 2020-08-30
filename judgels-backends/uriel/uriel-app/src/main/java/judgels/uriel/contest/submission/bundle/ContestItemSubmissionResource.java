@@ -18,8 +18,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
@@ -46,6 +44,7 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
+import judgles.jophiel.user.UserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -63,10 +62,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
-    private final ProfileService profileService;
-    private final UserSearchService userSearchService;
     private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     private final ItemSubmissionRegrader itemSubmissionRegrader;
+    private final UserClient userClient;
     private final ProblemClient problemClient;
 
     @Inject
@@ -79,10 +77,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
-            ProfileService profileService,
-            UserSearchService userSearchService,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
             ItemSubmissionRegrader itemSubmissionRegrader,
+            UserClient userClient,
             ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
@@ -93,10 +90,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
-        this.profileService = profileService;
-        this.userSearchService = userSearchService;
         this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
         this.itemSubmissionRegrader = itemSubmissionRegrader;
+        this.userClient = userClient;
         this.problemClient = problemClient;
     }
 
@@ -116,7 +112,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         Optional<String> filterUserJid;
         if (canSupervise) {
-            filterUserJid = username.map(u -> userSearchService.translateUsernamesToJids(
+            filterUserJid = username.map(u -> userClient.translateUsernamesToJids(
                     ImmutableSet.of(u)).getOrDefault(u, ""));
         } else {
             filterUserJid = Optional.of(actorJid);
@@ -158,9 +154,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                     .collect(Collectors.toSet());
         }
 
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         userJidsSortedByUsername.sort((u1, u2) -> {
             String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
@@ -261,7 +255,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         String viewedUserJid;
         if (canSupervise && username.isPresent()) {
-            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
+            Map<String, String> userJidsMap = userClient.translateUsernamesToJids(
                     ImmutableSet.of(username.get()));
             viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
         } else {
@@ -296,7 +290,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         String viewedUserJid;
         if (canSupervise && username.isPresent()) {
-            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
+            Map<String, String> userJidsMap = userClient.translateUsernamesToJids(
                     ImmutableSet.of(username.get()));
             viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
         } else {
@@ -340,7 +334,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         Map<String, String> problemNamesByProblemJid = problemClient.getProblemNames(
                 ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
 
-        Profile profile = profileService.getProfiles(
+        Profile profile = userClient.getProfiles(
                 ImmutableSet.of(viewedUserJid), contest.getBeginTime()).get(viewedUserJid);
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()

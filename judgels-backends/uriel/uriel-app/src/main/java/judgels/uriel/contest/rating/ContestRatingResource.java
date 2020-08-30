@@ -5,7 +5,6 @@ import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -15,13 +14,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingService;
-import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -36,13 +32,13 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.RawContestScoreboard;
+import judgles.jophiel.user.UserClient;
 
 public class ContestRatingResource implements ContestRatingService {
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
-    private final UserSearchService userSearchService;
+    private final UserClient userClient;
     private final UserRatingService userRatingService;
-    private final ProfileService profileService;
     private final ContestStore contestStore;
     private final ContestScoreboardStore scoreboardStore;
     private final ContestScoreboardBuilder scoreboardBuilder;
@@ -52,9 +48,8 @@ public class ContestRatingResource implements ContestRatingService {
     public ContestRatingResource(
             ActorChecker actorChecker,
             ContestRoleChecker contestRoleChecker,
-            UserSearchService userSearchService,
+            UserClient userClient,
             UserRatingService userRatingService,
-            ProfileService profileService,
             ContestStore contestStore,
             ContestScoreboardStore scoreboardStore,
             ContestScoreboardBuilder scoreboardBuilder,
@@ -62,9 +57,8 @@ public class ContestRatingResource implements ContestRatingService {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
-        this.userSearchService = userSearchService;
+        this.userClient = userClient;
         this.userRatingService = userRatingService;
-        this.profileService = profileService;
         this.contestStore = contestStore;
         this.scoreboardStore = scoreboardStore;
         this.scoreboardBuilder = scoreboardBuilder;
@@ -90,7 +84,7 @@ public class ContestRatingResource implements ContestRatingService {
                 .filter(ScoreboardEntry::hasSubmission)
                 .collect(Collectors.toMap(ScoreboardEntry::getContestantJid, ScoreboardEntry::getRank));
 
-        Map<String, Profile> profilesMap = profileService.getProfiles(ranksMap.keySet(), contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(ranksMap.keySet(), contest.getBeginTime());
 
         Map<String, Integer> publicRatingsMap = Maps.newHashMap();
         Map<String, Integer> hiddenRatingsMap = Maps.newHashMap();
@@ -118,11 +112,7 @@ public class ContestRatingResource implements ContestRatingService {
     @Override
     @UnitOfWork(readOnly = true)
     public ContestRatingHistoryResponse getRatingHistory(String username) {
-        Map<String, String> userJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
-        if (!userJidMap.containsKey(username)) {
-            throw new NotFoundException();
-        }
-        String userJid = userJidMap.get(username);
+        String userJid = checkFound(userClient.translateUsernameToJid(username));
 
         List<UserRatingEvent> userRatingEvents = userRatingService.getRatingHistory(userJid);
 

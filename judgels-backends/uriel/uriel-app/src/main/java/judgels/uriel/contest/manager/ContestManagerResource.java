@@ -7,15 +7,12 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -28,6 +25,7 @@ import judgels.uriel.api.contest.manager.ContestManagersResponse;
 import judgels.uriel.api.contest.manager.ContestManagersUpsertResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
+import judgles.jophiel.user.UserClient;
 
 public class ContestManagerResource implements ContestManagerService {
     private final ActorChecker actorChecker;
@@ -35,8 +33,7 @@ public class ContestManagerResource implements ContestManagerService {
     private final ContestLogger contestLogger;
     private final ContestManagerRoleChecker managerRoleChecker;
     private final ContestManagerStore managerStore;
-    private final UserSearchService userSearchService;
-    private final ProfileService profileService;
+    private final UserClient userClient;
 
     @Inject
     public ContestManagerResource(
@@ -45,16 +42,14 @@ public class ContestManagerResource implements ContestManagerService {
             ContestLogger contestLogger,
             ContestManagerRoleChecker managerRoleChecker,
             ContestManagerStore managerStore,
-            UserSearchService userSearchService,
-            ProfileService profileService) {
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.contestLogger = contestLogger;
         this.managerRoleChecker = managerRoleChecker;
         this.managerStore = managerStore;
-        this.userSearchService = userSearchService;
-        this.profileService = profileService;
+        this.userClient = userClient;
     }
 
     @Override
@@ -67,9 +62,7 @@ public class ContestManagerResource implements ContestManagerService {
         Page<ContestManager> managers = managerStore.getManagers(contestJid, page);
         Set<String> userJids =
                 managers.getPage().stream().map(ContestManager::getUserJid).collect(Collectors.toSet());
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
         boolean canManage = managerRoleChecker.canManage(actorJid);
         ContestManagerConfig config = new ContestManagerConfig.Builder()
                 .canManage(canManage)
@@ -97,7 +90,7 @@ public class ContestManagerResource implements ContestManagerService {
 
         checkArgument(usernames.size() <= 100, "Cannot add more than 100 users.");
 
-        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userClient.translateUsernamesToJids(usernames);
 
         Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> insertedManagerUsernames = Sets.newHashSet();
@@ -110,7 +103,7 @@ public class ContestManagerResource implements ContestManagerService {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = userClient.getProfiles(userJids);
         Map<String, Profile> insertedManagerProfilesMap = insertedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -139,7 +132,7 @@ public class ContestManagerResource implements ContestManagerService {
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 
-        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userClient.translateUsernamesToJids(usernames);
 
         Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> deletedManagerUsernames = Sets.newHashSet();
@@ -149,7 +142,7 @@ public class ContestManagerResource implements ContestManagerService {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = userClient.getProfiles(userJids);
         Map<String, Profile> deletedManagerProfilesMap = deletedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

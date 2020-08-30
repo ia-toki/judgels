@@ -7,7 +7,6 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -30,7 +29,6 @@ import javax.ws.rs.core.StreamingOutput;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.ProblemInfo;
@@ -62,6 +60,7 @@ import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
+import judgles.jophiel.user.UserClient;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
@@ -82,7 +81,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ContestContestantStore contestantStore;
     private final ContestSupervisorStore supervisorStore;
     private final ContestProblemStore problemStore;
-    private final ProfileService profileService;
+    private final UserClient userClient;
     private final ProblemClient problemClient;
 
     @Inject
@@ -102,7 +101,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ContestContestantStore contestantStore,
             ContestSupervisorStore supervisorStore,
             ContestProblemStore problemStore,
-            ProfileService profileService,
+            UserClient userClient,
             ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
@@ -120,7 +119,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.contestantStore = contestantStore;
         this.supervisorStore = supervisorStore;
         this.problemStore = problemStore;
-        this.profileService = profileService;
+        this.userClient = userClient;
         this.problemClient = problemClient;
     }
 
@@ -166,9 +165,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                     .collect(Collectors.toSet());
         }
 
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         userJidsSortedByUsername.sort((u1, u2) -> {
             String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
@@ -210,8 +207,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         ProblemInfo problem = problemClient.getProblem(contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
-        Profile profile = checkFound(Optional.ofNullable(
-                profileService.getProfiles(ImmutableSet.of(userJid), contest.getBeginTime()).get(userJid)));
+        Profile profile = checkFound(Optional.ofNullable(userClient.getProfile(userJid, contest.getBeginTime())));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
@@ -327,11 +323,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         }
 
         Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
-        Map<String, String> usernamesMap = userJids.isEmpty()
-                ? ImmutableMap.of()
-                : profileService.getProfiles(userJids).entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
+        Map<String, String> usernamesMap = userClient.getProfiles(userJids).entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
 
         Set<String> problemJids = submissions.stream()
                 .map(Submission::getProblemJid)

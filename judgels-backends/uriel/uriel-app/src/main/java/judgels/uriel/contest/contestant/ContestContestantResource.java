@@ -7,15 +7,12 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
-import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -32,6 +29,7 @@ import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
+import judgles.jophiel.user.UserClient;
 
 public class ContestContestantResource implements ContestContestantService {
     private final ActorChecker actorChecker;
@@ -40,8 +38,7 @@ public class ContestContestantResource implements ContestContestantService {
     private final ContestContestantRoleChecker contestantRoleChecker;
     private final ContestContestantStore contestantStore;
     private final ContestModuleStore moduleStore;
-    private final UserSearchService userSearchService;
-    private final ProfileService profileService;
+    private final UserClient userClient;
 
     @Inject
     public ContestContestantResource(
@@ -51,8 +48,7 @@ public class ContestContestantResource implements ContestContestantService {
             ContestContestantRoleChecker contestantRoleChecker,
             ContestContestantStore contestantStore,
             ContestModuleStore moduleStore,
-            UserSearchService userSearchService,
-            ProfileService profileService) {
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -60,8 +56,7 @@ public class ContestContestantResource implements ContestContestantService {
         this.contestantRoleChecker = contestantRoleChecker;
         this.contestantStore = contestantStore;
         this.moduleStore = moduleStore;
-        this.userSearchService = userSearchService;
-        this.profileService = profileService;
+        this.userClient = userClient;
     }
 
     @Override
@@ -74,9 +69,7 @@ public class ContestContestantResource implements ContestContestantService {
         Page<ContestContestant> contestants = contestantStore.getContestants(contestJid, page);
         Set<String> userJids =
                 contestants.getPage().stream().map(ContestContestant::getUserJid).collect(Collectors.toSet());
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         boolean canManage = contestantRoleChecker.canManage(actorJid, contest);
         ContestContestantConfig config = new ContestContestantConfig.Builder()
@@ -102,9 +95,7 @@ public class ContestContestantResource implements ContestContestantService {
         checkAllowed(contestantRoleChecker.canViewApproved(actorJid, contest));
 
         Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         return new ApprovedContestContestantsResponse.Builder()
                 .data(userJids)
@@ -127,7 +118,7 @@ public class ContestContestantResource implements ContestContestantService {
     public void registerMyselfAsContestant(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        Profile profile = profileService.getProfiles(ImmutableSet.of(actorJid)).get(actorJid);
+        Profile profile = userClient.getProfile(actorJid);
         checkAllowed(contestantRoleChecker.canRegister(actorJid, profile.getRating(), contest));
 
         contestLogger.log(contestJid, "REGISTER_CONTEST");
@@ -152,7 +143,7 @@ public class ContestContestantResource implements ContestContestantService {
     public ContestContestantState getMyContestantState(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        Profile profile = profileService.getProfiles(ImmutableSet.of(actorJid)).get(actorJid);
+        Profile profile = userClient.getProfile(actorJid);
 
         return contestantRoleChecker.getContestantState(actorJid, profile.getRating(), contest);
     }
@@ -170,7 +161,7 @@ public class ContestContestantResource implements ContestContestantService {
 
         checkArgument(usernames.size() <= 1000, "Cannot add more than 1000 users.");
 
-        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userClient.translateUsernamesToJids(usernames);
 
         Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> insertedContestantUsernames = Sets.newHashSet();
@@ -183,7 +174,7 @@ public class ContestContestantResource implements ContestContestantService {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = userClient.getProfiles(userJids);
         Map<String, Profile> insertedContestantProfilesMap = insertedContestantUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -212,7 +203,7 @@ public class ContestContestantResource implements ContestContestantService {
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 
-        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userClient.translateUsernamesToJids(usernames);
 
         Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> deletedContestantUsernames = Sets.newHashSet();
@@ -222,7 +213,7 @@ public class ContestContestantResource implements ContestContestantService {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = userClient.getProfiles(userJids);
         Map<String, Profile> deletedContestantProfilesMap = deletedContestantUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

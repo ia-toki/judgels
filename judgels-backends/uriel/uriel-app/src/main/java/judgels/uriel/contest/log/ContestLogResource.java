@@ -6,14 +6,12 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -27,6 +25,7 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
+import judgles.jophiel.user.UserClient;
 
 public class ContestLogResource implements ContestLogService {
     private final ActorChecker actorChecker;
@@ -36,7 +35,7 @@ public class ContestLogResource implements ContestLogService {
     private final ContestContestantStore contestantStore;
     private final ContestSupervisorStore supervisorStore;
     private final ContestProblemStore problemStore;
-    private final ProfileService profileService;
+    private final UserClient userClient;
 
     @Inject
     public ContestLogResource(
@@ -47,7 +46,7 @@ public class ContestLogResource implements ContestLogService {
             ContestContestantStore contestantStore,
             ContestSupervisorStore supervisorStore,
             ContestProblemStore problemStore,
-            ProfileService profileService) {
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
@@ -56,7 +55,7 @@ public class ContestLogResource implements ContestLogService {
         this.contestantStore = contestantStore;
         this.supervisorStore = supervisorStore;
         this.problemStore = problemStore;
-        this.profileService = profileService;
+        this.userClient = userClient;
     }
 
     @Override
@@ -81,9 +80,7 @@ public class ContestLogResource implements ContestLogService {
                 .addAll(supervisorStore.getAllSupervisorJids(contestJid))
                 .build();
 
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         List<String> userJidsSortedByUsername = Lists.newArrayList(userJids);
         userJidsSortedByUsername.sort((u1, u2) -> {

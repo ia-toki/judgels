@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
@@ -29,6 +28,7 @@ import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgles.jophiel.user.UserClient;
 
 public class ContestClarificationResource implements ContestClarificationService {
     private final ActorChecker actorChecker;
@@ -37,7 +37,7 @@ public class ContestClarificationResource implements ContestClarificationService
     private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestClarificationStore clarificationStore;
     private final ContestProblemStore problemStore;
-    private final ProfileService profileService;
+    private final UserClient userClient;
     private final ProblemClient problemClient;
 
     @Inject
@@ -48,7 +48,7 @@ public class ContestClarificationResource implements ContestClarificationService
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestClarificationStore clarificationStore,
             ContestProblemStore problemStore,
-            ProfileService profileService,
+            UserClient userClient,
             ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
@@ -57,7 +57,7 @@ public class ContestClarificationResource implements ContestClarificationService
         this.clarificationRoleChecker = clarificationRoleChecker;
         this.clarificationStore = clarificationStore;
         this.problemStore = problemStore;
-        this.profileService = profileService;
+        this.userClient = userClient;
         this.problemClient = problemClient;
     }
 
@@ -126,9 +126,7 @@ public class ContestClarificationResource implements ContestClarificationService
                 .map(Optional::get)
                 .collect(Collectors.toSet());
 
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
         Map<String, String> problemNamesMap = problemClient.getProblemNames(problemJids, language);

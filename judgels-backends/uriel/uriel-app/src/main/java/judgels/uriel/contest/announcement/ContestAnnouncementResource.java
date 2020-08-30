@@ -4,14 +4,12 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -23,6 +21,7 @@ import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
+import judgles.jophiel.user.UserClient;
 
 public class ContestAnnouncementResource implements ContestAnnouncementService {
     private final ActorChecker actorChecker;
@@ -30,7 +29,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     private final ContestLogger contestLogger;
     private final ContestAnnouncementRoleChecker announcementRoleChecker;
     private final ContestAnnouncementStore announcementStore;
-    private final ProfileService profileService;
+    private final UserClient userClient;
 
     @Inject
     public ContestAnnouncementResource(
@@ -39,14 +38,14 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
             ContestLogger contestLogger,
             ContestAnnouncementRoleChecker announcementRoleChecker,
             ContestAnnouncementStore announcementStore,
-            ProfileService profileService) {
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.announcementRoleChecker = announcementRoleChecker;
         this.contestStore = contestStore;
         this.announcementStore = announcementStore;
         this.contestLogger = contestLogger;
-        this.profileService = profileService;
+        this.userClient = userClient;
     }
 
     @Override
@@ -76,9 +75,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 .map(ContestAnnouncement::getUserJid)
                 .collect(Collectors.toSet());
 
-        Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? Collections.emptyMap()
-                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_ANNOUNCEMENTS");
 
