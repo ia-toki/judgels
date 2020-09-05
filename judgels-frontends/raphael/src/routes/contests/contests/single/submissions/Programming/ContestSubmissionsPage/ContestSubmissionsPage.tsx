@@ -22,8 +22,8 @@ export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
   contest: Contest;
   onGetProgrammingSubmissions: (
     contestJid: string,
-    userJid?: string,
-    problemJid?: string,
+    username?: string,
+    problemAlias?: string,
     page?: number
   ) => Promise<ContestSubmissionsResponse>;
   onRegrade: (submissionJid: string) => Promise<void>;
@@ -60,17 +60,13 @@ export class ContestSubmissionsPage extends React.PureComponent<
     this.state = { filter: { username, problemAlias } };
   }
 
-  async componentDidUpdate(prevProps: ContestSubmissionsPageProps, prevState: ContestSubmissionsPageState) {
-    const {
-      response,
-      filter: { username, problemAlias },
-    } = this.state;
+  componentDidUpdate() {
     const queries = parse(this.props.location.search);
-    const page = queries.page && +queries.page;
+    const username = queries.username as string;
+    const problemAlias = queries.problemAlias as string;
 
-    if (!prevState.response && response && (username || problemAlias)) {
+    if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
       this.setState({ isFilterLoading: true });
-      await this.refreshSubmissions(username, problemAlias, page);
     }
   }
 
@@ -150,17 +146,8 @@ export class ContestSubmissionsPage extends React.PureComponent<
   private renderPagination = () => {
     const { filter } = this.state;
 
-    // updates pagination when the filter is updated
     const key = '' + filter.username + filter.problemAlias;
-
-    return (
-      <Pagination
-        key={key}
-        currentPage={1}
-        pageSize={ContestSubmissionsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+    return <Pagination key={key} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
   private onChangePage = async (nextPage: number) => {
@@ -170,24 +157,9 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 
   private refreshSubmissions = async (username?: string, problemAlias?: string, page?: number) => {
-    const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
-    const response = await this.props.onGetProgrammingSubmissions(this.props.contest.jid, userJid, problemJid, page);
+    const response = await this.props.onGetProgrammingSubmissions(this.props.contest.jid, username, problemAlias, page);
     this.setState({ response, isFilterLoading: false });
     return response.data;
-  };
-
-  private getFilterJids = (username?: string, problemAlias?: string) => {
-    const { response } = this.state;
-    if (!response) {
-      return {};
-    }
-
-    const { config, profilesMap, problemAliasesMap } = response;
-    const { userJids, problemJids } = config;
-
-    const userJid = userJids.find(jid => profilesMap[jid].username === username);
-    const problemJid = problemJids.find(jid => problemAliasesMap[jid] === problemAlias);
-    return { userJid, problemJid };
   };
 
   private onRegrade = async (submissionJid: string) => {
@@ -200,8 +172,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
   private onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { username, problemAlias } = this.state.filter!;
-      const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
-      await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
+      await this.props.onRegradeAll(this.props.contest.jid, username, problemAlias);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(username, problemAlias, queries.page);
     }

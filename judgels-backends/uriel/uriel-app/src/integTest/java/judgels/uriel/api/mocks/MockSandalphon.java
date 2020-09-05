@@ -115,6 +115,13 @@ public class MockSandalphon {
                         "gradingEngine", "Batch",
                         "gradingLanguageRestriction", ImmutableMap.of("allowedLanguageNames", ImmutableSet.of())))));
 
+        mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_2_JID + "/programming/submission-config")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        "sourceKeys", ImmutableMap.of("source", "Source"),
+                        "gradingEngine", "BatchWithSubtasks",
+                        "gradingLanguageRestriction", ImmutableMap.of("allowedLanguageNames", ImmutableSet.of())))));
+
         /* Mocks for problem worksheets */
 
         mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_1_JID + "/programming/worksheet")

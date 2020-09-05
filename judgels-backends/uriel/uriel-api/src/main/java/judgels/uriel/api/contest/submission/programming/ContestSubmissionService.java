@@ -22,8 +22,8 @@ public interface ContestSubmissionService {
     ContestSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid,
-            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
             @QueryParam("page") Optional<Integer> page);
 
     @GET
@@ -45,8 +45,8 @@ public interface ContestSubmissionService {
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid,
-            @QueryParam("problemJid") Optional<String> problemJid);
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias);
 
 //    These endpoints are not representable as JAX-RS methods
 

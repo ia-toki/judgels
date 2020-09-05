@@ -6,10 +6,10 @@ import { ProblemSubmissionFormData } from '../../../../../../../components/Probl
 import { contestSubmissionProgrammingAPI } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
 
-export function getSubmissions(contestJid: string, userJid?: string, problemJid?: string, page?: number) {
+export function getSubmissions(contestJid: string, username?: string, problemAlias?: string, page?: number) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    return await contestSubmissionProgrammingAPI.getSubmissions(token, contestJid, userJid, problemJid, page);
+    return await contestSubmissionProgrammingAPI.getSubmissions(token, contestJid, username, problemAlias, page);
   };
 }
 
@@ -65,10 +65,10 @@ export function regradeSubmission(submissionJid: string) {
   };
 }
 
-export function regradeSubmissions(contestJid: string, userJid?: string, problemJid?: string) {
+export function regradeSubmissions(contestJid: string, username?: string, problemAlias?: string) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    await contestSubmissionProgrammingAPI.regradeSubmissions(token, contestJid, userJid, problemJid);
+    await contestSubmissionProgrammingAPI.regradeSubmissions(token, contestJid, username, problemAlias);
 
     toastActions.showSuccessToast('Regrade in progress.');
   };

@@ -9,7 +9,9 @@ import * as contestSubmissionActions from './contestSubmissionActions';
 
 const contestJid = 'contest-jid';
 const userJid = 'user-jid';
+const username = 'username';
 const problemJid = 'problem-jid';
+const problemAlias = 'problem-alias';
 const submissionId = 2;
 const mockStore = configureMockStore([thunk]);
 
@@ -34,11 +36,11 @@ describe('contestSubmissionProgrammingActions', () => {
       nock(APP_CONFIG.apiUrls.uriel)
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/contests/submissions/programming`)
-        .query({ contestJid, userJid, problemJid, page })
+        .query({ contestJid, username, problemAlias, page })
         .reply(200, responseBody);
 
       const response = await store.dispatch(
-        contestSubmissionActions.getSubmissions(contestJid, userJid, problemJid, page)
+        contestSubmissionActions.getSubmissions(contestJid, username, problemAlias, page)
       );
       expect(response).toEqual(responseBody);
     });

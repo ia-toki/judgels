@@ -128,8 +128,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     public ContestSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> userJid,
-            Optional<String> problemJid,
+            Optional<String> username,
+            Optional<String> problemAlias,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
@@ -137,7 +137,14 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
+        Optional<String> actualUserJid = Optional.of(actorJid);
+        if (canSupervise) {
+            actualUserJid = username.flatMap(userClient::translateUsernameToJid);
+        }
+
+        Optional<String> problemJid = problemAlias
+                .flatMap(alias -> problemStore.getProblemByAlias(contestJid, alias))
+                .map(ContestProblem::getProblemJid);
 
         Page<Submission> submissions =
                 submissionStore.getSubmissions(Optional.of(contest.getJid()), actualUserJid, problemJid, page);
@@ -276,12 +283,17 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     public void regradeSubmissions(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> userJid,
-            Optional<String> problemJid) {
+            Optional<String> username,
+            Optional<String> problemAlias) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+
+        Optional<String> userJid = username.flatMap(userClient::translateUsernameToJid);
+        Optional<String> problemJid = problemAlias
+                .flatMap(alias -> problemStore.getProblemByAlias(contestJid, alias))
+                .map(ContestProblem::getProblemJid);
 
         for (int page = 1;; page++) {
             List<Submission> submissions = submissionStore

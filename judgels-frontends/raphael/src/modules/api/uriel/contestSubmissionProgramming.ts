@@ -15,11 +15,11 @@ export const contestSubmissionProgrammingAPI = {
   getSubmissions: (
     token: string,
     contestJid?: string,
-    userJid?: string,
-    problemJid?: string,
+    username?: string,
+    problemAlias?: string,
     page?: number
   ): Promise<ContestSubmissionsResponse> => {
-    const params = stringify({ contestJid, userJid, problemJid, page });
+    const params = stringify({ contestJid, username, problemAlias, page });
     return get(`${baseURL}?${params}`, token);
   },
 
@@ -47,8 +47,8 @@ export const contestSubmissionProgrammingAPI = {
     return post(`${baseURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeSubmissions: (token: string, contestJid?: string, userJid?: string, problemJid?: string): Promise<void> => {
-    const params = stringify({ contestJid, userJid, problemJid });
+  regradeSubmissions: (token: string, contestJid?: string, username?: string, problemAlias?: string): Promise<void> => {
+    const params = stringify({ contestJid, username, problemAlias });
     return post(`${baseURL}/regrade?${params}`, token);
   },
 };
