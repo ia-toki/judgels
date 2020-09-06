@@ -11,4 +11,4 @@ rm build/distributions/*.tgz
 cd ../../../deployment/ansible
 
 ansible --version
-ansible-playbook -e @dist/env.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-sealtiel.yml
+ansible-playbook playbooks/build-sealtiel.yml

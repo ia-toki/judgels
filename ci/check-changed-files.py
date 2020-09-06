@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -63,21 +64,6 @@ MODULES = OrderedDict([
     (':raphael', {':raphael:package.json'})
 ])
 
-PROJECTS = [
-    ':judgels-commons:judgels-fs',
-    ':judgels-commons:judgels-persistence-core',
-    ':judgels-commons:judgels-recaptcha',
-    ':judgels-commons:judgels-service-core',
-    ':judgels-commons:judgels-service-persistence',
-    ':jophiel',
-    ':sandalphon',
-    ':sealtiel',
-    ':uriel',
-    ':jerahmeel',
-    ':gabriel',
-    ':raphael'
-]
-
 SERVICES = [
     ':jophiel',
     ':uriel',
@@ -96,21 +82,17 @@ def flatten_dependencies():
         MODULES[module].add(module)
 
 
-def die(message):
-    print('[ERROR] {}'.format(message))
-    sys.exit(1)
-
-
 def run(command):
     p = subprocess.Popen(['bash', '-c', command], cwd='.', stdout=subprocess.PIPE)
     return p.communicate()[0].decode('utf-8')
 
 
-def get_changed_modules(branch_to_compare):
-    if branch_to_compare == FORCE_CI:
+def get_changed_modules(head_sha, base_sha, force_ci):
+    if force_ci:
         return MODULES.keys()
 
-    changed_files = run('git diff --name-only {}'.format(branch_to_compare)).split('\n')
+    run('git fetch origin master')
+    changed_files = run('git diff --name-only {} {}'.format(base_sha, head_sha)).split('\n')
 
     changed_modules = set()
     for module in MODULES.keys():
@@ -123,61 +105,31 @@ def get_changed_modules(branch_to_compare):
                 break
     return changed_modules
 
+def check(head_sha, base_sha, force_ci):
+    changed_modules = get_changed_modules(head_sha, base_sha, force_ci)
 
-def get_tag_env():
-    tag = run('git describe --exact-match --tags HEAD 2> /dev/null').strip()
-    if not tag:
-        return ''
-    return 'JUDGELS_VERSION={} '.format(tag)
-
-
-def check(branch_to_compare):
-    changed_modules = get_changed_modules(branch_to_compare)
-
-    for project in PROJECTS:
-        if MODULES[project].intersection(changed_modules):
-            if project == ':raphael':
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael install && \\')
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael ci && \\')
-            elif project == ':sandalphon':
-                print('./judgels-backends/gradlew --console=plain -p judgels-backends/judgels-play{} test && \\'.format(project.replace(':', '/'))) 
-            else:
-                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check && \\'.format(project.replace(':', '/')))
-    print('true')
-
-def deploy(branch_to_compare):
-    tag_env = get_tag_env()
-    changed_modules = MODULES.keys() if tag_env else get_changed_modules(branch_to_compare)
-
-    print('set -ex')
     for service in SERVICES:
         if MODULES[service].intersection(changed_modules):
-            print('{}./deployment/scripts/deploy_{}.sh && \\'.format(tag_env, service.replace(':', '')))
-    print('true')
-
+            print('echo ::set-output name={}::1'.format(service[1:]))
+            if service == ':raphael':
+                print('echo ::set-output name=yarn::1')
+            else:
+                print('echo ::set-output name=gradle::1')
 
 flatten_dependencies()
 
-if len(sys.argv) < 2:
-    die('Usage: python3 ci.py <command>')
+print('set -x')
 
-command, commit_range, commit_message = sys.argv[1], os.environ['TRAVIS_COMMIT_RANGE'], os.environ['TRAVIS_COMMIT_MESSAGE']
+with open(os.environ['GITHUB_EVENT_PATH']) as event_path:
+    event = json.load(event_path)
 
-print('echo "TRAVIS_COMMIT_RANGE: {}"'.format(commit_range))
+    if 'pull_request' in event:
+        head_sha = event['pull_request']['head']['sha']
+        base_sha = event['pull_request']['base']['sha']
+        force_ci = False
+    else:
+        head_sha = event['after']
+        base_sha = event['before'] if event['ref'] == 'refs/heads/master' else 'origin/master'
+        force_ci = FORCE_CI in event['head_commit']['message']
 
-branch_to_compare = None
-if FORCE_CI in commit_message or not commit_range:
-    branch_to_compare = FORCE_CI
-else:
-    branch_to_compare = commit_range.split('...')[0]
-    if not 'commit' in run('git cat-file -t {}'.format(branch_to_compare)):
-        branch_to_compare = FORCE_CI
-
-print('echo "Running continuous integration against {}"'.format(branch_to_compare))
-
-print('set -ex')
-
-if command == 'check':
-    check(branch_to_compare)
-elif command == 'deploy':
-    deploy(branch_to_compare)
+    check(head_sha, base_sha, force_ci)

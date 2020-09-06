@@ -11,4 +11,4 @@ rm build/distributions/*.tgz
 cd ../../../deployment/ansible
 
 ansible --version
-ansible-playbook -e @dist/env.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-gabriel.yml
+ansible-playbook playbooks/build-gabriel.yml

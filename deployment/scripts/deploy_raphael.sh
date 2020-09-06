@@ -2,13 +2,7 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../../judgels-frontends/raphael
-
-yarn build
-rm -rf dist/build && mv build dist/
-
-cd ../../deployment/ansible
+cd deployment/ansible
 
 ansible --version
-ansible-playbook -e @dist/env.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-raphael.yml
-ansible-playbook -e @dist/env.yml -e judgels_version=$JUDGELS_VERSION playbooks/deploy-raphael.yml
+ansible-playbook -e @dist/env.yml playbooks/deploy-raphael.yml

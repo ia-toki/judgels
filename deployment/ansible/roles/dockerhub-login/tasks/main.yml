@@ -1,6 +1,6 @@
 - block:
   - name: Log in to DockerHub
     docker_login:
-      username: "{{ dockerhub_username }}"
-      password: "{{ dockerhub_token }}"
-      email: "{{ dockerhub_email }}"
+      username: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}"
+      password: "{{ lookup('env', 'DOCKERHUB_PASSWORD') }}"
+      email: "{{ lookup('env', 'DOCKERHUB_EMAIL') }}"

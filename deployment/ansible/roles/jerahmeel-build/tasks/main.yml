@@ -6,4 +6,4 @@
         force: yes
         push: yes
         buildargs:
-          VCS_REF: "{{ lookup('env', 'TRAVIS_COMMIT') }}"
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
