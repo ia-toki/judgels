@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -63,21 +64,6 @@ MODULES = OrderedDict([
     (':raphael', {':raphael:package.json'})
 ])
 
-PROJECTS = [
-    ':judgels-commons:judgels-fs',
-    ':judgels-commons:judgels-persistence-core',
-    ':judgels-commons:judgels-recaptcha',
-    ':judgels-commons:judgels-service-core',
-    ':judgels-commons:judgels-service-persistence',
-    ':jophiel',
-    ':sandalphon',
-    ':sealtiel',
-    ':uriel',
-    ':jerahmeel',
-    ':gabriel',
-    ':raphael'
-]
-
 SERVICES = [
     ':jophiel',
     ':uriel',
@@ -123,27 +109,12 @@ def get_changed_modules(branch_to_compare):
                 break
     return changed_modules
 
-
-def get_tag_env():
-    tag = run('git describe --exact-match --tags HEAD 2> /dev/null').strip()
-    if not tag:
-        return ''
-    return 'JUDGELS_VERSION={} '.format(tag)
-
-
 def check(branch_to_compare):
     changed_modules = get_changed_modules(branch_to_compare)
 
-    for project in PROJECTS:
-        if MODULES[project].intersection(changed_modules):
-            if project == ':raphael':
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael install && \\')
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael ci && \\')
-            elif project == ':sandalphon':
-                print('./judgels-backends/gradlew --console=plain -p judgels-backends/judgels-play{} test && \\'.format(project.replace(':', '/'))) 
-            else:
-                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check && \\'.format(project.replace(':', '/')))
-    print('true')
+    for service in SERVICES:
+        if MODULES[service].intersection(changed_modules):
+            print('true')
 
 def deploy(branch_to_compare):
     tag_env = get_tag_env()
@@ -158,26 +129,8 @@ def deploy(branch_to_compare):
 
 flatten_dependencies()
 
-if len(sys.argv) < 2:
-    die('Usage: python3 ci.py <command>')
+print('WOY')
 
-command, commit_range, commit_message = sys.argv[1], os.environ['TRAVIS_COMMIT_RANGE'], os.environ['TRAVIS_COMMIT_MESSAGE']
-
-print('echo "TRAVIS_COMMIT_RANGE: {}"'.format(commit_range))
-
-branch_to_compare = None
-if FORCE_CI in commit_message or not commit_range:
-    branch_to_compare = FORCE_CI
-else:
-    branch_to_compare = commit_range.split('...')[0]
-    if not 'commit' in run('git cat-file -t {}'.format(branch_to_compare)):
-        branch_to_compare = FORCE_CI
-
-print('echo "Running continuous integration against {}"'.format(branch_to_compare))
-
-print('set -ex')
-
-if command == 'check':
-    check(branch_to_compare)
-elif command == 'deploy':
-    deploy(branch_to_compare)
+with open(os.environ['GITHUB_EVENT_PATH']) as event_path:
+    data = json.load(event_path)
+    print(data)
