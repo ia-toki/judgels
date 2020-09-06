@@ -15,23 +15,24 @@ import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/proble
 import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { SubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
-import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid, selectMaybeUsername } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 export interface ProblemSubmissionsPageProps extends RouteComponentProps<{}> {
   userJid?: string;
+  username?: string;
   problemSet: ProblemSet;
   problem: ProblemSetProblem;
   onGetProgrammingSubmissions: (
     problemSetJid: string,
-    userJid?: string,
+    username?: string,
     problemJid?: string,
     page?: number
   ) => Promise<SubmissionsResponse>;
   onRegrade: (submissionJid: string) => Promise<void>;
-  onRegradeAll: (problemSetJid: string, userJid?: string, problemJid?: string) => Promise<void>;
+  onRegradeAll: (problemSetJid: string, username?: string, problemJid?: string) => Promise<void>;
   onAppendRoute: (queries) => any;
 }
 
@@ -122,10 +123,10 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   };
 
   private refreshSubmissions = async (page?: number) => {
-    const userJid = this.isUserFilterMine() ? this.props.userJid : undefined;
+    const username = this.isUserFilterMine() ? this.props.username : undefined;
     const response = await this.props.onGetProgrammingSubmissions(
       undefined,
-      userJid,
+      username,
       this.props.problem.problemJid,
       page
     );
@@ -150,6 +151,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
 
 const mapStateToProps = (state: AppState) => ({
   userJid: selectMaybeUserJid(state),
+  username: selectMaybeUsername(state),
   problemSet: selectProblemSet(state),
   problem: selectProblemSetProblem(state),
 });

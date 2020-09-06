@@ -22,9 +22,9 @@ export function getContestPublicHistory(username: string) {
   };
 }
 
-export function getSubmissions(userJid: string, page?: number) {
+export function getSubmissions(username: string, page?: number) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    return await submissionProgrammingAPI.getSubmissions(token, undefined, userJid, undefined, page);
+    return await submissionProgrammingAPI.getSubmissions(token, undefined, username, undefined, undefined, page);
   };
 }

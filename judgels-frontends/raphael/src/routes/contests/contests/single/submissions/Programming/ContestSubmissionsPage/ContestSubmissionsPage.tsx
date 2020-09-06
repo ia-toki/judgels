@@ -66,7 +66,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
     const problemAlias = queries.problemAlias as string;
 
     if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
-      this.setState({ isFilterLoading: true });
+      this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
     }
   }
 
@@ -179,14 +179,6 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 
   private onFilter = async filter => {
-    const { username, problemAlias } = filter;
-    this.setState(prevState => {
-      const prevFilter = prevState.filter || {};
-      return {
-        filter,
-        isFilterLoading: prevFilter.username !== username || prevFilter.problemAlias !== problemAlias,
-      };
-    });
     this.props.onAppendRoute(filter);
   };
 }

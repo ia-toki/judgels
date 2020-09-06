@@ -137,7 +137,7 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
                 Optional.empty());
 
         response = logService.getLogs(
-                MANAGER_HEADER, contest1.getJid(), Optional.of(MANAGER_JID), Optional.empty(), Optional.empty());
+                MANAGER_HEADER, contest1.getJid(), Optional.of(MANAGER), Optional.empty(), Optional.empty());
         assertThat(Lists.transform(response.getData().getPage(), ContestLog::getUserJid)).containsExactly(
                 MANAGER_JID,
                 MANAGER_JID,
@@ -145,7 +145,7 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
                 MANAGER_JID);
 
         response = logService.getLogs(
-                MANAGER_HEADER, contest1.getJid(), Optional.empty(), Optional.of(PROBLEM_1_JID), Optional.empty());
+                MANAGER_HEADER, contest1.getJid(), Optional.empty(), Optional.of("A"), Optional.empty());
         assertThat(Lists.transform(response.getData().getPage(), ContestLog::getProblemJid)).containsExactly(
                 Optional.of(PROBLEM_1_JID));
 

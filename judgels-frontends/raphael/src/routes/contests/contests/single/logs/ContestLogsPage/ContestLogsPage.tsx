@@ -48,14 +48,13 @@ export class ContestLogsPage extends React.PureComponent<ContestLogsPageProps, C
     this.state = { filter: { username, problemAlias } };
   }
 
-  async componentDidUpdate(prevProps: ContestLogsPageProps, prevState: ContestLogsPageState) {
-    const {
-      response,
-      filter: { username, problemAlias },
-    } = this.state;
-    if (!prevState.response && response && (username || problemAlias)) {
-      this.setState({ isFilterLoading: true });
-      await this.refreshLogs(username, problemAlias);
+  componentDidUpdate() {
+    const queries = parse(this.props.location.search);
+    const username = queries.username as string;
+    const problemAlias = queries.problemAlias as string;
+
+    if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
+      this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
     }
   }
 
@@ -113,12 +112,8 @@ export class ContestLogsPage extends React.PureComponent<ContestLogsPageProps, C
   private renderPagination = () => {
     const { filter } = this.state;
 
-    // updates pagination when the filter is updated
     const key = '' + filter.username + filter.problemAlias;
-
-    return (
-      <Pagination key={key} currentPage={1} pageSize={ContestLogsPage.PAGE_SIZE} onChangePage={this.onChangePage} />
-    );
+    return <Pagination key={key} pageSize={ContestLogsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
   private onChangePage = async (nextPage: number) => {
@@ -128,35 +123,12 @@ export class ContestLogsPage extends React.PureComponent<ContestLogsPageProps, C
   };
 
   private refreshLogs = async (username?: string, problemAlias?: string, page?: number) => {
-    const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
-    const response = await this.props.onGetLogs(this.props.contest.jid, userJid, problemJid, page);
+    const response = await this.props.onGetLogs(this.props.contest.jid, username, problemAlias, page);
     this.setState({ response, isFilterLoading: false });
     return response.data;
   };
 
-  private getFilterJids = (username?: string, problemAlias?: string) => {
-    const { response } = this.state;
-    if (!response) {
-      return {};
-    }
-
-    const { config, profilesMap, problemAliasesMap } = response;
-    const { userJids, problemJids } = config;
-
-    const userJid = userJids.find(jid => profilesMap[jid].username === username);
-    const problemJid = problemJids.find(jid => problemAliasesMap[jid] === problemAlias);
-    return { userJid, problemJid };
-  };
-
   private onFilter = async filter => {
-    const { username, problemAlias } = filter;
-    this.setState(prevState => {
-      const prevFilter = prevState.filter || {};
-      return {
-        filter,
-        isFilterLoading: prevFilter.username !== username || prevFilter.problemAlias !== problemAlias,
-      };
-    });
     this.props.onAppendRoute(filter);
   };
 }

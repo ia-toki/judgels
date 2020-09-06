@@ -60,8 +60,14 @@ export const contestSubmissionBundleAPI = {
     return post(`${baseURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeSubmissions: (token: string, contestJid?: string, userJid?: string, problemJid?: string): Promise<void> => {
-    const params = stringify({ contestJid, userJid, problemJid });
+  regradeSubmissions: (
+    token: string,
+    contestJid?: string,
+    username?: string,
+    problemJid?: string,
+    problemAlias?: string
+  ): Promise<void> => {
+    const params = stringify({ contestJid, username, problemJid, problemAlias });
     return post(`${baseURL}/regrade?${params}`, token);
   },
 };

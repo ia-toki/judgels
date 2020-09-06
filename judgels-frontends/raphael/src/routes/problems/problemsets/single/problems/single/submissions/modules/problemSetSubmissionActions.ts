@@ -5,10 +5,10 @@ import { ProblemSubmissionFormData } from '../../../../../../../../components/Pr
 import { submissionProgrammingAPI } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { toastActions } from '../../../../../../../../modules/toast/toastActions';
 
-export function getSubmissions(problemSetJid: string, userJid?: string, problemJid?: string, page?: number) {
+export function getSubmissions(problemSetJid: string, username?: string, problemJid?: string, page?: number) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    return await submissionProgrammingAPI.getSubmissions(token, problemSetJid, userJid, problemJid, page);
+    return await submissionProgrammingAPI.getSubmissions(token, problemSetJid, username, problemJid, undefined, page);
   };
 }
 

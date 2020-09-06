@@ -63,6 +63,7 @@ public interface ContestItemSubmissionService {
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") Optional<String> contestJid,
-            @QueryParam("userJid") Optional<String> userJid,
-            @QueryParam("problemJid") Optional<String> problemJid);
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("problemAlias") Optional<String> problemAlias);
 }

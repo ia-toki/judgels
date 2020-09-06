@@ -5,15 +5,14 @@ import { toastActions } from '../../../modules/toast/toastActions';
 export function getSubmissions(containerJid?: string, userJid?: string, problemJid?: string, page?: number) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    return await submissionProgrammingAPI.getSubmissions(token, containerJid, userJid, problemJid, page);
+    return await submissionProgrammingAPI.getSubmissions(token, containerJid, userJid, problemJid, undefined, page);
   };
 }
 
 export function getSubmissionWithSource(submissionId: number, language?: string) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    const submissionWithSource = await submissionProgrammingAPI.getSubmissionWithSource(token, submissionId, language);
-    return submissionWithSource;
+    return await submissionProgrammingAPI.getSubmissionWithSource(token, submissionId, language);
   };
 }
 
@@ -29,7 +28,7 @@ export function regradeSubmission(submissionJid: string) {
 export function regradeSubmissions(containerJid: string, userJid?: string, problemJid?: string) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    await submissionProgrammingAPI.regradeSubmissions(token, containerJid, userJid, problemJid);
+    await submissionProgrammingAPI.regradeSubmissions(token, containerJid, userJid, problemJid, undefined);
 
     toastActions.showSuccessToast('Regrade in progress.');
   };

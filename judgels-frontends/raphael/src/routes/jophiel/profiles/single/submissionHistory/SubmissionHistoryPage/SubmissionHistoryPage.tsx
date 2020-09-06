@@ -7,14 +7,14 @@ import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { AppState } from '../../../../../../modules/store';
 import { SubmissionsResponse } from '../../../../../../modules/api/jerahmeel/submissionProgramming';
-import { selectUserJid } from '../../../../modules/profileSelectors';
+import { selectUsername } from '../../../../modules/profileSelectors';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import * as profileActions from '../../modules/profileActions';
 
 interface SubmissionHistoryPageProps {
-  userJid: string;
+  username: string;
   sessionUserJid?: string;
-  onGetSubmissions: (userJid: string, page: number) => Promise<SubmissionsResponse>;
+  onGetSubmissions: (username: string, page: number) => Promise<SubmissionsResponse>;
 }
 
 interface SubmissionHistoryPageState {
@@ -69,7 +69,7 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
   };
 
   private renderPagination = () => {
-    return <Pagination key={1} currentPage={1} pageSize={20} onChangePage={this.onChangePage} />;
+    return <Pagination key={1} pageSize={20} onChangePage={this.onChangePage} />;
   };
 
   private onChangePage = async (nextPage: number) => {
@@ -78,14 +78,14 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
   };
 
   private refreshSubmissions = async (page?: number) => {
-    const response = await this.props.onGetSubmissions(this.props.userJid, page);
+    const response = await this.props.onGetSubmissions(this.props.username, page);
     this.setState({ response });
     return response.data;
   };
 }
 
 const mapStateToProps = (state: AppState) => ({
-  userJid: selectUserJid(state),
+  username: selectUsername(state),
   sessionUserJid: selectMaybeUserJid(state),
 });
 const mapDispatchToProps = {

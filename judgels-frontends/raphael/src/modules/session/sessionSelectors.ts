@@ -15,3 +15,7 @@ export function selectUserJid(state: AppState) {
 export function selectMaybeUserJid(state: AppState) {
   return state.session.user && state.session.user.jid;
 }
+
+export function selectMaybeUsername(state: AppState) {
+  return state.session.user && state.session.user.username;
+}

@@ -10,14 +10,15 @@ import SubmissionUserFilter from '../../../components/SubmissionUserFilter/Submi
 import { AppState } from '../../../modules/store';
 import { SubmissionsResponse } from '../../../modules/api/jerahmeel/submissionProgramming';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
-import { selectMaybeUserJid } from '../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid, selectMaybeUsername } from '../../../modules/session/sessionSelectors';
 import * as submissionActions from '../modules/submissionActions';
 
 export interface SubmissionsPageProps extends RouteComponentProps<{}> {
   userJid?: string;
+  username?: string;
   onGetProgrammingSubmissions: (
     containerJid?: string,
-    userJid?: string,
+    username?: string,
     problemJid?: string,
     page?: number
   ) => Promise<SubmissionsResponse>;
@@ -108,8 +109,8 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
   };
 
   private refreshSubmissions = async (page?: number) => {
-    const userJid = this.isUserFilterMine() ? this.props.userJid : undefined;
-    const response = await this.props.onGetProgrammingSubmissions(undefined, userJid, undefined, page);
+    const username = this.isUserFilterMine() ? this.props.username : undefined;
+    const response = await this.props.onGetProgrammingSubmissions(undefined, username, undefined, page);
     this.setState({ response });
     return response.data;
   };
@@ -123,6 +124,7 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
 
 const mapStateToProps = (state: AppState) => ({
   userJid: selectMaybeUserJid(state),
+  username: selectMaybeUsername(state),
 });
 
 const mapDispatchToProps = {

@@ -24,11 +24,12 @@ export const submissionProgrammingAPI = {
   getSubmissions: (
     token: string,
     containerJid?: string,
-    userJid?: string,
+    username?: string,
     problemJid?: string,
+    problemAlias?: string,
     page?: number
   ): Promise<SubmissionsResponse> => {
-    const params = stringify({ containerJid, userJid, problemJid, page });
+    const params = stringify({ containerJid, username, problemJid, problemAlias, page });
     return get(`${baseSubmissionsURL}?${params}`, token);
   },
 
@@ -56,8 +57,14 @@ export const submissionProgrammingAPI = {
     return post(`${baseSubmissionsURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeSubmissions: (token: string, containerJid?: string, userJid?: string, problemJid?: string): Promise<void> => {
-    const params = stringify({ containerJid, userJid, problemJid });
+  regradeSubmissions: (
+    token: string,
+    containerJid?: string,
+    username?: string,
+    problemJid?: string,
+    problemAlias?: string
+  ): Promise<void> => {
+    const params = stringify({ containerJid, username, problemJid, problemAlias });
     return post(`${baseSubmissionsURL}/regrade?${params}`, token);
   },
 };

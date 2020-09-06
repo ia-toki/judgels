@@ -32,11 +32,11 @@ export const contestLogAPI = {
   getLogs: (
     token: string,
     contestJid: string,
-    userJid?: string,
-    problemJid?: string,
+    username?: string,
+    problemAlias?: string,
     page?: number
   ): Promise<ContestLogsResponse> => {
-    const params = stringify({ userJid, problemJid, page });
+    const params = stringify({ username, problemAlias, page });
     return get(`${baseURL(contestJid)}?${params}`, token);
   },
 };

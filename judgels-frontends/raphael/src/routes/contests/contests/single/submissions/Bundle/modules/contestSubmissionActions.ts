@@ -47,10 +47,10 @@ export function regradeSubmission(submissionJid: string) {
   };
 }
 
-export function regradeSubmissions(contestJid: string, userJid?: string, problemJid?: string) {
+export function regradeSubmissions(contestJid: string, username?: string, problemAlias?: string) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    await contestSubmissionBundleAPI.regradeSubmissions(token, contestJid, userJid, problemJid);
+    await contestSubmissionBundleAPI.regradeSubmissions(token, contestJid, username, undefined, problemAlias);
 
     toastActions.showSuccessToast('Regrade in progress.');
   };

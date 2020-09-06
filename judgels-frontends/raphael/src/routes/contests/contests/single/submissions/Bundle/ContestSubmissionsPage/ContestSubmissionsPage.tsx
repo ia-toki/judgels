@@ -52,16 +52,24 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
 
   state: ContestSubmissionsPageState = {};
 
-  async componentDidMount() {
+  constructor(props) {
+    super(props);
+
     const queries = parse(this.props.location.search);
     const username = queries.username as string;
     const problemAlias = queries.problemAlias as string;
 
-    if (username || problemAlias) {
-      await this.refreshSubmissions();
-    }
+    this.state = { filter: { username, problemAlias } };
+  }
 
-    this.setState({ filter: { username, problemAlias } });
+  componentDidUpdate() {
+    const queries = parse(this.props.location.search);
+    const username = queries.username as string;
+    const problemAlias = queries.problemAlias as string;
+
+    if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
+      this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
+    }
   }
 
   render() {
@@ -136,21 +144,9 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
 
   private renderPagination = () => {
     const { filter } = this.state;
-    if (!filter) {
-      return null;
-    }
 
-    // updates pagination when the filter is updated
     const key = '' + filter.username + filter.problemAlias;
-
-    return (
-      <Pagination
-        key={key}
-        currentPage={1}
-        pageSize={ContestSubmissionsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+    return <Pagination key={key} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
   private refreshSubmissions = async (username?: string, problemAlias?: string, page?: number) => {
@@ -164,20 +160,6 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     const { username, problemAlias } = this.state.filter!;
     const response = await this.refreshSubmissions(username, problemAlias, nextPage);
     return response.data.totalCount;
-  };
-
-  private getFilterJids = (username?: string, problemAlias?: string) => {
-    const { response } = this.state;
-    if (!response) {
-      return {};
-    }
-
-    const { config, profilesMap, problemAliasesMap } = response;
-    const { userJids, problemJids } = config;
-
-    const userJid = userJids.find(jid => profilesMap[jid].username === username);
-    const problemJid = problemJids.find(jid => problemAliasesMap[jid] === problemAlias);
-    return { userJid, problemJid };
   };
 
   private onClickRegrade = (submissionJid: string) => {
@@ -194,8 +176,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
   private onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { username, problemAlias } = this.state.filter!;
-      const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
-      await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
+      await this.props.onRegradeAll(this.props.contest.jid, username, problemAlias);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(username, problemAlias, queries.page);
     }
@@ -243,14 +224,6 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
   };
 
   private onFilter = async filter => {
-    const { username, problemAlias } = filter;
-    this.setState(prevState => {
-      const prevFilter = prevState.filter || {};
-      return {
-        filter,
-        isFilterLoading: prevFilter.username !== username || prevFilter.problemAlias !== problemAlias,
-      };
-    });
     this.props.onAppendRoute(filter);
   };
 }

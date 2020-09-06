@@ -137,17 +137,12 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        Optional<String> actualUserJid = Optional.of(actorJid);
-        if (canSupervise) {
-            actualUserJid = username.flatMap(userClient::translateUsernameToJid);
-        }
 
-        Optional<String> problemJid = problemAlias
-                .flatMap(alias -> problemStore.getProblemByAlias(contestJid, alias))
-                .map(ContestProblem::getProblemJid);
-
-        Page<Submission> submissions =
-                submissionStore.getSubmissions(Optional.of(contest.getJid()), actualUserJid, problemJid, page);
+        Page<Submission> submissions = submissionStore.getSubmissions(
+                Optional.of(contest.getJid()),
+                canSupervise ? byUserJid(username) : Optional.of(actorJid),
+                byProblemJid(contestJid, problemAlias),
+                page);
 
         List<String> userJidsSortedByUsername;
         Set<String> userJids;
@@ -290,15 +285,14 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
 
-        Optional<String> userJid = username.flatMap(userClient::translateUsernameToJid);
-        Optional<String> problemJid = problemAlias
-                .flatMap(alias -> problemStore.getProblemByAlias(contestJid, alias))
-                .map(ContestProblem::getProblemJid);
+        Optional<String> problemJid = byProblemJid(contestJid, problemAlias);
 
         for (int page = 1;; page++) {
-            List<Submission> submissions = submissionStore
-                    .getSubmissions(Optional.of(contestJid), userJid, problemJid, Optional.of(page))
-                    .getPage();
+            List<Submission> submissions = submissionStore.getSubmissions(
+                    Optional.of(contestJid),
+                    byUserJid(username),
+                    problemJid,
+                    Optional.of(page)).getPage();
 
             if (submissions.isEmpty()) {
                 break;
@@ -350,5 +344,18 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         return Response.ok(stream)
                 .header(LAST_SUBMISSION_ID_HEADER, submissions.get(submissions.size() - 1).getId())
                 .build();
+    }
+
+    private Optional<String> byUserJid(Optional<String> username) {
+        return username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
+    }
+
+    private Optional<String> byProblemJid(
+            String contestJid,
+            Optional<String> problemAlias) {
+        return problemAlias.map(alias -> problemStore
+                .getProblemByAlias(contestJid, alias)
+                .map(ContestProblem::getProblemJid)
+                .orElse(""));
     }
 }

@@ -106,15 +106,20 @@ public class SubmissionResource implements SubmissionService {
     public SubmissionsResponse getSubmissions(
             Optional<AuthHeader> authHeader,
             Optional<String> containerJid,
-            Optional<String> userJid,
+            Optional<String> username,
             Optional<String> problemJid,
+            Optional<String> problemAlias,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
 
-        Page<Submission> submissions = submissionStore.getSubmissions(containerJid, userJid, problemJid, page);
+        Page<Submission> submissions = submissionStore.getSubmissions(
+                containerJid,
+                byUserJid(username),
+                byProblemJid(containerJid, problemJid, problemAlias),
+                page);
         Set<String> containerJids = submissions.getPage().stream().map(Submission::getContainerJid).collect(toSet());
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
 
@@ -248,21 +253,41 @@ public class SubmissionResource implements SubmissionService {
     public void regradeSubmissions(
             AuthHeader authHeader,
             Optional<String> containerJid,
-            Optional<String> userJid,
+            Optional<String> username,
+            Optional<String> problemAlias,
             Optional<String> problemJid) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
         for (int page = 1;; page++) {
-            List<Submission> submissions = submissionStore
-                    .getSubmissions(containerJid, userJid, problemJid, Optional.of(page))
-                    .getPage();
+            List<Submission> submissions = submissionStore.getSubmissions(
+                    containerJid,
+                    byUserJid(username),
+                    byProblemJid(containerJid, problemJid, problemAlias),
+                    Optional.of(page)).getPage();
 
             if (submissions.isEmpty()) {
                 break;
             }
             submissionRegrader.regradeSubmissions(submissions);
         }
+    }
+
+    private Optional<String> byUserJid(Optional<String> username) {
+        return username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
+    }
+
+    private Optional<String> byProblemJid(
+            Optional<String> containerJid,
+            Optional<String> problemJid,
+            Optional<String> problemAlias) {
+        if (containerJid.isPresent() && problemAlias.isPresent()) {
+            return Optional.of(problemSetProblemStore
+                    .getProblemByAlias(containerJid.get(), problemAlias.get())
+                    .map(ProblemSetProblem::getProblemJid)
+                    .orElse(""));
+        }
+        return problemJid;
     }
 }

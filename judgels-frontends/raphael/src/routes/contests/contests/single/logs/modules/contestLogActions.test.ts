@@ -20,8 +20,8 @@ describe('contestLogActions', () => {
   });
 
   describe('getLogs()', () => {
-    const userJid = 'userJid';
-    const problemJid = 'problemJid';
+    const username = 'username';
+    const problemAlias = 'problemAlias';
     const page = 3;
 
     const responseBody = {
@@ -32,10 +32,10 @@ describe('contestLogActions', () => {
       nock(APP_CONFIG.apiUrls.uriel)
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/contests/${contestJid}/logs`)
-        .query({ userJid, problemJid, page })
+        .query({ username, problemAlias, page })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(contestLogActions.getLogs(contestJid, userJid, problemJid, page));
+      const response = await store.dispatch(contestLogActions.getLogs(contestJid, username, problemAlias, page));
       expect(response).toEqual(responseBody);
     });
   });

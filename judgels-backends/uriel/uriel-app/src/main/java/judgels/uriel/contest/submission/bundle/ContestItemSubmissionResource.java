@@ -110,22 +110,12 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        Optional<String> filterUserJid;
-        if (canSupervise) {
-            filterUserJid = username.map(u -> userClient.translateUsernamesToJids(
-                    ImmutableSet.of(u)).getOrDefault(u, ""));
-        } else {
-            filterUserJid = Optional.of(actorJid);
-        }
 
-        Optional<String> problemJid = Optional.empty();
-        if (problemAlias.isPresent()) {
-            Optional<ContestProblem> problem = problemStore.getProblemByAlias(contestJid, problemAlias.get());
-            problemJid = Optional.of(problem.isPresent() ? problem.get().getProblemJid() : "");
-        }
-
-        Page<ItemSubmission> submissions =
-                submissionStore.getSubmissions(contestJid, filterUserJid, problemJid, page);
+        Page<ItemSubmission> submissions = submissionStore.getSubmissions(
+                contestJid,
+                canSupervise ? byUserJid(username) : Optional.of(actorJid),
+                byProblemJid(Optional.of(contestJid), Optional.empty(), problemAlias),
+                page);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
         if (!canManage) {
@@ -253,21 +243,13 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        String viewedUserJid;
-        if (canSupervise && username.isPresent()) {
-            Map<String, String> userJidsMap = userClient.translateUsernamesToJids(
-                    ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
-        } else {
-            viewedUserJid = actorJid;
-        }
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
 
         List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
                 contestJid,
                 problem.getProblemJid(),
-                viewedUserJid
+                canSupervise ? byUserJid(username).orElse(actorJid) : actorJid
         );
 
         return submissions.stream()
@@ -288,17 +270,11 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        String viewedUserJid;
-        if (canSupervise && username.isPresent()) {
-            Map<String, String> userJidsMap = userClient.translateUsernamesToJids(
-                    ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
-        } else {
-            viewedUserJid = actorJid;
-        }
+        String userJid = canSupervise ? byUserJid(username).orElse(actorJid) : actorJid;
 
         List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContainer(
-                contestJid, viewedUserJid);
+                contestJid,
+                userJid);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
         if (!canManage) {
@@ -334,13 +310,12 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         Map<String, String> problemNamesByProblemJid = problemClient.getProblemNames(
                 ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
 
-        Profile profile = userClient.getProfiles(
-                ImmutableSet.of(viewedUserJid), contest.getBeginTime()).get(viewedUserJid);
+        Profile profile = userClient.getProfile(userJid, contest.getBeginTime());
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
                 .canSupervise(canSupervise)
                 .canManage(canManage)
-                .userJids(ImmutableList.of(viewedUserJid))
+                .userJids(ImmutableList.of(userJid))
                 .problemJids(bundleProblemJidsSortedByAlias)
                 .build();
 
@@ -371,8 +346,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     public void regradeSubmissions(
             AuthHeader authHeader,
             Optional<String> contestJid,
-            Optional<String> userJid,
-            Optional<String> problemJid) {
+            Optional<String> username,
+            Optional<String> problemJid,
+            Optional<String> problemAlias) {
 
         String actorJid = actorChecker.check(authHeader);
         if (contestJid.isPresent()) {
@@ -382,6 +358,26 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             checkAllowed(contestRoleChecker.canAdminister(actorJid));
         }
 
-        itemSubmissionRegrader.regradeSubmissions(contestJid, userJid, problemJid);
+        itemSubmissionRegrader.regradeSubmissions(
+                contestJid,
+                byUserJid(username),
+                byProblemJid(contestJid, problemJid, problemAlias));
+    }
+
+    private Optional<String> byUserJid(Optional<String> username) {
+        return username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
+    }
+
+    private Optional<String> byProblemJid(
+            Optional<String> contestJid,
+            Optional<String> problemJid,
+            Optional<String> problemAlias) {
+        if (contestJid.isPresent() && problemAlias.isPresent()) {
+            return Optional.of(problemStore
+                    .getProblemByAlias(contestJid.get(), problemAlias.get())
+                    .map(ContestProblem::getProblemJid)
+                    .orElse(""));
+        }
+        return problemJid;
     }
 }

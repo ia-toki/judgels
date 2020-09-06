@@ -16,23 +16,24 @@ import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { SubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
-import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid, selectMaybeUsername } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
 export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
   userJid?: string;
+  username?: string;
   course: Course;
   chapter: CourseChapter;
   onGetProgrammingSubmissions: (
     chapterJid: string,
-    userJid?: string,
-    problemJid?: string,
+    username?: string,
+    problemAlias?: string,
     page?: number
   ) => Promise<SubmissionsResponse>;
   onRegrade: (submissionJid: string) => Promise<void>;
-  onRegradeAll: (chapterJid: string, userJid?: string, problemJid?: string) => Promise<void>;
+  onRegradeAll: (chapterJid: string, username?: string, problemAlias?: string) => Promise<void>;
   onAppendRoute: (queries) => any;
 }
 
@@ -54,6 +55,15 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 
   state: ChapterSubmissionsPageState = {};
 
+  constructor(props) {
+    super(props);
+
+    const queries = parse(this.props.location.search);
+    const problemAlias = queries.problemAlias as string;
+
+    this.state = { filter: { problemAlias } };
+  }
+
   async componentDidMount() {
     const queries = parse(this.props.location.search);
     const problemAlias = queries.problemAlias as string;
@@ -65,10 +75,12 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     this.setState({ filter: { problemAlias } });
   }
 
-  async componentDidUpdate(prevProps: ChapterSubmissionsPageProps) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
-      await this.refreshSubmissions();
-      this.setState({ filter: {} });
+  componentDidUpdate() {
+    const queries = parse(this.props.location.search);
+    const problemAlias = queries.problemAlias as string;
+
+    if (problemAlias !== this.state.filter.problemAlias) {
+      this.setState({ filter: { problemAlias }, isFilterLoading: true });
     }
   }
 
@@ -133,21 +145,9 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 
   private renderPagination = () => {
     const { filter } = this.state;
-    if (!filter) {
-      return null;
-    }
 
-    // updates pagination when the filter is updated
     const key = '' + filter.problemAlias + this.isUserFilterMine();
-
-    return (
-      <Pagination
-        key={key}
-        currentPage={1}
-        pageSize={ChapterSubmissionsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+    return <Pagination key={key} pageSize={ChapterSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
   private onChangePage = async (nextPage: number) => {
@@ -157,31 +157,15 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   };
 
   private refreshSubmissions = async (problemAlias?: string, page?: number) => {
-    const userJid = this.isUserFilterMine() ? this.props.userJid : undefined;
-    const { problemJid } = this.getFilterJids(problemAlias);
+    const username = this.isUserFilterMine() ? this.props.username : undefined;
     const response = await this.props.onGetProgrammingSubmissions(
       this.props.chapter.chapterJid,
-      userJid,
-      problemJid,
+      username,
+      problemAlias,
       page
     );
     this.setState({ response, isFilterLoading: false });
     return response.data;
-  };
-
-  private getFilterJids = (problemAlias?: string) => {
-    const { response } = this.state;
-    if (!response) {
-      return {};
-    }
-
-    const { config, problemAliasesMap } = response;
-    const { problemJids } = config;
-
-    const problemJid = problemJids.find(
-      jid => problemAliasesMap[this.props.chapter.chapterJid + '-' + jid] === problemAlias
-    );
-    return { problemJid };
   };
 
   private renderFilterWidget = () => {
@@ -204,14 +188,6 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   };
 
   private onFilter = async filter => {
-    const { problemAlias } = filter;
-    this.setState(prevState => {
-      const prevFilter = prevState.filter || {};
-      return {
-        filter,
-        isFilterLoading: prevFilter.problemAlias !== problemAlias,
-      };
-    });
     this.props.onAppendRoute(filter);
   };
 
@@ -225,8 +201,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   private onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { problemAlias } = this.state.filter;
-      const { problemJid } = this.getFilterJids(problemAlias);
-      await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined, problemJid);
+      await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined, problemAlias);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(problemAlias, queries.page);
     }
@@ -235,6 +210,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 
 const mapStateToProps = (state: AppState) => ({
   userJid: selectMaybeUserJid(state),
+  username: selectMaybeUsername(state),
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
 });

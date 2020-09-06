@@ -20,6 +20,7 @@ import judgels.uriel.api.contest.log.ContestLog;
 import judgels.uriel.api.contest.log.ContestLogConfig;
 import judgels.uriel.api.contest.log.ContestLogService;
 import judgels.uriel.api.contest.log.ContestLogsResponse;
+import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -63,14 +64,20 @@ public class ContestLogResource implements ContestLogService {
     public ContestLogsResponse getLogs(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> userJid,
-            Optional<String> problemJid,
+            Optional<String> username,
+            Optional<String> problemAlias,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
+
+        Optional<String> userJid = username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
+        Optional<String> problemJid = problemAlias.map(alias -> problemStore
+                .getProblemByAlias(contestJid, alias)
+                .map(ContestProblem::getProblemJid)
+                .orElse(""));
 
         Page<ContestLog> logs = logStore.getLogs(contestJid, userJid, problemJid, page);
 

@@ -20,7 +20,7 @@ public interface ContestLogService {
     ContestLogsResponse getLogs(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid,
-            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
             @QueryParam("page") Optional<Integer> page);
 }
