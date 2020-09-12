@@ -1,4 +1,4 @@
-# Judgels
+# Judgels 
 
 [![Build Status](https://img.shields.io/travis/ia-toki/judgels/master.svg)](https://travis-ci.org/ia-toki/judgels)
 [![License](https://img.shields.io/github/license/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/blob/master/LICENSE.txt)
