@@ -103,7 +103,9 @@ public class GradingWorker {
             grade();
         } catch (Exception e) {
             LOGGER.error("Grading failed!", e);
+            //CHECKSTYLE:OFF
             e.printStackTrace();
+            //CHECKSTYLE:ON
             result = new GradingResult.Builder()
                     .verdict(Verdict.INTERNAL_ERROR)
                     .score(0)
