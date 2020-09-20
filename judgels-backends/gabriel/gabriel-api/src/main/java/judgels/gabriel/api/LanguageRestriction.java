@@ -1,7 +1,6 @@
 package judgels.gabriel.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,8 +9,12 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableLanguageRestriction.class)
 public interface LanguageRestriction {
-    @JsonProperty("allowedLanguageNames")
-    Set<String> getAllowedLanguages();
+    Set<String> getAllowedLanguageNames();
+
+    @JsonIgnore
+    default Set<String> getAllowedLanguages() {
+        return getAllowedLanguageNames();
+    }
 
     @JsonIgnore
     default boolean isAllowedAll() {
@@ -23,7 +26,7 @@ public interface LanguageRestriction {
     }
 
     static LanguageRestriction of(Set<String> allowedLanguageNames) {
-        return ImmutableLanguageRestriction.builder().allowedLanguages(allowedLanguageNames).build();
+        return ImmutableLanguageRestriction.builder().allowedLanguageNames(allowedLanguageNames).build();
     }
 
     static LanguageRestriction combine(LanguageRestriction r1, LanguageRestriction r2) {
