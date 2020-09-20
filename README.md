@@ -1,6 +1,6 @@
 # Judgels
 
-[![Build Status](https://img.shields.io/travis/ia-toki/judgels/master.svg)](https://travis-ci.org/ia-toki/judgels)
+![CI Status](https://github.com/ia-toki/judgels/workflows/ci/badge.svg)
 [![License](https://img.shields.io/github/license/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/blob/master/LICENSE.txt)
 
 <img src="https://raw.githubusercontent.com/ia-toki/judgels/master/judgels-frontends/raphael/src/assets/images/logo.png" align="left" height="100" hspace="5"/>
