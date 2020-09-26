@@ -2,6 +2,7 @@ import { Intent } from '@blueprintjs/core';
 
 export enum VerdictCode {
   AC = 'AC',
+  CE = 'CE',
   WA = 'WA',
   TLE = 'TLE',
   RTE = 'RTE',
