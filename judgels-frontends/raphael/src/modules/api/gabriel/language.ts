@@ -14,6 +14,7 @@ export const gradingLanguageNamesMap = {
   Java: 'Java 8',
   Pascal: 'Pascal',
   Python3: 'Python 3',
+  PyPy3: 'PyPy 3',
   OutputOnly: '-',
 };
 
@@ -24,6 +25,7 @@ export const gradingLanguageFamiliesMap = {
   Java: 'Java',
   Pascal: 'Pascal',
   Python3: 'Python',
+  PyPy3: 'Python',
 };
 
 export const gradingLanguageFilenameExtensionsMap = {
@@ -33,6 +35,7 @@ export const gradingLanguageFilenameExtensionsMap = {
   Java: ['java'],
   Pascal: ['pas'],
   Python3: ['py'],
+  PyPy3: ['py'],
   OutputOnly: ['zip'],
 };
 
@@ -43,6 +46,7 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
   Java: 'java',
   Pascal: 'pascal',
   Python3: 'python',
+  PyPy3: 'python',
   OutputOnly: '',
 };
 

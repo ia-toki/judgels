@@ -4,10 +4,10 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import judgels.gabriel.api.GradingLanguage;
 
-public class Python3GradingLanguage implements GradingLanguage {
+public class PyPy3GradingLanguage implements GradingLanguage {
     @Override
     public String getName() {
-        return "Python 3";
+        return "PyPy 3";
     }
 
     @Override
@@ -27,6 +27,6 @@ public class Python3GradingLanguage implements GradingLanguage {
 
     @Override
     public List<String> getExecutionCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/python3", sourceFilename);
+        return ImmutableList.of("/usr/bin/pypy3", sourceFilename);
     }
 }

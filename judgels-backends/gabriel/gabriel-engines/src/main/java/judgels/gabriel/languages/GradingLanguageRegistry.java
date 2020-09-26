@@ -11,6 +11,7 @@ import judgels.gabriel.languages.cpp.Cpp17GradingLanguage;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import judgels.gabriel.languages.java.JavaGradingLanguage;
 import judgels.gabriel.languages.pascal.PascalGradingLanguage;
+import judgels.gabriel.languages.python.PyPy3GradingLanguage;
 import judgels.gabriel.languages.python.Python3GradingLanguage;
 
 public class GradingLanguageRegistry {
@@ -23,6 +24,7 @@ public class GradingLanguageRegistry {
             new Cpp17GradingLanguage(),
             new JavaGradingLanguage(),
             new PascalGradingLanguage(),
+            new PyPy3GradingLanguage(),
             new Python3GradingLanguage(),
             new OutputOnlyGradingLanguage());
 
