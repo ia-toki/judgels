@@ -6,6 +6,7 @@ import go from 'react-syntax-highlighter/languages/prism/go';
 import java from 'react-syntax-highlighter/languages/prism/java';
 import pascal from 'react-syntax-highlighter/languages/prism/pascal';
 import python from 'react-syntax-highlighter/languages/prism/python';
+import coy from 'react-syntax-highlighter/styles/prism/coy';
 
 registerLanguage('c', c);
 registerLanguage('cpp', cpp);
