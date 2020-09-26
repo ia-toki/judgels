@@ -10,6 +10,7 @@ export const OutputOnlyOverrides = {
 export const gradingLanguageNamesMap = {
   C: 'C',
   Cpp11: 'C++11',
+  Cpp17: 'C++17',
   Java: 'Java 8',
   Pascal: 'Pascal',
   Python3: 'Python 3',
@@ -19,6 +20,7 @@ export const gradingLanguageNamesMap = {
 export const gradingLanguageFamiliesMap = {
   C: 'C',
   Cpp11: 'C++',
+  Cpp17: 'C++',
   Java: 'Java',
   Pascal: 'Pascal',
   Python3: 'Python',
@@ -27,6 +29,7 @@ export const gradingLanguageFamiliesMap = {
 export const gradingLanguageFilenameExtensionsMap = {
   C: ['c'],
   Cpp11: ['cc', 'cpp'],
+  Cpp17: ['cc', 'cpp'],
   Java: ['java'],
   Pascal: ['pas'],
   Python3: ['py'],
@@ -36,6 +39,7 @@ export const gradingLanguageFilenameExtensionsMap = {
 export const gradingLanguageSyntaxHighlighterValueMap = {
   C: 'c',
   Cpp11: 'cpp',
+  Cpp17: 'cpp',
   Java: 'java',
   Pascal: 'pascal',
   Python3: 'python',

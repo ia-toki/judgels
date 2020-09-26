@@ -7,6 +7,7 @@ import java.util.Map;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.languages.c.CGradingLanguage;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
+import judgels.gabriel.languages.cpp.Cpp17GradingLanguage;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import judgels.gabriel.languages.java.JavaGradingLanguage;
 import judgels.gabriel.languages.pascal.PascalGradingLanguage;
@@ -19,6 +20,7 @@ public class GradingLanguageRegistry {
             new CGradingLanguage(),
             new CppGradingLanguage(),
             new Cpp11GradingLanguage(),
+            new Cpp17GradingLanguage(),
             new JavaGradingLanguage(),
             new PascalGradingLanguage(),
             new Python3GradingLanguage(),

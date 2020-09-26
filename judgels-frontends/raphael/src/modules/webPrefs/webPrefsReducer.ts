@@ -5,7 +5,7 @@ export interface WebPrefsState {
   gradingLanguage: string;
 }
 
-export const INITIAL_STATE: WebPrefsState = { statementLanguage: 'id', gradingLanguage: 'Cpp11' };
+export const INITIAL_STATE: WebPrefsState = { statementLanguage: 'id', gradingLanguage: 'Cpp17' };
 
 export const PutStatementLanguage = TypedAction.define('webPrefs/PUT_STATEMENT_LANGUAGE')<string>();
 export const PutGradingLanguage = TypedAction.define('webPrefs/PUT_GRADING_LANGUAGE')<string>();

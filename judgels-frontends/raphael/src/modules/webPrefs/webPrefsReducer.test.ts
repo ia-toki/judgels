@@ -10,7 +10,7 @@ describe('webPrefsReducer', () => {
   test('PUT_STATEMENT_LANGUAGE', () => {
     const state = INITIAL_STATE;
     const action = PutStatementLanguage.create('id');
-    const nextState: WebPrefsState = { statementLanguage: 'id', gradingLanguage: 'Cpp11' };
+    const nextState: WebPrefsState = { statementLanguage: 'id', gradingLanguage: 'Cpp17' };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
@@ -22,7 +22,7 @@ describe('webPrefsReducer', () => {
   });
 
   test('other actions', () => {
-    const state: WebPrefsState = { statementLanguage: 'en', gradingLanguage: 'Cpp11' };
+    const state: WebPrefsState = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
     expect(webPrefsReducer(state, { type: 'other' })).toEqual(state);
   });
 
