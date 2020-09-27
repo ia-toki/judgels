@@ -4,7 +4,6 @@ require(["katex-contrib-auto-render"], function(renderMathInElement) {
             { left: "\\(", right: "\\)", display: false },
             { left: "$", right: "$", display: false },
             { left: "\\[", right: "\\]", display: true },
-            { left: "$$", right: "$$", display: true },
         ]
     });
 });

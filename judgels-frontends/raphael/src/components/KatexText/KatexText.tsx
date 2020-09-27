@@ -49,13 +49,12 @@ export class KatexText extends React.Component<KatexTextProps, KatexTextState> {
         { left: '\\(', right: '\\)', display: false },
         { left: '$', right: '$', display: false },
         { left: '\\[', right: '\\]', display: true },
-        { left: '$$', right: '$$', display: true },
       ],
     });
   }
 
   private containsKatexSyntax(text: string) {
-    const delimiters = ['$$$', '$$$$', '\\(', '\\)', '\\[', '\\]'];
+    const delimiters = ['$', '\\(', '\\)', '\\[', '\\]'];
     for (let delimiter of delimiters) {
       if (text.includes(delimiter)) {
         return true;
