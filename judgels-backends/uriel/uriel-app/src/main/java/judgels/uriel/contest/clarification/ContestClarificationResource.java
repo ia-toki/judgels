@@ -83,6 +83,7 @@ public class ContestClarificationResource implements ContestClarificationService
     public ContestClarificationsResponse getClarifications(
             AuthHeader authHeader,
             String contestJid,
+            Optional<String> status,
             Optional<String> language,
             Optional<Integer> page) {
 
@@ -92,7 +93,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         boolean canSupervise = clarificationRoleChecker.canSupervise(actorJid, contest);
         Page<ContestClarification> clarifications = canSupervise
-                ? clarificationStore.getClarifications(contestJid, page)
+                ? clarificationStore.getClarifications(contestJid, status, page)
                 : clarificationStore.getClarifications(contestJid, actorJid, page);
 
         List<String> problemJidsSortedByAlias;

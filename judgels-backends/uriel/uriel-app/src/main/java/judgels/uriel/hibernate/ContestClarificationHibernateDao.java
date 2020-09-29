@@ -44,6 +44,15 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
     }
 
     @Override
+    public Page<ContestClarificationModel> selectPagedByContestJidAndStatus(
+            String contestJid, String status, SelectionOptions options) {
+        return selectPaged(new FilterOptions.Builder<ContestClarificationModel>()
+                .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
+                .putColumnsEq(ContestClarificationModel_.status, status)
+                .build(), options);
+    }
+
+    @Override
     public Set<ContestClarificationModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
         return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)

@@ -42,6 +42,7 @@ describe('contestClarificationActions', () => {
   });
 
   describe('getClarifications()', () => {
+    const status = undefined;
     const language = 'id';
     const page = 3;
     const responseBody = {
@@ -55,7 +56,9 @@ describe('contestClarificationActions', () => {
         .query({ language, page })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(contestClarificationActions.getClarifications(contestJid, language, page));
+      const response = await store.dispatch(
+        contestClarificationActions.getClarifications(contestJid, status, language, page)
+      );
       expect(response).toEqual(responseBody);
     });
   });

@@ -17,10 +17,10 @@ export function createClarification(contestJid: string, data: ContestClarificati
   };
 }
 
-export function getClarifications(contestJid: string, language?: string, page?: number) {
+export function getClarifications(contestJid: string, status?: string, language?: string, page?: number) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    return await contestClarificationAPI.getClarifications(token, contestJid, language, page);
+    return await contestClarificationAPI.getClarifications(token, contestJid, status, language, page);
   };
 }
 

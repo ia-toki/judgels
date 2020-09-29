@@ -59,11 +59,24 @@ public class ContestClarificationStore {
                 p -> Lists.transform(p, ContestClarificationStore::fromModel));
     }
 
-    public Page<ContestClarification> getClarifications(String contestJid, Optional<Integer> page) {
+    public Page<ContestClarification> getClarifications(
+            String contestJid,
+            Optional<String> status,
+            Optional<Integer> page) {
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        return clarificationDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
+        Page<ContestClarificationModel> contestClarificationModelPage;
+        if (status.isPresent()) {
+            contestClarificationModelPage = clarificationDao.selectPagedByContestJidAndStatus(
+                    contestJid,
+                    status.get(),
+                    options.build());
+        } else {
+            contestClarificationModelPage = clarificationDao.selectPagedByContestJid(contestJid, options.build());
+        }
+
+        return contestClarificationModelPage.mapPage(
                 p -> Lists.transform(p, ContestClarificationStore::fromModel));
     }
 
