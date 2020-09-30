@@ -1,18 +1,24 @@
 package judgels.jerahmeel.api.course.chapter;
 
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.jerahmeel.api.mocks.MockJophiel.USER;
+import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
+import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterCreateData;
+import judgels.jerahmeel.api.chapter.problem.ChapterProblemData;
 import judgels.jerahmeel.api.course.Course;
 import judgels.jerahmeel.api.course.CourseCreateData;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.junit.jupiter.api.Test;
 
-class CourseChapterIntegrationTests extends AbstractTrainingServiceIntegrationTests {
+class CourseChapterServiceIntegrationTests extends AbstractTrainingServiceIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin
@@ -40,6 +46,11 @@ class CourseChapterIntegrationTests extends AbstractTrainingServiceIntegrationTe
                 new CourseChapter.Builder().alias("A").chapterJid(chapterA.getJid()).build(),
                 new CourseChapter.Builder().alias("B").chapterJid(chapterB.getJid()).build()));
 
+        chapterProblemService.setProblems(ADMIN_HEADER, chapterA.getJid(), ImmutableList.of(
+                new ChapterProblemData.Builder().alias("A").slug(PROBLEM_1_SLUG).type(ProblemType.PROGRAMMING).build(),
+                new ChapterProblemData.Builder().alias("B").slug(PROBLEM_2_SLUG).type(ProblemType.PROGRAMMING).build())
+        );
+
         CourseChaptersResponse response = courseChapterService.getChapters(Optional.of(ADMIN_HEADER), courseA.getJid());
         assertThat(response.getData()).containsExactly(
                 new CourseChapter.Builder().alias("A").chapterJid(chapterA.getJid()).build(),
@@ -47,5 +58,13 @@ class CourseChapterIntegrationTests extends AbstractTrainingServiceIntegrationTe
 
         response = courseChapterService.getChapters(Optional.of(ADMIN_HEADER), courseB.getJid());
         assertThat(response.getData()).isEmpty();
+
+        CourseChapterUserProgressesResponse userProgresses = courseChapterService.getChapterUserProgresses(
+                Optional.empty(),
+                courseA.getJid(),
+                new CourseChapterUserProgressesData.Builder().addUsernames(USER).build());
+
+        assertThat(userProgresses.getTotalProblemsList()).containsExactly(2, 0);
+        assertThat(userProgresses.getUserProgressesMap()).isEqualTo(ImmutableMap.of(USER, ImmutableList.of(0, 0)));
     }
 }

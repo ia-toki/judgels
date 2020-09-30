@@ -32,4 +32,15 @@ public class StatsUserChapterHibernateDao extends HibernateDao<StatsUserChapterM
                 .putColumnsIn(StatsUserChapterModel_.chapterJid, chapterJids)
                 .build());
     }
+
+    @Override
+    public List<StatsUserChapterModel> selectAllByUserJidsAndChapterJids(
+            Set<String> userJids,
+            Set<String> chapterJids) {
+
+        return selectAll(new FilterOptions.Builder<StatsUserChapterModel>()
+                .putColumnsIn(StatsUserChapterModel_.userJid, userJids)
+                .putColumnsIn(StatsUserChapterModel_.chapterJid, chapterJids)
+                .build());
+    }
 }

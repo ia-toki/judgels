@@ -1,6 +1,8 @@
 package judgels.jerahmeel.stats;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +24,7 @@ import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.StatsUserChapterDao;
+import judgels.jerahmeel.persistence.StatsUserChapterModel;
 import judgels.jerahmeel.persistence.StatsUserCourseDao;
 import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
@@ -105,6 +108,27 @@ public class StatsStore {
                         .solvedProblems(solvedProblemsMap.getOrDefault(jid, 0))
                         .totalProblems(totalProblemsMap.getOrDefault(jid, 0L).intValue())
                         .build()));
+    }
+
+    public Map<String, Long> getChapterTotalProblemsMap(Set<String> chapterJids) {
+        return chapterProblemDao.selectCountProgrammingByChapterJids(chapterJids);
+    }
+
+    public Map<String, Map<String, Integer>> getChapterUserSolvedProblemsMap(
+            Set<String> userJids,
+            Set<String> chapterJids) {
+
+        Map<String, Map<String, Integer>> progressesMap = new HashMap<>();
+
+        List<StatsUserChapterModel> models =
+                statsUserChapterDao.selectAllByUserJidsAndChapterJids(userJids, chapterJids);
+
+        for (StatsUserChapterModel model : models) {
+            progressesMap.putIfAbsent(model.userJid, new HashMap<>());
+            progressesMap.get(model.userJid).put(model.chapterJid, model.progress);
+        }
+
+        return ImmutableMap.copyOf(progressesMap);
     }
 
     public Map<String, ProblemProgress> getProblemProgressesMap(String userJid, Set<String> problemJids) {
