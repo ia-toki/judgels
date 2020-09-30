@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -121,13 +122,14 @@ public class CourseChapterResource implements CourseChapterService {
                 chapter -> (int) (long) totalProblemsMap.getOrDefault(chapter.getChapterJid(), 0L));
 
 
-        Map<String, String> usernameToJidsMap = userClient.translateUsernamesToJids(data.getUsernames());
+        Map<String, String> usernameToJidsMap =
+                userClient.translateUsernamesToJids(ImmutableSet.copyOf(data.getUsernames()));
         Map<String, Map<String, Integer>> userSolvedProblemsMap =
                 statsStore.getChapterUserSolvedProblemsMap(
                         ImmutableSet.copyOf(usernameToJidsMap.values()),
                         chapterJids);
 
-        Map<String, List<Integer>> userProgressesMap = new HashMap<>();
+        Map<String, List<Integer>> userProgressesMap = new LinkedHashMap<>();
         for (String username : data.getUsernames()) {
             if (!usernameToJidsMap.containsKey(username)) {
                 continue;
