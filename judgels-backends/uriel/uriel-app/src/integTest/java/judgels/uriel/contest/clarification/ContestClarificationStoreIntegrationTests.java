@@ -3,6 +3,7 @@ package judgels.uriel.contest.clarification;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.palantir.conjure.java.api.errors.ServiceException;
+import java.util.List;
 import java.util.Optional;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
@@ -39,10 +40,10 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
 
         ContestClarification clarification1 =
                 store.createClarification(contestA.getJid(), new ContestClarificationData.Builder()
-                    .topicJid(contestA.getJid())
-                    .title("Snack")
-                    .question("Is snack provided?")
-                    .build());
+                        .topicJid(contestA.getJid())
+                        .title("Snack")
+                        .question("Is snack provided?")
+                        .build());
 
         ContestClarification clarification2 =
                 store.createClarification(contestA.getJid(), new ContestClarificationData.Builder()
@@ -58,15 +59,28 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
                         .question("No balloons?")
                         .build());
 
-        assertThat(store.getClarifications(contestA.getJid(), Optional.empty()).getPage())
+        store.createClarification(contestB.getJid(), new ContestClarificationData.Builder()
+                .topicJid(contestB.getJid())
+                .title("Total number of ducks")
+                .question("How many ducks are there in problem A?")
+                .build());
+
+        assertThat(store.getClarifications(contestA.getJid(), Optional.empty(), Optional.empty()).getPage())
                 .containsExactly(clarification2, clarification1);
 
         assertThat(clarification3.getAnswer()).isEmpty();
         assertThat(clarification3.getStatus()).isEqualTo(ContestClarificationStatus.ASKED);
 
         store.answerClarification(contestB.getJid(), clarification3.getJid(), "Yes!");
+        List<ContestClarification> contestBAskedClarifications = store
+                .getClarifications(
+                        contestB.getJid(),
+                        Optional.of(ContestClarificationStatus.ASKED.name()),
+                        Optional.empty())
+                .getPage();
+        assertThat(contestBAskedClarifications.size()).isEqualTo(1);
         ContestClarification answeredClarification3 =
-                store.getClarifications(contestB.getJid(), Optional.empty()).getPage().get(0);
+                store.getClarifications(contestB.getJid(), Optional.empty(), Optional.empty()).getPage().get(1);
 
         assertThat(answeredClarification3.getAnswer()).contains("Yes!");
         assertThat(answeredClarification3.getStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);
@@ -79,7 +93,7 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
             assertThat(err.getParameters().get(0).getValue()).isEqualTo(clarification3.getJid());
         }
         ContestClarification answeredClarification3NotUpdated =
-                store.getClarifications(contestB.getJid(), Optional.empty()).getPage().get(0);
+                store.getClarifications(contestB.getJid(), Optional.empty(), Optional.empty()).getPage().get(1);
 
         assertThat(answeredClarification3NotUpdated.getAnswer()).contains("Yes!");
         assertThat(answeredClarification3NotUpdated.getStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);

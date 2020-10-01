@@ -2,6 +2,7 @@ package judgels.uriel.api.contest.clarification;
 
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
@@ -63,7 +64,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
                 .build());
 
         ContestClarificationsResponse response = clarificationService
-                .getClarifications(USER_A_HEADER, contest.getJid(), empty(), empty());
+                .getClarifications(USER_A_HEADER, contest.getJid(), empty(), empty(), empty());
 
         List<ContestClarification> clarifications = response.getData().getPage();
         assertThat(clarifications.size()).isEqualTo(1);
@@ -86,7 +87,8 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         // as supervisor
 
-        response = clarificationService.getClarifications(SUPERVISOR_HEADER, contest.getJid(), empty(), empty());
+        response = clarificationService.getClarifications(SUPERVISOR_HEADER, contest.getJid(),
+                empty(), empty(), empty());
 
         clarifications = response.getData().getPage();
         assertThat(clarifications.size()).isEqualTo(2);
@@ -110,7 +112,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         // as manager
 
-        response = clarificationService.getClarifications(MANAGER_HEADER, contest.getJid(), empty(), empty());
+        response = clarificationService.getClarifications(MANAGER_HEADER, contest.getJid(), empty(), empty(), empty());
 
         clarifications = response.getData().getPage();
         assertThat(clarifications.size()).isEqualTo(2);
@@ -125,10 +127,20 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         clarificationService.answerClarification(MANAGER_HEADER, contest.getJid(), clarification.getJid(), answer);
 
+        response = clarificationService
+                .getClarifications(
+                        MANAGER_HEADER,
+                        contest.getJid(),
+                        of(ContestClarificationStatus.ASKED.name()),
+                        empty(),
+                        empty());
+
+        assertThat(response.getData().getPage().size()).isEqualTo(1);
+
         // as contestant
 
         clarifications = clarificationService
-                .getClarifications(USER_A_HEADER, contest.getJid(), empty(), empty()).getData().getPage();
+                .getClarifications(USER_A_HEADER, contest.getJid(), empty(), empty(), empty()).getData().getPage();
         clarification = clarifications.get(0);
 
         assertThat(clarification.getAnswer()).contains("Yes!");
@@ -139,7 +151,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
         moduleService.enableModule(MANAGER_HEADER, contest.getJid(), ContestModuleType.REGISTRATION);
 
         assertThatRemoteExceptionThrownBy(
-                () -> clarificationService.getClarifications(USER_HEADER, contest.getJid(), empty(), empty()))
+                () -> clarificationService.getClarifications(USER_HEADER, contest.getJid(), empty(), empty(), empty()))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         assertThatRemoteExceptionThrownBy(() -> clarificationService.createClarification(

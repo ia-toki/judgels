@@ -529,7 +529,7 @@ public class ContestServiceDumpIntegrationTests extends AbstractServiceIntegrati
                         .build());
 
         assertThat(contestClarificationService.getClarifications(ADMIN_HEADER, "JIDCONTtest-ioi",
-                Optional.empty(), Optional.empty()).getData().getPage())
+                Optional.empty(), Optional.empty(), Optional.empty()).getData().getPage())
                 .hasSize(2)
                 .usingElementComparatorIgnoringFields("id")
                 .containsOnlyOnce(new ContestClarification.Builder()

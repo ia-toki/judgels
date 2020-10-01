@@ -61,10 +61,11 @@ export const contestClarificationAPI = {
   getClarifications: (
     token: string,
     contestJid: string,
+    status?: string,
     language?: string,
     page?: number
   ): Promise<ContestClarificationsResponse> => {
-    const params = stringify({ language, page });
+    const params = stringify({ status, language, page });
     return get(`${baseURL(contestJid)}?${params}`, token);
   },
 

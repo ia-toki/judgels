@@ -14,6 +14,11 @@ public interface ContestClarificationDao extends JudgelsDao<ContestClarification
 
     Page<ContestClarificationModel> selectPagedByContestJid(String contestJid, SelectionOptions options);
 
+    Page<ContestClarificationModel> selectPagedByContestJidAndStatus(
+            String contestJid,
+            String status,
+            SelectionOptions options);
+
     Set<ContestClarificationModel> selectAllByContestJid(String contestJid, SelectionOptions options);
 
     Optional<ContestClarificationModel> selectByContestJidAndClarificationJid(
