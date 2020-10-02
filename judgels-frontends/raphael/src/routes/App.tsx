@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
 import { setGAUser } from '../ga';
+import Announcements from '../components/Announcements/Announcements';
 import Header from '../components/Header/Header';
 import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
@@ -41,6 +42,7 @@ class App extends React.PureComponent<AppProps> {
       <DocumentTitle title={this.props.title}>
         <IntlProvider locale={navigator.language}>
           <div>
+            <Announcements />
             <Header />
             <Menubar items={visibleAppRoutes} homeRoute={homeRoute} />
             <AppContent>

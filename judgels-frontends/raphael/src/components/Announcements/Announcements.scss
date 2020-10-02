@@ -1,0 +1,18 @@
+@import '../../styles/base';
+
+.announcement {
+  height: 35px;
+  background-color: #394B59;
+}
+
+.announcement__wrapper {
+  margin: 0 auto;
+  max-width: 1250px;
+}
+
+.announcement__text {
+  color: white;
+  font-size: 13px;
+  margin-left: 50px;
+  line-height: 35px;
+}

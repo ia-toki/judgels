@@ -23,6 +23,7 @@ export interface AppConfig {
   slogan: string;
   apiUrls: ApiUrlsConfig;
   welcomeBanner: WelcomeBannerConfig;
+  announcements?: string;
   googleAnalytics?: GoogleAnalyticsConfig;
 }
 
