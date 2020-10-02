@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
+import { APP_CONFIG, Mode } from '../../../../conf';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -42,13 +43,17 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
       routeComponent: Route,
       component: ContestHistoryPage,
     },
-    {
-      id: 'submission-history',
-      titleIcon: 'layers',
-      title: 'Submission history',
-      routeComponent: Route,
-      component: SubmissionHistoryPage,
-    },
+    ...(APP_CONFIG.mode === Mode.PRIVATE_CONTESTS
+      ? []
+      : ([
+          {
+            id: 'submission-history',
+            titleIcon: 'layers',
+            title: 'Submission history',
+            routeComponent: Route,
+            component: SubmissionHistoryPage,
+          },
+        ] as ContentWithSidebarItem[])),
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
