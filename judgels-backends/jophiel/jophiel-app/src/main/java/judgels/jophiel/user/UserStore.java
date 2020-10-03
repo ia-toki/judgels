@@ -39,6 +39,12 @@ public class UserStore {
         return fromModel(userDao.insert(model));
     }
 
+    public User createUserWithJid(String jid, UserData userData) {
+        UserModel model = new UserModel();
+        toModel(userData, model);
+        return fromModel(userDao.insertWithJid(jid, model));
+    }
+
     public List<User> createUsers(List<UserData> data) {
         List<UserModel> usersModel = Lists.transform(data, userData -> {
             UserModel model = new UserModel();

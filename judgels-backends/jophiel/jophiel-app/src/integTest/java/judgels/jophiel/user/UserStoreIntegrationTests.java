@@ -77,8 +77,20 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
 
         User budi = store.getUserByUsername("budi").get();
 
+        UserData foxtrotData = new UserData.Builder()
+                .username("foxtrot")
+                .password("pass")
+                .email("foxtrot@domain.com")
+                .build();
+        store.createUserWithJid("JIDUSERfoxtrot", foxtrotData);
+
+        User foxtrot = store.getUserByUsername("foxtrot").get();
+        assertThat(foxtrot.getJid()).isEqualTo("JIDUSERfoxtrot");
+        assertThat(foxtrot.getUsername()).isEqualTo("foxtrot");
+        assertThat(foxtrot.getEmail()).isEqualTo("foxtrot@domain.com");
+
         Page<User> users = store.getUsers(Optional.empty(), Optional.empty(), Optional.empty());
-        assertThat(users.getPage()).containsExactly(budi, nano, user);
+        assertThat(users.getPage()).containsExactly(budi, foxtrot, nano, user);
     }
 
     @Test

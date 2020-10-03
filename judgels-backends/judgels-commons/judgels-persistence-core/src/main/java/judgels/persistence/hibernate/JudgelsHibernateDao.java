@@ -36,6 +36,12 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     }
 
     @Override
+    public M insertWithJid(String jid, M model) {
+        model.jid = jid;
+        return super.insert(model);
+    }
+
+    @Override
     public Map<String, M> selectByJids(Set<String> jids) {
         if (jids.isEmpty()) {
             return ImmutableMap.of();
