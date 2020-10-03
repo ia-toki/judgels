@@ -8,6 +8,8 @@ import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -82,6 +84,15 @@ public class UserResource implements UserService {
         checkAllowed(roleChecker.canAdminister(actorJid));
 
         return userStore.createUsers(data);
+    }
+
+    @Override
+    @UnitOfWork
+    public List<User> exportUsers(AuthHeader authHeader, List<String> usernames) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canAdminister(actorJid));
+
+        return new ArrayList<>(userStore.getUsersByUsername(new HashSet<>(usernames)).values());
     }
 
     @Override

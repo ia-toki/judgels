@@ -34,6 +34,12 @@ public interface UserService {
     User createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserData data);
 
     @POST
+    @Path("/export")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    List<User> exportUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<String> usernames);
+
+    @POST
     @Path("/batch-create")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
