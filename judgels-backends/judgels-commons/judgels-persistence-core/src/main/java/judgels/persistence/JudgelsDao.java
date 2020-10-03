@@ -11,6 +11,7 @@ import judgels.persistence.api.dump.JudgelsDump;
 public interface JudgelsDao<M extends JudgelsModel> extends Dao<M> {
     Optional<M> selectByJid(String jid);
     Map<String, M> selectByJids(Set<String> jids);
+    M insertWithJid(String jid, M model);
     M updateByJid(String jid, M model);
     boolean existsByJid(String jid);
 

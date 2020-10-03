@@ -114,12 +114,22 @@ public class UserResource implements UserService {
                     .password(line[headerMap.get("password")])
                     .email(line[headerMap.get("email")])
                     .build();
-            Optional<User> maybeUser = userStore.getUserByUsername(username);
-            if (maybeUser.isPresent()) {
-                user = userStore.updateUser(maybeUser.get().getJid(), userData).get();
+
+            Optional<User> existingUser;
+            Optional<String> jid = getCsvValue(headerMap, line, "jid");
+            if (jid.isPresent()) {
+                existingUser = userStore.getUserByJid(jid.get());
+            } else {
+                existingUser = userStore.getUserByUsername(username);
+            }
+
+            if (existingUser.isPresent()) {
+                user = userStore.updateUser(existingUser.get().getJid(), userData).get();
                 updatedUsernames.add(username);
             } else {
-                user = userStore.createUser(userData);
+                user = jid.isPresent()
+                        ? userStore.createUserWithJid(jid.get(), userData)
+                        : userStore.createUser(userData);
                 createdUsernames.add(username);
             }
 

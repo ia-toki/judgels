@@ -66,6 +66,16 @@ class JudgelsHibernateDaoIntegrationTests {
         assertThat(model.column).isEqualTo("value3");
 
         assertThat(dao.selectByJid("JIDEXAMnotfound")).isEmpty();
+
+        model = new ExampleModel();
+        model.column = "value4";
+        jid = "JIDMANUALCatDog";
+        dao.insertWithJid(jid, model);
+
+        model = dao.selectByJid(jid).get();
+
+        assertThat(model.jid).isEqualTo(jid);
+        assertThat(model.column).isEqualTo("value4");
     }
 
     @Test
