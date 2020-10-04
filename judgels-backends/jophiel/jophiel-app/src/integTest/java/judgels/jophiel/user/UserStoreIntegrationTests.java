@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Arrays;
-import java.util.HashSet;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -96,12 +96,13 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
         assertThat(users.getPage()).containsExactly(budi, foxtrot, nano, user);
 
         Map<String, User> userMap = store.getUsersByUsername(
-                new HashSet<>(Arrays.asList("budi", "foxtrot", "notexists"))
+                ImmutableSet.of("budi", "foxtrot", "notexists")
         );
 
-        assertThat(userMap).hasSize(2);
-        assertThat(userMap).hasEntrySatisfying(budi.getJid(), e -> assertThat(e).isEqualTo(budi));
-        assertThat(userMap).hasEntrySatisfying(foxtrot.getJid(), e -> assertThat(e).isEqualTo(foxtrot));
+        assertThat(userMap).isEqualTo(ImmutableMap.of(
+                budi.getJid(), budi,
+                foxtrot.getJid(), foxtrot
+        ));
     }
 
     @Test
