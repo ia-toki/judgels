@@ -1,6 +1,7 @@
 package judgels.jophiel.user;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -69,6 +70,11 @@ public class UserStore {
 
     public Optional<User> getUserByUsername(String username) {
         return userDao.selectByUsername(username).map(UserStore::fromModel);
+    }
+
+    public Map<String, User> getUsersByUsername(Set<String> usernames) {
+        Map<String, UserModel> users = userDao.selectAllByUsernames(usernames);
+        return Maps.transformValues(users, UserStore::fromModel);
     }
 
     public Optional<User> getUserByUsernameAndPassword(String username, String password) {

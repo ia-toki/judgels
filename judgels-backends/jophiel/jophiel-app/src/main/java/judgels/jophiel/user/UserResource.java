@@ -4,6 +4,7 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.UsersUpsertResponse;
+import judgels.jophiel.api.user.dump.ExportUsersDumpData;
+import judgels.jophiel.api.user.dump.UsersDump;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.user.info.UserInfoStore;
 import judgels.persistence.api.OrderDir;
@@ -82,6 +85,19 @@ public class UserResource implements UserService {
         checkAllowed(roleChecker.canAdminister(actorJid));
 
         return userStore.createUsers(data);
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public UsersDump exportUsers(AuthHeader authHeader, ExportUsersDumpData users) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canAdminister(actorJid));
+
+        return new UsersDump.Builder()
+                .users(ImmutableList.copyOf(
+                        userStore.getUsersByUsername(ImmutableSet.copyOf(users.getUsernames())).values())
+                )
+                .build();
     }
 
     @Override
