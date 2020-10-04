@@ -13,6 +13,9 @@ public class SessionErrors {
     public static final ErrorType USER_MAX_CONCURRENT_SESSIONS_EXCEEDED =
             ErrorType.create(ErrorType.Code.PERMISSION_DENIED, "Jophiel:UserMaxConcurrentSessionsExceeded");
 
+    public static final ErrorType LOG_OUT_DISABLED =
+            ErrorType.create(ErrorType.Code.PERMISSION_DENIED, "Jophiel:LogOutDisabled");
+
     public static ServiceException userNotActivated(String email) {
         return new ServiceException(USER_NOT_ACTIVATED, SafeArg.of("email", email));
     }
@@ -21,5 +24,9 @@ public class SessionErrors {
         return new ServiceException(USER_MAX_CONCURRENT_SESSIONS_EXCEEDED,
                 SafeArg.of("username", username),
                 SafeArg.of("maxConcurrentSessions", Integer.toString(maxConcurrentSessions)));
+    }
+
+    public static ServiceException logOutDisabled() {
+        return new ServiceException(LOG_OUT_DISABLED);
     }
 }

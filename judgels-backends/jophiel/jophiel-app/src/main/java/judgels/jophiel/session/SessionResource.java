@@ -8,6 +8,7 @@ import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.service.actor.ActorChecker;
@@ -15,6 +16,7 @@ import judgels.service.api.actor.AuthHeader;
 
 public class SessionResource implements SessionService {
     private final ActorChecker actorChecker;
+    private final UserRoleChecker roleChecker;
     private UserStore userStore;
     private UserRegistrationEmailStore userRegistrationEmailStore;
     private SessionStore sessionStore;
@@ -23,12 +25,14 @@ public class SessionResource implements SessionService {
     @Inject
     public SessionResource(
             ActorChecker actorChecker,
+            UserRoleChecker roleChecker,
             UserStore userStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
             SessionStore sessionStore,
             SessionConfiguration sessionConfiguration) {
 
         this.actorChecker = actorChecker;
+        this.roleChecker = roleChecker;
         this.userStore = userStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
         this.sessionStore = sessionStore;
@@ -47,10 +51,13 @@ public class SessionResource implements SessionService {
             throw SessionErrors.userNotActivated(user.getEmail());
         }
 
-        int maxConcurrentSessionsPerUser = this.sessionConfiguration.getMaxConcurrentSessionsPerUser().orElse(-1);
-        if (maxConcurrentSessionsPerUser >= 0) {
-            if (sessionStore.getSessionsByUserJid(user.getJid()).size() >= maxConcurrentSessionsPerUser) {
-                throw SessionErrors.userMaxConcurrentSessionsExceeded(user.getUsername(), maxConcurrentSessionsPerUser);
+        if (!roleChecker.canAdminister(user.getJid())) {
+            int maxConcurrentSessionsPerUser = sessionConfiguration.getMaxConcurrentSessionsPerUser().orElse(-1);
+            if (maxConcurrentSessionsPerUser >= 0) {
+                if (sessionStore.getSessionsByUserJid(user.getJid()).size() >= maxConcurrentSessionsPerUser) {
+                    throw SessionErrors.userMaxConcurrentSessionsExceeded(
+                            user.getUsername(), maxConcurrentSessionsPerUser);
+                }
             }
         }
 
@@ -60,7 +67,11 @@ public class SessionResource implements SessionService {
     @Override
     @UnitOfWork
     public void logOut(AuthHeader authHeader) {
-        actorChecker.check(authHeader);
+        String actorJid = actorChecker.check(authHeader);
+        if (!roleChecker.canAdminister(actorJid) && sessionConfiguration.getDisableLogOut().orElse(false)) {
+            throw SessionErrors.logOutDisabled();
+        }
+
         sessionStore.deleteSessionByToken(authHeader.getBearerToken());
         actorChecker.clear();
     }

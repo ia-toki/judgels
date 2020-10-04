@@ -96,3 +96,4 @@ jophiel:
 
   session:
     maxConcurrentSessionsPerUser: -1
+    disableLogOut: false
