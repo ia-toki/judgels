@@ -54,6 +54,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
                         UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
+                .jophielModule(new JophielModule(jophielConfig))
                 .build();
 
         component.superadminCreator().ensureSuperadminExists();

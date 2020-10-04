@@ -18,18 +18,21 @@ public class SessionResource implements SessionService {
     private UserStore userStore;
     private UserRegistrationEmailStore userRegistrationEmailStore;
     private SessionStore sessionStore;
+    private SessionConfiguration sessionConfiguration;
 
     @Inject
     public SessionResource(
             ActorChecker actorChecker,
             UserStore userStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
-            SessionStore sessionStore) {
+            SessionStore sessionStore,
+            SessionConfiguration sessionConfiguration) {
 
         this.actorChecker = actorChecker;
         this.userStore = userStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
         this.sessionStore = sessionStore;
+        this.sessionConfiguration = sessionConfiguration;
     }
 
     @Override
@@ -42,6 +45,13 @@ public class SessionResource implements SessionService {
 
         if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
             throw SessionErrors.userNotActivated(user.getEmail());
+        }
+
+        int maxConcurrentSessionsPerUser = this.sessionConfiguration.getMaxConcurrentSessionsPerUser().orElse(-1);
+        if (maxConcurrentSessionsPerUser >= 0) {
+            if (sessionStore.getSessionsByUserJid(user.getJid()).size() >= maxConcurrentSessionsPerUser) {
+                throw SessionErrors.userMaxConcurrentSessionsExceeded(user.getUsername(), maxConcurrentSessionsPerUser);
+            }
         }
 
         return sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());

@@ -1,6 +1,8 @@
 package judgels.jophiel.session;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.persistence.SessionDao;
@@ -38,6 +40,12 @@ public class SessionStore {
     public Optional<Session> getSessionByAuthCode(String authCode) {
         return playSessionDao.getByAuthCode(authCode).flatMap(legacyModel ->
                 sessionDao.selectByToken(legacyModel.token).map(SessionStore::fromModel));
+    }
+
+    public List<Session> getSessionsByUserJid(String userJid) {
+        return sessionDao.selectAllByUserJid(userJid).stream()
+                .map(SessionStore::fromModel)
+                .collect(Collectors.toList());
     }
 
     public void deleteAuthCode(String authCode) {

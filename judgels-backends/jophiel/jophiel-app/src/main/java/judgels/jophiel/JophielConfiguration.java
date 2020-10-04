@@ -6,6 +6,7 @@ import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
 import judgels.jophiel.mailer.MailerConfiguration;
+import judgels.jophiel.session.SessionConfiguration;
 import judgels.jophiel.user.account.UserRegistrationConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
@@ -38,6 +39,9 @@ public interface JophielConfiguration {
 
     @JsonProperty("superadminCreator")
     Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();
+
+    @JsonProperty("session")
+    SessionConfiguration getSessionConfig();
 
     @Value.Check
     default void check() {
