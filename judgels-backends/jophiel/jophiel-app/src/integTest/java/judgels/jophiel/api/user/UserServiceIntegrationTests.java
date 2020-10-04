@@ -2,6 +2,7 @@ package judgels.jophiel.api.user;
 
 import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -9,16 +10,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
+import judgels.jophiel.api.session.Credentials;
+import judgels.jophiel.api.session.Session;
+import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.api.user.info.UserInfoService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
+import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 
 class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
     private UserInfoService userInfoService = createService(UserInfoService.class);
     private UserSearchService userSearchService = createService(UserSearchService.class);
+    private SessionService sessionService = createService(SessionService.class);
 
     @Test
     void end_to_end_flow() {
@@ -35,6 +41,24 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         Page<User> users = userService.getUsers(adminHeader, empty(), empty(), empty());
         assertThat(users.getPage()).contains(nani, nano);
+    }
+
+    @Test
+    void admin_logout_user() {
+        User userToLogout = userService.createUser(adminHeader, new UserData.Builder()
+                .username("user_to_logout")
+                .password("pass")
+                .email("user_to_logout@domain.com")
+                .build());
+
+        Session session = sessionService.logIn(Credentials.of("user_to_logout", "pass"));
+        assertThat(session.getUserJid()).isEqualTo(userToLogout.getJid());
+
+        userService.logoutUser(adminHeader, userToLogout.getJid());
+
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> userService.getUser(AuthHeader.of(session.getToken()), userToLogout.getJid()))
+                .withMessageContaining("Judgels:Unauthorized");
     }
 
     @Test

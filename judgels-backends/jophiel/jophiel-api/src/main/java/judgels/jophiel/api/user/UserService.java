@@ -30,6 +30,11 @@ public interface UserService {
     User getUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @POST
+    @Path("/{userJid}/logout")
+    @Produces(APPLICATION_JSON)
+    void logoutUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
+
+    @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
