@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.palantir.conjure.java.api.errors.ErrorType;
-import java.util.ArrayList;
 import java.util.Arrays;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
@@ -14,7 +13,6 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
-import org.openjdk.tools.javac.util.List;
 
 class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private SessionService sessionService = createService(SessionService.class);

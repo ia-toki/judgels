@@ -72,7 +72,7 @@ public class SessionResource implements SessionService {
     public void logOut(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
         if (!roleChecker.canAdminister(actorJid) && sessionConfiguration.getDisableLogout()) {
-            throw SessionErrors.logOutDisabled();
+            throw SessionErrors.logoutDisabled();
         }
 
         sessionStore.deleteSessionByToken(authHeader.getBearerToken());
