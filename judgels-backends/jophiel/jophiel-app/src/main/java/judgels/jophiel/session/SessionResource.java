@@ -1,8 +1,11 @@
 package judgels.jophiel.session;
 
+import static judgels.service.ServiceUtils.checkAllowed;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
 import javax.ws.rs.ForbiddenException;
+import judgels.jophiel.api.session.BatchLogoutData;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionErrors;
@@ -52,7 +55,7 @@ public class SessionResource implements SessionService {
         }
 
         if (!roleChecker.canAdminister(user.getJid())) {
-            int maxConcurrentSessionsPerUser = sessionConfiguration.getMaxConcurrentSessionsPerUser().orElse(-1);
+            int maxConcurrentSessionsPerUser = sessionConfiguration.getMaxConcurrentSessionsPerUser();
             if (maxConcurrentSessionsPerUser >= 0) {
                 if (sessionStore.getSessionsByUserJid(user.getJid()).size() >= maxConcurrentSessionsPerUser) {
                     throw SessionErrors.userMaxConcurrentSessionsExceeded(
@@ -68,11 +71,22 @@ public class SessionResource implements SessionService {
     @UnitOfWork
     public void logOut(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        if (!roleChecker.canAdminister(actorJid) && sessionConfiguration.getDisableLogOut().orElse(false)) {
+        if (!roleChecker.canAdminister(actorJid) && sessionConfiguration.getDisableLogout()) {
             throw SessionErrors.logOutDisabled();
         }
 
         sessionStore.deleteSessionByToken(authHeader.getBearerToken());
         actorChecker.clear();
+    }
+
+    @Override
+    @UnitOfWork
+    public void batchLogout(AuthHeader authHeader, BatchLogoutData data) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canAdminister(actorJid));
+
+        for (String userJid : data.getUserJids()) {
+            sessionStore.deleteSessionsByUserJid(userJid);
+        }
     }
 }

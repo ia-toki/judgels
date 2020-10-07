@@ -1,23 +1,28 @@
 package judgels.jophiel.session;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSessionConfiguration.class)
 public interface SessionConfiguration {
-    judgels.jophiel.session.SessionConfiguration DEFAULT = new SessionConfiguration.Builder()
+    SessionConfiguration DEFAULT = new SessionConfiguration.Builder()
             .maxConcurrentSessionsPerUser(-1)
-            .disableLogOut(false)
+            .disableLogout(false)
             .build();
 
-    // If maxConcurrentSessionsPerUser is not set or negative, concurrent session limitation is disabled.
+    // If maxConcurrentSessionsPerUser negative, concurrent session limitation is disabled.
     // This limitation does not apply for admins.
-    Optional<Integer> getMaxConcurrentSessionsPerUser();
+    @Value.Default
+    default int getMaxConcurrentSessionsPerUser() {
+        return -1;
+    }
 
     // If true, disable self log out. This limitation does not apply log outs done by admins.
-    Optional<Boolean> getDisableLogOut();
+    @Value.Default
+    default boolean getDisableLogout() {
+        return false;
+    }
 
     class Builder extends ImmutableSessionConfiguration.Builder {}
 }

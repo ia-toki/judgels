@@ -60,14 +60,6 @@ public class UserResource implements UserService {
     }
 
     @Override
-    @UnitOfWork
-    public void logoutUser(AuthHeader authHeader, String userJid) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAdminister(actorJid));
-        sessionStore.deleteSessionsByUserJid(userJid);
-    }
-
-    @Override
     @UnitOfWork(readOnly = true)
     public Page<User> getUsers(
             AuthHeader authHeader,

@@ -21,4 +21,9 @@ public interface SessionService {
     @POST
     @Path("/logout")
     void logOut(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
+
+    @POST
+    @Path("/batch-logout")
+    @Produces(APPLICATION_JSON)
+    void batchLogout(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, BatchLogoutData data);
 }
