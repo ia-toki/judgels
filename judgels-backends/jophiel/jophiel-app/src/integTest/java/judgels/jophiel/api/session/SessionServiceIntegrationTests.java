@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.palantir.conjure.java.api.errors.ErrorType;
+import java.util.ArrayList;
+import java.util.Arrays;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
@@ -77,7 +79,7 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(session3.getUserJid()).isEqualTo(userToNotLogout.getJid());
 
         sessionService.batchLogout(
-                adminHeader, BatchLogoutData.of(List.of(session1.getUserJid(), session2.getUserJid())));
+                adminHeader, BatchLogoutData.of(Arrays.asList(session1.getUserJid(), session2.getUserJid())));
 
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> userService.getUser(AuthHeader.of(session1.getToken()), userToLogout1.getJid()))
