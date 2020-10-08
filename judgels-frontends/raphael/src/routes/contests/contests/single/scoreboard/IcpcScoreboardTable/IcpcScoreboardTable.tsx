@@ -74,9 +74,7 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
     const shownPenalty =
       state === IcpcScoreboardProblemState.NotAccepted
         ? '-'
-        : state === IcpcScoreboardProblemState.Frozen
-        ? '?'
-        : '' + penalty;
+        : state === IcpcScoreboardProblemState.Frozen ? '?' : '' + penalty;
 
     return (
       <td key={idx} className={classNames(className)}>

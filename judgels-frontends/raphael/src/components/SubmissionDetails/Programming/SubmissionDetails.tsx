@@ -353,13 +353,11 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
   private renderSubtaskTags = (subtaskIds: number[]) => {
     return (
       <span>
-        {subtaskIds
-          .filter(id => id !== 0)
-          .map(id => (
-            <Tag className="subtask-tag" key={id} round>
-              {id}
-            </Tag>
-          ))}
+        {subtaskIds.filter(id => id !== 0).map(id => (
+          <Tag className="subtask-tag" key={id} round>
+            {id}
+          </Tag>
+        ))}
       </span>
     );
   };

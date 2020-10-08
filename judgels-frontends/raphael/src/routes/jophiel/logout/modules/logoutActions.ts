@@ -13,7 +13,7 @@ export function logOut(currentPath: string) {
     } catch (error) {
       if (error instanceof ForbiddenError) {
         if (error.message === SessionErrors.LogoutDisabled) {
-          throw new Error('Logout is currently disabled.')
+          throw new Error('Logout is currently disabled.');
         }
       }
       if (!(error instanceof UnauthorizedError)) {

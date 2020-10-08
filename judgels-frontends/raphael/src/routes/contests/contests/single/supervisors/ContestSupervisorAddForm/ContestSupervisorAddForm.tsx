@@ -65,16 +65,14 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
       onChange: this.toggleAllowAllPermissionsCheckbox,
     };
 
-    const permissionFields = supervisorManagementPermissions
-      .filter(p => p !== 'All')
-      .map(
-        p =>
-          ({
-            name: 'managementPermissions.' + p,
-            label: p,
-            small: true,
-          } as any)
-      );
+    const permissionFields = supervisorManagementPermissions.filter(p => p !== 'All').map(
+      p =>
+        ({
+          name: 'managementPermissions.' + p,
+          label: p,
+          small: true,
+        } as any)
+    );
 
     return (
       <FormGroup label="Management permissions">
