@@ -76,6 +76,11 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(session2.getUserJid()).isEqualTo(userToLogout2.getJid());
         assertThat(session3.getUserJid()).isEqualTo(userToNotLogout.getJid());
 
+        assertThatRemoteExceptionThrownBy(() -> sessionService.batchLogout(
+                AuthHeader.of(session1.getToken()),
+                BatchLogoutData.of(Arrays.asList(session1.getUserJid(), session2.getUserJid()))))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
         sessionService.batchLogout(
                 adminHeader, BatchLogoutData.of(Arrays.asList(session1.getUserJid(), session2.getUserJid())));
 

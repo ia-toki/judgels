@@ -53,5 +53,20 @@ describe('logoutActions', () => {
         expect(store.getActions()).toContainEqual(DelSession.create());
       });
     });
+
+    describe('when logout is disabled', () => {
+      it('does not log out', async () => {
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/session/logout`)
+          .reply(200)
+          .post(`/session/logout`)
+          .reply(403, { errorName: 'Jophiel:LogoutDisabled' });
+
+        await expect(store.dispatch(logoutActions.logOut(path))).rejects.toEqual(
+          new Error('Logout is currently disabled.')
+        );
+      });
+    });
   });
 });

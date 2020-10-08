@@ -77,5 +77,20 @@ describe('loginActions', () => {
         );
       });
     });
+
+    describe('when max concurrent sessions per user limit is exceeded', () => {
+      it('throws a more descriptive error', async () => {
+        nock(APP_CONFIG.apiUrls.jophiel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/session/login`)
+          .reply(200)
+          .post(`/session/login`, { usernameOrEmail, password })
+          .reply(403, { errorName: 'Jophiel:UserMaxConcurrentSessionsExceeded' });
+
+        await expect(store.dispatch(loginActions.logIn(usernameOrEmail, password))).rejects.toEqual(
+          new Error('Login failed because you are trying to log in from too many places at once.')
+        );
+      });
+    });
   });
 });

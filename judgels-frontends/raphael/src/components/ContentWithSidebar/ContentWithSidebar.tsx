@@ -73,14 +73,16 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
   }
 
   private renderSidebar = () => {
-    const sidebarItems = this.props.items.filter(item => !item.disabled).map(
-      item =>
-        ({
-          id: item.id,
-          titleIcon: item.titleIcon,
-          title: item.title,
-        } as SidebarItem)
-    );
+    const sidebarItems = this.props.items
+      .filter(item => !item.disabled)
+      .map(
+        item =>
+          ({
+            id: item.id,
+            titleIcon: item.titleIcon,
+            title: item.title,
+          } as SidebarItem)
+      );
     const sidebarWidget = this.renderSidebarWidget();
 
     return (
@@ -109,15 +111,17 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
   };
 
   private renderSidebarWidget = () => {
-    const components = this.props.items.filter(item => !!item.widgetComponent).map(item => {
-      const RouteC = item.routeComponent;
-      const props = {
-        exact: item.id === '@',
-        path: resolveUrl(this.props.match.url, item.id),
-        component: item.widgetComponent,
-      };
-      return <RouteC key={item.id} {...props} />;
-    });
+    const components = this.props.items
+      .filter(item => !!item.widgetComponent)
+      .map(item => {
+        const RouteC = item.routeComponent;
+        const props = {
+          exact: item.id === '@',
+          path: resolveUrl(this.props.match.url, item.id),
+          component: item.widgetComponent,
+        };
+        return <RouteC key={item.id} {...props} />;
+      });
 
     if (components.length === 0) {
       return null;

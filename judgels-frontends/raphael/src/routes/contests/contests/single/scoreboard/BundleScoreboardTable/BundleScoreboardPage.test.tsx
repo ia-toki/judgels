@@ -85,7 +85,10 @@ describe('BundleScoreboardTable', () => {
       .find('tbody')
       .children()
       .map(mapRow);
-    expect(score).toEqual([['12', '3'], ['10', '2']]);
+    expect(score).toEqual([
+      ['12', '3'],
+      ['10', '2'],
+    ]);
   });
 
   test('display points', () => {

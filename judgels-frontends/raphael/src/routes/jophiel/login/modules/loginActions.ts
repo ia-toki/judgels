@@ -20,7 +20,7 @@ export function logIn(usernameOrEmail: string, password: string) {
           dispatch(replace('/need-activation', { email: error.parameters.email }));
           return;
         } else if (error.message === SessionErrors.UserMaxConcurrentSessionsExceeded) {
-          throw new Error('Maximum active sessions limit exceeded.');
+          throw new Error('Login failed because you are trying to log in from too many places at once.');
         } else {
           throw new Error('Invalid username/password.');
         }

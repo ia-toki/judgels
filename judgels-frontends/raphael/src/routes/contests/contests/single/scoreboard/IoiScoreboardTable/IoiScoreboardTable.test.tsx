@@ -94,6 +94,9 @@ describe('IoiScoreboardTable', () => {
       .find('tbody')
       .children()
       .map(mapRow);
-    expect(points).toEqual([['100', '70', '30', '0'], ['60', '50', '-', '10']]);
+    expect(points).toEqual([
+      ['100', '70', '30', '0'],
+      ['60', '50', '-', '10'],
+    ]);
   });
 });

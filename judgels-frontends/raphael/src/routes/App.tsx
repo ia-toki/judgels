@@ -48,7 +48,9 @@ class App extends React.PureComponent<AppProps> {
             <AppContent>
               <Breadcrumbs />
               <Switch>
-                {visibleAppRoutes.map(item => <Route key={item.id} {...item.route} />)}
+                {visibleAppRoutes.map(item => (
+                  <Route key={item.id} {...item.route} />
+                ))}
                 <Route {...homeRoute.route} />
               </Switch>
               <Footer />
