@@ -19,6 +19,8 @@ export function logIn(usernameOrEmail: string, password: string) {
         if (error.message === SessionErrors.UserNotActivated) {
           dispatch(replace('/need-activation', { email: error.parameters.email }));
           return;
+        } else if (error.message === SessionErrors.UserMaxConcurrentSessionsExceeded) {
+          throw new Error('Login failed because you are trying to log in from too many places at once.');
         } else {
           throw new Error('Invalid username/password.');
         }

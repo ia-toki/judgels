@@ -20,6 +20,7 @@ import judgels.jophiel.api.user.UsersUpsertResponse;
 import judgels.jophiel.api.user.dump.ExportUsersDumpData;
 import judgels.jophiel.api.user.dump.UsersDump;
 import judgels.jophiel.api.user.info.UserInfo;
+import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.info.UserInfoStore;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
@@ -32,18 +33,21 @@ public class UserResource implements UserService {
     private final UserRoleChecker roleChecker;
     private final UserStore userStore;
     private final UserInfoStore infoStore;
+    private final SessionStore sessionStore;
 
     @Inject
     public UserResource(
             ActorChecker actorChecker,
             UserRoleChecker roleChecker,
             UserStore userStore,
-            UserInfoStore infoStore) {
+            UserInfoStore infoStore,
+            SessionStore sessionStore) {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
         this.userStore = userStore;
         this.infoStore = infoStore;
+        this.sessionStore = sessionStore;
     }
 
     @Override

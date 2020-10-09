@@ -9,6 +9,7 @@ import judgels.jophiel.legacy.user.LegacyUserResource;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.play.PlaySessionResource;
 import judgels.jophiel.profile.ProfileResource;
+import judgels.jophiel.session.SessionModule;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
 import judgels.jophiel.user.account.UserAccountResource;
@@ -42,7 +43,8 @@ import judgels.service.hibernate.JudgelsHibernateModule;
         SuperadminModule.class,
         UserAvatarModule.class,
         UserRegistrationModule.class,
-        UserResetPasswordModule.class})
+        UserResetPasswordModule.class,
+        SessionModule.class})
 @Singleton
 public interface JophielComponent {
     LegacyUserResource legacyUserResource();

@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.mailer.MailerModule;
+import judgels.jophiel.session.SessionModule;
 import judgels.jophiel.user.account.UserRegistrationModule;
 import judgels.jophiel.user.account.UserResetPasswordModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
@@ -54,6 +55,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
                         UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
+                .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
                 .build();
 
         component.superadminCreator().ensureSuperadminExists();

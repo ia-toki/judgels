@@ -93,3 +93,7 @@ jophiel:
 
   superadminCreator:
     initialPassword: superadmin
+
+  session:
+    maxConcurrentSessionsPerUser: -1
+    disableLogout: false

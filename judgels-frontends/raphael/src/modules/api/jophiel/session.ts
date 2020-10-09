@@ -7,6 +7,8 @@ export interface Session {
 
 export enum SessionErrors {
   UserNotActivated = 'Jophiel:UserNotActivated',
+  UserMaxConcurrentSessionsExceeded = 'Jophiel:UserMaxConcurrentSessionsExceeded',
+  LogoutDisabled = 'Jophiel:LogoutDisabled',
 }
 
 const baseUrl = `${APP_CONFIG.apiUrls.jophiel}/session`;

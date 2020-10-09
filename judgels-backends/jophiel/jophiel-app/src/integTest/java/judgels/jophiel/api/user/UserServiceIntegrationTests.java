@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
+import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.api.user.info.UserInfoService;
 import judgels.jophiel.api.user.search.UserSearchService;
@@ -19,6 +20,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
     private UserInfoService userInfoService = createService(UserInfoService.class);
     private UserSearchService userSearchService = createService(UserSearchService.class);
+    private SessionService sessionService = createService(SessionService.class);
 
     @Test
     void end_to_end_flow() {
