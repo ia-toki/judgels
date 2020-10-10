@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import com.google.common.collect.Sets;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.api.OutputOnlyOverrides;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 
 import java.util.List;
@@ -33,9 +32,7 @@ public final class LanguageRestrictionAdapter {
     }
 
     public static Set<String> getFinalAllowedLanguageNames(List<LanguageRestriction> languageRestrictions) {
-        Set<String> result = Sets.newHashSet(GradingLanguageRegistry.getInstance().getNamesMap().keySet());
-        result.remove(OutputOnlyOverrides.KEY);
-        result.remove("Cpp");
+        Set<String> result = Sets.newHashSet(GradingLanguageRegistry.getInstance().getVisibleNamesMap().keySet());
 
         for (LanguageRestriction languageRestriction : languageRestrictions) {
             if (!languageRestriction.isAllowedAll()) {

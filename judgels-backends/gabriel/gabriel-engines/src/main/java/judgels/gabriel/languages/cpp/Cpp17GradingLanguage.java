@@ -11,6 +11,11 @@ public class Cpp17GradingLanguage implements CppFamilyGradingLanguage {
     }
 
     @Override
+    public boolean isVisible() {
+        return true;
+    }
+
+    @Override
     public List<String> getAllowedExtensions() {
         return ImmutableList.of("cpp", "cc");
     }

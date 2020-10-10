@@ -11,6 +11,11 @@ public class OutputOnlyGradingLanguage implements GradingLanguage {
     }
 
     @Override
+    public boolean isVisible() {
+        return false;
+    }
+
+    @Override
     public List<String> getAllowedExtensions() {
         return ImmutableList.of("zip");
     }

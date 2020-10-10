@@ -14,6 +14,11 @@ public class JavaGradingLanguage implements GradingLanguage {
     }
 
     @Override
+    public boolean isVisible() {
+        return true;
+    }
+
+    @Override
     public List<String> getAllowedExtensions() {
         return ImmutableList.of("java");
     }

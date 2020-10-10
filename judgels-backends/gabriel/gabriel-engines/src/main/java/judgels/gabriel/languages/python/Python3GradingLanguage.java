@@ -11,6 +11,11 @@ public class Python3GradingLanguage implements GradingLanguage {
     }
 
     @Override
+    public boolean isVisible() {
+        return true;
+    }
+
+    @Override
     public List<String> getAllowedExtensions() {
         return ImmutableList.of("py");
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.languages.c.CGradingLanguage;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
@@ -30,12 +31,21 @@ public class GradingLanguageRegistry {
             new Python3GradingLanguage(),
             new OutputOnlyGradingLanguage());
 
+    private static final List<GradingLanguage> VISIBLE_LANGUAGES = LANGUAGES.stream()
+            .filter(GradingLanguage::isVisible)
+            .collect(Collectors.toList());
+
     private static final Map<String, GradingLanguage> LANGUAGES_BY_SIMPLE_NAME = LANGUAGES.stream().collect(
             LinkedHashMap::new,
             (map, language) -> map.put(getSimpleName(language), language),
             Map::putAll);
 
     private static final Map<String, String> LANGUAGE_NAMES_BY_SIMPLE_NAME = LANGUAGES.stream().collect(
+            LinkedHashMap::new,
+            (map, language) -> map.put(getSimpleName(language), language.getName()),
+            Map::putAll);
+
+    private static final Map<String, String> VISIBLE_LANGUAGE_NAMES_BY_SIMPLE_NAME = VISIBLE_LANGUAGES.stream().collect(
             LinkedHashMap::new,
             (map, language) -> map.put(getSimpleName(language), language.getName()),
             Map::putAll);
@@ -56,6 +66,10 @@ public class GradingLanguageRegistry {
 
     public Map<String, String> getNamesMap() {
         return LANGUAGE_NAMES_BY_SIMPLE_NAME;
+    }
+
+    public Map<String, String> getVisibleNamesMap() {
+        return VISIBLE_LANGUAGE_NAMES_BY_SIMPLE_NAME;
     }
 
     private static String getSimpleName(GradingLanguage language) {
