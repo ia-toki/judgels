@@ -19,7 +19,6 @@ import javax.ws.rs.QueryParam;
 import judgels.jophiel.api.user.dump.ExportUsersDumpData;
 import judgels.jophiel.api.user.dump.UsersDump;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/users")
@@ -57,7 +56,7 @@ public interface UserService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    Page<User> getUsers(
+    UsersResponse getUsers(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("page") Optional<Integer> page,
             @QueryParam("orderBy") Optional<String> orderBy,

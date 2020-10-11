@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
+import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.api.user.info.UserInfoService;
 import judgels.jophiel.api.user.search.UserSearchService;
-import judgels.persistence.api.Page;
 import org.junit.jupiter.api.Test;
 
 class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
@@ -35,8 +35,12 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .email("nani@domain.com")
                 .build());
 
-        Page<User> users = userService.getUsers(adminHeader, empty(), empty(), empty());
-        assertThat(users.getPage()).contains(nani, nano);
+        sessionService.logIn(Credentials.of("nano", "pass"));
+
+        UsersResponse response = userService.getUsers(adminHeader, empty(), empty(), empty());
+        assertThat(response.getData().getPage()).contains(nani, nano);
+        assertThat(response.getLastSessionTimesMap()).containsKeys(nano.getJid());
+        assertThat(response.getLastSessionTimesMap()).doesNotContainKeys(nani.getJid());
     }
 
     @Test
@@ -63,8 +67,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(dina.getUsername()).isEqualTo("dina");
         assertThat(dino.getUsername()).isEqualTo("dino");
 
-        Page<User> usersPage = userService.getUsers(adminHeader, empty(), empty(), empty());
-        assertThat(usersPage.getPage()).contains(dina, dino);
+        UsersResponse response = userService.getUsers(adminHeader, empty(), empty(), empty());
+        assertThat(response.getData().getPage()).contains(dina, dino);
     }
 
     @Test

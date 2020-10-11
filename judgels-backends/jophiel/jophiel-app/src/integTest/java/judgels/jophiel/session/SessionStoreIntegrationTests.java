@@ -3,6 +3,7 @@ package judgels.jophiel.session;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.api.session.Session;
@@ -30,6 +31,9 @@ class SessionStoreIntegrationTests extends AbstractIntegrationTests {
         store.createSession("token123", "userJid");
         store.createSession("token223", "userJid");
         store.createSession("token323", "userJid2");
+
+        assertThat(store.getLatestSessionTimeByUserJids(ImmutableSet.of("userJid", "userJid2")))
+                .containsOnlyKeys("userJid", "userJid2");
 
         Session session = store.getSessionByToken("token123").get();
         assertThat(session.getToken()).isEqualTo("token123");

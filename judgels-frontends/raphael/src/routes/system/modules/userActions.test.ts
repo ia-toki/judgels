@@ -44,8 +44,11 @@ describe('userActions', () => {
       name: 'User',
     };
     const users = {
-      totalCount: 1,
-      page: [user],
+      data: {
+        totalCount: 1,
+        page: [user],
+      },
+      lastSessionTimesMap: {},
     };
 
     it('calls API to get users', async () => {

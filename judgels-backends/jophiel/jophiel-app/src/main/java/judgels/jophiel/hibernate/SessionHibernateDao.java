@@ -2,6 +2,7 @@ package judgels.jophiel.hibernate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.persistence.SessionDao;
@@ -30,6 +31,13 @@ public class SessionHibernateDao extends UnmodifiableHibernateDao<SessionModel> 
     public List<SessionModel> selectAllByUserJid(String userJid) {
         return selectAll(new FilterOptions.Builder<SessionModel>()
                 .putColumnsEq(SessionModel_.userJid, userJid)
+                .build());
+    }
+
+    @Override
+    public List<SessionModel> selectAllByUserJids(Set<String> userJids) {
+        return selectAll(new FilterOptions.Builder<SessionModel>()
+                .putColumnsIn(SessionModel_.userJid, userJids)
                 .build());
     }
 }

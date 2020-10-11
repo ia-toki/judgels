@@ -6,23 +6,25 @@ import { parse, stringify } from 'query-string';
 import { HTMLTable, Icon } from '@blueprintjs/core';
 
 import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { Page, OrderDir } from '../../../../modules/api/pagination';
-import { User } from '../../../../modules/api/jophiel/user';
+import { User, UsersResponse } from '../../../../modules/api/jophiel/user';
 import * as userActions from '../../modules/userActions';
 
 import './UsersPage.css';
 
 export interface UsersPageProps extends RouteComponentProps<{ page: string; orderDir: OrderDir; orderBy: string }> {
-  onGetUsers: (page?: number, orderBy?: string, orderDir?: OrderDir) => Promise<Page<User>>;
+  onGetUsers: (page?: number, orderBy?: string, orderDir?: OrderDir) => Promise<UsersResponse>;
   onAppendRoute: (queries: any) => any;
 }
 
 interface UsersPageState {
   users?: Page<User>;
+  lastSessionTimesMap?: { [userJid: string]: number };
   page?: number;
   orderBy?: string;
   orderDir?: OrderDir;
@@ -76,18 +78,23 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
               {this.withCaret(header)}
             </th>
           ))}
+          <th>Last login</th>
         </tr>
       </thead>
     );
   };
 
   private renderRows = (data: User[]) => {
+    const { lastSessionTimesMap } = this.state;
     return (
       <tbody>
         {data.map(user => (
           <tr>
             <td>
               <UserRef profile={user} />
+            </td>
+            <td>
+              <FormattedRelative value={lastSessionTimesMap[user.jid]} />
             </td>
           </tr>
         ))}
@@ -128,8 +135,8 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
 
   private updateUsers = async () => {
     const { page, orderBy, orderDir } = this.state;
-    const users = await this.props.onGetUsers(page, orderBy, orderDir);
-    this.setState({ users });
+    const { data: users, lastSessionTimesMap } = await this.props.onGetUsers(page, orderBy, orderDir);
+    this.setState({ users, lastSessionTimesMap });
     return users;
   };
 }

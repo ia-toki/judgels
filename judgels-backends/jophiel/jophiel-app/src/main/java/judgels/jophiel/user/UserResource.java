@@ -9,13 +9,17 @@ import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.io.StringReader;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
+import judgels.jophiel.api.user.UsersResponse;
 import judgels.jophiel.api.user.UsersUpsertResponse;
 import judgels.jophiel.api.user.dump.ExportUsersDumpData;
 import judgels.jophiel.api.user.dump.UsersDump;
@@ -61,7 +65,7 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<User> getUsers(
+    public UsersResponse getUsers(
             AuthHeader authHeader,
             Optional<Integer> page,
             Optional<String> orderBy,
@@ -70,7 +74,13 @@ public class UserResource implements UserService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        return userStore.getUsers(page, orderBy, orderDir);
+        Page<User> users = userStore.getUsers(page, orderBy, orderDir);
+        Set<String> userJids = users.getPage().stream().map(User::getJid).collect(Collectors.toSet());
+        Map<String, Instant> lastSessionTimesMap = sessionStore.getLatestSessionTimeByUserJids(userJids);
+        return new UsersResponse.Builder()
+                .data(users)
+                .lastSessionTimesMap(lastSessionTimesMap)
+                .build();
     }
 
     @Override
