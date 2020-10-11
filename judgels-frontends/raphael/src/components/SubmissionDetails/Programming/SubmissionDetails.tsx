@@ -287,7 +287,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
   private renderSourceFiles = () => {
     const { submission, source } = this.props;
     if (isOutputOnly(submission.gradingEngine)) {
-      return null;
+      return this.renderSourceFilesHeading();
     }
 
     const grading = submission.latestGrading;
@@ -331,14 +331,14 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
 
     return (
       <>
-        {this.renderHeading()}
+        {this.renderSourceFilesHeading()}
         {sourceFiles}
         {defaultCompilationOutputs}
       </>
     );
   };
 
-  private renderHeading = () => {
+  private renderSourceFilesHeading = () => {
     if (!this.props.onDownload) {
       return <h4>Source Files</h4>;
     }
