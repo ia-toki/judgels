@@ -66,3 +66,26 @@ export async function postMultipart(url: string, token: string, parts: { [key: s
 
   return request('POST', url, token, {}, body);
 }
+
+export async function download(url: string, token: string): Promise<any> {
+  const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
+  const init: RequestInit = {
+    method: 'GET',
+    headers: authHeader,
+  };
+
+  const res = await fetch(url, init);
+  const filename = res.headers.get('Content-Disposition').match(/filename=(["']?)(.+)\1/i)[2];
+
+  const blob = await res.blob();
+  const objUrl = window.URL.createObjectURL(blob);
+
+  let link = document.createElement('a');
+  link.href = objUrl;
+  link.download = filename;
+  link.click();
+
+  setTimeout(() => {
+    window.URL.revokeObjectURL(objUrl);
+  }, 250);
+}

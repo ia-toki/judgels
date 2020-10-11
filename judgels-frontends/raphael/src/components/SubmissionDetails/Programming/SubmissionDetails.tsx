@@ -1,4 +1,4 @@
-import { HTMLTable, Tag } from '@blueprintjs/core';
+import { HTMLTable, Tag, Button } from '@blueprintjs/core';
 import * as base64 from 'base-64';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -31,6 +31,7 @@ export interface SubmissionDetailsProps {
   problemUrl?: string;
   containerTitle: string;
   containerName: string;
+  onDownload?: () => any;
 }
 
 export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProps> {
@@ -330,10 +331,25 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
 
     return (
       <>
-        <h4>Source Files</h4>
+        {this.renderHeading()}
         {sourceFiles}
         {defaultCompilationOutputs}
       </>
+    );
+  };
+
+  private renderHeading = () => {
+    if (!this.props.onDownload) {
+      return <h4>Source Files</h4>;
+    }
+    return (
+      <div>
+        <h4 className="source-heading">Source Files</h4>
+        <Button small className="source-download" icon="download" onClick={this.props.onDownload}>
+          Download
+        </Button>
+        <div className="clearfix" />
+      </div>
     );
   };
 

@@ -21,6 +21,20 @@ public class SubmissionDownloader {
         this.sourceBuilder = sourceBuilder;
     }
 
+    public void downloadAsZip(OutputStream output, Submission submission) throws IOException {
+        try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(output))) {
+            SubmissionSource source = sourceBuilder.fromPastSubmission(submission.getJid());
+            for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
+                SourceFile file = entry.getValue();
+                ZipEntry ze = new ZipEntry(submission.getId() + "/" + file.getName());
+                zos.putNextEntry(ze);
+                zos.write(file.getContent());
+                zos.closeEntry();
+            }
+        }
+        output.flush();
+    }
+
     public void downloadAsZip(
             OutputStream output,
             List<Submission> submissions,

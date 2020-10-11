@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 
-import { get, postMultipart, post } from '../http';
+import { get, postMultipart, post, download } from '../http';
 import { SubmissionsResponse, SubmissionWithSourceResponse } from '../sandalphon/submissionProgramming';
 import { baseContestsURL } from './contest';
 import { ContestSubmissionConfig } from './contestSubmission';
@@ -50,5 +50,9 @@ export const contestSubmissionProgrammingAPI = {
   regradeSubmissions: (token: string, contestJid?: string, username?: string, problemAlias?: string): Promise<void> => {
     const params = stringify({ contestJid, username, problemAlias });
     return post(`${baseURL}/regrade?${params}`, token);
+  },
+
+  downloadSubmission: (token: string, submissionJid: string): Promise<void> => {
+    return download(`${baseURL}/${submissionJid}/download`, token);
   },
 };

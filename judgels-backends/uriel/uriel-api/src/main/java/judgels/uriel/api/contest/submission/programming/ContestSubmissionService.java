@@ -56,6 +56,13 @@ public interface ContestSubmissionService {
 //    void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts);
 
 //    @GET
+//    @Path("/{submissionJid}/download")
+//    @Produces(APPLICATION_OCTET_STREAM)
+//    Response downloadSubmission(
+//            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+//            @PathParam("submissionJid") String submissionJid);
+
+//    @GET
 //    @Path("/download")
 //    @Produces(APPLICATION_OCTET_STREAM)
 //    Response downloadSubmissions(

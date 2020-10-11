@@ -73,3 +73,10 @@ export function regradeSubmissions(contestJid: string, username?: string, proble
     toastActions.showSuccessToast('Regrade in progress.');
   };
 }
+
+export function downloadSubmission(submissionJid: string) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    await contestSubmissionProgrammingAPI.downloadSubmission(token, submissionJid);
+  };
+}

@@ -22,6 +22,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -61,6 +62,7 @@ import judgels.uriel.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgles.jophiel.user.UserClient;
+import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
@@ -305,8 +307,31 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     }
 
     @GET
+    @Path("/{submissionJid}/download")
+    @UnitOfWork(readOnly = true)
+    @Produces(APPLICATION_OCTET_STREAM)
+    public Response downloadSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionJid") String submissionJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
+        checkAllowed(submissionRoleChecker.canView(actorJid, contest, submission.getUserJid()));
+
+        StreamingOutput stream = output -> submissionDownloader.downloadAsZip(output, submission);
+        return Response.ok(stream)
+                .header("Access-Control-Expose-Headers", "Content-Disposition")
+                .header("Content-Disposition", ContentDisposition
+                        .type("attachment")
+                        .fileName(submission.getId() + ".zip")
+                        .build())
+                .build();
+    }
+
+    @GET
     @Path("/download")
-    @UnitOfWork
+    @UnitOfWork(readOnly = true)
     @Produces(APPLICATION_OCTET_STREAM)
     public Response downloadSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,

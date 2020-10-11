@@ -25,6 +25,7 @@ export interface ContestSubmissionPageProps extends RouteComponentProps<{ submis
     submissionId: number,
     language?: string
   ) => Promise<SubmissionWithSourceResponse>;
+  onDownloadSubmission: (submissionJid: string) => void;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -88,8 +89,14 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
         problemUrl={`/contests/${contest.slug}/problems/${problemAlias}`}
         containerTitle="Contest"
         containerName={containerName!}
+        onDownload={this.downloadSubmission}
       />
     );
+  };
+
+  private downloadSubmission = () => {
+    const { submissionWithSource } = this.state;
+    this.props.onDownloadSubmission(submissionWithSource.submission.jid);
   };
 }
 
@@ -100,6 +107,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = {
   onGetSubmissionWithSource: contestSubmissionActions.getSubmissionWithSource,
+  onDownloadSubmission: contestSubmissionActions.downloadSubmission,
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
