@@ -1,5 +1,7 @@
+import { parse } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 
 import Pagination from '../../../../components/Pagination/Pagination';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
@@ -17,7 +19,7 @@ import {
 import { ProblemSetProblemsResponse, ProblemSetProblemData } from '../../../../modules/api/jerahmeel/problemSetProblem';
 import * as problemSetActions from '../modules/problemSetActions';
 
-export interface ProblemSetsPageProps {
+export interface ProblemSetsPageProps extends RouteComponentProps<{}> {
   onGetProblemSets: (page: number) => Promise<ProblemSetsResponse>;
   onCreateProblemSet: (data: ProblemSetCreateData) => Promise<void>;
   onUpdateProblemSet: (problemSetJid: string, data: ProblemSetUpdateData) => Promise<void>;
@@ -26,6 +28,7 @@ export interface ProblemSetsPageProps {
 }
 
 interface ProblemSetsPageState {
+  page?: number;
   response?: ProblemSetsResponse;
   isEditDialogOpen: boolean;
   isEditProblemsDialogOpen: boolean;
@@ -35,10 +38,29 @@ interface ProblemSetsPageState {
 class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsPageState> {
   private static PAGE_SIZE = 20;
 
-  state: ProblemSetsPageState = {
-    isEditDialogOpen: false,
-    isEditProblemsDialogOpen: false,
-  };
+  state: ProblemSetsPageState;
+
+  constructor(props) {
+    super(props);
+
+    const queries = parse(this.props.location.search);
+    const page = queries.page;
+
+    this.state = {
+      page,
+      isEditDialogOpen: false,
+      isEditProblemsDialogOpen: false,
+    };
+  }
+
+  componentDidUpdate() {
+    const queries = parse(this.props.location.search);
+    const page = queries.page;
+
+    if (page !== this.state.page) {
+      this.setState({ page });
+    }
+  }
 
   render() {
     return (
@@ -135,7 +157,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   private updateProblemSet = async (problemSetJid: string, data: ProblemSetUpdateData) => {
     await this.props.onUpdateProblemSet(problemSetJid, data);
     this.editProblemSet(undefined);
-    await this.onChangePage(1);
+    await this.onChangePage(this.state.page);
   };
 
   private editProblemSetProblems = async (problemSet?: ProblemSet) => {
