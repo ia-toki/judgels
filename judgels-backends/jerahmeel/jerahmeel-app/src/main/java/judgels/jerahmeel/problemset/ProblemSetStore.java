@@ -66,11 +66,10 @@ public class ProblemSetStore {
         SearchOptions.Builder searchOptions = new SearchOptions.Builder();
         name.ifPresent(e -> searchOptions.putTerms("name", e));
 
-        SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .orderBy("name");
         page.ifPresent(selectionOptions::page);
-        if (!name.orElse("").isEmpty() || archiveJid.isPresent()) {
-            selectionOptions.orderBy("name");
-        }
 
         Page<ProblemSetModel> models =
                 problemSetDao.selectPaged(archiveJid, searchOptions.build(), selectionOptions.build());
