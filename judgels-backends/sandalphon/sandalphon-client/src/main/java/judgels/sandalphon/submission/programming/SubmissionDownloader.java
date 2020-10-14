@@ -55,8 +55,8 @@ public class SubmissionDownloader {
                 for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
                     SourceFile file = entry.getValue();
                     String filename = String.format(
-                            "%s/%s~%s~%d/%s",
-                            submission.getId(), problemAlias, username, points, file.getName());
+                            "%s/%s_%s_%d_%s",
+                            problemAlias, submission.getId(), username, points, file.getName());
 
                     ZipEntry ze = new ZipEntry(filename);
                     zos.putNextEntry(ze);
