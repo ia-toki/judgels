@@ -20,6 +20,7 @@ import judgels.jerahmeel.AbstractIntegrationTests;
 import judgels.jerahmeel.JerahmeelApplication;
 import judgels.jerahmeel.JerahmeelApplicationConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
+import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
@@ -58,6 +59,7 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
                         .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
                         .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                         .submissionConfig(SubmissionConfiguration.DEFAULT)
+                        .statsConfig(StatsConfiguration.DEFAULT)
                         .build());
 
         support = new DropwizardTestSupport<>(JerahmeelApplication.class, config);

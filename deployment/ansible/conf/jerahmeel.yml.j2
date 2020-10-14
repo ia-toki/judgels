@@ -76,3 +76,6 @@ jerahmeel:
 {% if jerahmeel_submission_fs_type != 'local' %}
       s3BucketName: {{ jerahmeel_submission_fs_s3BucketName }}
 {% endif %}
+
+  stats:
+    enabled: {{ jerahmeel_stats_enabled }}

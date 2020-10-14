@@ -46,7 +46,9 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
                 .sealtielModule(new SealtielModule(jerahmeelConfig.getSealtielConfig()))
-                .submissionModule(new SubmissionModule(jerahmeelConfig.getSubmissionConfig()))
+                .submissionModule(new SubmissionModule(
+                        jerahmeelConfig.getSubmissionConfig(),
+                        jerahmeelConfig.getStatsConfig()))
                 .jerahmeelModule(new JerahmeelModule(jerahmeelConfig))
                 .build();
 

@@ -14,8 +14,10 @@ import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.jerahmeel.JerahmeelBaseDataDir;
+import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
+import judgels.sandalphon.submission.programming.NoOpSubmissionConsumer;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionConsumer;
 import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
@@ -28,9 +30,11 @@ import judgels.service.api.client.BasicAuthHeader;
 @Module
 public class SubmissionModule {
     private final SubmissionConfiguration config;
+    private final StatsConfiguration statsConfig;
 
-    public SubmissionModule(SubmissionConfiguration config) {
+    public SubmissionModule(SubmissionConfiguration config, StatsConfiguration statsConfig) {
         this.config = config;
+        this.statsConfig = statsConfig;
     }
 
     @Provides
@@ -98,7 +102,7 @@ public class SubmissionModule {
 
     @Provides
     @Singleton
-    static GradingResponseProcessor gradingResponseProcessor(
+    GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
             SubmissionStore submissionStore,
@@ -119,6 +123,6 @@ public class SubmissionModule {
                         submissionStore,
                         sealtielClientAuthHeader,
                         messageService,
-                        statsProcessor});
+                        statsConfig.getEnabled() ? statsProcessor : new NoOpSubmissionConsumer()});
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
@@ -33,6 +34,9 @@ public interface JerahmeelConfiguration {
 
     @JsonProperty("submission")
     SubmissionConfiguration getSubmissionConfig();
+
+    @JsonProperty("stats")
+    StatsConfiguration getStatsConfig();
 
     class Builder extends ImmutableJerahmeelConfiguration.Builder {}
 }

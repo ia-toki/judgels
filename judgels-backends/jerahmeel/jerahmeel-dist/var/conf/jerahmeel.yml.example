@@ -68,3 +68,6 @@ jerahmeel:
   submission:
     fs:
       type: local
+
+  stats:
+    enabled: false
