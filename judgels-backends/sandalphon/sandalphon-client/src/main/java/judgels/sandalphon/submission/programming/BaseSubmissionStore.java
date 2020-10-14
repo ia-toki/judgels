@@ -32,7 +32,7 @@ public class BaseSubmissionStore<
         GM extends AbstractProgrammingGradingModel>
         implements SubmissionStore {
 
-    private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 100;
+    private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 5000;
 
     private final BaseProgrammingSubmissionDao<SM> submissionDao;
     private final BaseProgrammingGradingDao<GM> gradingDao;
