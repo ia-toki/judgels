@@ -11,6 +11,7 @@ import judgels.jophiel.user.account.UserRegistrationConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
+import judgels.jophiel.web.WebConfiguration;
 import judgels.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
 
@@ -42,6 +43,9 @@ public interface JophielConfiguration {
 
     @JsonProperty("session")
     SessionConfiguration getSessionConfig();
+
+    @JsonProperty("web")
+    WebConfiguration getWebConfig();
 
     @Value.Check
     default void check() {

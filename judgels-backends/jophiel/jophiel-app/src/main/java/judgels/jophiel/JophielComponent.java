@@ -26,6 +26,8 @@ import judgels.jophiel.user.search.UserSearchResource;
 import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.UserWebResource;
+import judgels.jophiel.web.WebModule;
+import judgels.jophiel.web.WebResource;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
@@ -44,7 +46,8 @@ import judgels.service.hibernate.JudgelsHibernateModule;
         UserAvatarModule.class,
         UserRegistrationModule.class,
         UserResetPasswordModule.class,
-        SessionModule.class})
+        SessionModule.class,
+        WebModule.class})
 @Singleton
 public interface JophielComponent {
     LegacyUserResource legacyUserResource();
@@ -62,6 +65,7 @@ public interface JophielComponent {
     UserRatingResource userRatingResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
+    WebResource webResource();
     ClientUserResource clientUserResource();
     PingResource pingResource();
 }

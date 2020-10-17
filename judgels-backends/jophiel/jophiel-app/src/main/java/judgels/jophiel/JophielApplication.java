@@ -17,6 +17,7 @@ import judgels.jophiel.user.account.UserResetPasswordModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jophiel.user.superadmin.SuperadminModule;
+import judgels.jophiel.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
@@ -56,6 +57,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
                 .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
+                .webModule(new WebModule(jophielConfig.getWebConfig()))
                 .build();
 
         component.superadminCreator().ensureSuperadminExists();
@@ -76,6 +78,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         env.jersey().register(component.userRatingResource());
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
+        env.jersey().register(component.webResource());
         env.jersey().register(component.clientUserResource());
         env.jersey().register(component.pingResource());
     }

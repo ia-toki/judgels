@@ -19,16 +19,19 @@ import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 import { getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
 import { selectRole } from './jophiel/modules/userWebSelectors';
 import * as userWebActions from './jophiel/modules/userWebActions';
+import * as webActions from './jophiel/modules/webActions';
 
 interface AppProps {
   title: string;
   userJid?: string;
   role: UserRole;
+  onGetWebConfig: () => void;
   onGetUserWebConfig: () => void;
 }
 
 class App extends React.PureComponent<AppProps> {
   componentDidMount() {
+    this.props.onGetWebConfig();
     this.props.onGetUserWebConfig();
     preloadRoutes();
     setGAUser(this.props.userJid);
@@ -68,6 +71,7 @@ const mapStateToProps = (state: AppState) => ({
   role: selectRole(state),
 });
 const mapDispatchToProps = {
+  onGetWebConfig: webActions.getConfig,
   onGetUserWebConfig: userWebActions.getWebConfig,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);

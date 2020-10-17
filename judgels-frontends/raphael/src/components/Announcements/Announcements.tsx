@@ -1,17 +1,23 @@
 import { Icon, Navbar } from '@blueprintjs/core';
 import * as React from 'react';
+import { connect } from 'react-redux';
 
-import { APP_CONFIG } from '../../conf';
+import { AppState } from '../../modules/store';
+import { WebConfig } from '../../modules/api/jophiel/web';
 
 import './Announcements.css';
 
-class Announcements extends React.PureComponent {
+interface AnnouncementsProps {
+  config: WebConfig;
+}
+
+class Announcements extends React.PureComponent<AnnouncementsProps> {
   render() {
-    const announcements = APP_CONFIG.announcements || '';
+    const announcements = this.props.config.announcements || [];
     if (!announcements) {
       return null;
     }
-    return announcements.split(';').map(announcemet => (
+    return announcements.map(announcemet => (
       <Navbar className="announcement">
         <div className="announcement__wrapper">
           <Navbar.Heading className="announcement__text">
@@ -25,4 +31,8 @@ class Announcements extends React.PureComponent {
   }
 }
 
-export default Announcements;
+const mapStateToProps = (state: AppState) => ({
+  config: state.jophiel.web.config,
+});
+
+export default connect(mapStateToProps)(Announcements);

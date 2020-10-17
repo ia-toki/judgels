@@ -13,9 +13,6 @@ window.conf = {
     title: '{{ judgels_title }}',
     description: '{{ judgels_description }}',
   },
-{% if judgels_announcements is defined %}
-  announcements: '{{ judgels_announcements }}',
-{% endif %}
 {% if googleAnalytics_trackingId is defined %}
   googleAnalytics: {
     trackingId: '{{ googleAnalytics_trackingId }}',
