@@ -88,7 +88,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
                     Set<String> contestantJids = scoreboard.getScoreboard().getContent().getEntries().stream()
                             .map(ScoreboardEntry::getContestantJid).collect(Collectors.toSet());
                     Map<String, Profile> profilesMap =
-                            userClient.getProfiles(contestantJids, scoreboard.getUpdatedTime());
+                            userClient.getProfiles(contestantJids, contest.getBeginTime());
 
                     return new ContestScoreboardResponse.Builder()
                             .data(scoreboard)
