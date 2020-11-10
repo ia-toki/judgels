@@ -283,10 +283,18 @@ public class SubmissionResource implements SubmissionService {
             Optional<String> problemJid,
             Optional<String> problemAlias) {
         if (containerJid.isPresent() && problemAlias.isPresent()) {
-            return Optional.of(problemSetProblemStore
-                    .getProblemByAlias(containerJid.get(), problemAlias.get())
-                    .map(ProblemSetProblem::getProblemJid)
-                    .orElse(""));
+            if (SubmissionUtils.isProblemSet(containerJid.get())) {
+                return Optional.of(problemSetProblemStore
+                        .getProblemByAlias(containerJid.get(), problemAlias.get())
+                        .map(ProblemSetProblem::getProblemJid)
+                        .orElse(""));
+            }
+            if (SubmissionUtils.isChapter(containerJid.get())) {
+                return Optional.of(chapterProblemStore
+                        .getProblemByAlias(containerJid.get(), problemAlias.get())
+                        .map(ChapterProblem::getProblemJid)
+                        .orElse(""));
+            }
         }
         return problemJid;
     }
