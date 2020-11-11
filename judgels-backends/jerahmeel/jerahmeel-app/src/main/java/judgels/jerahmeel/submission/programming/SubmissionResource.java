@@ -254,8 +254,8 @@ public class SubmissionResource implements SubmissionService {
             AuthHeader authHeader,
             Optional<String> containerJid,
             Optional<String> username,
-            Optional<String> problemAlias,
-            Optional<String> problemJid) {
+            Optional<String> problemJid,
+            Optional<String> problemAlias) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(submissionRoleChecker.canManage(actorJid));

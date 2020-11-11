@@ -142,7 +142,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
 
   private onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await this.props.onRegradeAll(this.props.problemSet.jid, undefined, this.props.problem.problemJid);
+      await this.props.onRegradeAll(undefined, undefined, this.props.problem.problemJid);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(queries.page);
     }
