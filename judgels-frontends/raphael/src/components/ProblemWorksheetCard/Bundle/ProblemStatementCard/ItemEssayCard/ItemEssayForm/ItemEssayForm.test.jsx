@@ -1,15 +1,14 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 
-import { ItemEssayFormProps, ItemEssayFormState } from './ItemEssayForm';
-import { ItemType, ItemEssayConfig } from '../../../../../../modules/api/sandalphon/problemBundle';
-import { AnswerState } from '../../../../../../components/ProblemWorksheetCard/Bundle/itemStatement';
+import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
+import { AnswerState } from '../../../itemStatement';
 import ItemEssayForm from './ItemEssayForm';
 
 describe('ItemEssayForm', () => {
-  let wrapper: ReactWrapper<ItemEssayFormProps, ItemEssayFormState>;
-  const onSubmitFn: jest.Mocked<any> = jest.fn(() => Promise.resolve(true));
-  const itemConfig: ItemEssayConfig = {
+  let wrapper;
+  const onSubmitFn = jest.fn(() => Promise.resolve(true));
+  const itemConfig = {
     statement: 'statement',
     score: 100,
   };
@@ -19,7 +18,7 @@ describe('ItemEssayForm', () => {
   });
 
   describe('not answered yet', () => {
-    const props: ItemEssayFormProps = {
+    const props = {
       jid: 'jid',
       type: ItemType.Essay,
       meta: 'meta',
@@ -88,7 +87,7 @@ describe('ItemEssayForm', () => {
   });
 
   describe('answered', () => {
-    const props: ItemEssayFormProps = {
+    const props = {
       jid: 'jid',
       type: ItemType.Essay,
       meta: 'meta',
@@ -168,7 +167,7 @@ describe('ItemEssayForm', () => {
   });
 
   describe('disabled', () => {
-    const props: ItemEssayFormProps = {
+    const props = {
       jid: 'jid',
       type: ItemType.Essay,
       meta: 'meta',

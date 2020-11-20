@@ -2,21 +2,21 @@ import { selectToken } from '../../../modules/session/sessionSelectors';
 import { submissionProgrammingAPI } from '../../../modules/api/jerahmeel/submissionProgramming';
 import { toastActions } from '../../../modules/toast/toastActions';
 
-export function getSubmissions(containerJid?: string, userJid?: string, problemJid?: string, page?: number) {
+export function getSubmissions(containerJid, userJid, problemJid, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await submissionProgrammingAPI.getSubmissions(token, containerJid, userJid, problemJid, undefined, page);
   };
 }
 
-export function getSubmissionWithSource(submissionId: number, language?: string) {
+export function getSubmissionWithSource(submissionId, language) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await submissionProgrammingAPI.getSubmissionWithSource(token, submissionId, language);
   };
 }
 
-export function regradeSubmission(submissionJid: string) {
+export function regradeSubmission(submissionJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await submissionProgrammingAPI.regradeSubmission(token, submissionJid);
@@ -25,7 +25,7 @@ export function regradeSubmission(submissionJid: string) {
   };
 }
 
-export function regradeSubmissions(containerJid: string, userJid?: string, problemJid?: string) {
+export function regradeSubmissions(containerJid, userJid, problemJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await submissionProgrammingAPI.regradeSubmissions(token, containerJid, userJid, problemJid, undefined);

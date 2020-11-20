@@ -2,16 +2,11 @@ import { SubmissionError } from 'redux-form';
 
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { BadRequestError } from '../../../../modules/api/error';
-import {
-  problemSetAPI,
-  ProblemSetCreateData,
-  ProblemSetUpdateData,
-  ProblemSetErrors,
-} from '../../../../modules/api/jerahmeel/problemSet';
-import { problemSetProblemAPI, ProblemSetProblemData } from '../../../../modules/api/jerahmeel/problemSetProblem';
+import { problemSetAPI, ProblemSetErrors } from '../../../../modules/api/jerahmeel/problemSet';
+import { problemSetProblemAPI } from '../../../../modules/api/jerahmeel/problemSetProblem';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function createProblemSet(data: ProblemSetCreateData) {
+export function createProblemSet(data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -29,7 +24,7 @@ export function createProblemSet(data: ProblemSetCreateData) {
   };
 }
 
-export function updateProblemSet(problemSetJid: string, data: ProblemSetUpdateData) {
+export function updateProblemSet(problemSetJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -47,21 +42,21 @@ export function updateProblemSet(problemSetJid: string, data: ProblemSetUpdateDa
   };
 }
 
-export function getProblemSets(page: number) {
+export function getProblemSets(page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await problemSetAPI.getProblemSets(token, undefined, undefined, page);
   };
 }
 
-export function getProblems(problemSetJid: string) {
+export function getProblems(problemSetJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await problemSetProblemAPI.getProblems(token, problemSetJid);
   };
 }
 
-export function setProblems(problemSetJid: string, data: ProblemSetProblemData[]) {
+export function setProblems(problemSetJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await problemSetProblemAPI.setProblems(token, problemSetJid, data);

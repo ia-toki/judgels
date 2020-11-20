@@ -3,18 +3,11 @@ import * as React from 'react';
 import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
 import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
-import { Contest } from '../../../../../modules/api/uriel/contest';
-import { ContestRole } from '../../../../../modules/api/uriel/contestWeb';
 import { ContestRoleTag } from '../../../../../components/ContestRole/ContestRoleTag';
 
 import './ActiveContestCard.css';
 
-export interface ActiveContestCardProps {
-  contest: Contest;
-  role?: ContestRole;
-}
-
-export class ActiveContestCard extends React.PureComponent<ActiveContestCardProps> {
+export class ActiveContestCard extends React.PureComponent {
   render() {
     const { contest, role } = this.props;
 
@@ -33,7 +26,7 @@ export class ActiveContestCard extends React.PureComponent<ActiveContestCardProp
     );
   }
 
-  private renderBeginTime = (contest: Contest) => {
+  renderBeginTime = contest => {
     let text = <>in progress</>;
     if (new Date().getTime() < contest.beginTime) {
       text = (

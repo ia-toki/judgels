@@ -1,13 +1,13 @@
 import { Intent, Position, Toaster } from '@blueprintjs/core';
 import { SubmissionError } from 'redux-form';
-import { ForbiddenError, NotFoundError, RemoteError } from '../../modules/api/error';
+import { ForbiddenError, NotFoundError, RemoteError } from '../api/error';
 
 const toaster = Toaster.create({
   position: Position.TOP,
   className: 'toast',
 });
 
-export function showToast(message: string) {
+export function showToast(message) {
   toaster.show({
     message,
     intent: Intent.NONE,
@@ -15,7 +15,7 @@ export function showToast(message: string) {
   });
 }
 
-export function showSuccessToast(message: string) {
+export function showSuccessToast(message) {
   toaster.show({
     icon: 'tick',
     message,
@@ -24,7 +24,7 @@ export function showSuccessToast(message: string) {
   });
 }
 
-export function showAlertToast(message: string) {
+export function showAlertToast(message) {
   toaster.show({
     icon: 'envelope',
     message,
@@ -33,8 +33,8 @@ export function showAlertToast(message: string) {
   });
 }
 
-export function showErrorToast(error: any) {
-  let message: string;
+export function showErrorToast(error) {
+  let message;
   if (error instanceof RemoteError) {
     message = 'Internal server error; please try again later.';
   } else if (error instanceof ForbiddenError) {

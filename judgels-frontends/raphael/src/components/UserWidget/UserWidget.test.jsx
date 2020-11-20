@@ -1,25 +1,22 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { User } from '../../modules/api/jophiel/user';
-import { Profile } from '../../modules/api/jophiel/profile';
-
-import { UserWidget, UserWidgetProps } from './UserWidget';
+import { UserWidget } from './UserWidget';
 
 describe('UserWidget', () => {
-  let user: User | undefined;
-  let profile: Profile | undefined;
+  let user;
+  let profile;
   let onRenderAvatar = () => Promise.resolve('url');
 
-  let wrapper: ShallowWrapper;
+  let wrapper;
 
   const render = () => {
-    const props: any = {
+    const props = {
       user,
       isWebConfigLoaded: true,
       profile,
       onRenderAvatar,
-    } as Partial<UserWidgetProps>;
+    };
 
     wrapper = shallow(<UserWidget {...props} />);
   };
@@ -43,7 +40,7 @@ describe('UserWidget', () => {
   describe('when the user is logged in', () => {
     beforeEach(() => {
       user = { jid: 'jid123', username: 'user', email: 'user@domain.com' };
-      profile = { username: 'user' } as Profile;
+      profile = { username: 'user' };
       render();
     });
 

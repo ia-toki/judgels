@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,9 +8,8 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest } from '../../../../../../fixtures/state';
-import { ContestContestant, ContestContestantsResponse } from '../../../../../../modules/api/uriel/contestContestant';
 import ContestContestantsPage from './ContestContestantsPage';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestContestantActions from '../../modules/contestContestantActions';
 import * as contestActions from '../../../modules/contestActions';
 
@@ -18,9 +17,9 @@ jest.mock('../../modules/contestContestantActions');
 jest.mock('../../../modules/contestActions');
 
 describe('ContestContestantsPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestContestantsResponse = {
+  const response = {
     data: { page: [], totalCount: 0 },
     profilesMap: {
       userJid1: { username: 'user1' },
@@ -32,11 +31,11 @@ describe('ContestContestantsPage', () => {
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -50,8 +49,8 @@ describe('ContestContestantsPage', () => {
   };
 
   beforeEach(() => {
-    (contestContestantActions.getContestants as jest.Mock).mockReturnValue(() => Promise.resolve(response));
-    (contestActions.resetVirtualContest as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    contestContestantActions.getContestants.mockReturnValue(() => Promise.resolve(response));
+    contestActions.resetVirtualContest.mockReturnValue(() => Promise.resolve({}));
   });
 
   describe('when there are no contestants', () => {
@@ -70,15 +69,15 @@ describe('ContestContestantsPage', () => {
 
   describe('when there are contestants', () => {
     beforeEach(() => {
-      const contestants: ContestContestant[] = [
+      const contestants = [
         {
           userJid: 'userJid1',
-        } as ContestContestant,
+        },
         {
           userJid: 'userJid2',
-        } as ContestContestant,
+        },
       ];
-      (contestContestantActions.getContestants as jest.Mock).mockReturnValue(() =>
+      contestContestantActions.getContestants.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: contestants, totalCount: 2 } })
       );
 

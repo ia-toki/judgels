@@ -2,35 +2,18 @@ import { Callout, Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestProblemData } from '../../../../../../modules/api/uriel/contestProblem';
-
-import ContestProblemEditForm, { ContestProblemEditFormData } from '../ContestProblemEditForm/ContestProblemEditForm';
+import ContestProblemEditForm from '../ContestProblemEditForm/ContestProblemEditForm';
 import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';
-import { ContestProblemEditor } from '../modules/editor/contestProblemEditor';
 
 import './ContestProblemEditDialog.css';
 
-export interface ContestProblemEditDialogProps {
-  contest: Contest;
-  problems: ContestProblemData[];
-  onSetProblems: (contestJid: string, data: ContestProblemData[]) => Promise<void>;
-}
-
-interface ContestProblemEditDialogState {
-  isDialogOpen?: boolean;
-  editor: ContestProblemEditor;
-}
-
-export class ContestProblemEditDialog extends React.Component<
-  ContestProblemEditDialogProps,
-  ContestProblemEditDialogState
-> {
-  state: ContestProblemEditDialogState;
+export class ContestProblemEditDialog extends React.Component {
+  state;
 
   constructor(props) {
     super(props);
     this.state = {
+      isDialogOpen: false,
       editor: getContestProblemEditor(props.contest.style),
     };
   }
@@ -44,19 +27,19 @@ export class ContestProblemEditDialog extends React.Component<
     );
   }
 
-  componentDidUpdate(prevProps: ContestProblemEditDialogProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.contest.style !== this.props.contest.style) {
       this.updateEditor();
     }
   }
 
-  private updateEditor() {
+  updateEditor() {
     this.setState({
       editor: getContestProblemEditor(this.props.contest.style),
     });
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button
         className="contest-problem-set-dialog__button"
@@ -70,15 +53,15 @@ export class ContestProblemEditDialog extends React.Component<
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
+  renderDialog = () => {
     return (
       <Dialog
         className="contest-problem-set-dialog"
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Edit problems"
         canOutsideClickClose={false}
@@ -89,9 +72,9 @@ export class ContestProblemEditDialog extends React.Component<
     );
   };
 
-  private renderDialogSetForm = () => {
+  renderDialogSetForm = () => {
     const problems = this.state.editor.serializer(this.props.problems);
-    const props: any = {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       validator: this.state.editor.validator,
       onSubmit: this.setProblems,
@@ -100,7 +83,7 @@ export class ContestProblemEditDialog extends React.Component<
     return <ContestProblemEditForm {...props} />;
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-problem-edit-dialog__body')}>
         {fields}
@@ -115,7 +98,7 @@ export class ContestProblemEditDialog extends React.Component<
     </>
   );
 
-  private renderInstructions = () => {
+  renderInstructions = () => {
     return (
       <Callout icon={null}>
         <p>
@@ -129,7 +112,7 @@ export class ContestProblemEditDialog extends React.Component<
     );
   };
 
-  private setProblems = async (data: ContestProblemEditFormData) => {
+  setProblems = async data => {
     const problems = this.state.editor.deserializer(data.problems);
 
     await this.props.onSetProblems(this.props.contest.jid, problems);

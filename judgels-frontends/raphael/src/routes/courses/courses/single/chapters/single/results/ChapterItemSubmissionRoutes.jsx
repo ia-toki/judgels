@@ -5,17 +5,19 @@ import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrappe
 import ChapterSubmissionsPage from './ChapterSubmissionsPage/ChapterSubmissionsPage';
 import ChapterSubmissionSummaryPage from './ChapterSubmissionSummaryPage/ChapterSubmissionSummaryPage';
 
-const ChapterItemSubmissionRoutes = () => (
-  <div>
-    <Switch>
-      <Route
-        path="/courses/:courseSlug/chapters/:chapterAlias/results/users/:username"
-        component={ChapterSubmissionSummaryPage}
-      />
-      <Route path="/courses/:courseSlug/chapters/:chapterAlias/results/all" component={ChapterSubmissionsPage} />
-      <Route path="/courses/:courseSlug/chapters/:chapterAlias/results" component={ChapterSubmissionSummaryPage} />
-    </Switch>
-  </div>
-);
+function ChapterItemSubmissionRoutes() {
+  return (
+    <div>
+      <Switch>
+        <Route
+          path="/courses/:courseSlug/chapters/:chapterAlias/results/users/:username"
+          component={ChapterSubmissionSummaryPage}
+        />
+        <Route path="/courses/:courseSlug/chapters/:chapterAlias/results/all" component={ChapterSubmissionsPage} />
+        <Route path="/courses/:courseSlug/chapters/:chapterAlias/results" component={ChapterSubmissionSummaryPage} />
+      </Switch>
+    </div>
+  );
+}
 
 export default withBreadcrumb('Quiz results')(ChapterItemSubmissionRoutes);

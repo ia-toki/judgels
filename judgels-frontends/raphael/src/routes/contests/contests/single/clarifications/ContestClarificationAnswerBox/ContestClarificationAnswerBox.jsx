@@ -1,57 +1,48 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContestClarification } from '../../../../../../modules/api/uriel/contestClarification';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import {
-  default as ContestClarificationAnswerForm,
-  ContestClarificationAnswerFormData,
-} from '../ContestClarificationAnswerForm/ContestClarificationAnswerForm';
+import ContestClarificationAnswerForm from '../ContestClarificationAnswerForm/ContestClarificationAnswerForm';
 
-export interface ContestClarificationAnswerBoxProps {
-  contest: Contest;
-  clarification: ContestClarification;
-  isBoxOpen: boolean;
-  isBoxLoading: boolean;
-  onToggleBox: (clarification?: ContestClarification) => void;
-  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
-}
-
-export class ContestClarificationAnswerBox extends React.Component<ContestClarificationAnswerBoxProps> {
-  render() {
-    if (this.props.isBoxOpen) {
-      return this.renderBox();
-    } else {
-      return this.renderButton();
-    }
-  }
-
-  private renderButton = () => {
+export function ContestClarificationAnswerBox({
+  contest,
+  clarification,
+  isBoxOpen,
+  isBoxLoading,
+  onToggleBox,
+  onAnswerClarification,
+}) {
+  const renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon="comment" onClick={this.showBox}>
+      <Button intent={Intent.PRIMARY} icon="comment" onClick={showBox}>
         Answer
       </Button>
     );
   };
 
-  private showBox = () => {
-    this.props.onToggleBox(this.props.clarification);
+  const showBox = () => {
+    onToggleBox(clarification);
   };
 
-  private hideBox = () => {
-    this.props.onToggleBox();
+  const hideBox = () => {
+    onToggleBox();
   };
 
-  private renderBox = () => {
+  const renderBox = () => {
     const props = {
-      onSubmit: this.answerClarification,
-      onCancel: this.hideBox,
-      isLoading: this.props.isBoxLoading,
+      onSubmit: answerClarification,
+      onCancel: hideBox,
+      isLoading: isBoxLoading,
     };
     return <ContestClarificationAnswerForm {...props} />;
   };
 
-  private answerClarification = (data: ContestClarificationAnswerFormData) => {
-    this.props.onAnswerClarification(this.props.contest.jid, this.props.clarification.jid, data.answer);
+  const answerClarification = data => {
+    onAnswerClarification(contest.jid, clarification.jid, data.answer);
   };
+
+  if (isBoxOpen) {
+    return renderBox();
+  } else {
+    return renderButton();
+  }
 }

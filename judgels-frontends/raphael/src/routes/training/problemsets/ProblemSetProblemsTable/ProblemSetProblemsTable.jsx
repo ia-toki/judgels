@@ -1,25 +1,10 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ProblemSetProblemsResponse } from '../../../../modules/api/jerahmeel/problemSetProblem';
-
 import './ProblemSetProblemsTable.css';
 
-export interface ProblemSetProblemsTableProps {
-  response: ProblemSetProblemsResponse;
-}
-
-export class ProblemSetProblemsTable extends React.PureComponent<ProblemSetProblemsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed problem-set-problems-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ProblemSetProblemsTable({ response: { data, problemsMap } }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -31,9 +16,7 @@ export class ProblemSetProblemsTable extends React.PureComponent<ProblemSetProbl
     );
   };
 
-  private renderRows = () => {
-    const { data, problemsMap } = this.props.response;
-
+  const renderRows = () => {
     const rows = data.map(problem => (
       <tr key={problem.problemJid}>
         <td>{problem.alias}</td>
@@ -44,4 +27,11 @@ export class ProblemSetProblemsTable extends React.PureComponent<ProblemSetProbl
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed problem-set-problems-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

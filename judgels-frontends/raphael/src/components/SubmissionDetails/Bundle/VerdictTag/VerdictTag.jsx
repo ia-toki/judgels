@@ -3,11 +3,7 @@ import * as React from 'react';
 
 import { Verdict } from '../../../../modules/api/sandalphon/submissionBundle';
 
-export interface VerdictTagProps {
-  verdict: Verdict;
-}
-
-const verdictIntentMap: { [verdict: string]: Intent } = {
+const verdictIntentMap = {
   [Verdict.ACCEPTED]: Intent.SUCCESS,
   [Verdict.INTERNAL_ERROR]: Intent.DANGER,
   [Verdict.OK]: Intent.SUCCESS,
@@ -16,7 +12,7 @@ const verdictIntentMap: { [verdict: string]: Intent } = {
   [Verdict.WRONG_ANSWER]: Intent.DANGER,
 };
 
-const verdictDisplayCode: { [verdict: string]: string | React.ReactNode } = {
+const verdictDisplayCode = {
   [Verdict.ACCEPTED]: 'AC',
   [Verdict.INTERNAL_ERROR]: '???',
   [Verdict.OK]: 'OK',
@@ -25,7 +21,7 @@ const verdictDisplayCode: { [verdict: string]: string | React.ReactNode } = {
   [Verdict.WRONG_ANSWER]: 'WA',
 };
 
-export const VerdictTag: React.FunctionComponent<VerdictTagProps> = ({ verdict }) => {
+export function VerdictTag({ verdict }) {
   const intent = verdictIntentMap[verdict] || Intent.NONE;
   let displayCode = verdictDisplayCode[verdict] || verdict;
   if (verdict === Verdict.PENDING_REGRADE) {
@@ -38,4 +34,4 @@ export const VerdictTag: React.FunctionComponent<VerdictTagProps> = ({ verdict }
       {displayCode}
     </Tag>
   );
-};
+}

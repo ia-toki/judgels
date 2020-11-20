@@ -1,40 +1,29 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 
-export interface ArchiveEditFormData {
-  slug: string;
-  name: string;
-  category: string;
-  description: string;
-}
-
-export interface ArchiveEditFormProps extends InjectedFormProps<ArchiveEditFormData> {
-  renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
-}
-
-const ArchiveEditForm = (props: ArchiveEditFormProps) => {
-  const slugField: any = {
+function ArchiveEditForm({ handleSubmit, submitting, renderFormComponents }) {
+  const slugField = {
     name: 'slug',
     label: 'Slug',
     validate: [Required, Slug],
   };
-  const nameField: any = {
+  const nameField = {
     name: 'name',
     label: 'Name',
     validate: [Required],
   };
 
-  const categoryField: any = {
+  const categoryField = {
     name: 'category',
     label: 'Category',
     validate: [Required],
   };
-  const descriptionField: any = {
+  const descriptionField = {
     name: 'description',
     label: 'Description',
     rows: 5,
@@ -48,12 +37,12 @@ const ArchiveEditForm = (props: ArchiveEditFormProps) => {
       <Field component={FormTextArea} {...descriptionField} />
     </>
   );
-  const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={props.submitting} />;
+  const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
-};
+  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+}
 
-export default reduxForm<ArchiveEditFormData>({
+export default reduxForm({
   form: 'archive-edit',
   touchOnBlur: false,
   enableReinitialize: true,

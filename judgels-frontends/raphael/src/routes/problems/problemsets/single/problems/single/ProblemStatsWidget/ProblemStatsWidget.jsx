@@ -1,38 +1,23 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
-import { ProblemSet } from '../../../../../../../modules/api/jerahmeel/problemSet';
-import {
-  ProblemProgress,
-  ProblemStats,
-  ProblemTopStats,
-  ProblemTopStatsEntry,
-} from '../../../../../../../modules/api/jerahmeel/problem';
-import { ProblemStatsResponse } from '../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
 import './ProblemStatsWidget.css';
 
-export interface ProblemStatsWidgetProps extends RouteComponentProps<{ problemAlias: string }> {
-  problemSet: ProblemSet;
-  onGetProblemStats: (problemSetJid: string, problemAlias: string) => Promise<ProblemStatsResponse>;
-}
+class ProblemStatsWidget extends React.Component {
+  static TOP_STATS_SIZE = 5;
 
-interface ProblemStatsWidgetState {
-  response?: ProblemStatsResponse;
-}
-
-class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, ProblemStatsWidgetState> {
-  private static TOP_STATS_SIZE = 5;
-
-  state: ProblemStatsWidgetState = {};
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetProblemStats(
@@ -56,7 +41,7 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
     );
   }
 
-  private renderStats = (progress: ProblemProgress, stats: ProblemStats) => {
+  renderStats = (progress, stats) => {
     return (
       <ContentCard className="problem-stats-widget">
         <h4>Stats</h4>
@@ -83,7 +68,7 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
     );
   };
 
-  private renderTopStats = (topStats: ProblemTopStats, profilesMap) => {
+  renderTopStats = (topStats, profilesMap) => {
     const { topUsersByScore, topUsersByTime, topUsersByMemory } = topStats;
     if (
       topUsersByScore.length === ProblemStatsWidget.TOP_STATS_SIZE &&
@@ -100,24 +85,18 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
     }
   };
 
-  private renderTopScore = (entries: ProblemTopStatsEntry[], profilesMap) => {
+  renderTopScore = (entries, profilesMap) => {
     return this.renderTopEntries(entries, profilesMap, 'score', 'Score', '');
   };
 
-  private renderTopTime = (entries: ProblemTopStatsEntry[], profilesMap) => {
+  renderTopTime = (entries, profilesMap) => {
     return this.renderTopEntries(entries, profilesMap, 'time', 'Time', 'ms');
   };
-  private renderTopMemory = (entries: ProblemTopStatsEntry[], profilesMap) => {
+  renderTopMemory = (entries, profilesMap) => {
     return this.renderTopEntries(entries, profilesMap, 'memory', 'Memory', 'KB');
   };
 
-  private renderTopEntries = (
-    entries: ProblemTopStatsEntry[],
-    profilesMap,
-    title: string,
-    header: string,
-    suffix: string
-  ) => {
+  renderTopEntries = (entries, profilesMap, title, header, suffix) => {
     if (entries.length === 0) {
       return null;
     }

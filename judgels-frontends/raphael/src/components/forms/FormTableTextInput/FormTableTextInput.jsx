@@ -3,19 +3,18 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { getIntentClassName } from '../meta';
-import { FormTableInput, FormTableInputProps } from '../FormTableInput/FormTableInput';
+import { FormTableInput } from '../FormTableInput/FormTableInput';
 
-export interface FormTableTextInputProps extends FormTableInputProps {
-  type?: 'password';
+export function FormTableTextInput(props) {
+  const { input, meta, disabled, type } = props;
+  return (
+    <FormTableInput {...props}>
+      <input
+        {...input}
+        type={type || 'text'}
+        disabled={disabled}
+        className={classNames(Classes.INPUT, getIntentClassName(meta))}
+      />
+    </FormTableInput>
+  );
 }
-
-export const FormTableTextInput = (props: FormTableTextInputProps) => (
-  <FormTableInput {...props}>
-    <input
-      {...props.input}
-      type={props.type || 'text'}
-      disabled={props.disabled}
-      className={classNames(Classes.INPUT, getIntentClassName(props.meta))}
-    />
-  </FormTableInput>
-);

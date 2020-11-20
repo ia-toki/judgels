@@ -1,18 +1,16 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { ScoreboardState } from '../../../../../../modules/api/uriel/scoreboard';
-
-import { ScoreboardTable, ScoreboardTableProps } from './ScoreboardTable';
+import { ScoreboardTable } from './ScoreboardTable';
 
 describe('ScoreboardTable', () => {
-  let wrapper: ShallowWrapper<ScoreboardTableProps>;
+  let wrapper;
   let problemPoints;
 
   const className = 'className';
 
   const render = () => {
-    const state: ScoreboardState = {
+    const state = {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
       problemAliases: ['A', 'B', 'C'],
       contestantJids: ['JIDUSER1', 'JIDUSER2'],

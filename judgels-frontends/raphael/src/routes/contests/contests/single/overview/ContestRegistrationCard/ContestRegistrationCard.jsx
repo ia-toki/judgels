@@ -5,8 +5,6 @@ import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { AppState } from '../../../../../../modules/store';
 import { selectIsLoggedIn } from '../../../../../../modules/session/sessionSelectors';
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 import { selectContest } from '../../../modules/contestSelectors';
@@ -15,25 +13,13 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 
 import './ContestRegistrationCard.css';
 
-export interface ContestRegistrationCardProps {
-  isLoggedIn: boolean;
-  contest: Contest;
-  onGetMyContestantState: (contestJid: string) => Promise<ContestContestantState>;
-  onGetApprovedContestantsCount: (contestJid: string) => Promise<number>;
-  onGetContestWebConfig: (contestJid: string) => Promise<void>;
-  onRegisterMyselfAsContestant: (contestJid: string) => Promise<void>;
-  onUnregisterMyselfAsContestant: (contestJid: string) => Promise<void>;
-}
-
-interface ContestRegistrationCardState {
-  contestantState?: ContestContestantState;
-  contestantsCount?: number;
-  isActionButtonLoading?: boolean;
-  isRegistrantsDialogOpen?: boolean;
-}
-
-class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCardProps, ContestRegistrationCardState> {
-  state: ContestRegistrationCardState = {};
+class ContestRegistrationCard extends React.Component {
+  state = {
+    contestantState: undefined,
+    contestantCount: undefined,
+    isActionButtonLoading: false,
+    isRegistrantsDialogOpen: false,
+  };
 
   async componentDidMount() {
     await this.refresh();
@@ -50,7 +36,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     return <Callout className="contest-registration-card">{this.renderCard()}</Callout>;
   }
 
-  private refresh = async () => {
+  refresh = async () => {
     if (!this.props.isLoggedIn) {
       return;
     }
@@ -63,7 +49,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     this.setState({ contestantState, contestantsCount });
   };
 
-  private renderCard = () => {
+  renderCard = () => {
     const { contestantState, contestantsCount } = this.state;
     if (!contestantState || contestantsCount === undefined) {
       return <LoadingState />;
@@ -80,7 +66,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     );
   };
 
-  private renderContestantStateTag = (contestantState: ContestContestantState) => {
+  renderContestantStateTag = contestantState => {
     if (
       contestantState === ContestContestantState.Registrant ||
       contestantState === ContestContestantState.Contestant
@@ -94,7 +80,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     return null;
   };
 
-  private renderActionButton = (contestantState: ContestContestantState) => {
+  renderActionButton = contestantState => {
     if (contestantState === ContestContestantState.RegistrableWrongDivision) {
       return (
         <Button
@@ -130,7 +116,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     return null;
   };
 
-  private renderViewRegistrantsButton = (contestantsCount: number) => {
+  renderViewRegistrantsButton = contestantsCount => {
     return (
       <Button
         className="contest-registration-card__item"
@@ -141,37 +127,37 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     );
   };
 
-  private renderRegistrantsDialog = () => {
+  renderRegistrantsDialog = () => {
     if (!this.state.isRegistrantsDialogOpen) {
       return null;
     }
     return <ContestRegistrantsDialog onClose={this.toggleRegistrantsDialog} />;
   };
 
-  private register = async () => {
+  register = async () => {
     this.setState({ isActionButtonLoading: true });
     await this.props.onRegisterMyselfAsContestant(this.props.contest.jid);
     this.setState({ isActionButtonLoading: false });
     await this.refresh();
   };
 
-  private unregister = async () => {
+  unregister = async () => {
     this.setState({ isActionButtonLoading: true });
     await this.props.onUnregisterMyselfAsContestant(this.props.contest.jid);
     this.setState({ isActionButtonLoading: false });
     await this.refresh();
   };
 
-  private toggleRegistrantsDialog = () => {
-    this.setState((prevState: ContestRegistrationCardState) => ({
+  toggleRegistrantsDialog = () => {
+    this.setState(prevState => ({
       isRegistrantsDialogOpen: !prevState.isRegistrantsDialogOpen,
     }));
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   isLoggedIn: selectIsLoggedIn(state),
-  contest: selectContest(state)!,
+  contest: selectContest(state),
 });
 const mapDispatchToProps = {
   onGetContestWebConfig: contestWebActions.getWebConfig,
@@ -180,4 +166,4 @@ const mapDispatchToProps = {
   onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
   onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
 };
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));

@@ -32,5 +32,5 @@ ReactDOM.render(
       </ConnectedRouter>
     </PersistGate>
   </Provider>,
-  document.getElementById('root') as HTMLElement
+  document.getElementById('root')
 );

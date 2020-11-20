@@ -3,8 +3,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { JophielRole } from '../../../../modules/api/jophiel/role';
-import { User } from '../../../../modules/api/jophiel/user';
-import { UserWebConfig } from '../../../../modules/api/jophiel/userWeb';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { APP_CONFIG } from '../../../../conf';
 import * as loginActions from './loginActions';
@@ -15,8 +13,8 @@ const password = 'password';
 const authCode = 'authCode';
 const userJid = 'userJid';
 const token = 'token123';
-const user: User = { jid: userJid, username: usernameOrEmail, email: 'email' };
-const config: UserWebConfig = { role: { jophiel: JophielRole.User } };
+const user = { jid: userJid, username: usernameOrEmail, email: 'email' };
+const config = { role: { jophiel: JophielRole.User } };
 const mockStore = configureMockStore([thunk]);
 
 describe('loginActions', () => {
@@ -57,9 +55,9 @@ describe('loginActions', () => {
           .reply(200, config);
 
         await store.dispatch(loginActions.logIn(usernameOrEmail, password));
-        expect(store.getActions()).toContainEqual(PutToken.create(token));
-        expect(store.getActions()).toContainEqual(PutUser.create(user));
-        expect(store.getActions()).toContainEqual(PutWebConfig.create(config));
+        expect(store.getActions()).toContainEqual(PutToken(token));
+        expect(store.getActions()).toContainEqual(PutUser(user));
+        expect(store.getActions()).toContainEqual(PutWebConfig(config));
       });
     });
 

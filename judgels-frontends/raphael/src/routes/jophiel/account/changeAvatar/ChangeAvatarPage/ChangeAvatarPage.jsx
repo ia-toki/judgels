@@ -1,23 +1,22 @@
 import { connect } from 'react-redux';
 
 import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { AppState } from '../../../../../modules/store';
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 import { ChangeAvatarPanel } from '../../../panels/avatar/ChangeAvatarPanel/ChangeAvatarPanel';
 import * as avatarActions from '../../../modules/avatarActions';
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectUserJid(state),
 });
 const mapDispatchToProps = {
-  onDropAccepted: (userJid: string, files: File[]) => avatarActions.updateAvatar(userJid, files[0]),
-  onDropRejected: (files: File[]) => avatarActions.rejectAvatar(files[0]),
+  onDropAccepted: (userJid, files) => avatarActions.updateAvatar(userJid, files[0]),
+  onDropRejected: files => avatarActions.rejectAvatar(files[0]),
   onAvatarExists: avatarActions.avatarExists,
   onRenderAvatar: avatarActions.renderAvatar,
   onDeleteAvatar: avatarActions.deleteAvatar,
 };
 const mergeProps = (stateProps, dispatchProps) => ({
-  onDropAccepted: (files: File[]) => dispatchProps.onDropAccepted(stateProps.userJid, files),
+  onDropAccepted: files => dispatchProps.onDropAccepted(stateProps.userJid, files),
   onDropRejected: dispatchProps.onDropRejected,
   onAvatarExists: () => dispatchProps.onAvatarExists(stateProps.userJid),
   onRenderAvatar: () => dispatchProps.onRenderAvatar(stateProps.userJid),

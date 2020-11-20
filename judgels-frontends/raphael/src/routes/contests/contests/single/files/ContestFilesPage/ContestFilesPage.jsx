@@ -4,27 +4,15 @@ import { connect } from 'react-redux';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestFilesResponse } from '../../../../../../modules/api/uriel/contestFile';
 import { ContestFileUploadCard } from '../ContestFileUploadCard/ContestFileUploadCard';
-import { ContestFileUploadFormData } from '../ContestFileUploadForm/ContestFileUploadForm';
 import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestFileActions from '../modules/contestFileActions';
 
-export interface ContestFilesPageProps {
-  contest: Contest;
-  onGetFiles: (contestJid: string, page?: number) => Promise<ContestFilesResponse>;
-  onUploadFile: (contestJid: string, file: File) => Promise<void>;
-}
-
-interface ContestFilesPageState {
-  response?: ContestFilesResponse;
-}
-
-class ContestFilesPage extends React.Component<ContestFilesPageProps, ContestFilesPageState> {
-  state: ContestFilesPageState = {};
+class ContestFilesPage extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     await this.refreshFiles();
@@ -41,7 +29,7 @@ class ContestFilesPage extends React.Component<ContestFilesPageProps, ContestFil
     );
   }
 
-  private renderUploadCard = () => {
+  renderUploadCard = () => {
     const { response } = this.state;
     if (!response) {
       return null;
@@ -53,7 +41,7 @@ class ContestFilesPage extends React.Component<ContestFilesPageProps, ContestFil
     return <ContestFileUploadCard onSubmit={this.uploadFile} />;
   };
 
-  private renderFiles = () => {
+  renderFiles = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -71,18 +59,18 @@ class ContestFilesPage extends React.Component<ContestFilesPageProps, ContestFil
     return <ContestFilesTable contest={this.props.contest} files={files} />;
   };
 
-  private uploadFile = async (data: ContestFileUploadFormData) => {
+  uploadFile = async data => {
     await this.props.onUploadFile(this.props.contest.jid, data.file);
     await this.refreshFiles();
   };
 
-  private refreshFiles = async () => {
+  refreshFiles = async () => {
     const response = await this.props.onGetFiles(this.props.contest.jid);
     this.setState({ response });
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 

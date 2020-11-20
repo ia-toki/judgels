@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,19 +6,18 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-
-import { ContestManagerRemoveDialog, ContestManagerRemoveDialogProps } from './ContestManagerRemoveDialog';
+import { ContestManagerRemoveDialog } from './ContestManagerRemoveDialog';
 
 describe('ContestManagerRemoveDialog', () => {
-  let onDeleteManagers: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onDeleteManagers;
+  let wrapper;
 
   beforeEach(() => {
     onDeleteManagers = jest.fn().mockReturnValue(Promise.resolve({ deletedManagerProfilesMap: {} }));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestManagerRemoveDialogProps = {
+    const props = {
       contest,
       onDeleteManagers,
     };

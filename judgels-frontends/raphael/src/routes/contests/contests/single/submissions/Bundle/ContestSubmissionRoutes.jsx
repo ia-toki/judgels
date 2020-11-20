@@ -5,13 +5,9 @@ import { withRouter, Route } from 'react-router';
 import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
 import ContestSubmissionSummaryPage from './ContestSubmissionSummaryPage/ContestSubmissionSummaryPage';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
-import { ContestWebConfig, ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
+import { ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
 
-export interface ContestSubmissionRoutesProps {
-  webConfig?: ContestWebConfig;
-}
-
-const ContestSubmissionRoutes: React.FunctionComponent<ContestSubmissionRoutesProps> = ({ webConfig }) => {
+function ContestSubmissionRoutes({ webConfig }) {
   if (!webConfig) {
     return null;
   }
@@ -24,9 +20,9 @@ const ContestSubmissionRoutes: React.FunctionComponent<ContestSubmissionRoutesPr
       <Route exact path="/contests/:contestSlug/submissions" component={ContestSubmissionsPage} />
     </div>
   );
-};
+}
 
 const mapStateToProps = state => ({
   webConfig: selectContestWebConfig(state),
 });
-export default withRouter<any, any>(connect(mapStateToProps)(ContestSubmissionRoutes));
+export default withRouter(connect(mapStateToProps)(ContestSubmissionRoutes));

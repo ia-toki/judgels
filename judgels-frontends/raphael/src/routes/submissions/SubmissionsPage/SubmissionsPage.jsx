@@ -2,38 +2,21 @@ import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import Pagination from '../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { AppState } from '../../../modules/store';
-import { SubmissionsResponse } from '../../../modules/api/jerahmeel/submissionProgramming';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { selectMaybeUserJid, selectMaybeUsername } from '../../../modules/session/sessionSelectors';
 import * as submissionActions from '../modules/submissionActions';
 
-export interface SubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid?: string;
-  username?: string;
-  onGetProgrammingSubmissions: (
-    containerJid?: string,
-    username?: string,
-    problemJid?: string,
-    page?: number
-  ) => Promise<SubmissionsResponse>;
-  onRegrade: (submissionJid: string) => Promise<void>;
-  onAppendRoute: (queries) => any;
-}
+export class SubmissionsPage extends React.Component {
+  static PAGE_SIZE = 20;
 
-interface SubmissionsPageState {
-  response?: SubmissionsResponse;
-}
-
-export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, SubmissionsPageState> {
-  private static PAGE_SIZE = 20;
-
-  state: SubmissionsPageState = {};
+  state = {
+    response: undefined,
+  };
 
   render() {
     return (
@@ -46,15 +29,15 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
     );
   }
 
-  private renderUserFilter = () => {
+  renderUserFilter = () => {
     return this.props.userJid && <SubmissionUserFilter />;
   };
 
-  private isUserFilterMine = () => {
+  isUserFilterMine = () => {
     return (this.props.location.pathname + '/').includes('/mine/');
   };
 
-  private renderSubmissions = () => {
+  renderSubmissions = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -92,7 +75,7 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
     );
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     return (
       <Pagination
         key={'' + this.isUserFilterMine()}
@@ -103,26 +86,26 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
     );
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  private refreshSubmissions = async (page?: number) => {
+  refreshSubmissions = async page => {
     const username = this.isUserFilterMine() ? this.props.username : undefined;
     const response = await this.props.onGetProgrammingSubmissions(undefined, username, undefined, page);
     this.setState({ response });
     return response.data;
   };
 
-  private onRegrade = async (submissionJid: string) => {
+  onRegrade = async submissionJid => {
     await this.props.onRegrade(submissionJid);
     const queries = parse(this.props.location.search);
     await this.refreshSubmissions(queries.page);
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
   username: selectMaybeUsername(state),
 });
@@ -133,4 +116,4 @@ const mapDispatchToProps = {
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionsPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionsPage));

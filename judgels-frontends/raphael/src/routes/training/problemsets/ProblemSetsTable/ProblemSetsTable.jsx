@@ -1,28 +1,10 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ProblemSet } from '../../../../modules/api/jerahmeel/problemSet';
-
 import './ProblemSetsTable.css';
 
-export interface ProblemSetsTableProps {
-  problemSets: ProblemSet[];
-  archiveSlugsMap: { [archiveJid: string]: string };
-  onEditProblemSet: (problemSet: ProblemSet) => any;
-  onEditProblemSetProblems: (problemSet: ProblemSet) => any;
-}
-
-export class ProblemSetsTable extends React.PureComponent<ProblemSetsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed problem-sets-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ProblemSetsTable({ problemSets, archiveSlugsMap, onEditProblemSet, onEditProblemSetProblems }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -36,9 +18,7 @@ export class ProblemSetsTable extends React.PureComponent<ProblemSetsTableProps>
     );
   };
 
-  private renderRows = () => {
-    const { problemSets, archiveSlugsMap } = this.props;
-
+  const renderRows = () => {
     const rows = problemSets.map(problemSet => (
       <tr key={problemSet.jid}>
         <td>{problemSet.id}</td>
@@ -46,17 +26,12 @@ export class ProblemSetsTable extends React.PureComponent<ProblemSetsTableProps>
         <td>{problemSet.name}</td>
         <td>{archiveSlugsMap[problemSet.archiveJid]}</td>
         <td>
-          <Icon
-            className="action"
-            icon="edit"
-            intent="primary"
-            onClick={() => this.props.onEditProblemSet(problemSet)}
-          />
+          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditProblemSet(problemSet)} />
           <Icon
             className="action"
             icon="manual"
             intent="primary"
-            onClick={() => this.props.onEditProblemSetProblems(problemSet)}
+            onClick={() => onEditProblemSetProblems(problemSet)}
           />
         </td>
       </tr>
@@ -64,4 +39,11 @@ export class ProblemSetsTable extends React.PureComponent<ProblemSetsTableProps>
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed problem-sets-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

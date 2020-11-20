@@ -1,72 +1,35 @@
 import { stringify } from 'query-string';
 
 import { get, post } from '../http';
-import {
-  SubmissionSummaryResponse,
-  ItemSubmission,
-  ItemSubmissionData,
-  ItemSubmissionsResponse,
-} from '../sandalphon/submissionBundle';
-import { ContestSubmissionConfig } from './contestSubmission';
 import { baseContestsURL } from './contest';
-
-export interface ContestItemSubmissionsResponse extends ItemSubmissionsResponse {
-  config: ContestSubmissionConfig;
-}
-
-export interface ContestSubmissionSummaryResponse extends SubmissionSummaryResponse {
-  config: ContestSubmissionConfig;
-}
 
 const baseURL = `${baseContestsURL}/submissions/bundle`;
 
 export const contestSubmissionBundleAPI = {
-  getSubmissions: (
-    token: string,
-    contestJid: string,
-    username?: string,
-    problemAlias?: string,
-    page?: number
-  ): Promise<ContestItemSubmissionsResponse> => {
+  getSubmissions: (token, contestJid, username, problemAlias, page) => {
     const params = stringify({ contestJid, username, problemAlias, page });
     return get(`${baseURL}?${params}`, token);
   },
 
-  createItemSubmission: (token: string, data: ItemSubmissionData): Promise<void> => {
+  createItemSubmission: (token, data) => {
     return post(baseURL, token, data);
   },
 
-  getSubmissionSummary: (
-    token: string,
-    contestJid: string,
-    username?: string,
-    language?: string
-  ): Promise<ContestSubmissionSummaryResponse> => {
+  getSubmissionSummary: (token, contestJid, username, language) => {
     const params = stringify({ contestJid, username, language });
     return get(`${baseURL}/summary?${params}`, token);
   },
 
-  getLatestSubmissions: (
-    token: string,
-    contestJid: string,
-    problemAlias: string,
-    username?: string
-  ): Promise<{ [id: string]: ItemSubmission }> => {
+  getLatestSubmissions: (token, contestJid, problemAlias, username) => {
     const params = stringify({ contestJid, username, problemAlias });
     return get(`${baseURL}/answers?${params}`, token);
   },
 
-  regradeSubmission: (token: string, submissionJid: string): Promise<void> => {
+  regradeSubmission: (token, submissionJid) => {
     return post(`${baseURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeSubmissions: (
-    token: string,
-    contestJid?: string,
-    username?: string,
-    problemJid?: string,
-    problemAlias?: string
-  ): Promise<void> => {
+  regradeSubmissions: (token, contestJid, username, problemJid, problemAlias) => {
     const params = stringify({ contestJid, username, problemJid, problemAlias });
     return post(`${baseURL}/regrade?${params}`, token);
   },

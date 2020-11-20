@@ -6,13 +6,15 @@ import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWra
 import CoursesRoutes from './CoursesRoutes';
 import MainSingleCourseRoutes from './courses/single/MainSingleCourseRoutes';
 
-const MainCoursesRoutes = () => (
-  <div>
-    <Switch>
-      <Route path="/courses/:courseSlug([a-zA-Z0-9-]+)" component={MainSingleCourseRoutes} />
-      <Route path="/courses" component={CoursesRoutes} />
-    </Switch>
-  </div>
-);
+function MainCoursesRoutes() {
+  return (
+    <div>
+      <Switch>
+        <Route path="/courses/:courseSlug([a-zA-Z0-9-]+)" component={MainSingleCourseRoutes} />
+        <Route path="/courses" component={CoursesRoutes} />
+      </Switch>
+    </div>
+  );
+}
 
 export default withBreadcrumb('Courses')(MainCoursesRoutes);

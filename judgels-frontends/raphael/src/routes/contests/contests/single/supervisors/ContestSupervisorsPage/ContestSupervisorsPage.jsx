@@ -5,14 +5,6 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import {
-  ContestSupervisorsResponse,
-  ContestSupervisorsDeleteResponse,
-  ContestSupervisorsUpsertResponse,
-  ContestSupervisorUpsertData,
-} from '../../../../../../modules/api/uriel/contestSupervisor';
 import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
 import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/ContestSupervisorAddDialog';
 import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/ContestSupervisorRemoveDialog';
@@ -21,25 +13,13 @@ import * as contestSupervisorActions from '../../modules/contestSupervisorAction
 
 import './ContestSupervisorsPage.css';
 
-export interface ContestSupervisorsPageProps {
-  contest: Contest;
-  onGetSupervisors: (contestJid: string, page?: number) => Promise<ContestSupervisorsResponse>;
-  onUpsertSupervisors: (
-    contestJid: string,
-    data: ContestSupervisorUpsertData
-  ) => Promise<ContestSupervisorsUpsertResponse>;
-  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorsDeleteResponse>;
-}
+class ContestSupervisorsPage extends React.Component {
+  static PAGE_SIZE = 250;
 
-interface ContestSupervisorsPageState {
-  response?: ContestSupervisorsResponse;
-  lastRefreshSupervisorsTime?: number;
-}
-
-class ContestSupervisorsPage extends React.Component<ContestSupervisorsPageProps, ContestSupervisorsPageState> {
-  private static PAGE_SIZE = 250;
-
-  state: ContestSupervisorsPageState = {};
+  state = {
+    response: undefined,
+    lastRefreshSupervisorsTime: 0,
+  };
 
   render() {
     return (
@@ -53,7 +33,7 @@ class ContestSupervisorsPage extends React.Component<ContestSupervisorsPageProps
     );
   }
 
-  private renderSupervisors = () => {
+  renderSupervisors = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -71,14 +51,12 @@ class ContestSupervisorsPage extends React.Component<ContestSupervisorsPageProps
     return <ContestSupervisorsTable supervisors={supervisors.page} profilesMap={profilesMap} />;
   };
 
-  private renderPagination = () => {
-    // updates pagination when supervisors are refreshed
+  renderPagination = () => {
     const { lastRefreshSupervisorsTime } = this.state;
-    const key = lastRefreshSupervisorsTime || 0;
 
     return (
       <Pagination
-        key={key}
+        key={lastRefreshSupervisorsTime}
         currentPage={1}
         pageSize={ContestSupervisorsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
@@ -86,18 +64,18 @@ class ContestSupervisorsPage extends React.Component<ContestSupervisorsPageProps
     );
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshSupervisors(nextPage);
     return data.totalCount;
   };
 
-  private refreshSupervisors = async (page?: number) => {
+  refreshSupervisors = async page => {
     const response = await this.props.onGetSupervisors(this.props.contest.jid, page);
     this.setState({ response });
     return response.data;
   };
 
-  private renderAddRemoveDialogs = () => {
+  renderAddRemoveDialogs = () => {
     const { response } = this.state;
     if (!response) {
       return null;
@@ -111,20 +89,20 @@ class ContestSupervisorsPage extends React.Component<ContestSupervisorsPageProps
     );
   };
 
-  private upsertSupervisors = async (contestJid, data) => {
+  upsertSupervisors = async (contestJid, data) => {
     const response = await this.props.onUpsertSupervisors(contestJid, data);
     this.setState({ lastRefreshSupervisorsTime: new Date().getTime() });
     return response;
   };
 
-  private deleteSupervisors = async (contestJid, data) => {
+  deleteSupervisors = async (contestJid, data) => {
     const response = await this.props.onDeleteSupervisors(contestJid, data);
     this.setState({ lastRefreshSupervisorsTime: new Date().getTime() });
     return response;
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 

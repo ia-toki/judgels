@@ -1,30 +1,17 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../../../modules/store';
-import { Course } from '../../../../../../modules/api/jerahmeel/course';
-import { Chapter } from '../../../../../../modules/api/jerahmeel/chapter';
 import { selectCourse } from '../../../modules/courseSelectors';
 import * as courseChapterActions from '../modules/courseChapterActions';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export interface SingleCourseChapterDataRouteProps
-  extends RouteComponentProps<{ courseSlug: string; chapterAlias: string }> {
-  course?: Course;
-
-  onClearChapter: () => void;
-  onGetChapter: (courseJid: string, courseSlug: string, chapterAlias: string) => Promise<Chapter>;
-  onPushBreadcrumb: (link: string, title: string) => void;
-  onPopBreadcrumb: (link: string) => void;
-}
-
-class SingleCourseChapterDataRoute extends React.Component<SingleCourseChapterDataRouteProps> {
+class SingleCourseChapterDataRoute extends React.Component {
   async componentDidMount() {
     await this.refresh();
   }
 
-  async componentDidUpdate(prevProps: SingleCourseChapterDataRouteProps) {
+  async componentDidUpdate(prevProps) {
     if ((prevProps.course && prevProps.course.jid) !== (this.props.course && this.props.course.jid)) {
       this.props.onPopBreadcrumb(this.props.match.url);
       await this.refresh();
@@ -50,7 +37,7 @@ class SingleCourseChapterDataRoute extends React.Component<SingleCourseChapterDa
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
 });
 
@@ -61,4 +48,4 @@ const mapDispatchToProps = {
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleCourseChapterDataRoute));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleCourseChapterDataRoute));

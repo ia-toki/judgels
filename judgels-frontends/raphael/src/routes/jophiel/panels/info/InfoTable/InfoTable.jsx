@@ -1,19 +1,12 @@
 import * as React from 'react';
 
-import { FormTable, FormTableRow } from '../../../../../components/forms/FormTable/FormTable';
+import { FormTable } from '../../../../../components/forms/FormTable/FormTable';
 import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
-import { UserInfo, userInfoGender } from '../../../../../modules/api/jophiel/userInfo';
+import { userInfoGender } from '../../../../../modules/api/jophiel/userInfo';
 import { getCountryName } from '../../../../../assets/data/countries';
 
-export interface InfoTableProps {
-  email: string;
-  info: UserInfo;
-}
-
-export const InfoTable = (props: InfoTableProps) => {
-  const { email, info } = props;
-
-  const infoRows: FormTableRow[] = [
+export function InfoTable({ email, info }) {
+  const infoRows = [
     { key: 'name', title: 'Name', value: info.name },
     { key: 'email', title: 'Email', value: email },
     {
@@ -26,7 +19,7 @@ export const InfoTable = (props: InfoTableProps) => {
     { key: 'shirtSize', title: 'Shirt size', value: info.shirtSize },
   ];
 
-  const institutionRows: FormTableRow[] = [
+  const institutionRows = [
     { key: 'institutionName', title: 'Name', value: info.institutionName },
     { key: 'institutionCountry', title: 'Country', value: getCountryName(info.institutionCountry) },
     {
@@ -48,4 +41,4 @@ export const InfoTable = (props: InfoTableProps) => {
       <FormTable rows={institutionRows} />
     </div>
   );
-};
+}

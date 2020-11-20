@@ -1,17 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { PushBreadcrumb, PopBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
-export function withBreadcrumb(breadcrumbTitle: string) {
+export function withBreadcrumb(breadcrumbTitle) {
   return InnerComponent => {
-    interface WrappedComponentConnectedProps extends RouteComponentProps<{}> {
-      onPushBreadcrumb: (link: string, title: string) => any;
-      onPopBreadcrumb: (link: string) => any;
-    }
-
-    class WrappedComponent extends React.Component<WrappedComponentConnectedProps> {
+    class WrappedComponent extends React.Component {
       componentDidMount() {
         this.props.onPushBreadcrumb(this.props.match.url, breadcrumbTitle);
       }
@@ -27,10 +22,10 @@ export function withBreadcrumb(breadcrumbTitle: string) {
     }
 
     const mapDispatchToProps = {
-      onPushBreadcrumb: (link: string, title: string) => PushBreadcrumb.create({ link, title }),
-      onPopBreadcrumb: (link: string) => PopBreadcrumb.create({ link }),
+      onPushBreadcrumb: (link, title) => PushBreadcrumb({ link, title }),
+      onPopBreadcrumb: link => PopBreadcrumb({ link }),
     };
 
-    return withRouter<any, any>(connect(undefined, mapDispatchToProps)(WrappedComponent));
+    return withRouter(connect(undefined, mapDispatchToProps)(WrappedComponent));
   };
 }

@@ -1,37 +1,31 @@
-import { ContestTab, ContestWebConfig } from '../../../../modules/api/uriel/contestWeb';
+import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
 
-import {
-  contestWebConfigReducer,
-  ContestWebConfigState,
-  DelWebConfig,
-  INITIAL_STATE,
-  PutWebConfig,
-} from './contestWebConfigReducer';
+import contestWebConfigReducer, { DelWebConfig, PutWebConfig } from './contestWebConfigReducer';
 
 describe('contestWebConfigReducer', () => {
   test('PUT', () => {
-    const state = INITIAL_STATE;
-    const webConfig = { visibleTabs: [ContestTab.Scoreboard] } as ContestWebConfig;
-    const action = PutWebConfig.create(webConfig);
-    const nextState: ContestWebConfigState = { value: webConfig };
+    const state = {};
+    const webConfig = { visibleTabs: [ContestTab.Scoreboard] };
+    const action = PutWebConfig(webConfig);
+    const nextState = { value: webConfig };
     expect(contestWebConfigReducer(state, action)).toEqual(nextState);
   });
 
   test('DEL', () => {
-    const webConfig = { visibleTabs: [ContestTab.Scoreboard] } as ContestWebConfig;
-    const state: ContestWebConfigState = { value: webConfig };
-    const action = DelWebConfig.create();
-    const nextState: ContestWebConfigState = {};
+    const webConfig = { visibleTabs: [ContestTab.Scoreboard] };
+    const state = { value: webConfig };
+    const action = DelWebConfig();
+    const nextState = {};
     expect(contestWebConfigReducer(state, action)).toEqual(nextState);
   });
 
   test('other actions', () => {
-    const webConfig = { visibleTabs: [ContestTab.Scoreboard] } as ContestWebConfig;
-    const state: ContestWebConfigState = { value: webConfig };
+    const webConfig = { visibleTabs: [ContestTab.Scoreboard] };
+    const state = { value: webConfig };
     expect(contestWebConfigReducer(state, { type: 'other' })).toEqual(state);
   });
 
   test('initial state', () => {
-    expect(contestWebConfigReducer(undefined as any, { type: 'other' })).toEqual(INITIAL_STATE);
+    expect(contestWebConfigReducer(undefined, { type: 'other' })).toEqual({ value: undefined });
   });
 });

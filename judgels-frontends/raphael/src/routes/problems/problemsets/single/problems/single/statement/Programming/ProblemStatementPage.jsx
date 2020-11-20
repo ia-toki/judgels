@@ -3,16 +3,8 @@ import { connect } from 'react-redux';
 
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from '../../../../../../../../modules/store';
-import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
-import { ProblemSetProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemProgramming';
-import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
-import { ProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemProgramming';
-import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language';
+import StatementLanguageWidget from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language.js';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -20,37 +12,20 @@ import { ProblemWorksheetCard } from '../../../../../../../../components/Problem
 import * as problemSetSubmissionActions from '../../submissions/modules/problemSetSubmissionActions';
 import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
 
-export interface ProblemStatementPageProps {
-  problemSet: ProblemSet;
-  problem: ProblemSetProblem;
-  worksheet: ProblemSetProblemWorksheet;
-  gradingLanguage: string;
-  onCreateSubmission: (
-    problemSetSlug: string,
-    problemSetJid: string,
-    problemAlias: string,
-    problemJid: string,
-    data: ProblemSubmissionFormData
-  ) => Promise<void>;
-  onUpdateGradingLanguage: (language: string) => void;
-}
-
-export class ProblemStatementPage extends React.Component<ProblemStatementPageProps> {
-  render() {
-    return (
-      <ContentCard>
-        {this.renderStatementLanguageWidget()}
-        {this.renderStatement()}
-      </ContentCard>
-    );
-  }
-
-  private renderStatementLanguageWidget = () => {
-    const { defaultLanguage, languages } = this.props.worksheet;
+export function ProblemStatementPage({
+  problemSet,
+  problem,
+  worksheet,
+  gradingLanguage,
+  onCreateSubmission,
+  onUpdateGradingLanguage,
+}) {
+  const renderStatementLanguageWidget = () => {
+    const { defaultLanguage, languages } = worksheet;
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
@@ -61,28 +36,24 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     );
   };
 
-  private renderStatement = () => {
-    const { worksheet } = this.props.worksheet;
-
+  const renderStatement = () => {
     return (
       <ProblemWorksheetCard
-        worksheet={worksheet as ProblemWorksheet}
-        onSubmit={this.createSubmission}
-        gradingLanguage={this.props.gradingLanguage}
+        worksheet={worksheet.worksheet}
+        onSubmit={createSubmission}
+        gradingLanguage={gradingLanguage}
       />
     );
   };
 
-  private createSubmission = async (data: ProblemSubmissionFormData) => {
-    const { problem } = this.props.worksheet;
+  const createSubmission = async data => {
+    onUpdateGradingLanguage(data.gradingLanguage);
 
-    this.props.onUpdateGradingLanguage(data.gradingLanguage);
-
-    sendGAEvent({ category: 'Problems', action: 'Submit problemset problem', label: this.props.problemSet.name });
+    sendGAEvent({ category: 'Problems', action: 'Submit problemset problem', label: problemSet.name });
     sendGAEvent({
       category: 'Problems',
       action: 'Submit problem',
-      label: this.props.problemSet.name + ': ' + this.props.problem.alias,
+      label: problemSet.name + ': ' + problem.alias,
     });
     if (getGradingLanguageFamily(data.gradingLanguage)) {
       sendGAEvent({
@@ -92,17 +63,18 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
       });
     }
 
-    return await this.props.onCreateSubmission(
-      this.props.problemSet.slug,
-      this.props.problemSet.jid,
-      this.props.problem.alias,
-      problem.problemJid,
-      data
-    );
+    return await onCreateSubmission(problemSet.slug, problemSet.jid, problem.alias, worksheet.problem.problemJid, data);
   };
+
+  return (
+    <ContentCard>
+      {renderStatementLanguageWidget()}
+      {renderStatement()}
+    </ContentCard>
+  );
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   problemSet: selectProblemSet(state),
   problem: selectProblemSetProblem(state),
   gradingLanguage: selectGradingLanguage(state),

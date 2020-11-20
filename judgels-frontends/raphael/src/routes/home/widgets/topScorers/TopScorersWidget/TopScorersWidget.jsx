@@ -5,21 +5,14 @@ import { connect } from 'react-redux';
 import { Card } from '../../../../../components/Card/Card';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { UserTopStatsResponse } from '../../../../../modules/api/jerahmeel/user';
 import * as widgetActions from '../../modules/widgetActions';
 
 import './TopScorersWidget.css';
 
-interface TopScorersWidgetProps {
-  onGetTopUserStats: (page?: number, pageSize?: number) => Promise<UserTopStatsResponse>;
-}
-
-interface TopScorersWidgetState {
-  response?: UserTopStatsResponse;
-}
-
-class TopScorersWidget extends React.PureComponent<TopScorersWidgetProps, TopScorersWidgetState> {
-  state: TopScorersWidgetState = {};
+class TopScorersWidget extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetTopUserStats(1, 5);
@@ -39,7 +32,7 @@ class TopScorersWidget extends React.PureComponent<TopScorersWidgetProps, TopSco
     );
   }
 
-  private renderTable = () => {
+  renderTable = () => {
     const { data, profilesMap } = this.state.response;
     if (data.page.length === 0) {
       return (

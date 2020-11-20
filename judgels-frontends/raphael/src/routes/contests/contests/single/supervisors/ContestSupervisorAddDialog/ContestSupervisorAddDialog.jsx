@@ -2,39 +2,15 @@ import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
-import {
-  ContestSupervisorsUpsertResponse,
-  ContestSupervisorUpsertData,
-} from '../../../../../../modules/api/uriel/contestSupervisor';
-
-import ContestSupervisorAddForm, {
-  ContestSupervisorAddFormData,
-} from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
+import ContestSupervisorAddForm from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
 import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTable/ContestSupervisorAddResultTable';
 
-export interface ContestSupervisorAddDialogProps {
-  contest: Contest;
-  onUpsertSupervisors: (
-    contestJid: string,
-    data: ContestSupervisorUpsertData
-  ) => Promise<ContestSupervisorsUpsertResponse>;
-}
-
-interface ContestSupervisorAddDialogState {
-  isDialogOpen?: boolean;
-  submitted?: {
-    usernames: string[];
-    response: ContestSupervisorsUpsertResponse;
+export class ContestSupervisorAddDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+    submitted: undefined,
   };
-}
-
-export class ContestSupervisorAddDialog extends React.Component<
-  ContestSupervisorAddDialogProps,
-  ContestSupervisorAddDialogState
-> {
-  state: ContestSupervisorAddDialogState = {};
 
   render() {
     return (
@@ -45,7 +21,7 @@ export class ContestSupervisorAddDialog extends React.Component<
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button
         className="contest-supervisor-dialog-button"
@@ -59,11 +35,11 @@ export class ContestSupervisorAddDialog extends React.Component<
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
   };
 
-  private renderDialog = () => {
+  renderDialog = () => {
     const dialogBody =
       this.state.submitted !== undefined ? this.renderDialogAddResultTable() : this.renderDialogAddForm();
     const dialogTitle =
@@ -72,7 +48,7 @@ export class ContestSupervisorAddDialog extends React.Component<
     return (
       <Dialog
         className="contest-supervisor-dialog"
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title={dialogTitle}
         canOutsideClickClose={false}
@@ -83,16 +59,16 @@ export class ContestSupervisorAddDialog extends React.Component<
     );
   };
 
-  private renderDialogAddForm = () => {
-    const props: any = {
+  renderDialogAddForm = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.addSupervisors,
     };
     return <ContestSupervisorAddForm {...props} />;
   };
 
-  private renderDialogAddResultTable = () => {
-    const { usernames, response } = this.state.submitted!;
+  renderDialogAddResultTable = () => {
+    const { usernames, response } = this.state.submitted;
     const { upsertedSupervisorProfilesMap: insertedSupervisorProfilesMap } = response;
     return (
       <>
@@ -111,7 +87,7 @@ export class ContestSupervisorAddDialog extends React.Component<
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -123,7 +99,7 @@ export class ContestSupervisorAddDialog extends React.Component<
     </>
   );
 
-  private getPermissionList(managementPermissions) {
+  getPermissionList(managementPermissions) {
     return !managementPermissions
       ? []
       : Object.keys(managementPermissions)
@@ -131,12 +107,12 @@ export class ContestSupervisorAddDialog extends React.Component<
           .map(p => SupervisorManagementPermission[p]);
   }
 
-  private addSupervisors = async (dataForm: ContestSupervisorAddFormData) => {
+  addSupervisors = async dataForm => {
     const usernames = dataForm.usernames
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0);
-    const data: ContestSupervisorUpsertData = {
+    const data = {
       usernames,
       managementPermissions: this.getPermissionList(dataForm.managementPermissions),
     };

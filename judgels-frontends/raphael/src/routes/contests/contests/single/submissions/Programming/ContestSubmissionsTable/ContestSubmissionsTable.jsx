@@ -5,39 +5,25 @@ import { Link } from 'react-router-dom';
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { VerdictTag } from '../../../../../../../components/VerdictTag/VerdictTag';
-import { ProfilesMap } from '../../../../../../../modules/api/jophiel/profile';
-import { getGradingLanguageName } from '../../../../../../../modules/api/gabriel/language';
-import { Contest } from '../../../../../../../modules/api/uriel/contest';
-import { Submission as ProgrammingSubmission } from '../../../../../../../modules/api/sandalphon/submissionProgramming';
+import { getGradingLanguageName } from '../../../../../../../modules/api/gabriel/language.js';
 
 import '../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
-export interface ContestSubmissionsTableProps {
-  contest: Contest;
-  submissions: ProgrammingSubmission[];
-  canSupervise: boolean;
-  canManage: boolean;
-  profilesMap: ProfilesMap;
-  problemAliasesMap: { [problemJid: string]: string };
-  onRegrade: (submissionJid: string) => any;
-}
-
-export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed submissions-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ContestSubmissionsTable({
+  contest,
+  submissions,
+  canSupervise,
+  canManage,
+  profilesMap,
+  problemAliasesMap,
+  onRegrade,
+}) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
           <th className="col-id">ID</th>
-          {this.props.canSupervise && <th className="col-user">User</th>}
+          {canSupervise && <th className="col-user">User</th>}
           <th className="col-prob">Prob</th>
           <th className="col-lang">Lang</th>
           <th className="col-verdict">Verdict</th>
@@ -49,17 +35,15 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
     );
   };
 
-  private renderRows = () => {
-    const { contest, submissions, profilesMap, problemAliasesMap, canSupervise } = this.props;
-
+  const renderRows = () => {
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
         <td>
           {submission.id}
-          {this.props.canManage && (
+          {canManage && (
             <>
               &nbsp;&nbsp;&nbsp;
-              <Icon className="action" icon="refresh" intent="primary" onClick={this.onClickRegrade(submission.jid)} />
+              <Icon className="action" icon="refresh" intent="primary" onClick={onClickRegrade(submission.jid)} />
             </>
           )}
         </td>
@@ -88,7 +72,14 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
     return <tbody>{rows}</tbody>;
   };
 
-  private onClickRegrade = (submissionJid: string) => {
-    return () => this.props.onRegrade(submissionJid);
+  const onClickRegrade = submissionJid => {
+    return () => onRegrade(submissionJid);
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed submissions-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

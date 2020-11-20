@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,23 +6,22 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { Chapter } from '../../../../modules/api/jerahmeel/chapter';
 import { ChapterEditDialog } from './ChapterEditDialog';
 
-const chapter: Chapter = {
+const chapter = {
   id: 1,
   jid: 'chapterJid',
   name: 'Chapter',
 };
 
 describe('ChapterEditDialog', () => {
-  let onUpdateChapter: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onUpdateChapter;
+  let wrapper;
 
   beforeEach(() => {
     onUpdateChapter = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
       isOpen: true,

@@ -2,32 +2,14 @@ import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestContestantUpsertResponse } from '../../../../../../modules/api/uriel/contestContestant';
-
-import ContestContestantAddForm, {
-  ContestContestantAddFormData,
-} from '../ContestContestantAddForm/ContestContestantAddForm';
+import ContestContestantAddForm from '../ContestContestantAddForm/ContestContestantAddForm';
 import { ContestContestantAddResultTable } from '../ContestContestantAddResultTable/ContestContestantAddResultTable';
 
-export interface ContestContestantAddDialogProps {
-  contest: Contest;
-  onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
-}
-
-interface ContestContestantAddDialogState {
-  isDialogOpen?: boolean;
-  submitted?: {
-    usernames: string[];
-    response: ContestContestantUpsertResponse;
+export class ContestContestantAddDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+    submitted: undefined,
   };
-}
-
-export class ContestContestantAddDialog extends React.Component<
-  ContestContestantAddDialogProps,
-  ContestContestantAddDialogState
-> {
-  state: ContestContestantAddDialogState = {};
 
   render() {
     return (
@@ -38,7 +20,7 @@ export class ContestContestantAddDialog extends React.Component<
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button
         className="contest-contestant-dialog-button"
@@ -52,11 +34,11 @@ export class ContestContestantAddDialog extends React.Component<
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
   };
 
-  private renderDialog = () => {
+  renderDialog = () => {
     const dialogBody =
       this.state.submitted !== undefined ? this.renderDialogAddResultTable() : this.renderDialogAddForm();
     const dialogTitle = this.state.submitted !== undefined ? 'Add contestants results' : 'Add contestants';
@@ -64,7 +46,7 @@ export class ContestContestantAddDialog extends React.Component<
     return (
       <Dialog
         className="contest-contestant-dialog"
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title={dialogTitle}
         canOutsideClickClose={false}
@@ -75,16 +57,16 @@ export class ContestContestantAddDialog extends React.Component<
     );
   };
 
-  private renderDialogAddForm = () => {
-    const props: any = {
+  renderDialogAddForm = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.addContestants,
     };
     return <ContestContestantAddForm {...props} />;
   };
 
-  private renderDialogAddResultTable = () => {
-    const { usernames, response } = this.state.submitted!;
+  renderDialogAddResultTable = () => {
+    const { usernames, response } = this.state.submitted;
     const { insertedContestantProfilesMap, alreadyContestantProfilesMap } = response;
     return (
       <>
@@ -104,7 +86,7 @@ export class ContestContestantAddDialog extends React.Component<
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-contestant-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -116,7 +98,7 @@ export class ContestContestantAddDialog extends React.Component<
     </>
   );
 
-  private addContestants = async (data: ContestContestantAddFormData) => {
+  addContestants = async data => {
     const usernames = data.usernames
       .split('\n')
       .map(s => s.trim())

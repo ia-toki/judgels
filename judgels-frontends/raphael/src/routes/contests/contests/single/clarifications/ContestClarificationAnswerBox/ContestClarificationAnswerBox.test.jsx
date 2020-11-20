@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,24 +6,22 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-import { ContestClarification } from '../../../../../../modules/api/uriel/contestClarification';
-
-import { ContestClarificationAnswerBox, ContestClarificationAnswerBoxProps } from './ContestClarificationAnswerBox';
+import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
 
 describe('ContestClarificationAnswerBox', () => {
-  let onAnswerClarification: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onAnswerClarification;
+  let wrapper;
 
   const clarification = {
     jid: 'clarificationJid123',
-  } as ContestClarification;
+  };
 
   beforeEach(() => {
     onAnswerClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestClarificationAnswerBoxProps = {
+    const props = {
       contest,
       clarification,
       isBoxOpen: true,

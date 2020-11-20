@@ -97,8 +97,8 @@ describe('contestSubmissionProgrammingActions', () => {
 
   describe('createSubmission()', () => {
     const sourceFiles = {
-      encoder: { name: 'e' } as File,
-      decoder: { name: 'd' } as File,
+      encoder: { name: 'e' },
+      decoder: { name: 'd' },
     };
     const gradingLanguage = 'Pascal';
     const data = {

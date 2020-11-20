@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -12,7 +12,7 @@ import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
 
 import ContestEditGeneralTab from './ContestEditGeneralTab';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
@@ -20,17 +20,17 @@ jest.mock('../../../modules/contestActions');
 jest.mock('../../modules/contestWebActions');
 
 describe('ContestEditGeneralTab', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
   beforeEach(() => {
-    (contestWebActions.getContestByJidWithWebConfig as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-    (contestActions.updateContest as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    contestWebActions.getContestByJidWithWebConfig.mockReturnValue(() => Promise.resolve({}));
+    contestActions.updateContest.mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>

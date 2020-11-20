@@ -4,18 +4,11 @@ import { TimeanddateLink } from '../../../../components/TimeanddateLink/Timeandd
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
 import { FormattedDuration } from '../../../../components/FormattedDuration/FormattedDuration';
-import { Contest } from '../../../../modules/api/uriel/contest';
-import { ContestRole } from '../../../../modules/api/uriel/contestWeb';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
 
 import './ContestCard.css';
 
-export interface ContestCardProps {
-  contest: Contest;
-  role: ContestRole;
-}
-
-export class ContestCard extends React.PureComponent<ContestCardProps> {
+export class ContestCard extends React.PureComponent {
   render() {
     const { contest, role } = this.props;
 
@@ -36,7 +29,7 @@ export class ContestCard extends React.PureComponent<ContestCardProps> {
     );
   }
 
-  private renderBeginTime = (contest: Contest) => {
+  renderBeginTime = contest => {
     return (
       <TimeanddateLink time={contest.beginTime} message={contest.name}>
         <FormattedDate value={contest.beginTime} />
@@ -44,7 +37,7 @@ export class ContestCard extends React.PureComponent<ContestCardProps> {
     );
   };
 
-  private renderDuration = (contest: Contest) => {
+  renderDuration = contest => {
     return <FormattedDuration value={contest.duration} />;
   };
 }

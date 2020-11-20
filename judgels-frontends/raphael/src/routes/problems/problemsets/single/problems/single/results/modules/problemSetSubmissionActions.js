@@ -2,14 +2,14 @@ import { selectToken } from '../../../../../../../../modules/session/sessionSele
 import { submissionBundleAPI } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { toastActions } from '../../../../../../../../modules/toast/toastActions';
 
-export function getSubmissions(problemSetJid: string, username?: string, problemAlias?: string, page?: number) {
+export function getSubmissions(problemSetJid, username, problemAlias, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await submissionBundleAPI.getSubmissions(token, problemSetJid, username, problemAlias, page);
   };
 }
 
-export function createItemSubmission(problemSetJid: string, problemJid: string, itemJid: string, answer: string) {
+export function createItemSubmission(problemSetJid, problemJid, itemJid, answer) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const data = {
@@ -24,21 +24,21 @@ export function createItemSubmission(problemSetJid: string, problemJid: string, 
   };
 }
 
-export function getSubmissionSummary(problemSetJid: string, problemJid: string, username?: string, language?: string) {
+export function getSubmissionSummary(problemSetJid, problemJid, username, language) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return submissionBundleAPI.getSubmissionSummary(token, problemSetJid, problemJid, username, language);
   };
 }
 
-export function getLatestSubmissions(problemSetJid: string, problemAlias: string) {
+export function getLatestSubmissions(problemSetJid, problemAlias) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return submissionBundleAPI.getLatestSubmissions(token, problemSetJid, problemAlias);
   };
 }
 
-export function regradeSubmission(submissionJid: string) {
+export function regradeSubmission(submissionJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await submissionBundleAPI.regradeSubmission(token, submissionJid);
@@ -47,7 +47,7 @@ export function regradeSubmission(submissionJid: string) {
   };
 }
 
-export function regradeSubmissions(problemSetJid: string, userJid?: string, problemJid?: string) {
+export function regradeSubmissions(problemSetJid, userJid, problemJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await submissionBundleAPI.regradeSubmissions(token, problemSetJid, userJid, problemJid);

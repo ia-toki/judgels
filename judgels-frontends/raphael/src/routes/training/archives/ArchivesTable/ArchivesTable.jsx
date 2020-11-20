@@ -1,26 +1,10 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Archive } from '../../../../modules/api/jerahmeel/archive';
-
 import './ArchivesTable.css';
 
-export interface ArchivesTableProps {
-  archives: Archive[];
-  onEditArchive: (archive: Archive) => any;
-}
-
-export class ArchivesTable extends React.PureComponent<ArchivesTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed archives-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ArchivesTable({ archives, onEditArchive }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -34,9 +18,7 @@ export class ArchivesTable extends React.PureComponent<ArchivesTableProps> {
     );
   };
 
-  private renderRows = () => {
-    const { archives } = this.props;
-
+  const renderRows = () => {
     const rows = archives.map(archive => (
       <tr key={archive.jid}>
         <td>{archive.id}</td>
@@ -44,11 +26,18 @@ export class ArchivesTable extends React.PureComponent<ArchivesTableProps> {
         <td>{archive.name}</td>
         <td>{archive.category}</td>
         <td>
-          <Icon className="action" icon="edit" intent="primary" onClick={() => this.props.onEditArchive(archive)} />
+          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditArchive(archive)} />
         </td>
       </tr>
     ));
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed archives-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

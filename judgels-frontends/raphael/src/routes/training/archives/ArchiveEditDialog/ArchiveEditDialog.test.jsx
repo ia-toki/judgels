@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,10 +6,9 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { Archive } from '../../../../modules/api/jerahmeel/archive';
 import { ArchiveEditDialog } from './ArchiveEditDialog';
 
-const archive: Archive = {
+const archive = {
   id: 1,
   jid: 'archiveJid',
   slug: 'archive',
@@ -19,13 +18,13 @@ const archive: Archive = {
 };
 
 describe('ArchiveEditDialog', () => {
-  let onUpdateArchive: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onUpdateArchive;
+  let wrapper;
 
   beforeEach(() => {
     onUpdateArchive = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
       isOpen: true,

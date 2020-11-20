@@ -1,8 +1,6 @@
 import { Classes, Button, Dialog, Icon, Intent, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-
 import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
 import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
 import ContestEditModulesTab from '../ContestEditModulesTab/ContestEditModulesTab';
@@ -10,19 +8,10 @@ import ContestEditConfigsTab from '../ContestEditConfigsTab/ContestEditConfigsTa
 
 import './ContestEditDialog.css';
 
-export interface ContestEditDialogProps {
-  contest: Contest;
-  canManage: boolean;
-  isEditingContest: boolean;
-  onSetNotEditingContest: () => void;
-}
-
-interface ContestEditDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class ContestEditDialog extends React.Component<ContestEditDialogProps, ContestEditDialogState> {
-  state: ContestEditDialogState = {};
+export class ContestEditDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
   async componentDidMount() {
     if (this.props.isEditingContest) {
@@ -40,7 +29,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     if (!this.props.canManage) {
       return null;
     }
@@ -57,15 +46,15 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
+  renderDialog = () => {
     return (
       <Dialog
         className="contest-edit-dialog"
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Contest settings"
         canOutsideClickClose={false}

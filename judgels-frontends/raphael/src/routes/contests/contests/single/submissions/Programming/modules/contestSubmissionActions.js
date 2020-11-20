@@ -2,18 +2,17 @@ import { push } from 'connected-react-router';
 
 import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 import { NotFoundError } from '../../../../../../../modules/api/error';
-import { ProblemSubmissionFormData } from '../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 import { contestSubmissionProgrammingAPI } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
 
-export function getSubmissions(contestJid: string, username?: string, problemAlias?: string, page?: number) {
+export function getSubmissions(contestJid, username, problemAlias, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestSubmissionProgrammingAPI.getSubmissions(token, contestJid, username, problemAlias, page);
   };
 }
 
-export function getSubmissionWithSource(contestJid: string, submissionId: number, language?: string) {
+export function getSubmissionWithSource(contestJid, submissionId, language) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const submissionWithSource = await contestSubmissionProgrammingAPI.getSubmissionWithSource(
@@ -28,12 +27,7 @@ export function getSubmissionWithSource(contestJid: string, submissionId: number
   };
 }
 
-export function createSubmission(
-  contestJid: string,
-  contestSlug: string,
-  problemJid: string,
-  data: ProblemSubmissionFormData
-) {
+export function createSubmission(contestJid, contestSlug, problemJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     let sourceFiles = {};
@@ -56,7 +50,7 @@ export function createSubmission(
   };
 }
 
-export function regradeSubmission(submissionJid: string) {
+export function regradeSubmission(submissionJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestSubmissionProgrammingAPI.regradeSubmission(token, submissionJid);
@@ -65,7 +59,7 @@ export function regradeSubmission(submissionJid: string) {
   };
 }
 
-export function regradeSubmissions(contestJid: string, username?: string, problemAlias?: string) {
+export function regradeSubmissions(contestJid, username, problemAlias) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestSubmissionProgrammingAPI.regradeSubmissions(token, contestJid, username, problemAlias);
@@ -74,7 +68,7 @@ export function regradeSubmissions(contestJid: string, username?: string, proble
   };
 }
 
-export function downloadSubmission(submissionJid: string) {
+export function downloadSubmission(submissionJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestSubmissionProgrammingAPI.downloadSubmission(token, submissionJid);

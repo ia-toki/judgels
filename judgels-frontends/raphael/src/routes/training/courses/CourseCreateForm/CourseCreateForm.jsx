@@ -1,36 +1,26 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 
-export interface CourseCreateFormData {
-  slug: string;
-  name: string;
-  description?: string;
-}
-
-export interface CourseCreateFormProps extends InjectedFormProps<CourseCreateFormData> {
-  renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
-}
-
-const CourseCreateForm = (props: CourseCreateFormProps) => {
-  const slugField: any = {
+function CourseCreateForm({ handleSubmit, submitting, renderFormComponents }) {
+  const slugField = {
     name: 'slug',
     label: 'Slug',
     validate: [Required, Slug],
     autoFocus: true,
   };
 
-  const nameField: any = {
+  const nameField = {
     name: 'name',
     label: 'Name',
     validate: [Required],
   };
 
-  const descriptionField: any = {
+  const descriptionField = {
     name: 'description',
     label: 'Description',
     rows: 5,
@@ -43,12 +33,12 @@ const CourseCreateForm = (props: CourseCreateFormProps) => {
       <Field component={FormTextArea} {...descriptionField} />
     </>
   );
-  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={props.submitting} />;
+  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
-};
+  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+}
 
-export default reduxForm<CourseCreateFormData>({
+export default reduxForm({
   form: 'course-create',
   touchOnBlur: false,
 })(CourseCreateForm);

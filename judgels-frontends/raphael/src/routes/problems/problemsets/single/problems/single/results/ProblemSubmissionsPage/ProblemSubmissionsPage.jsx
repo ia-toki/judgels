@@ -2,7 +2,7 @@ import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter, Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
@@ -12,10 +12,6 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
-import { AppState } from '../../../../../../../../modules/store';
-import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
-import { ItemSubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
@@ -25,29 +21,12 @@ import * as problemSetSubmissionActions from '../modules/problemSetSubmissionAct
 
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
-export interface ProblemSubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid?: string;
-  problemSet: ProblemSet;
-  problem: ProblemSetProblem;
-  onGetSubmissions: (
-    problemSetJid: string,
-    username?: string,
-    problemAlias?: string,
-    page?: number
-  ) => Promise<ItemSubmissionsResponse>;
-  onRegrade: (submissionJid: string) => Promise<void>;
-  onRegradeAll: (problemSetJid: string, userJid?: string, problemJid?: string) => Promise<void>;
-  onAppendRoute: (queries) => any;
-}
+export class ProblemSubmissionsPage extends React.Component {
+  static PAGE_SIZE = 20;
 
-interface ProblemSubmissionsPageState {
-  response?: ItemSubmissionsResponse;
-}
-
-export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPageProps, ProblemSubmissionsPageState> {
-  private static PAGE_SIZE = 20;
-
-  state: ProblemSubmissionsPageState = {};
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     await this.refreshSubmissions();
@@ -66,7 +45,7 @@ export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPa
     );
   }
 
-  private renderSubmissions = () => {
+  renderSubmissions = () => {
     const response = this.state.response;
     if (!response) {
       return <LoadingState />;
@@ -129,7 +108,7 @@ export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPa
     );
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     return (
       <Pagination
         key={1}
@@ -140,29 +119,29 @@ export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPa
     );
   };
 
-  private refreshSubmissions = async (page?: number) => {
+  refreshSubmissions = async page => {
     const { problemSet, problem, onGetSubmissions } = this.props;
     const response = await onGetSubmissions(problemSet.jid, undefined, problem.alias, page);
     this.setState({ response });
     return response.data;
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  private onClickRegrade = (submissionJid: string) => {
+  onClickRegrade = submissionJid => {
     return () => this.onRegrade(submissionJid);
   };
 
-  private onRegrade = async (submissionJid: string) => {
+  onRegrade = async submissionJid => {
     await this.props.onRegrade(submissionJid);
     const queries = parse(this.props.location.search);
     await this.refreshSubmissions(queries.page);
   };
 
-  private onRegradeAll = async () => {
+  onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
       await this.props.onRegradeAll(this.props.problemSet.jid, undefined, this.props.problem.problemJid);
       const queries = parse(this.props.location.search);
@@ -170,7 +149,7 @@ export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPa
     }
   };
 
-  private renderRegradeAllButton = () => {
+  renderRegradeAllButton = () => {
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
@@ -188,7 +167,7 @@ export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPa
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
   problemSet: selectProblemSet(state),
   problem: selectProblemSetProblem(state),
@@ -201,4 +180,4 @@ const mapDispatchToProps = {
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));

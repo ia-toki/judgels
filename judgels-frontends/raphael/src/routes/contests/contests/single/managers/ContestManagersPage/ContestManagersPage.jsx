@@ -5,13 +5,6 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import {
-  ContestManagersDeleteResponse,
-  ContestManagersResponse,
-  ContestManagersUpsertResponse,
-} from '../../../../../../modules/api/uriel/contestManager';
 import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
 import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManagerAddDialog';
 import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
@@ -20,22 +13,13 @@ import * as contestManagerActions from '../modules/contestManagerActions';
 
 import './ContestManagersPage.css';
 
-export interface ContestManagersPageProps {
-  contest: Contest;
-  onGetManagers: (contestJid: string, page?: number) => Promise<ContestManagersResponse>;
-  onUpsertManagers: (contestJid: string, usernames: string[]) => Promise<ContestManagersUpsertResponse>;
-  onDeleteManagers: (contestJid: string, usernames: string[]) => Promise<ContestManagersDeleteResponse>;
-}
+class ContestManagersPage extends React.Component {
+  static PAGE_SIZE = 250;
 
-interface ContestManagersPageState {
-  response?: ContestManagersResponse;
-  lastRefreshManagersTime?: number;
-}
-
-class ContestManagersPage extends React.Component<ContestManagersPageProps, ContestManagersPageState> {
-  private static PAGE_SIZE = 250;
-
-  state: ContestManagersPageState = {};
+  state = {
+    response: undefined,
+    lastRefreshManagersTime: 0,
+  };
 
   render() {
     return (
@@ -49,7 +33,7 @@ class ContestManagersPage extends React.Component<ContestManagersPageProps, Cont
     );
   }
 
-  private renderManagers = () => {
+  renderManagers = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -67,7 +51,7 @@ class ContestManagersPage extends React.Component<ContestManagersPageProps, Cont
     return <ContestManagersTable managers={managers.page} profilesMap={profilesMap} />;
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     // updates pagination when managers are refreshed
     const { lastRefreshManagersTime } = this.state;
     const key = lastRefreshManagersTime || 0;
@@ -77,18 +61,18 @@ class ContestManagersPage extends React.Component<ContestManagersPageProps, Cont
     );
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshManagers(nextPage);
     return data.totalCount;
   };
 
-  private refreshManagers = async (page?: number) => {
+  refreshManagers = async page => {
     const response = await this.props.onGetManagers(this.props.contest.jid, page);
     this.setState({ response });
     return response.data;
   };
 
-  private renderAddRemoveDialogs = () => {
+  renderAddRemoveDialogs = () => {
     const { response } = this.state;
     if (!response) {
       return null;
@@ -105,21 +89,21 @@ class ContestManagersPage extends React.Component<ContestManagersPageProps, Cont
     );
   };
 
-  private upsertManagers = async (contestJid, data) => {
+  upsertManagers = async (contestJid, data) => {
     const response = await this.props.onUpsertManagers(contestJid, data);
     this.setState({ lastRefreshManagersTime: new Date().getTime() });
     return response;
   };
 
-  private deleteManagers = async (contestJid, data) => {
+  deleteManagers = async (contestJid, data) => {
     const response = await this.props.onDeleteManagers(contestJid, data);
     this.setState({ lastRefreshManagersTime: new Date().getTime() });
     return response;
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
 });
 
 const mapDispatchToProps = {

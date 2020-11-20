@@ -1,31 +1,20 @@
 import * as React from 'react';
 
-import ClarificationFilterForm, { ClarificationFilterFormData } from './ClarificationFilterForm';
+import ClarificationFilterForm from './ClarificationFilterForm';
 
-export interface ClarificationFilterWidgetProps {
-  statuses?: string[];
-  onFilter: (filter: any) => Promise<void>;
-  isLoading: boolean;
-
-  status?: string;
-}
-
-export class ClarificationFilterWidget extends React.Component<ClarificationFilterWidgetProps> {
-  render() {
-    const { statuses, isLoading, status } = this.props;
-    const formProps = {
-      statuses: ['-', ...statuses],
-      isLoading,
-      initialValues: {
-        status: status || '-',
-      },
-    };
-
-    return <ClarificationFilterForm onSubmit={this.onFilter} {...formProps} />;
-  }
-
-  private onFilter = async (data: ClarificationFilterFormData) => {
-    const status = data.status === '-' ? undefined : data.status;
-    return await this.props.onFilter({ status });
+export function ClarificationFilterWidget({ statuses, isLoading, status, onFilter }) {
+  const formProps = {
+    statuses: ['-', ...statuses],
+    isLoading,
+    initialValues: {
+      status: status || '-',
+    },
   };
+
+  const filter = async data => {
+    const status = data.status === '-' ? undefined : data.status;
+    return await onFilter({ status });
+  };
+
+  return <ClarificationFilterForm onSubmit={filter} {...formProps} />;
 }

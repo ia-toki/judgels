@@ -1,24 +1,27 @@
-import { TypedAction, TypedReducer } from 'redoodle';
+export const initialState = {
+  value: undefined,
+};
 
-import { ContestWebConfig } from '../../../../modules/api/uriel/contestWeb';
-
-export interface ContestWebConfigState {
-  value?: ContestWebConfig;
+export function PutWebConfig(config) {
+  return {
+    type: 'uriel/contest/web/PUT_CONFIG',
+    payload: config,
+  };
 }
 
-export const INITIAL_STATE: ContestWebConfigState = {};
-
-export const PutWebConfig = TypedAction.define('uriel/contest/web/PUT_CONFIG')<ContestWebConfig>();
-export const DelWebConfig = TypedAction.defineWithoutPayload('uriel/contest/web/DEL_CONFIG')();
-
-function createContestWebConfigReducer() {
-  const builder = TypedReducer.builder<ContestWebConfigState>();
-
-  builder.withHandler(PutWebConfig.TYPE, (state, payload) => ({ value: payload }));
-  builder.withHandler(DelWebConfig.TYPE, () => ({ value: undefined }));
-  builder.withDefaultHandler(state => (state !== undefined ? state : INITIAL_STATE));
-
-  return builder.build();
+export function DelWebConfig() {
+  return {
+    type: 'uriel/contest/web/DEL_CONFIG',
+  };
 }
 
-export const contestWebConfigReducer = createContestWebConfigReducer();
+export default function contestWebConfigReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'uriel/contest/web/PUT_CONFIG':
+      return { value: action.payload };
+    case 'uriel/contest/web/DEL_CONFIG':
+      return { value: undefined };
+    default:
+      return state;
+  }
+}

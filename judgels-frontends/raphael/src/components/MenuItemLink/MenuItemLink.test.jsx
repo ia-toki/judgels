@@ -1,14 +1,14 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { push } from 'connected-react-router';
-import createMockStore, { MockStore } from 'redux-mock-store';
+import createMockStore from 'redux-mock-store';
 
 import MenuItemLink from './MenuItemLink';
 
 describe('MenuItemLink', () => {
-  let wrapper: ReactWrapper<any, any>;
-  let store: MockStore<any>;
+  let wrapper;
+  let store;
 
   beforeEach(() => {
     store = createMockStore()({});

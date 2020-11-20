@@ -3,12 +3,7 @@ import * as React from 'react';
 
 import { getVerdictDisplayCode, getVerdictIntent, VerdictCode } from '../../modules/api/gabriel/verdict';
 
-export interface VerdictTagProps {
-  verdictCode: string;
-}
-
-export const VerdictTag = (props: VerdictTagProps) => {
-  const { verdictCode } = props;
+export const VerdictTag = ({ verdictCode }) => {
   const tag = verdictCode === VerdictCode.PND ? <Icon icon="time" /> : getVerdictDisplayCode(verdictCode);
   return (
     <Tag round intent={getVerdictIntent(verdictCode)}>

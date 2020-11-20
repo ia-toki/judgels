@@ -2,14 +2,14 @@ import { selectToken } from '../../../../../../modules/session/sessionSelectors'
 import { contestManagerAPI } from '../../../../../../modules/api/uriel/contestManager';
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-export function getManagers(contestJid: string, page?: number) {
+export function getManagers(contestJid, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestManagerAPI.getManagers(token, contestJid, page);
   };
 }
 
-export function upsertManagers(contestJid: string, usernames: string[]) {
+export function upsertManagers(contestJid, usernames) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const response = await contestManagerAPI.upsertManagers(token, contestJid, usernames);
@@ -20,7 +20,7 @@ export function upsertManagers(contestJid: string, usernames: string[]) {
   };
 }
 
-export function deleteManagers(contestJid: string, usernames: string[]) {
+export function deleteManagers(contestJid, usernames) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const response = await contestManagerAPI.deleteManagers(token, contestJid, usernames);

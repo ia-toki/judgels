@@ -1,49 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
-import { AppState } from '../../../../../../../modules/store';
-import { Profile } from '../../../../../../../modules/api/jophiel/profile';
-import { Contest } from '../../../../../../../modules/api/uriel/contest';
-import { ContestSubmissionSummaryResponse } from '../../../../../../../modules/api/uriel/contestSubmissionBundle';
-import { ContestSubmissionConfig } from '../../../../../../../modules/api/uriel/contestSubmission';
 import { selectStatementLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../../modules/contestSelectors';
 
-import {
-  ProblemSubmissionCard,
-  ProblemSubmissionCardProps,
-} from '../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
+import { ProblemSubmissionCard } from '../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
-interface ContestSubmissionSummaryPageRoute {
-  username?: string;
-}
-
-export interface ContestSubmissionSummaryPageProps extends RouteComponentProps<ContestSubmissionSummaryPageRoute> {
-  contest: Contest;
-  language?: string;
-  onGetSubmissionSummary: (
-    contestJid: string,
-    username?: string,
-    language?: string
-  ) => Promise<ContestSubmissionSummaryResponse>;
-  onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
-}
-
-export interface ContestSubmissionSummaryPageState {
-  config?: ContestSubmissionConfig;
-  profile?: Profile;
-  problemSummaries: ProblemSubmissionCardProps[];
-}
-
-class SubmissionSummaryPage extends React.Component<
-  ContestSubmissionSummaryPageProps,
-  ContestSubmissionSummaryPageState
-> {
-  state: ContestSubmissionSummaryPageState = {
+class SubmissionSummaryPage extends React.Component {
+  state = {
     config: undefined,
     profile: undefined,
     problemSummaries: [],
@@ -53,7 +21,7 @@ class SubmissionSummaryPage extends React.Component<
     const { contest, onGetSubmissionSummary } = this.props;
     const response = await onGetSubmissionSummary(contest.jid, this.props.match.params.username, this.props.language);
 
-    const problemSummaries: ProblemSubmissionCardProps[] = response.config.problemJids.map(problemJid => ({
+    const problemSummaries = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
       alias: response.problemAliasesMap[problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
@@ -80,7 +48,7 @@ class SubmissionSummaryPage extends React.Component<
         <h3>Submissions</h3>
         <hr />
         <ContentCard>
-          Summary for <UserRef profile={this.state.profile!} />
+          Summary for <UserRef profile={this.state.profile} />
         </ContentCard>
         {this.state.problemSummaries.map(props => (
           <ProblemSubmissionCard key={props.alias} {...props} />
@@ -89,8 +57,8 @@ class SubmissionSummaryPage extends React.Component<
     );
   }
 
-  private regrade = async problemJid => {
-    const { userJids } = this.state.config!;
+  regrade = async problemJid => {
+    const { userJids } = this.state.config;
     const userJid = userJids[0];
 
     await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
@@ -98,8 +66,8 @@ class SubmissionSummaryPage extends React.Component<
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
   language: selectStatementLanguage(state),
 });
 
@@ -108,4 +76,4 @@ const mapDispatchToProps = {
   onRegradeAll: contestSubmissionActions.regradeSubmissions,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));

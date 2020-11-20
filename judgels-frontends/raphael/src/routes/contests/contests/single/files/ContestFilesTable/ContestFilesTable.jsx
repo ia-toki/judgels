@@ -3,27 +3,12 @@ import prettyBytes from 'pretty-bytes';
 import * as React from 'react';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestFile, contestFileAPI } from '../../../../../../modules/api/uriel/contestFile';
+import { contestFileAPI } from '../../../../../../modules/api/uriel/contestFile';
 
 import './ContestFilesTable.css';
 
-export interface ContestFilesTableProps {
-  contest: Contest;
-  files: ContestFile[];
-}
-
-export class ContestFilesTable extends React.PureComponent<ContestFilesTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed contest-files-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ContestFilesTable({ contest, files }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -36,8 +21,8 @@ export class ContestFilesTable extends React.PureComponent<ContestFilesTableProp
     );
   };
 
-  private renderRows = () => {
-    const rows = this.props.files.map(file => (
+  const renderRows = () => {
+    const rows = files.map(file => (
       <tr key={file.name}>
         <td>{file.name}</td>
         <td>{prettyBytes(file.size)}</td>
@@ -45,7 +30,7 @@ export class ContestFilesTable extends React.PureComponent<ContestFilesTableProp
           <FormattedRelative value={file.lastModifiedTime} />
         </td>
         <td className="col-download">
-          <a href={contestFileAPI.renderDownloadFileUrl(this.props.contest.jid, file.name)}>
+          <a href={contestFileAPI.renderDownloadFileUrl(contest.jid, file.name)}>
             <Icon icon="download" />
           </a>
         </td>
@@ -54,4 +39,10 @@ export class ContestFilesTable extends React.PureComponent<ContestFilesTableProp
 
     return <tbody>{rows}</tbody>;
   };
+  return (
+    <HTMLTable striped className="table-list-condensed contest-files-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

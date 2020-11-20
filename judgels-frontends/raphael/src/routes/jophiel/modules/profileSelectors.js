@@ -1,9 +1,7 @@
-import { AppState } from '../../../modules/store';
-
-export function selectUserJid(state: AppState) {
+export function selectUserJid(state) {
   return state.jophiel.profile.userJid;
 }
 
-export function selectUsername(state: AppState) {
+export function selectUsername(state) {
   return state.jophiel.profile.username;
 }

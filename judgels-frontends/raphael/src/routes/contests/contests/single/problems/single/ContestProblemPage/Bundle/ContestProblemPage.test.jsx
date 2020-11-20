@@ -1,5 +1,5 @@
-import { mount, ReactWrapper } from 'enzyme';
-import { createMemoryHistory, MemoryHistory } from 'history';
+import { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -8,11 +8,11 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { webPrefsReducer } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid, problemAlias } from '../../../../../../../../fixtures/state';
 import ContestProblemPage from './ContestProblemPage';
-import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
@@ -24,11 +24,11 @@ jest.mock('../../../modules/contestProblemActions');
 jest.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
 
 describe('BundleContestProblemPage', () => {
-  let wrapper: ReactWrapper<any, any>;
-  let history: MemoryHistory;
+  let wrapper;
+  let history;
 
   beforeEach(() => {
-    (contestProblemActions.getBundleProblemWorksheet as jest.Mock).mockReturnValue(() =>
+    contestProblemActions.getBundleProblemWorksheet.mockReturnValue(() =>
       Promise.resolve({
         defaultLanguage: 'fakelang',
         languages: ['fakelang'],
@@ -65,15 +65,14 @@ describe('BundleContestProblemPage', () => {
       })
     );
 
-    (contestSubmissionActions.createItemSubmission as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-    (contestSubmissionActions.getLatestSubmissions as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-
-    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
-    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
+    contestSubmissionActions.createItemSubmission.mockReturnValue(() => Promise.resolve({}));
+    contestSubmissionActions.getLatestSubmissions.mockReturnValue(() => Promise.resolve({}));
+    breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
+    breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
 
     history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/${problemAlias}`] });
 
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({
         form: formReducer,
         webPrefs: webPrefsReducer,
@@ -82,7 +81,7 @@ describe('BundleContestProblemPage', () => {
       }),
       applyMiddleware(thunk, routerMiddleware(history))
     );
-    store.dispatch(PutContest.create({ ...contest, style: ContestStyle.Bundle }));
+    store.dispatch(PutContest({ ...contest, style: ContestStyle.Bundle }));
 
     wrapper = mount(
       <Provider store={store}>

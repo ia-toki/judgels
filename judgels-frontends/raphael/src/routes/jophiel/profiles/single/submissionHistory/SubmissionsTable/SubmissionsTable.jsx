@@ -5,32 +5,20 @@ import { Link } from 'react-router-dom';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { VerdictTag } from '../../../../../../components/VerdictTag/VerdictTag';
 import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language';
-import { Submission as ProgrammingSubmission } from '../../../../../../modules/api/sandalphon/submissionProgramming';
+import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
 
 import '../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
-export interface SubmissionsTableProps {
-  submissions: ProgrammingSubmission[];
-  canManage: boolean;
-  userJid: string;
-  problemAliasesMap: { [problemJid: string]: string };
-  problemNamesMap: { [problemJid: string]: string };
-  containerNamesMap: { [problemJid: string]: string };
-  containerPathsMap: { [problemJid: string]: string[] };
-}
-
-export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed submissions-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function SubmissionsTable({
+  submissions,
+  userJid,
+  canManage,
+  problemAliasesMap,
+  problemNamesMap,
+  containerNamesMap,
+  containerPathsMap,
+}) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -47,29 +35,19 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
     );
   };
 
-  private renderRows = () => {
-    const {
-      submissions,
-      userJid,
-      canManage,
-      problemAliasesMap,
-      problemNamesMap,
-      containerNamesMap,
-      containerPathsMap,
-    } = this.props;
-
+  const renderRows = () => {
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
         <td>{submission.id}</td>
 
         <td>
-          <Link to={this.constructContainerUrl(containerPathsMap[submission.containerJid])}>
+          <Link to={constructContainerUrl(containerPathsMap[submission.containerJid])}>
             {containerNamesMap[submission.containerJid]}
           </Link>
         </td>
         <td>
           <Link
-            to={`${this.constructContainerUrl(containerPathsMap[submission.containerJid])}/${problemAliasesMap[
+            to={`${constructContainerUrl(containerPathsMap[submission.containerJid])}/${problemAliasesMap[
               submission.containerJid + '-' + submission.problemJid
             ] || '#'}`}
           >
@@ -100,7 +78,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
     return <tbody>{rows}</tbody>;
   };
 
-  private constructContainerUrl = (subpaths: string[]) => {
+  const constructContainerUrl = subpaths => {
     if (!subpaths) {
       return '';
     }
@@ -110,4 +88,11 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
       return `/problems/${subpaths[0]}`;
     }
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed submissions-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

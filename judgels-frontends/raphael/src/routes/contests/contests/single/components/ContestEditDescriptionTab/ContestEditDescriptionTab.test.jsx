@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -9,24 +9,23 @@ import thunk from 'redux-thunk';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestActions from '../../../modules/contestActions';
 
 jest.mock('../../../modules/contestActions');
 
 describe('ContestEditDescriptionTab', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
   beforeEach(() => {
-    (contestActions.getContestDescription as jest.Mock).mockReturnValue(() => Promise.resolve('current description'));
+    contestActions.getContestDescription.mockReturnValue(() => Promise.resolve('current description'));
+    contestActions.updateContestDescription.mockReturnValue(() => Promise.resolve({}));
 
-    (contestActions.updateContestDescription as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>

@@ -2,44 +2,22 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import {
-  IcpcScoreboardProblemState,
-  IcpcScoreboard,
-  IcpcScoreboardContent,
-  IcpcScoreboardEntry,
-} from '../../../../../../modules/api/uriel/scoreboard';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-
+import { IcpcScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './IcpcScoreboardTable.css';
 
-export class IcpcScoreboardTableProps {
-  userJid?: string;
-  scoreboard: IcpcScoreboard;
-  profilesMap: ProfilesMap;
-}
-
-export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTableProps> {
-  render() {
-    const { scoreboard } = this.props;
-    return (
-      <ScoreboardTable className="icpc-scoreboard__content" state={scoreboard.state}>
-        {this.renderData(scoreboard.content)}
-      </ScoreboardTable>
-    );
-  }
-
-  private renderData = (content: IcpcScoreboardContent) => {
-    let rows = content.entries.map(this.renderRow);
+export function IcpcScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap }) {
+  const renderData = () => {
+    const rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
   };
 
-  private renderRow = (entry: IcpcScoreboardEntry) => {
+  const renderRow = entry => {
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        <UserRef profile={this.props.profilesMap[entry.contestantJid]} showFlag />
+        <UserRef profile={profilesMap[entry.contestantJid]} showFlag />
       </td>,
       <td key="totalAccepted">
         <strong>{entry.totalAccepted}</strong>
@@ -48,17 +26,17 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
       </td>,
     ];
     const problemCells = entry.attemptsList.map((item, i) =>
-      this.renderProblemCell(i, entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
+      renderProblemCell(i, entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
     );
     cells = [...cells, ...problemCells];
     return (
-      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === this.props.userJid })}>
+      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === userJid })}>
         {cells}
       </tr>
     );
   };
 
-  private renderProblemCell = (idx: number, attempts: number, penalty: number, state: IcpcScoreboardProblemState) => {
+  const renderProblemCell = (idx, attempts, penalty, state) => {
     let className = {};
     if (state === IcpcScoreboardProblemState.Accepted) {
       className = 'accepted';
@@ -86,4 +64,10 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
       </td>
     );
   };
+
+  return (
+    <ScoreboardTable className="icpc-scoreboard__content" state={state}>
+      {renderData()}
+    </ScoreboardTable>
+  );
 }

@@ -1,39 +1,26 @@
 import { APP_CONFIG } from '../../../conf';
-import { post } from '../../../modules/api/http';
-
-export interface UserRegistrationData {
-  username: string;
-  password: string;
-  email: string;
-  name?: string;
-  recaptchaResponse?: string;
-}
-
-export interface PasswordResetData {
-  emailCode: string;
-  newPassword: string;
-}
+import { post } from '../http';
 
 const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-account`;
 
 export const userAccountAPI = {
-  registerUser: (userRegistrationData: UserRegistrationData): Promise<void> => {
-    return post(`${baseURL}/register`, undefined, userRegistrationData);
+  registerUser: data => {
+    return post(`${baseURL}/register`, undefined, data);
   },
 
-  activateUser: (emailCode: string): Promise<void> => {
+  activateUser: emailCode => {
     return post(`${baseURL}/activate/${emailCode}`);
   },
 
-  requestToResetPassword: (email: string): Promise<void> => {
+  requestToResetPassword: email => {
     return post(`${baseURL}/request-reset-password/${email}`);
   },
 
-  resetPassword: (passwordResetData: PasswordResetData): Promise<void> => {
-    return post(`${baseURL}/reset-password`, undefined, passwordResetData);
+  resetPassword: data => {
+    return post(`${baseURL}/reset-password`, undefined, data);
   },
 
-  resendActivationEmail: (email: string): Promise<void> => {
+  resendActivationEmail: email => {
     return post(`${baseURL}/resend-activation-email/${email}`);
   },
 };

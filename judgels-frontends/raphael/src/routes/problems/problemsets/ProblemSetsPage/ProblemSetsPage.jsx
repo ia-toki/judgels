@@ -1,51 +1,36 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import { parse } from 'query-string';
 
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { Card } from '../../../../components/Card/Card';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
-import { ProblemSetsResponse } from '../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
 import * as problemSetActions from '../modules/problemSetActions';
 
 import './ProblemSetsPage.css';
 
-export interface ProblemSetsPageProps extends RouteComponentProps<{ name: string }> {
-  onGetProblemSets: (archiveSlug?: string, name?: string, page?: number) => Promise<ProblemSetsResponse>;
-}
-
-interface ProblemSetsFilter {
-  archiveSlug?: string;
-  name?: string;
-}
-
-export interface ProblemSetsPageState {
-  response?: Partial<ProblemSetsResponse>;
-  filter?: ProblemSetsFilter;
-  isFilterLoading?: boolean;
-}
-
-class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsPageState> {
-  private static PAGE_SIZE = 20;
-
-  state: ProblemSetsPageState = {};
+class ProblemSetsPage extends React.Component {
+  state;
 
   constructor(props) {
     super(props);
 
     const queries = parse(this.props.location.search);
-    const archiveSlug = queries.archive as string;
-    const name = queries.name as string;
+    const archiveSlug = queries.archive;
+    const name = queries.name;
 
-    this.state = { filter: { archiveSlug, name }, isFilterLoading: false };
+    this.state = {
+      response: undefined,
+      filter: { archiveSlug, name },
+      isFilterLoading: false,
+    };
   }
 
   componentDidUpdate() {
     const queries = parse(this.props.location.search);
-    const archiveSlug = queries.archive as string;
+    const archiveSlug = queries.archive;
 
     if (archiveSlug !== this.state.filter.archiveSlug) {
       this.setState({ filter: { archiveSlug }, isFilterLoading: false });
@@ -62,7 +47,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     );
   }
 
-  private renderHeader = () => {
+  renderHeader = () => {
     return (
       <>
         <div className="content-card__section search-box-inline">{this.renderFilter()}</div>
@@ -75,7 +60,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     );
   };
 
-  private renderFilterResultsBanner = () => {
+  renderFilterResultsBanner = () => {
     const { archiveSlug, name } = this.state.filter;
     if (!archiveSlug && !name) {
       return <>Most recently added problemsets:</>;
@@ -112,7 +97,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     );
   };
 
-  private renderFilter = () => {
+  renderFilter = () => {
     const { name } = this.state.filter;
     return (
       <SearchBox
@@ -123,7 +108,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     );
   };
 
-  private renderProblemSets = () => {
+  renderProblemSets = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -151,7 +136,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     ));
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     const { filter } = this.state;
     return (
       <Pagination
@@ -162,7 +147,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     );
   };
 
-  private onChangePage = async (nextPage?: number) => {
+  onChangePage = async nextPage => {
     if (this.state.response) {
       this.setState({ response: { ...this.state.response, data: undefined } });
     }
@@ -172,7 +157,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     return response.data.totalCount;
   };
 
-  private searchBoxUpdateQueries = (name: string, queries: any) => {
+  searchBoxUpdateQueries = (name, queries) => {
     this.setState(prevState => {
       const prevFilter = prevState.filter || {};
       return {

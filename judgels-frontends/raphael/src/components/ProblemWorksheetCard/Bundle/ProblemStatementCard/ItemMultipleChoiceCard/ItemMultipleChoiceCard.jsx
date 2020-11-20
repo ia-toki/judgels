@@ -1,29 +1,17 @@
 import { Card, Divider, RadioGroup, Radio, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
-import { Item, ItemMultipleChoiceConfig } from '../../../../../modules/api/sandalphon/problemBundle';
+import { HtmlText } from '../../../../HtmlText/HtmlText';
 
 import './ItemMultipleChoiceCard.css';
 
-export interface ItemMultipleChoiceCardProps extends Item {
-  className?: string;
-  initialAnswer?: string;
-  onChoiceChange?: (choice?: string) => Promise<any>;
-  itemNumber: number;
-}
-
-export interface ItemMultipleChoiceCardState {
-  value?: string;
-}
-
-export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCardProps, ItemMultipleChoiceCardState> {
-  constructor(props: ItemMultipleChoiceCardProps) {
+export class ItemMultipleChoiceCard extends React.Component {
+  constructor(props) {
     super(props);
     this.state = { value: props.initialAnswer };
   }
 
-  handleRadioChange = (event: React.FormEvent<HTMLInputElement>) => {
+  handleRadioChange = event => {
     const oldValue = this.state.value;
     const newValue = event.currentTarget.value;
     this.setState({ value: newValue });
@@ -32,7 +20,7 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
     }
   };
 
-  handleRadioClick = (event: React.FormEvent<HTMLInputElement>) => {
+  handleRadioClick = event => {
     const oldValue = this.state.value;
     const newValue = event.currentTarget.value;
     if (oldValue === newValue) {
@@ -44,7 +32,7 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
   };
 
   render() {
-    const config: ItemMultipleChoiceConfig = this.props.config as ItemMultipleChoiceConfig;
+    const config = this.props.config;
     return (
       <Card className={this.props.className}>
         <div className="bundle-problem-statement-item__statement">

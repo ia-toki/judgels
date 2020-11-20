@@ -2,7 +2,7 @@ import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
@@ -13,9 +13,6 @@ import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { ContestItemSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionBundle';
-import { AppState } from '../../../../../../../modules/store';
-import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
@@ -23,49 +20,29 @@ import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
-export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
-  contest: Contest;
-  onGetSubmissions: (
-    contestJid: string,
-    username?: string,
-    problemAlias?: string,
-    page?: number
-  ) => Promise<ContestItemSubmissionsResponse>;
-  onRegrade: (submissionJid: string) => Promise<void>;
-  onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
-  onAppendRoute: (queries) => any;
-}
+export class ContestSubmissionsPage extends React.Component {
+  static PAGE_SIZE = 20;
 
-interface ContestSubmissionsFilter {
-  username?: string;
-  problemAlias?: string;
-}
-
-interface ContestSubmissionsPageState {
-  response?: ContestItemSubmissionsResponse;
-  filter?: ContestSubmissionsFilter;
-  isFilterLoading?: boolean;
-}
-
-export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPageProps, ContestSubmissionsPageState> {
-  private static PAGE_SIZE = 20;
-
-  state: ContestSubmissionsPageState = {};
+  state;
 
   constructor(props) {
     super(props);
 
     const queries = parse(this.props.location.search);
-    const username = queries.username as string;
-    const problemAlias = queries.problemAlias as string;
+    const username = queries.username;
+    const problemAlias = queries.problemAlias;
 
-    this.state = { filter: { username, problemAlias } };
+    this.state = {
+      response: undefined,
+      filter: { username, problemAlias },
+      isFilterLoading: false,
+    };
   }
 
   componentDidUpdate() {
     const queries = parse(this.props.location.search);
-    const username = queries.username as string;
-    const problemAlias = queries.problemAlias as string;
+    const username = queries.username;
+    const problemAlias = queries.problemAlias;
 
     if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
       this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
@@ -85,7 +62,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     );
   }
 
-  private renderSubmissions = () => {
+  renderSubmissions = () => {
     const response = this.state.response;
     if (!response) {
       return <LoadingState />;
@@ -142,47 +119,47 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     );
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     const { filter } = this.state;
 
     const key = '' + filter.username + filter.problemAlias;
     return <Pagination key={key} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
-  private refreshSubmissions = async (username?: string, problemAlias?: string, page?: number) => {
+  refreshSubmissions = async (username, problemAlias, page) => {
     const { contest, onGetSubmissions } = this.props;
     const response = await onGetSubmissions(contest.jid, username, problemAlias, page);
     this.setState({ response, isFilterLoading: false });
     return response;
   };
 
-  private onChangePage = async (nextPage: number) => {
-    const { username, problemAlias } = this.state.filter!;
+  onChangePage = async nextPage => {
+    const { username, problemAlias } = this.state.filter;
     const response = await this.refreshSubmissions(username, problemAlias, nextPage);
     return response.data.totalCount;
   };
 
-  private onClickRegrade = (submissionJid: string) => {
+  onClickRegrade = submissionJid => {
     return () => this.onRegrade(submissionJid);
   };
 
-  private onRegrade = async (submissionJid: string) => {
+  onRegrade = async submissionJid => {
     await this.props.onRegrade(submissionJid);
-    const { username, problemAlias } = this.state.filter!;
+    const { username, problemAlias } = this.state.filter;
     const queries = parse(this.props.location.search);
     await this.refreshSubmissions(username, problemAlias, queries.page);
   };
 
-  private onRegradeAll = async () => {
+  onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      const { username, problemAlias } = this.state.filter!;
+      const { username, problemAlias } = this.state.filter;
       await this.props.onRegradeAll(this.props.contest.jid, username, problemAlias);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(username, problemAlias, queries.page);
     }
   };
 
-  private renderRegradeAllButton = () => {
+  renderRegradeAllButton = () => {
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
@@ -199,7 +176,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     );
   };
 
-  private renderFilterWidget = () => {
+  renderFilterWidget = () => {
     const { response, filter, isFilterLoading } = this.state;
     if (!response || !filter) {
       return null;
@@ -223,13 +200,13 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     );
   };
 
-  private onFilter = async filter => {
+  onFilter = async filter => {
     this.props.onAppendRoute(filter);
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
 });
 
 const mapDispatchToProps = {

@@ -1,48 +1,13 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { ProblemStatement } from '../../../../modules/api/sandalphon/problem';
-import { ProblemLimits } from '../../../../modules/api/sandalphon/problemProgramming';
+import { ContentCard } from '../../../ContentCard/ContentCard';
 import { KatexText } from '../../../KatexText/KatexText';
 
 import './ProblemStatementCard.css';
 
-export interface ProblemStatementCardProps {
-  alias?: string;
-  statement: ProblemStatement;
-  limits: ProblemLimits;
-}
-
-export class ProblemStatementCard extends React.PureComponent<ProblemStatementCardProps> {
-  render() {
-    const { alias, statement, limits } = this.props;
-    return (
-      <ContentCard>
-        <h2 className="programming-problem-statement__name">
-          {alias ? `${alias}. ` : ''}
-          {statement.title}
-        </h2>
-        <HTMLTable condensed className="programming-problem-statement__limits">
-          <tbody>
-            <tr>
-              <td>Time limit</td>
-              <td>{this.renderTimeLimit(limits.timeLimit)}</td>
-            </tr>
-            <tr>
-              <td>Memory limit</td>
-              <td>{this.renderMemoryLimit(limits.memoryLimit)}</td>
-            </tr>
-          </tbody>
-        </HTMLTable>
-        <div className="programming-problem-statement__text">
-          <KatexText>{statement.text}</KatexText>
-        </div>
-      </ContentCard>
-    );
-  }
-
-  private renderTimeLimit = (timeLimit: number) => {
+export function ProblemStatementCard({ alias, statement: { title, text }, limits: { timeLimit, memoryLimit } }) {
+  const renderTimeLimit = timeLimit => {
     if (!timeLimit) {
       return '-';
     }
@@ -52,7 +17,7 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
     return timeLimit + ' ms';
   };
 
-  private renderMemoryLimit = (memoryLimit: number) => {
+  const renderMemoryLimit = memoryLimit => {
     if (!memoryLimit) {
       return '-';
     }
@@ -61,4 +26,28 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
     }
     return memoryLimit + ' KB';
   };
+
+  return (
+    <ContentCard>
+      <h2 className="programming-problem-statement__name">
+        {alias ? `${alias}. ` : ''}
+        {title}
+      </h2>
+      <HTMLTable condensed className="programming-problem-statement__limits">
+        <tbody>
+          <tr>
+            <td>Time limit</td>
+            <td>{renderTimeLimit(timeLimit)}</td>
+          </tr>
+          <tr>
+            <td>Memory limit</td>
+            <td>{renderMemoryLimit(memoryLimit)}</td>
+          </tr>
+        </tbody>
+      </HTMLTable>
+      <div className="programming-problem-statement__text">
+        <KatexText>{text}</KatexText>
+      </div>
+    </ContentCard>
+  );
 }

@@ -2,16 +2,10 @@ import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../../../modules/store';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
 
-interface ContestAnnouncementsWidgetProps {
-  announcementCount: number;
-  onAlertNewAnnouncements: () => void;
-}
-
-class ContestAnnouncementsWidget extends React.Component<ContestAnnouncementsWidgetProps> {
+class ContestAnnouncementsWidget extends React.Component {
   render() {
     if (this.props.announcementCount === 0) {
       return null;
@@ -19,14 +13,14 @@ class ContestAnnouncementsWidget extends React.Component<ContestAnnouncementsWid
     return <Tag className="normal-weight">{this.props.announcementCount}</Tag>;
   }
 
-  componentDidUpdate(prevProps: ContestAnnouncementsWidgetProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.announcementCount > prevProps.announcementCount) {
       this.props.onAlertNewAnnouncements();
     }
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   announcementCount: selectContestWebConfig(state).announcementCount,
 });
 const mapDispatchToProps = {

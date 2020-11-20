@@ -1,16 +1,13 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-import { IoiScoreboard } from '../../../../../../modules/api/uriel/scoreboard';
-
-import { IoiScoreboardTable, IoiScoreboardTableProps } from './IoiScoreboardTable';
+import { IoiScoreboardTable } from './IoiScoreboardTable';
 
 describe('IoiScoreboardTable', () => {
-  let wrapper: ReactWrapper<IoiScoreboardTableProps>;
+  let wrapper;
 
-  const scoreboard: IoiScoreboard = {
+  const scoreboard = {
     state: {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
       problemAliases: ['A', 'B', 'C'],
@@ -36,7 +33,7 @@ describe('IoiScoreboardTable', () => {
     },
   };
 
-  const profilesMap: ProfilesMap = {
+  const profilesMap = {
     JIDUSER1: { username: 'username1' },
     JIDUSER2: { username: 'username2' },
   };

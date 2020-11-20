@@ -3,10 +3,7 @@ import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import CoursesPage from './courses/CoursesPage/CoursesPage';
@@ -14,8 +11,8 @@ import ChaptersPage from './chapters/ChaptersPage/ChaptersPage';
 import ArchivesPage from './archives/ArchivesPage/ArchivesPage';
 import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 
-const TrainingRoutes = () => {
-  const sidebarItems: ContentWithSidebarItem[] = [
+function TrainingRoutes() {
+  const sidebarItems = [
     {
       id: 'courses',
       titleIcon: 'predictive-analysis',
@@ -46,7 +43,7 @@ const TrainingRoutes = () => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'Training',
     items: sidebarItems,
   };
@@ -57,6 +54,6 @@ const TrainingRoutes = () => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
 export default withBreadcrumb('Training')(TrainingRoutes);

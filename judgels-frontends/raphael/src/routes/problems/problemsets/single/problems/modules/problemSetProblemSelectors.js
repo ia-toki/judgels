@@ -1,5 +1,3 @@
-import { AppState } from '../../../../../../modules/store';
-
-export function selectProblemSetProblem(state: AppState) {
+export function selectProblemSetProblem(state) {
   return state.jerahmeel.problemSetProblem.value;
 }

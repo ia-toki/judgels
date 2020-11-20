@@ -10,13 +10,9 @@ const contestRoleColor = {
   [ContestRole.Contestant]: Intent.PRIMARY,
 };
 
-export interface ContestRoleTagProps {
-  role?: ContestRole;
-}
-
-export const ContestRoleTag = (props: ContestRoleTagProps) => {
-  if (!props.role || !contestRoleColor[props.role]) {
+export function ContestRoleTag({ role }) {
+  if (!role || !contestRoleColor[role]) {
     return null;
   }
-  return <Tag intent={contestRoleColor[props.role]}>{props.role}</Tag>;
-};
+  return <Tag intent={contestRoleColor[role]}>{role}</Tag>;
+}

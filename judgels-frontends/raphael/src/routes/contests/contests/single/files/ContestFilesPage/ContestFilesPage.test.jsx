@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,27 +8,26 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-import { ContestFile, ContestFilesResponse } from '../../../../../../modules/api/uriel/contestFile';
 import ContestFilesPage from './ContestFilesPage';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestFileActions from '../modules/contestFileActions';
 
 jest.mock('../modules/contestFileActions');
 
 describe('ContestFilesPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestFilesResponse = {
+  const response = {
     data: [],
     config: { canManage: true },
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -42,8 +41,8 @@ describe('ContestFilesPage', () => {
   };
 
   beforeEach(() => {
-    (contestFileActions.getFiles as jest.Mock).mockReturnValue(() => Promise.resolve(response));
-    (contestFileActions.uploadFile as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    contestFileActions.getFiles.mockReturnValue(() => Promise.resolve(response));
+    contestFileActions.uploadFile.mockReturnValue(() => Promise.resolve({}));
     render();
   });
 
@@ -63,19 +62,19 @@ describe('ContestFilesPage', () => {
 
   describe('when there are files', () => {
     beforeEach(() => {
-      const files: ContestFile[] = [
+      const files = [
         {
           name: 'editorial.pdf',
           size: 100,
           lastModifiedTime: 12345,
-        } as ContestFile,
+        },
         {
           name: 'solutions.zip',
           size: 100,
           lastModifiedTime: 12345,
-        } as ContestFile,
+        },
       ];
-      (contestFileActions.getFiles as jest.Mock).mockReturnValue(() => Promise.resolve({ ...response, data: files }));
+      contestFileActions.getFiles.mockReturnValue(() => Promise.resolve({ ...response, data: files }));
 
       render();
     });
@@ -101,6 +100,6 @@ describe('ContestFilesPage', () => {
     expect(contestFileActions.uploadFile).toHaveBeenCalledWith(contestJid, {
       name: 'editorial.txt',
       size: 1000,
-    } as File);
+    });
   });
 });

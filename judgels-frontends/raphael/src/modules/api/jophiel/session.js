@@ -1,24 +1,20 @@
 import { APP_CONFIG } from '../../../conf';
-import { post } from '../../../modules/api/http';
+import { post } from '../http';
 
-export interface Session {
-  token: string;
-}
-
-export enum SessionErrors {
-  UserNotActivated = 'Jophiel:UserNotActivated',
-  UserMaxConcurrentSessionsExceeded = 'Jophiel:UserMaxConcurrentSessionsExceeded',
-  LogoutDisabled = 'Jophiel:LogoutDisabled',
-}
+export const SessionErrors = {
+  UserNotActivated: 'Jophiel:UserNotActivated',
+  UserMaxConcurrentSessionsExceeded: 'Jophiel:UserMaxConcurrentSessionsExceeded',
+  LogoutDisabled: 'Jophiel:LogoutDisabled',
+};
 
 const baseUrl = `${APP_CONFIG.apiUrls.jophiel}/session`;
 
 export const sessionAPI = {
-  logIn: (usernameOrEmail: string, password: string): Promise<Session> => {
+  logIn: (usernameOrEmail, password) => {
     return post(`${baseUrl}/login`, undefined, { usernameOrEmail, password });
   },
 
-  logOut: (token: string): Promise<void> => {
+  logOut: token => {
     return post(`${baseUrl}/logout`, token);
   },
 };

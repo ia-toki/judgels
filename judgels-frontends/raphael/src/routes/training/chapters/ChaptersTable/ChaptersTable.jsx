@@ -1,28 +1,10 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Chapter } from '../../../../modules/api/jerahmeel/chapter';
-
 import './ChaptersTable.css';
 
-export interface ChaptersTableProps {
-  chapters: Chapter[];
-  onEditChapter: (chapter: Chapter) => any;
-  onEditChapterLessons: (chapter: Chapter) => any;
-  onEditChapterProblems: (chapter: Chapter) => any;
-}
-
-export class ChaptersTable extends React.PureComponent<ChaptersTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed chapters-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ChaptersTable({ chapters, onEditChapter, onEditChapterLessons, onEditChapterProblems }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -35,32 +17,27 @@ export class ChaptersTable extends React.PureComponent<ChaptersTableProps> {
     );
   };
 
-  private renderRows = () => {
-    const { chapters } = this.props;
-
+  const renderRows = () => {
     const rows = chapters.map(chapter => (
       <tr key={chapter.jid}>
         <td>{chapter.id}</td>
         <td>{chapter.jid}</td>
         <td>{chapter.name}</td>
         <td>
-          <Icon className="action" icon="edit" intent="primary" onClick={() => this.props.onEditChapter(chapter)} />
-          <Icon
-            className="action"
-            icon="presentation"
-            intent="primary"
-            onClick={() => this.props.onEditChapterLessons(chapter)}
-          />
-          <Icon
-            className="action"
-            icon="manual"
-            intent="primary"
-            onClick={() => this.props.onEditChapterProblems(chapter)}
-          />
+          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditChapter(chapter)} />
+          <Icon className="action" icon="presentation" intent="primary" onClick={() => onEditChapterLessons(chapter)} />
+          <Icon className="action" icon="manual" intent="primary" onClick={() => onEditChapterProblems(chapter)} />
         </td>
       </tr>
     ));
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed chapters-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

@@ -1,69 +1,29 @@
 import { stringify } from 'query-string';
 
-import { get, put } from '../../../modules/api/http';
-import { Profile } from '../jophiel/profile';
-import { ProblemInfo, ProblemType } from '../sandalphon/problem';
+import { get, put } from '../http';
 import { baseProblemSetURL } from './problemSet';
-import { ProblemProgress, ProblemStats, ProblemTopStats } from './problem';
 
-export interface ProblemSetProblem {
-  alias: string;
-  problemJid: string;
-  type: ProblemType;
-}
-
-export interface ProblemSetProblemData {
-  alias: string;
-  slug: string;
-  type: ProblemType;
-}
-
-export interface ProblemSetProblemsResponse {
-  data: ProblemSetProblem[];
-  problemsMap: { [problemJid: string]: ProblemInfo };
-  problemProgressesMap: { [problemJid: string]: ProblemProgress };
-  problemStatsMap: { [problemJid: string]: ProblemStats };
-}
-
-export interface ProblemSetProblemWorksheet {
-  defaultLanguage: string;
-  languages: string[];
-  problem: ProblemSetProblem;
-}
-
-export interface ProblemStatsResponse {
-  progress: ProblemProgress;
-  stats: ProblemStats;
-  topStats: ProblemTopStats;
-  profilesMap: { [userJid: string]: Profile };
-}
-
-const baseURL = (problemSetJid: string) => `${baseProblemSetURL(problemSetJid)}/problems`;
+const baseURL = problemSetJid => `${baseProblemSetURL(problemSetJid)}/problems`;
 
 export const problemSetProblemAPI = {
-  setProblems: (token: string, problemSetJid: string, data: ProblemSetProblemData[]): Promise<void> => {
+  setProblems: (token, problemSetJid, data) => {
     return put(baseURL(problemSetJid), token, data);
   },
 
-  getProblems: (token: string, problemSetJid: string): Promise<ProblemSetProblemsResponse> => {
+  getProblems: (token, problemSetJid) => {
     return get(baseURL(problemSetJid), token);
   },
 
-  getProblem: (token: string, problemSetJid: string, problemAlias: string): Promise<ProblemSetProblem> => {
+  getProblem: (token, problemSetJid, problemAlias) => {
     return get(`${baseURL(problemSetJid)}/${problemAlias}`, token);
   },
 
-  getProblemWorksheet: (
-    token: string,
-    problemSetJid: string,
-    problemAlias: string,
-    language?: string
-  ): Promise<ProblemSetProblemWorksheet> => {
+  getProblemWorksheet: (token, problemSetJid, problemAlias, language) => {
     const params = stringify({ language });
     return get(`${baseURL(problemSetJid)}/${problemAlias}/worksheet?${params}`, token);
   },
 
-  getProblemStats: (token: string, problemSetJid: string, problemAlias: string): Promise<ProblemStatsResponse> => {
+  getProblemStats: (token, problemSetJid, problemAlias) => {
     return get(`${baseURL(problemSetJid)}/${problemAlias}/stats`, token);
   },
 };

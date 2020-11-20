@@ -1,53 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
-import { AppState } from '../../../../../../../../modules/store';
-import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
-import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { SubmissionSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
-import { SubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/submission';
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import {
-  ProblemSubmissionCard,
-  ProblemSubmissionCardProps,
-} from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
+import { ProblemSubmissionCard } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
-interface ChapterSubmissionSummaryPageRoute {
-  username?: string;
-}
-
-export interface ChapterSubmissionSummaryPageProps extends RouteComponentProps<ChapterSubmissionSummaryPageRoute> {
-  userJid?: string;
-  chapter: CourseChapter;
-  language?: string;
-  onGetSubmissionSummary: (
-    chapterJid: string,
-    username?: string,
-    language?: string
-  ) => Promise<SubmissionSummaryResponse>;
-  onRegradeAll: (chapterJid: string, userJid?: string, problemJid?: string) => Promise<void>;
-}
-
-export interface ChapterSubmissionSummaryPageState {
-  config?: SubmissionConfig;
-  profile?: Profile;
-  problemSummaries: ProblemSubmissionCardProps[];
-}
-
-class ChapterSubmissionSummaryPage extends React.Component<
-  ChapterSubmissionSummaryPageProps,
-  ChapterSubmissionSummaryPageState
-> {
-  state: ChapterSubmissionSummaryPageState = {
+class ChapterSubmissionSummaryPage extends React.Component {
+  state = {
     config: undefined,
+    profile: undefined,
     problemSummaries: undefined,
   };
 
@@ -64,7 +32,7 @@ class ChapterSubmissionSummaryPage extends React.Component<
       this.props.language
     );
 
-    const problemSummaries: ProblemSubmissionCardProps[] = response.config.problemJids.map(problemJid => ({
+    const problemSummaries = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
       alias: response.problemAliasesMap[chapter.chapterJid + '-' + problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
@@ -93,14 +61,14 @@ class ChapterSubmissionSummaryPage extends React.Component<
     );
   }
 
-  private renderUserFilter = () => {
+  renderUserFilter = () => {
     if (this.props.location.pathname.includes('/users/')) {
       return null;
     }
     return <ItemSubmissionUserFilter />;
   };
 
-  private renderResults = () => {
+  renderResults = () => {
     const { problemSummaries } = this.state;
     if (!problemSummaries) {
       return <LoadingState />;
@@ -120,7 +88,7 @@ class ChapterSubmissionSummaryPage extends React.Component<
     );
   };
 
-  private regrade = async problemJid => {
+  regrade = async problemJid => {
     const { userJids } = this.state.config;
     const userJid = userJids[0];
 
@@ -129,7 +97,7 @@ class ChapterSubmissionSummaryPage extends React.Component<
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
   chapter: selectCourseChapter(state),
   language: selectStatementLanguage(state),
@@ -140,4 +108,4 @@ const mapDispatchToProps = {
   onRegradeAll: chapterSubmissionActions.regradeSubmissions,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionSummaryPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionSummaryPage));

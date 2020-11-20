@@ -1,27 +1,37 @@
-import { setWith, TypedAction, TypedReducer } from 'redoodle';
+export const initialState = {
+  value: undefined,
+  isEditing: false,
+};
 
-import { Contest } from '../../../../modules/api/uriel/contest';
-
-export interface ContestState {
-  value?: Contest;
-  isEditing?: boolean;
+export function PutContest(contest) {
+  return {
+    type: 'uriel/contest/PUT',
+    payload: contest,
+  };
 }
 
-export const INITIAL_STATE: ContestState = {};
-
-export const PutContest = TypedAction.define('uriel/contest/PUT')<Contest>();
-export const DelContest = TypedAction.defineWithoutPayload('uriel/contest/DEL')();
-export const EditContest = TypedAction.define('uriel/contest/EDIT')<boolean>();
-
-function createContestReducer() {
-  const builder = TypedReducer.builder<ContestState>();
-
-  builder.withHandler(PutContest.TYPE, (state, payload) => setWith(state, { value: payload }));
-  builder.withHandler(DelContest.TYPE, () => ({ value: undefined }));
-  builder.withHandler(EditContest.TYPE, (state, payload) => setWith(state, { isEditing: payload }));
-  builder.withDefaultHandler(state => (state !== undefined ? state : INITIAL_STATE));
-
-  return builder.build();
+export function DelContest() {
+  return {
+    type: 'uriel/contest/DEL',
+  };
 }
 
-export const contestReducer = createContestReducer();
+export function EditContest(isEditing) {
+  return {
+    type: 'uriel/contest/EDIT',
+    payload: isEditing,
+  };
+}
+
+export default function contestReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'uriel/contest/PUT':
+      return { ...state, value: action.payload };
+    case 'uriel/contest/DEL':
+      return { value: undefined };
+    case 'uriel/contest/EDIT':
+      return { ...state, isEditing: action.payload };
+    default:
+      return state;
+  }
+}

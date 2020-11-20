@@ -2,25 +2,15 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Card } from '../../../../../components/Card/Card';
-import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
-
 import InfoForm from '../InfoForm/InfoForm';
 import { InfoTable } from '../InfoTable/InfoTable';
 
 import './InfoPanel.css';
 
-export interface InfoPanelProps {
-  email: string;
-  info: UserInfo;
-  onUpdateInfo: (info: UserInfo) => Promise<void>;
-}
-
-interface InfoPanelState {
-  isEditing: boolean;
-}
-
-export class InfoPanel extends React.PureComponent<InfoPanelProps, InfoPanelState> {
-  state: InfoPanelState = { isEditing: false };
+export class InfoPanel extends React.Component {
+  state = {
+    isEditing: false,
+  };
 
   render() {
     const action = this.state.isEditing ? (
@@ -36,7 +26,7 @@ export class InfoPanel extends React.PureComponent<InfoPanelProps, InfoPanelStat
     );
   }
 
-  private renderContent = () => {
+  renderContent = () => {
     const { email, info } = this.props;
     if (this.state.isEditing) {
       const onCancel = { onCancel: this.toggleEdit };
@@ -45,13 +35,13 @@ export class InfoPanel extends React.PureComponent<InfoPanelProps, InfoPanelStat
     return <InfoTable email={email} info={info} />;
   };
 
-  private toggleEdit = () => {
-    this.setState((prevState: InfoPanelState) => ({
+  toggleEdit = () => {
+    this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 
-  private onSave = async (info: UserInfo) => {
+  onSave = async info => {
     await this.props.onUpdateInfo(info);
     this.setState({ isEditing: false });
   };

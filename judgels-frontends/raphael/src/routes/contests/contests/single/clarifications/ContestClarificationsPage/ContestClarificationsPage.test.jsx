@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,24 +8,20 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest, userJid, user } from '../../../../../../fixtures/state';
-import {
-  ContestClarification,
-  ContestClarificationsResponse,
-} from '../../../../../../modules/api/uriel/contestClarification';
-import { PutUser, sessionReducer } from '../../../../../../modules/session/sessionReducer';
-import { PutStatementLanguage, webPrefsReducer } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
 
 import ContestClarificationsPage from './ContestClarificationsPage';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
 jest.mock('../modules/contestClarificationActions');
 
 describe('ContestClarificationsPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestClarificationsResponse = {
+  const response = {
     data: { page: [], totalCount: 0 },
     config: {
       canCreate: true,
@@ -39,18 +35,18 @@ describe('ContestClarificationsPage', () => {
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({
         session: sessionReducer,
-        uriel: combineReducers({ contest: contestReducer }),
         webPrefs: webPrefsReducer,
+        uriel: combineReducers({ contest: contestReducer }),
         form: formReducer,
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser.create(user));
-    store.dispatch(PutContest.create(contest));
-    store.dispatch(PutStatementLanguage.create('en'));
+    store.dispatch(PutUser(user));
+    store.dispatch(PutContest(contest));
+    store.dispatch(PutStatementLanguage('en'));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -64,9 +60,9 @@ describe('ContestClarificationsPage', () => {
   };
 
   beforeEach(() => {
-    (contestClarificationActions.getClarifications as jest.Mock).mockReturnValue(() => Promise.resolve(response));
-    (contestClarificationActions.createClarification as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-    (contestClarificationActions.answerClarification as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    contestClarificationActions.getClarifications.mockReturnValue(() => Promise.resolve(response));
+    contestClarificationActions.createClarification.mockReturnValue(() => Promise.resolve({}));
+    contestClarificationActions.answerClarification.mockReturnValue(() => Promise.resolve({}));
   });
 
   describe('when there are no clarifications', () => {
@@ -85,19 +81,19 @@ describe('ContestClarificationsPage', () => {
 
   describe('when there are clarifications', () => {
     beforeEach(() => {
-      const clarifications: ContestClarification[] = [
+      const clarifications = [
         {
           jid: 'jid1',
           userJid,
           time: 12345,
-        } as ContestClarification,
+        },
         {
           jid: 'jid2',
           userJid,
           time: 12345,
-        } as ContestClarification,
+        },
       ];
-      (contestClarificationActions.getClarifications as jest.Mock).mockReturnValue(() =>
+      contestClarificationActions.getClarifications.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: clarifications, totalCount: 2 } })
       );
 

@@ -1,23 +1,29 @@
-import { setWith, TypedAction, TypedReducer } from 'redoodle';
+const initialState = {
+  statementLanguage: 'id',
+  gradingLanguage: 'Cpp17',
+};
 
-export interface WebPrefsState {
-  statementLanguage: string;
-  gradingLanguage: string;
+export function PutStatementLanguage(lang) {
+  return {
+    type: 'webPrefs/PUT_STATEMENT_LANGUAGE',
+    payload: lang,
+  };
 }
 
-export const INITIAL_STATE: WebPrefsState = { statementLanguage: 'id', gradingLanguage: 'Cpp17' };
-
-export const PutStatementLanguage = TypedAction.define('webPrefs/PUT_STATEMENT_LANGUAGE')<string>();
-export const PutGradingLanguage = TypedAction.define('webPrefs/PUT_GRADING_LANGUAGE')<string>();
-
-function createWebPrefsReducer() {
-  const builder = TypedReducer.builder<WebPrefsState>();
-
-  builder.withHandler(PutStatementLanguage.TYPE, (state, statementLanguage) => setWith(state, { statementLanguage }));
-  builder.withHandler(PutGradingLanguage.TYPE, (state, gradingLanguage) => setWith(state, { gradingLanguage }));
-  builder.withDefaultHandler(state => (state !== undefined ? state : INITIAL_STATE));
-
-  return builder.build();
+export function PutGradingLanguage(lang) {
+  return {
+    type: 'webPrefs/PUT_GRADING_LANGUAGE',
+    payload: lang,
+  };
 }
 
-export const webPrefsReducer = createWebPrefsReducer();
+export default function webPrefsReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'webPrefs/PUT_STATEMENT_LANGUAGE':
+      return { ...state, statementLanguage: action.payload };
+    case 'webPrefs/PUT_GRADING_LANGUAGE':
+      return { ...state, gradingLanguage: action.payload };
+    default:
+      return state;
+  }
+}

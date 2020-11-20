@@ -1,15 +1,15 @@
 import { Intent } from '@blueprintjs/core';
 
-export enum VerdictCode {
-  AC = 'AC',
-  CE = 'CE',
-  WA = 'WA',
-  TLE = 'TLE',
-  RTE = 'RTE',
-  PND = '?',
-  ERR = '!!!',
-  SKP = 'SKP',
-}
+export const VerdictCode = {
+  AC: 'AC',
+  CE: 'CE',
+  WA: 'WA',
+  TLE: 'TLE',
+  RTE: 'RTE',
+  PND: '?',
+  ERR: '!!!',
+  SKP: 'SKP',
+};
 
 const verdictIntentsMap = {
   [VerdictCode.AC]: Intent.SUCCESS,
@@ -24,10 +24,10 @@ const verdictDisplayCodeMap = {
   [VerdictCode.SKP]: 'SKIPPED',
 };
 
-export function getVerdictIntent(code: string): Intent {
+export function getVerdictIntent(code) {
   return verdictIntentsMap[code] || Intent.WARNING;
 }
 
-export function getVerdictDisplayCode(code: string): Intent {
+export function getVerdictDisplayCode(code) {
   return verdictDisplayCodeMap[code] || code;
 }

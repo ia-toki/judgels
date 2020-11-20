@@ -1,64 +1,43 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { isOutputOnly } from '../../../../modules/api/gabriel/engine';
-import { FormTableFileInput } from '../../../../components/forms/FormTableFileInput/FormTableFileInput';
-import { FormTableSelect2 } from '../../../../components/forms/FormTableSelect2/FormTableSelect2';
+import { FormTableFileInput } from '../../../forms/FormTableFileInput/FormTableFileInput';
+import { FormTableSelect2 } from '../../../forms/FormTableSelect2/FormTableSelect2';
 import {
   CompatibleFilenameExtensionForGradingLanguage,
   MaxFileSize300KB,
   MaxFileSize10MB,
   Required,
-} from '../../../../components/forms/validations';
-import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language';
+} from '../../../forms/validations';
+import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
 
 import './ProblemSubmissionForm.css';
 
-export interface ProblemSubmissionFormData {
-  gradingLanguage: string;
-  sourceFiles: { [key: string]: File };
-}
-
-interface ProblemSubmissionFormProps extends InjectedFormProps<ProblemSubmissionFormData> {
-  sourceKeys: { [key: string]: string };
-  gradingEngine: string;
-  gradingLanguages: string[];
-  submissionWarning?: string;
-}
-
-class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormProps> {
-  render() {
+function ProblemSubmissionForm({
+  handleSubmit,
+  submitting,
+  sourceKeys,
+  gradingEngine,
+  gradingLanguages,
+  submissionWarning,
+}) {
+  const renderWarning = () => {
     return (
-      <form onSubmit={this.props.handleSubmit}>
-        {this.renderWarning()}
-        <table className="programming-problem-submission-form__table">
-          <tbody>
-            {this.renderSourceFields()}
-            {this.renderGradingLanguageFields()}
-          </tbody>
-        </table>
-        <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={this.props.submitting} />
-      </form>
-    );
-  }
-
-  private renderWarning = () => {
-    return (
-      this.props.submissionWarning && (
+      submissionWarning && (
         <Callout
           icon="warning-sign"
           className="programming-problem-submission-form__warning"
           data-key="submission-warning"
         >
-          {this.props.submissionWarning}
+          {submissionWarning}
         </Callout>
       )
     );
   };
 
-  private renderSourceFields = () => {
-    const { gradingEngine, sourceKeys } = this.props;
+  const renderSourceFields = () => {
     let maxFileSize;
     if (isOutputOnly(gradingEngine)) {
       maxFileSize = MaxFileSize10MB;
@@ -69,7 +48,7 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
     return Object.keys(sourceKeys)
       .sort()
       .map(key => {
-        const field: any = {
+        const field = {
           name: 'sourceFiles.' + key,
           label: sourceKeys[key],
           validate: [Required, maxFileSize, CompatibleFilenameExtensionForGradingLanguage],
@@ -78,13 +57,12 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
       });
   };
 
-  private renderGradingLanguageFields = () => {
-    const { gradingEngine, gradingLanguages } = this.props;
+  const renderGradingLanguageFields = () => {
     if (isOutputOnly(gradingEngine)) {
       return null;
     }
 
-    const field: any = {
+    const field = {
       name: 'gradingLanguage',
       label: 'Language',
       validate: [Required],
@@ -94,9 +72,22 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
 
     return <Field component={FormTableSelect2} {...field} />;
   };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {renderWarning()}
+      <table className="programming-problem-submission-form__table">
+        <tbody>
+          {renderSourceFields()}
+          {renderGradingLanguageFields()}
+        </tbody>
+      </table>
+      <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />
+    </form>
+  );
 }
 
-export default reduxForm<ProblemSubmissionFormData>({
+export default reduxForm({
   form: 'problem-submission',
   touchOnBlur: false,
 })(ProblemSubmissionForm);

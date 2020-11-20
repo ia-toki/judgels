@@ -1,9 +1,8 @@
 import { selectDocumentTitle, selectSortedBreadcrumbs } from './breadcrumbsSelectors';
-import { AppState } from '../store';
 
 describe('breadcrumbsSelectors', () => {
   test('selectSortedBreadcrumbs()', () => {
-    const state: Partial<AppState> = {
+    const state = {
       breadcrumbs: {
         values: [
           { link: '/a', title: 'A' },
@@ -13,7 +12,7 @@ describe('breadcrumbsSelectors', () => {
       },
     };
 
-    const sortedBreadcrumbs = selectSortedBreadcrumbs(state as any);
+    const sortedBreadcrumbs = selectSortedBreadcrumbs(state);
     expect(sortedBreadcrumbs).toEqual([
       { link: '/a', title: 'A' },
       { link: '/a/b', title: 'AB' },
@@ -22,7 +21,7 @@ describe('breadcrumbsSelectors', () => {
   });
 
   test('selectDocumentTitle()', () => {
-    let state: Partial<AppState> = {
+    let state = {
       breadcrumbs: {
         values: [
           { link: '/a', title: 'A' },
@@ -30,13 +29,13 @@ describe('breadcrumbsSelectors', () => {
         ],
       },
     };
-    expect(selectDocumentTitle(state as any)).toEqual('AB | Judgels');
+    expect(selectDocumentTitle(state)).toEqual('AB | Judgels');
 
     state = {
       breadcrumbs: {
         values: [],
       },
     };
-    expect(selectDocumentTitle(state as any)).toEqual('Judgels');
+    expect(selectDocumentTitle(state)).toEqual('Judgels');
   });
 });

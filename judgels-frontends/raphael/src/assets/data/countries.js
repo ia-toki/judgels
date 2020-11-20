@@ -1004,6 +1004,6 @@ countriesData.forEach(country => {
   countriesMap[country.code] = country.name;
 });
 
-export function getCountryName(code?: string) {
+export function getCountryName(code) {
   return code && countriesMap[code];
 }

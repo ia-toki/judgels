@@ -1,19 +1,12 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ChapterCreateData } from '../../../../modules/api/jerahmeel/chapter';
 import ChapterCreateForm from '../ChapterCreateForm/ChapterCreateForm';
 
-interface ChapterCreateDialogProps {
-  onCreateChapter: (data: ChapterCreateData) => Promise<void>;
-}
-
-interface ChapterCreateDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class ChapterCreateDialog extends React.Component<ChapterCreateDialogProps, ChapterCreateDialogState> {
-  state: ChapterCreateDialogState = {};
+export class ChapterCreateDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
   render() {
     return (
@@ -24,7 +17,7 @@ export class ChapterCreateDialog extends React.Component<ChapterCreateDialogProp
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New chapter
@@ -32,18 +25,18 @@ export class ChapterCreateDialog extends React.Component<ChapterCreateDialogProp
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
-    const props: any = {
+  renderDialog = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createChapter,
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Create new chapter"
         canOutsideClickClose={false}
@@ -53,7 +46,7 @@ export class ChapterCreateDialog extends React.Component<ChapterCreateDialogProp
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -65,7 +58,7 @@ export class ChapterCreateDialog extends React.Component<ChapterCreateDialogProp
     </>
   );
 
-  private createChapter = async (data: ChapterCreateData) => {
+  createChapter = async data => {
     await this.props.onCreateChapter(data);
     this.setState({ isDialogOpen: false });
   };

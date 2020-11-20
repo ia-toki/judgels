@@ -4,19 +4,14 @@ import { contestFileAPI } from '../../modules/api/uriel/contestFile';
 
 import { HtmlText } from '../HtmlText/HtmlText';
 
-export interface FormattedContentProps {
-  context: any;
-  children: any;
-}
-
-export const FormattedContent = (props: FormattedContentProps) => {
-  let res = props.children as string;
-  res = formatDownloadUrls(res, props.context);
+export function FormattedContent({ context, children }) {
+  let res = children;
+  res = formatDownloadUrls(res, context);
 
   return <HtmlText>{res}</HtmlText>;
-};
+}
 
-function formatDownloadUrls(text: string, context: any): string {
+function formatDownloadUrls(text, context) {
   const { contestJid } = context;
   if (!contestJid) {
     return text;

@@ -2,11 +2,11 @@ import { SubmissionError } from 'redux-form';
 
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { BadRequestError } from '../../../../modules/api/error';
-import { courseAPI, CourseCreateData, CourseUpdateData, CourseErrors } from '../../../../modules/api/jerahmeel/course';
-import { courseChapterAPI, CourseChapter } from '../../../../modules/api/jerahmeel/courseChapter';
+import { courseAPI, CourseErrors } from '../../../../modules/api/jerahmeel/course';
+import { courseChapterAPI } from '../../../../modules/api/jerahmeel/courseChapter';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function createCourse(data: CourseCreateData) {
+export function createCourse(data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -21,7 +21,7 @@ export function createCourse(data: CourseCreateData) {
   };
 }
 
-export function updateCourse(courseJid: string, data: CourseUpdateData) {
+export function updateCourse(courseJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -43,14 +43,14 @@ export function getCourses() {
   };
 }
 
-export function getChapters(courseJid: string) {
+export function getChapters(courseJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await courseChapterAPI.getChapters(token, courseJid);
   };
 }
 
-export function setChapters(courseJid: string, data: CourseChapter[]) {
+export function setChapters(courseJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await courseChapterAPI.setChapters(token, courseJid, data);

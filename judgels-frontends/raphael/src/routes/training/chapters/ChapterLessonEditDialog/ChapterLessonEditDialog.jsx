@@ -3,33 +3,12 @@ import * as React from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ChapterLessonsTable } from '../ChapterLessonsTable/ChapterLessonsTable';
-import { Chapter } from '../../../../modules/api/jerahmeel/chapter';
-import {
-  ChapterLessonsResponse,
-  ChapterLesson,
-  ChapterLessonData,
-} from '../../../../modules/api/jerahmeel/chapterLesson';
-import ChapterLessonEditForm, { ChapterLessonEditFormData } from '../ChapterLessonEditForm/ChapterLessonEditForm';
+import ChapterLessonEditForm from '../ChapterLessonEditForm/ChapterLessonEditForm';
 import { Alias } from '../../../../components/forms/validations';
 
-export interface ChapterLessonEditDialogProps {
-  isOpen: boolean;
-  chapter?: Chapter;
-  onCloseDialog: () => void;
-  onGetLessons: (chapterJid: string) => Promise<ChapterLessonsResponse>;
-  onSetLessons: (chapterJid: string, data: ChapterLessonData[]) => Promise<void>;
-}
-
-interface ChapterLessonEditDialogState {
-  response?: ChapterLessonsResponse;
-  isEditing: boolean;
-}
-
-export class ChapterLessonEditDialog extends React.Component<
-  ChapterLessonEditDialogProps,
-  ChapterLessonEditDialogState
-> {
-  state: ChapterLessonEditDialogState = {
+export class ChapterLessonEditDialog extends React.Component {
+  state = {
+    response: undefined,
     isEditing: false,
   };
 
@@ -37,7 +16,7 @@ export class ChapterLessonEditDialog extends React.Component<
     this.refreshLessons();
   }
 
-  async componentDidUpdate(prevProps: ChapterLessonEditDialogProps) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.chapter !== this.props.chapter) {
       this.refreshLessons();
     }
@@ -54,19 +33,19 @@ export class ChapterLessonEditDialog extends React.Component<
     );
   }
 
-  private closeDialog = () => {
+  closeDialog = () => {
     this.props.onCloseDialog();
     this.setState({ isEditing: false });
   };
 
-  private renderDialogContent = () => {
+  renderDialogContent = () => {
     const { response, isEditing } = this.state;
     if (!response) {
       return this.renderDialogForm(<LoadingState />, null);
     }
 
     if (isEditing) {
-      const props: any = {
+      const props = {
         validator: this.validateLessons,
         renderFormComponents: this.renderDialogForm,
         onSubmit: this.updateLessons,
@@ -80,7 +59,7 @@ export class ChapterLessonEditDialog extends React.Component<
     }
   };
 
-  private renderDialogForm = (content: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (content, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>
         {content}
@@ -95,7 +74,7 @@ export class ChapterLessonEditDialog extends React.Component<
     </>
   );
 
-  private renderInstructions = () => {
+  renderInstructions = () => {
     if (!this.state.isEditing) {
       return null;
     }
@@ -113,7 +92,7 @@ export class ChapterLessonEditDialog extends React.Component<
     );
   };
 
-  private refreshLessons = async () => {
+  refreshLessons = async () => {
     if (this.props.isOpen) {
       this.setState({ response: undefined });
       const response = await this.props.onGetLessons(this.props.chapter.jid);
@@ -121,40 +100,37 @@ export class ChapterLessonEditDialog extends React.Component<
     }
   };
 
-  private toggleEditing = () => {
+  toggleEditing = () => {
     this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 
-  private updateLessons = async (data: ChapterLessonEditFormData) => {
+  updateLessons = async data => {
     const lessons = this.deserializeLessons(data.lessons);
     await this.props.onSetLessons(this.props.chapter.jid, lessons);
     await this.refreshLessons();
     this.toggleEditing();
   };
 
-  private serializeLessons = (lessons: ChapterLesson[], lessonsMap): string => {
+  serializeLessons = (lessons, lessonsMap) => {
     return lessons.map(c => `${c.alias},${lessonsMap[c.lessonJid].slug}`).join('\n');
   };
 
-  private deserializeLessons = (lessons: string): ChapterLessonData[] => {
+  deserializeLessons = lessons => {
     return lessons
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0)
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()))
-      .map(
-        s =>
-          ({
-            alias: s[0],
-            slug: s[1],
-          } as ChapterLessonData)
-      );
+      .map(s => ({
+        alias: s[0],
+        slug: s[1],
+      }));
   };
 
-  private validateLessons = (value: string) => {
+  validateLessons = value => {
     const lessons = value
       .split('\n')
       .map(s => s.trim())
@@ -162,8 +138,8 @@ export class ChapterLessonEditDialog extends React.Component<
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()));
 
-    const aliases: string[] = [];
-    const slugs: string[] = [];
+    const aliases = [];
+    const slugs = [];
 
     for (const c of lessons) {
       if (c.length !== 2) {

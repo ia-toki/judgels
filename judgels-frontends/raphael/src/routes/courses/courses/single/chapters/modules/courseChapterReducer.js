@@ -1,30 +1,29 @@
-import { setWith, TypedAction, TypedReducer } from 'redoodle';
+export const initialState = {
+  value: undefined,
+  courseSlug: undefined,
+  name: undefined,
+};
 
-import { CourseChapter } from '../../../../../../modules/api/jerahmeel/courseChapter';
-
-export interface CourseChapterState {
-  value?: CourseChapter;
-  courseSlug?: string;
-  name?: string;
+export function PutCourseChapter({ value, courseSlug, name }) {
+  return {
+    type: 'jerahmeel/courseChapter/PUT',
+    payload: { value, courseSlug, name },
+  };
 }
 
-export const INITIAL_STATE: CourseChapterState = {};
-
-export const PutCourseChapter = TypedAction.define('jerahmeel/courseChapter/PUT')<{
-  value: CourseChapter;
-  courseSlug: string;
-  name: string;
-}>();
-export const DelCourseChapter = TypedAction.defineWithoutPayload('jerahmeel/courseChapter/DEL')();
-
-function createCourseChapterReducer() {
-  const builder = TypedReducer.builder<CourseChapterState>();
-
-  builder.withHandler(PutCourseChapter.TYPE, (state, payload) => setWith(state, payload));
-  builder.withHandler(DelCourseChapter.TYPE, () => ({ value: undefined, name: undefined }));
-  builder.withDefaultHandler(state => (state !== undefined ? state : INITIAL_STATE));
-
-  return builder.build();
+export function DelCourseChapter() {
+  return {
+    type: 'jerahmeel/courseChapter/DEL',
+  };
 }
 
-export const courseChapterReducer = createCourseChapterReducer();
+export default function courseChapterReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'jerahmeel/courseChapter/PUT':
+      return action.payload;
+    case 'jerahmeel/courseChapter/DEL':
+      return { value: undefined, courseSlug: undefined, name: undefined };
+    default:
+      return state;
+  }
+}

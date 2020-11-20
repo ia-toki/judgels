@@ -2,53 +2,20 @@ import { Icon } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
-import { FormTable, FormTableRow } from '../../../../../../components/forms/FormTable/FormTable';
-import {
-  ClarificationTimeLimitModuleConfig,
-  ContestModulesConfig,
-  DivisionModuleConfig,
-  FrozenScoreboardModuleConfig,
-  ExternalScoreboardModuleConfig,
-  IcpcStyleModuleConfig,
-  IoiStyleModuleConfig,
-  GcjStyleModuleConfig,
-  ScoreboardModuleConfig,
-  VirtualModuleConfig,
-} from '../../../../../../modules/api/uriel/contestModule';
-import { getGradingLanguageName, LanguageRestriction } from '../../../../../../modules/api/gabriel/language';
+import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
+import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
 
 import './ContestEditConfigsTable.css';
 
-export interface ContestEditConfigsTableProps {
-  config: ContestModulesConfig;
-}
-
-export class ContestEditConfigsTable extends React.Component<ContestEditConfigsTableProps> {
-  render() {
-    const { config } = this.props;
-    return (
-      <div className="contest-edit-dialog__content">
-        {config.icpcStyle && this.renderIcpcStyleConfig(config.icpcStyle)}
-        {config.ioiStyle && this.renderIoiStyleConfig(config.ioiStyle)}
-        {config.gcjStyle && this.renderGcjStyleConfig(config.gcjStyle)}
-        {config.clarificationTimeLimit && this.renderClarificationTimeLimitConfig(config.clarificationTimeLimit)}
-        {config.division && this.renderDivisionConfig(config.division)}
-        {config.scoreboard && this.renderScoreboardConfig(config.scoreboard)}
-        {config.frozenScoreboard && this.renderFrozenScoreboardConfig(config.frozenScoreboard)}
-        {config.externalScoreboard && this.renderExternalScoreboardConfig(config.externalScoreboard)}
-        {config.virtual && this.renderVirtualConfig(config.virtual)}
-      </div>
-    );
-  }
-
-  private renderIcpcStyleConfig = (config: IcpcStyleModuleConfig) => {
-    const rows: FormTableRow[] = [
+export function ContestEditConfigsTable({ config }) {
+  const renderIcpcStyleConfig = ({ languageRestriction, wrongSubmissionPenalty }) => {
+    const rows = [
       {
         key: 'languageRestriction',
         title: 'Allowed languages',
-        value: this.formatLanguageRestriction(config.languageRestriction),
+        value: formatLanguageRestriction(languageRestriction),
       },
-      { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: config.wrongSubmissionPenalty },
+      { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: wrongSubmissionPenalty },
     ];
     return (
       <div className="contest-edit-configs-table__config">
@@ -59,22 +26,22 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderIoiStyleConfig = (config: IoiStyleModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderIoiStyleConfig = ({ languageRestriction, usingLastAffectingPenalty, usingMaxScorePerSubtask }) => {
+    const rows = [
       {
         key: 'languageRestriction',
         title: 'Allowed languages',
-        value: this.formatLanguageRestriction(config.languageRestriction),
+        value: formatLanguageRestriction(languageRestriction),
       },
       {
         key: 'usingLastAffectingPenalty',
         title: 'Using last affecting penalty?',
-        value: <Icon icon={config.usingLastAffectingPenalty ? 'small-tick' : 'small-cross'} />,
+        value: <Icon icon={usingLastAffectingPenalty ? 'small-tick' : 'small-cross'} />,
       },
       {
         key: 'usingMaxScorePerSubtask',
         title: 'Using max score per subtask?',
-        value: <Icon icon={config.usingMaxScorePerSubtask ? 'small-tick' : 'small-cross'} />,
+        value: <Icon icon={usingMaxScorePerSubtask ? 'small-tick' : 'small-cross'} />,
       },
     ];
     return (
@@ -86,14 +53,14 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderGcjStyleConfig = (config: GcjStyleModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderGcjStyleConfig = ({ languageRestriction, wrongSubmissionPenalty }) => {
+    const rows = [
       {
         key: 'languageRestriction',
         title: 'Allowed languages',
-        value: this.formatLanguageRestriction(config.languageRestriction),
+        value: formatLanguageRestriction(languageRestriction),
       },
-      { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: config.wrongSubmissionPenalty },
+      { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: wrongSubmissionPenalty },
     ];
     return (
       <div className="contest-edit-configs-table__config">
@@ -104,14 +71,14 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderClarificationTimeLimitConfig = (config: ClarificationTimeLimitModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderClarificationTimeLimitConfig = ({ clarificationDuration }) => {
+    const rows = [
       {
         key: 'clarificationDuration',
         title: 'Clarification duration',
         value: (
           <>
-            <FormattedDuration value={config.clarificationDuration} /> (since contest start time)
+            <FormattedDuration value={clarificationDuration} /> (since contest start time)
           </>
         ),
       },
@@ -125,12 +92,12 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderDivisionConfig = (config: DivisionModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderDivisionConfig = ({ division }) => {
+    const rows = [
       {
         key: 'divisionDivision',
         title: 'Division',
-        value: <>{config.division}</>,
+        value: <>{division}</>,
       },
     ];
     return (
@@ -142,12 +109,12 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderScoreboardConfig = (config: ScoreboardModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderScoreboardConfig = ({ isIncognitoScoreboard }) => {
+    const rows = [
       {
         key: 'isIncognitoScoreboard',
         title: 'Incognito scoreboard?',
-        value: <Icon icon={config.isIncognitoScoreboard ? 'small-tick' : 'small-cross'} />,
+        value: <Icon icon={isIncognitoScoreboard ? 'small-tick' : 'small-cross'} />,
       },
     ];
     return (
@@ -159,14 +126,14 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderFrozenScoreboardConfig = (config: FrozenScoreboardModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderFrozenScoreboardConfig = ({ scoreboardFreezeTime, isOfficialScoreboardAllowed }) => {
+    const rows = [
       {
         key: 'scoreboardFreezeTime',
         title: 'Freeze time',
         value: (
           <>
-            <FormattedDuration value={config.scoreboardFreezeTime} />
+            <FormattedDuration value={scoreboardFreezeTime} />
             (before contest end time)
           </>
         ),
@@ -174,7 +141,7 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
       {
         key: 'isIncognitoScoreboard',
         title: 'Is now unfrozen?',
-        value: <Icon icon={config.isOfficialScoreboardAllowed ? 'small-tick' : 'small-cross'} />,
+        value: <Icon icon={isOfficialScoreboardAllowed ? 'small-tick' : 'small-cross'} />,
       },
     ];
     return (
@@ -186,17 +153,17 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderExternalScoreboardConfig = (config: ExternalScoreboardModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderExternalScoreboardConfig = ({ receiverUrl, receiverSecret }) => {
+    const rows = [
       {
         key: 'receiverUrl',
         title: 'Receiver URL',
-        value: config.receiverUrl,
+        value: receiverUrl,
       },
       {
         key: 'receiverSecret',
         title: 'Receiver secret',
-        value: config.receiverSecret,
+        value: receiverSecret,
       },
     ];
     return (
@@ -208,12 +175,12 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private renderVirtualConfig = (config: VirtualModuleConfig) => {
-    const rows: FormTableRow[] = [
+  const renderVirtualConfig = ({ virtualDuration }) => {
+    const rows = [
       {
         key: 'virtualDuration',
         title: 'Virtual contest duration',
-        value: <FormattedDuration value={config.virtualDuration} />,
+        value: <FormattedDuration value={virtualDuration} />,
       },
     ];
     return (
@@ -225,14 +192,27 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     );
   };
 
-  private formatLanguageRestriction = (restriction: LanguageRestriction) => {
-    const languages = restriction.allowedLanguageNames;
-    if (!languages || languages.length === 0) {
+  const formatLanguageRestriction = ({ allowedLanguageNames }) => {
+    if (!allowedLanguageNames || allowedLanguageNames.length === 0) {
       return '(all)';
     }
-    return languages
+    return allowedLanguageNames
       .sort()
       .map(getGradingLanguageName)
       .join(', ');
   };
+
+  return (
+    <div className="contest-edit-dialog__content">
+      {config.icpcStyle && renderIcpcStyleConfig(config.icpcStyle)}
+      {config.ioiStyle && renderIoiStyleConfig(config.ioiStyle)}
+      {config.gcjStyle && renderGcjStyleConfig(config.gcjStyle)}
+      {config.clarificationTimeLimit && renderClarificationTimeLimitConfig(config.clarificationTimeLimit)}
+      {config.division && renderDivisionConfig(config.division)}
+      {config.scoreboard && renderScoreboardConfig(config.scoreboard)}
+      {config.frozenScoreboard && renderFrozenScoreboardConfig(config.frozenScoreboard)}
+      {config.externalScoreboard && renderExternalScoreboardConfig(config.externalScoreboard)}
+      {config.virtual && renderVirtualConfig(config.virtual)}
+    </div>
+  );
 }

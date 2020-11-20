@@ -2,27 +2,14 @@ import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { ContestAnnouncementData } from '../../../../../../modules/api/uriel/contestAnnouncement';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-
 import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/ContestAnnouncementCreateForm';
 
 import './ContestAnnouncementCreateDialog.css';
 
-export interface ContestAnnouncementCreateDialogProps {
-  contest: Contest;
-  onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
-}
-
-interface ContestAnnouncementCreateDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class ContestAnnouncementCreateDialog extends React.Component<
-  ContestAnnouncementCreateDialogProps,
-  ContestAnnouncementCreateDialogState
-> {
-  state: ContestAnnouncementCreateDialogState = {};
+export class ContestAnnouncementCreateDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
   render() {
     return (
@@ -33,7 +20,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New announcement
@@ -41,19 +28,19 @@ export class ContestAnnouncementCreateDialog extends React.Component<
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
-    const props: any = {
+  renderDialog = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createAnnouncement,
     };
     return (
       <Dialog
         className="contest-announcement-create-dialog"
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Create new announcement"
         canOutsideClickClose={false}
@@ -64,7 +51,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-announcement-create-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -76,7 +63,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
     </>
   );
 
-  private createAnnouncement = async (data: ContestAnnouncementData) => {
+  createAnnouncement = async data => {
     await this.props.onCreateAnnouncement(this.props.contest.jid, data);
     this.setState({ isDialogOpen: false });
   };

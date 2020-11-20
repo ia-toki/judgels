@@ -5,12 +5,12 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
-import { ContestErrors, Contest, ContestStyle } from '../../../../modules/api/uriel/contest';
+import { ContestErrors, ContestStyle } from '../../../../modules/api/uriel/contest';
 import * as contestActions from './contestActions';
 import { EditContest, PutContest } from './contestReducer';
 
 const contestJid = 'contest-jid';
-const contest: Contest = {
+const contest = {
   id: 1,
   jid: contestJid,
   slug: 'ioi',
@@ -47,7 +47,7 @@ describe('contestActions', () => {
         await store.dispatch(contestActions.createContest(params));
 
         expect(store.getActions()).toContainEqual(push('/contests/new-contest'));
-        expect(store.getActions()).toContainEqual(EditContest.create(true));
+        expect(store.getActions()).toContainEqual(EditContest(true));
       });
     });
 
@@ -125,7 +125,7 @@ describe('contestActions', () => {
     const page = 2;
     const responseBody = {
       totalCount: 3,
-      page: [],
+      page: [contest],
     };
 
     it('calls API to get contests', async () => {
@@ -166,7 +166,7 @@ describe('contestActions', () => {
       const response = await store.dispatch(contestActions.getContestBySlug('ioi'));
       expect(response).toEqual(contest);
 
-      expect(store.getActions()).toContainEqual(PutContest.create(contest));
+      expect(store.getActions()).toContainEqual(PutContest(contest));
     });
   });
 

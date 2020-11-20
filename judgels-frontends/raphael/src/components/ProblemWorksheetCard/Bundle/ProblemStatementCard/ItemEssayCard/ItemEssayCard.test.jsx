@@ -1,16 +1,16 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 
-import { ItemEssayCard, ItemEssayCardProps } from './ItemEssayCard';
-import { ItemType, ItemEssayConfig } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemEssayCard } from './ItemEssayCard';
+import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 
 describe('ItemEssayCard', () => {
-  let wrapper: ReactWrapper<ItemEssayCard>;
-  const itemConfig: ItemEssayConfig = {
+  let wrapper;
+  const itemConfig = {
     statement: 'statement',
     score: 100,
   };
-  const props: ItemEssayCardProps = {
+  const props = {
     jid: 'jid',
     type: ItemType.Essay,
     meta: 'meta',

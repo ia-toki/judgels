@@ -3,43 +3,25 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import {
-  ContestProblem,
-  ContestProblemData,
-  ContestProblemsResponse,
-  ContestProblemStatus,
-} from '../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { AppState } from '../../../../../../modules/store';
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
-import { ContestProblemCard, ContestProblemCardProps } from '../ContestProblemCard/ContestProblemCard';
+import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestProblemActions from '../modules/contestProblemActions';
 
 import './ContestProblemsPage.css';
 
-export interface ContestProblemsPageProps {
-  contest: Contest;
-  statementLanguage: string;
-  onGetProblems: (contestJid: string) => Promise<ContestProblemsResponse>;
-  onSetProblems: (contestJid: string, data: ContestProblemData[]) => Promise<any>;
-}
-
-interface ContestProblemsPageState {
-  response?: ContestProblemsResponse;
-  defaultLanguage?: string;
-  uniqueLanguages?: string[];
-}
-
-export class ContestProblemsPage extends React.PureComponent<ContestProblemsPageProps, ContestProblemsPageState> {
-  state: ContestProblemsPageState = {};
+export class ContestProblemsPage extends React.Component {
+  state = {
+    response: undefined,
+    defaultLanguage: undefined,
+    uniqueLanguages: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetProblems(this.props.contest.jid);
@@ -55,7 +37,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
     });
   }
 
-  async componentDidUpdate(prevProps: ContestProblemsPageProps) {
+  async componentDidUpdate(prevProps) {
     const { response } = this.state;
     if (this.props.statementLanguage !== prevProps.statementLanguage && response) {
       const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
@@ -85,41 +67,38 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
     );
   }
 
-  private renderSetDialog = () => {
+  renderSetDialog = () => {
     const { response } = this.state;
     if (!response || !response.config.canManage) {
       return null;
     }
 
-    const problems = response.data.map(
-      p =>
-        ({
-          alias: p.alias,
-          slug: response.problemsMap[p.problemJid].slug,
-          status: p.status,
-          submissionsLimit: p.submissionsLimit,
-          points: p.points,
-        } as ContestProblemData)
-    );
+    const problems = response.data.map(p => ({
+      alias: p.alias,
+      slug: response.problemsMap[p.problemJid].slug,
+      status: p.status,
+      submissionsLimit: p.submissionsLimit,
+      points: p.points,
+    }));
     return (
       <ContestProblemEditDialog contest={this.props.contest} problems={problems} onSetProblems={this.setProblems} />
     );
   };
 
-  private renderStatementLanguageWidget = () => {
+  renderStatementLanguageWidget = () => {
     const { defaultLanguage, uniqueLanguages } = this.state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
 
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage,
       statementLanguages: uniqueLanguages,
     };
     return <StatementLanguageWidget {...props} />;
   };
 
-  private renderProblems = () => {
+  renderProblems = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -149,11 +128,11 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
     );
   };
 
-  private renderOpenProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
+  renderOpenProblems = (problems, totalSubmissionsMap) => {
     return <div>{this.renderFilteredProblems(problems, totalSubmissionsMap)}</div>;
   };
 
-  private renderClosedProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
+  renderClosedProblems = (problems, totalSubmissionsMap) => {
     return (
       <div>
         {problems.length !== 0 && <hr />}
@@ -162,27 +141,27 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
     );
   };
 
-  private renderFilteredProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
+  renderFilteredProblems = (problems, totalSubmissionsMap) => {
     return problems.map(problem => {
-      const props: ContestProblemCardProps = {
+      const props = {
         contest: this.props.contest,
         problem,
-        problemName: getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage!),
+        problemName: getProblemName(this.state.response.problemsMap[problem.problemJid], this.state.defaultLanguage),
         totalSubmissions: totalSubmissionsMap[problem.problemJid],
       };
       return <ContestProblemCard key={problem.problemJid} {...props} />;
     });
   };
 
-  private setProblems = async (contestJid, data) => {
+  setProblems = async (contestJid, data) => {
     const response = await this.props.onSetProblems(contestJid, data);
     await this.componentDidMount();
     return response;
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
   statementLanguage: selectStatementLanguage(state),
 });
 

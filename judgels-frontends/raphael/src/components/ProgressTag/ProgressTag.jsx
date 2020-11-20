@@ -4,21 +4,12 @@ import * as React from 'react';
 
 import './ProgressTag.css';
 
-export interface ProgressTagProps {
-  className?: string;
-  large?: boolean;
-  num: number;
-  denom: number;
-  children: any;
-}
-
-export const ProgressTag = (props: ProgressTagProps) => {
-  const { className, large, num, denom, children } = props;
+export function ProgressTag({ className, large, num, denom, children }) {
   if (denom === 0) {
     return null;
   }
 
-  let intent: Intent;
+  let intent;
   if (num === denom) {
     intent = Intent.SUCCESS;
   } else if (num === 0) {
@@ -31,4 +22,4 @@ export const ProgressTag = (props: ProgressTagProps) => {
       {children}
     </Tag>
   );
-};
+}

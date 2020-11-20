@@ -6,11 +6,13 @@ import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/Breadcrumb
 import SingleProfileDataRoute from './single/SingleProfileDataRoute';
 import SingleProfileRoutes from './single/SingleProfileRoutes';
 
-const ProfileRoutes = () => (
-  <div>
-    <Route path="/profiles/:username" component={SingleProfileDataRoute} />
-    <Route path="/profiles/:username" component={SingleProfileRoutes} />
-  </div>
-);
+function ProfileRoutes() {
+  return (
+    <div>
+      <Route path="/profiles/:username" component={SingleProfileDataRoute} />
+      <Route path="/profiles/:username" component={SingleProfileRoutes} />
+    </div>
+  );
+}
 
-export default withBreadcrumb('Profiles')(withRouter<any, any>(ProfileRoutes));
+export default withBreadcrumb('Profiles')(withRouter(ProfileRoutes));

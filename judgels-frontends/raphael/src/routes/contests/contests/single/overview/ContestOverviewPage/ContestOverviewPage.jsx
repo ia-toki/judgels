@@ -3,28 +3,18 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
-
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestActions from '../../../modules/contestActions';
 
 import './ContestOverviewPage.css';
 
-export interface ContestOverviewPageProps {
-  contest: Contest;
-  onGetContestDescription: (contestJid: string) => Promise<string>;
-}
-
-interface ContestOverviewPageState {
-  description?: string;
-}
-
-class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps, ContestOverviewPageState> {
-  state: ContestOverviewPageState = {};
+class ContestOverviewPage extends React.Component {
+  state = {
+    description: undefined,
+  };
 
   async componentDidMount() {
     const description = await this.props.onGetContestDescription(this.props.contest.jid);
@@ -42,11 +32,11 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps, 
     );
   }
 
-  private renderRegistration = () => {
+  renderRegistration = () => {
     return <ContestRegistrationCard />;
   };
 
-  private renderDescription = () => {
+  renderDescription = () => {
     const { description } = this.state;
 
     if (description === undefined) {
@@ -65,11 +55,11 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps, 
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
 });
 const mapDispatchToProps = {
   onGetContestDescription: contestActions.getContestDescription,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));

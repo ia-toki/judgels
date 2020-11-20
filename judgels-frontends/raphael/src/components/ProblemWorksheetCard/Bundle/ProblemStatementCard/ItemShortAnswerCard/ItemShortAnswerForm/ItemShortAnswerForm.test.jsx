@@ -1,14 +1,14 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 
-import { ItemShortAnswerConfig, ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
-import { AnswerState } from '../../../../../../components/ProblemWorksheetCard/Bundle/itemStatement';
-import ItemShortAnswerForm, { ItemShortAnswerFormProps, ItemShortAnswerFormState } from './ItemShortAnswerForm';
+import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
+import { AnswerState } from '../../../itemStatement';
+import ItemShortAnswerForm from './ItemShortAnswerForm';
 
 describe('ItemShortAnswerForm', () => {
-  let wrapper: ReactWrapper<ItemShortAnswerFormProps, ItemShortAnswerFormState>;
-  const onSubmitFn: jest.Mocked<any> = jest.fn();
-  const itemConfig: ItemShortAnswerConfig = {
+  let wrapper;
+  const onSubmitFn = jest.fn();
+  const itemConfig = {
     statement: 'statement',
     score: 4,
     penalty: -2,
@@ -21,7 +21,7 @@ describe('ItemShortAnswerForm', () => {
   });
 
   describe('not answered yet condition', () => {
-    const props: ItemShortAnswerFormProps = {
+    const props = {
       jid: 'jid',
       type: ItemType.ShortAnswer,
       meta: 'meta',
@@ -90,7 +90,7 @@ describe('ItemShortAnswerForm', () => {
   });
 
   describe('answered', () => {
-    const props: ItemShortAnswerFormProps = {
+    const props = {
       jid: 'jid',
       type: ItemType.ShortAnswer,
       meta: 'meta',
@@ -170,7 +170,7 @@ describe('ItemShortAnswerForm', () => {
   });
 
   describe('disabled', () => {
-    const props: ItemShortAnswerFormProps = {
+    const props = {
       jid: 'jid',
       type: ItemType.ShortAnswer,
       meta: 'meta',

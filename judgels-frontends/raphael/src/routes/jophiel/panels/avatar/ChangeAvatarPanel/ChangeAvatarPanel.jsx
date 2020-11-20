@@ -9,21 +9,11 @@ import { MAX_AVATAR_FILE_SIZE } from '../../../modules/avatarActions';
 
 import './ChangeAvatarPanel.css';
 
-export interface ChangeAvatarPanelProps {
-  onDropAccepted: (files: File[]) => Promise<void>;
-  onDropRejected: (files: File[]) => Promise<void>;
-  onAvatarExists: () => Promise<boolean>;
-  onRenderAvatar: () => Promise<string>;
-  onDeleteAvatar: () => Promise<void>;
-}
-
-interface ChangeAvatarPanelState {
-  avatarExists?: boolean;
-  avatarUrl?: string;
-}
-
-export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProps, ChangeAvatarPanelState> {
-  state: ChangeAvatarPanelState = {};
+export class ChangeAvatarPanel extends React.Component {
+  state = {
+    avatarExists: undefined,
+    avatarUrl: undefined,
+  };
 
   async componentDidMount() {
     const [avatarExists, avatarUrl] = await Promise.all([this.props.onAvatarExists(), this.props.onRenderAvatar()]);
@@ -73,12 +63,12 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
     );
   }
 
-  private dropAccepted = async files => {
+  dropAccepted = async files => {
     await this.props.onDropAccepted(files);
     window.location.reload();
   };
 
-  private deleteAvatar = async () => {
+  deleteAvatar = async () => {
     await this.props.onDeleteAvatar();
     window.location.reload();
   };

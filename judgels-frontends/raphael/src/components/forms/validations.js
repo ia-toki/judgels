@@ -1,4 +1,4 @@
-import { getGradingLanguageFilenameExtensions } from '../../modules/api/gabriel/language';
+import { getGradingLanguageFilenameExtensions } from '../../modules/api/gabriel/language.js';
 
 export const Required = value => (value ? undefined : 'Required');
 
@@ -21,15 +21,15 @@ export const EmailAddress = value =>
 export const ConfirmPassword = (value, { password }) =>
   value === password ? undefined : 'Confirmed password does not match';
 
-export const MaxFileSize300KB = (value: File) => {
+export const MaxFileSize300KB = value => {
   return value && value.size <= 300 * 1024 ? undefined : 'File size must be at most 300 KB';
 };
 
-export const MaxFileSize10MB = (value: File) => {
+export const MaxFileSize10MB = value => {
   return value && value.size <= 10 * 1024 * 1024 ? undefined : 'File size must be at most 10 MB';
 };
 
-export const MaxFileSize20MB = (value: File) => {
+export const MaxFileSize20MB = value => {
   return value && value.size <= 20 * 1024 * 1024 ? undefined : 'File size must be at most 20 MB';
 };
 
@@ -51,7 +51,7 @@ export const Max1000Lines = value => {
     : 'Max 1000 lines';
 };
 
-export function CompatibleFilenameExtensionForGradingLanguage(value: File, { gradingLanguage }) {
+export function CompatibleFilenameExtensionForGradingLanguage(value, { gradingLanguage }) {
   if (!gradingLanguage || !value) {
     return undefined;
   }

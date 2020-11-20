@@ -7,11 +7,10 @@ describe('language', () => {
   });
 
   describe('consolidateLanguages()', () => {
-    const mk = (defaultLanguage, languages) =>
-      ({
-        defaultLanguage,
-        titlesByLanguage: Object.assign({}, ...languages.map(lang => ({ [lang]: 'name' }))),
-      } as ProblemInfo);
+    const mk = (defaultLanguage, languages) => ({
+      defaultLanguage,
+      titlesByLanguage: Object.assign({}, ...languages.map(lang => ({ [lang]: 'name' }))),
+    });
 
     let problemsMap;
     it('returns the current statement language when it is one of the languages', () => {

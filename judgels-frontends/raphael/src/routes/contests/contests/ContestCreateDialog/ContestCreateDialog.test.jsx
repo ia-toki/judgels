@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -9,15 +9,15 @@ import thunk from 'redux-thunk';
 import { ContestCreateDialog } from './ContestCreateDialog';
 
 describe('ContestCreateDialog', () => {
-  let onGetContestConfig: jest.Mock<any>;
-  let onCreateContest: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onGetContestConfig;
+  let onCreateContest;
+  let wrapper;
 
   beforeEach(() => {
     onGetContestConfig = jest.fn().mockReturnValue(Promise.resolve({ canAdminister: true }));
     onCreateContest = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
       onGetContestConfig,

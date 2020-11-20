@@ -1,32 +1,18 @@
 import { Callout } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { getAllowedGradingLanguages } from '../../../../modules/api/gabriel/language';
-import { ProblemSubmissionConfig } from '../../../../modules/api/sandalphon/problemProgramming';
-import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
+import { ContentCard } from '../../../ContentCard/ContentCard';
+import { getAllowedGradingLanguages } from '../../../../modules/api/gabriel/language.js';
+import ProblemSubmissionForm from '../ProblemSubmissionForm/ProblemSubmissionForm';
 
-export interface ProblemSubmissionCardProps {
-  config: ProblemSubmissionConfig;
-  onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
-  reasonNotAllowedToSubmit?: string;
-  submissionWarning?: string;
-  preferredGradingLanguage: string;
-}
-
-export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmissionCardProps> {
-  render() {
-    return (
-      <ContentCard>
-        <h4>Submit solution</h4>
-        {this.renderSubmissionForm()}
-      </ContentCard>
-    );
-  }
-
-  private renderSubmissionForm = () => {
-    const { config, onSubmit, reasonNotAllowedToSubmit, submissionWarning } = this.props;
-
+export function ProblemSubmissionCard({
+  config: { sourceKeys, gradingEngine, gradingLanguageRestriction },
+  reasonNotAllowedToSubmit,
+  submissionWarning,
+  preferredGradingLanguage,
+  onSubmit,
+}) {
+  const renderSubmissionForm = () => {
     if (reasonNotAllowedToSubmit) {
       return (
         <Callout icon="ban-circle" className="secondary-info">
@@ -35,16 +21,16 @@ export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmission
       );
     }
 
-    const gradingLanguages = getAllowedGradingLanguages(config.gradingEngine, config.gradingLanguageRestriction);
+    const gradingLanguages = getAllowedGradingLanguages(gradingEngine, gradingLanguageRestriction);
 
-    let defaultGradingLanguage: string | undefined = this.props.preferredGradingLanguage;
+    let defaultGradingLanguage = preferredGradingLanguage;
     if (gradingLanguages.indexOf(defaultGradingLanguage) === -1) {
       defaultGradingLanguage = gradingLanguages.length === 0 ? undefined : gradingLanguages[0];
     }
 
     const formProps = {
-      sourceKeys: config.sourceKeys,
-      gradingEngine: config.gradingEngine,
+      sourceKeys,
+      gradingEngine,
       gradingLanguages,
       submissionWarning,
       initialValues: {
@@ -54,4 +40,11 @@ export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmission
 
     return <ProblemSubmissionForm onSubmit={onSubmit} {...formProps} />;
   };
+
+  return (
+    <ContentCard>
+      <h4>Submit solution</h4>
+      {renderSubmissionForm()}
+    </ContentCard>
+  );
 }

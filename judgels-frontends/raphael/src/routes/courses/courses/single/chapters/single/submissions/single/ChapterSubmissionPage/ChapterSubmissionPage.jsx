@@ -1,43 +1,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { AppState } from '../../../../../../../../../modules/store';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { Course } from '../../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import {
-  SubmissionWithSource,
-  SubmissionWithSourceResponse,
-} from '../../../../../../../../../modules/api/sandalphon/submissionProgramming';
-import { Profile } from '../../../../../../../../../modules/api/jophiel/profile';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterSubmissionActions from '../../modules/chapterSubmissionActions';
 
-export interface ChapterSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
-  course: Course;
-  chapter: CourseChapter;
-  statementLanguage: string;
-  onGetSubmissionWithSource: (submissionId: number, language?: string) => Promise<SubmissionWithSourceResponse>;
-  onPushBreadcrumb: (link: string, title: string) => void;
-  onPopBreadcrumb: (link: string) => void;
-}
-
-interface ChapterSubmissionPageState {
-  submissionWithSource?: SubmissionWithSource;
-  profile?: Profile;
-  problemName?: string;
-  problemAlias?: string;
-  containerName?: string;
-}
-
-export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPageProps, ChapterSubmissionPageState> {
-  state: ChapterSubmissionPageState = {};
+export class ChapterSubmissionPage extends React.Component {
+  state = {
+    submissionWithSource: undefined,
+    profile: undefined,
+    problemName: undefined,
+    problemAlias: undefined,
+    containerName: undefined,
+  };
 
   async componentDidMount() {
     const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
@@ -68,7 +49,7 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
     );
   }
 
-  private renderSubmission = () => {
+  renderSubmission = () => {
     const { submissionWithSource, profile, problemName, problemAlias, containerName } = this.state;
     const { course, chapter } = this.props;
 
@@ -80,18 +61,18 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
-        profile={profile!}
-        problemName={problemName!}
-        problemAlias={problemAlias!}
+        profile={profile}
+        problemName={problemName}
+        problemAlias={problemAlias}
         problemUrl={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}`}
         containerTitle="Chapter"
-        containerName={containerName!}
+        containerName={containerName}
       />
     );
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   statementLanguage: selectStatementLanguage(state),
@@ -103,4 +84,4 @@ const mapDispatchToProps = {
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionPage));

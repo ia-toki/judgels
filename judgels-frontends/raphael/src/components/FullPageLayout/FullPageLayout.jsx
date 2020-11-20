@@ -2,4 +2,6 @@ import * as React from 'react';
 
 import './FullPageLayout.css';
 
-export const FullPageLayout = props => <div className="layout-full-page">{props.children}</div>;
+export function FullPageLayout({ children }) {
+  return <div className="layout-full-page">{children}</div>;
+}

@@ -5,36 +5,23 @@ import { Link } from 'react-router-dom';
 import { FormattedRelative } from '../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../components/UserRef/UserRef';
 import { VerdictTag } from '../../../components/VerdictTag/VerdictTag';
-import { ProfilesMap } from '../../../modules/api/jophiel/profile';
 import { getGradingLanguageName } from '../../../modules/api/gabriel/language';
-import { Submission as ProgrammingSubmission } from '../../../modules/api/sandalphon/submissionProgramming';
-
-import '../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 import { constructProblemName } from '../../../modules/api/sandalphon/problem';
 
-export interface SubmissionsTableProps {
-  submissions: ProgrammingSubmission[];
-  canManage: boolean;
-  userJid: string;
-  profilesMap: ProfilesMap;
-  problemAliasesMap: { [problemJid: string]: string };
-  problemNamesMap: { [problemJid: string]: string };
-  containerNamesMap: { [problemJid: string]: string };
-  containerPathsMap: { [problemJid: string]: string[] };
-  onRegrade: (submissionJid: string) => any;
-}
+import '../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
-export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed submissions-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function SubmissionsTable({
+  submissions,
+  userJid,
+  canManage,
+  profilesMap,
+  problemAliasesMap,
+  problemNamesMap,
+  containerNamesMap,
+  containerPathsMap,
+  onRegrade,
+}) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -52,18 +39,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
     );
   };
 
-  private renderRows = () => {
-    const {
-      submissions,
-      userJid,
-      canManage,
-      profilesMap,
-      problemAliasesMap,
-      problemNamesMap,
-      containerNamesMap,
-      containerPathsMap,
-    } = this.props;
-
+  const renderRows = () => {
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
         <td>
@@ -71,7 +47,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
           {canManage && (
             <>
               &nbsp;&nbsp;&nbsp;
-              <Icon className="action" icon="refresh" intent="primary" onClick={this.onClickRegrade(submission.jid)} />
+              <Icon className="action" icon="refresh" intent="primary" onClick={onClickRegrade(submission.jid)} />
             </>
           )}
         </td>
@@ -80,13 +56,13 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
         </td>
 
         <td>
-          <Link to={this.constructContainerUrl(containerPathsMap[submission.containerJid])}>
+          <Link to={constructContainerUrl(containerPathsMap[submission.containerJid])}>
             {containerNamesMap[submission.containerJid]}
           </Link>
         </td>
         <td>
           <Link
-            to={`${this.constructContainerUrl(containerPathsMap[submission.containerJid])}/${problemAliasesMap[
+            to={`${constructContainerUrl(containerPathsMap[submission.containerJid])}/${problemAliasesMap[
               submission.containerJid + '-' + submission.problemJid
             ] || '#'}`}
           >
@@ -117,7 +93,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
     return <tbody>{rows}</tbody>;
   };
 
-  private constructContainerUrl = (subpaths: string[]) => {
+  const constructContainerUrl = subpaths => {
     if (!subpaths) {
       return '';
     }
@@ -128,7 +104,14 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
     }
   };
 
-  private onClickRegrade = (submissionJid: string) => {
-    return () => this.props.onRegrade(submissionJid);
+  const onClickRegrade = submissionJid => {
+    return () => onRegrade(submissionJid);
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed submissions-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

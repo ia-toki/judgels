@@ -5,36 +5,20 @@ import { Link } from 'react-router-dom';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { VerdictTag } from '../../../../../../../../components/VerdictTag/VerdictTag';
-import { ProfilesMap } from '../../../../../../../../modules/api/jophiel/profile';
-import { getGradingLanguageName } from '../../../../../../../../modules/api/gabriel/language';
-import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
-import { Submission as ProgrammingSubmission } from '../../../../../../../../modules/api/sandalphon/submissionProgramming';
+import { getGradingLanguageName } from '../../../../../../../../modules/api/gabriel/language.js';
 
 import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
-export interface ProblemSubmissionsTableProps {
-  problemSet: ProblemSet;
-  problem: ProblemSetProblem;
-  submissions: ProgrammingSubmission[];
-  canManage: boolean;
-  userJid: string;
-  profilesMap: ProfilesMap;
-  problemAliasesMap: { [problemJid: string]: string };
-  onRegrade: (submissionJid: string) => any;
-}
-
-export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissionsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed submissions-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ProblemSubmissionsTable({
+  problemSet,
+  problem,
+  submissions,
+  userJid,
+  canManage,
+  profilesMap,
+  onRegrade,
+}) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -50,9 +34,7 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
     );
   };
 
-  private renderRows = () => {
-    const { problemSet, problem, submissions, userJid, canManage, profilesMap } = this.props;
-
+  const renderRows = () => {
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
         <td>
@@ -60,7 +42,7 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
           {canManage && (
             <>
               &nbsp;&nbsp;&nbsp;
-              <Icon className="action" icon="refresh" intent="primary" onClick={this.onClickRegrade(submission.jid)} />
+              <Icon className="action" icon="refresh" intent="primary" onClick={onClickRegrade(submission.jid)} />
             </>
           )}
         </td>
@@ -89,7 +71,14 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
     return <tbody>{rows}</tbody>;
   };
 
-  private onClickRegrade = (submissionJid: string) => {
-    return () => this.props.onRegrade(submissionJid);
+  const onClickRegrade = submissionJid => {
+    return () => onRegrade(submissionJid);
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed submissions-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

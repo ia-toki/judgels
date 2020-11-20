@@ -1,7 +1,7 @@
 import { BadRequestError, ForbiddenError, NotFoundError, RemoteError, UnauthorizedError } from './error';
 
-async function call(url: string, init: RequestInit): Promise<any> {
-  let response: Response;
+async function call(url, init) {
+  let response;
   try {
     response = await fetch(url, init);
   } catch (error) {
@@ -31,10 +31,10 @@ async function call(url: string, init: RequestInit): Promise<any> {
   return json;
 }
 
-async function request(method: string, url: string, token?: string, headers?: any, body?: any): Promise<any> {
+async function request(method, url, token, headers, body) {
   const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
 
-  const init: RequestInit = {
+  const init = {
     method,
     mode: 'cors',
     headers: { ...headers, ...authHeader },
@@ -44,32 +44,32 @@ async function request(method: string, url: string, token?: string, headers?: an
   return call(url, init);
 }
 
-export async function get(url: string, token?: string): Promise<any> {
+export async function get(url, token) {
   return request('GET', url, token);
 }
 
-export async function delete_(url: string, token?: string): Promise<any> {
+export async function delete_(url, token) {
   return request('DELETE', url, token);
 }
 
-export async function post(url: string, token?: string, body?: any): Promise<any> {
+export async function post(url, token, body) {
   return request('POST', url, token, { 'Content-Type': 'application/json' }, JSON.stringify(body));
 }
 
-export async function put(url: string, token?: string, body?: any): Promise<any> {
+export async function put(url, token, body) {
   return request('PUT', url, token, { 'Content-Type': 'application/json' }, JSON.stringify(body));
 }
 
-export async function postMultipart(url: string, token: string, parts: { [key: string]: any }): Promise<any> {
+export async function postMultipart(url, token, parts) {
   const body = new FormData();
   Object.keys(parts).forEach(part => body.append(part, parts[part]));
 
   return request('POST', url, token, {}, body);
 }
 
-export async function download(url: string, token: string): Promise<any> {
+export async function download(url, token) {
   const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
-  const init: RequestInit = {
+  const init = {
     method: 'GET',
     headers: authHeader,
   };

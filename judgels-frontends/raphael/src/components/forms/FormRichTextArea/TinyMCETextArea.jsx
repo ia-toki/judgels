@@ -9,11 +9,7 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/paste';
 import 'tinymce/plugins/table';
 
-export interface TinyMCETextAreaProps {
-  onChange: (content: any) => any;
-}
-
-export class TinyMCETextArea extends React.PureComponent<TinyMCETextAreaProps> {
+export class TinyMCETextArea extends React.PureComponent {
   componentDidMount() {
     if (tinymce) {
       tinymce.init({

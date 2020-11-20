@@ -1,9 +1,7 @@
-import { AppState } from '../../../../modules/store';
-
-export function selectContest(state: AppState) {
+export function selectContest(state) {
   return state.uriel.contest.value;
 }
 
-export function selectIsEditingContest(state: AppState): boolean {
+export function selectIsEditingContest(state) {
   return !!state.uriel.contest.isEditing;
 }

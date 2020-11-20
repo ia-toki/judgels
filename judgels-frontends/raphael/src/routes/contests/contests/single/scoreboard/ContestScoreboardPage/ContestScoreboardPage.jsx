@@ -2,7 +2,6 @@ import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import { push } from 'connected-react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
@@ -10,18 +9,8 @@ import { FormattedRelative } from '../../../../../../components/FormattedRelativ
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../components/Pagination/Pagination';
-import { Contest, ContestStyle } from '../../../../../../modules/api/uriel/contest';
-import {
-  ContestScoreboardResponse,
-  ContestScoreboardType,
-} from '../../../../../../modules/api/uriel/contestScoreboard';
-import {
-  IcpcScoreboard,
-  IoiScoreboard,
-  GcjScoreboard,
-  BundleScoreboard,
-} from '../../../../../../modules/api/uriel/scoreboard';
-import { AppState } from '../../../../../../modules/store';
+import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
+import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectContest } from '../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
@@ -32,44 +21,27 @@ import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.css';
 
-export interface ContestScoreboardPageProps
-  extends RouteComponentProps<{ frozen: string; showClosedProblems: string }> {
-  userJid?: string;
-  contest: Contest;
-  onGetScoreboard: (
-    contestJid: string,
-    frozen?: boolean,
-    showClosedProblems?: boolean,
-    page?: number
-  ) => Promise<ContestScoreboardResponse | null>;
-  onRefreshScoreboard: (contestJid: string) => Promise<void>;
-  onAppendRoute: (queries: any) => any;
-}
+export class ContestScoreboardPage extends React.Component {
+  static PAGE_SIZE = 250;
+  state;
 
-interface ContestScoreboardPageState {
-  response?: ContestScoreboardResponse[];
-  frozen?: boolean;
-  showClosedProblems?: boolean;
-  lastRefreshScoreboardTime?: number;
-  isForceRefreshButtonLoading?: boolean;
-}
-
-export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
-  private static PAGE_SIZE = 250;
-  state: ContestScoreboardPageState = {};
-
-  constructor(props: ContestScoreboardPageProps) {
+  constructor(props) {
     super(props);
 
     const queries = parse(this.props.location.search);
     const frozen = !!queries.frozen;
     const showClosedProblems = !!queries.showClosedProblems;
-    this.state = { frozen, showClosedProblems };
+    this.state = {
+      response: undefined,
+      frozen,
+      showClosedProblems,
+      lastRefreshScoreboardTime: 0,
+      isForceRefreshButtonLoading: false,
+    };
   }
 
   render() {
     const { lastRefreshScoreboardTime } = this.state;
-    const key = lastRefreshScoreboardTime || 0;
 
     return (
       <ContentCard className="contest-scoreboard-page">
@@ -83,7 +55,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
         {this.renderFrozenScoreboardNotice()}
         {this.renderScoreboard()}
         <Pagination
-          key={key}
+          key={lastRefreshScoreboardTime}
           currentPage={1}
           pageSize={ContestScoreboardPage.PAGE_SIZE}
           onChangePage={this.onChangePage}
@@ -92,7 +64,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     );
   }
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const scoreboard = await this.refreshScoreboard(nextPage, this.state.frozen, this.state.showClosedProblems);
     if (scoreboard) {
       return scoreboard.data.totalEntries;
@@ -101,13 +73,13 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     }
   };
 
-  private refreshScoreboard = async (nextPage?: number, frozen?: boolean, showClosedProblems?: boolean) => {
+  refreshScoreboard = async (nextPage, frozen, showClosedProblems) => {
     const response = await this.props.onGetScoreboard(this.props.contest.jid, frozen, showClosedProblems, nextPage);
     this.setState({ response: response ? [response] : [], frozen, showClosedProblems });
     return response;
   };
 
-  private renderScoreboardUpdatedTime = () => {
+  renderScoreboardUpdatedTime = () => {
     const { response } = this.state;
     if (!response || response.length === 0) {
       return null;
@@ -124,7 +96,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     );
   };
 
-  private renderFrozenScoreboardNotice = () => {
+  renderFrozenScoreboardNotice = () => {
     const { response } = this.state;
     if (!response || response.length === 0 || response[0].data.type !== ContestScoreboardType.Frozen) {
       return null;
@@ -140,7 +112,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     );
   };
 
-  private renderFilter = () => {
+  renderFilter = () => {
     const { response } = this.state;
     if (!response || response.length === 0) {
       return null;
@@ -198,17 +170,17 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     );
   };
 
-  private forceRefreshScoreboard = async () => {
+  forceRefreshScoreboard = async () => {
     this.setState({ isForceRefreshButtonLoading: true });
     await this.props.onRefreshScoreboard(this.props.contest.jid);
     this.setState({ isForceRefreshButtonLoading: false });
   };
 
-  private onChangeFrozen = ({ target }) => this.onChange(target.checked, this.state.showClosedProblems);
+  onChangeFrozen = ({ target }) => this.onChange(target.checked, this.state.showClosedProblems);
 
-  private onChangeShowClosedProblems = ({ target }) => this.onChange(this.state.frozen, target.checked);
+  onChangeShowClosedProblems = ({ target }) => this.onChange(this.state.frozen, target.checked);
 
-  private onChange = (frozen?: boolean, showClosedProblems?: boolean) => {
+  onChange = (frozen, showClosedProblems) => {
     this.setState({ frozen, showClosedProblems });
     this.refreshScoreboard(1, frozen, showClosedProblems);
     this.setState({ lastRefreshScoreboardTime: new Date().getTime() });
@@ -224,7 +196,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     this.props.onAppendRoute(queries);
   };
 
-  private renderScoreboard = () => {
+  renderScoreboard = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -242,33 +214,25 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
       return (
         <IcpcScoreboardTable
           userJid={this.props.userJid}
-          scoreboard={scoreboard.scoreboard as IcpcScoreboard}
-          profilesMap={profilesMap!}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
         />
       );
     } else if (this.props.contest.style === ContestStyle.IOI) {
       return (
-        <IoiScoreboardTable
-          userJid={this.props.userJid}
-          scoreboard={scoreboard.scoreboard as IoiScoreboard}
-          profilesMap={profilesMap!}
-        />
+        <IoiScoreboardTable userJid={this.props.userJid} scoreboard={scoreboard.scoreboard} profilesMap={profilesMap} />
       );
     } else if (this.props.contest.style === ContestStyle.Bundle) {
       return (
         <BundleScoreboardTable
           userJid={this.props.userJid}
-          scoreboard={scoreboard.scoreboard as BundleScoreboard}
-          profilesMap={profilesMap!}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
         />
       );
     } else if (this.props.contest.style === ContestStyle.GCJ) {
       return (
-        <GcjScoreboardTable
-          userJid={this.props.userJid}
-          scoreboard={scoreboard.scoreboard as GcjScoreboard}
-          profilesMap={profilesMap!}
-        />
+        <GcjScoreboardTable userJid={this.props.userJid} scoreboard={scoreboard.scoreboard} profilesMap={profilesMap} />
       );
     } else {
       return <React.Fragment />;
@@ -276,16 +240,15 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
   };
 }
 
-const mapStateToProps = (state: AppState) =>
-  ({
-    userJid: selectMaybeUserJid(state),
-    contest: selectContest(state)!,
-  } as Partial<ContestScoreboardPageProps>);
+const mapStateToProps = state => ({
+  userJid: selectMaybeUserJid(state),
+  contest: selectContest(state),
+});
 
 const mapDispatchToProps = {
   onGetScoreboard: contestScoreboardActions.getScoreboard,
   onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
-  onAppendRoute: (queries: any) => push({ search: stringify(queries) }),
+  onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 
 export default withBreadcrumb('Scoreboard')(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));

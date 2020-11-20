@@ -1,19 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { sendGAEvent } from '../../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from '../../../../../../../../../modules/store';
-import { Course } from '../../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblemProgramming';
-import { ProblemSubmissionFormData } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
-import { ProblemWorksheet } from '../../../../../../../../../modules/api/sandalphon/problemProgramming';
-import { getGradingLanguageFamily } from '../../../../../../../../../modules/api/gabriel/language';
+import StatementLanguageWidget from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { getGradingLanguageFamily } from '../../../../../../../../../modules/api/gabriel/language.js';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -21,38 +13,22 @@ import { ProblemWorksheetCard } from '../../../../../../../../../components/Prob
 import * as chapterSubmissionActions from '../../../submissions/modules/chapterSubmissionActions';
 import * as webPrefsActions from '../../../../../../../../../modules/webPrefs/webPrefsActions';
 
-export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
-  course: Course;
-  chapter: CourseChapter;
-  chapterName: string;
-  worksheet: ChapterProblemWorksheet;
-  gradingLanguage: string;
-  onCreateSubmission: (
-    courseSlug: string,
-    chapterJid: string,
-    chapterAlias: string,
-    problemJid: string,
-    data: ProblemSubmissionFormData
-  ) => Promise<void>;
-  onUpdateGradingLanguage: (language: string) => void;
-}
-
-export class ChapterProblemPage extends React.Component<ChapterProblemPageProps> {
-  render() {
-    return (
-      <ContentCard>
-        {this.renderStatementLanguageWidget()}
-        {this.renderStatement()}
-      </ContentCard>
-    );
-  }
-
-  private renderStatementLanguageWidget = () => {
-    const { defaultLanguage, languages } = this.props.worksheet;
+export function ChapterProblemPage({
+  match,
+  course,
+  chapter,
+  chapterName,
+  worksheet,
+  gradingLanguage,
+  onCreateSubmission,
+  onUpdateGradingLanguage,
+}) {
+  const renderStatementLanguageWidget = () => {
+    const { defaultLanguage, languages } = worksheet;
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
@@ -63,30 +39,30 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
     );
   };
 
-  private renderStatement = () => {
-    const { problem, worksheet } = this.props.worksheet;
+  const renderStatement = () => {
+    const { problem } = worksheet;
 
     return (
       <ProblemWorksheetCard
         alias={problem.alias}
-        worksheet={worksheet as ProblemWorksheet}
-        onSubmit={this.createSubmission}
-        gradingLanguage={this.props.gradingLanguage}
+        worksheet={worksheet.worksheet}
+        onSubmit={createSubmission}
+        gradingLanguage={gradingLanguage}
       />
     );
   };
 
-  private createSubmission = async (data: ProblemSubmissionFormData) => {
-    const { problem } = this.props.worksheet;
+  const createSubmission = async data => {
+    const { problem } = worksheet;
 
-    this.props.onUpdateGradingLanguage(data.gradingLanguage);
+    onUpdateGradingLanguage(data.gradingLanguage);
 
-    sendGAEvent({ category: 'Courses', action: 'Submit course problem', label: this.props.course.name });
-    sendGAEvent({ category: 'Courses', action: 'Submit chapter problem', label: this.props.chapterName });
+    sendGAEvent({ category: 'Courses', action: 'Submit course problem', label: course.name });
+    sendGAEvent({ category: 'Courses', action: 'Submit chapter problem', label: chapterName });
     sendGAEvent({
       category: 'Courses',
       action: 'Submit problem',
-      label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
+      label: chapterName + ': ' + match.params.problemAlias,
     });
     if (getGradingLanguageFamily(data.gradingLanguage)) {
       sendGAEvent({
@@ -96,17 +72,18 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
       });
     }
 
-    return await this.props.onCreateSubmission(
-      this.props.course.slug,
-      this.props.chapter.chapterJid,
-      this.props.chapter.alias,
-      problem.problemJid,
-      data
-    );
+    return await onCreateSubmission(course.slug, chapter.chapterJid, chapter.alias, problem.problemJid, data);
   };
+
+  return (
+    <ContentCard>
+      {renderStatementLanguageWidget()}
+      {renderStatement()}
+    </ContentCard>
+  );
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   chapterName: selectCourseChapterName(state),
@@ -117,4 +94,4 @@ const mapDispatchToProps = {
   onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));

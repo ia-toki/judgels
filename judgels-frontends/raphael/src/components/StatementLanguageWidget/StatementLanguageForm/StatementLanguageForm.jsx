@@ -1,6 +1,6 @@
 import { Alignment, Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { Required } from '../../forms/validations';
 import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
@@ -8,25 +8,17 @@ import { statementLanguageDisplayNamesMap } from '../../../modules/api/sandalpho
 
 import './StatementLanguageForm.css';
 
-export interface StatementLanguageFormData {
-  statementLanguage: string;
-}
-
-interface StatementLanguageFormProps extends InjectedFormProps<StatementLanguageFormData> {
-  statementLanguages: string[];
-}
-
-const StatementLanguageForm = (props: StatementLanguageFormProps) => {
-  const field: any = {
+function StatementLanguageForm({ handleSubmit, submitting, statementLanguages }) {
+  const field = {
     className: 'form-statement-language',
     name: 'statementLanguage',
-    optionValues: props.statementLanguages,
+    optionValues: statementLanguages,
     optionNamesMap: statementLanguageDisplayNamesMap,
     validate: [Required],
   };
 
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <table className="statement-language-form__field">
         <tbody>
           <Field component={FormTableSelect2} {...field} />
@@ -38,13 +30,11 @@ const StatementLanguageForm = (props: StatementLanguageFormProps) => {
         text="Switch"
         alignText={Alignment.LEFT}
         intent={Intent.PRIMARY}
-        loading={props.submitting}
+        loading={submitting}
       />
       <div className="clearfix" />
     </form>
   );
-};
+}
 
-export default reduxForm<StatementLanguageFormData>({ form: 'statement-language', touchOnBlur: false })(
-  StatementLanguageForm
-);
+export default reduxForm({ form: 'statement-language', touchOnBlur: false })(StatementLanguageForm);

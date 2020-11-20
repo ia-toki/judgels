@@ -2,30 +2,22 @@ import { HTMLTable } from '@blueprintjs/core';
 import { parse } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { UserTopStatsResponse } from '../../../../modules/api/jerahmeel/user';
 import * as rankingActions from '../../modules/rankingActions';
 
 import './ScoresPage.css';
 
-interface ScoresPageProps extends RouteComponentProps<{}> {
-  onGetTopUserStats: (page?: number, pageSize?: number) => Promise<UserTopStatsResponse>;
-  onAppendRoute: (queries: any) => any;
-}
+class ScoresPage extends React.Component {
+  static PAGE_SIZE = 50;
 
-interface ScoresPageState {
-  response?: UserTopStatsResponse;
-}
-
-class ScoresPage extends React.Component<ScoresPageProps, ScoresPageState> {
-  private static PAGE_SIZE = 50;
-
-  state: ScoresPageState = {};
+  state = {
+    response: undefined,
+  };
 
   render() {
     return (
@@ -36,7 +28,7 @@ class ScoresPage extends React.Component<ScoresPageProps, ScoresPageState> {
     );
   }
 
-  private renderScores = () => {
+  renderScores = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -70,7 +62,7 @@ class ScoresPage extends React.Component<ScoresPageProps, ScoresPageState> {
     );
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const response = await this.props.onGetTopUserStats(nextPage, ScoresPage.PAGE_SIZE);
     this.setState({ response });
     return response.data.totalCount;
@@ -81,4 +73,4 @@ const mapDispatchToProps = {
   onGetTopUserStats: rankingActions.getTopUserStats,
 };
 
-export default withRouter<any, any>(connect(undefined, mapDispatchToProps)(ScoresPage));
+export default withRouter(connect(undefined, mapDispatchToProps)(ScoresPage));

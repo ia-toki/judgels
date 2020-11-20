@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
@@ -11,32 +11,24 @@ import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { Page, OrderDir } from '../../../../modules/api/pagination';
-import { User, UsersResponse } from '../../../../modules/api/jophiel/user';
+import { OrderDir } from '../../../../modules/api/pagination';
 import * as userActions from '../../modules/userActions';
 
 import './UsersPage.css';
 
-export interface UsersPageProps extends RouteComponentProps<{ page: string; orderDir: OrderDir; orderBy: string }> {
-  onGetUsers: (page?: number, orderBy?: string, orderDir?: OrderDir) => Promise<UsersResponse>;
-  onAppendRoute: (queries: any) => any;
-}
+export class UsersPage extends React.Component {
+  static PAGE_SIZE = 250;
+  static HEADER = ['Username'];
+  static DEFAULT_ORDER_BY = 'username';
+  static DEFAULT_ORDER_DIR = OrderDir.ASC;
 
-interface UsersPageState {
-  users?: Page<User>;
-  lastSessionTimesMap?: { [userJid: string]: number };
-  page?: number;
-  orderBy?: string;
-  orderDir?: OrderDir;
-}
-
-export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageState> {
-  private static PAGE_SIZE = 250;
-  private static HEADER = ['Username'];
-  private static DEFAULT_ORDER_BY = 'username';
-  private static DEFAULT_ORDER_DIR = OrderDir.ASC;
-
-  state: UsersPageState = { page: 1 };
+  state = {
+    users: undefined,
+    lastSessionTimesMap: undefined,
+    orderBy: undefined,
+    orderDir: undefined,
+    page: 1,
+  };
 
   async componentDidMount() {
     const queries = parse(this.props.location.search);
@@ -69,7 +61,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
     );
   }
 
-  private renderHeader = () => {
+  renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -84,7 +76,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
     );
   };
 
-  private renderRows = (data: User[]) => {
+  renderRows = data => {
     const { lastSessionTimesMap } = this.state;
     return (
       <tbody>
@@ -102,7 +94,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
     );
   };
 
-  private withCaret = (title: string) => {
+  withCaret = title => {
     const { orderBy, orderDir } = this.state;
     if (orderBy === title.toLowerCase()) {
       return (
@@ -114,13 +106,13 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
     return title;
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     await this.setState({ page: nextPage });
     const users = await this.updateUsers();
     return users.totalCount;
   };
 
-  private setOrder = (orderBy: string) => {
+  setOrder = orderBy => {
     return async () => {
       let orderDir = OrderDir.ASC;
       if (this.state.orderBy === orderBy && this.state.orderDir !== OrderDir.DESC) {
@@ -133,7 +125,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
     };
   };
 
-  private updateUsers = async () => {
+  updateUsers = async () => {
     const { page, orderBy, orderDir } = this.state;
     const { data: users, lastSessionTimesMap } = await this.props.onGetUsers(page, orderBy, orderDir);
     this.setState({ users, lastSessionTimesMap });
@@ -143,9 +135,9 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
 
 const mapDispatchToProps = {
   onGetUsers: userActions.getUsers,
-  onAppendRoute: (queries: any) => {
+  onAppendRoute: queries => {
     return push({ search: stringify(queries) });
   },
 };
 
-export default withBreadcrumb('Users')(withRouter<any, any>(connect(undefined, mapDispatchToProps)(UsersPage)));
+export default withBreadcrumb('Users')(withRouter(connect(undefined, mapDispatchToProps)(UsersPage)));

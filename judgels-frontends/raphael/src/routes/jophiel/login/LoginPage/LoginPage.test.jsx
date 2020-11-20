@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -9,15 +9,15 @@ import thunk from 'redux-thunk';
 import LoginPage from './LoginPage';
 import * as loginActions from '../modules/loginActions';
 
-jest.mock('../modules/loginActions.ts');
+jest.mock('../modules/loginActions');
 
 describe('LoginPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
   beforeEach(() => {
-    (loginActions.logIn as jest.Mock).mockReturnValue(() => Promise.resolve());
+    loginActions.logIn.mockReturnValue(() => Promise.resolve());
 
-    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     wrapper = mount(
       <Provider store={store}>

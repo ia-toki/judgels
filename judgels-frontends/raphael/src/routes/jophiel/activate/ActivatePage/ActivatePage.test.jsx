@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import ActivatePage from './ActivatePage';
@@ -11,10 +11,10 @@ import * as activateActions from '../modules/activateActions';
 jest.mock('../modules/activateActions');
 
 describe('ActivatePage', () => {
-  let store: any;
+  let store;
 
   beforeEach(() => {
-    (activateActions.activateUser as jest.Mock).mockReturnValue(() => Promise.resolve());
+    activateActions.activateUser.mockReturnValue(() => Promise.resolve());
 
     store = createStore(() => {}, applyMiddleware(thunk));
 

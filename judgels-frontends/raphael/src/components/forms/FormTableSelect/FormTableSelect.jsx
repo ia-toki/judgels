@@ -3,16 +3,17 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { getIntentClassName } from '../meta';
-import { FormTableInput, FormTableInputProps } from '../FormTableInput/FormTableInput';
+import { FormTableInput } from '../FormTableInput/FormTableInput';
 
 import './FormTableSelect.css';
 
-export const FormTableSelect = (props: FormTableInputProps) => {
+export function FormTableSelect(props) {
+  const { input, meta, children } = props;
   return (
     <FormTableInput {...props}>
-      <HTMLSelect {...props.input} className={classNames(getIntentClassName(props.meta))}>
-        {props.children}
+      <HTMLSelect {...input} className={classNames(getIntentClassName(meta))}>
+        {children}
       </HTMLSelect>
     </FormTableInput>
   );
-};
+}

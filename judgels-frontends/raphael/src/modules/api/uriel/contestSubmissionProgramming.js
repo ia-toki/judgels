@@ -1,58 +1,36 @@
 import { stringify } from 'query-string';
 
 import { get, postMultipart, post, download } from '../http';
-import { SubmissionsResponse, SubmissionWithSourceResponse } from '../sandalphon/submissionProgramming';
 import { baseContestsURL } from './contest';
-import { ContestSubmissionConfig } from './contestSubmission';
-
-export interface ContestSubmissionsResponse extends SubmissionsResponse {
-  config: ContestSubmissionConfig;
-}
 
 const baseURL = `${baseContestsURL}/submissions/programming`;
 
 export const contestSubmissionProgrammingAPI = {
-  getSubmissions: (
-    token: string,
-    contestJid?: string,
-    username?: string,
-    problemAlias?: string,
-    page?: number
-  ): Promise<ContestSubmissionsResponse> => {
+  getSubmissions: (token, contestJid, username, problemAlias, page) => {
     const params = stringify({ contestJid, username, problemAlias, page });
     return get(`${baseURL}?${params}`, token);
   },
 
-  getSubmissionWithSource: (
-    token: string,
-    submissionId: number,
-    language?: string
-  ): Promise<SubmissionWithSourceResponse> => {
+  getSubmissionWithSource: (token, submissionId, language) => {
     const params = stringify({ language });
     return get(`${baseURL}/id/${submissionId}?${params}`, token);
   },
 
-  createSubmission: (
-    token: string,
-    contestJid: string,
-    problemJid: string,
-    gradingLanguage: string,
-    sourceFiles: { [key: string]: File }
-  ): Promise<void> => {
+  createSubmission: (token, contestJid, problemJid, gradingLanguage, sourceFiles) => {
     const parts = { contestJid, problemJid, gradingLanguage, ...sourceFiles };
     return postMultipart(baseURL, token, parts);
   },
 
-  regradeSubmission: (token: string, submissionJid: string): Promise<void> => {
+  regradeSubmission: (token, submissionJid) => {
     return post(`${baseURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeSubmissions: (token: string, contestJid?: string, username?: string, problemAlias?: string): Promise<void> => {
+  regradeSubmissions: (token, contestJid, username, problemAlias) => {
     const params = stringify({ contestJid, username, problemAlias });
     return post(`${baseURL}/regrade?${params}`, token);
   },
 
-  downloadSubmission: (token: string, submissionJid: string): Promise<void> => {
+  downloadSubmission: (token, submissionJid) => {
     return download(`${baseURL}/${submissionJid}/download`, token);
   },
 };

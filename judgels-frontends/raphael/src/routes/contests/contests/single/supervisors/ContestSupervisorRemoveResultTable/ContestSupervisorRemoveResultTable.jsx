@@ -2,24 +2,9 @@ import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
 
-export interface ContestSupervisorRemoveResultTableProps {
-  usernames: string[];
-  deletedSupervisorProfilesMap: ProfilesMap;
-}
-
-export class ContestSupervisorRemoveResultTable extends React.PureComponent<ContestSupervisorRemoveResultTableProps> {
-  render() {
-    return (
-      <>
-        {this.renderSupervisorsTable('Removed supervisors', this.props.deletedSupervisorProfilesMap)}
-        {this.renderUnknownSupervisorsTable()}
-      </>
-    );
-  }
-
-  private renderSupervisorsTable = (title: string, profilesMap: ProfilesMap) => {
+export function ContestSupervisorRemoveResultTable({ usernames, deletedSupervisorProfilesMap }) {
+  const renderSupervisorsTable = (title, profilesMap) => {
     const usernames = Object.keys(profilesMap)
       .slice()
       .sort((u1, u2) => u1.localeCompare(u2));
@@ -48,18 +33,18 @@ export class ContestSupervisorRemoveResultTable extends React.PureComponent<Cont
     );
   };
 
-  private renderUnknownSupervisorsTable = () => {
-    const knownUsernames = Object.keys(this.props.deletedSupervisorProfilesMap);
-    const usernames = this.props.usernames
+  const renderUnknownSupervisorsTable = () => {
+    const knownUsernames = Object.keys(deletedSupervisorProfilesMap);
+    const unknownUsernames = usernames
       .filter(u => knownUsernames.indexOf(u) === -1)
       .slice()
       .sort((u1, u2) => u1.localeCompare(u2));
 
-    if (usernames.length === 0) {
+    if (unknownUsernames.length === 0) {
       return null;
     }
 
-    const rows = usernames.map(username => (
+    const rows = unknownUsernames.map(username => (
       <tr key={username}>
         <td>{username}</td>
       </tr>
@@ -74,4 +59,11 @@ export class ContestSupervisorRemoveResultTable extends React.PureComponent<Cont
       </>
     );
   };
+
+  return (
+    <>
+      {renderSupervisorsTable('Removed supervisors', deletedSupervisorProfilesMap)}
+      {renderUnknownSupervisorsTable()}
+    </>
+  );
 }

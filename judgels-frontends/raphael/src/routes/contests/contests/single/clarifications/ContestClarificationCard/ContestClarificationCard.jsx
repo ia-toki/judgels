@@ -3,88 +3,42 @@ import * as React from 'react';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { Profile } from '../../../../../../modules/api/jophiel/profile';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestClarification } from '../../../../../../modules/api/uriel/contestClarification';
-
 import { ContestClarificationAnswerBox } from '../ContestClarificationAnswerBox/ContestClarificationAnswerBox';
 
 import './ContestClarificationCard.css';
 
-export interface ContestClarificationCardProps {
-  contest: Contest;
-  clarification: ContestClarification;
-  canSupervise: boolean;
-  canManage: boolean;
-  askerProfile?: Profile;
-  answererProfile?: Profile;
-  problemAlias?: string;
-  problemName?: string;
-  isAnswerBoxOpen: boolean;
-  isAnswerBoxLoading: boolean;
-  onToggleAnswerBox: (clarification?: ContestClarification) => void;
-  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
-}
+export function ContestClarificationCard({
+  contest,
+  clarification,
+  canSupervise,
+  canManage,
+  askerProfile,
+  answererProfile,
+  problemAlias,
+  problemName,
+  isAnswerBoxOpen,
+  isAnswerBoxLoading,
+  onToggleAnswerBox,
+  onAnswerClarification,
+}) {
+  const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
+  const asker = canSupervise && (
+    <>
+      &nbsp;<small>by</small> <UserRef profile={askerProfile} />
+    </>
+  );
 
-export class ContestClarificationCard extends React.PureComponent<ContestClarificationCardProps> {
-  render() {
-    const { clarification, canSupervise, askerProfile, problemAlias, problemName } = this.props;
-
-    const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
-    const asker = canSupervise && (
-      <>
-        &nbsp;<small>by</small> <UserRef profile={askerProfile!} />
-      </>
-    );
-
-    let questionIntent: Intent = Intent.NONE;
-    if (canSupervise && !clarification.answer) {
-      questionIntent = Intent.WARNING;
-    }
-
-    let answerIntent: Intent = Intent.NONE;
-    if (!canSupervise && clarification.answer) {
-      answerIntent = Intent.WARNING;
-    }
-
-    return (
-      <Callout className="contest-clarification-card" intent={questionIntent} icon={null}>
-        <h4>
-          {clarification.title} &nbsp; <Tag>{topic}</Tag>
-        </h4>
-        <p className="contest-clarification-card__info">
-          <small>
-            asked <FormattedRelative value={clarification.time} />
-          </small>
-          {asker}
-        </p>
-        <div className="clearfix" />
-        <hr />
-        <div className="multiline-text">{clarification.question}</div>
-        <Callout
-          className="contest-clarification-card contest-clarification-card__answer"
-          intent={answerIntent}
-          icon={null}
-        >
-          {this.renderAnswer()}
-        </Callout>
-      </Callout>
-    );
+  let questionIntent = Intent.NONE;
+  if (canSupervise && !clarification.answer) {
+    questionIntent = Intent.WARNING;
   }
 
-  private renderAnswer = () => {
-    const {
-      contest,
-      clarification,
-      canSupervise,
-      canManage,
-      answererProfile,
-      isAnswerBoxOpen,
-      isAnswerBoxLoading,
-      onToggleAnswerBox,
-      onAnswerClarification,
-    } = this.props;
+  let answerIntent = Intent.NONE;
+  if (!canSupervise && clarification.answer) {
+    answerIntent = Intent.WARNING;
+  }
 
+  const renderAnswer = () => {
     if (!clarification.answer) {
       if (canManage) {
         return (
@@ -108,7 +62,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
 
     const answerer = canSupervise && (
       <>
-        &nbsp;<small>by</small> <UserRef profile={answererProfile!} />
+        &nbsp;<small>by</small> <UserRef profile={answererProfile} />
       </>
     );
 
@@ -117,7 +71,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
         <h4>Answer:</h4>
         <p className="contest-clarification-card__info">
           <small>
-            answered <FormattedRelative value={clarification.answeredTime!} />
+            answered <FormattedRelative value={clarification.answeredTime} />
           </small>
           {answerer}
         </p>
@@ -127,4 +81,28 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
       </>
     );
   };
+
+  return (
+    <Callout className="contest-clarification-card" intent={questionIntent} icon={null}>
+      <h4>
+        {clarification.title} &nbsp; <Tag>{topic}</Tag>
+      </h4>
+      <p className="contest-clarification-card__info">
+        <small>
+          asked <FormattedRelative value={clarification.time} />
+        </small>
+        {asker}
+      </p>
+      <div className="clearfix" />
+      <hr />
+      <div className="multiline-text">{clarification.question}</div>
+      <Callout
+        className="contest-clarification-card contest-clarification-card__answer"
+        intent={answerIntent}
+        icon={null}
+      >
+        {renderAnswer()}
+      </Callout>
+    </Callout>
+  );
 }

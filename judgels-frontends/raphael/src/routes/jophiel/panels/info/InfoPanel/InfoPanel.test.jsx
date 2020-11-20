@@ -1,21 +1,19 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore, Store } from 'redux';
+import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-
-import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
 import { InfoPanel } from './InfoPanel';
 
 describe('InfoPanel', () => {
-  let onUpdateInfo: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onUpdateInfo;
+  let wrapper;
 
   beforeEach(() => {
     onUpdateInfo = jest.fn().mockReturnValue({ type: 'mock-update', then: fn => fn() });
 
-    const info: UserInfo = {
+    const info = {
       name: 'My Name',
       gender: 'MALE',
       country: 'ID',
@@ -27,7 +25,7 @@ describe('InfoPanel', () => {
       institutionCity: 'My City',
     };
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
     wrapper = mount(
       <Provider store={store}>

@@ -3,18 +3,15 @@ import * as React from 'react';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import UserRoute from '../../../components/UserRoute/UserRoute';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import InfoPage from './info/InfoPage/InfoPage';
 import ChangePasswordPage from './changePassword/ChangePasswordPage/ChangePasswordPage';
 import ChangeAvatarPage from './changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
 
-const AccountRoutes = () => {
-  const sidebarItems: ContentWithSidebarItem[] = [
+function AccountRoutes() {
+  const sidebarItems = [
     {
       id: 'info',
       title: 'Info',
@@ -35,7 +32,7 @@ const AccountRoutes = () => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'My account',
     items: sidebarItems,
     smallContent: true,
@@ -47,6 +44,6 @@ const AccountRoutes = () => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
 export default withBreadcrumb('My account')(AccountRoutes);

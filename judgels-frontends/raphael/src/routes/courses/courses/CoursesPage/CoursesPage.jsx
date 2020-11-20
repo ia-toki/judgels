@@ -4,24 +4,14 @@ import { connect } from 'react-redux';
 import { Card } from '../../../../components/Card/Card';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import { UserRole } from '../../../../modules/api/jophiel/role';
-import { CoursesResponse } from '../../../../modules/api/jerahmeel/course';
 import { CourseCard } from '../CourseCard/CourseCard';
-import { AppState } from '../../../../modules/store';
 import { selectRole } from '../../../jophiel/modules/userWebSelectors';
 import * as courseActions from '../modules/courseActions';
 
-export interface CoursePageProps {
-  role: UserRole;
-  onGetCourses: () => Promise<CoursesResponse>;
-}
-
-export interface CoursesPageState {
-  response?: CoursesResponse;
-}
-
-class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
-  state: CoursesPageState = {};
+class CoursesPage extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetCourses();
@@ -32,7 +22,7 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
     return <Card title="Courses">{this.renderCourses()}</Card>;
   }
 
-  private renderCourses = () => {
+  renderCourses = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -60,7 +50,7 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   role: selectRole(state),
 });
 const mapDispatchToProps = {

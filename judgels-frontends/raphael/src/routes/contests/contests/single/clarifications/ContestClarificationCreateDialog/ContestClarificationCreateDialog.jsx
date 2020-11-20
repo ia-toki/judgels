@@ -1,30 +1,12 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import ContestClarificationCreateForm, {
-  ContestClarificationCreateFormData,
-} from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
-import { ContestClarificationData } from '../../../../../../modules/api/uriel/contestClarification';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
+import ContestClarificationCreateForm from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
 
-export interface ContestClarificationCreateDialogProps {
-  contest: Contest;
-  problemJids: string[];
-  problemAliasesMap: { [problemJid: string]: string };
-  problemNamesMap: { [problemJid: string]: string };
-  statementLanguage: string;
-  onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
-}
-
-interface ContestClarificationCreateDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class ContestClarificationCreateDialog extends React.Component<
-  ContestClarificationCreateDialogProps,
-  ContestClarificationCreateDialogState
-> {
-  state: ContestClarificationCreateDialogState = {};
+export class ContestClarificationCreateDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
   render() {
     return (
@@ -35,7 +17,7 @@ export class ContestClarificationCreateDialog extends React.Component<
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New clarification
@@ -43,11 +25,11 @@ export class ContestClarificationCreateDialog extends React.Component<
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
+  renderDialog = () => {
     const { contest, problemJids, problemAliasesMap, problemNamesMap } = this.props;
     const props = {
       contestJid: contest.jid,
@@ -62,7 +44,7 @@ export class ContestClarificationCreateDialog extends React.Component<
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Submit new clarification"
         canOutsideClickClose={false}
@@ -72,7 +54,7 @@ export class ContestClarificationCreateDialog extends React.Component<
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -84,7 +66,7 @@ export class ContestClarificationCreateDialog extends React.Component<
     </>
   );
 
-  private createClarification = async (data: ContestClarificationCreateFormData) => {
+  createClarification = async data => {
     await this.props.onCreateClarification(this.props.contest.jid, data);
     this.setState({ isDialogOpen: false });
   };

@@ -5,22 +5,14 @@ import { connect } from 'react-redux';
 import { Card } from '../../../../../components/Card/Card';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { Page } from '../../../../../modules/api/pagination';
-import { Profile } from '../../../../../modules/api/jophiel/profile';
 import * as widgetActions from '../../modules/widgetActions';
 
 import './TopRatingsWidget.css';
 
-interface TopRatingsWidgetProps {
-  onGetTopRatedProfiles: (page?: number, pageSize?: number) => Promise<Page<Profile>>;
-}
-
-interface TopRatingsWidgetState {
-  profiles?: Page<Profile>;
-}
-
-class TopRatingsWidget extends React.PureComponent<TopRatingsWidgetProps, TopRatingsWidgetState> {
-  state: TopRatingsWidgetState = {};
+class TopRatingsWidget extends React.Component {
+  state = {
+    profiles: undefined,
+  };
 
   async componentDidMount() {
     const profiles = await this.props.onGetTopRatedProfiles(1, 5);
@@ -40,7 +32,7 @@ class TopRatingsWidget extends React.PureComponent<TopRatingsWidgetProps, TopRat
     );
   }
 
-  private renderTable = (profiles: Profile[]) => {
+  renderTable = profiles => {
     if (profiles.length === 0) {
       return (
         <div className="top-ratings-widget__empty">

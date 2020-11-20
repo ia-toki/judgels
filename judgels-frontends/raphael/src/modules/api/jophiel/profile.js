@@ -1,40 +1,21 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from '../../../conf';
-import { get, post } from '../../../modules/api/http';
-import { Page } from '../../../modules/api/pagination';
-import { UserRating } from './userRating';
-
-export interface Profile {
-  username: string;
-  rating?: UserRating;
-  country?: string;
-}
-
-export interface BasicProfile {
-  username: string;
-  rating?: UserRating;
-  name?: string;
-  country?: string;
-}
-
-export interface ProfilesMap {
-  [userJid: string]: Profile;
-}
+import { get, post } from '../http';
 
 const baseURL = `${APP_CONFIG.apiUrls.jophiel}/profiles`;
 
 export const profileAPI = {
-  getProfiles: (userJids: string[]): Promise<Profile> => {
+  getProfiles: userJids => {
     return post(`${baseURL}`, undefined, userJids);
   },
 
-  getTopRatedProfiles: (page?: number, pageSize?: number): Promise<Page<Profile>> => {
+  getTopRatedProfiles: (page, pageSize) => {
     const params = stringify({ page, pageSize });
     return get(`${baseURL}/top/?${params}`);
   },
 
-  getBasicProfile: (userJid: string): Promise<BasicProfile> => {
+  getBasicProfile: userJid => {
     return get(`${baseURL}/${userJid}/basic`);
   },
 };

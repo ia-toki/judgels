@@ -7,13 +7,6 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import {
-  ContestContestantsDeleteResponse,
-  ContestContestantsResponse,
-  ContestContestantUpsertResponse,
-} from '../../../../../../modules/api/uriel/contestContestant';
 import { ContestContestantsTable } from '../ContestContestantsTable/ContestContestantsTable';
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
@@ -23,23 +16,13 @@ import * as contestActions from '../../../modules/contestActions';
 
 import './ContestContestantsPage.css';
 
-export interface ContestContestantsPageProps {
-  contest: Contest;
-  onGetContestants: (contestJid: string, page?: number) => Promise<ContestContestantsResponse>;
-  onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
-  onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantsDeleteResponse>;
-  onResetVirtualContest: (contestJid: string) => Promise<void>;
-}
+class ContestContestantsPage extends React.Component {
+  static PAGE_SIZE = 1000;
 
-interface ContestContestantsPageState {
-  response?: ContestContestantsResponse;
-  lastRefreshContestantsTime?: number;
-}
-
-class ContestContestantsPage extends React.Component<ContestContestantsPageProps, ContestContestantsPageState> {
-  private static PAGE_SIZE = 1000;
-
-  state: ContestContestantsPageState = {};
+  state = {
+    response: undefined,
+    lastRefreshContestantsTime: 0,
+  };
 
   render() {
     return (
@@ -53,7 +36,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     );
   }
 
-  private renderContestants = () => {
+  renderContestants = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -80,14 +63,12 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     );
   };
 
-  private renderPagination = () => {
-    // updates pagination when contestants are refreshed
+  renderPagination = () => {
     const { lastRefreshContestantsTime } = this.state;
-    const key = lastRefreshContestantsTime || 0;
 
     return (
       <Pagination
-        key={key}
+        key={lastRefreshContestantsTime}
         currentPage={1}
         pageSize={ContestContestantsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
@@ -95,18 +76,18 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     );
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshContestants(nextPage);
     return data.totalCount;
   };
 
-  private refreshContestants = async (page?: number) => {
+  refreshContestants = async page => {
     const response = await this.props.onGetContestants(this.props.contest.jid, page);
     this.setState({ response });
     return response.data;
   };
 
-  private renderAddRemoveDialogs = () => {
+  renderAddRemoveDialogs = () => {
     const { response } = this.state;
     if (!response) {
       return null;
@@ -135,28 +116,28 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     );
   };
 
-  private onResetVirtualContest = async () => {
+  onResetVirtualContest = async () => {
     if (reallyConfirm('Are you sure to reset all contestant virtual start times?')) {
       await this.props.onResetVirtualContest(this.props.contest.jid);
       this.setState({ lastRefreshContestantsTime: new Date().getTime() });
     }
   };
 
-  private upsertContestants = async (contestJid, data) => {
+  upsertContestants = async (contestJid, data) => {
     const response = await this.props.onUpsertContestants(contestJid, data);
     this.setState({ lastRefreshContestantsTime: new Date().getTime() });
     return response;
   };
 
-  private deleteContestants = async (contestJid, data) => {
+  deleteContestants = async (contestJid, data) => {
     const response = await this.props.onDeleteContestants(contestJid, data);
     this.setState({ lastRefreshContestantsTime: new Date().getTime() });
     return response;
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
 });
 
 const mapDispatchToProps = {

@@ -1,24 +1,27 @@
-import { setWith, TypedAction, TypedReducer } from 'redoodle';
+export const initialState = {
+  value: undefined,
+};
 
-import { ProblemSetProblem } from '../../../../../../modules/api/jerahmeel/problemSetProblem';
-
-export interface ProblemSetProblemState {
-  value?: ProblemSetProblem;
+export function PutProblemSetProblem(problemSetProblem) {
+  return {
+    type: 'jerahmeel/problemSetProblem/PUT',
+    payload: problemSetProblem,
+  };
 }
 
-export const INITIAL_STATE: ProblemSetProblemState = {};
-
-export const PutProblemSetProblem = TypedAction.define('jerahmeel/problemSetProblem/PUT')<ProblemSetProblem>();
-export const DelProblemSetProblem = TypedAction.defineWithoutPayload('jerahmeel/problemSetProblem/DEL')();
-
-function createProblemSetProblemReducer() {
-  const builder = TypedReducer.builder<ProblemSetProblemState>();
-
-  builder.withHandler(PutProblemSetProblem.TYPE, (state, payload) => setWith(state, { value: payload }));
-  builder.withHandler(DelProblemSetProblem.TYPE, () => ({ value: undefined }));
-  builder.withDefaultHandler(state => (state !== undefined ? state : INITIAL_STATE));
-
-  return builder.build();
+export function DelProblemSetProblem() {
+  return {
+    type: 'jerahmeel/problemSetProblem/DEL',
+  };
 }
 
-export const problemSetProblemReducer = createProblemSetProblemReducer();
+export default function problemSetProblemReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'jerahmeel/problemSetProblem/PUT':
+      return { value: action.payload };
+    case 'jerahmeel/problemSetProblem/DEL':
+      return { value: undefined };
+    default:
+      return state;
+  }
+}

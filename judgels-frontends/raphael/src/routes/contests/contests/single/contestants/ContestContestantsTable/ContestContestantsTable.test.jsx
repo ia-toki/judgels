@@ -1,27 +1,24 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { ContestContestantsTable } from './ContestContestantsTable';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
 import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
-import { VirtualModuleConfig } from '../../../../../../modules/api/uriel/contestModule';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestContestant } from '../../../../../../modules/api/uriel/contestContestant';
 
 describe('ContestContestantsTable', () => {
-  let virtualModuleConfig: VirtualModuleConfig;
-  let contestants: ContestContestant[];
-  let now: number;
+  let virtualModuleConfig;
+  let contestants;
+  let now;
 
-  let wrapper: ShallowWrapper;
+  let wrapper;
 
   const render = () => {
     const props = {
       contest: {
         beginTime: 10,
         duration: 100,
-      } as Contest,
+      },
       virtualModuleConfig,
       contestants,
       profilesMap: {

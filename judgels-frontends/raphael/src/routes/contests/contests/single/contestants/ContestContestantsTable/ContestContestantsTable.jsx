@@ -4,33 +4,13 @@ import * as React from 'react';
 import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
 import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestContestant } from '../../../../../../modules/api/uriel/contestContestant';
-import { VirtualModuleConfig } from '../../../../../../modules/api/uriel/contestModule';
 
 import './ContestContestantsTable.css';
 
-export interface ContestContestantsTableProps {
-  contest: Contest;
-  virtualModuleConfig?: VirtualModuleConfig;
-  contestants: ContestContestant[];
-  profilesMap: ProfilesMap;
-  now: number;
-}
+export function ContestContestantsTable({ contest, virtualModuleConfig, contestants, profilesMap, now }) {
+  const isVirtualContest = !!virtualModuleConfig;
 
-export class ContestContestantsTable extends React.PureComponent<ContestContestantsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed contestants-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
-    const isVirtualContest = !!this.props.virtualModuleConfig;
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -43,10 +23,7 @@ export class ContestContestantsTable extends React.PureComponent<ContestContesta
     );
   };
 
-  private renderRows = () => {
-    const { contest, virtualModuleConfig, contestants, profilesMap, now } = this.props;
-    const isVirtualContest = !!virtualModuleConfig;
-
+  const renderRows = () => {
     const sortedContestants = contestants.slice().sort((c1, c2) => {
       const username1 = (profilesMap[c1.userJid] && profilesMap[c1.userJid].username) || 'ZZ';
       const username2 = (profilesMap[c2.userJid] && profilesMap[c2.userJid].username) || 'ZZ';
@@ -66,28 +43,19 @@ export class ContestContestantsTable extends React.PureComponent<ContestContesta
         <td>
           <UserRef profile={profilesMap[contestant.userJid]} />
         </td>
-        {isVirtualContest && (
-          <td className="col-virtual-progress">
-            {this.renderVirtualProgress(now, contest, virtualModuleConfig, contestant)}
-          </td>
-        )}
-        {isVirtualContest && <td className="col-virtual-start-time">{this.renderVirtualStartTime(contestant)}</td>}
+        {isVirtualContest && <td className="col-virtual-progress">{renderVirtualProgress(contestant)}</td>}
+        {isVirtualContest && <td className="col-virtual-start-time">{renderVirtualStartTime(contestant)}</td>}
       </tr>
     ));
 
     return <tbody>{rows}</tbody>;
   };
 
-  private renderVirtualStartTime = (contestant: ContestContestant) => {
+  const renderVirtualStartTime = contestant => {
     return contestant.contestStartTime && <FormattedDate value={contestant.contestStartTime} />;
   };
 
-  private renderVirtualProgress = (
-    now: number,
-    contest: Contest,
-    virtualModuleConfig: VirtualModuleConfig,
-    contestant: ContestContestant
-  ) => {
+  const renderVirtualProgress = contestant => {
     if (!contestant.contestStartTime) {
       return null;
     }
@@ -100,4 +68,11 @@ export class ContestContestantsTable extends React.PureComponent<ContestContesta
 
     return <ProgressBar num={num} denom={denom} />;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed contestants-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

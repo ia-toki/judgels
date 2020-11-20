@@ -1,19 +1,12 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ProblemSetCreateData } from '../../../../modules/api/jerahmeel/problemSet';
 import ProblemSetCreateForm from '../ProblemSetCreateForm/ProblemSetCreateForm';
 
-interface ProblemSetCreateDialogProps {
-  onCreateProblemSet: (data: ProblemSetCreateData) => Promise<void>;
-}
-
-interface ProblemSetCreateDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class ProblemSetCreateDialog extends React.Component<ProblemSetCreateDialogProps, ProblemSetCreateDialogState> {
-  state: ProblemSetCreateDialogState = {};
+export class ProblemSetCreateDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
   render() {
     return (
@@ -24,7 +17,7 @@ export class ProblemSetCreateDialog extends React.Component<ProblemSetCreateDial
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New problemset
@@ -32,18 +25,18 @@ export class ProblemSetCreateDialog extends React.Component<ProblemSetCreateDial
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
-    const props: any = {
+  renderDialog = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createProblemSet,
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Create new problemset"
         canOutsideClickClose={false}
@@ -53,7 +46,7 @@ export class ProblemSetCreateDialog extends React.Component<ProblemSetCreateDial
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -65,7 +58,7 @@ export class ProblemSetCreateDialog extends React.Component<ProblemSetCreateDial
     </>
   );
 
-  private createProblemSet = async (data: ProblemSetCreateData) => {
+  createProblemSet = async data => {
     await this.props.onCreateProblemSet(data);
     this.setState({ isDialogOpen: false });
   };

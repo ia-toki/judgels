@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,17 +8,16 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest } from '../../../../../../fixtures/state';
-import { ContestManager, ContestManagersResponse } from '../../../../../../modules/api/uriel/contestManager';
 import ContestManagersPage from './ContestManagersPage';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestManagerActions from '../modules/contestManagerActions';
 
 jest.mock('../modules/contestManagerActions');
 
 describe('ContestManagersPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestManagersResponse = {
+  const response = {
     data: { page: [], totalCount: 0 },
     profilesMap: {
       userJid1: { username: 'user1' },
@@ -28,11 +27,11 @@ describe('ContestManagersPage', () => {
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -46,7 +45,7 @@ describe('ContestManagersPage', () => {
   };
 
   beforeEach(() => {
-    (contestManagerActions.getManagers as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    contestManagerActions.getManagers.mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no managers', () => {
@@ -65,15 +64,15 @@ describe('ContestManagersPage', () => {
 
   describe('when there are managers', () => {
     beforeEach(() => {
-      const managers: ContestManager[] = [
+      const managers = [
         {
           userJid: 'userJid1',
-        } as ContestManager,
+        },
         {
           userJid: 'userJid2',
-        } as ContestManager,
+        },
       ];
-      (contestManagerActions.getManagers as jest.Mock).mockReturnValue(() =>
+      contestManagerActions.getManagers.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: managers, totalCount: 2 } })
       );
 

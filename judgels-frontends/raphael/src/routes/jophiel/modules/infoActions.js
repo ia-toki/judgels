@@ -1,15 +1,15 @@
 import { selectToken } from '../../../modules/session/sessionSelectors';
-import { UserInfo, userInfoAPI } from '../../../modules/api/jophiel/userInfo';
+import { userInfoAPI } from '../../../modules/api/jophiel/userInfo';
 import * as toastActions from '../../../modules/toast/toastActions';
 
-export function getInfo(userJid: string) {
+export function getInfo(userJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await userInfoAPI.getInfo(token, userJid);
   };
 }
 
-export function updateInfo(userJid: string, info: UserInfo) {
+export function updateInfo(userJid, info) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await userInfoAPI.updateInfo(token, userJid, info);

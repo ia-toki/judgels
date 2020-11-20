@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { sendGAEvent } from '../../../../../../../../../ga';
-import { AppState } from '../../../../../../../../../modules/store';
 import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
-import { Course } from '../../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblem';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
@@ -17,27 +13,10 @@ import { selectStatementLanguage } from '../../../../../../../../../modules/webP
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
-  course: Course;
-  chapter: CourseChapter;
-  chapterName: string;
-  statementLanguage: string;
-  gradingLanguage: string;
-  onGetProblemWorksheet: (
-    chapterJid: string,
-    problemAlias: string,
-    language?: string
-  ) => Promise<ChapterProblemWorksheet>;
-  onPushBreadcrumb: (link: string, title: string) => void;
-  onPopBreadcrumb: (link: string) => void;
-}
-
-interface ChapterProblemPageState {
-  response?: ChapterProblemWorksheet;
-}
-
-export class ChapterProblemPage extends React.Component<ChapterProblemPageProps, ChapterProblemPageState> {
-  state: ChapterProblemPageState = {};
+export class ChapterProblemPage extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetProblemWorksheet(
@@ -61,7 +40,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
     });
   }
 
-  async componentDidUpdate(prevProps: ChapterProblemPageProps, prevState: ChapterProblemPageState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.response) {
       this.setState({ response: undefined });
     } else if (!this.state.response && prevState.response) {
@@ -87,7 +66,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   chapterName: selectCourseChapterName(state),
@@ -98,4 +77,4 @@ const mapDispatchToProps = {
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));

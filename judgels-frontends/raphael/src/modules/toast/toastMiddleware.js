@@ -2,7 +2,7 @@ import { SubmissionError } from 'redux-form';
 
 import * as toastActions from './toastActions';
 
-export const toastMiddleware: any = store => next => async action => {
+const toastMiddleware = store => next => async action => {
   try {
     return await next(action);
   } catch (error) {
@@ -13,3 +13,5 @@ export const toastMiddleware: any = store => next => async action => {
     }
   }
 };
+
+export default toastMiddleware;

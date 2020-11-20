@@ -4,23 +4,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Breadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 import { selectSortedBreadcrumbs } from '../../modules/breadcrumbs/breadcrumbsSelectors';
-import { AppState } from '../../modules/store';
 
 import './Breadcrumbs.css';
 
-export interface BreadcrumbsProps {
-  breadcrumbs: Breadcrumb[];
-}
-
-export const Breadcrumbs = (props: BreadcrumbsProps) => {
-  const items = props.breadcrumbs.map((item, idx) => (
+function Breadcrumbs({ breadcrumbs }) {
+  const items = breadcrumbs.map((item, idx) => (
     <li key={item.link}>
       <Link
         to={item.link}
         className={classNames(Classes.BREADCRUMB, {
-          [Classes.BREADCRUMB_CURRENT]: idx === props.breadcrumbs.length - 1,
+          [Classes.BREADCRUMB_CURRENT]: idx === breadcrumbs.length - 1,
         })}
       >
         {item.title}
@@ -34,9 +28,9 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
       </div>
     </div>
   );
-};
+}
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   breadcrumbs: selectSortedBreadcrumbs(state),
 });
 export default connect(mapStateToProps)(Breadcrumbs);

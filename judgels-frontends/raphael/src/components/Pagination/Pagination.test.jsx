@@ -1,23 +1,21 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import { stringify } from 'query-string';
 import * as React from 'react';
 import ReactPaginate from 'react-paginate';
-import createMockStore, { MockStore } from 'redux-mock-store';
+import createMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { push } from 'connected-react-router';
 
-import { AppState } from '../../modules/store';
-
-import Pagination, { PaginationProps } from './Pagination';
+import Pagination from './Pagination';
 
 describe('Pagination', () => {
-  let store: MockStore<Partial<AppState>>;
-  let wrapper: ReactWrapper<any, any>;
-  let onChangePage: jest.Mock<any>;
+  let store;
+  let wrapper;
+  let onChangePage;
 
-  const render = (pageQuery: string) => {
-    const props: PaginationProps = {
+  const render = pageQuery => {
+    const props = {
       pageSize: 6,
       onChangePage,
     };
@@ -33,7 +31,7 @@ describe('Pagination', () => {
   };
 
   beforeEach(() => {
-    store = createMockStore<Partial<AppState>>()({});
+    store = createMockStore()({});
     onChangePage = jest.fn().mockReturnValue(Promise.resolve(14));
   });
 
@@ -86,7 +84,10 @@ describe('Pagination', () => {
 
     describe('when page changes to page 1', () => {
       beforeEach(() => {
-        wrapper.find(ReactPaginate).props().onPageChange!({ selected: 0 });
+        wrapper
+          .find(ReactPaginate)
+          .props()
+          .onPageChange({ selected: 0 });
       });
 
       it('clears the query string', () => {
@@ -100,7 +101,10 @@ describe('Pagination', () => {
 
     describe('when page changes to page > 1', () => {
       beforeEach(() => {
-        wrapper.find(ReactPaginate).props().onPageChange!({ selected: 2 });
+        wrapper
+          .find(ReactPaginate)
+          .props()
+          .onPageChange({ selected: 2 });
       });
 
       it('pushes the query string', () => {

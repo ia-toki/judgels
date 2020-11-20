@@ -6,34 +6,16 @@ import { withRouter } from 'react-router';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { ApprovedContestContestantsResponse } from '../../../../../../modules/api/uriel/contestContestant';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { AppState } from '../../../../../../modules/store';
 import { getCountryName } from '../../../../../../assets/data/countries';
-
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
 import './ContestRegistrantsDialog.css';
 
-export interface ContestRegistrantsDialogProps {
-  onClose: () => void;
-}
-
-export interface ContestRegistrantsDialogConnectedProps {
-  contest: Contest;
-  onGetApprovedContestants: (contestJid: string) => Promise<ApprovedContestContestantsResponse>;
-}
-
-interface ContestRegistrantsDialogState {
-  response?: ApprovedContestContestantsResponse;
-}
-
-class ContestRegistrantsDialog extends React.PureComponent<
-  ContestRegistrantsDialogProps & ContestRegistrantsDialogConnectedProps,
-  ContestRegistrantsDialogState
-> {
-  state: ContestRegistrantsDialogState = {};
+class ContestRegistrantsDialog extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetApprovedContestants(this.props.contest.jid);
@@ -58,7 +40,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
     );
   }
 
-  private renderRegistrants = () => {
+  renderRegistrants = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -106,10 +88,10 @@ class ContestRegistrantsDialog extends React.PureComponent<
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
 });
 const mapDispatchToProps = {
   onGetApprovedContestants: contestContestantActions.getApprovedContestants,
 };
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));

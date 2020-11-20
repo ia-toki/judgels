@@ -1,24 +1,14 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
-import { Required } from '../../components/forms/validations';
-import { FormSelect2 } from '../../components/forms/FormSelect2/FormSelect2';
+import { Required } from '../forms/validations';
+import { FormSelect2 } from '../forms/FormSelect2/FormSelect2';
 
 import './ClarificationFilterForm.css';
 
-export interface ClarificationFilterFormData {
-  status: string;
-}
-
-export interface ClarificationFilterFormProps extends InjectedFormProps<ClarificationFilterFormData> {
-  statuses?: string[];
-  isLoading: boolean;
-}
-
-const ClarificationFilterForm = (props: ClarificationFilterFormProps) => {
-  const { statuses } = props;
-  const statusField: any = {
+function ClarificationFilterForm({ handleSubmit, isLoading, statuses }) {
+  const statusField = {
     className: 'form-status',
     name: 'status',
     label: 'Status',
@@ -28,14 +18,14 @@ const ClarificationFilterForm = (props: ClarificationFilterFormProps) => {
   };
 
   return (
-    <form onSubmit={props.handleSubmit} className="clarification-filter-form">
-      <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={props.isLoading} />
+    <form onSubmit={handleSubmit} className="clarification-filter-form">
+      <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
       {<Field component={FormSelect2} {...statusField} />}
     </form>
   );
-};
+}
 
-export default reduxForm<ClarificationFilterFormData>({
+export default reduxForm({
   form: 'clarification-filter',
   touchOnBlur: false,
   enableReinitialize: true,

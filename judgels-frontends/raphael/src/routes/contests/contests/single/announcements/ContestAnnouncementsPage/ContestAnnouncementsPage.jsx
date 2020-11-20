@@ -5,39 +5,20 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import {
-  ContestAnnouncement,
-  ContestAnnouncementData,
-  ContestAnnouncementsResponse,
-} from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { selectContest } from '../../../modules/contestSelectors';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
 import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
-export interface ContestAnnouncementsPageProps {
-  contest: Contest;
-  onGetAnnouncements: (contestJid: string, page?: number) => Promise<ContestAnnouncementsResponse>;
-  onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
-  onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => void;
-}
+class ContestAnnouncementsPage extends React.Component {
+  static PAGE_SIZE = 20;
 
-interface ContestAnnouncementsPageState {
-  response?: ContestAnnouncementsResponse;
-  lastRefreshAnnouncementsTime?: number;
-  openEditDialogAnnouncement?: ContestAnnouncement;
-}
-
-class ContestAnnouncementsPage extends React.PureComponent<
-  ContestAnnouncementsPageProps,
-  ContestAnnouncementsPageState
-> {
-  private static PAGE_SIZE = 20;
-
-  state: ContestAnnouncementsPageState = {};
+  state = {
+    response: undefined,
+    lastRefreshAnnouncementsTime: 0,
+    openEditDialogAnnouncement: undefined,
+  };
 
   render() {
     return (
@@ -52,7 +33,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
     );
   }
 
-  private renderAnnouncements = () => {
+  renderAnnouncements = () => {
     const { response, openEditDialogAnnouncement } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -84,14 +65,13 @@ class ContestAnnouncementsPage extends React.PureComponent<
     ));
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     // updates pagination when announcements are refreshed
     const { lastRefreshAnnouncementsTime } = this.state;
-    const key = lastRefreshAnnouncementsTime || 0;
 
     return (
       <Pagination
-        key={key}
+        key={lastRefreshAnnouncementsTime}
         currentPage={1}
         pageSize={ContestAnnouncementsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
@@ -99,28 +79,28 @@ class ContestAnnouncementsPage extends React.PureComponent<
     );
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshAnnouncements(nextPage);
     return data.totalCount;
   };
 
-  private refreshAnnouncements = async (page?: number) => {
+  refreshAnnouncements = async page => {
     const response = await this.props.onGetAnnouncements(this.props.contest.jid, page);
     this.setState({ response });
     return response.data;
   };
 
-  private createAnnouncement = async (contestJid, data) => {
+  createAnnouncement = async (contestJid, data) => {
     await this.props.onCreateAnnouncement(contestJid, data);
     this.setState({ lastRefreshAnnouncementsTime: new Date().getTime() });
   };
 
-  private updateAnnouncement = async (contestJid, announcementJid, data) => {
+  updateAnnouncement = async (contestJid, announcementJid, data) => {
     await this.props.onUpdateAnnouncement(contestJid, announcementJid, data);
     this.setState({ lastRefreshAnnouncementsTime: new Date().getTime() });
   };
 
-  private renderCreateDialog = () => {
+  renderCreateDialog = () => {
     const { response } = this.state;
     if (!response) {
       return null;
@@ -134,7 +114,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
     );
   };
 
-  private renderEditDialog = () => {
+  renderEditDialog = () => {
     const { response, openEditDialogAnnouncement } = this.state;
     if (!response) {
       return null;
@@ -153,13 +133,13 @@ class ContestAnnouncementsPage extends React.PureComponent<
     );
   };
 
-  private toggleEditDialog = (announcement?: ContestAnnouncement) => {
+  toggleEditDialog = announcement => {
     this.setState({ openEditDialogAnnouncement: announcement });
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
 });
 
 const mapDispatchToProps = {

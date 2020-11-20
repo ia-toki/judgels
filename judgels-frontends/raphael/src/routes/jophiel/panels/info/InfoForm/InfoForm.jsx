@@ -1,6 +1,6 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { HorizontalDivider } from '../../../../../components/HorizontalDivider/HorizontalDivider';
@@ -9,58 +9,53 @@ import { ActionButtons } from '../../../../../components/ActionButtons/ActionBut
 import { FormTableTextArea } from '../../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableSelect } from '../../../../../components/forms/FormTableSelect/FormTableSelect';
 import { countriesData } from '../../../../../assets/data/countries';
-import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
 
-const nameField: any = {
+const nameField = {
   name: 'name',
   label: 'Name',
 };
 
-const genderField: any = {
+const genderField = {
   name: 'gender',
   label: 'Gender',
 };
 
-const countryField: any = {
+const countryField = {
   name: 'country',
   label: 'Country',
 };
 
-const homeAddressField: any = {
+const homeAddressField = {
   name: 'homeAddress',
   label: 'Home address',
 };
 
-const shirtSizeField: any = {
+const shirtSizeField = {
   name: 'shirtSize',
   label: 'Shirt size',
 };
 
-const institutionField: any = {
+const institutionField = {
   name: 'institutionName',
   label: 'Name',
 };
 
-const institutionCountryField: any = {
+const institutionCountryField = {
   name: 'institutionCountry',
   label: 'Country',
 };
 
-const institutionProvinceField: any = {
+const institutionProvinceField = {
   name: 'institutionProvince',
   label: 'Province/State',
 };
 
-const institutionCityField: any = {
+const institutionCityField = {
   name: 'institutionCity',
   label: 'City',
 };
 
-export interface InfoFormProps extends InjectedFormProps<UserInfo> {
-  onCancel: () => void;
-}
-
-const InfoForm = (props: InfoFormProps) => {
+function InfoForm({ handleSubmit, submitting, onCancel }) {
   const countryOptions = countriesData.map(country => (
     <option key={country.code} value={country.code}>
       {country.name}
@@ -68,7 +63,7 @@ const InfoForm = (props: InfoFormProps) => {
   ));
 
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <h4>My info</h4>
       <HTMLTable striped>
         <tbody>
@@ -115,11 +110,11 @@ const InfoForm = (props: InfoFormProps) => {
       <HorizontalDivider />
 
       <ActionButtons>
-        <Button data-key="cancel" text="Cancel" onClick={props.onCancel} disabled={props.submitting} />
-        <Button type="submit" text="Save changes" intent={Intent.PRIMARY} loading={props.submitting} />
+        <Button data-key="cancel" text="Cancel" onClick={onCancel} disabled={submitting} />
+        <Button type="submit" text="Save changes" intent={Intent.PRIMARY} loading={submitting} />
       </ActionButtons>
     </form>
   );
-};
+}
 
-export default reduxForm<UserInfo>({ form: 'info', touchOnBlur: false })(InfoForm);
+export default reduxForm({ form: 'info', touchOnBlur: false })(InfoForm);

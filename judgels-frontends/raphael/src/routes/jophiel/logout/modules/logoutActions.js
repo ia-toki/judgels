@@ -6,7 +6,7 @@ import { PutWebConfig } from '../../modules/userWebReducer';
 import { sessionAPI } from '../../../../modules/api/jophiel/session';
 import { SessionErrors } from '../../../../modules/api/jophiel/session';
 
-export function logOut(currentPath: string) {
+export function logOut() {
   return async (dispatch, getState) => {
     try {
       await sessionAPI.logOut(selectToken(getState()));
@@ -20,7 +20,7 @@ export function logOut(currentPath: string) {
         throw error;
       }
     }
-    dispatch(DelSession.create());
-    dispatch(PutWebConfig.create({ role: { jophiel: JophielRole.Guest } }));
+    dispatch(DelSession());
+    dispatch(PutWebConfig({ role: { jophiel: JophielRole.Guest } }));
   };
 }

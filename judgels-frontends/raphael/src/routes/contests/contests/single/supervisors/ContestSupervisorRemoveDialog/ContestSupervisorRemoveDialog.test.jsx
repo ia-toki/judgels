@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -7,18 +7,18 @@ import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
 
-import { ContestSupervisorRemoveDialog, ContestSupervisorRemoveDialogProps } from './ContestSupervisorRemoveDialog';
+import { ContestSupervisorRemoveDialog } from './ContestSupervisorRemoveDialog';
 
 describe('ContestSupervisorRemoveDialog', () => {
-  let onDeleteSupervisors: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onDeleteSupervisors;
+  let wrapper;
 
   beforeEach(() => {
     onDeleteSupervisors = jest.fn().mockReturnValue(Promise.resolve({ deletedSupervisorProfilesMap: {} }));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestSupervisorRemoveDialogProps = {
+    const props = {
       contest,
       onDeleteSupervisors: onDeleteSupervisors,
     };

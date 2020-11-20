@@ -3,29 +3,12 @@ import * as React from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { CourseChaptersTable } from '../CourseChaptersTable/CourseChaptersTable';
-import { Course } from '../../../../modules/api/jerahmeel/course';
-import { CourseChaptersResponse, CourseChapter } from '../../../../modules/api/jerahmeel/courseChapter';
-import CourseChapterEditForm, { CourseChapterEditFormData } from '../CourseChapterEditForm/CourseChapterEditForm';
+import CourseChapterEditForm from '../CourseChapterEditForm/CourseChapterEditForm';
 import { Alias } from '../../../../components/forms/validations';
 
-export interface CourseChapterEditDialogProps {
-  isOpen: boolean;
-  course?: Course;
-  onCloseDialog: () => void;
-  onGetChapters: (courseJid: string) => Promise<CourseChaptersResponse>;
-  onSetChapters: (courseJid: string, data: CourseChapter[]) => Promise<void>;
-}
-
-interface CourseChapterEditDialogState {
-  response?: CourseChaptersResponse;
-  isEditing: boolean;
-}
-
-export class CourseChapterEditDialog extends React.Component<
-  CourseChapterEditDialogProps,
-  CourseChapterEditDialogState
-> {
-  state: CourseChapterEditDialogState = {
+export class CourseChapterEditDialog extends React.Component {
+  state = {
+    response: undefined,
     isEditing: false,
   };
 
@@ -33,7 +16,7 @@ export class CourseChapterEditDialog extends React.Component<
     this.refreshChapters();
   }
 
-  async componentDidUpdate(prevProps: CourseChapterEditDialogProps) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.course !== this.props.course) {
       this.refreshChapters();
     }
@@ -50,19 +33,19 @@ export class CourseChapterEditDialog extends React.Component<
     );
   }
 
-  private closeDialog = () => {
+  closeDialog = () => {
     this.props.onCloseDialog();
     this.setState({ isEditing: false });
   };
 
-  private renderDialogContent = () => {
+  renderDialogContent = () => {
     const { response, isEditing } = this.state;
     if (!response) {
       return this.renderDialogForm(<LoadingState />, null);
     }
 
     if (isEditing) {
-      const props: any = {
+      const props = {
         validator: this.validateChapters,
         renderFormComponents: this.renderDialogForm,
         onSubmit: this.updateChapters,
@@ -76,7 +59,7 @@ export class CourseChapterEditDialog extends React.Component<
     }
   };
 
-  private renderDialogForm = (content: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (content, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>
         {content}
@@ -91,7 +74,7 @@ export class CourseChapterEditDialog extends React.Component<
     </>
   );
 
-  private renderInstructions = () => {
+  renderInstructions = () => {
     if (!this.state.isEditing) {
       return null;
     }
@@ -109,7 +92,7 @@ export class CourseChapterEditDialog extends React.Component<
     );
   };
 
-  private refreshChapters = async () => {
+  refreshChapters = async () => {
     if (this.props.isOpen) {
       this.setState({ response: undefined });
       const response = await this.props.onGetChapters(this.props.course.jid);
@@ -117,40 +100,37 @@ export class CourseChapterEditDialog extends React.Component<
     }
   };
 
-  private toggleEditing = () => {
+  toggleEditing = () => {
     this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 
-  private updateChapters = async (data: CourseChapterEditFormData) => {
+  updateChapters = async data => {
     const chapters = this.deserializeChapters(data.chapters);
     await this.props.onSetChapters(this.props.course.jid, chapters);
     await this.refreshChapters();
     this.toggleEditing();
   };
 
-  private serializeChapters = (chapters: CourseChapter[]): string => {
+  serializeChapters = chapters => {
     return chapters.map(c => `${c.alias},${c.chapterJid}`).join('\n');
   };
 
-  private deserializeChapters = (chapters: string): CourseChapter[] => {
+  deserializeChapters = chapters => {
     return chapters
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0)
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()))
-      .map(
-        s =>
-          ({
-            alias: s[0],
-            chapterJid: s[1],
-          } as CourseChapter)
-      );
+      .map(s => ({
+        alias: s[0],
+        chapterJid: s[1],
+      }));
   };
 
-  private validateChapters = (value: string) => {
+  validateChapters = value => {
     const chapters = value
       .split('\n')
       .map(s => s.trim())
@@ -158,8 +138,8 @@ export class CourseChapterEditDialog extends React.Component<
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()));
 
-    const aliases: string[] = [];
-    const chapterJids: string[] = [];
+    const aliases = [];
+    const chapterJids = [];
 
     for (const c of chapters) {
       if (c.length !== 2) {

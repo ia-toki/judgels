@@ -3,36 +3,13 @@ import * as React from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ProblemSetProblemsTable } from '../ProblemSetProblemsTable/ProblemSetProblemsTable';
-import { ProblemSet } from '../../../../modules/api/jerahmeel/problemSet';
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
-import {
-  ProblemSetProblemsResponse,
-  ProblemSetProblem,
-  ProblemSetProblemData,
-} from '../../../../modules/api/jerahmeel/problemSetProblem';
-import ProblemSetProblemEditForm, {
-  ProblemSetProblemEditFormData,
-} from '../ProblemSetProblemEditForm/ProblemSetProblemEditForm';
+import ProblemSetProblemEditForm from '../ProblemSetProblemEditForm/ProblemSetProblemEditForm';
 import { Alias } from '../../../../components/forms/validations';
 
-export interface ProblemSetProblemEditDialogProps {
-  isOpen: boolean;
-  problemSet?: ProblemSet;
-  onCloseDialog: () => void;
-  onGetProblems: (problemSetJid: string) => Promise<ProblemSetProblemsResponse>;
-  onSetProblems: (problemSetJid: string, data: ProblemSetProblemData[]) => Promise<void>;
-}
-
-interface ProblemSetProblemEditDialogState {
-  response?: ProblemSetProblemsResponse;
-  isEditing: boolean;
-}
-
-export class ProblemSetProblemEditDialog extends React.Component<
-  ProblemSetProblemEditDialogProps,
-  ProblemSetProblemEditDialogState
-> {
-  state: ProblemSetProblemEditDialogState = {
+export class ProblemSetProblemEditDialog extends React.Component {
+  state = {
+    response: undefined,
     isEditing: false,
   };
 
@@ -40,7 +17,7 @@ export class ProblemSetProblemEditDialog extends React.Component<
     this.refreshProblems();
   }
 
-  async componentDidUpdate(prevProps: ProblemSetProblemEditDialogProps) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.problemSet !== this.props.problemSet) {
       this.refreshProblems();
     }
@@ -62,19 +39,19 @@ export class ProblemSetProblemEditDialog extends React.Component<
     );
   }
 
-  private closeDialog = () => {
+  closeDialog = () => {
     this.props.onCloseDialog();
     this.setState({ isEditing: false });
   };
 
-  private renderDialogContent = () => {
+  renderDialogContent = () => {
     const { response, isEditing } = this.state;
     if (!response) {
       return this.renderDialogForm(<LoadingState />, null);
     }
 
     if (isEditing) {
-      const props: any = {
+      const props = {
         validator: this.validateProblems,
         renderFormComponents: this.renderDialogForm,
         onSubmit: this.updateProblems,
@@ -88,7 +65,7 @@ export class ProblemSetProblemEditDialog extends React.Component<
     }
   };
 
-  private renderDialogForm = (content: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (content, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>
         {content}
@@ -103,7 +80,7 @@ export class ProblemSetProblemEditDialog extends React.Component<
     </>
   );
 
-  private renderInstructions = () => {
+  renderInstructions = () => {
     if (!this.state.isEditing) {
       return null;
     }
@@ -121,7 +98,7 @@ export class ProblemSetProblemEditDialog extends React.Component<
     );
   };
 
-  private refreshProblems = async () => {
+  refreshProblems = async () => {
     if (this.props.isOpen) {
       this.setState({ response: undefined });
       const response = await this.props.onGetProblems(this.props.problemSet.jid);
@@ -129,20 +106,20 @@ export class ProblemSetProblemEditDialog extends React.Component<
     }
   };
 
-  private toggleEditing = () => {
+  toggleEditing = () => {
     this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 
-  private updateProblems = async (data: ProblemSetProblemEditFormData) => {
+  updateProblems = async data => {
     const problems = this.deserializeProblems(data.problems);
     await this.props.onSetProblems(this.props.problemSet.jid, problems);
     await this.refreshProblems();
     this.toggleEditing();
   };
 
-  private serializeProblems = (problems: ProblemSetProblem[], problemsMap): string => {
+  serializeProblems = (problems, problemsMap) => {
     return problems
       .map(p => {
         if (p.type !== ProblemType.Programming) {
@@ -154,24 +131,21 @@ export class ProblemSetProblemEditDialog extends React.Component<
       .join('\n');
   };
 
-  private deserializeProblems = (problems: string): ProblemSetProblemData[] => {
+  deserializeProblems = problems => {
     return problems
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0)
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()))
-      .map(
-        s =>
-          ({
-            alias: s[0],
-            slug: s[1],
-            type: s[2] || ProblemType.Programming,
-          } as ProblemSetProblemData)
-      );
+      .map(s => ({
+        alias: s[0],
+        slug: s[1],
+        type: s[2] || ProblemType.Programming,
+      }));
   };
 
-  private validateProblems = (value: string) => {
+  validateProblems = value => {
     const problems = value
       .split('\n')
       .map(s => s.trim())
@@ -179,8 +153,8 @@ export class ProblemSetProblemEditDialog extends React.Component<
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()));
 
-    const aliases: string[] = [];
-    const slugs: string[] = [];
+    const aliases = [];
+    const slugs = [];
 
     for (const p of problems) {
       if (p.length < 2 || p.length > 3) {

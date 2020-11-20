@@ -2,32 +2,14 @@ import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestManagersDeleteResponse } from '../../../../../../modules/api/uriel/contestManager';
-
-import ContestManagerRemoveForm, {
-  ContestManagerRemoveFormData,
-} from '../ContestManagerRemoveForm/ContestManagerRemoveForm';
+import ContestManagerRemoveForm from '../ContestManagerRemoveForm/ContestManagerRemoveForm';
 import { ContestManagerRemoveResultTable } from '../ContestManagerRemoveResultTable/ContestManagerRemoveResultTable';
 
-export interface ContestManagerRemoveDialogProps {
-  contest: Contest;
-  onDeleteManagers: (contestJid: string, usernames: string[]) => Promise<ContestManagersDeleteResponse>;
-}
-
-interface ContestManagerRemoveDialogState {
-  isDialogOpen?: boolean;
-  submitted?: {
-    usernames: string[];
-    response: ContestManagersDeleteResponse;
+export class ContestManagerRemoveDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+    submitted: undefined,
   };
-}
-
-export class ContestManagerRemoveDialog extends React.Component<
-  ContestManagerRemoveDialogProps,
-  ContestManagerRemoveDialogState
-> {
-  state: ContestManagerRemoveDialogState = {};
 
   render() {
     return (
@@ -38,7 +20,7 @@ export class ContestManagerRemoveDialog extends React.Component<
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button
         className="contest-manager-dialog-button"
@@ -52,11 +34,11 @@ export class ContestManagerRemoveDialog extends React.Component<
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
   };
 
-  private renderDialog = () => {
+  renderDialog = () => {
     const dialogBody =
       this.state.submitted !== undefined ? this.renderDialogRemoveResultTable() : this.renderDialogRemoveForm();
     const dialogTitle = this.state.submitted !== undefined ? 'Remove managers results' : 'Remove managers';
@@ -64,7 +46,7 @@ export class ContestManagerRemoveDialog extends React.Component<
     return (
       <Dialog
         className="contest-manager-dialog"
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title={dialogTitle}
         canOutsideClickClose={false}
@@ -75,16 +57,16 @@ export class ContestManagerRemoveDialog extends React.Component<
     );
   };
 
-  private renderDialogRemoveForm = () => {
-    const props: any = {
+  renderDialogRemoveForm = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.addManagers,
     };
     return <ContestManagerRemoveForm {...props} />;
   };
 
-  private renderDialogRemoveResultTable = () => {
-    const { usernames, response } = this.state.submitted!;
+  renderDialogRemoveResultTable = () => {
+    const { usernames, response } = this.state.submitted;
     const { deletedManagerProfilesMap } = response;
     return (
       <>
@@ -103,7 +85,7 @@ export class ContestManagerRemoveDialog extends React.Component<
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-manager-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -115,7 +97,7 @@ export class ContestManagerRemoveDialog extends React.Component<
     </>
   );
 
-  private addManagers = async (data: ContestManagerRemoveFormData) => {
+  addManagers = async data => {
     const usernames = data.usernames
       .split('\n')
       .filter(s => s.length > 0)

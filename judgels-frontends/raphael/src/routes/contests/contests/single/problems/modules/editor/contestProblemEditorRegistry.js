@@ -7,6 +7,6 @@ const contestProblemEditorMapping = {
   [ContestStyle.GCJ]: gcjContestProblemEditor,
 };
 
-export const getContestProblemEditor = (contestStyle: ContestStyle) => {
+export function getContestProblemEditor(contestStyle) {
   return contestProblemEditorMapping[contestStyle] || defaultContestProblemEditor;
-};
+}

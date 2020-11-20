@@ -6,7 +6,7 @@ configure({ adapter: new Adapter() });
 
 nock.disableNetConnect();
 
-(window as any).conf = {
+window.conf = {
   name: 'Judgels',
   slogan: 'Judgment Angels',
   apiUrls: {
@@ -21,7 +21,7 @@ nock.disableNetConnect();
   },
 };
 
-(window as any).scrollTo = function() {
+window.scrollTo = function() {
   return;
 };
 

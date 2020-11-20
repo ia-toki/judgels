@@ -9,13 +9,13 @@ export function getCourses() {
   };
 }
 
-export function getCourseBySlug(courseSlug: string) {
+export function getCourseBySlug(courseSlug) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const course = await courseAPI.getCourseBySlug(token, courseSlug);
-    dispatch(PutCourse.create(course));
+    dispatch(PutCourse(course));
     return course;
   };
 }
 
-export const clearCourse = DelCourse.create;
+export const clearCourse = DelCourse;

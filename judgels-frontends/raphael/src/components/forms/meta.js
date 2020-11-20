@@ -1,20 +1,14 @@
 import { Intent } from '@blueprintjs/core';
 
-export interface FormInputMeta {
-  touched: boolean;
-  valid: boolean;
-  error?: string;
-}
-
-export function isValid(meta: FormInputMeta) {
+export function isValid(meta) {
   return !meta.touched || meta.valid;
 }
 
-export function getIntent(meta: FormInputMeta) {
+export function getIntent(meta) {
   return isValid(meta) ? undefined : Intent.DANGER;
 }
 
-export function getIntentClassName(meta: FormInputMeta) {
+export function getIntentClassName(meta) {
   return {
     'pt-intent-danger': !isValid(meta),
   };

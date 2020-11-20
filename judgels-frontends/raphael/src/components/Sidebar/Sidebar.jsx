@@ -1,32 +1,13 @@
-import { Icon, IconName, Popover, Position, Tab, Tabs } from '@blueprintjs/core';
+import { Icon, Popover, Position, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Card } from '../../components/Card/Card';
+import { Card } from '../Card/Card';
 
 import './Sidebar.css';
 
-export interface SidebarItem {
-  id: string;
-  titleIcon?: IconName;
-  title: string;
-}
-
-export interface SidebarProps {
-  title: string;
-  action?: JSX.Element;
-  activeItemId: string;
-  items: SidebarItem[];
-  widget?: JSX.Element;
-  onResolveItemUrl: (itemId: string) => string;
-}
-
-export interface SidebarState {
-  isResponsivePopoverOpen: boolean;
-}
-
-export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
-  state: SidebarState = { isResponsivePopoverOpen: false };
+export class Sidebar extends React.PureComponent {
+  state = { isResponsivePopoverOpen: false };
 
   render() {
     const { title, action, activeItemId, items, widget, onResolveItemUrl } = this.props;
@@ -96,11 +77,11 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
     );
   }
 
-  private onResponsivePopoverInteraction = state => {
+  onResponsivePopoverInteraction = state => {
     this.setState({ isResponsivePopoverOpen: state });
   };
 
-  private onResponsiveItemClick = () => {
+  onResponsiveItemClick = () => {
     setTimeout(() => {
       this.setState({ isResponsivePopoverOpen: false });
     }, 200);

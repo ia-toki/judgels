@@ -1,26 +1,21 @@
-import { TypedAction, TypedReducer } from 'redoodle';
-
-import { WebConfig } from '../../../modules/api/jophiel/web';
-
-export interface WebState {
-  config: WebConfig;
-}
-
-export const INITIAL_STATE: WebState = {
+export const initialState = {
   config: {
     announcements: [],
   },
 };
 
-export const PutWebConfig = TypedAction.define('jophiel/web/PUT_CONFIG')<WebConfig>();
-
-function createWebReducer() {
-  const builder = TypedReducer.builder<WebState>();
-
-  builder.withHandler(PutWebConfig.TYPE, (state, payload) => ({ config: payload }));
-  builder.withDefaultHandler(state => (state !== undefined ? state : INITIAL_STATE));
-
-  return builder.build();
+export function PutWebConfig(config) {
+  return {
+    type: 'jophiel/web/PUT_CONFIG',
+    payload: config,
+  };
 }
 
-export const webReducer = createWebReducer();
+export default function webReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'jophiel/web/PUT_CONFIG':
+      return { config: action.payload };
+    default:
+      return state;
+  }
+}

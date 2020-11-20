@@ -2,15 +2,12 @@ import * as React from 'react';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 
 import CoursesPage from './courses/CoursesPage/CoursesPage';
 
-const CoursesRoutes = () => {
-  const sidebarItems: ContentWithSidebarItem[] = [
+function CoursesRoutes() {
+  const sidebarItems = [
     {
       id: '@',
       titleIcon: 'predictive-analysis',
@@ -20,7 +17,7 @@ const CoursesRoutes = () => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'Menu',
     items: sidebarItems,
   };
@@ -30,6 +27,6 @@ const CoursesRoutes = () => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
 export default CoursesRoutes;

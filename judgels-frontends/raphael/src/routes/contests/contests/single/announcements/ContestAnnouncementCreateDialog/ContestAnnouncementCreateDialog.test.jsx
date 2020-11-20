@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -7,22 +7,18 @@ import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
-
-import {
-  ContestAnnouncementCreateDialog,
-  ContestAnnouncementCreateDialogProps,
-} from './ContestAnnouncementCreateDialog';
+import { ContestAnnouncementCreateDialog } from './ContestAnnouncementCreateDialog';
 
 describe('ContestAnnouncementCreateDialog', () => {
-  let onCreateAnnouncement: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onCreateAnnouncement;
+  let wrapper;
 
   beforeEach(() => {
     onCreateAnnouncement = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestAnnouncementCreateDialogProps = {
+    const props = {
       contest,
       onCreateAnnouncement,
     };

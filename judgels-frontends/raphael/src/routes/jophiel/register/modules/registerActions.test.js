@@ -4,7 +4,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
-import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
 import * as registerActions from './registerActions';
 
 const mockStore = configureMockStore([thunk]);
@@ -21,7 +20,7 @@ describe('registerActions', () => {
   });
 
   describe('registerUser()', () => {
-    const data: UserRegistrationData = {
+    const data = {
       username: 'user',
       name: 'name',
       email: 'email@domain.com',
@@ -76,7 +75,7 @@ describe('registerActions', () => {
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/user-account/register`)
           .reply(200)
-          .post(`/user-account/register`, data as any)
+          .post(`/user-account/register`, data)
           .reply(200);
 
         await store.dispatch(registerActions.registerUser(data));

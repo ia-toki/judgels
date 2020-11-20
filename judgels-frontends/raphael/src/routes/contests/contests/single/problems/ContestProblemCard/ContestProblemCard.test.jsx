@@ -1,16 +1,15 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { contest } from '../../../../../../fixtures/state';
-import { ContestProblem, ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
-
-import { ContestProblemCard, ContestProblemCardProps } from './ContestProblemCard';
+import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemCard } from './ContestProblemCard';
 
 describe('ContestProblemCard', () => {
-  let wrapper: ShallowWrapper<ContestProblemCardProps>;
+  let wrapper;
 
-  const render = (problem: ContestProblem) => {
+  const render = problem => {
     const totalSubmissions = 10;
     const problemName = 'The Problem';
 

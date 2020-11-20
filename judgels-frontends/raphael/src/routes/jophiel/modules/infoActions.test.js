@@ -3,7 +3,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../conf';
-import { UserInfo } from '../../../modules/api/jophiel/userInfo';
 import * as infoActions from './infoActions';
 
 const userJid = 'user-jid';
@@ -21,7 +20,7 @@ describe('infoActions', () => {
   });
 
   describe('getInfo()', () => {
-    const info: UserInfo = { name: 'First Last' };
+    const info = { name: 'First Last' };
 
     it('calls API to get user info', async () => {
       nock(APP_CONFIG.apiUrls.jophiel)
@@ -36,7 +35,7 @@ describe('infoActions', () => {
 
   describe('updateInfo()', () => {
     const info = { name: 'First Last' };
-    const newInfo: UserInfo = { name: 'Last First' };
+    const newInfo = { name: 'Last First' };
 
     it('calls API to update user info', async () => {
       nock(APP_CONFIG.apiUrls.jophiel)

@@ -1,16 +1,13 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import {
-  ContestSupervisorRemoveResultTable,
-  ContestSupervisorRemoveResultTableProps,
-} from './ContestSupervisorRemoveResultTable';
+import { ContestSupervisorRemoveResultTable } from './ContestSupervisorRemoveResultTable';
 
 describe('ContestSupervisorRemoveResultTable', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
   beforeEach(() => {
-    const props: ContestSupervisorRemoveResultTableProps = {
+    const props = {
       usernames: ['budi', 'andi', 'zoro'],
       deletedSupervisorProfilesMap: {
         budi: { username: 'budi' },

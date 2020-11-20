@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -9,14 +9,14 @@ import thunk from 'redux-thunk';
 import { ArchiveCreateDialog } from './ArchiveCreateDialog';
 
 describe('ArchiveCreateDialog', () => {
-  let onGetArchiveConfig: jest.Mock<any>;
-  let onCreateArchive: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onGetArchiveConfig;
+  let onCreateArchive;
+  let wrapper;
 
   beforeEach(() => {
     onCreateArchive = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
       onGetArchiveConfig,

@@ -1,49 +1,25 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from '../../../../../../../../modules/store';
+import StatementLanguageWidget from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { Contest } from '../../../../../../../../modules/api/uriel/contest';
-import { ContestProblem } from '../../../../../../../../modules/api/uriel/contestProblem';
-import { ContestProblemWorksheet } from '../../../../../../../../modules/api/uriel/contestProblemBundle';
-import { ProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemBundle';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectContest } from '../../../../../modules/contestSelectors';
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
 
-export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
-  contest: Contest;
-  statementLanguage: string;
-  onGetProblemWorksheet: (
-    contestJid: string,
-    problemAlias: string,
-    language?: string
-  ) => Promise<ContestProblemWorksheet>;
-  onCreateSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
-  onGetLatestSubmissions: (contestJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
-  onPushBreadcrumb: (link: string, title: string) => void;
-  onPopBreadcrumb: (link: string) => void;
-}
-
-interface ContestProblemPageState {
-  defaultLanguage?: string;
-  languages?: string[];
-  problem?: ContestProblem;
-  latestSubmissions?: { [id: string]: ItemSubmission };
-  worksheet?: ProblemWorksheet;
-}
-
-export class ContestProblemPage extends React.Component<ContestProblemPageProps, ContestProblemPageState> {
-  state: ContestProblemPageState = {};
+export class ContestProblemPage extends React.Component {
+  state = {
+    defaultLanguage: undefined,
+    languages: undefined,
+    problem: undefined,
+    latestSubmissions: undefined,
+    worksheet: undefined,
+  };
 
   async componentDidMount() {
     const { defaultLanguage, languages, problem, worksheet } = await this.props.onGetProblemWorksheet(
@@ -63,7 +39,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
   }
 
-  async componentDidUpdate(prevProps: ContestProblemPageProps, prevState: ContestProblemPageState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.worksheet) {
       this.setState({ worksheet: undefined });
     } else if (!this.state.worksheet && prevState.worksheet) {
@@ -84,17 +60,17 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
   }
 
-  private onCreateSubmission = async (itemJid: string, answer: string) => {
-    const problem = this.state.problem!;
+  onCreateSubmission = async (itemJid, answer) => {
+    const problem = this.state.problem;
     return await this.props.onCreateSubmission(this.props.contest.jid, problem.problemJid, itemJid, answer);
   };
 
-  private renderStatementLanguageWidget = () => {
+  renderStatementLanguageWidget = () => {
     const { defaultLanguage, languages } = this.state;
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
@@ -105,7 +81,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
   };
 
-  private renderStatement = () => {
+  renderStatement = () => {
     const { problem, worksheet, latestSubmissions } = this.state;
     if (!problem || !worksheet) {
       return <LoadingState />;
@@ -119,14 +95,14 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
         alias={problem.alias}
         latestSubmissions={latestSubmissions}
         onAnswerItem={this.onCreateSubmission}
-        worksheet={worksheet as ProblemWorksheet}
+        worksheet={worksheet}
       />
     );
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
   statementLanguage: selectStatementLanguage(state),
 });
 
@@ -138,4 +114,4 @@ const mapDispatchToProps = {
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));

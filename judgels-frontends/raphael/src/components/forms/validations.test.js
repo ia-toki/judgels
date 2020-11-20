@@ -61,21 +61,21 @@ describe('validations', () => {
   });
 
   test('MaxFileSize300KB', () => {
-    expect(MaxFileSize300KB({ size: 500000 } as File)).toBeTruthy();
-    expect(MaxFileSize300KB({ size: 300000 } as File)).toBeUndefined();
+    expect(MaxFileSize300KB({ size: 500000 })).toBeTruthy();
+    expect(MaxFileSize300KB({ size: 300000 })).toBeUndefined();
   });
 
   test('MaxFileSize10MB', () => {
-    expect(MaxFileSize10MB({ size: 11000000 } as File)).toBeTruthy();
-    expect(MaxFileSize10MB({ size: 10000000 } as File)).toBeUndefined();
+    expect(MaxFileSize10MB({ size: 11000000 })).toBeTruthy();
+    expect(MaxFileSize10MB({ size: 10000000 })).toBeUndefined();
   });
 
   test('CompatibleFilenameExtensionForGradingLanguage', () => {
+    expect(CompatibleFilenameExtensionForGradingLanguage({ name: 'sol.pas' }, { gradingLanguage: 'Cpp11' })).toEqual(
+      'Allowed extensions: cc, cpp.'
+    );
     expect(
-      CompatibleFilenameExtensionForGradingLanguage({ name: 'sol.pas' } as File, { gradingLanguage: 'Cpp11' })
-    ).toEqual('Allowed extensions: cc, cpp.');
-    expect(
-      CompatibleFilenameExtensionForGradingLanguage({ name: 'sol.cpp' } as File, { gradingLanguage: 'Cpp11' })
+      CompatibleFilenameExtensionForGradingLanguage({ name: 'sol.cpp' }, { gradingLanguage: 'Cpp11' })
     ).toBeUndefined();
   });
 });

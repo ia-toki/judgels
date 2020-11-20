@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Card } from '../../../../../components/Card/Card';
-import { ActiveContestsResponse } from '../../../../../modules/api/uriel/contest';
 import * as contestActions from '../../../../contests/contests/modules/contestActions';
 
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
@@ -11,16 +10,10 @@ import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveCont
 
 import './ActiveContestsWidget.css';
 
-interface ActiveContestsWidgetProps {
-  onGetActiveContests: () => Promise<ActiveContestsResponse>;
-}
-
-interface ActiveContestsWidgetState {
-  response?: ActiveContestsResponse;
-}
-
-class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps> {
-  state: ActiveContestsWidgetState = {};
+class ActiveContestsWidget extends React.PureComponent {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetActiveContests();
@@ -39,7 +32,7 @@ class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps
     );
   }
 
-  private renderActiveContests = () => {
+  renderActiveContests = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingActiveContestCard />;

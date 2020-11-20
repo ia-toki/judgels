@@ -18,7 +18,7 @@ export function initGA(history) {
   }
 }
 
-export function setGAUser(userJid?: string) {
+export function setGAUser(userJid) {
   if (APP_CONFIG.googleAnalytics) {
     if (userJid) {
       ReactGA.set({ userId: userJid });
@@ -26,7 +26,7 @@ export function setGAUser(userJid?: string) {
   }
 }
 
-export function sendGAEvent(args: ReactGA.EventArgs) {
+export function sendGAEvent(args) {
   if (APP_CONFIG.googleAnalytics) {
     ReactGA.event(args);
   }

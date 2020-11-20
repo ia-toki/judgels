@@ -1,30 +1,17 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../../../modules/store';
-import { ProblemSet } from '../../../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblem } from '../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
-export interface SingleProblemSetProblemDataRouteProps
-  extends RouteComponentProps<{ problemSetSlug: string; problemAlias: string }> {
-  problemSet?: ProblemSet;
-
-  onClearProblem: () => void;
-  onGetProblem: (problemSetJid: string, problemAlias: string) => Promise<ProblemSetProblem>;
-  onPushBreadcrumb: (link: string, title: string) => void;
-  onPopBreadcrumb: (link: string) => void;
-}
-
-class SingleProblemSetProblemDataRoute extends React.Component<SingleProblemSetProblemDataRouteProps> {
+class SingleProblemSetProblemDataRoute extends React.Component {
   async componentDidMount() {
     await this.refresh();
   }
 
-  async componentDidUpdate(prevProps: SingleProblemSetProblemDataRouteProps) {
+  async componentDidUpdate(prevProps) {
     if ((prevProps.problemSet && prevProps.problemSet.jid) !== (this.props.problemSet && this.props.problemSet.jid)) {
       this.props.onPopBreadcrumb(this.props.match.url);
       await this.refresh();
@@ -50,7 +37,7 @@ class SingleProblemSetProblemDataRoute extends React.Component<SingleProblemSetP
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   problemSet: selectProblemSet(state),
 });
 
@@ -61,4 +48,4 @@ const mapDispatchToProps = {
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetProblemDataRoute));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetProblemDataRoute));

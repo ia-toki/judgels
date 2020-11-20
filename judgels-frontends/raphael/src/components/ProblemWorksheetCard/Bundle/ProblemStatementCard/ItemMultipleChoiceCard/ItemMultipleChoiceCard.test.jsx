@@ -1,17 +1,13 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 
-import {
-  ItemMultipleChoiceCardProps,
-  ItemMultipleChoiceCard,
-  ItemMultipleChoiceCardState,
-} from './ItemMultipleChoiceCard';
-import { ItemType, ItemMultipleChoiceConfig } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
+import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 
 describe('ItemMultipleChoiceCard', () => {
-  let wrapper: ReactWrapper<ItemMultipleChoiceCardProps, ItemMultipleChoiceCardState>;
-  const onChoiceChangeFn: jest.Mocked<any> = jest.fn();
-  const itemConfig: ItemMultipleChoiceConfig = {
+  let wrapper;
+  const onChoiceChangeFn = jest.fn();
+  const itemConfig = {
     statement: 'Statement',
     choices: [
       {
@@ -28,7 +24,7 @@ describe('ItemMultipleChoiceCard', () => {
       },
     ],
   };
-  const multipleChoiceCardProps: ItemMultipleChoiceCardProps = {
+  const multipleChoiceCardProps = {
     jid: 'jid',
     type: ItemType.MultipleChoice,
     meta: 'meta',

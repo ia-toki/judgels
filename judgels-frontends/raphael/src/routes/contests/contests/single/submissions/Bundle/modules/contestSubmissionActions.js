@@ -2,14 +2,14 @@ import { selectToken } from '../../../../../../../modules/session/sessionSelecto
 import { contestSubmissionBundleAPI } from '../../../../../../../modules/api/uriel/contestSubmissionBundle';
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
 
-export function getSubmissions(contestJid: string, username?: string, problemAlias?: string, page?: number) {
+export function getSubmissions(contestJid, username, problemAlias, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestSubmissionBundleAPI.getSubmissions(token, contestJid, username, problemAlias, page);
   };
 }
 
-export function createItemSubmission(contestJid: string, problemJid: string, itemJid: string, answer: string) {
+export function createItemSubmission(contestJid, problemJid, itemJid, answer) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const data = {
@@ -24,21 +24,21 @@ export function createItemSubmission(contestJid: string, problemJid: string, ite
   };
 }
 
-export function getSubmissionSummary(contestJid: string, username?: string, language?: string) {
+export function getSubmissionSummary(contestJid, username, language) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return contestSubmissionBundleAPI.getSubmissionSummary(token, contestJid, username, language);
   };
 }
 
-export function getLatestSubmissions(contestJid: string, problemAlias: string) {
+export function getLatestSubmissions(contestJid, problemAlias) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return contestSubmissionBundleAPI.getLatestSubmissions(token, contestJid, problemAlias);
   };
 }
 
-export function regradeSubmission(submissionJid: string) {
+export function regradeSubmission(submissionJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestSubmissionBundleAPI.regradeSubmission(token, submissionJid);
@@ -47,7 +47,7 @@ export function regradeSubmission(submissionJid: string) {
   };
 }
 
-export function regradeSubmissions(contestJid: string, username?: string, problemAlias?: string) {
+export function regradeSubmissions(contestJid, username, problemAlias) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestSubmissionBundleAPI.regradeSubmissions(token, contestJid, username, undefined, problemAlias);

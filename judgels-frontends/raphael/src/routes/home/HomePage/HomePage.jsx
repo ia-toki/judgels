@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { APP_CONFIG, Mode } from '../../../conf';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
-import { AppState } from '../../../modules/store';
 import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
 
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
@@ -14,22 +13,9 @@ import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersW
 
 import './HomePage.css';
 
-interface HomePageProps {
-  isLoggedIn: boolean;
-}
-
-class HomePage extends React.Component<HomePageProps> {
-  render() {
-    return (
-      <FullPageLayout>
-        {this.renderBanner()}
-        {this.renderWidgets()}
-      </FullPageLayout>
-    );
-  }
-
-  private renderBanner = () => {
-    if (this.props.isLoggedIn) {
+function HomePage({ isLoggedIn }) {
+  const renderBanner = () => {
+    if (isLoggedIn) {
       return null;
     }
 
@@ -64,7 +50,7 @@ class HomePage extends React.Component<HomePageProps> {
     );
   };
 
-  private renderWidgets = () => {
+  const renderWidgets = () => {
     return (
       <div className="home-widget-row">
         <div className="home-widget-row__two-thirds">
@@ -78,9 +64,16 @@ class HomePage extends React.Component<HomePageProps> {
       </div>
     );
   };
+
+  return (
+    <FullPageLayout>
+      {renderBanner()}
+      {renderWidgets()}
+    </FullPageLayout>
+  );
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   isLoggedIn: selectIsLoggedIn(state),
 });
 

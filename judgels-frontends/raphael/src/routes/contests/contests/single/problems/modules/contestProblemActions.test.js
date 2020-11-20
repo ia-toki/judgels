@@ -5,7 +5,6 @@ import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../../../conf';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
-import { ContestProblemData } from '../../../../../../modules/api/uriel/contestProblem';
 import * as contestProblemActions from './contestProblemActions';
 
 const contestJid = 'contest-jid';
@@ -39,12 +38,7 @@ describe('contestProblemActions', () => {
   });
 
   describe('setProblems()', () => {
-    const data: ContestProblemData[] = [
-      { slug: 'slug1' } as ContestProblemData,
-      { slug: 'slug2' } as ContestProblemData,
-      { slug: 'slug3' } as ContestProblemData,
-      { slug: 'slug4' } as ContestProblemData,
-    ];
+    const data = [{ slug: 'slug1' }, { slug: 'slug2' }, { slug: 'slug3' }, { slug: 'slug4' }];
 
     describe('when all slugs are valid', () => {
       it('calls API to set problems', async () => {
@@ -52,7 +46,7 @@ describe('contestProblemActions', () => {
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/contests/${contestJid}/problems`)
           .reply(200)
-          .put(`/contests/${contestJid}/problems`, data as any)
+          .put(`/contests/${contestJid}/problems`, data)
           .reply(200);
 
         await store.dispatch(contestProblemActions.setProblems(contestJid, data));
@@ -65,7 +59,7 @@ describe('contestProblemActions', () => {
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/contests/${contestJid}/problems`)
           .reply(200)
-          .put(`/contests/${contestJid}/problems`, data as any)
+          .put(`/contests/${contestJid}/problems`, data)
           .reply(403, {
             errorName: ContestErrors.ProblemSlugsNotAllowed,
             parameters: { slugs: 'slug2, slug4' },

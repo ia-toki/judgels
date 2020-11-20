@@ -2,35 +2,35 @@ import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { contestContestantAPI } from '../../../../../modules/api/uriel/contestContestant';
 import * as toastActions from '../../../../../modules/toast/toastActions';
 
-export function getMyContestantState(contestJid: string) {
+export function getMyContestantState(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestContestantAPI.getMyContestantState(token, contestJid);
   };
 }
 
-export function getContestants(contestJid: string, page?: number) {
+export function getContestants(contestJid, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestContestantAPI.getContestants(token, contestJid, page);
   };
 }
 
-export function getApprovedContestantsCount(contestJid: string) {
+export function getApprovedContestantsCount(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestContestantAPI.getApprovedContestantsCount(token, contestJid);
   };
 }
 
-export function getApprovedContestants(contestJid: string) {
+export function getApprovedContestants(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestContestantAPI.getApprovedContestants(token, contestJid);
   };
 }
 
-export function registerMyselfAsContestant(contestJid: string) {
+export function registerMyselfAsContestant(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestContestantAPI.registerMyselfAsContestant(token, contestJid);
@@ -38,7 +38,7 @@ export function registerMyselfAsContestant(contestJid: string) {
   };
 }
 
-export function unregisterMyselfAsContestant(contestJid: string) {
+export function unregisterMyselfAsContestant(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestContestantAPI.unregisterMyselfAsContestant(token, contestJid);
@@ -46,7 +46,7 @@ export function unregisterMyselfAsContestant(contestJid: string) {
   };
 }
 
-export function upsertContestants(contestJid: string, usernames: string[]) {
+export function upsertContestants(contestJid, usernames) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const response = await contestContestantAPI.upsertContestants(token, contestJid, usernames);
@@ -57,7 +57,7 @@ export function upsertContestants(contestJid: string, usernames: string[]) {
   };
 }
 
-export function deleteContestants(contestJid: string, usernames: string[]) {
+export function deleteContestants(contestJid, usernames) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const response = await contestContestantAPI.deleteContestants(token, contestJid, usernames);

@@ -1,13 +1,12 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import {
   allLanguagesAllowed,
   getGradingLanguageName,
   gradingLanguages,
-} from '../../../../../../modules/api/gabriel/language';
-import { ContestModulesConfig } from '../../../../../../modules/api/uriel/contestModule';
+} from '../../../../../../modules/api/gabriel/language.js';
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { FormTableInput } from '../../../../../../components/forms/FormTableInput/FormTableInput';
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
@@ -17,48 +16,10 @@ import { NonnegativeNumber, Required } from '../../../../../../components/forms/
 
 import './ContestEditConfigsForm.css';
 
-export interface ContestEditConfigsFormData {
-  icpcAllowAllLanguages?: boolean;
-  icpcAllowedLanguages?: { [key: string]: string };
-  icpcWrongSubmissionPenalty?: string;
+class ContestEditConfigsForm extends React.Component {
+  state;
 
-  ioiAllowAllLanguages?: boolean;
-  ioiAllowedLanguages?: { [key: string]: string };
-  ioiUsingLastAffectingPenalty?: boolean;
-  ioiUsingMaxScorePerSubtask?: boolean;
-
-  gcjAllowAllLanguages?: boolean;
-  gcjAllowedLanguages?: { [key: string]: string };
-  gcjWrongSubmissionPenalty?: string;
-
-  scoreboardIsIncognito: boolean;
-
-  clarificationTimeLimitDuration?: string;
-
-  divisionDivision?: number;
-
-  externalScoreboardReceiverUrl?: string;
-  externalScoreboardReceiverSecret?: string;
-
-  frozenScoreboardFreezeTime?: string;
-  frozenScoreboardIsOfficialAllowed?: boolean;
-
-  virtualDuration?: string;
-}
-
-export interface ContestEditConfigsFormProps extends InjectedFormProps<ContestEditConfigsFormData> {
-  config: ContestModulesConfig;
-  onCancel: () => void;
-}
-
-interface ContestEditConfigFormState {
-  allowAllLanguages: boolean;
-}
-
-class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps, ContestEditConfigFormState> {
-  state: ContestEditConfigFormState;
-
-  constructor(props: ContestEditConfigsFormProps) {
+  constructor(props) {
     super(props);
 
     const { icpcStyle, ioiStyle, gcjStyle } = props.config;
@@ -71,9 +32,9 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
   }
 
   render() {
-    const { config } = this.props;
+    const { handleSubmit, submitting, config, onCancel } = this.props;
     return (
-      <form className="contest-edit-dialog__content" onSubmit={this.props.handleSubmit}>
+      <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
         {config.icpcStyle && this.renderIcpcStyleForm()}
         {config.ioiStyle && this.renderIoiStyleForm()}
         {config.gcjStyle && this.renderGcjStyleForm()}
@@ -86,37 +47,34 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
 
         <hr />
         <ActionButtons>
-          <Button text="Cancel" disabled={this.props.submitting} onClick={this.props.onCancel} />
-          <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={this.props.submitting} />
+          <Button text="Cancel" disabled={submitting} onClick={onCancel} />
+          <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
         </ActionButtons>
       </form>
     );
   }
 
-  private toggleAllowAllLanguagesCheckbox = (e, checked) => {
+  toggleAllowAllLanguagesCheckbox = (e, checked) => {
     this.setState({ allowAllLanguages: checked });
   };
 
-  private renderIcpcStyleForm = () => {
-    const allowedLanguageField: any = {
+  renderIcpcStyleForm = () => {
+    const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
     };
-    const allowAllLanguagesField: any = {
+    const allowAllLanguagesField = {
       name: 'icpcAllowAllLanguages',
       label: '(all)',
       onChange: this.toggleAllowAllLanguagesCheckbox,
     };
-    const allowedLanguageFields = gradingLanguages.map(
-      lang =>
-        ({
-          name: 'icpcAllowedLanguages.' + lang,
-          label: getGradingLanguageName(lang),
-          small: true,
-        } as any)
-    );
+    const allowedLanguageFields = gradingLanguages.map(lang => ({
+      name: 'icpcAllowedLanguages.' + lang,
+      label: getGradingLanguageName(lang),
+      small: true,
+    }));
 
-    const wrongSubmissionPenaltyField: any = {
+    const wrongSubmissionPenaltyField = {
       name: 'icpcWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
       validate: [Required, NonnegativeNumber],
@@ -140,32 +98,29 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderIoiStyleForm = () => {
-    const allowedLanguageField: any = {
+  renderIoiStyleForm = () => {
+    const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
     };
-    const allowAllLanguagesField: any = {
+    const allowAllLanguagesField = {
       name: 'ioiAllowAllLanguages',
       label: '(all)',
       onChange: this.toggleAllowAllLanguagesCheckbox,
     };
-    const allowedLanguageFields = gradingLanguages.map(
-      lang =>
-        ({
-          name: 'ioiAllowedLanguages.' + lang,
-          label: getGradingLanguageName(lang),
-          small: true,
-        } as any)
-    );
+    const allowedLanguageFields = gradingLanguages.map(lang => ({
+      name: 'ioiAllowedLanguages.' + lang,
+      label: getGradingLanguageName(lang),
+      small: true,
+    }));
 
-    const usingLastAffectingPenaltyField: any = {
+    const usingLastAffectingPenaltyField = {
       name: 'ioiUsingLastAffectingPenalty',
       label: 'Using last affecting penalty?',
       keyClassName: 'contest-edit-configs-form__key',
     };
 
-    const usingMaxScorePerSubtaskField: any = {
+    const usingMaxScorePerSubtaskField = {
       name: 'ioiUsingMaxScorePerSubtask',
       label: 'Using max score per subtask?',
       keyClassName: 'contest-edit-configs-form__key',
@@ -189,26 +144,23 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderGcjStyleForm = () => {
-    const allowedLanguageField: any = {
+  renderGcjStyleForm = () => {
+    const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
     };
-    const allowAllLanguagesField: any = {
+    const allowAllLanguagesField = {
       name: 'gcjAllowAllLanguages',
       label: '(all)',
       onChange: this.toggleAllowAllLanguagesCheckbox,
     };
-    const allowedLanguageFields = gradingLanguages.map(
-      lang =>
-        ({
-          name: 'gcjAllowedLanguages.' + lang,
-          label: getGradingLanguageName(lang),
-          small: true,
-        } as any)
-    );
+    const allowedLanguageFields = gradingLanguages.map(lang => ({
+      name: 'gcjAllowedLanguages.' + lang,
+      label: getGradingLanguageName(lang),
+      small: true,
+    }));
 
-    const wrongSubmissionPenaltyField: any = {
+    const wrongSubmissionPenaltyField = {
       name: 'gcjWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
       validate: [Required, NonnegativeNumber],
@@ -232,8 +184,8 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderClarificationTimeLimitForm = () => {
-    const clarificationTimeLimitDurationField: any = {
+  renderClarificationTimeLimitForm = () => {
+    const clarificationTimeLimitDurationField = {
       name: 'clarificationTimeLimitDuration',
       label: 'Clarification duration',
       inputHelper: 'Since contest start time. Example: 2h 30m',
@@ -253,8 +205,8 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderDivisionForm = () => {
-    const divisionDivisionField: any = {
+  renderDivisionForm = () => {
+    const divisionDivisionField = {
       name: 'divisionDivision',
       label: 'Division',
       validate: [Required],
@@ -273,8 +225,8 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderScoreboardForm = () => {
-    const scoreboardIsIncognitoField: any = {
+  renderScoreboardForm = () => {
+    const scoreboardIsIncognitoField = {
       name: 'scoreboardIsIncognito',
       label: 'Incognito scoreboard?',
       keyClassName: 'contest-edit-configs-form__key',
@@ -292,8 +244,8 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderFrozenScoreboardForm = () => {
-    const frozenScoreboardFreezeTimeField: any = {
+  renderFrozenScoreboardForm = () => {
+    const frozenScoreboardFreezeTimeField = {
       name: 'frozenScoreboardFreezeTime',
       label: 'Freeze time',
       inputHelper: 'Before contest end time. Example: 2h 30m',
@@ -301,7 +253,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
       keyClassName: 'contest-edit-configs-form__key',
     };
 
-    const frozenScoreboardIsOfficialAllowedField: any = {
+    const frozenScoreboardIsOfficialAllowedField = {
       name: 'frozenScoreboardIsOfficialAllowed',
       label: 'Is now unfrozen?',
       keyClassName: 'contest-edit-configs-form__key',
@@ -320,15 +272,15 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderExternalScoreboardForm = () => {
-    const externalScoreboardReceiverUrlField: any = {
+  renderExternalScoreboardForm = () => {
+    const externalScoreboardReceiverUrlField = {
       name: 'externalScoreboardReceiverUrl',
       label: 'Receiver URL',
       validate: [Required],
       keyClassName: 'contest-edit-configs-form__key',
     };
 
-    const externalScoreboardReceiverSecretField: any = {
+    const externalScoreboardReceiverSecretField = {
       name: 'externalScoreboardReceiverSecret',
       label: 'Receiver secret',
       keyClassName: 'contest-edit-configs-form__key',
@@ -347,8 +299,8 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   };
 
-  private renderVirtualForm = () => {
-    const virtualDurationField: any = {
+  renderVirtualForm = () => {
+    const virtualDurationField = {
       name: 'virtualDuration',
       label: 'Virtual contest duration',
       inputHelper: 'Example: 2h 30m',
@@ -369,7 +321,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
   };
 }
 
-export default reduxForm<ContestEditConfigsFormData>({
+export default reduxForm({
   form: 'contest-edit-configs',
   touchOnBlur: false,
 })(ContestEditConfigsForm);

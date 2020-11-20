@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -9,14 +9,14 @@ import thunk from 'redux-thunk';
 import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
 
 describe('ProblemSetCreateDialog', () => {
-  let onGetProblemSetConfig: jest.Mock<any>;
-  let onCreateProblemSet: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onGetProblemSetConfig;
+  let onCreateProblemSet;
+  let wrapper;
 
   beforeEach(() => {
     onCreateProblemSet = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
       onGetProblemSetConfig,

@@ -3,36 +3,28 @@ import { RadioGroup, Radio } from '@blueprintjs/core';
 import { push } from 'connected-react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router';
 import { parse, stringify } from 'query-string';
 
 import { sendGAEvent } from '../../../../ga';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { ArchivesResponse, Archive } from '../../../../modules/api/jerahmeel/archive';
 import * as archiveActions from '../modules/archiveActions';
 
 import './ProblemSetArchiveFilter.css';
 
-export interface ProblemSetArchiveFilterProps extends RouteComponentProps<{ archiveSlug: string }> {
-  onGetArchives: () => Promise<ArchivesResponse>;
-  onPush: (any) => any;
-}
-
-interface ProblemSetArchiveFilterState {
-  archiveSlug?: string;
-  response?: ArchivesResponse;
-}
-
-class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterProps, ProblemSetArchiveFilterState> {
-  state: ProblemSetArchiveFilterState = {};
+class ProblemSetArchiveFilter extends React.Component {
+  state;
 
   constructor(props) {
     super(props);
 
     const queries = parse(this.props.location.search);
-    const archiveSlug = (queries.archive as string) || '';
+    const archiveSlug = queries.archive || '';
 
-    this.state = { archiveSlug };
+    this.state = {
+      response: undefined,
+      archiveSlug,
+    };
   }
 
   async componentDidMount() {
@@ -54,7 +46,7 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     );
   }
 
-  private renderArchiveCategories = () => {
+  renderArchiveCategories = () => {
     const archives = [{ slug: '', name: '(All problemsets)', category: '' }, ...this.state.response.data];
     const archivesByCategory = {};
     archives.forEach(archive => {
@@ -69,7 +61,7 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     return categories.map(category => this.renderArchives(category, archivesByCategory[category]));
   };
 
-  private renderArchives = (category: string, archives: Archive[]) => {
+  renderArchives = (category, archives) => {
     return (
       <div key={category}>
         {category && <p className="archive-filter__category">{category}</p>}
@@ -87,7 +79,7 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     );
   };
 
-  private renderArchiveOption = (archive: Archive) => {
+  renderArchiveOption = archive => {
     return (
       <span className={classNames({ 'archive-filter__option--inactive': archive.slug !== this.state.archiveSlug })}>
         {archive.name}
@@ -95,7 +87,7 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     );
   };
 
-  private changeArchive = e => {
+  changeArchive = e => {
     const archiveSlug = e.target.value;
     const queries = parse(this.props.location.search);
     this.props.onPush({

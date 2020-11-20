@@ -1,16 +1,13 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import {
-  ContestContestantAddResultTable,
-  ContestContestantAddResultTableProps,
-} from './ContestContestantAddResultTable';
+import { ContestContestantAddResultTable } from './ContestContestantAddResultTable';
 
 describe('ContestContestantAddResultTable', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
   beforeEach(() => {
-    const props: ContestContestantAddResultTableProps = {
+    const props = {
       usernames: ['budi', 'caca', 'andi', 'dudi', 'zoro'],
       insertedContestantProfilesMap: {
         budi: { username: 'budi' },

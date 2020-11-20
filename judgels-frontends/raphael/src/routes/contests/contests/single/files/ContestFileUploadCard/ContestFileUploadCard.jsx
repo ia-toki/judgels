@@ -1,15 +1,12 @@
 import * as React from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import ContestFileUploadForm from '../ContestFileUploadForm/ContestFileUploadForm';
 
-import ContestFileUploadForm, { ContestFileUploadFormData } from '../ContestFileUploadForm/ContestFileUploadForm';
-
-export interface ContestFileUploadCardProps {
-  onSubmit: (data: ContestFileUploadFormData) => Promise<void>;
+export function ContestFileUploadCard({ onSubmit }) {
+  return (
+    <ContentCard>
+      <ContestFileUploadForm onSubmit={onSubmit} />
+    </ContentCard>
+  );
 }
-
-export const ContestFileUploadCard = (props: ContestFileUploadCardProps) => (
-  <ContentCard>
-    <ContestFileUploadForm onSubmit={props.onSubmit} />
-  </ContentCard>
-);

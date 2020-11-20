@@ -2,40 +2,34 @@ import { ButtonGroup, Button } from '@blueprintjs/core';
 import { push } from 'connected-react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router';
 
 import './SubmissionUserFilter.css';
 
-interface SubmissionUserFilterProps extends RouteComponentProps {
-  push: (url: string) => void;
-}
-
-class SubmissionUserFilter extends React.Component<SubmissionUserFilterProps> {
-  render() {
-    return (
-      <ButtonGroup className="submission-user-filter" fill>
-        <Button active={!this.isMine()} text="All submissions" onClick={this.clickAll} />
-        <Button active={this.isMine()} text="My submissions" onClick={this.clickMine} />
-      </ButtonGroup>
-    );
-  }
-
-  private isMine = () => {
-    return (this.props.location.pathname + '/').includes('/mine/');
+function SubmissionUserFilter({ location, push }) {
+  const isMine = () => {
+    return (location.pathname + '/').includes('/mine/');
   };
 
-  private clickAll = () => {
-    if (this.isMine()) {
-      const idx = this.props.location.pathname.lastIndexOf('/mine');
-      this.props.push(this.props.location.pathname.substr(0, idx));
+  const clickAll = () => {
+    if (isMine()) {
+      const idx = location.pathname.lastIndexOf('/mine');
+      push(location.pathname.substr(0, idx));
     }
   };
 
-  private clickMine = () => {
-    if (!this.isMine()) {
-      this.props.push((this.props.location.pathname + '/mine').replace('//', '/'));
+  const clickMine = () => {
+    if (!isMine()) {
+      push((location.pathname + '/mine').replace('//', '/'));
     }
   };
+
+  return (
+    <ButtonGroup className="submission-user-filter" fill>
+      <Button active={!isMine()} text="All submissions" onClick={clickAll} />
+      <Button active={isMine()} text="My submissions" onClick={clickMine} />
+    </ButtonGroup>
+  );
 }
 
 const mapDispatchToProps = {

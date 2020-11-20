@@ -2,4 +2,6 @@ import * as React from 'react';
 
 import './AppContent.css';
 
-export const AppContent = props => <div className="app-content">{props.children}</div>;
+export function AppContent({ children }) {
+  return <div className="app-content">{children}</div>;
+}

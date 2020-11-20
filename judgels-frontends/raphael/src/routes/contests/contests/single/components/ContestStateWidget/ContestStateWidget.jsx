@@ -3,9 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
-import { AppState } from '../../../../../../modules/store';
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import * as contestWebActions from '../../modules/contestWebActions';
@@ -13,29 +11,19 @@ import * as contestActions from '../../../modules/contestActions';
 
 import './ContestStateWidget.css';
 
-export interface ContestStateWidgetProps {
-  contest: Contest;
-  state: ContestState;
-  remainingStateDuration?: number;
-  onGetContestWebConfig: (contestJid: string) => Promise<void>;
-  onStartVirtualContest: (contestJid: string) => Promise<void>;
-}
-
-interface ContestStateWidgetState {
-  baseRemainingDuration?: number;
-  baseTimeForRemainingDuration?: number;
-  remainingDuration?: number;
-  isVirtualContestAlertOpen?: boolean;
-  isVirtualContestButtonLoading?: boolean;
-}
-
 // TODO(fushar): unit tests
-class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, ContestStateWidgetState> {
-  state: ContestStateWidgetState = {};
+class ContestStateWidget extends React.PureComponent {
+  state = {
+    baseRemainingDuration: undefined,
+    baseTimeForRemainingDuration: undefined,
+    remainingDuration: undefined,
+    isVirtualContestAlertOpen: undefined,
+    isVirtualContestButtonLoading: undefined,
+  };
 
-  private currentTimeout;
+  currentTimeout;
 
-  componentDidUpdate(prevProps: ContestStateWidgetProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.remainingStateDuration !== this.props.remainingStateDuration) {
       this.setUpBaseRemainingDuration();
     }
@@ -64,7 +52,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     );
   }
 
-  private renderVirtualContestAlert = () => (
+  renderVirtualContestAlert = () => (
     <Alert
       isOpen={this.state.isVirtualContestAlertOpen || false}
       confirmButtonText="Yes, start my participation"
@@ -78,7 +66,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     </Alert>
   );
 
-  private getWidgetComponents = (): any => {
+  getWidgetComponents = () => {
     const state = this.props.state;
 
     if (state === ContestState.NotBegun) {
@@ -121,20 +109,17 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     return {};
   };
 
-  private getRemainingDuration = () => {
-    return <FormattedDuration value={this.state.remainingDuration!} />;
+  getRemainingDuration = () => {
+    return <FormattedDuration value={this.state.remainingDuration} />;
   };
 
-  private refreshRemainingDuration = () => {
+  refreshRemainingDuration = () => {
     const {
       remainingDuration: prevRemainingDuration,
       baseRemainingDuration,
       baseTimeForRemainingDuration,
     } = this.state;
-    const remainingDuration = Math.max(
-      0,
-      baseRemainingDuration! + baseTimeForRemainingDuration! - new Date().getTime()
-    );
+    const remainingDuration = Math.max(0, baseRemainingDuration + baseTimeForRemainingDuration - new Date().getTime());
     this.setState({ remainingDuration });
 
     if (remainingDuration === 0 && prevRemainingDuration !== 0) {
@@ -144,22 +129,22 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     this.currentTimeout = setTimeout(() => this.refreshRemainingDuration(), 500);
   };
 
-  private setUpBaseRemainingDuration = () => {
+  setUpBaseRemainingDuration = () => {
     this.setState({
       baseRemainingDuration: this.props.remainingStateDuration,
       baseTimeForRemainingDuration: new Date().getTime(),
     });
   };
 
-  private alertVirtualContest = () => {
+  alertVirtualContest = () => {
     this.setState({ isVirtualContestAlertOpen: true });
   };
 
-  private cancelVirtualContest = () => {
+  cancelVirtualContest = () => {
     this.setState({ isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: false });
   };
 
-  private startVirtualContest = async () => {
+  startVirtualContest = async () => {
     this.setState({ isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: true });
     await this.props.onStartVirtualContest(this.props.contest.jid);
     await this.props.onGetContestWebConfig(this.props.contest.jid);
@@ -167,10 +152,10 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
-  contest: selectContest(state)!,
-  state: selectContestWebConfig(state)!.state,
-  remainingStateDuration: selectContestWebConfig(state)!.remainingStateDuration,
+const mapStateToProps = state => ({
+  contest: selectContest(state),
+  state: selectContestWebConfig(state).state,
+  remainingStateDuration: selectContestWebConfig(state).remainingStateDuration,
 });
 
 const mapDispatchToProps = {

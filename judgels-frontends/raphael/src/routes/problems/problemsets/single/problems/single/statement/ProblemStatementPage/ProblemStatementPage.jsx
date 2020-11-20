@@ -2,15 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { sendGAEvent } from '../../../../../../../../ga';
-import { AppState } from '../../../../../../../../modules/store';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
-import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
-import {
-  ProblemSetProblemWorksheet,
-  ProblemSetProblem,
-} from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
-import { ProblemSetProblemWorksheet as ProblemSetBundleProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemBundle';
-import { ProblemSetProblemWorksheet as ProblemSetProgrammingProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemProgramming';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
@@ -19,24 +11,10 @@ import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import * as problemSetProblemActions from '../../../modules/problemSetProblemActions';
 
-export interface ProblemStatementPageProps {
-  problemSet: ProblemSet;
-  problem: ProblemSetProblem;
-  statementLanguage: string;
-  gradingLanguage: string;
-  onGetProblemWorksheet: (
-    problemSetJid: string,
-    problemAlias: string,
-    language?: string
-  ) => Promise<ProblemSetProblemWorksheet>;
-}
-
-interface ProblemStatementPageState {
-  response?: ProblemSetProblemWorksheet;
-}
-
-export class ProblemStatementPage extends React.Component<ProblemStatementPageProps, ProblemStatementPageState> {
-  state: ProblemStatementPageState = {};
+export class ProblemStatementPage extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetProblemWorksheet(
@@ -57,7 +35,7 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     });
   }
 
-  async componentDidUpdate(prevProps: ProblemStatementPageProps, prevState: ProblemStatementPageState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.response) {
       this.setState({ response: undefined });
     } else if (!this.state.response && prevState.response) {
@@ -72,16 +50,14 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     }
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
-      return (
-        <ProblemSetProblemProgrammingStatementPage worksheet={response as ProblemSetProgrammingProblemWorksheet} />
-      );
+      return <ProblemSetProblemProgrammingStatementPage worksheet={response} />;
     } else {
-      return <ProblemSetProblemBundleStatementPage worksheet={response as ProblemSetBundleProblemWorksheet} />;
+      return <ProblemSetProblemBundleStatementPage worksheet={response} />;
     }
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   problemSet: selectProblemSet(state),
   problem: selectProblemSetProblem(state),
   statementLanguage: selectStatementLanguage(state),

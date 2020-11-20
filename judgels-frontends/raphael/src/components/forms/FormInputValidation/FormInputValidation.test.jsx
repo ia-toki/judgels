@@ -1,16 +1,16 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { FormInputValidation, FormInputValidationProps } from './FormInputValidation';
+import { FormInputValidation } from './FormInputValidation';
 
 describe('FormInputValidation', () => {
-  let wrapper: ShallowWrapper;
-  let touched: boolean;
-  let valid: boolean;
-  let error: string;
+  let wrapper;
+  let touched;
+  let valid;
+  let error;
 
   const render = () => {
-    const props: FormInputValidationProps = {
+    const props = {
       meta: { touched, valid, error },
     };
 

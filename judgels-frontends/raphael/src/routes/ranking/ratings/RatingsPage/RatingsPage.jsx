@@ -2,31 +2,22 @@ import { HTMLTable } from '@blueprintjs/core';
 import { parse } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { Page } from '../../../../modules/api/pagination';
-import { Profile } from '../../../../modules/api/jophiel/profile';
 import * as profileActions from '../../../jophiel/modules/profileActions';
 
 import './RatingsPage.css';
 
-interface RatingsPageProps extends RouteComponentProps<{}> {
-  onGetTopRatedProfiles: (page?: number, pageSize?: number) => Promise<Page<Profile>>;
-  onAppendRoute: (queries: any) => any;
-}
+class RatingsPage extends React.Component {
+  static PAGE_SIZE = 50;
 
-interface RatingsPageState {
-  profiles?: Page<Profile>;
-}
-
-class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
-  private static PAGE_SIZE = 50;
-
-  state: RatingsPageState = {};
+  state = {
+    profiles: undefined,
+  };
 
   render() {
     return (
@@ -37,7 +28,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
     );
   }
 
-  private renderRatings = () => {
+  renderRatings = () => {
     const { profiles } = this.state;
     if (!profiles) {
       return <LoadingState />;
@@ -69,7 +60,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
     );
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const profiles = await this.props.onGetTopRatedProfiles(nextPage, RatingsPage.PAGE_SIZE);
     this.setState({ profiles });
     return profiles.totalCount;

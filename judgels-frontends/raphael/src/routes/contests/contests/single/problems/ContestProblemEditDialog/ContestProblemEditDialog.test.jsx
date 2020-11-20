@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,15 +6,14 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-import { ContestProblemStatus, ContestProblemData } from '../../../../../../modules/api/uriel/contestProblem';
-
-import { ContestProblemEditDialog, ContestProblemEditDialogProps } from './ContestProblemEditDialog';
+import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemEditDialog } from './ContestProblemEditDialog';
 
 describe('ContestProblemEditDialog', () => {
-  let onSetProblems: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onSetProblems;
+  let wrapper;
 
-  const problems: ContestProblemData[] = [
+  const problems = [
     {
       alias: 'A',
       slug: 'pp1',
@@ -48,9 +47,9 @@ describe('ContestProblemEditDialog', () => {
   beforeEach(() => {
     onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestProblemEditDialogProps = {
+    const props = {
       contest,
       problems,
       onSetProblems,

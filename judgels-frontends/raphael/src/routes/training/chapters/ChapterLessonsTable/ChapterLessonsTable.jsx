@@ -1,25 +1,10 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ChapterLessonsResponse } from '../../../../modules/api/jerahmeel/chapterLesson';
-
 import './ChapterLessonsTable.css';
 
-export interface ChapterLessonsTableProps {
-  response: ChapterLessonsResponse;
-}
-
-export class ChapterLessonsTable extends React.PureComponent<ChapterLessonsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed chapter-lessons-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ChapterLessonsTable({ response: { data, lessonsMap } }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -30,9 +15,7 @@ export class ChapterLessonsTable extends React.PureComponent<ChapterLessonsTable
     );
   };
 
-  private renderRows = () => {
-    const { data, lessonsMap } = this.props.response;
-
+  const renderRows = () => {
     const rows = data.map(lesson => (
       <tr key={lesson.lessonJid}>
         <td>{lesson.alias}</td>
@@ -42,4 +25,11 @@ export class ChapterLessonsTable extends React.PureComponent<ChapterLessonsTable
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed chapter-lessons-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

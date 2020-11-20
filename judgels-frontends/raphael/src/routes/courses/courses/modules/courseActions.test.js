@@ -3,12 +3,11 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
-import { Course } from '../../../../modules/api/jerahmeel/course';
 import * as courseActions from './courseActions';
 import { PutCourse } from './courseReducer';
 
 const courseJid = 'course-jid';
-const course: Course = {
+const course = {
   id: 1,
   jid: courseJid,
   slug: 'competitive',
@@ -53,7 +52,7 @@ describe('courseActions', () => {
       const response = await store.dispatch(courseActions.getCourseBySlug('competitive'));
       expect(response).toEqual(course);
 
-      expect(store.getActions()).toContainEqual(PutCourse.create(course));
+      expect(store.getActions()).toContainEqual(PutCourse(course));
     });
   });
 });

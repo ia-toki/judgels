@@ -1,105 +1,62 @@
-import { IconName } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
-import { Redirect, RouteComponentProps, Switch, withRouter } from 'react-router';
+import { Redirect, Switch, withRouter } from 'react-router';
 
-import { Sidebar, SidebarItem } from '../../components/Sidebar/Sidebar';
+import { Sidebar } from '../Sidebar/Sidebar';
 
 import './ContentWithSidebar.css';
 
-export interface ContentAndSidebarProps {
-  sidebarElement: JSX.Element;
-  contentElement: JSX.Element;
-  stickyWidget?: any;
-  smallContent?: boolean;
-}
-
-const ContentAndSidebar = (props: ContentAndSidebarProps) => {
+function ContentAndSidebar({ sidebarElement, contentElement, stickyWidget, smallContent }) {
   const responsive = window.matchMedia && window.matchMedia('(max-width: 750px)').matches;
   return (
     <div className="content-with-sidebar">
       <div className="content-with-sidebar__sidebar">
-        {props.sidebarElement}
-        {!responsive && props.stickyWidget}
+        {sidebarElement}
+        {!responsive && stickyWidget}
       </div>
       <div
         className={classNames('content-with-sidebar__content', {
-          'content-with-sidebar__content--small': props.smallContent,
+          'content-with-sidebar__content--small': smallContent,
         })}
       >
-        {props.contentElement}
-        {responsive && props.stickyWidget}
+        {contentElement}
+        {responsive && stickyWidget}
       </div>
     </div>
   );
-};
-
-export interface ContentWithSidebarItem {
-  id: string;
-  titleIcon?: IconName;
-  title: string | JSX.Element;
-  routeComponent: any;
-  widgetComponent?: any;
-  component: any;
-  disabled?: boolean;
 }
 
-export interface ContentWithSidebarProps {
-  title: string;
-  action?: JSX.Element;
-  smallContent?: boolean;
-  items: ContentWithSidebarItem[];
-  contentHeader?: JSX.Element;
-  stickyWidget?: any;
-}
-
-interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {}
-
-function resolveUrl(parentPath: string, childPath: string) {
+function resolveUrl(parentPath, childPath) {
   const actualChildPath = childPath === '@' ? '' : childPath;
   return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
 }
 
-class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & ContentWithSidebarConnectedProps> {
-  render() {
-    return (
-      <ContentAndSidebar
-        sidebarElement={this.renderSidebar()}
-        contentElement={this.renderContent()}
-        stickyWidget={this.renderStickyWidget()}
-        smallContent={this.props.smallContent}
-      />
-    );
-  }
-
-  private renderSidebar = () => {
-    const sidebarItems = this.props.items
+function ContentWithSidebar({ match, location, items, title, action, contentHeader, stickyWidget, smallContent }) {
+  const renderSidebar = () => {
+    const sidebarItems = items
       .filter(item => !item.disabled)
-      .map(
-        item =>
-          ({
-            id: item.id,
-            titleIcon: item.titleIcon,
-            title: item.title,
-          } as SidebarItem)
-      );
-    const sidebarWidget = this.renderSidebarWidget();
+      .map(item => ({
+        id: item.id,
+        titleIcon: item.titleIcon,
+        title: item.title,
+      }));
+    const sidebarWidget = renderSidebarWidget();
 
     return (
       <Sidebar
-        title={this.props.title}
-        action={this.props.action}
-        activeItemId={this.getActiveItemId()}
+        title={title}
+        action={action}
+        activeItemId={getActiveItemId()}
         items={sidebarItems}
         widget={sidebarWidget}
-        onResolveItemUrl={this.onResolveItemUrl}
+        onResolveItemUrl={onResolveItemUrl}
       />
     );
   };
 
-  private renderStickyWidget = () => {
-    if (this.props.stickyWidget) {
-      const Widget = this.props.stickyWidget;
+  const renderStickyWidget = () => {
+    if (stickyWidget) {
+      const Widget = stickyWidget;
       return (
         <div>
           <hr />
@@ -110,14 +67,14 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
     return null;
   };
 
-  private renderSidebarWidget = () => {
-    const components = this.props.items
+  const renderSidebarWidget = () => {
+    const components = items
       .filter(item => !!item.widgetComponent)
       .map(item => {
         const RouteC = item.routeComponent;
         const props = {
           exact: item.id === '@',
-          path: resolveUrl(this.props.match.url, item.id),
+          path: resolveUrl(match.url, item.id),
           component: item.widgetComponent,
         };
         return <RouteC key={item.id} {...props} />;
@@ -135,24 +92,22 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
     );
   };
 
-  private renderContent = () => {
-    const components = this.props.items.map(item => {
+  const renderContent = () => {
+    const components = items.map(item => {
       const RouteC = item.routeComponent;
       const props = {
         exact: item.id === '@',
-        path: resolveUrl(this.props.match.url, item.id),
+        path: resolveUrl(match.url, item.id),
         component: item.component,
       };
       return <RouteC key={item.id} {...props} />;
     });
 
-    const redirect = this.props.items[0].id !== '@' && (
-      <Redirect exact from={this.props.match.url} to={resolveUrl(this.props.match.url, this.props.items[0].id)} />
-    );
+    const redirect = items[0].id !== '@' && <Redirect exact from={match.url} to={resolveUrl(match.url, items[0].id)} />;
 
     return (
       <div>
-        {this.props.contentHeader}
+        {contentHeader}
         <Switch>
           {redirect}
           {components}
@@ -161,19 +116,28 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
     );
   };
 
-  private onResolveItemUrl = (itemId: string) => {
-    return resolveUrl(this.props.match.url, itemId);
+  const onResolveItemUrl = itemId => {
+    return resolveUrl(match.url, itemId);
   };
 
-  private getActiveItemId = () => {
-    if (this.props.location.pathname === this.props.match.url) {
+  const getActiveItemId = () => {
+    if (location.pathname === match.url) {
       return '@';
     }
 
-    const currentPath = this.props.location.pathname + '/';
-    const nextSlashPos = currentPath.indexOf('/', this.props.match.url.length + 1);
-    return currentPath.substring(this.props.match.url.length + 1, nextSlashPos);
+    const currentPath = location.pathname + '/';
+    const nextSlashPos = currentPath.indexOf('/', match.url.length + 1);
+    return currentPath.substring(match.url.length + 1, nextSlashPos);
   };
+
+  return (
+    <ContentAndSidebar
+      sidebarElement={renderSidebar()}
+      contentElement={renderContent()}
+      stickyWidget={renderStickyWidget()}
+      smallContent={smallContent}
+    />
+  );
 }
 
-export default withRouter<any, any>(ContentWithSidebar);
+export default withRouter(ContentWithSidebar);

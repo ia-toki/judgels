@@ -2,31 +2,13 @@ import { ControlGroup, Classes, Button, Intent, Callout } from '@blueprintjs/cor
 import classNames from 'classnames';
 import * as React from 'react';
 
-import {
-  AnswerState,
-  StatementButtonText,
-} from '../../../../../../components/ProblemWorksheetCard/Bundle/itemStatement';
-import { Item } from '../../../../../../modules/api/sandalphon/problemBundle';
+import { AnswerState, StatementButtonText } from '../../../itemStatement';
 
 import './ItemEssayForm.css';
 
-export interface ItemEssayFormProps extends Item {
-  initialAnswer?: string;
-  meta: string;
-  onSubmit?: (answer?: string) => Promise<any>;
-  answerState: AnswerState;
-}
-
-export interface ItemEssayFormState {
-  answerState: AnswerState;
-  answer: string;
-  initialAnswer: string;
-  cancelButtonState: AnswerState.NotAnswered | AnswerState.AnswerSaved;
-}
-
-export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProps, ItemEssayFormState> {
-  _input: HTMLTextAreaElement | null | undefined;
-  state: ItemEssayFormState = {
+export default class ItemEssayForm extends React.PureComponent {
+  _input;
+  state = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
     initialAnswer: this.props.initialAnswer || '',
@@ -50,14 +32,14 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         className={`form-textarea--code text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
         onKeyDown={this.onKeyDown}
         rows={20}
-        ref={(input: HTMLTextAreaElement) => (this._input = input)}
+        ref={input => (this._input = input)}
       />
     );
   }
 
   renderSubmitButton() {
     let buttonText;
-    let intent: Intent = Intent.PRIMARY;
+    let intent = Intent.PRIMARY;
     let disabled = this.props.disabled;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
@@ -174,7 +156,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
 
   onTextAreaInputChange = event => this.setState({ answer: event.target.value });
 
-  onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  onKeyDown = event => {
     const TAB_KEYCODE = 9;
     if (event.keyCode === TAB_KEYCODE) {
       event.preventDefault();
@@ -182,7 +164,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
       const start = event.currentTarget.selectionStart;
       const end = event.currentTarget.selectionEnd;
       this.setState({ answer: value.substring(0, start) + '\t' + value.substring(end) }, () => {
-        this._input!.selectionStart = this._input!.selectionEnd = start + 1;
+        this._input.selectionStart = this._input.selectionEnd = start + 1;
       });
     }
   };

@@ -1,18 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, RouteComponentProps, withRouter } from 'react-router';
+import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
-import { Contest, ContestStyle } from '../../../../modules/api/uriel/contest';
-import { ContestTab, ContestWebConfig } from '../../../../modules/api/uriel/contestWeb';
-import { AppState } from '../../../../modules/store';
+import { ContestStyle } from '../../../../modules/api/uriel/contest';
+import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
 
 import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
 import ContestStateWidget from './components/ContestStateWidget/ContestStateWidget';
@@ -38,24 +34,15 @@ import { contestIcon } from './modules/contestIcon';
 
 import './SingleContestRoutes.css';
 
-interface SingleContestRoutesProps extends RouteComponentProps<{ contestSlug: string }> {
-  contest?: Contest;
-  isEditingContest: boolean;
-  contestWebConfig?: ContestWebConfig;
-  onSetNotEditingContest: () => any;
-}
-
-const SingleContestRoutes = (props: SingleContestRoutesProps) => {
-  const { contest, isEditingContest, contestWebConfig, onSetNotEditingContest } = props;
-
+function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfig, onSetNotEditingContest }) {
   // Optimization:
   // We wait until we get the contest from the backend only if the current slug is different from the persisted one.
-  if (!contest || contest.slug !== props.match.params.contestSlug) {
+  if (!contest || contest.slug !== match.params.contestSlug) {
     return <LoadingState large />;
   }
 
   const visibleTabs = contestWebConfig && contestWebConfig.visibleTabs;
-  const sidebarItems: ContentWithSidebarItem[] = [
+  const sidebarItems = [
     {
       id: '@',
       titleIcon: contestIcon[ContestTab.Overview],
@@ -161,7 +148,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'Contest Menu',
     action: contestWebConfig && <ContestRoleTag role={contestWebConfig.role} />,
     items: sidebarItems,
@@ -171,8 +158,8 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
         {contestWebConfig && (
           <div className="single-contest-routes__button">
             <ContestEditDialog
-              contest={contest!}
-              canManage={contestWebConfig!.canManage}
+              contest={contest}
+              canManage={contestWebConfig.canManage}
               isEditingContest={isEditingContest}
               onSetNotEditingContest={onSetNotEditingContest}
             />
@@ -190,16 +177,15 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
-const mapStateToProps = (state: AppState) =>
-  ({
-    contest: selectContest(state),
-    isEditingContest: selectIsEditingContest(state),
-    contestWebConfig: selectContestWebConfig(state),
-  } as Partial<SingleContestRoutesProps>);
+const mapStateToProps = state => ({
+  contest: selectContest(state),
+  isEditingContest: selectIsEditingContest(state),
+  contestWebConfig: selectContestWebConfig(state),
+});
 
 const mapDispatchToProps = {
-  onSetNotEditingContest: () => EditContest.create(false),
+  onSetNotEditingContest: () => EditContest(false),
 };
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));

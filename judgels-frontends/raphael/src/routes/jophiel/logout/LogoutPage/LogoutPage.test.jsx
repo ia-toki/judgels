@@ -12,9 +12,9 @@ jest.mock('../modules/logoutActions');
 
 describe('LogoutPage', () => {
   beforeEach(() => {
-    (logoutActions.logOut as jest.Mock).mockReturnValue(() => Promise.resolve());
+    logoutActions.logOut.mockReturnValue(() => Promise.resolve());
 
-    const store: any = createStore(() => {}, applyMiddleware(thunk));
+    const store = createStore(() => {}, applyMiddleware(thunk));
 
     mount(
       <Provider store={store}>

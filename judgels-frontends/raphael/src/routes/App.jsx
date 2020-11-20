@@ -11,8 +11,6 @@ import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
-import { UserRole } from '../modules/api/jophiel/role';
-import { AppState } from '../modules/store';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 
@@ -21,15 +19,7 @@ import { selectRole } from './jophiel/modules/userWebSelectors';
 import * as userWebActions from './jophiel/modules/userWebActions';
 import * as webActions from './jophiel/modules/webActions';
 
-interface AppProps {
-  title: string;
-  userJid?: string;
-  role: UserRole;
-  onGetWebConfig: () => void;
-  onGetUserWebConfig: () => void;
-}
-
-class App extends React.PureComponent<AppProps> {
+class App extends React.PureComponent {
   componentDidMount() {
     this.props.onGetWebConfig();
     this.props.onGetUserWebConfig();
@@ -38,11 +28,13 @@ class App extends React.PureComponent<AppProps> {
   }
 
   render() {
-    const visibleAppRoutes = getVisibleAppRoutes(this.props.role);
+    const { title, role } = this.props;
+
+    const visibleAppRoutes = getVisibleAppRoutes(role);
     const homeRoute = getHomeRoute();
 
     return (
-      <DocumentTitle title={this.props.title}>
+      <DocumentTitle title={title}>
         <IntlProvider locale={navigator.language}>
           <div>
             <Announcements />
@@ -65,7 +57,7 @@ class App extends React.PureComponent<AppProps> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
   title: selectDocumentTitle(state),
   role: selectRole(state),

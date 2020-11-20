@@ -1,20 +1,12 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { Required, Max1000Lines } from '../../../../../../components/forms/validations';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 
-export interface ContestContestantAddFormData {
-  usernames: string;
-}
-
-export interface ContestContestantAddFormProps extends InjectedFormProps<ContestContestantAddFormData> {
-  renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
-}
-
-const ContestContestantAddForm = (props: ContestContestantAddFormProps) => {
-  const usernamesField: any = {
+function ContestContestantAddForm({ handleSubmit, submitting, renderFormComponents }) {
+  const usernamesField = {
     name: 'usernames',
     label: 'Usernames',
     labelHelper: '(one username per line, max 1000 users)',
@@ -25,12 +17,12 @@ const ContestContestantAddForm = (props: ContestContestantAddFormProps) => {
   };
 
   const fields = <Field component={FormTextArea} {...usernamesField} />;
-  const submitButton = <Button type="submit" text="Add" intent={Intent.PRIMARY} loading={props.submitting} />;
+  const submitButton = <Button type="submit" text="Add" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
-};
+  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+}
 
-export default reduxForm<ContestContestantAddFormData>({
+export default reduxForm({
   form: 'contest-contestant-add',
   touchOnBlur: false,
 })(ContestContestantAddForm);

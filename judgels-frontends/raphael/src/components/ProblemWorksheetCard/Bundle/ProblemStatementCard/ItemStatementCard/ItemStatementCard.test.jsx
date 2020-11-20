@@ -1,13 +1,13 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 
-import { ItemStatementCardProps, ItemStatementCard } from './ItemStatementCard';
+import { ItemStatementCard } from './ItemStatementCard';
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 
 describe('ItemStatementCard', () => {
-  let wrapper: ReactWrapper<ItemStatementCardProps>;
+  let wrapper;
 
-  const props: ItemStatementCardProps = {
+  const props = {
     jid: 'jid',
     type: ItemType.Statement,
     meta: 'meta',

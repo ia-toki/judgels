@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -6,27 +6,26 @@ import { MemoryRouter } from 'react-router';
 import thunk from 'redux-thunk';
 
 import { contest, user } from '../../../../../../fixtures/state';
-import { PutUser, sessionReducer } from '../../../../../../modules/session/sessionReducer';
-import { ContestScoreboardResponse } from '../../../../../../modules/api/uriel/contestScoreboard';
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import ContestScoreboardPage from './ContestScoreboardPage';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 jest.mock('../modules/contestScoreboardActions');
 
 describe('ContestScoreboardPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ session: sessionReducer, uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser.create(user));
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutUser(user));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -41,7 +40,7 @@ describe('ContestScoreboardPage', () => {
 
   describe('when there is no scoreboard', () => {
     beforeEach(() => {
-      (contestScoreboardActions.getScoreboard as jest.Mock).mockReturnValue(() => Promise.resolve(null));
+      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(null));
       render();
     });
 
@@ -56,7 +55,7 @@ describe('ContestScoreboardPage', () => {
 
   describe('when there is official scoreboard', () => {
     beforeEach(() => {
-      const response: ContestScoreboardResponse = {
+      const response = {
         data: {
           type: ContestScoreboardType.Official,
           scoreboard: {
@@ -75,7 +74,7 @@ describe('ContestScoreboardPage', () => {
         profilesMap: {},
         config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, canRefresh: true, pageSize: 0 },
       };
-      (contestScoreboardActions.getScoreboard as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
 
       render();
     });
@@ -91,7 +90,7 @@ describe('ContestScoreboardPage', () => {
 
   describe('when there is frozen scoreboard', () => {
     beforeEach(() => {
-      const response: ContestScoreboardResponse = {
+      const response = {
         data: {
           type: ContestScoreboardType.Frozen,
           scoreboard: {
@@ -110,7 +109,7 @@ describe('ContestScoreboardPage', () => {
         profilesMap: {},
         config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, canRefresh: true, pageSize: 0 },
       };
-      (contestScoreboardActions.getScoreboard as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
 
       render();
     });

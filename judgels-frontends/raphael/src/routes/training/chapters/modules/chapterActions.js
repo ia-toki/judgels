@@ -1,10 +1,10 @@
 import { selectToken } from '../../../../modules/session/sessionSelectors';
-import { chapterAPI, ChapterCreateData, ChapterUpdateData } from '../../../../modules/api/jerahmeel/chapter';
-import { chapterProblemAPI, ChapterProblemData } from '../../../../modules/api/jerahmeel/chapterProblem';
-import { chapterLessonAPI, ChapterLessonData } from '../../../../modules/api/jerahmeel/chapterLesson';
+import { chapterAPI } from '../../../../modules/api/jerahmeel/chapter';
+import { chapterProblemAPI } from '../../../../modules/api/jerahmeel/chapterProblem';
+import { chapterLessonAPI } from '../../../../modules/api/jerahmeel/chapterLesson';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function createChapter(data: ChapterCreateData) {
+export function createChapter(data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await chapterAPI.createChapter(token, data);
@@ -12,7 +12,7 @@ export function createChapter(data: ChapterCreateData) {
   };
 }
 
-export function updateChapter(chapterJid: string, data: ChapterUpdateData) {
+export function updateChapter(chapterJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await chapterAPI.updateChapter(token, chapterJid, data);
@@ -27,14 +27,14 @@ export function getChapters() {
   };
 }
 
-export function getProblems(chapterJid: string) {
+export function getProblems(chapterJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await chapterProblemAPI.getProblems(token, chapterJid);
   };
 }
 
-export function setProblems(chapterJid: string, data: ChapterProblemData[]) {
+export function setProblems(chapterJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await chapterProblemAPI.setProblems(token, chapterJid, data);
@@ -42,14 +42,14 @@ export function setProblems(chapterJid: string, data: ChapterProblemData[]) {
   };
 }
 
-export function getLessons(chapterJid: string) {
+export function getLessons(chapterJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await chapterLessonAPI.getLessons(token, chapterJid);
   };
 }
 
-export function setLessons(chapterJid: string, data: ChapterLessonData[]) {
+export function setLessons(chapterJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await chapterLessonAPI.setLessons(token, chapterJid, data);

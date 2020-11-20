@@ -3,28 +3,11 @@ import * as React from 'react';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-import { ContestLog } from '../../../../../../modules/api/uriel/contestLog';
 
 import './ContestLogsTable.css';
 
-export interface ContestLogsTableProps {
-  logs: ContestLog[];
-  profilesMap: ProfilesMap;
-  problemAliasesMap: { [problemJid: string]: string };
-}
-
-export class ContestLogsTable extends React.PureComponent<ContestLogsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed contest-logs-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ContestLogsTable({ logs, profilesMap, problemAliasesMap }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -37,9 +20,7 @@ export class ContestLogsTable extends React.PureComponent<ContestLogsTableProps>
     );
   };
 
-  private renderRows = () => {
-    const { logs, profilesMap, problemAliasesMap } = this.props;
-
+  const renderRows = () => {
     const rows = logs.map(log => (
       <tr key={log.userJid + log.time}>
         <td>
@@ -55,4 +36,11 @@ export class ContestLogsTable extends React.PureComponent<ContestLogsTableProps>
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed contest-logs-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

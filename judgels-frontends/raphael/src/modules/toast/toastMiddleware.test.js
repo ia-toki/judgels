@@ -1,19 +1,19 @@
 import { SubmissionError } from 'redux-form';
 
 import { NotFoundError } from '../api/error';
-import { toastMiddleware } from './toastMiddleware';
+import toastMiddleware from './toastMiddleware';
 import * as toastActions from './toastActions';
 
 jest.mock('./toastActions');
 
 describe('toastMiddleware', () => {
-  let store: jest.Mock<any>;
+  let store;
 
   const myAction = { type: 'action ' };
   const nextAction = { type: 'next_action ' };
 
   beforeEach(() => {
-    (toastActions.showErrorToast as jest.Mock).mockClear();
+    toastActions.showErrorToast.mockClear();
     store = jest.fn();
   });
 

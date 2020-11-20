@@ -1,7 +1,6 @@
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import { push } from 'connected-react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -10,48 +9,32 @@ import Pagination from '../../../../../../components/Pagination/Pagination';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { SubmissionFilterWidget } from '../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestLogsResponse } from '../../../../../../modules/api/uriel/contestLog';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestLogActions from '../modules/contestLogActions';
 
-export interface ContestLogsPageProps extends RouteComponentProps<{}> {
-  contest: Contest;
-  onGetLogs: (contestJid: string, userJid?: string, problemJid?: string, page?: number) => Promise<ContestLogsResponse>;
-  onAppendRoute: (queries) => any;
-}
+export class ContestLogsPage extends React.Component {
+  static PAGE_SIZE = 100;
 
-interface ContestLogsFilter {
-  username?: string;
-  problemAlias?: string;
-}
-
-interface ContestLogsPageState {
-  response?: ContestLogsResponse;
-  filter?: ContestLogsFilter;
-  isFilterLoading?: boolean;
-}
-
-export class ContestLogsPage extends React.PureComponent<ContestLogsPageProps, ContestLogsPageState> {
-  private static PAGE_SIZE = 100;
-
-  state: ContestLogsPageState = {};
+  state;
 
   constructor(props) {
     super(props);
 
     const queries = parse(this.props.location.search);
-    const username = queries.username as string;
-    const problemAlias = queries.problemAlias as string;
+    const username = queries.username;
+    const problemAlias = queries.problemAlias;
 
-    this.state = { filter: { username, problemAlias } };
+    this.state = {
+      response: undefined,
+      filter: { username, problemAlias },
+      isFilterLoading: false,
+    };
   }
 
   componentDidUpdate() {
     const queries = parse(this.props.location.search);
-    const username = queries.username as string;
-    const problemAlias = queries.problemAlias as string;
+    const username = queries.username;
+    const problemAlias = queries.problemAlias;
 
     if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
       this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
@@ -71,7 +54,7 @@ export class ContestLogsPage extends React.PureComponent<ContestLogsPageProps, C
     );
   }
 
-  private renderFilterWidget = () => {
+  renderFilterWidget = () => {
     const { response, filter, isFilterLoading } = this.state;
     if (!response) {
       return null;
@@ -91,7 +74,7 @@ export class ContestLogsPage extends React.PureComponent<ContestLogsPageProps, C
     );
   };
 
-  private renderLogs = () => {
+  renderLogs = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -109,31 +92,31 @@ export class ContestLogsPage extends React.PureComponent<ContestLogsPageProps, C
     return <ContestLogsTable logs={logs.page} profilesMap={profilesMap} problemAliasesMap={problemAliasesMap} />;
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     const { filter } = this.state;
 
     const key = '' + filter.username + filter.problemAlias;
     return <Pagination key={key} pageSize={ContestLogsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
-  private onChangePage = async (nextPage: number) => {
-    const { username, problemAlias } = this.state.filter!;
+  onChangePage = async nextPage => {
+    const { username, problemAlias } = this.state.filter;
     const data = await this.refreshLogs(username, problemAlias, nextPage);
     return data.totalCount;
   };
 
-  private refreshLogs = async (username?: string, problemAlias?: string, page?: number) => {
+  refreshLogs = async (username, problemAlias, page) => {
     const response = await this.props.onGetLogs(this.props.contest.jid, username, problemAlias, page);
     this.setState({ response, isFilterLoading: false });
     return response.data;
   };
 
-  private onFilter = async filter => {
+  onFilter = async filter => {
     this.props.onAppendRoute(filter);
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 

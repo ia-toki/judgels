@@ -1,5 +1,3 @@
-import { AppState } from '../../../../modules/store';
-
-export function selectCourse(state: AppState) {
+export function selectCourse(state) {
   return state.jerahmeel.course.value;
 }

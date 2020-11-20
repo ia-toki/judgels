@@ -4,11 +4,7 @@ import { FormattedRelativeTime } from 'react-intl';
 import { selectUnit } from '@formatjs/intl-utils';
 import '@formatjs/intl-relativetimeformat/polyfill-locales';
 
-export interface FormattedRelativeProps {
-  value: number;
-}
-
-export const FormattedRelative = (props: FormattedRelativeProps) => {
+export function FormattedRelative(props) {
   if (!props.value) {
     return null;
   }
@@ -19,4 +15,4 @@ export const FormattedRelative = (props: FormattedRelativeProps) => {
     day: 30,
   });
   return <FormattedRelativeTime value={value} unit={unit} />;
-};
+}

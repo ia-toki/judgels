@@ -5,17 +5,19 @@ import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrappe
 import ProblemSubmissionsPage from './ProblemSubmissionsPage/ProblemSubmissionsPage';
 import ProblemSubmissionSummaryPage from './ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage';
 
-const ProblemItemSubmissionRoutes = () => (
-  <div>
-    <Switch>
-      <Route
-        path="/problems/:problemSetSlug/:problemAlias/results/users/:username"
-        component={ProblemSubmissionSummaryPage}
-      />
-      <Route path="/problems/:problemSetSlug/:problemAlias/results/all" component={ProblemSubmissionsPage} />
-      <Route path="/problems/:problemSetSlug/:problemAlias/results" component={ProblemSubmissionSummaryPage} />
-    </Switch>
-  </div>
-);
+function ProblemItemSubmissionRoutes() {
+  return (
+    <div>
+      <Switch>
+        <Route
+          path="/problems/:problemSetSlug/:problemAlias/results/users/:username"
+          component={ProblemSubmissionSummaryPage}
+        />
+        <Route path="/problems/:problemSetSlug/:problemAlias/results/all" component={ProblemSubmissionsPage} />
+        <Route path="/problems/:problemSetSlug/:problemAlias/results" component={ProblemSubmissionSummaryPage} />
+      </Switch>
+    </div>
+  );
+}
 
 export default withBreadcrumb('Results')(ProblemItemSubmissionRoutes);

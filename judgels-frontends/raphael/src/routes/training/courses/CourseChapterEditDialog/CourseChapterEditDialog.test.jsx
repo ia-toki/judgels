@@ -1,23 +1,21 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { Course } from '../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../modules/api/jerahmeel/courseChapter';
-import { CourseChapterEditDialog, CourseChapterEditDialogProps } from './CourseChapterEditDialog';
+import { CourseChapterEditDialog } from './CourseChapterEditDialog';
 
 const course = {
   jid: 'course-jid',
-} as Course;
+};
 
 describe('CourseChapterEditDialog', () => {
-  let onGetChapters: jest.Mock<any>;
-  let onSetChapters: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onGetChapters;
+  let onSetChapters;
+  let wrapper;
 
-  const chapters: CourseChapter[] = [
+  const chapters = [
     {
       alias: 'A',
       chapterJid: 'jid-1',
@@ -32,9 +30,9 @@ describe('CourseChapterEditDialog', () => {
     onGetChapters = jest.fn().mockReturnValue(Promise.resolve({ data: chapters, chaptersMap: {} }));
     onSetChapters = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: CourseChapterEditDialogProps = {
+    const props = {
       isOpen: true,
       course,
       onCloseDialog: jest.fn(),

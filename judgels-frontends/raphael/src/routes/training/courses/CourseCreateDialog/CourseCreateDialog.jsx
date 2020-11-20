@@ -1,19 +1,12 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { CourseCreateData } from '../../../../modules/api/jerahmeel/course';
 import CourseCreateForm from '../CourseCreateForm/CourseCreateForm';
 
-interface CourseCreateDialogProps {
-  onCreateCourse: (data: CourseCreateData) => Promise<void>;
-}
-
-interface CourseCreateDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class CourseCreateDialog extends React.Component<CourseCreateDialogProps, CourseCreateDialogState> {
-  state: CourseCreateDialogState = {};
+export class CourseCreateDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
   render() {
     return (
@@ -24,7 +17,7 @@ export class CourseCreateDialog extends React.Component<CourseCreateDialogProps,
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New course
@@ -32,18 +25,18 @@ export class CourseCreateDialog extends React.Component<CourseCreateDialogProps,
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
-    const props: any = {
+  renderDialog = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createCourse,
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Create new course"
         canOutsideClickClose={false}
@@ -53,7 +46,7 @@ export class CourseCreateDialog extends React.Component<CourseCreateDialogProps,
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -65,7 +58,7 @@ export class CourseCreateDialog extends React.Component<CourseCreateDialogProps,
     </>
   );
 
-  private createCourse = async (data: CourseCreateData) => {
+  createCourse = async data => {
     await this.props.onCreateCourse(data);
     this.setState({ isDialogOpen: false });
   };

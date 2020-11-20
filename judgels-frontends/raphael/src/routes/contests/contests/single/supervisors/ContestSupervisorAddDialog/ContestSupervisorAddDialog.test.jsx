@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,23 +6,21 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-import { ContestSupervisorUpsertData } from '../../../../../../modules/api/uriel/contestSupervisor';
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
-
-import { ContestSupervisorAddDialog, ContestSupervisorAddDialogProps } from './ContestSupervisorAddDialog';
+import { ContestSupervisorAddDialog } from './ContestSupervisorAddDialog';
 
 describe('ContestSupervisorAddDialog', () => {
-  let onUpsertSupervisors: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onUpsertSupervisors;
+  let wrapper;
 
   beforeEach(() => {
     onUpsertSupervisors = jest
       .fn()
       .mockReturnValue(Promise.resolve({ upsertedSupervisorProfilesMap: {}, alreadySupervisorProfilesMap: {} }));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestSupervisorAddDialogProps = {
+    const props = {
       contest,
       onUpsertSupervisors: onUpsertSupervisors,
     };
@@ -61,6 +59,6 @@ describe('ContestSupervisorAddDialog', () => {
         SupervisorManagementPermission.Clarifications,
       ],
       usernames: ['andi', 'budi', 'caca'],
-    } as ContestSupervisorUpsertData);
+    });
   });
 });

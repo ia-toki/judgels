@@ -1,16 +1,14 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-import { IcpcScoreboardProblemState, IcpcScoreboard } from '../../../../../../modules/api/uriel/scoreboard';
-
-import { IcpcScoreboardTable, IcpcScoreboardTableProps } from './IcpcScoreboardTable';
+import { IcpcScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { IcpcScoreboardTable } from './IcpcScoreboardTable';
 
 describe('IcpcScoreboardTable', () => {
-  let wrapper: ReactWrapper<IcpcScoreboardTableProps>;
+  let wrapper;
 
-  const scoreboard: IcpcScoreboard = {
+  const scoreboard = {
     state: {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3', 'JIDPROG4'],
       problemAliases: ['A', 'B', 'C', 'D'],
@@ -50,7 +48,7 @@ describe('IcpcScoreboardTable', () => {
     },
   };
 
-  const profilesMap: ProfilesMap = {
+  const profilesMap = {
     JIDUSER1: { username: 'username1' },
     JIDUSER2: { username: 'username2' },
   };

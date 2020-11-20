@@ -34,8 +34,8 @@ describe('logoutActions', () => {
 
         await store.dispatch(logoutActions.logOut(path));
 
-        expect(store.getActions()).toContainEqual(DelSession.create());
-        expect(store.getActions()).toContainEqual(PutWebConfig.create({ role: { jophiel: JophielRole.Guest } }));
+        expect(store.getActions()).toContainEqual(DelSession());
+        expect(store.getActions()).toContainEqual(PutWebConfig({ role: { jophiel: JophielRole.Guest } }));
       });
     });
 
@@ -50,7 +50,7 @@ describe('logoutActions', () => {
 
         await store.dispatch(logoutActions.logOut(path));
 
-        expect(store.getActions()).toContainEqual(DelSession.create());
+        expect(store.getActions()).toContainEqual(DelSession());
       });
     });
 

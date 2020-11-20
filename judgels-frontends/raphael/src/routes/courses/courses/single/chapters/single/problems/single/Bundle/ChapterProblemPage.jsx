@@ -1,33 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from '../../../../../../../../../modules/store';
-import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblemBundle';
+import StatementLanguageWidget from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { ItemSubmission } from '../../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import * as chapterSubmissionActions from '../../../results/modules/chapterSubmissionActions';
 
-export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
-  chapter: CourseChapter;
-  worksheet: ChapterProblemWorksheet;
-  onCreateSubmission: (chapterJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
-  onGetLatestSubmissions: (chapterJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
-}
-
-interface ChapterProblemPageState {
-  latestSubmissions?: { [id: string]: ItemSubmission };
-}
-
-export class ChapterProblemPage extends React.Component<ChapterProblemPageProps, ChapterProblemPageState> {
-  state: ChapterProblemPageState = {};
+export class ChapterProblemPage extends React.Component {
+  state = {
+    latestSubmissions: undefined,
+  };
 
   async componentDidMount() {
     const latestSubmissions = await this.props.onGetLatestSubmissions(
@@ -48,12 +33,12 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
     );
   }
 
-  private renderStatementLanguageWidget = () => {
+  renderStatementLanguageWidget = () => {
     const { defaultLanguage, languages } = this.props.worksheet;
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
@@ -64,7 +49,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
     );
   };
 
-  private renderStatement = () => {
+  renderStatement = () => {
     const { problem, worksheet } = this.props.worksheet;
     if (!problem || !worksheet) {
       return <LoadingState />;
@@ -85,13 +70,13 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
     );
   };
 
-  private createSubmission = async (itemJid: string, answer: string) => {
+  createSubmission = async (itemJid, answer) => {
     const { problem } = this.props.worksheet;
     return await this.props.onCreateSubmission(this.props.chapter.chapterJid, problem.problemJid, itemJid, answer);
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   chapter: selectCourseChapter(state),
 });
 const mapDispatchToProps = {
@@ -99,4 +84,4 @@ const mapDispatchToProps = {
   onGetLatestSubmissions: chapterSubmissionActions.getLatestSubmissions,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));

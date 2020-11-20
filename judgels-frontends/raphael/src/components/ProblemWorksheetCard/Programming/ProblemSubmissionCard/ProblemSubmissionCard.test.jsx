@@ -1,25 +1,24 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { LanguageRestriction } from '../../../../modules/api/gabriel/language';
-import { ProblemSubmissionCardProps, ProblemSubmissionCard } from './ProblemSubmissionCard';
+import { ProblemSubmissionCard } from './ProblemSubmissionCard';
 
 describe('ProblemSubmissionCard', () => {
-  let gradingEngine: string;
-  let gradingLanguageRestriction: LanguageRestriction;
-  let onSubmit: jest.Mock<any>;
-  let reasonNotAllowedToSubmit: string | undefined;
-  let submissionWarning: string | undefined;
-  let preferredGradingLanguage: string;
+  let gradingEngine;
+  let gradingLanguageRestriction;
+  let onSubmit;
+  let reasonNotAllowedToSubmit;
+  let submissionWarning;
+  let preferredGradingLanguage;
 
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
   const render = () => {
-    const props: ProblemSubmissionCardProps = {
+    const props = {
       config: {
         sourceKeys: {
           encoder: 'Encoder',
@@ -34,7 +33,7 @@ describe('ProblemSubmissionCard', () => {
       preferredGradingLanguage,
     };
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
     wrapper = mount(
       <Provider store={store}>

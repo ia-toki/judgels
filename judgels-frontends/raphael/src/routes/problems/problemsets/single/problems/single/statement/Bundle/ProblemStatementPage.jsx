@@ -3,30 +3,15 @@ import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from '../../../../../../../../modules/store';
-import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemBundle';
+import StatementLanguageWidget from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
 
-export interface ProblemStatementPageProps {
-  problemSet: ProblemSet;
-  worksheet: ProblemSetProblemWorksheet;
-  onCreateSubmission: (problemSetJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
-  onGetLatestSubmissions: (problemSetJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
-}
-
-interface ProblemStatementPageState {
-  latestSubmissions?: { [id: string]: ItemSubmission };
-}
-
-export class ProblemStatementPage extends React.Component<ProblemStatementPageProps, ProblemStatementPageState> {
-  state: ProblemStatementPageState = {};
+export class ProblemStatementPage extends React.Component {
+  state = {
+    latestSubmissions: undefined,
+  };
 
   async componentDidMount() {
     const latestSubmissions = await this.props.onGetLatestSubmissions(
@@ -47,12 +32,12 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     );
   }
 
-  private renderStatementLanguageWidget = () => {
+  renderStatementLanguageWidget = () => {
     const { defaultLanguage, languages } = this.props.worksheet;
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
@@ -63,7 +48,7 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     );
   };
 
-  private renderStatement = () => {
+  renderStatement = () => {
     const { problem, worksheet } = this.props.worksheet;
     if (!problem || !worksheet) {
       return <LoadingState />;
@@ -83,13 +68,13 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     );
   };
 
-  private createSubmission = async (itemJid: string, answer: string) => {
+  createSubmission = async (itemJid, answer) => {
     const { problem } = this.props.worksheet;
     return await this.props.onCreateSubmission(this.props.problemSet.jid, problem.problemJid, itemJid, answer);
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   problemSet: selectProblemSet(state),
 });
 const mapDispatchToProps = {

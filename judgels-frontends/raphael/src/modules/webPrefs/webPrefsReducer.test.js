@@ -1,32 +1,29 @@
-import {
-  webPrefsReducer,
-  WebPrefsState,
-  INITIAL_STATE,
-  PutStatementLanguage,
-  PutGradingLanguage,
-} from './webPrefsReducer';
+import webPrefsReducer, { PutStatementLanguage, PutGradingLanguage } from './webPrefsReducer';
 
 describe('webPrefsReducer', () => {
   test('PUT_STATEMENT_LANGUAGE', () => {
-    const state = INITIAL_STATE;
-    const action = PutStatementLanguage.create('id');
-    const nextState: WebPrefsState = { statementLanguage: 'id', gradingLanguage: 'Cpp17' };
+    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const action = PutStatementLanguage('id');
+    const nextState = { statementLanguage: 'id', gradingLanguage: 'Cpp17' };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
   test('PUT_GRADING_LANGUAGE', () => {
-    const state = INITIAL_STATE;
-    const action = PutGradingLanguage.create('Java');
-    const nextState: WebPrefsState = { statementLanguage: 'id', gradingLanguage: 'Java' };
+    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const action = PutGradingLanguage('Java');
+    const nextState = { statementLanguage: 'en', gradingLanguage: 'Java' };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
   test('other actions', () => {
-    const state: WebPrefsState = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
     expect(webPrefsReducer(state, { type: 'other' })).toEqual(state);
   });
 
   test('initial state', () => {
-    expect(webPrefsReducer(undefined as any, { type: 'other' })).toEqual(INITIAL_STATE);
+    expect(webPrefsReducer(undefined, { type: 'other' })).toEqual({
+      statementLanguage: 'id',
+      gradingLanguage: 'Cpp17',
+    });
   });
 });

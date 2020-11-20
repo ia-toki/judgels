@@ -15,21 +15,23 @@ import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPa
 import JophielAccountRoutes from './JophielAccountRoutes';
 import JophielProfilesRoutes from './JophielProfilesRoutes';
 
-const JophielRoutes = () => (
-  <div>
-    <Switch>
-      <Route exact path="/" component={HomePage} />
-      <GuestRoute exact path="/login" component={LoginPage} />
-      <UserRoute exact path="/logout" component={LogoutPage} />
-      <GuestRoute exact path="/register" component={RegisterPage} />
-      <GuestRoute exact path="/activate/:emailCode" component={ActivatePage} />
-      <GuestRoute exact path="/forgot-password" component={ForgotPasswordPage} />
-      <GuestRoute exact path="/need-activation" component={NeedActivationPage} />
-      <GuestRoute exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
-      <UserRoute path="/account" component={JophielAccountRoutes} />
-      <Route path="/profiles" component={JophielProfilesRoutes} />
-    </Switch>
-  </div>
-);
+function JophielRoutes() {
+  return (
+    <div>
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <GuestRoute exact path="/login" component={LoginPage} />
+        <UserRoute exact path="/logout" component={LogoutPage} />
+        <GuestRoute exact path="/register" component={RegisterPage} />
+        <GuestRoute exact path="/activate/:emailCode" component={ActivatePage} />
+        <GuestRoute exact path="/forgot-password" component={ForgotPasswordPage} />
+        <GuestRoute exact path="/need-activation" component={NeedActivationPage} />
+        <GuestRoute exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
+        <UserRoute path="/account" component={JophielAccountRoutes} />
+        <Route path="/profiles" component={JophielProfilesRoutes} />
+      </Switch>
+    </div>
+  );
+}
 
-export default withRouter<any, any>(JophielRoutes);
+export default withRouter(JophielRoutes);

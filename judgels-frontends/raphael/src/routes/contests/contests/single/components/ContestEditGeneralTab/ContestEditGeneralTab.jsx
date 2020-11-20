@@ -2,28 +2,17 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../../../modules/store';
-import { Contest, ContestStyle, ContestUpdateData } from '../../../../../../modules/api/uriel/contest';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
-
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
-import ContestEditGeneralForm, { ContestEditGeneralFormData } from '../ContestEditGeneralForm/ContestEditGeneralForm';
+import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
-interface ContestEditGeneralTabProps {
-  contest: Contest;
-  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<any>;
-  onUpdateContest: (contestJid: string, contestSlug: string, data: ContestUpdateData) => Promise<any>;
-}
-
-interface ContestEditGeneralTabState {
-  isEditing?: boolean;
-}
-
-class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, ContestEditGeneralTabState> {
-  state: ContestEditGeneralTabState = {};
+class ContestEditGeneralTab extends React.Component {
+  state = {
+    isEditing: false,
+  };
 
   render() {
     return (
@@ -38,7 +27,7 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
     );
   }
 
-  private renderEditButton = () => {
+  renderEditButton = () => {
     return (
       !this.state.isEditing && (
         <Button small className="right-action-button" intent={Intent.PRIMARY} icon="edit" onClick={this.toggleEdit}>
@@ -48,10 +37,10 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
     );
   };
 
-  private renderContent = () => {
+  renderContent = () => {
     const { contest } = this.props;
     if (this.state.isEditing) {
-      const initialValues: ContestEditGeneralFormData = {
+      const initialValues = {
         slug: contest.slug,
         name: contest.name,
         style: contest.style,
@@ -66,11 +55,11 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
     return <ContestEditGeneralTable contest={contest} />;
   };
 
-  private updateContest = async (data: ContestEditGeneralFormData) => {
-    const updateData: ContestUpdateData = {
+  updateContest = async data => {
+    const updateData = {
       slug: data.slug,
       name: data.name,
-      style: data.style as ContestStyle,
+      style: data.style,
       beginTime: data.beginTime.getTime(),
       duration: parseDuration(data.duration),
     };
@@ -79,14 +68,14 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
     this.toggleEdit();
   };
 
-  private toggleEdit = () => {
-    this.setState((prevState: ContestEditGeneralTabState) => ({
+  toggleEdit = () => {
+    this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 const mapDispatchToProps = {

@@ -1,41 +1,33 @@
 import * as React from 'react';
 
 import { Card } from '../../../../../../components/Card/Card';
-import { UserStats } from '../../../../../../modules/api/jerahmeel/user';
 
-export interface ProblemStatsPanelProps {
-  userStats: UserStats;
-}
-
-export class ProblemStatsPanel extends React.Component<ProblemStatsPanelProps> {
-  render() {
-    const { userStats } = this.props;
-    return (
-      <Card title="Problem stats">
-        <ul>
-          <li>
-            Total problem scores: <b>{userStats.totalScores}</b> pts
-          </li>
-          <li>
-            Total problems attempted: <b>{userStats.totalProblemsTried}</b>
-            {this.renderVerdictsMap(userStats.totalProblemVerdictsMap)}
-          </li>
-        </ul>
-      </Card>
-    );
-  }
-
-  private renderVerdictsMap = verdictsMap => {
+export function ProblemStatsPanel({ userStats: { totalScores, totalProblemsTried, totalProblemVerdictsMap } }) {
+  const renderVerdictsMap = () => {
     return (
       <ul>
-        {Object.keys(verdictsMap)
+        {Object.keys(totalProblemVerdictsMap)
           .sort()
           .map(v => (
             <li key={v}>
-              <b>{v}</b>: {verdictsMap[v]}
+              <b>{v}</b>: {totalProblemVerdictsMap[v]}
             </li>
           ))}
       </ul>
     );
   };
+
+  return (
+    <Card title="Problem stats">
+      <ul>
+        <li>
+          Total problem scores: <b>{totalScores}</b> pts
+        </li>
+        <li>
+          Total problems attempted: <b>{totalProblemsTried}</b>
+          {renderVerdictsMap()}
+        </li>
+      </ul>
+    </Card>
+  );
 }

@@ -1,19 +1,19 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 
-import { ItemShortAnswerCard, ItemShortAnswerCardProps } from './ItemShortAnswerCard';
-import { ItemShortAnswerConfig, ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemShortAnswerCard } from './ItemShortAnswerCard';
+import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 
 describe('ItemShortAnswerCard', () => {
-  let wrapper: ReactWrapper<ItemShortAnswerCard>;
-  const itemConfig: ItemShortAnswerConfig = {
+  let wrapper;
+  const itemConfig = {
     statement: 'statement',
     score: 4,
     penalty: -2,
     inputValidationRegex: '/^d+$/',
     gradingRegex: '/^d+$/',
   };
-  const props: ItemShortAnswerCardProps = {
+  const props = {
     jid: 'jid',
     type: ItemType.Essay,
     meta: 'meta',

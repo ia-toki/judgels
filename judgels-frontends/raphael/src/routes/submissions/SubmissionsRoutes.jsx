@@ -9,17 +9,19 @@ import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWra
 
 import './SubmissionsRoutes.css';
 
-const SubmissionsRoutes = () => (
-  <FullPageLayout>
-    <Card className="submissions-routes" title="Submissions">
-      <Switch>
-        <Route exact path="/submissions" component={SubmissionsPage} />
-        <Route exact path="/submissions/mine" component={SubmissionsPage} />
+function SubmissionsRoutes() {
+  return (
+    <FullPageLayout>
+      <Card className="submissions-routes" title="Submissions">
+        <Switch>
+          <Route exact path="/submissions" component={SubmissionsPage} />
+          <Route exact path="/submissions/mine" component={SubmissionsPage} />
 
-        <Route path="/submissions/:submissionId" component={SubmissionPage} />
-      </Switch>
-    </Card>
-  </FullPageLayout>
-);
+          <Route path="/submissions/:submissionId" component={SubmissionPage} />
+        </Switch>
+      </Card>
+    </FullPageLayout>
+  );
+}
 
-export default withBreadcrumb('Submissions')(withRouter<any, any>(SubmissionsRoutes));
+export default withBreadcrumb('Submissions')(withRouter(SubmissionsRoutes));

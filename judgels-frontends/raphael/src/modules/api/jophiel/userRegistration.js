@@ -1,18 +1,11 @@
-import { get } from '../../../modules/api/http';
+import { get } from '../http';
 
 import { baseUsersURL } from './user';
-
-export interface UserRegistrationWebConfig {
-  useRecaptcha: boolean;
-  recaptcha?: {
-    siteKey: string;
-  };
-}
 
 const baseURL = `${baseUsersURL}/registration/web`;
 
 export const userRegistrationWebAPI = {
-  getWebConfig: (): Promise<UserRegistrationWebConfig> => {
+  getWebConfig: () => {
     return get(`${baseURL}/config`);
   },
 };

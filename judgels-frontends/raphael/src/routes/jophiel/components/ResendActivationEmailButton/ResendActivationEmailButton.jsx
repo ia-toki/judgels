@@ -4,21 +4,12 @@ import { connect } from 'react-redux';
 
 import * as userAccountActions from '../../modules/userAccountActions';
 
-export interface ResendActivationEmailButtonProps {
-  email: string;
-  onResendActivationEmail: (email: string) => Promise<void>;
-}
+class ResendActivationEmailButton extends React.Component {
+  timer;
 
-interface ResendActivationEmailButtonState {
-  timeRemainingResendEmail: number;
-}
-
-class ResendActivationEmailButton extends React.PureComponent<
-  ResendActivationEmailButtonProps,
-  ResendActivationEmailButtonState
-> {
-  timer?: any;
-  state: ResendActivationEmailButtonState = { timeRemainingResendEmail: 5 };
+  state = {
+    timeRemainingResendEmail: 5,
+  };
 
   componentDidMount() {
     this.timer = setInterval(this.countDown, 1000);
@@ -44,13 +35,13 @@ class ResendActivationEmailButton extends React.PureComponent<
     );
   }
 
-  private onResendEmail = async () => {
+  onResendEmail = async () => {
     await this.props.onResendActivationEmail(this.props.email);
     this.setState({ timeRemainingResendEmail: 5 });
     this.timer = setInterval(this.countDown, 1000);
   };
 
-  private countDown = () => {
+  countDown = () => {
     const seconds = this.state.timeRemainingResendEmail - 1;
     this.setState({ timeRemainingResendEmail: seconds });
 

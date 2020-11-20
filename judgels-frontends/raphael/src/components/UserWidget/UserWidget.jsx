@@ -5,51 +5,38 @@ import { Link } from 'react-router-dom';
 
 import { APP_CONFIG, Mode } from '../../conf';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
-import { User } from '../../modules/api/jophiel/user';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
-import { Profile } from '../../modules/api/jophiel/profile';
-import { AppState } from '../../modules/store';
 import { selectUserProfile, selectIsUserWebConfigLoaded } from '../../routes/jophiel/modules/userWebSelectors';
 import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
 
 import './UserWidget.css';
 
-export interface UserWidgetProps {
-  user?: User;
-  isWebConfigLoaded?: boolean;
-  profile?: Profile;
-  onRenderAvatar: (userJid?: string) => Promise<string>;
-}
-
-interface UserWidgetState {
-  avatarUrl?: string;
-}
-
-export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetState> {
-  state: UserWidgetState = {};
+export class UserWidget extends React.PureComponent {
+  state = { avatarUrl: undefined };
 
   componentDidMount() {
     this.refreshUser();
   }
 
-  async componentDidUpdate(prevProps: UserWidgetProps) {
+  async componentDidUpdate(prevProps) {
     if (this.props.user !== prevProps.user) {
       this.refreshUser();
     }
   }
 
   render() {
-    if (!this.props.isWebConfigLoaded) {
+    const { isWebConfigLoaded, profile } = this.props;
+    if (!isWebConfigLoaded) {
       return null;
     }
-    if (this.props.profile) {
-      return this.renderForUser(this.state.avatarUrl!, this.props.profile);
+    if (profile) {
+      return this.renderForUser(this.state.avatarUrl, profile);
     } else {
       return this.renderForGuest();
     }
   }
 
-  private refreshUser = async () => {
+  refreshUser = async () => {
     const { user, onRenderAvatar } = this.props;
     if (user) {
       const avatarUrl = await onRenderAvatar(user.jid);
@@ -57,7 +44,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     }
   };
 
-  private renderForUser = (avatarUrl: string, profile: Profile) => {
+  renderForUser = (avatarUrl, profile) => {
     const menu = (
       <Menu className="widget-user__menu">
         <MenuItem className="widget-user__menu-helper" icon="user" text={profile.username} disabled />
@@ -98,7 +85,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     );
   };
 
-  private renderForGuest = () => {
+  renderForGuest = () => {
     return (
       <Navbar.Group align={Alignment.RIGHT}>
         <div className="widget-user__link">
@@ -118,7 +105,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     );
   };
 
-  private renderGuestResponsiveMenu = () => {
+  renderGuestResponsiveMenu = () => {
     const menu = (
       <Menu className="widget-user__menu">
         <MenuItemLink text="Log in" to="/login" />
@@ -134,7 +121,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   user: state.session.user,
   isWebConfigLoaded: selectIsUserWebConfigLoaded(state),
   profile: selectUserProfile(state),

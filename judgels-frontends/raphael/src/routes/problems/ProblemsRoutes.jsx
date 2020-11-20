@@ -2,16 +2,12 @@ import * as React from 'react';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../components/ContentWithSidebar/ContentWithSidebar';
-
+import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 import ProblemSetArchiveFilter from './problemsets/ProblemSetArchiveFilter/ProblemSetArchiveFilter';
 
-const ProblemsRoutes = () => {
-  const sidebarItems: ContentWithSidebarItem[] = [
+function ProblemsRoutes() {
+  const sidebarItems = [
     {
       id: '@',
       titleIcon: 'panel-stats',
@@ -22,7 +18,7 @@ const ProblemsRoutes = () => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'Menu',
     items: sidebarItems,
   };
@@ -32,6 +28,6 @@ const ProblemsRoutes = () => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
 export default ProblemsRoutes;

@@ -3,36 +3,21 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { ChapterProblemCard, ChapterProblemCardProps } from '../ChapterProblemCard/ChapterProblemCard';
+import StatementLanguageWidget from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
 import { consolidateLanguages } from '../../../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
-import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ChapterProblemsResponse } from '../../../../../../../../modules/api/jerahmeel/chapterProblem';
-import { AppState } from '../../../../../../../../modules/store';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as chapterProblemActions from '../modules/chapterProblemActions';
 
-export interface ChapterProblemsPageProps {
-  course: Course;
-  chapter: CourseChapter;
-  statementLanguage: string;
-  onGetProblems: (chapterJid: string) => Promise<ChapterProblemsResponse>;
-}
-
-interface ChapterProblemsPageState {
-  response?: ChapterProblemsResponse;
-  defaultLanguage?: string;
-  uniqueLanguages?: string[];
-}
-
-export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPageProps, ChapterProblemsPageState> {
-  state: ChapterProblemsPageState = {};
+export class ChapterProblemsPage extends React.Component {
+  state = {
+    response: undefined,
+    defaultLanguage: undefined,
+    uniqueLanguages: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetProblems(this.props.chapter.chapterJid);
@@ -48,7 +33,7 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
     });
   }
 
-  async componentDidUpdate(prevProps: ChapterProblemsPageProps) {
+  async componentDidUpdate(prevProps) {
     const { response } = this.state;
     if (this.props.statementLanguage !== prevProps.statementLanguage && response) {
       const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
@@ -74,20 +59,20 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
     );
   }
 
-  private renderStatementLanguageWidget = () => {
+  renderStatementLanguageWidget = () => {
     const { defaultLanguage, uniqueLanguages } = this.state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
 
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage,
       statementLanguages: uniqueLanguages,
     };
     return <StatementLanguageWidget {...props} />;
   };
 
-  private renderProblems = () => {
+  renderProblems = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -104,7 +89,7 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
     }
 
     return problems.map(problem => {
-      const props: ChapterProblemCardProps = {
+      const props = {
         course: this.props.course,
         chapter: this.props.chapter,
         problem,
@@ -116,7 +101,7 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   statementLanguage: selectStatementLanguage(state),

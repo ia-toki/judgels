@@ -1,24 +1,22 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import createMockStore, { MockStore } from 'redux-mock-store';
+import createMockStore from 'redux-mock-store';
 
-import { AppState } from '../../modules/store';
-
-import Menubar, { MenubarProps } from './Menubar';
+import Menubar from './Menubar';
 
 describe('Menubar', () => {
-  let store: MockStore<Partial<AppState>>;
-  let wrapper: ReactWrapper<any, any>;
+  let store;
+  let wrapper;
 
   const FirstComponent = () => <div />;
   const SecondComponent = () => <div />;
   const ThirdComponent = () => <div />;
   const HomeComponent = () => <div />;
 
-  const render = (childPath: string, withHome: boolean, parentRoute: string) => {
-    const props: MenubarProps = {
+  const render = (childPath, withHome, parentRoute) => {
+    const props = {
       items: [
         {
           id: 'first',
@@ -70,7 +68,7 @@ describe('Menubar', () => {
   };
 
   beforeEach(() => {
-    store = createMockStore<Partial<AppState>>()({});
+    store = createMockStore()({});
   });
 
   describe('when the child path is present', () => {

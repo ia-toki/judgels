@@ -1,9 +1,7 @@
-import { AppState } from '../../modules/store';
-
-export function selectStatementLanguage(state: AppState) {
+export function selectStatementLanguage(state) {
   return state.webPrefs.statementLanguage;
 }
 
-export function selectGradingLanguage(state: AppState) {
+export function selectGradingLanguage(state) {
   return state.webPrefs.gradingLanguage;
 }

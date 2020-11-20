@@ -1,12 +1,7 @@
 import { FileInput } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { FormInputProps } from '../props';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
-
-export interface FormTableFileInputProps extends FormInputProps {
-  placeholder?: string;
-}
 
 const handleChange = onChange => e => {
   e.preventDefault();
@@ -14,15 +9,16 @@ const handleChange = onChange => e => {
   return onChange(target.files.length ? target.files[0] : undefined);
 };
 
-export const FormTableFileInput = (props: FormTableFileInputProps) => {
-  const { value, onChange, onBlur, ...inputProps } = props.input;
-  const placeholder = props.placeholder || 'Choose file...';
+export function FormTableFileInput(props) {
+  const { input, placeholder } = props;
+
+  const { value, onChange, onBlur, ...inputProps } = input;
   return (
     <FormTableInput {...props}>
       <FileInput
         inputProps={{ onChange: handleChange(onChange), ...inputProps }}
-        text={value ? value.name : placeholder}
+        text={value ? value.name : placeholder || 'Choose file...'}
       />
     </FormTableInput>
   );
-};
+}

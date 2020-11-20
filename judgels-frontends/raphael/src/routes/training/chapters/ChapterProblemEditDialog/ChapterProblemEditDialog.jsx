@@ -3,34 +3,13 @@ import * as React from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ChapterProblemsTable } from '../ChapterProblemsTable/ChapterProblemsTable';
-import { Chapter } from '../../../../modules/api/jerahmeel/chapter';
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
-import {
-  ChapterProblemsResponse,
-  ChapterProblem,
-  ChapterProblemData,
-} from '../../../../modules/api/jerahmeel/chapterProblem';
-import ChapterProblemEditForm, { ChapterProblemEditFormData } from '../ChapterProblemEditForm/ChapterProblemEditForm';
+import ChapterProblemEditForm from '../ChapterProblemEditForm/ChapterProblemEditForm';
 import { Alias } from '../../../../components/forms/validations';
 
-export interface ChapterProblemEditDialogProps {
-  isOpen: boolean;
-  chapter?: Chapter;
-  onCloseDialog: () => void;
-  onGetProblems: (chapterJid: string) => Promise<ChapterProblemsResponse>;
-  onSetProblems: (chapterJid: string, data: ChapterProblemData[]) => Promise<void>;
-}
-
-interface ChapterProblemEditDialogState {
-  response?: ChapterProblemsResponse;
-  isEditing: boolean;
-}
-
-export class ChapterProblemEditDialog extends React.Component<
-  ChapterProblemEditDialogProps,
-  ChapterProblemEditDialogState
-> {
-  state: ChapterProblemEditDialogState = {
+export class ChapterProblemEditDialog extends React.Component {
+  state = {
+    response: undefined,
     isEditing: false,
   };
 
@@ -38,7 +17,7 @@ export class ChapterProblemEditDialog extends React.Component<
     this.refreshProblems();
   }
 
-  async componentDidUpdate(prevProps: ChapterProblemEditDialogProps) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.chapter !== this.props.chapter) {
       this.refreshProblems();
     }
@@ -55,19 +34,19 @@ export class ChapterProblemEditDialog extends React.Component<
     );
   }
 
-  private closeDialog = () => {
+  closeDialog = () => {
     this.props.onCloseDialog();
     this.setState({ isEditing: false });
   };
 
-  private renderDialogContent = () => {
+  renderDialogContent = () => {
     const { response, isEditing } = this.state;
     if (!response) {
       return this.renderDialogForm(<LoadingState />, null);
     }
 
     if (isEditing) {
-      const props: any = {
+      const props = {
         validator: this.validateProblems,
         renderFormComponents: this.renderDialogForm,
         onSubmit: this.updateProblems,
@@ -81,7 +60,7 @@ export class ChapterProblemEditDialog extends React.Component<
     }
   };
 
-  private renderDialogForm = (content: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (content, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>
         {content}
@@ -96,7 +75,7 @@ export class ChapterProblemEditDialog extends React.Component<
     </>
   );
 
-  private renderInstructions = () => {
+  renderInstructions = () => {
     if (!this.state.isEditing) {
       return null;
     }
@@ -114,7 +93,7 @@ export class ChapterProblemEditDialog extends React.Component<
     );
   };
 
-  private refreshProblems = async () => {
+  refreshProblems = async () => {
     if (this.props.isOpen) {
       this.setState({ response: undefined });
       const response = await this.props.onGetProblems(this.props.chapter.jid);
@@ -122,20 +101,20 @@ export class ChapterProblemEditDialog extends React.Component<
     }
   };
 
-  private toggleEditing = () => {
+  toggleEditing = () => {
     this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 
-  private updateProblems = async (data: ChapterProblemEditFormData) => {
+  updateProblems = async data => {
     const problems = this.deserializeProblems(data.problems);
     await this.props.onSetProblems(this.props.chapter.jid, problems);
     await this.refreshProblems();
     this.toggleEditing();
   };
 
-  private serializeProblems = (problems: ChapterProblem[], problemsMap): string => {
+  serializeProblems = (problems, problemsMap) => {
     return problems
       .map(p => {
         if (p.type !== ProblemType.Programming) {
@@ -147,24 +126,21 @@ export class ChapterProblemEditDialog extends React.Component<
       .join('\n');
   };
 
-  private deserializeProblems = (problems: string): ChapterProblemData[] => {
+  deserializeProblems = problems => {
     return problems
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0)
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()))
-      .map(
-        s =>
-          ({
-            alias: s[0],
-            slug: s[1],
-            type: s[2] || ProblemType.Programming,
-          } as ChapterProblemData)
-      );
+      .map(s => ({
+        alias: s[0],
+        slug: s[1],
+        type: s[2] || ProblemType.Programming,
+      }));
   };
 
-  private validateProblems = (value: string) => {
+  validateProblems = value => {
     const problems = value
       .split('\n')
       .map(s => s.trim())
@@ -172,8 +148,8 @@ export class ChapterProblemEditDialog extends React.Component<
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()));
 
-    const aliases: string[] = [];
-    const slugs: string[] = [];
+    const aliases = [];
+    const slugs = [];
 
     for (const p of problems) {
       if (p.length < 2 || p.length > 3) {

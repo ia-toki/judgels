@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,22 +6,18 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-
-import {
-  ContestClarificationCreateDialog,
-  ContestClarificationCreateDialogProps,
-} from './ContestClarificationCreateDialog';
+import { ContestClarificationCreateDialog } from './ContestClarificationCreateDialog';
 
 describe('ContestClarificationCreateDialog', () => {
-  let onCreateClarification: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onCreateClarification;
+  let wrapper;
 
   beforeEach(() => {
     onCreateClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestClarificationCreateDialogProps = {
+    const props = {
       contest,
       problemJids: ['problemJid1', 'problemJid2'],
       problemAliasesMap: { problemJid1: 'A', problemJid2: 'B' },

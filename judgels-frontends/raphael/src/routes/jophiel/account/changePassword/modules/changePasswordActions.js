@@ -5,7 +5,7 @@ import { BadRequestError } from '../../../../../modules/api/error';
 import { myUserAPI } from '../../../../../modules/api/jophiel/myUser';
 import { toastActions } from '../../../../../modules/toast/toastActions';
 
-export function updateMyPassword(oldPassword: string, newPassword: string) {
+export function updateMyPassword(oldPassword, newPassword) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
 

@@ -3,11 +3,7 @@ import { connect } from 'react-redux';
 
 import * as logoutActions from '../modules/logoutActions';
 
-interface LogoutPageProps {
-  onLogOut: () => void;
-}
-
-class LogoutPage extends React.Component<LogoutPageProps> {
+class LogoutPage extends React.Component {
   componentDidMount() {
     this.props.onLogOut();
   }

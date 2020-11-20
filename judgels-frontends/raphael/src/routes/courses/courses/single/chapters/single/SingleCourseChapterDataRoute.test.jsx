@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import { createMemoryHistory, MemoryHistory } from 'history';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -7,8 +7,8 @@ import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
 import thunk from 'redux-thunk';
 
-import { courseReducer, PutCourse } from '../../../modules/courseReducer';
-import { courseChapterReducer } from '../modules/courseChapterReducer';
+import courseReducer, { PutCourse } from '../../../modules/courseReducer';
+import courseChapterReducer from '../modules/courseChapterReducer';
 import SingleCourseChapterDataRoute from './SingleCourseChapterDataRoute';
 import * as courseChapterActions from '../modules/courseChapterActions';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
@@ -17,12 +17,12 @@ jest.mock('../modules/courseChapterActions');
 jest.mock('../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleCourseChapterDataRoute', () => {
-  let history: MemoryHistory;
+  let history;
 
-  const render = (currentPath: string) => {
+  const render = currentPath => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
 
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({
         jerahmeel: combineReducers({ course: courseReducer, courseChapter: courseChapterReducer }),
         router: connectRouter(history),
@@ -30,7 +30,7 @@ describe('SingleCourseChapterDataRoute', () => {
       applyMiddleware(thunk, routerMiddleware(history))
     );
 
-    store.dispatch(PutCourse.create({ id: 1, jid: 'jid123', slug: 'basic', name: 'Basic' }));
+    store.dispatch(PutCourse({ id: 1, jid: 'jid123', slug: 'basic', name: 'Basic' }));
 
     mount(
       <Provider store={store}>
@@ -42,13 +42,10 @@ describe('SingleCourseChapterDataRoute', () => {
   };
 
   beforeEach(() => {
-    (courseChapterActions.getChapter as jest.Mock).mockReturnValue(() =>
-      Promise.resolve({ jid: 'jid456', name: 'Chapter 123' })
-    );
-    (courseChapterActions.clearChapter as jest.Mock).mockReturnValue({ type: 'clear' });
-
-    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
-    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
+    courseChapterActions.getChapter.mockReturnValue(() => Promise.resolve({ jid: 'jid456', name: 'Chapter 123' }));
+    courseChapterActions.clearChapter.mockReturnValue({ type: 'clear' });
+    breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
+    breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
   });
 
   test('navigation', async () => {

@@ -1,24 +1,22 @@
 import { Icon } from '@blueprintjs/core';
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import createMockStore, { MockStore } from 'redux-mock-store';
+import createMockStore from 'redux-mock-store';
 
-import { AppState } from '../../modules/store';
-
-import ContentWithSidebar, { ContentWithSidebarProps } from './ContentWithSidebar';
+import ContentWithSidebar from './ContentWithSidebar';
 
 describe('ContentWithSidebar', () => {
-  let store: MockStore<Partial<AppState>>;
-  let wrapper: ReactWrapper<any, any>;
+  let store;
+  let wrapper;
 
   const FirstComponent = () => <div />;
   const SecondComponent = () => <div />;
   const ThirdComponent = () => <div />;
 
-  const render = (childPath: string, firstId?: string) => {
-    const props: ContentWithSidebarProps = {
+  const render = (childPath, firstId) => {
+    const props = {
       title: 'Content with Sidebar',
       items: [
         {
@@ -53,7 +51,7 @@ describe('ContentWithSidebar', () => {
   };
 
   beforeEach(() => {
-    store = createMockStore<Partial<AppState>>()({});
+    store = createMockStore()({});
   });
 
   describe('when the first route is allowed to have suffix', () => {

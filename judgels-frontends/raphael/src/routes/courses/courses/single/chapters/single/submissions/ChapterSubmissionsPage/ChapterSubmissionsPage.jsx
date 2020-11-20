@@ -2,7 +2,7 @@ import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
@@ -11,62 +11,33 @@ import { RegradeAllButton } from '../../../../../../../../components/RegradeAllB
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { SubmissionFilterWidget } from '../../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
-import { AppState } from '../../../../../../../../modules/store';
-import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { SubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
 import { selectMaybeUserJid, selectMaybeUsername } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
-export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid?: string;
-  username?: string;
-  course: Course;
-  chapter: CourseChapter;
-  onGetProgrammingSubmissions: (
-    chapterJid: string,
-    username?: string,
-    problemAlias?: string,
-    page?: number
-  ) => Promise<SubmissionsResponse>;
-  onRegrade: (submissionJid: string) => Promise<void>;
-  onRegradeAll: (chapterJid: string, username?: string, problemAlias?: string) => Promise<void>;
-  onAppendRoute: (queries) => any;
-}
+export class ChapterSubmissionsPage extends React.Component {
+  static PAGE_SIZE = 20;
 
-interface ChapterSubmissionsFilter {
-  problemAlias?: string;
-}
-
-interface ChapterSubmissionsPageState {
-  response?: SubmissionsResponse;
-  filter?: ChapterSubmissionsFilter;
-  isFilterLoading?: boolean;
-}
-
-export class ChapterSubmissionsPage extends React.PureComponent<
-  ChapterSubmissionsPageProps,
-  ChapterSubmissionsPageState
-> {
-  private static PAGE_SIZE = 20;
-
-  state: ChapterSubmissionsPageState = {};
+  state;
 
   constructor(props) {
     super(props);
 
     const queries = parse(this.props.location.search);
-    const problemAlias = queries.problemAlias as string;
+    const problemAlias = queries.problemAlias;
 
-    this.state = { filter: { problemAlias } };
+    this.state = {
+      response: undefined,
+      filter: { problemAlias },
+      isFilterLoading: false,
+    };
   }
 
   async componentDidMount() {
     const queries = parse(this.props.location.search);
-    const problemAlias = queries.problemAlias as string;
+    const problemAlias = queries.problemAlias;
 
     if (problemAlias) {
       await this.refreshSubmissions();
@@ -77,7 +48,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 
   componentDidUpdate() {
     const queries = parse(this.props.location.search);
-    const problemAlias = queries.problemAlias as string;
+    const problemAlias = queries.problemAlias;
 
     if (problemAlias !== this.state.filter.problemAlias) {
       this.setState({ filter: { problemAlias }, isFilterLoading: true });
@@ -99,22 +70,22 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     );
   }
 
-  private renderUserFilter = () => {
+  renderUserFilter = () => {
     return this.props.userJid && <SubmissionUserFilter />;
   };
 
-  private isUserFilterMine = () => {
+  isUserFilterMine = () => {
     return (this.props.location.pathname + '/').includes('/mine/');
   };
 
-  private renderRegradeAllButton = () => {
+  renderRegradeAllButton = () => {
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
     return <RegradeAllButton onRegradeAll={this.onRegradeAll} />;
   };
 
-  private renderSubmissions = () => {
+  renderSubmissions = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -143,20 +114,20 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     );
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     const { filter } = this.state;
 
     const key = '' + filter.problemAlias + this.isUserFilterMine();
     return <Pagination key={key} pageSize={ChapterSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const { problemAlias } = this.state.filter;
     const data = await this.refreshSubmissions(problemAlias, nextPage);
     return data.totalCount;
   };
 
-  private refreshSubmissions = async (problemAlias?: string, page?: number) => {
+  refreshSubmissions = async (problemAlias, page) => {
     const username = this.isUserFilterMine() ? this.props.username : undefined;
     const response = await this.props.onGetProgrammingSubmissions(
       this.props.chapter.chapterJid,
@@ -168,7 +139,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     return response.data;
   };
 
-  private renderFilterWidget = () => {
+  renderFilterWidget = () => {
     const { response, filter, isFilterLoading } = this.state;
     if (!response || !filter) {
       return null;
@@ -187,18 +158,18 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     );
   };
 
-  private onFilter = async filter => {
+  onFilter = async filter => {
     this.props.onAppendRoute(filter);
   };
 
-  private onRegrade = async (submissionJid: string) => {
+  onRegrade = async submissionJid => {
     await this.props.onRegrade(submissionJid);
-    const { problemAlias } = this.state.filter!;
+    const { problemAlias } = this.state.filter;
     const queries = parse(this.props.location.search);
     await this.refreshSubmissions(problemAlias, queries.page);
   };
 
-  private onRegradeAll = async () => {
+  onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { problemAlias } = this.state.filter;
       await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined, problemAlias);
@@ -208,7 +179,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
   username: selectMaybeUsername(state),
   course: selectCourse(state),
@@ -222,4 +193,4 @@ const mapDispatchToProps = {
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));

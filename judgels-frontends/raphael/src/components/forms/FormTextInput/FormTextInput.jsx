@@ -3,21 +3,18 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { getIntent, getIntentClassName } from '../meta';
-import { FormInputProps } from '../props';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 
-export interface FormTextInputProps extends FormInputProps {
-  type?: 'password';
+export function FormTextInput({ input, label, meta, autoFocus, type }) {
+  return (
+    <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
+      <input
+        {...input}
+        type={type || 'text'}
+        autoFocus={autoFocus}
+        className={classNames(Classes.INPUT, getIntentClassName(meta))}
+      />
+      <FormInputValidation meta={meta} />
+    </FormGroup>
+  );
 }
-
-export const FormTextInput = (props: FormTextInputProps) => (
-  <FormGroup labelFor={props.input.name} label={props.label} intent={getIntent(props.meta)}>
-    <input
-      {...props.input}
-      type={props.type || 'text'}
-      autoFocus={props.autoFocus}
-      className={classNames(Classes.INPUT, getIntentClassName(props.meta))}
-    />
-    <FormInputValidation meta={props.meta} />
-  </FormGroup>
-);

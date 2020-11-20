@@ -3,28 +3,16 @@ import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { User } from '../../../../../modules/api/jophiel/user';
-import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
-import { AppState } from '../../../../../modules/store';
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
-
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
 import * as infoActions from '../../../modules/infoActions';
 import * as userActions from '../../../../system/modules/userActions';
 
-interface InfoPageProps {
-  onGetUser: () => Promise<User>;
-  onGetInfo: () => Promise<UserInfo>;
-  onUpdateInfo: (info: UserInfo) => Promise<void>;
-}
-
-interface InfoPageState {
-  user?: User;
-  info?: UserInfo;
-}
-
-class InfoPage extends React.PureComponent<InfoPageProps, InfoPageState> {
-  state: InfoPageState = {};
+class InfoPage extends React.Component {
+  state = {
+    user: undefined,
+    info: undefined,
+  };
 
   async componentDidMount() {
     await this.refreshInfo();
@@ -38,18 +26,18 @@ class InfoPage extends React.PureComponent<InfoPageProps, InfoPageState> {
     return <InfoPanel email={user.email} info={info} onUpdateInfo={this.onUpdateInfo} />;
   }
 
-  private refreshInfo = async () => {
+  refreshInfo = async () => {
     const [user, info] = await Promise.all([this.props.onGetUser(), this.props.onGetInfo()]);
     this.setState({ user, info });
   };
 
-  private onUpdateInfo = async (info: UserInfo) => {
+  onUpdateInfo = async info => {
     await this.props.onUpdateInfo(info);
     await this.refreshInfo();
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectUserJid(state),
 });
 const mapDispatchToProps = {
@@ -60,6 +48,6 @@ const mapDispatchToProps = {
 const mergeProps = (stateProps, dispatchProps) => ({
   onGetUser: () => dispatchProps.onGetUser(stateProps.userJid),
   onGetInfo: () => dispatchProps.onGetInfo(stateProps.userJid),
-  onUpdateInfo: (info: UserInfo) => dispatchProps.onUpdateInfo(stateProps.userJid, info),
+  onUpdateInfo: info => dispatchProps.onUpdateInfo(stateProps.userJid, info),
 });
 export default withBreadcrumb('Info')(connect(mapStateToProps, mapDispatchToProps, mergeProps)(InfoPage));

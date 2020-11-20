@@ -4,21 +4,7 @@ import { HtmlText } from '../HtmlText/HtmlText';
 
 import './KatexText.scss';
 
-declare global {
-  interface Window {
-    renderMathInElement: any;
-  }
-}
-
-interface KatexTextProps {
-  children: string;
-}
-
-interface KatexTextState {
-  containsKatex: boolean;
-}
-
-export class KatexText extends React.Component<KatexTextProps, KatexTextState> {
+export class KatexText extends React.Component {
   ref;
 
   constructor(props) {
@@ -41,7 +27,7 @@ export class KatexText extends React.Component<KatexTextProps, KatexTextState> {
     }
   }
 
-  private async typesetKatex() {
+  async typesetKatex() {
     await require('katex/dist/katex.min.css');
     const { default: renderMathInElement } = await import('katex/dist/contrib/auto-render');
     renderMathInElement(this.ref.current, {
@@ -53,7 +39,7 @@ export class KatexText extends React.Component<KatexTextProps, KatexTextState> {
     });
   }
 
-  private containsKatexSyntax(text: string) {
+  containsKatexSyntax(text) {
     const delimiters = ['$', '\\(', '\\)', '\\[', '\\]'];
     for (let delimiter of delimiters) {
       if (text.includes(delimiter)) {

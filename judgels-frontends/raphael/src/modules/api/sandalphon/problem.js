@@ -1,23 +1,12 @@
-import { ResourceInfo } from './resource';
+export const ProblemType = {
+  Programming: 'PROGRAMMING',
+  Bundle: 'BUNDLE',
+};
 
-export enum ProblemType {
-  Programming = 'PROGRAMMING',
-  Bundle = 'BUNDLE',
-}
-
-export interface ProblemInfo extends ResourceInfo {
-  type: ProblemType;
-}
-
-export function getProblemName(problem: ProblemInfo, language: string) {
+export function getProblemName(problem, language) {
   return problem.titlesByLanguage[language] || problem.titlesByLanguage[problem.defaultLanguage];
 }
 
-export function constructProblemName(title?: string, alias?: string) {
+export function constructProblemName(title, alias) {
   return (alias ? alias + '. ' : '') + (title || '');
-}
-
-export interface ProblemStatement {
-  title: string;
-  text: string;
 }

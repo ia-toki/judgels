@@ -1,9 +1,4 @@
-export interface UserRating {
-  publicRating: number;
-  hiddenRating: number;
-}
-
-export function getRatingName(rating?: UserRating) {
+export function getRatingName(rating) {
   if (rating === null || rating === undefined) {
     return 'unrated';
   }
@@ -29,6 +24,6 @@ export function getRatingName(rating?: UserRating) {
   return 'legend';
 }
 
-export function getRatingClass(rating?: UserRating) {
+export function getRatingClass(rating) {
   return 'rating-' + getRatingName(rating);
 }

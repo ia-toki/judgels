@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -8,19 +8,19 @@ import thunk from 'redux-thunk';
 
 import RegisterPage from './RegisterPage';
 import RegisterForm from '../RegisterForm/RegisterForm';
-import { jophielReducer } from '../../../../modules/jophiel/jophielReducer';
+import jophielReducer from '../../../../modules/jophiel/jophielReducer';
 import * as registerActions from '../modules/registerActions';
 
 jest.mock('../modules/registerActions');
 
 describe('RegisterPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
   beforeEach(() => {
-    (registerActions.getWebConfig as jest.Mock).mockReturnValue(() => Promise.resolve({ useRecaptcha: false }));
-    (registerActions.registerUser as jest.Mock).mockReturnValue(() => Promise.resolve());
+    registerActions.getWebConfig.mockReturnValue(() => Promise.resolve({ useRecaptcha: false }));
+    registerActions.registerUser.mockReturnValue(() => Promise.resolve());
 
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({
         form: formReducer,
         jophiel: jophielReducer,

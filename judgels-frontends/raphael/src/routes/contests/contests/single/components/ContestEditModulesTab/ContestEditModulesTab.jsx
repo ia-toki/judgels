@@ -2,29 +2,17 @@ import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { allModules, ContestModuleType } from '../../../../../../modules/api/uriel/contestModule';
+import { allModules } from '../../../../../../modules/api/uriel/contestModule';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectContest } from '../../../modules/contestSelectors';
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
 import * as contestWebActions from '../../modules/contestWebActions';
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
-interface ContestEditModulesTabProps {
-  contest: Contest;
-  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<any>;
-  onGetModules: (contestJid: string) => Promise<ContestModuleType[]>;
-  onEnableModule: (contestJid: string, type: ContestModuleType) => Promise<void>;
-  onDisableModule: (contestJid: string, type: ContestModuleType) => Promise<void>;
-}
-
-interface ContestEditModulesTabState {
-  modules?: ContestModuleType[];
-}
-
-class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, ContestEditModulesTabState> {
-  state: ContestEditModulesTabState = {};
+class ContestEditModulesTab extends React.Component {
+  state = {
+    modules: undefined,
+  };
 
   async componentDidMount() {
     await this.refreshModules();
@@ -40,7 +28,7 @@ class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, 
     );
   }
 
-  private renderContent = () => {
+  renderContent = () => {
     const { modules } = this.state;
 
     if (!modules) {
@@ -59,7 +47,7 @@ class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, 
     );
   };
 
-  private renderEnabledModules = (enabledModules: ContestModuleType[]) => {
+  renderEnabledModules = enabledModules => {
     if (enabledModules.length === 0) {
       return (
         <p>
@@ -82,7 +70,7 @@ class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, 
     ));
   };
 
-  private renderDisabledModules = (disabledModules: ContestModuleType[]) => {
+  renderDisabledModules = disabledModules => {
     if (disabledModules.length === 0) {
       return (
         <p>
@@ -105,23 +93,23 @@ class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, 
     ));
   };
 
-  private enableModule = async (type: ContestModuleType) => {
+  enableModule = async type => {
     await this.props.onEnableModule(this.props.contest.jid, type);
     await Promise.all([this.props.onGetContestByJidWithWebConfig(this.props.contest.jid), this.refreshModules()]);
   };
 
-  private disableModule = async (type: ContestModuleType) => {
+  disableModule = async type => {
     await this.props.onDisableModule(this.props.contest.jid, type);
     await Promise.all([this.props.onGetContestByJidWithWebConfig(this.props.contest.jid), this.refreshModules()]);
   };
 
-  private refreshModules = async () => {
+  refreshModules = async () => {
     const modules = await this.props.onGetModules(this.props.contest.jid);
     this.setState({ modules });
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 const mapDispatchToProps = {

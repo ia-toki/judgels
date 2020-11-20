@@ -1,5 +1,5 @@
 import { isInPrivateContestsMode, hasJerahmeel } from '../conf';
-import { UserRole, JophielRole } from '../modules/api/jophiel/role';
+import { JophielRole } from '../modules/api/jophiel/role';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
@@ -19,7 +19,7 @@ const appRoutes = [
       path: '/system',
       component: LazySystemRoutes,
     },
-    visible: (role: UserRole) => role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin,
+    visible: role => role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin,
   },
   {
     id: 'contests',
@@ -37,7 +37,7 @@ const appRoutes = [
       path: '/training',
       component: LazyTrainingRoutes,
     },
-    visible: (role: UserRole) => hasJerahmeel() && role.jerahmeel === JerahmeelRole.Admin,
+    visible: role => hasJerahmeel() && role.jerahmeel === JerahmeelRole.Admin,
   },
   {
     id: 'courses',
@@ -91,7 +91,7 @@ export function preloadRoutes() {
   }
 }
 
-export function getVisibleAppRoutes(role: UserRole) {
+export function getVisibleAppRoutes(role) {
   return appRoutes.filter(route => route.visible(role));
 }
 

@@ -2,15 +2,10 @@ import { SubmissionError } from 'redux-form';
 
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { BadRequestError } from '../../../../modules/api/error';
-import {
-  archiveAPI,
-  ArchiveCreateData,
-  ArchiveUpdateData,
-  ArchiveErrors,
-} from '../../../../modules/api/jerahmeel/archive';
+import { archiveAPI, ArchiveErrors } from '../../../../modules/api/jerahmeel/archive';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function createArchive(data: ArchiveCreateData) {
+export function createArchive(data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -25,7 +20,7 @@ export function createArchive(data: ArchiveCreateData) {
   };
 }
 
-export function updateArchive(archiveJid: string, data: ArchiveUpdateData) {
+export function updateArchive(archiveJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {

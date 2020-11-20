@@ -2,24 +2,9 @@ import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
 
-export interface ContestSupervisorAddResultTableProps {
-  usernames: string[];
-  insertedSupervisorProfilesMap: ProfilesMap;
-}
-
-export class ContestSupervisorAddResultTable extends React.PureComponent<ContestSupervisorAddResultTableProps> {
-  render() {
-    return (
-      <>
-        {this.renderSupervisorsTable('Added supervisors', this.props.insertedSupervisorProfilesMap)}
-        {this.renderUnknownSupervisorsTable()}
-      </>
-    );
-  }
-
-  private renderSupervisorsTable = (title: string, profilesMap: ProfilesMap) => {
+export function ContestSupervisorAddResultTable({ usernames, insertedSupervisorProfilesMap }) {
+  const renderSupervisorsTable = (title, profilesMap) => {
     const usernames = Object.keys(profilesMap)
       .slice()
       .sort((u1, u2) => u1.localeCompare(u2));
@@ -48,18 +33,18 @@ export class ContestSupervisorAddResultTable extends React.PureComponent<Contest
     );
   };
 
-  private renderUnknownSupervisorsTable = () => {
-    const knownUsernames = [...Object.keys(this.props.insertedSupervisorProfilesMap)];
-    const usernames = this.props.usernames
+  const renderUnknownSupervisorsTable = () => {
+    const knownUsernames = [...Object.keys(insertedSupervisorProfilesMap)];
+    const unknownUsernames = usernames
       .filter(u => knownUsernames.indexOf(u) === -1)
       .slice()
       .sort((u1, u2) => u1.localeCompare(u2));
 
-    if (usernames.length === 0) {
+    if (unknownUsernames.length === 0) {
       return null;
     }
 
-    const rows = usernames.map(username => (
+    const rows = unknownUsernames.map(username => (
       <tr key={username}>
         <td>{username}</td>
       </tr>
@@ -67,11 +52,18 @@ export class ContestSupervisorAddResultTable extends React.PureComponent<Contest
 
     return (
       <>
-        <h5>Unknown users ({usernames.length})</h5>
+        <h5>Unknown users ({unknownUsernames.length})</h5>
         <HTMLTable striped className="table-list-condensed contest-supervisor-dialog-result-table">
           <tbody>{rows}</tbody>
         </HTMLTable>
       </>
     );
   };
+
+  return (
+    <>
+      {renderSupervisorsTable('Added supervisors', insertedSupervisorProfilesMap)}
+      {renderUnknownSupervisorsTable()}
+    </>
+  );
 }

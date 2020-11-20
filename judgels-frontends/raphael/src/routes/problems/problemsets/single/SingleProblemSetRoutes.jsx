@@ -2,39 +2,26 @@ import { Button } from '@blueprintjs/core';
 import { push } from 'connected-react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, RouteComponentProps, withRouter } from 'react-router';
+import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { ProblemSet } from '../../../../modules/api/jerahmeel/problemSet';
-import { AppState } from '../../../../modules/store';
-
 import ProblemSetProblemsPage from './problems/ProblemSetProblemsPage/ProblemSetProblemsPage';
 
 import { selectProblemSet } from '../modules/problemSetSelectors';
 
 import './SingleProblemSetRoutes.css';
 
-interface SingleProblemSetRoutesProps extends RouteComponentProps<{ problemSetSlug: string }> {
-  problemSet?: ProblemSet;
-  onClickBack: () => void;
-}
-
-const SingleProblemSetRoutes = (props: SingleProblemSetRoutesProps) => {
-  const { problemSet, onClickBack } = props;
-
+function SingleProblemSetRoutes({ match, problemSet, onClickBack }) {
   // Optimization:
   // We wait until we get the problemSet from the backend only if the current slug is different from the persisted one.
-  if (!problemSet || problemSet.slug !== props.match.params.problemSetSlug) {
+  if (!problemSet || problemSet.slug !== match.params.problemSetSlug) {
     return <LoadingState large />;
   }
 
-  const sidebarItems: ContentWithSidebarItem[] = [
+  const sidebarItems = [
     {
       id: '@',
       titleIcon: 'manual',
@@ -44,7 +31,7 @@ const SingleProblemSetRoutes = (props: SingleProblemSetRoutesProps) => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'Problemset Menu',
     items: sidebarItems,
     action: (
@@ -66,19 +53,18 @@ const SingleProblemSetRoutes = (props: SingleProblemSetRoutesProps) => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
 function createSingleProblemSetRoutes() {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      problemSet: selectProblemSet(state),
-    } as Partial<SingleProblemSetRoutesProps>);
+  const mapStateToProps = state => ({
+    problemSet: selectProblemSet(state),
+  });
 
   const mapDispatchToProps = {
     onClickBack: () => push('/problems'),
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetRoutes));
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetRoutes));
 }
 
 export default createSingleProblemSetRoutes();

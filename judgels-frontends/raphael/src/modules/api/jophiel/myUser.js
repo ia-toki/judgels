@@ -1,20 +1,15 @@
-import { get, post } from '../../../modules/api/http';
+import { get, post } from '../http';
 
-import { baseUserURL, User } from './user';
-
-export interface PasswordUpdateData {
-  oldPassword: string;
-  newPassword: string;
-}
+import { baseUserURL } from './user';
 
 const baseURL = baseUserURL('me');
 
 export const myUserAPI = {
-  getMyself: (token: string): Promise<User> => {
+  getMyself: token => {
     return get(`${baseURL}`, token);
   },
 
-  updateMyPassword: (token: string, data: PasswordUpdateData): Promise<void> => {
+  updateMyPassword: (token, data) => {
     return post(`${baseURL}/password`, token, data);
   },
 };

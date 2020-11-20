@@ -1,9 +1,7 @@
-import { HTMLTable, Tag, IconName } from '@blueprintjs/core';
+import { HTMLTable, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-import { ContestSupervisor } from '../../../../../../modules/api/uriel/contestSupervisor';
 import {
   SupervisorManagementPermission,
   supervisorManagementPermissionShortNamesMap,
@@ -23,24 +21,10 @@ const managementPermissionTabsMap = {
   [SupervisorManagementPermission.Teams]: contestIcon[ContestTab.Teams],
   [SupervisorManagementPermission.Scoreboard]: contestIcon[ContestTab.Scoreboard],
   [SupervisorManagementPermission.Files]: contestIcon[ContestTab.Files],
-} as { [key: string]: IconName };
+};
 
-export interface ContestSupervisorsTableProps {
-  supervisors: ContestSupervisor[];
-  profilesMap: ProfilesMap;
-}
-
-export class ContestSupervisorsTable extends React.PureComponent<ContestSupervisorsTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed supervisors-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ContestSupervisorsTable({ supervisors, profilesMap }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -51,9 +35,7 @@ export class ContestSupervisorsTable extends React.PureComponent<ContestSupervis
     );
   };
 
-  private renderRows = () => {
-    const { supervisors, profilesMap } = this.props;
-
+  const renderRows = () => {
     const sortedSupervisors = supervisors.slice().sort((c1, c2) => {
       const username1 = (profilesMap[c1.userJid] && profilesMap[c1.userJid].username) || 'ZZ';
       const username2 = (profilesMap[c2.userJid] && profilesMap[c2.userJid].username) || 'ZZ';
@@ -78,4 +60,11 @@ export class ContestSupervisorsTable extends React.PureComponent<ContestSupervis
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed supervisors-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

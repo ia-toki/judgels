@@ -1,5 +1,3 @@
-import { IconName } from '@blueprintjs/core';
-
 import { ContestTab } from '../../../../../modules/api/uriel/contestWeb';
 
 export const contestIcon = {
@@ -15,4 +13,4 @@ export const contestIcon = {
   [ContestTab.Scoreboard]: 'th',
   [ContestTab.Files]: 'folder-close',
   [ContestTab.Logs]: 'history',
-} as { [key: string]: IconName };
+};

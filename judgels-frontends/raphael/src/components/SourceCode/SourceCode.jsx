@@ -15,17 +15,14 @@ registerLanguage('java', java);
 registerLanguage('pascal', pascal);
 registerLanguage('python', python);
 
-export interface SourceCodeProps {
-  language: string;
-  children?: any;
-}
-
 const customStyle = {
   padding: '5px',
 };
 
-export const SourceCode = (props: SourceCodeProps) => (
-  <SyntaxHighlighter style={coy} customStyle={customStyle} language={props.language}>
-    {props.children}
-  </SyntaxHighlighter>
-);
+export function SourceCode({ language, children }) {
+  return (
+    <SyntaxHighlighter style={coy} customStyle={customStyle} language={language}>
+      {children}
+    </SyntaxHighlighter>
+  );
+}

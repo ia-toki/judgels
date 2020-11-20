@@ -9,7 +9,7 @@ import { myUserAPI } from '../../../../modules/api/jophiel/myUser';
 import { userWebAPI } from '../../../../modules/api/jophiel/userWeb';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function logIn(usernameOrEmail: string, password: string) {
+export function logIn(usernameOrEmail, password) {
   return async dispatch => {
     let session;
     try {
@@ -35,8 +35,8 @@ export function logIn(usernameOrEmail: string, password: string) {
     const [user, config] = await Promise.all([myUserAPI.getMyself(session.token), userWebAPI.getWebConfig(token)]);
 
     toastActions.showToast(`Welcome, ${user.username}.`);
-    dispatch(PutToken.create(session.token));
-    dispatch(PutUser.create(user));
-    dispatch(PutWebConfig.create(config));
+    dispatch(PutToken(session.token));
+    dispatch(PutUser(user));
+    dispatch(PutWebConfig(config));
   };
 }

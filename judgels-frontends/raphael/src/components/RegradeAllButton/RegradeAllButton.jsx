@@ -3,8 +3,10 @@ import * as React from 'react';
 
 import './RegradeAllButton.css';
 
-export const RegradeAllButton = ({ onRegradeAll }) => (
-  <Button className="regrade-all" intent={Intent.PRIMARY} icon="refresh" onClick={onRegradeAll}>
-    Regrade all pages
-  </Button>
-);
+export function RegradeAllButton({ onRegradeAll }) {
+  return (
+    <Button className="regrade-all" intent={Intent.PRIMARY} icon="refresh" onClick={onRegradeAll}>
+      Regrade all pages
+    </Button>
+  );
+}

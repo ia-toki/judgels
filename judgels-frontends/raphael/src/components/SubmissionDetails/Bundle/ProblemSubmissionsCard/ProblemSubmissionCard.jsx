@@ -2,26 +2,13 @@ import { Button, HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
-import { ItemSubmission } from '../../../../modules/api/sandalphon/submissionBundle';
-import { ItemType } from '../../../../modules/api/sandalphon/problemBundle';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 
 import './ProblemSubmissionCard.css';
 
-export interface ProblemSubmissionCardProps {
-  name: string;
-  alias?: string;
-  itemJids: string[];
-  submissionsByItemJid: { [itemJid: string]: ItemSubmission };
-  itemTypesMap: { [itemJid: string]: ItemType };
-  canViewGrading: boolean;
-  canManage: boolean;
-  onRegrade?: () => Promise<void>;
-}
-
-export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCardProps> = ({
+export function ProblemSubmissionCard({
   name,
   alias,
   itemJids,
@@ -30,8 +17,8 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
   canViewGrading,
   canManage,
   onRegrade,
-}) => {
-  const renderSingleRow = (itemJid: string, index: number) => {
+}) {
+  const renderSingleRow = (itemJid, index) => {
     const submission = submissionsByItemJid[itemJid];
     if (submission) {
       return (
@@ -102,4 +89,4 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
       </HTMLTable>
     </ContentCard>
   );
-};
+}

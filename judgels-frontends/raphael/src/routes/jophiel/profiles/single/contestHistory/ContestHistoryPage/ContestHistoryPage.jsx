@@ -5,26 +5,16 @@ import { connect } from 'react-redux';
 import { Card } from '../../../../../../components/Card/Card';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { AppState } from '../../../../../../modules/store';
-import { getRatingClass, UserRating } from '../../../../../../modules/api/jophiel/userRating';
-import { ContestHistoryResponse } from '../../../../../../modules/api/uriel/contestHistory';
+import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
 import * as profileActions from '../../modules/profileActions';
 
 import './ContestHistoryPage.css';
 
-interface ContestHistoryPageProps {
-  userJid: string;
-  username: string;
-  onGetContestPublicHistory: (username: string) => Promise<ContestHistoryResponse>;
-}
-
-interface ContestHistoryPageState {
-  response?: ContestHistoryResponse;
-}
-
-class ContestHistoryPage extends React.Component<ContestHistoryPageProps, ContestHistoryPageState> {
-  state: ContestHistoryPageState = {};
+class ContestHistoryPage extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetContestPublicHistory(this.props.username);
@@ -40,8 +30,8 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
     return <Card title="Contest history">{this.renderTable()}</Card>;
   }
 
-  private renderTable = () => {
-    const { data } = this.state.response!;
+  renderTable = () => {
+    const { data } = this.state.response;
     if (data.length === 0) {
       return (
         <p>
@@ -65,14 +55,14 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
     );
   };
 
-  private renderRows = () => {
-    const { data, contestsMap } = this.state.response!;
+  renderRows = () => {
+    const { data, contestsMap } = this.state.response;
     const rows = [];
-    let lastRating: UserRating | null = null;
+    let lastRating;
 
     data.forEach((event, idx) => {
-      let ratingChange: JSX.Element | string = '';
-      let ratingDiff: JSX.Element | string = '';
+      let ratingChange = '';
+      let ratingDiff = '';
 
       if (event.rating) {
         if (lastRating === null) {
@@ -105,7 +95,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
     return rows.reverse();
   };
 
-  private renderRatingDiff = diff => {
+  renderRatingDiff = diff => {
     if (diff === 0) {
       return '0';
     } else if (diff > 0) {
@@ -116,7 +106,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectUserJid(state),
   username: selectUsername(state),
 });

@@ -1,5 +1,3 @@
-import { AppState } from '../../../../modules/store';
-
-export function selectContestWebConfig(state: AppState) {
+export function selectContestWebConfig(state) {
   return state.uriel.contestWebConfig.value;
 }

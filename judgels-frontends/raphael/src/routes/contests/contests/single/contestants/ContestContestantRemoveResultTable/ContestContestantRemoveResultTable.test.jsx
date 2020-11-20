@@ -1,16 +1,13 @@
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import {
-  ContestContestantRemoveResultTable,
-  ContestContestantRemoveResultTableProps,
-} from './ContestContestantRemoveResultTable';
+import { ContestContestantRemoveResultTable } from './ContestContestantRemoveResultTable';
 
 describe('ContestContestantRemoveResultTable', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
   beforeEach(() => {
-    const props: ContestContestantRemoveResultTableProps = {
+    const props = {
       usernames: ['budi', 'andi', 'zoro'],
       deletedContestantProfilesMap: {
         budi: { username: 'budi' },

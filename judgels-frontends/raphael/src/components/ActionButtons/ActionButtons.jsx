@@ -3,6 +3,6 @@ import * as React from 'react';
 
 import './ActionButtons.css';
 
-export const ActionButtons = props => (
-  <div className={classNames('action-buttons', { 'right-action-buttons': !props.leftAlign })}>{props.children}</div>
-);
+export function ActionButtons({ leftAlign, children }) {
+  return <div className={classNames('action-buttons', { 'right-action-buttons': !leftAlign })}>{children}</div>;
+}

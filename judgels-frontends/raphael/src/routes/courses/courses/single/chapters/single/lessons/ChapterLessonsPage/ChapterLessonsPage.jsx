@@ -3,36 +3,21 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { ChapterLessonCard, ChapterLessonCardProps } from '../ChapterLessonCard/ChapterLessonCard';
+import StatementLanguageWidget from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { consolidateLanguages } from '../../../../../../../../modules/api/sandalphon/language';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
-import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ChapterLessonsResponse } from '../../../../../../../../modules/api/jerahmeel/chapterLesson';
-import { AppState } from '../../../../../../../../modules/store';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import * as chapterLessonActions from '../modules/chapterLessonActions';
 
-export interface ChapterLessonsPageProps {
-  course: Course;
-  chapter: CourseChapter;
-  statementLanguage: string;
-  onGetLessons: (chapterJid: string) => Promise<ChapterLessonsResponse>;
-}
-
-interface ChapterLessonsPageState {
-  response?: ChapterLessonsResponse;
-  defaultLanguage?: string;
-  uniqueLanguages?: string[];
-}
-
-export class ChapterLessonsPage extends React.PureComponent<ChapterLessonsPageProps, ChapterLessonsPageState> {
-  state: ChapterLessonsPageState = {};
+export class ChapterLessonsPage extends React.Component {
+  state = {
+    response: undefined,
+    defaultLanguage: undefined,
+    uniqueLanguages: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetLessons(this.props.chapter.chapterJid);
@@ -48,7 +33,7 @@ export class ChapterLessonsPage extends React.PureComponent<ChapterLessonsPagePr
     });
   }
 
-  async componentDidUpdate(prevProps: ChapterLessonsPageProps) {
+  async componentDidUpdate(prevProps) {
     const { response } = this.state;
     if (this.props.statementLanguage !== prevProps.statementLanguage && response) {
       const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
@@ -63,13 +48,13 @@ export class ChapterLessonsPage extends React.PureComponent<ChapterLessonsPagePr
     }
   }
 
-  private renderStatementLanguageWidget = () => {
+  renderStatementLanguageWidget = () => {
     const { defaultLanguage, uniqueLanguages } = this.state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
 
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage,
       statementLanguages: uniqueLanguages,
     };
@@ -87,7 +72,7 @@ export class ChapterLessonsPage extends React.PureComponent<ChapterLessonsPagePr
     );
   }
 
-  private renderLessons = () => {
+  renderLessons = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -104,18 +89,18 @@ export class ChapterLessonsPage extends React.PureComponent<ChapterLessonsPagePr
     }
 
     return lessons.map(lesson => {
-      const props: ChapterLessonCardProps = {
+      const props = {
         course: this.props.course,
         chapter: this.props.chapter,
         lesson,
-        lessonName: getLessonName(this.state.response!.lessonsMap[lesson.lessonJid], this.state.defaultLanguage),
+        lessonName: getLessonName(this.state.response.lessonsMap[lesson.lessonJid], this.state.defaultLanguage),
       };
       return <ChapterLessonCard key={lesson.lessonJid} {...props} />;
     });
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   statementLanguage: selectStatementLanguage(state),

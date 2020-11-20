@@ -1,19 +1,12 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ArchiveCreateData } from '../../../../modules/api/jerahmeel/archive';
 import ArchiveCreateForm from '../ArchiveCreateForm/ArchiveCreateForm';
 
-interface ArchiveCreateDialogProps {
-  onCreateArchive: (data: ArchiveCreateData) => Promise<void>;
-}
-
-interface ArchiveCreateDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class ArchiveCreateDialog extends React.Component<ArchiveCreateDialogProps, ArchiveCreateDialogState> {
-  state: ArchiveCreateDialogState = {};
+export class ArchiveCreateDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+  };
 
   render() {
     return (
@@ -24,7 +17,7 @@ export class ArchiveCreateDialog extends React.Component<ArchiveCreateDialogProp
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New archive
@@ -32,18 +25,18 @@ export class ArchiveCreateDialog extends React.Component<ArchiveCreateDialogProp
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
-    const props: any = {
+  renderDialog = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createArchive,
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Create new archive"
         canOutsideClickClose={false}
@@ -53,7 +46,7 @@ export class ArchiveCreateDialog extends React.Component<ArchiveCreateDialogProp
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -65,7 +58,7 @@ export class ArchiveCreateDialog extends React.Component<ArchiveCreateDialogProp
     </>
   );
 
-  private createArchive = async (data: ArchiveCreateData) => {
+  createArchive = async data => {
     await this.props.onCreateArchive(data);
     this.setState({ isDialogOpen: false });
   };

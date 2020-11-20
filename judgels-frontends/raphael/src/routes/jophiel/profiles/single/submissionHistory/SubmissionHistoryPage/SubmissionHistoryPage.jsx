@@ -5,24 +5,14 @@ import Pagination from '../../../../../../components/Pagination/Pagination';
 import { Card } from '../../../../../../components/Card/Card';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { AppState } from '../../../../../../modules/store';
-import { SubmissionsResponse } from '../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { selectUsername } from '../../../../modules/profileSelectors';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import * as profileActions from '../../modules/profileActions';
 
-interface SubmissionHistoryPageProps {
-  username: string;
-  sessionUserJid?: string;
-  onGetSubmissions: (username: string, page: number) => Promise<SubmissionsResponse>;
-}
-
-interface SubmissionHistoryPageState {
-  response?: SubmissionsResponse;
-}
-
-class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, SubmissionHistoryPageState> {
-  state: SubmissionHistoryPageState = {};
+class SubmissionHistoryPage extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   render() {
     return (
@@ -33,7 +23,7 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
     );
   }
 
-  private renderSubmissions = () => {
+  renderSubmissions = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -68,23 +58,23 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
     );
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     return <Pagination key={1} pageSize={20} onChangePage={this.onChangePage} />;
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  private refreshSubmissions = async (page?: number) => {
+  refreshSubmissions = async page => {
     const response = await this.props.onGetSubmissions(this.props.username, page);
     this.setState({ response });
     return response.data;
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   username: selectUsername(state),
   sessionUserJid: selectMaybeUserJid(state),
 });

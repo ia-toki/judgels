@@ -4,7 +4,7 @@ import { BadRequestError } from '../../../../modules/api/error';
 import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function resetPassword(emailCode: string, newPassword: string) {
+export function resetPassword(emailCode, newPassword) {
   return async dispatch => {
     try {
       await userAccountAPI.resetPassword({ emailCode, newPassword });

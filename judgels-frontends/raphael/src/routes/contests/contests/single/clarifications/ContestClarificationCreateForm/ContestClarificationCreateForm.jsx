@@ -1,6 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { Required } from '../../../../../../components/forms/validations';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
@@ -8,45 +8,38 @@ import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/Form
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
 
-export interface ContestClarificationCreateFormData {
-  topicJid: string;
-  title: string;
-  question: string;
-}
-
-export interface ContestClarificationCreateFormProps extends InjectedFormProps<ContestClarificationCreateFormData> {
-  contestJid: string;
-  problemJids: string[];
-  problemAliasesMap: { [problemJid: string]: string };
-  problemNamesMap: { [problemJid: string]: string };
-
-  renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
-}
-
-const ContestClarificationCreateForm = (props: ContestClarificationCreateFormProps) => {
-  const topicField: any = {
+function ContestClarificationCreateForm({
+  handleSubmit,
+  submitting,
+  contestJid,
+  problemJids,
+  problemAliasesMap,
+  problemNamesMap,
+  renderFormComponents,
+}) {
+  const topicField = {
     name: 'topicJid',
     label: 'Topic',
     validate: [Required],
-    optionValues: [props.contestJid, ...props.problemJids],
+    optionValues: [contestJid, ...problemJids],
     optionNamesMap: {
-      [props.contestJid]: '(General)',
+      [contestJid]: '(General)',
       ...Object.assign(
         {},
-        ...props.problemJids.map(jid => ({
-          [jid]: constructProblemName(props.problemNamesMap[jid], props.problemAliasesMap[jid]),
+        ...problemJids.map(jid => ({
+          [jid]: constructProblemName(problemNamesMap[jid], problemAliasesMap[jid]),
         }))
       ),
     },
   };
 
-  const titleField: any = {
+  const titleField = {
     name: 'title',
     label: 'Title',
     validate: [Required],
   };
 
-  const questionField: any = {
+  const questionField = {
     name: 'question',
     label: 'Question',
     rows: 5,
@@ -61,12 +54,12 @@ const ContestClarificationCreateForm = (props: ContestClarificationCreateFormPro
     </>
   );
 
-  const submitButton = <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={props.submitting} />;
+  const submitButton = <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
-};
+  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+}
 
-export default reduxForm<ContestClarificationCreateFormData>({
+export default reduxForm({
   form: 'contest-clarification-create',
   touchOnBlur: false,
 })(ContestClarificationCreateForm);

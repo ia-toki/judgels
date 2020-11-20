@@ -2,32 +2,14 @@ import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestSupervisorsDeleteResponse } from '../../../../../../modules/api/uriel/contestSupervisor';
-
-import ContestSupervisorRemoveForm, {
-  ContestSupervisorRemoveFormData,
-} from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
+import ContestSupervisorRemoveForm from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
 import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveResultTable/ContestSupervisorRemoveResultTable';
 
-export interface ContestSupervisorRemoveDialogProps {
-  contest: Contest;
-  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorsDeleteResponse>;
-}
-
-interface ContestSupervisorRemoveDialogState {
-  isDialogOpen?: boolean;
-  submitted?: {
-    usernames: string[];
-    response: ContestSupervisorsDeleteResponse;
+export class ContestSupervisorRemoveDialog extends React.Component {
+  state = {
+    isDialogOpen: false,
+    submitted: undefined,
   };
-}
-
-export class ContestSupervisorRemoveDialog extends React.Component<
-  ContestSupervisorRemoveDialogProps,
-  ContestSupervisorRemoveDialogState
-> {
-  state: ContestSupervisorRemoveDialogState = {};
 
   render() {
     return (
@@ -38,7 +20,7 @@ export class ContestSupervisorRemoveDialog extends React.Component<
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button
         className="contest-supervisor-dialog-button"
@@ -52,11 +34,11 @@ export class ContestSupervisorRemoveDialog extends React.Component<
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
   };
 
-  private renderDialog = () => {
+  renderDialog = () => {
     const dialogBody =
       this.state.submitted !== undefined ? this.renderDialogRemoveResultTable() : this.renderDialogRemoveForm();
     const dialogTitle = this.state.submitted !== undefined ? 'Remove supervisors results' : 'Remove supervisors';
@@ -64,7 +46,7 @@ export class ContestSupervisorRemoveDialog extends React.Component<
     return (
       <Dialog
         className="contest-supervisor-dialog"
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title={dialogTitle}
         canOutsideClickClose={false}
@@ -75,16 +57,16 @@ export class ContestSupervisorRemoveDialog extends React.Component<
     );
   };
 
-  private renderDialogRemoveForm = () => {
-    const props: any = {
+  renderDialogRemoveForm = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.addSupervisors,
     };
     return <ContestSupervisorRemoveForm {...props} />;
   };
 
-  private renderDialogRemoveResultTable = () => {
-    const { usernames, response } = this.state.submitted!;
+  renderDialogRemoveResultTable = () => {
+    const { usernames, response } = this.state.submitted;
     const { deletedSupervisorProfilesMap } = response;
     return (
       <>
@@ -103,7 +85,7 @@ export class ContestSupervisorRemoveDialog extends React.Component<
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -115,7 +97,7 @@ export class ContestSupervisorRemoveDialog extends React.Component<
     </>
   );
 
-  private addSupervisors = async (data: ContestSupervisorRemoveFormData) => {
+  addSupervisors = async data => {
     const usernames = data.usernames
       .split('\n')
       .filter(s => s.length > 0)

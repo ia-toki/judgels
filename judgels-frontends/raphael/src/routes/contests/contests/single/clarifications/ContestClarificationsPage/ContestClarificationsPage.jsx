@@ -2,20 +2,12 @@ import { push } from 'connected-react-router';
 import * as React from 'react';
 import { parse, stringify } from 'query-string';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import {
-  ContestClarification,
-  ContestClarificationData,
-} from '../../../../../../modules/api/uriel/contestClarification';
-import { ContestClarificationsResponse } from '../../../../../../modules/api/uriel/contestClarification';
-import { AppState } from '../../../../../../modules/store';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
@@ -25,54 +17,30 @@ import * as contestClarificationActions from '../modules/contestClarificationAct
 
 import './ContestClarificationsPage.css';
 
-export interface ContestClarificationsPageProps extends RouteComponentProps<{}> {
-  userJid: string;
-  contest: Contest;
-  statementLanguage: string;
-  onGetClarifications: (
-    contestJid: string,
-    status?: string,
-    language?: string,
-    page?: number
-  ) => Promise<ContestClarificationsResponse>;
-  onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
-  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
-  onAppendRoute: (queries) => any;
-}
+class ContestClarificationsPage extends React.Component {
+  static PAGE_SIZE = 20;
 
-interface ContestClarificationsFilter {
-  status?: string;
-}
-
-interface ContestClarificationsPageState {
-  response?: ContestClarificationsResponse;
-  lastRefreshClarificationsTime?: number;
-  openAnswerBoxClarification?: ContestClarification;
-  isAnswerBoxLoading?: boolean;
-  filter?: ContestClarificationsFilter;
-  isFilterLoading?: boolean;
-}
-
-class ContestClarificationsPage extends React.PureComponent<
-  ContestClarificationsPageProps,
-  ContestClarificationsPageState
-> {
-  private static PAGE_SIZE = 20;
-
-  state: ContestClarificationsPageState = {};
+  state;
 
   constructor(props) {
     super(props);
 
     const queries = parse(this.props.location.search);
-    const status = queries.status as string;
+    const status = queries.status;
 
-    this.state = { filter: { status } };
+    this.state = {
+      response: undefined,
+      lastRefreshClarificationsTime: 0,
+      openAnswerBoxClarification: undefined,
+      isAnswerBoxLoading: false,
+      filter: { status },
+      isFilterLoading: false,
+    };
   }
 
   componentDidUpdate() {
     const queries = parse(this.props.location.search);
-    const status = queries.status as string;
+    const status = queries.status;
 
     if (status !== this.state.filter.status) {
       this.setState({
@@ -97,7 +65,7 @@ class ContestClarificationsPage extends React.PureComponent<
     );
   }
 
-  private refreshClarifications = async (status?: string, page?: number) => {
+  refreshClarifications = async (status, page) => {
     const response = await this.props.onGetClarifications(
       this.props.contest.jid,
       status,
@@ -108,7 +76,7 @@ class ContestClarificationsPage extends React.PureComponent<
     return response.data;
   };
 
-  private renderClarifications = () => {
+  renderClarifications = () => {
     const { response, openAnswerBoxClarification } = this.state;
     if (!response) {
       return <LoadingState />;
@@ -147,7 +115,7 @@ class ContestClarificationsPage extends React.PureComponent<
     ));
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     // updates pagination when clarifications are refreshed
     const { lastRefreshClarificationsTime } = this.state;
     const key = lastRefreshClarificationsTime || 0;
@@ -162,18 +130,18 @@ class ContestClarificationsPage extends React.PureComponent<
     );
   };
 
-  private toggleAnswerBox = (clarification?: ContestClarification) => {
+  toggleAnswerBox = clarification => {
     this.setState({ openAnswerBoxClarification: clarification });
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const { filter } = this.state;
     const { status } = filter;
     const data = await this.refreshClarifications(status, nextPage);
     return data.totalCount;
   };
 
-  private renderCreateDialog = () => {
+  renderCreateDialog = () => {
     const { response } = this.state;
     if (!response) {
       return null;
@@ -195,12 +163,12 @@ class ContestClarificationsPage extends React.PureComponent<
     );
   };
 
-  private createClarification = async (contestJid, data) => {
+  createClarification = async (contestJid, data) => {
     await this.props.onCreateClarification(contestJid, data);
     this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
   };
 
-  private answerClarification = async (contestJid, clarificationJid, data) => {
+  answerClarification = async (contestJid, clarificationJid, data) => {
     this.setState({ isAnswerBoxLoading: true });
     try {
       await this.props.onAnswerClarification(contestJid, clarificationJid, data);
@@ -213,7 +181,7 @@ class ContestClarificationsPage extends React.PureComponent<
     }
   };
 
-  private renderFilterWidget = () => {
+  renderFilterWidget = () => {
     const { response, filter, isFilterLoading } = this.state;
     if (!response) {
       return null;
@@ -235,14 +203,14 @@ class ContestClarificationsPage extends React.PureComponent<
     );
   };
 
-  private onFilter = async filter => {
+  onFilter = async filter => {
     this.props.onAppendRoute(filter);
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
-  contest: selectContest(state)!,
+  contest: selectContest(state),
   statementLanguage: selectStatementLanguage(state),
 });
 

@@ -2,34 +2,19 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 
-import ContestEditDescriptionForm, {
-  ContestEditDescriptionFormData,
-} from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
+import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestActions from '../../../modules/contestActions';
 
-interface ContestEditDescriptionTabProps {
-  contest: Contest;
-  onGetContestDescription: (contestJid: string) => Promise<string>;
-  onUpdateContestDescription: (contestJid: string, description: string) => Promise<void>;
-}
-
-interface ContestEditDescriptionTabState {
-  isEditing?: boolean;
-  description?: string;
-}
-
-class ContestEditDescriptionTab extends React.Component<
-  ContestEditDescriptionTabProps,
-  ContestEditDescriptionTabState
-> {
-  state: ContestEditDescriptionTabState = {};
+class ContestEditDescriptionTab extends React.Component {
+  state = {
+    isEditing: false,
+    description: undefined,
+  };
 
   async componentDidMount() {
     await this.refreshContestDescription();
@@ -48,12 +33,12 @@ class ContestEditDescriptionTab extends React.Component<
     );
   }
 
-  private refreshContestDescription = async () => {
+  refreshContestDescription = async () => {
     const description = await this.props.onGetContestDescription(this.props.contest.jid);
     this.setState({ description });
   };
 
-  private renderEditButton = () => {
+  renderEditButton = () => {
     return (
       !this.state.isEditing && (
         <Button small className="right-action-button" intent={Intent.PRIMARY} icon="edit" onClick={this.toggleEdit}>
@@ -63,13 +48,13 @@ class ContestEditDescriptionTab extends React.Component<
     );
   };
 
-  private renderContent = () => {
+  renderContent = () => {
     const { isEditing, description } = this.state;
     if (description === undefined) {
       return <LoadingState />;
     }
     if (isEditing) {
-      const initialValues: ContestEditDescriptionFormData = {
+      const initialValues = {
         description: description,
       };
       const formProps = {
@@ -86,7 +71,7 @@ class ContestEditDescriptionTab extends React.Component<
     return this.renderDescription(description);
   };
 
-  private renderDescription = (description: string) => {
+  renderDescription = description => {
     if (!description) {
       return (
         <p>
@@ -101,20 +86,20 @@ class ContestEditDescriptionTab extends React.Component<
     );
   };
 
-  private updateContestDescription = async (data: ContestEditDescriptionFormData) => {
+  updateContestDescription = async data => {
     await this.props.onUpdateContestDescription(this.props.contest.jid, data.description);
     await this.refreshContestDescription();
     this.toggleEdit();
   };
 
-  private toggleEdit = () => {
-    this.setState((prevState: ContestEditDescriptionTabState) => ({
+  toggleEdit = () => {
+    this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 const mapDispatchToProps = {

@@ -1,26 +1,24 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { push } from 'connected-react-router';
-import { createStore, combineReducers, Store } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import createMockStore, { MockStore } from 'redux-mock-store';
+import createMockStore from 'redux-mock-store';
 import { stringify } from 'query-string';
 
-import { AppState } from '../../modules/store';
-
-import SearchBox, { SearchBoxProps } from './SearchBox';
+import SearchBox from './SearchBox';
 
 describe('SearchBox', () => {
-  let wrapper: ReactWrapper<any, any>;
-  let onRouteChange: jest.Mock<any>;
-  let mockStore: MockStore<Partial<AppState>>;
+  let wrapper;
+  let onRouteChange;
+  let mockStore;
 
   const realStore = createStore(combineReducers({ form: formReducer }));
 
-  const render = (store: any, key: string, initialValue: string) => {
-    const props: SearchBoxProps = {
+  const render = (store, key, initialValue) => {
+    const props = {
       initialValue,
       onRouteChange,
     };
@@ -35,7 +33,7 @@ describe('SearchBox', () => {
     );
   };
 
-  const submit = (content: string) => {
+  const submit = content => {
     wrapper.find('input[name="content"]').simulate('change', { target: { value: content } });
     wrapper.find('form').simulate('submit');
   };
@@ -46,7 +44,7 @@ describe('SearchBox', () => {
     });
 
     it('updates the query string', () => {
-      mockStore = createMockStore<Partial<AppState>>()({});
+      mockStore = createMockStore()({});
       render(mockStore, 'key', 'test');
       submit('judgels');
       const query = stringify({ key: 'judgels' });

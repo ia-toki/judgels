@@ -2,36 +2,13 @@ import { Button, Intent, Classes, ControlGroup, Callout } from '@blueprintjs/cor
 import classNames from 'classnames';
 import * as React from 'react';
 
-import {
-  AnswerState,
-  StatementButtonText,
-} from '../../../../../../components/ProblemWorksheetCard/Bundle/itemStatement';
-import { Item, ItemShortAnswerConfig } from '../../../../../../modules/api/sandalphon/problemBundle';
+import { AnswerState, StatementButtonText } from '../../../itemStatement';
 
 import './ItemShortAnswerForm.css';
 
-export interface ItemShortAnswerFormProps extends Item {
-  initialAnswer?: string;
-  meta: string;
-  onSubmit?: (answer?: string) => Promise<any>;
-  answerState: AnswerState;
-}
-
-export interface ItemShortAnswerFormState {
-  answerState: AnswerState;
-  initialAnswer: string;
-  cancelButtonState: AnswerState.NotAnswered | AnswerState.AnswerSaved;
-  answer: string;
-  wrongFormat: boolean;
-  previousWrongFormat: boolean;
-}
-
-export default class ItemShortAnswerForm extends React.PureComponent<
-  ItemShortAnswerFormProps,
-  ItemShortAnswerFormState
-> {
-  _input: HTMLInputElement | null | undefined;
-  state: ItemShortAnswerFormState = {
+export default class ItemShortAnswerForm extends React.PureComponent {
+  _input;
+  state = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
     initialAnswer: this.props.initialAnswer || '',
@@ -42,7 +19,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   };
 
   componentDidUpdate() {
-    this._input!.focus();
+    this._input.focus();
   }
 
   renderHelpText() {
@@ -78,7 +55,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
 
   renderSubmitButton() {
     let buttonText;
-    let intent: Intent = Intent.PRIMARY;
+    let intent = Intent.PRIMARY;
     const disabledState =
       this.props.disabled || (this.state.wrongFormat && this.state.answerState === AnswerState.Answering);
     switch (this.state.answerState) {
@@ -180,8 +157,8 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   }
 
   onTextInputChange = event => {
-    const value = event.target.value as string;
-    const config: ItemShortAnswerConfig = this.props.config as ItemShortAnswerConfig;
+    const value = event.target.value;
+    const config = this.props.config;
     const formatValid = value.match(`^(${config.inputValidationRegex})$`);
     this.setState({
       answer: event.target.value,

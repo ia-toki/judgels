@@ -3,23 +3,16 @@ import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-
-import ForgotPasswordForm, { ForgotPasswordFormData } from '../ForgotPasswordForm/ForgotPasswordForm';
+import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
-export interface ForgotPasswordPageProps {
-  onForgetPassword: (email: string) => Promise<void>;
-}
-
-interface ForgotPasswordPageState {
-  submitted: boolean;
-}
-
-export class ForgotPasswordPage extends React.PureComponent<ForgotPasswordPageProps, ForgotPasswordPageState> {
-  state: ForgotPasswordPageState = { submitted: false };
+export class ForgotPasswordPage extends React.Component {
+  state = {
+    submitted: false,
+  };
 
   render() {
-    let content: JSX.Element;
+    let content;
 
     if (this.state.submitted) {
       content = (
@@ -38,7 +31,7 @@ export class ForgotPasswordPage extends React.PureComponent<ForgotPasswordPagePr
     );
   }
 
-  private onForgetPassword = async (data: ForgotPasswordFormData) => {
+  onForgetPassword = async data => {
     await this.props.onForgetPassword(data.email);
     this.setState({ submitted: true });
   };

@@ -1,37 +1,22 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { AppState } from '../../../../modules/store';
 import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSelectors';
-import {
-  SubmissionWithSource,
-  SubmissionWithSourceResponse,
-} from '../../../../modules/api/sandalphon/submissionProgramming';
-import { Profile } from '../../../../modules/api/jophiel/profile';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as submissionActions from '../../modules/submissionActions';
 
-export interface SubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
-  statementLanguage: string;
-  onGetSubmissionWithSource: (submissionId: number, language?: string) => Promise<SubmissionWithSourceResponse>;
-  onPushBreadcrumb: (link: string, title: string) => void;
-  onPopBreadcrumb: (link: string) => void;
-}
-
-interface SubmissionPageState {
-  submissionWithSource?: SubmissionWithSource;
-  profile?: Profile;
-  problemName?: string;
-  problemAlias?: string;
-  containerName?: string;
-}
-
-export class SubmissionPage extends React.Component<SubmissionPageProps, SubmissionPageState> {
-  state: SubmissionPageState = {};
+export class SubmissionPage extends React.Component {
+  state = {
+    submissionWithSource: undefined,
+    profile: undefined,
+    problemName: undefined,
+    problemAlias: undefined,
+    containerName: undefined,
+  };
 
   async componentDidMount() {
     const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
@@ -62,7 +47,7 @@ export class SubmissionPage extends React.Component<SubmissionPageProps, Submiss
     );
   }
 
-  private renderSubmission = () => {
+  renderSubmission = () => {
     const { submissionWithSource, profile, problemAlias, problemName, containerName } = this.state;
 
     if (!submissionWithSource) {
@@ -83,7 +68,7 @@ export class SubmissionPage extends React.Component<SubmissionPageProps, Submiss
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   statementLanguage: selectStatementLanguage(state),
 });
 
@@ -93,4 +78,4 @@ const mapDispatchToProps = {
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionPage));

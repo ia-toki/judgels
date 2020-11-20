@@ -1,3 +1,3 @@
-export enum JerahmeelRole {
-  Admin = 'ADMIN',
-}
+export const JerahmeelRole = {
+  Admin: 'ADMIN',
+};

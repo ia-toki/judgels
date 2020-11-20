@@ -2,7 +2,7 @@ import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter, Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
@@ -12,10 +12,6 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
-import { AppState } from '../../../../../../../../modules/store';
-import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ItemSubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
@@ -25,29 +21,12 @@ import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
-export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid?: string;
-  course: Course;
-  chapter: CourseChapter;
-  onGetSubmissions: (
-    chapterJid: string,
-    username?: string,
-    problemAlias?: string,
-    page?: number
-  ) => Promise<ItemSubmissionsResponse>;
-  onRegrade: (submissionJid: string) => Promise<void>;
-  onRegradeAll: (chapterJid: string, userJid?: string, problemJid?: string) => Promise<void>;
-  onAppendRoute: (queries) => any;
-}
+export class ChapterSubmissionsPage extends React.Component {
+  static PAGE_SIZE = 20;
 
-interface ChapterSubmissionsPageState {
-  response?: ItemSubmissionsResponse;
-}
-
-export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPageProps, ChapterSubmissionsPageState> {
-  private static PAGE_SIZE = 20;
-
-  state: ChapterSubmissionsPageState = {};
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     await this.refreshSubmissions();
@@ -66,7 +45,7 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
     );
   }
 
-  private renderSubmissions = () => {
+  renderSubmissions = () => {
     const response = this.state.response;
     if (!response) {
       return <LoadingState />;
@@ -131,7 +110,7 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
     );
   };
 
-  private renderPagination = () => {
+  renderPagination = () => {
     return (
       <Pagination
         key={1}
@@ -142,29 +121,29 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
     );
   };
 
-  private refreshSubmissions = async (page?: number) => {
+  refreshSubmissions = async page => {
     const { chapter, onGetSubmissions } = this.props;
     const response = await onGetSubmissions(chapter.chapterJid, undefined, undefined, page);
     this.setState({ response });
     return response.data;
   };
 
-  private onChangePage = async (nextPage: number) => {
+  onChangePage = async nextPage => {
     const data = await this.refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  private onClickRegrade = (submissionJid: string) => {
+  onClickRegrade = submissionJid => {
     return () => this.onRegrade(submissionJid);
   };
 
-  private onRegrade = async (submissionJid: string) => {
+  onRegrade = async submissionJid => {
     await this.props.onRegrade(submissionJid);
     const queries = parse(this.props.location.search);
     await this.refreshSubmissions(queries.page);
   };
 
-  private onRegradeAll = async () => {
+  onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
       await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined);
       const queries = parse(this.props.location.search);
@@ -172,7 +151,7 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
     }
   };
 
-  private renderRegradeAllButton = () => {
+  renderRegradeAllButton = () => {
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
@@ -190,7 +169,7 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
@@ -203,4 +182,4 @@ const mapDispatchToProps = {
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));

@@ -1,21 +1,16 @@
 import { ProgressBar } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { SingleColumnLayout } from '../../components/SingleColumnLayout/SingleColumnLayout';
+import { SingleColumnLayout } from '../SingleColumnLayout/SingleColumnLayout';
 
 import './LoadingState.css';
 
-export interface LoadingStateProps {
-  large?: boolean;
-}
+export class LoadingState extends React.PureComponent {
+  timer;
 
-export interface LoadingStateState {
-  showProgressBar: boolean;
-}
-
-export class LoadingState extends React.PureComponent<LoadingStateProps, LoadingStateState> {
-  timer: any;
-  state: LoadingStateState = { showProgressBar: false };
+  state = {
+    showProgressBar: false,
+  };
 
   componentDidMount() {
     this.timer = setTimeout(() => {
@@ -38,7 +33,7 @@ export class LoadingState extends React.PureComponent<LoadingStateProps, Loading
     return this.renderProgressBar();
   }
 
-  private renderProgressBar = () => {
+  renderProgressBar = () => {
     if (!this.state.showProgressBar) {
       return null;
     }

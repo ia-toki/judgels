@@ -1,8 +1,8 @@
 import { replace } from 'connected-react-router';
 
-import { UnauthorizedError } from '../../modules/api/error';
+import { UnauthorizedError } from '../api/error';
 
-export const tokenGateMiddleware: any = store => next => async action => {
+const tokenGateMiddleware = store => next => async action => {
   try {
     return await next(action);
   } catch (error) {
@@ -14,3 +14,5 @@ export const tokenGateMiddleware: any = store => next => async action => {
     throw error;
   }
 };
+
+export default tokenGateMiddleware;

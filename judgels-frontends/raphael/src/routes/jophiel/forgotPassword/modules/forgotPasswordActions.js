@@ -1,7 +1,7 @@
 import { NotFoundError } from '../../../../modules/api/error';
 import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
 
-export function requestToResetPassword(email: string) {
+export function requestToResetPassword(email) {
   return async () => {
     try {
       await userAccountAPI.requestToResetPassword(email);

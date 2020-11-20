@@ -2,25 +2,9 @@ import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-import { ContestManager } from '../../../../../../modules/api/uriel/contestManager';
 
-export interface ContestManagersTableProps {
-  managers: ContestManager[];
-  profilesMap: ProfilesMap;
-}
-
-export class ContestManagersTable extends React.PureComponent<ContestManagersTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function ContestManagersTable({ managers, profilesMap }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -30,9 +14,7 @@ export class ContestManagersTable extends React.PureComponent<ContestManagersTab
     );
   };
 
-  private renderRows = () => {
-    const { managers, profilesMap } = this.props;
-
+  const renderRows = () => {
     const sortedManagers = managers.slice().sort((c1, c2) => {
       const username1 = (profilesMap[c1.userJid] && profilesMap[c1.userJid].username) || 'ZZ';
       const username2 = (profilesMap[c2.userJid] && profilesMap[c2.userJid].username) || 'ZZ';
@@ -49,4 +31,11 @@ export class ContestManagersTable extends React.PureComponent<ContestManagersTab
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

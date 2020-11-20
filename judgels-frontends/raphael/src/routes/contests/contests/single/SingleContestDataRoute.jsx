@@ -1,30 +1,16 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../modules/store';
-import { Contest } from '../../../../modules/api/uriel/contest';
-import { ContestWithWebConfig } from '../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../modules/contestSelectors';
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestSlug: string }> {
-  contest?: Contest;
+class SingleContestDataRoute extends React.Component {
+  static GET_CONFIG_TIMEOUT = 20000;
 
-  onClearContest: () => void;
-  onGetContestBySlugWithWebConfig: (contestJid: string) => Promise<ContestWithWebConfig>;
-  onGetContestWebConfig: (contestJid: string) => void;
-  onClearContestWebConfig: () => void;
-  onPushBreadcrumb: (link: string, title: string) => void;
-  onPopBreadcrumb: (link: string) => void;
-}
-
-class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps> {
-  private static GET_CONFIG_TIMEOUT = 20000;
-
-  private currentTimeout;
+  currentTimeout;
 
   async componentDidMount() {
     const { contest, match } = this.props;
@@ -64,7 +50,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
     return null;
   }
 
-  private refreshWebConfig = async (contestJid: string) => {
+  refreshWebConfig = async contestJid => {
     await this.props.onGetContestWebConfig(contestJid);
     this.currentTimeout = setTimeout(
       () => this.refreshWebConfig(contestJid),
@@ -73,7 +59,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 
@@ -86,4 +72,4 @@ const mapDispatchToProps = {
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));

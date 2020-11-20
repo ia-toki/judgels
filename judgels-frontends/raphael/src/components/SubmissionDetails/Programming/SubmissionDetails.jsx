@@ -3,81 +3,64 @@ import * as base64 from 'base-64';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { SourceCode } from '../../../components/SourceCode/SourceCode';
-import { FormattedDate } from '../../../components/FormattedDate/FormattedDate';
-import { UserRef } from '../../../components/UserRef/UserRef';
-import { ContentCard } from '../../../components/ContentCard/ContentCard';
-import { VerdictTag } from '../../../components/VerdictTag/VerdictTag';
+import { SourceCode } from '../../SourceCode/SourceCode';
+import { FormattedDate } from '../../FormattedDate/FormattedDate';
+import { UserRef } from '../../UserRef/UserRef';
+import { ContentCard } from '../../ContentCard/ContentCard';
+import { VerdictTag } from '../../VerdictTag/VerdictTag';
 import { constructProblemName } from '../../../modules/api/sandalphon/problem';
-import { Submission } from '../../../modules/api/sandalphon/submissionProgramming';
 import {
   getGradingLanguageName,
   getGradingLanguageSyntaxHighlighterValue,
-} from '../../../modules/api/gabriel/language';
+} from '../../../modules/api/gabriel/language.js';
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
-import { TestCaseResult } from '../../../modules/api/gabriel/grading';
-import { SubmissionSource, DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
+import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
-import { Profile } from '../../../modules/api/jophiel/profile';
 
 import './SubmissionDetails.css';
 
-export interface SubmissionDetailsProps {
-  submission: Submission;
-  source: SubmissionSource;
-  profile: Profile;
-  problemName?: string;
-  problemAlias?: string;
-  problemUrl?: string;
-  containerTitle: string;
-  containerName: string;
-  onDownload?: () => any;
-}
+export function SubmissionDetails({
+  submission: { gradingEngine, gradingLanguage, time, latestGrading },
+  source: { submissionFiles },
+  profile,
+  problemName,
+  problemAlias,
+  problemUrl,
+  containerTitle,
+  containerName,
+  onDownload,
+}) {
+  const hasSubtasks = latestGrading && latestGrading.details && latestGrading.details.subtaskResults.length > 1;
 
-export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProps> {
-  render() {
-    return (
-      <div className="programming-submission-details">
-        {this.renderGeneralInfo()}
-        {this.renderDetails()}
-        {this.renderSourceFiles()}
-      </div>
-    );
-  }
-
-  private renderDetails = () => {
-    const { submission } = this.props;
-    const grading = submission.latestGrading;
+  const renderDetails = () => {
+    const grading = latestGrading;
     if (!grading || !grading.details) {
       return null;
     }
 
-    if (grading!.details!.errorMessage) {
+    if (grading.details.errorMessage) {
       return (
         <>
           <h4>Grading Error</h4>
           <ContentCard>
             <h5>Message</h5>
-            <pre>{grading!.details!.errorMessage}</pre>
+            <pre>{grading.details.errorMessage}</pre>
           </ContentCard>
         </>
       );
     }
 
-    const hasSubtasks = this.hasSubtasks();
-
     return (
       <>
-        {this.renderSubtaskResults(hasSubtasks)}
-        {this.renderSampleTestDataResults(hasSubtasks)}
-        {this.renderTestDataResults(hasSubtasks)}
+        {renderSubtaskResults()}
+        {renderSampleTestDataResults()}
+        {renderTestDataResults()}
       </>
     );
   };
 
-  private renderGeneralInfo = () => {
-    const { submission, profile, problemAlias, problemName, containerTitle, containerName, problemUrl } = this.props;
-    const grading = submission.latestGrading;
+  const renderGeneralInfo = () => {
+    const grading = latestGrading;
 
     return (
       <>
@@ -113,7 +96,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               </tr>
               <tr>
                 <td>Language</td>
-                <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
+                <td>{getGradingLanguageName(gradingLanguage)}</td>
               </tr>
               <tr>
                 <td>Verdict</td>
@@ -126,7 +109,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               <tr>
                 <td>Time</td>
                 <td>
-                  <FormattedDate value={submission.time} showSeconds />
+                  <FormattedDate value={time} showSeconds />
                 </td>
               </tr>
             </tbody>
@@ -136,18 +119,18 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     );
   };
 
-  private renderSubtaskResults = (hasSubtasks: boolean) => {
+  const renderSubtaskResults = () => {
     if (!hasSubtasks) {
       return null;
     }
 
-    const results = this.props.submission.latestGrading!.details!.subtaskResults.map((result, idx) => (
+    const results = latestGrading.details.subtaskResults.map(({ verdict, score }, idx) => (
       <tr key={idx}>
         <td>{idx + 1}</td>
         <td className="col-centered">
-          <VerdictTag verdictCode={result.verdict.code} />
+          <VerdictTag verdictCode={verdict.code} />
         </td>
-        <td>{result.score}</td>
+        <td>{score}</td>
       </tr>
     ));
 
@@ -170,8 +153,8 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     );
   };
 
-  private renderSampleTestDataResults = (hasSubtasks: boolean) => {
-    const details = this.props.submission.latestGrading!.details!;
+  const renderSampleTestDataResults = () => {
+    const details = latestGrading.details;
     if (details.testDataResults.length < 1) {
       return null;
     }
@@ -182,10 +165,10 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         <td className="col-centered">
           <VerdictTag verdictCode={result.verdict.code} />
         </td>
-        <td>{this.renderExecutionTime(result)}</td>
-        <td>{this.renderExecutionMemory(result)}</td>
+        <td>{renderExecutionTime(result)}</td>
+        <td>{renderExecutionMemory(result)}</td>
         <td>{result.score}</td>
-        {hasSubtasks && <td className="col-centered">{this.renderSubtaskTags(result.subtaskIds)}</td>}
+        {hasSubtasks && <td className="col-centered">{renderSubtaskTags(result.subtaskIds)}</td>}
       </tr>
     ));
 
@@ -211,13 +194,13 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     );
   };
 
-  private renderTestDataResults = (hasSubtasks: boolean) => {
-    const details = this.props.submission.latestGrading!.details!;
+  const renderTestDataResults = () => {
+    const details = latestGrading.details;
     if (details.testDataResults.length < 2) {
       return null;
     }
 
-    let groups: JSX.Element[] = [];
+    let groups = [];
 
     for (let idx = 1; idx < details.testDataResults.length; idx++) {
       const group = details.testDataResults[idx];
@@ -228,8 +211,8 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
           <td className="col-centered">
             <VerdictTag verdictCode={result.verdict.code} />
           </td>
-          <td>{this.renderExecutionTime(result)}</td>
-          <td>{this.renderExecutionMemory(result)}</td>
+          <td>{renderExecutionTime(result)}</td>
+          <td>{renderExecutionMemory(result)}</td>
           <td>{result.score}</td>
         </tr>
       ));
@@ -237,7 +220,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       groups = [
         ...groups,
         <ContentCard key={idx}>
-          {hasSubtasks && this.renderTestGroupHeading(idx, group.testCaseResults)}
+          {hasSubtasks && renderTestGroupHeading(idx, group.testCaseResults)}
           <HTMLTable striped className="programming-submission-details">
             <thead>
               <tr>
@@ -262,48 +245,47 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     );
   };
 
-  private renderExecutionTime = (result: TestCaseResult) => {
-    if (!result.executionResult) {
+  const renderExecutionTime = ({ executionResult, verdict }) => {
+    if (!executionResult) {
       return '?';
     }
-    if (result.verdict.code === VerdictCode.TLE) {
-      if (isInteractive(this.props.submission.gradingEngine)) {
+    if (verdict.code === VerdictCode.TLE) {
+      if (isInteractive(gradingEngine)) {
         return 'N/A';
       }
-      if (result.executionResult.isKilled) {
-        return '> ' + result.executionResult.time + ' ms';
+      if (executionResult.isKilled) {
+        return '> ' + executionResult.time + ' ms';
       }
     }
-    return result.executionResult.time + ' ms';
+    return executionResult.time + ' ms';
   };
 
-  private renderExecutionMemory = (result: TestCaseResult) => {
-    if (!result.executionResult) {
+  const renderExecutionMemory = ({ executionResult }) => {
+    if (!executionResult) {
       return '?';
     }
-    return result.executionResult.memory + ' KB';
+    return executionResult.memory + ' KB';
   };
 
-  private renderSourceFiles = () => {
-    const { submission, source } = this.props;
-    if (isOutputOnly(submission.gradingEngine)) {
-      return this.renderSourceFilesHeading();
+  const renderSourceFiles = () => {
+    if (isOutputOnly(gradingEngine)) {
+      return renderSourceFilesHeading();
     }
 
-    const grading = submission.latestGrading;
+    const grading = latestGrading;
     if (!grading) {
       return null;
     }
 
     const { details, verdict } = grading;
 
-    const sourceFiles = Object.keys(source.submissionFiles).map(key => (
+    const sourceFiles = Object.keys(submissionFiles).map(key => (
       <ContentCard key={key}>
         <h5>
-          {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {source.submissionFiles[key].name}
+          {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
         </h5>
-        <SourceCode language={getGradingLanguageSyntaxHighlighterValue(submission.gradingLanguage)}>
-          {base64.decode(source.submissionFiles[key].content)}
+        <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
+          {base64.decode(submissionFiles[key].content)}
         </SourceCode>
         {verdict.code === VerdictCode.CE &&
           details &&
@@ -321,7 +303,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       verdict.code === VerdictCode.CE &&
       details &&
       Object.keys(details.compilationOutputs)
-        .filter(key => source.submissionFiles[key] === undefined)
+        .filter(key => submissionFiles[key] === undefined)
         .map(key => (
           <ContentCard>
             <h5>Compilation Output</h5>
@@ -331,21 +313,21 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
 
     return (
       <>
-        {this.renderSourceFilesHeading()}
+        {renderSourceFilesHeading()}
         {sourceFiles}
         {defaultCompilationOutputs}
       </>
     );
   };
 
-  private renderSourceFilesHeading = () => {
-    if (!this.props.onDownload) {
+  const renderSourceFilesHeading = () => {
+    if (!onDownload) {
       return <h4>Source Files</h4>;
     }
     return (
       <div>
         <h4 className="source-heading">Source Files</h4>
-        <Button small className="source-download" icon="download" onClick={this.props.onDownload}>
+        <Button small className="source-download" icon="download" onClick={onDownload}>
           Download
         </Button>
         <div className="clearfix" />
@@ -353,8 +335,8 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     );
   };
 
-  private renderTestGroupHeading = (id: number, results: TestCaseResult[]) => {
-    const subtaskTags = results.length !== 0 && this.renderSubtaskTags(results[0].subtaskIds);
+  const renderTestGroupHeading = (id, results) => {
+    const subtaskTags = results.length !== 0 && renderSubtaskTags(results[0].subtaskIds);
 
     return (
       <>
@@ -366,7 +348,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     );
   };
 
-  private renderSubtaskTags = (subtaskIds: number[]) => {
+  const renderSubtaskTags = subtaskIds => {
     return (
       <span>
         {subtaskIds
@@ -380,12 +362,11 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     );
   };
 
-  private hasSubtasks = () => {
-    const { submission } = this.props;
-    const grading = submission.latestGrading;
-    if (!grading || !grading.details) {
-      return false;
-    }
-    return grading.details.subtaskResults.length > 1;
-  };
+  return (
+    <div className="programming-submission-details">
+      {renderGeneralInfo()}
+      {renderDetails()}
+      {renderSourceFiles()}
+    </div>
+  );
 }

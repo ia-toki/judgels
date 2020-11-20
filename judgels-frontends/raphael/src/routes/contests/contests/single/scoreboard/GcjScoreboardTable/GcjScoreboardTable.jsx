@@ -2,63 +2,41 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import {
-  GcjScoreboardProblemState,
-  GcjScoreboard,
-  GcjScoreboardContent,
-  GcjScoreboardEntry,
-} from '../../../../../../modules/api/uriel/scoreboard';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
-
+import { GcjScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './GcjScoreboardTable.css';
 
-export class GcjScoreboardTableProps {
-  userJid?: string;
-  scoreboard: GcjScoreboard;
-  profilesMap: ProfilesMap;
-}
-
-export class GcjScoreboardTable extends React.PureComponent<GcjScoreboardTableProps> {
-  render() {
-    const { scoreboard } = this.props;
-    return (
-      <ScoreboardTable className="gcj-scoreboard__content" state={scoreboard.state}>
-        {this.renderData(scoreboard.content)}
-      </ScoreboardTable>
-    );
-  }
-
-  private renderData = (content: GcjScoreboardContent) => {
-    let rows = content.entries.map(this.renderRow);
+export function GcjScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap }) {
+  const renderData = () => {
+    let rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
   };
 
-  private renderRow = (entry: GcjScoreboardEntry) => {
+  const renderRow = entry => {
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        <UserRef profile={this.props.profilesMap[entry.contestantJid]} showFlag />
+        <UserRef profile={profilesMap[entry.contestantJid]} showFlag />
       </td>,
       <td key="totalAccepted">
         <strong className="total-points-cell">{entry.totalPoints}</strong>
         <br />
-        <small>{this.renderPenalty(entry.totalPenalties, GcjScoreboardProblemState.Accepted)}</small>
+        <small>{renderPenalty(entry.totalPenalties, GcjScoreboardProblemState.Accepted)}</small>
       </td>,
     ];
     const problemCells = entry.attemptsList.map((item, i) =>
-      this.renderProblemCell(i, entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
+      renderProblemCell(i, entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
     );
     cells = [...cells, ...problemCells];
     return (
-      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === this.props.userJid })}>
+      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === userJid })}>
         {cells}
       </tr>
     );
   };
 
-  private renderProblemCell = (idx: number, attempts: number, penalty: number, state: GcjScoreboardProblemState) => {
+  const renderProblemCell = (idx, attempts, penalty, state) => {
     let className = {};
     if (state === GcjScoreboardProblemState.Accepted) {
       className = 'accepted';
@@ -70,19 +48,19 @@ export class GcjScoreboardTable extends React.PureComponent<GcjScoreboardTablePr
 
     return (
       <td key={idx} className={classNames(className)}>
-        <strong>{this.renderAttempts(attempts, state)}</strong>
+        <strong>{renderAttempts(attempts, state)}</strong>
         <br />
-        <small>{this.renderPenalty(penalty, state)}</small>
+        <small>{renderPenalty(penalty, state)}</small>
       </td>
     );
   };
 
-  private renderAttempts = (attempts: number, state: GcjScoreboardProblemState) => {
+  const renderAttempts = (attempts, state) => {
     if (attempts === 0) {
       return '-';
     }
 
-    let wrongAttempts: number;
+    let wrongAttempts;
     if (state === GcjScoreboardProblemState.Accepted) {
       wrongAttempts = attempts - 1;
     } else {
@@ -95,14 +73,14 @@ export class GcjScoreboardTable extends React.PureComponent<GcjScoreboardTablePr
     return '+' + wrongAttempts;
   };
 
-  private renderPenalty = (penalty: number, state: GcjScoreboardProblemState) => {
+  const renderPenalty = (penalty, state) => {
     if (state !== GcjScoreboardProblemState.Accepted) {
       return '-';
     }
-    return `${this.renderPenaltyHours(penalty)}:${this.renderPenaltyMinutes(penalty)}`;
+    return `${renderPenaltyHours(penalty)}:${renderPenaltyMinutes(penalty)}`;
   };
 
-  private renderPenaltyHours = (penalty: number) => {
+  const renderPenaltyHours = penalty => {
     const hours = Math.floor(penalty / 60);
     if (hours < 10) {
       return '0' + hours;
@@ -110,11 +88,17 @@ export class GcjScoreboardTable extends React.PureComponent<GcjScoreboardTablePr
     return hours;
   };
 
-  private renderPenaltyMinutes = (penalty: number) => {
+  const renderPenaltyMinutes = penalty => {
     const minutes = penalty % 60;
     if (minutes < 10) {
       return '0' + minutes;
     }
     return minutes;
   };
+
+  return (
+    <ScoreboardTable className="gcj-scoreboard__content" state={state}>
+      {renderData(content)}
+    </ScoreboardTable>
+  );
 }

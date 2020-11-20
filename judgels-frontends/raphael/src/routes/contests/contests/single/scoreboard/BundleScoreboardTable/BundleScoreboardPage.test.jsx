@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
-import { ReactWrapper, mount } from 'enzyme';
+import { mount } from 'enzyme';
 
-import { BundleScoreboardTableProps, BundleScoreboardTable } from './BundleScoreboardPage';
-import { BundleScoreboard } from '../../../../../../modules/api/uriel/scoreboard';
-import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
+import { BundleScoreboardTable } from './BundleScoreboardPage';
 
 describe('BundleScoreboardTable', () => {
-  let wrapper: ReactWrapper<BundleScoreboardTableProps>;
-  const scoreboard: BundleScoreboard = {
+  let wrapper;
+  const scoreboard = {
     state: {
       problemJids: ['JIDBUND1', 'JIDBUND2'],
       problemAliases: ['A', 'B'],
@@ -32,7 +30,7 @@ describe('BundleScoreboardTable', () => {
     },
   };
 
-  const profilesMap: ProfilesMap = {
+  const profilesMap = {
     JIDUSER1: { username: 'username1' },
     JIDUSER2: { username: 'username2' },
   };

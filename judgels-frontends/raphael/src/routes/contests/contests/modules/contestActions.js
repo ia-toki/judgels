@@ -2,12 +2,12 @@ import { push } from 'connected-react-router';
 import { SubmissionError } from 'redux-form';
 
 import { BadRequestError } from '../../../../modules/api/error';
-import { contestAPI, ContestCreateData, ContestUpdateData, ContestErrors } from '../../../../modules/api/uriel/contest';
+import { contestAPI, ContestErrors } from '../../../../modules/api/uriel/contest';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { DelContest, EditContest, PutContest } from './contestReducer';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function createContest(data: ContestCreateData) {
+export function createContest(data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -19,12 +19,12 @@ export function createContest(data: ContestCreateData) {
       throw error;
     }
     dispatch(push(`/contests/${data.slug}`));
-    dispatch(EditContest.create(true));
+    dispatch(EditContest(true));
     toastActions.showSuccessToast('Contest created.');
   };
 }
 
-export function updateContest(contestJid: string, contestSlug: string, data: ContestUpdateData) {
+export function updateContest(contestJid, contestSlug, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -43,7 +43,7 @@ export function updateContest(contestJid: string, contestSlug: string, data: Con
   };
 }
 
-export function getContests(name?: string, page?: number) {
+export function getContests(name, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestAPI.getContests(token, name, page);
@@ -57,23 +57,23 @@ export function getActiveContests() {
   };
 }
 
-export function getContestBySlug(contestSlug: string) {
+export function getContestBySlug(contestSlug) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const contest = await contestAPI.getContestBySlug(token, contestSlug);
-    dispatch(PutContest.create(contest));
+    dispatch(PutContest(contest));
     return contest;
   };
 }
 
-export function startVirtualContest(contestId: string) {
+export function startVirtualContest(contestId) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestAPI.startVirtualContest(token, contestId);
   };
 }
 
-export function resetVirtualContest(contestId: string) {
+export function resetVirtualContest(contestId) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestAPI.resetVirtualContest(token, contestId);
@@ -81,7 +81,7 @@ export function resetVirtualContest(contestId: string) {
   };
 }
 
-export function getContestDescription(contestJid: string) {
+export function getContestDescription(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const { description } = await contestAPI.getContestDescription(token, contestJid);
@@ -89,7 +89,7 @@ export function getContestDescription(contestJid: string) {
   };
 }
 
-export function updateContestDescription(contestJid: string, description: string) {
+export function updateContestDescription(contestJid, description) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestAPI.updateContestDescription(token, contestJid, { description });
@@ -97,4 +97,4 @@ export function updateContestDescription(contestJid: string, description: string
   };
 }
 
-export const clearContest = DelContest.create;
+export const clearContest = DelContest;

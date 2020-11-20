@@ -2,14 +2,11 @@ import * as React from 'react';
 import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import ContestsPage from './contests/ContestsPage/ContestsPage';
 
-const ContestsRoutes = () => {
-  const sidebarItems: ContentWithSidebarItem[] = [
+function ContestsRoutes() {
+  const sidebarItems = [
     {
       id: '@',
       titleIcon: 'timeline-events',
@@ -19,7 +16,7 @@ const ContestsRoutes = () => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'Menu',
     items: sidebarItems,
   };
@@ -29,6 +26,6 @@ const ContestsRoutes = () => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
-export default withRouter<any, any>(ContestsRoutes);
+export default withRouter(ContestsRoutes);

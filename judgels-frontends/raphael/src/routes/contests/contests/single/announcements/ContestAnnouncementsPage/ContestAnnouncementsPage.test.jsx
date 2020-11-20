@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,22 +8,17 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest } from '../../../../../../fixtures/state';
-import {
-  ContestAnnouncement,
-  ContestAnnouncementsResponse,
-} from '../../../../../../modules/api/uriel/contestAnnouncement';
-
 import ContestAnnouncementsPage from './ContestAnnouncementsPage';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
 jest.mock('../modules/contestAnnouncementActions');
 
 describe('ContestAnnouncementsPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestAnnouncementsResponse = {
+  const response = {
     data: { page: [], totalCount: 0 },
     config: { canSupervise: true, canManage: true },
     profilesMap: {
@@ -33,11 +28,11 @@ describe('ContestAnnouncementsPage', () => {
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -51,9 +46,9 @@ describe('ContestAnnouncementsPage', () => {
   };
 
   beforeEach(() => {
-    (contestAnnouncementActions.getAnnouncements as jest.Mock).mockReturnValue(() => Promise.resolve(response));
-    (contestAnnouncementActions.createAnnouncement as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-    (contestAnnouncementActions.updateAnnouncement as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    contestAnnouncementActions.getAnnouncements.mockReturnValue(() => Promise.resolve(response));
+    contestAnnouncementActions.createAnnouncement.mockReturnValue(() => Promise.resolve({}));
+    contestAnnouncementActions.updateAnnouncement.mockReturnValue(() => Promise.resolve({}));
   });
 
   describe('when there are no announcements', () => {
@@ -72,23 +67,23 @@ describe('ContestAnnouncementsPage', () => {
 
   describe('when there are announcements', () => {
     beforeEach(() => {
-      const announcements: ContestAnnouncement[] = [
+      const announcements = [
         {
           jid: 'jid1',
           userJid: 'userJid1',
           title: 'title1',
           content: 'content1',
           updatedTime: 0,
-        } as ContestAnnouncement,
+        },
         {
           jid: 'jid2',
           userJid: 'userJid2',
           title: 'title2',
           content: 'content2',
           updatedTime: 0,
-        } as ContestAnnouncement,
+        },
       ];
-      (contestAnnouncementActions.getAnnouncements as jest.Mock).mockReturnValue(() =>
+      contestAnnouncementActions.getAnnouncements.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: announcements, totalCount: 2 } })
       );
 

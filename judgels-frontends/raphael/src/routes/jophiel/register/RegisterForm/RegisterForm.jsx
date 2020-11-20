@@ -1,6 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
@@ -10,66 +10,52 @@ import { HorizontalDivider } from '../../../../components/HorizontalDivider/Hori
 
 import './RegisterForm.css';
 
-export interface RegisterFormData {
-  username: string;
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  recaptchaResponse?: string;
-}
-
-const usernameField: any = {
+const usernameField = {
   name: 'username',
   label: 'Username',
   required: true,
   validate: [Required, Username],
 };
 
-const nameField: any = {
+const nameField = {
   name: 'name',
   label: 'Name',
   validate: [Required],
 };
 
-const emailField: any = {
+const emailField = {
   name: 'email',
   label: 'Email',
   validate: [Required, EmailAddress],
 };
 
-const passwordField: any = {
+const passwordField = {
   name: 'password',
   label: 'Password',
   type: 'password',
   validate: [Required],
 };
 
-const confirmPasswordField: any = {
+const confirmPasswordField = {
   name: 'confirmPassword',
   label: 'Confirm password',
   type: 'password',
   validate: [Required, ConfirmPassword],
 };
 
-export interface RegisterFormProps extends InjectedFormProps<RegisterFormData> {
-  useRecaptcha: boolean;
-  recaptchaSiteKey?: string;
-}
-
-const RegisterForm = (props: RegisterFormProps) => {
+function RegisterForm({ handleSubmit, submitting, useRecaptcha, recaptchaSiteKey }) {
   let recaptchaChallengeField;
-  if (props.useRecaptcha) {
-    const recaptchaField: any = {
+  if (useRecaptcha) {
+    const recaptchaField = {
       name: 'recaptchaResponse',
-      siteKey: props.recaptchaSiteKey!,
+      siteKey: recaptchaSiteKey,
       validate: [Required],
     };
     recaptchaChallengeField = <Field component={FormRecaptcha} {...recaptchaField} />;
   }
 
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <Field component={FormTextInput} {...usernameField} />
       <Field component={FormTextInput} {...nameField} />
       <Field component={FormTextInput} {...emailField} />
@@ -80,13 +66,13 @@ const RegisterForm = (props: RegisterFormProps) => {
       <HorizontalDivider />
 
       <div className="form-login__actions">
-        <Button type="submit" text="Register" intent={Intent.PRIMARY} loading={props.submitting} />
+        <Button type="submit" text="Register" intent={Intent.PRIMARY} loading={submitting} />
         <p className="form-login__actions-register">
           Have an account already? <Link to="/login">Log in now</Link>
         </p>
       </div>
     </form>
   );
-};
+}
 
-export default reduxForm<RegisterFormData>({ form: 'register', touchOnBlur: false })(RegisterForm);
+export default reduxForm({ form: 'register', touchOnBlur: false })(RegisterForm);

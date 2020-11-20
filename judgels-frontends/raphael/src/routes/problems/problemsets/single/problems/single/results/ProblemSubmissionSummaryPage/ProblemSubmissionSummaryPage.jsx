@@ -1,55 +1,23 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
-import { AppState } from '../../../../../../../../modules/store';
-import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
-import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
-import { SubmissionSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
-import { SubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/submission';
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import {
-  ProblemSubmissionCard,
-  ProblemSubmissionCardProps,
-} from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
+import { ProblemSubmissionCard } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
-interface ProblemSubmissionSummaryPageRoute {
-  username?: string;
-}
-
-export interface ProblemSubmissionSummaryPageProps extends RouteComponentProps<ProblemSubmissionSummaryPageRoute> {
-  userJid?: string;
-  problemSet: ProblemSet;
-  problem: ProblemSetProblem;
-  language?: string;
-  onGetSubmissionSummary: (
-    problemSetJid: string,
-    problemJid: string,
-    username?: string,
-    language?: string
-  ) => Promise<SubmissionSummaryResponse>;
-  onRegradeAll: (problemSetJid: string, userJid?: string, problemJid?: string) => Promise<void>;
-}
-
-export interface ProblemSubmissionSummaryPageState {
-  config?: SubmissionConfig;
-  profile?: Profile;
-  problemSummaries?: ProblemSubmissionCardProps[];
-}
-
-class ProblemSubmissionSummaryPage extends React.Component<
-  ProblemSubmissionSummaryPageProps,
-  ProblemSubmissionSummaryPageState
-> {
-  state: ProblemSubmissionSummaryPageState = {};
+class ProblemSubmissionSummaryPage extends React.Component {
+  state = {
+    config: undefined,
+    profile: undefined,
+    problemSummaries: undefined,
+  };
 
   async refreshSubmissions() {
     const { userJid, problemSet, problem, onGetSubmissionSummary } = this.props;
@@ -65,7 +33,7 @@ class ProblemSubmissionSummaryPage extends React.Component<
       this.props.language
     );
 
-    const problemSummaries: ProblemSubmissionCardProps[] = response.config.problemJids.map(problemJid => ({
+    const problemSummaries = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
@@ -93,14 +61,14 @@ class ProblemSubmissionSummaryPage extends React.Component<
     );
   }
 
-  private renderUserFilter = () => {
+  renderUserFilter = () => {
     if (this.props.location.pathname.includes('/users/')) {
       return null;
     }
     return <ItemSubmissionUserFilter />;
   };
 
-  private renderResults = () => {
+  renderResults = () => {
     const { problemSummaries } = this.state;
     if (!problemSummaries) {
       return <LoadingState />;
@@ -120,7 +88,7 @@ class ProblemSubmissionSummaryPage extends React.Component<
     );
   };
 
-  private regrade = async problemJid => {
+  regrade = async problemJid => {
     const { userJids } = this.state.config;
     const userJid = userJids[0];
 
@@ -129,7 +97,7 @@ class ProblemSubmissionSummaryPage extends React.Component<
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   userJid: selectMaybeUserJid(state),
   problemSet: selectProblemSet(state),
   problem: selectProblemSetProblem(state),
@@ -141,4 +109,4 @@ const mapDispatchToProps = {
   onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
 };
 
-export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionSummaryPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionSummaryPage));

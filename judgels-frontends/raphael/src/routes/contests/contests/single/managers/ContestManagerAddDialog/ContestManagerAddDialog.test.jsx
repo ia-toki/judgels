@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,21 +6,20 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-
-import { ContestManagerAddDialog, ContestManagerAddDialogProps } from './ContestManagerAddDialog';
+import { ContestManagerAddDialog } from './ContestManagerAddDialog';
 
 describe('ContestManagerAddDialog', () => {
-  let onUpsertManagers: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onUpsertManagers;
+  let wrapper;
 
   beforeEach(() => {
     onUpsertManagers = jest
       .fn()
       .mockReturnValue(Promise.resolve({ insertedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} }));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestManagerAddDialogProps = {
+    const props = {
       contest,
       onUpsertManagers,
     };

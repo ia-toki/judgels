@@ -1,27 +1,10 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Course } from '../../../../modules/api/jerahmeel/course';
-
 import './CoursesTable.css';
 
-export interface CoursesTableProps {
-  courses: Course[];
-  onEditCourse: (course: Course) => any;
-  onEditCourseChapters: (course: Course) => any;
-}
-
-export class CoursesTable extends React.PureComponent<CoursesTableProps> {
-  render() {
-    return (
-      <HTMLTable striped className="table-list-condensed courses-table">
-        {this.renderHeader()}
-        {this.renderRows()}
-      </HTMLTable>
-    );
-  }
-
-  private renderHeader = () => {
+export function CoursesTable({ courses, onEditCourse, onEditCourseChapters }) {
+  const renderHeader = () => {
     return (
       <thead>
         <tr>
@@ -34,26 +17,26 @@ export class CoursesTable extends React.PureComponent<CoursesTableProps> {
     );
   };
 
-  private renderRows = () => {
-    const { courses } = this.props;
-
+  const renderRows = () => {
     const rows = courses.map(course => (
       <tr key={course.jid}>
         <td>{course.id}</td>
         <td>{course.slug}</td>
         <td>{course.name}</td>
         <td>
-          <Icon className="action" icon="edit" intent="primary" onClick={() => this.props.onEditCourse(course)} />
-          <Icon
-            className="action"
-            icon="properties"
-            intent="primary"
-            onClick={() => this.props.onEditCourseChapters(course)}
-          />
+          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditCourse(course)} />
+          <Icon className="action" icon="properties" intent="primary" onClick={() => onEditCourseChapters(course)} />
         </td>
       </tr>
     ));
 
     return <tbody>{rows}</tbody>;
   };
+
+  return (
+    <HTMLTable striped className="table-list-condensed courses-table">
+      {renderHeader()}
+      {renderRows()}
+    </HTMLTable>
+  );
 }

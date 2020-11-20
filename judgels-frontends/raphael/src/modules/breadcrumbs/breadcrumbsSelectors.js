@@ -1,11 +1,10 @@
 import { APP_CONFIG } from '../../conf';
-import { AppState } from '../../modules/store';
 
-export function selectSortedBreadcrumbs(state: AppState) {
+export function selectSortedBreadcrumbs(state) {
   return state.breadcrumbs.values.slice().sort((a, b) => a.link.length - b.link.length);
 }
 
-export function selectDocumentTitle(state: AppState) {
+export function selectDocumentTitle(state) {
   let title = APP_CONFIG.name;
   let longestBreadcrumb;
   state.breadcrumbs.values.forEach(breadcrumb => {

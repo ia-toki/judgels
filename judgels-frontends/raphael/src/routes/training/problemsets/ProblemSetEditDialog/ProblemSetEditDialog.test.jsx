@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
@@ -6,10 +6,9 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { ProblemSet } from '../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetEditDialog } from './ProblemSetEditDialog';
 
-const problemSet: ProblemSet = {
+const problemSet = {
   id: 1,
   jid: 'problemSetJid',
   slug: 'problemSet',
@@ -19,13 +18,13 @@ const problemSet: ProblemSet = {
 };
 
 describe('ProblemSetEditDialog', () => {
-  let onUpdateProblemSet: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onUpdateProblemSet;
+  let wrapper;
 
   beforeEach(() => {
     onUpdateProblemSet = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
       isOpen: true,

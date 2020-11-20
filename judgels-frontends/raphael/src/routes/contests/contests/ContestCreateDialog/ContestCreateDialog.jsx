@@ -1,19 +1,10 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContestCreateData } from '../../../../modules/api/uriel/contest';
 import ContestCreateForm from '../ContestCreateForm/ContestCreateForm';
 
-interface ContestCreateDialogProps {
-  onCreateContest: (data: ContestCreateData) => Promise<void>;
-}
-
-interface ContestCreateDialogState {
-  isDialogOpen?: boolean;
-}
-
-export class ContestCreateDialog extends React.Component<ContestCreateDialogProps, ContestCreateDialogState> {
-  state: ContestCreateDialogState = {};
+export class ContestCreateDialog extends React.Component {
+  state = { isDialogOpen: false };
 
   render() {
     return (
@@ -24,7 +15,7 @@ export class ContestCreateDialog extends React.Component<ContestCreateDialogProp
     );
   }
 
-  private renderButton = () => {
+  renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New contest
@@ -32,18 +23,18 @@ export class ContestCreateDialog extends React.Component<ContestCreateDialogProp
     );
   };
 
-  private toggleDialog = () => {
+  toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
-    const props: any = {
+  renderDialog = () => {
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createContest,
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen || false}
+        isOpen={this.state.isDialogOpen}
         onClose={this.toggleDialog}
         title="Create new contest"
         canOutsideClickClose={false}
@@ -53,7 +44,7 @@ export class ContestCreateDialog extends React.Component<ContestCreateDialogProp
     );
   };
 
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+  renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -65,7 +56,7 @@ export class ContestCreateDialog extends React.Component<ContestCreateDialogProp
     </>
   );
 
-  private createContest = async (data: ContestCreateData) => {
+  createContest = async data => {
     await this.props.onCreateContest(data);
     this.setState({ isDialogOpen: false });
   };

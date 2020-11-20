@@ -1,24 +1,19 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import createMockStore, { MockStore } from 'redux-mock-store';
+import createMockStore from 'redux-mock-store';
 
-import { AppState } from '../../modules/store';
 import { PushBreadcrumb, PopBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
 import { withBreadcrumb } from './BreadcrumbWrapper';
 
 describe('BreadcrumbWrapper', () => {
-  let store: MockStore<Partial<AppState>>;
-  let wrapper: ReactWrapper<any, any>;
-  let renderFn: jest.Mock<any>;
+  let store;
+  let wrapper;
+  let renderFn;
 
-  interface InnerComponentProps {
-    num: number;
-  }
-
-  class InnerComponent extends React.Component<InnerComponentProps> {
+  class InnerComponent extends React.Component {
     render() {
       renderFn(this.props.num);
       return <div />;
@@ -26,7 +21,7 @@ describe('BreadcrumbWrapper', () => {
   }
 
   beforeEach(() => {
-    store = createMockStore<Partial<AppState>>()({
+    store = createMockStore()({
       breadcrumbs: { values: [] },
     });
     renderFn = jest.fn();
@@ -44,7 +39,7 @@ describe('BreadcrumbWrapper', () => {
   });
 
   it('pushes a new breadcrumb when mounted', () => {
-    expect(store.getActions()).toContainEqual(PushBreadcrumb.create({ link: '/component', title: 'My Component' }));
+    expect(store.getActions()).toContainEqual(PushBreadcrumb({ link: '/component', title: 'My Component' }));
   });
 
   it('renders the inner component', () => {
@@ -53,6 +48,6 @@ describe('BreadcrumbWrapper', () => {
 
   it('pops a breadcrumb when unmounted', () => {
     wrapper.unmount();
-    expect(store.getActions()).toContainEqual(PopBreadcrumb.create({ link: '/component' }));
+    expect(store.getActions()).toContainEqual(PopBreadcrumb({ link: '/component' }));
   });
 });

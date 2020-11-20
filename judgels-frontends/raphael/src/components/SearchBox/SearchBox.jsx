@@ -2,40 +2,28 @@ import * as React from 'react';
 
 import { stringify, parse } from 'query-string';
 import { push } from 'connected-react-router';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import SearchBoxForm, { SearchBoxFormData } from './SearchBoxForm';
+import SearchBoxForm from './SearchBoxForm';
 
-interface SearchBoxRouteProps extends RouteComponentProps<{}> {
-  onAppendRoute: (queries: any) => any;
-}
-
-export interface SearchBoxProps {
-  onRouteChange: (content: string, prevQueries: any) => any;
-  initialValue?: string;
-  isLoading?: boolean;
-}
-
-const SearchBoxContainer = (props: SearchBoxProps & SearchBoxRouteProps) => {
-  const handleSubmit = (data: SearchBoxFormData) => {
-    const queries = parse(props.location.search);
-    props.onAppendRoute(props.onRouteChange(data.content, queries));
+function SearchBoxContainer({ location, onAppendRoute, onRouteChange, initialValue, isLoading }) {
+  const handleSubmit = ({ content }) => {
+    const queries = parse(location.search);
+    onAppendRoute(onRouteChange(content, queries));
   };
-
-  const { initialValue: content, isLoading } = props;
 
   const formProps = {
     isLoading,
     initialValues: {
-      content,
+      content: initialValue,
     },
   };
 
   return <SearchBoxForm onSubmit={handleSubmit} {...formProps} />;
-};
+}
 
 const mapDispatchToProps = {
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
-export default withRouter<any, any>(connect(undefined, mapDispatchToProps)(SearchBoxContainer));
+export default withRouter(connect(undefined, mapDispatchToProps)(SearchBoxContainer));

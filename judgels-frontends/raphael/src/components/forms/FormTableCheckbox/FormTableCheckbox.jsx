@@ -3,13 +3,14 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import { getIntentClassName } from '../meta';
-import { FormTableInput, FormTableInputProps } from '../FormTableInput/FormTableInput';
+import { FormTableInput } from '../FormTableInput/FormTableInput';
 
 import './FormTableCheckbox.css';
 
-export const FormTableCheckbox = (props: FormTableInputProps) => {
-  const { value, onChange, ...inputProps } = props.input;
-  const newOnChange = ({ target }) => onChange((target as any).checked);
+export function FormTableCheckbox(props) {
+  const { input, meta } = props;
+  const { value, onChange, ...inputProps } = input;
+  const newOnChange = ({ target }) => onChange(target.checked);
 
   return (
     <FormTableInput {...props}>
@@ -17,8 +18,8 @@ export const FormTableCheckbox = (props: FormTableInputProps) => {
         defaultChecked={!!value}
         onChange={newOnChange}
         {...inputProps}
-        className={classNames(getIntentClassName(props.meta))}
+        className={classNames(getIntentClassName(meta))}
       />
     </FormTableInput>
   );
-};
+}

@@ -3,36 +3,20 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
-import StatementLanguageWidget, {
-  StatementLanguageWidgetProps,
-} from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { ProblemSetProblemCard, ProblemSetProblemCardProps } from '../ProblemSetProblemCard/ProblemSetProblemCard';
+import StatementLanguageWidget from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { ProblemSetProblemCard } from '../ProblemSetProblemCard/ProblemSetProblemCard';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { ProblemSet } from '../../../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblemsResponse } from '../../../../../../modules/api/jerahmeel/problemSetProblem';
-import { AppState } from '../../../../../../modules/store';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
-export interface ProblemSetProblemsPageProps {
-  problemSet: ProblemSet;
-  statementLanguage: string;
-  onGetProblems: (problemSetJid: string) => Promise<ProblemSetProblemsResponse>;
-}
-
-interface ProblemSetProblemsPageState {
-  response?: ProblemSetProblemsResponse;
-  defaultLanguage?: string;
-  uniqueLanguages?: string[];
-}
-
-export class ProblemSetProblemsPage extends React.PureComponent<
-  ProblemSetProblemsPageProps,
-  ProblemSetProblemsPageState
-> {
-  state: ProblemSetProblemsPageState = {};
+export class ProblemSetProblemsPage extends React.Component {
+  state = {
+    response: undefined,
+    defaultLanguage: undefined,
+    uniqueLanguages: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetProblems(this.props.problemSet.jid);
@@ -48,7 +32,7 @@ export class ProblemSetProblemsPage extends React.PureComponent<
     });
   }
 
-  async componentDidUpdate(prevProps: ProblemSetProblemsPageProps) {
+  async componentDidUpdate(prevProps) {
     const { response } = this.state;
     if (this.props.statementLanguage !== prevProps.statementLanguage && response) {
       const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
@@ -74,20 +58,20 @@ export class ProblemSetProblemsPage extends React.PureComponent<
     );
   }
 
-  private renderStatementLanguageWidget = () => {
+  renderStatementLanguageWidget = () => {
     const { defaultLanguage, uniqueLanguages } = this.state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
 
-    const props: StatementLanguageWidgetProps = {
+    const props = {
       defaultLanguage,
       statementLanguages: uniqueLanguages,
     };
     return <StatementLanguageWidget {...props} />;
   };
 
-  private renderProblems = () => {
+  renderProblems = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -104,10 +88,10 @@ export class ProblemSetProblemsPage extends React.PureComponent<
     }
 
     return problems.map(problem => {
-      const props: ProblemSetProblemCardProps = {
+      const props = {
         problemSet: this.props.problemSet,
         problem,
-        problemName: getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage),
+        problemName: getProblemName(this.state.response.problemsMap[problem.problemJid], this.state.defaultLanguage),
         progress: problemProgressesMap[problem.problemJid],
         stats: problemStatsMap[problem.problemJid],
       };
@@ -116,7 +100,7 @@ export class ProblemSetProblemsPage extends React.PureComponent<
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   problemSet: selectProblemSet(state),
   statementLanguage: selectStatementLanguage(state),
 });

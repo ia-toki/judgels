@@ -1,35 +1,34 @@
 import { selectToken } from '../../../../../modules/session/sessionSelectors';
-
 import { contestWebAPI } from '../../../../../modules/api/uriel/contestWeb';
 import { PutContest } from '../../modules/contestReducer';
 import { DelWebConfig, PutWebConfig } from '../../modules/contestWebConfigReducer';
 
-export function getContestBySlugWithWebConfig(contestSlug: string) {
+export function getContestBySlugWithWebConfig(contestSlug) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const { contest, config } = await contestWebAPI.getContestBySlugWithWebConfig(token, contestSlug);
-    dispatch(PutContest.create(contest));
-    dispatch(PutWebConfig.create(config));
+    dispatch(PutContest(contest));
+    dispatch(PutWebConfig(config));
     return { contest, config };
   };
 }
 
-export function getContestByJidWithWebConfig(contestJid: string) {
+export function getContestByJidWithWebConfig(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const { contest, config } = await contestWebAPI.getContestByJidWithWebConfig(token, contestJid);
-    dispatch(PutContest.create(contest));
-    dispatch(PutWebConfig.create(config));
+    dispatch(PutContest(contest));
+    dispatch(PutWebConfig(config));
     return { contest, config };
   };
 }
 
-export function getWebConfig(contestJid: string) {
+export function getWebConfig(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const config = await contestWebAPI.getWebConfig(token, contestJid);
-    dispatch(PutWebConfig.create(config));
+    dispatch(PutWebConfig(config));
   };
 }
 
-export const clearWebConfig = DelWebConfig.create;
+export const clearWebConfig = DelWebConfig;

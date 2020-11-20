@@ -33,7 +33,7 @@ describe('profileActions', () => {
           .reply(200, { username: userJid });
 
         await store.dispatch(profileActions.getUser(username));
-        expect(store.getActions()).toContainEqual(PutUser.create({ userJid, username }));
+        expect(store.getActions()).toContainEqual(PutUser({ userJid, username }));
       });
     });
 

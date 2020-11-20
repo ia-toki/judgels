@@ -1,15 +1,12 @@
 import { SubmissionError } from 'redux-form';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import {
-  ContestClarificationData,
-  ContestClarificationStatus,
-} from '../../../../../../modules/api/uriel/contestClarification';
+import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { BadRequestError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import { contestClarificationAPI } from '../../../../../../modules/api/uriel/contestClarification';
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-export function createClarification(contestJid: string, data: ContestClarificationData) {
+export function createClarification(contestJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestClarificationAPI.createClarification(token, contestJid, data);
@@ -17,14 +14,14 @@ export function createClarification(contestJid: string, data: ContestClarificati
   };
 }
 
-export function getClarifications(contestJid: string, status?: string, language?: string, page?: number) {
+export function getClarifications(contestJid, status, language, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestClarificationAPI.getClarifications(token, contestJid, status, language, page);
   };
 }
 
-export function answerClarification(contestJid: string, clarificationJid: string, answer: string) {
+export function answerClarification(contestJid, clarificationJid, answer) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     try {
@@ -40,7 +37,7 @@ export function answerClarification(contestJid: string, clarificationJid: string
   };
 }
 
-export function alertNewClarifications(status: ContestClarificationStatus) {
+export function alertNewClarifications(status) {
   return async () => {
     if (status === ContestClarificationStatus.Answered) {
       toastActions.showAlertToast('You have new answered clarification(s).');

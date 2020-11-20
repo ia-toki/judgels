@@ -1,4 +1,4 @@
-export function formatDuration(ms: number) {
+export function formatDuration(ms) {
   let num = Math.floor(ms / 1000);
   let res = '';
 
@@ -28,7 +28,7 @@ export function formatDuration(ms: number) {
   return res.slice(0, -1);
 }
 
-export function parseDuration(str: string) {
+export function parseDuration(str) {
   let secs = 0;
   for (const token of str.split(' ')) {
     let match;

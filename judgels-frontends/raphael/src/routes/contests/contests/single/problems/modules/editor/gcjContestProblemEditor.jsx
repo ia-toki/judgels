@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-import { ContestProblemData, ContestProblemStatus } from '../../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemStatus } from '../../../../../../../modules/api/uriel/contestProblem';
 import { Alias, Slug, NonnegativeNumber } from '../../../../../../../components/forms/validations';
-
-import { ContestProblemEditor } from './contestProblemEditor';
 
 export default {
   validator: value => {
@@ -14,8 +12,8 @@ export default {
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()));
 
-    const aliases: string[] = [];
-    const slugs: string[] = [];
+    const aliases = [];
+    const slugs = [];
 
     for (const p of problems) {
       if (p.length < 3 || p.length > 5) {
@@ -67,7 +65,7 @@ export default {
 
     return undefined;
   },
-  serializer: (problems: ContestProblemData[]) => {
+  serializer: problems => {
     return problems
       .map(p => {
         const points = p.points || 0;
@@ -81,24 +79,21 @@ export default {
       })
       .join('\n');
   },
-  deserializer: (problems: string) => {
+  deserializer: problems => {
     return problems
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0)
       .map(s => s.split(','))
       .map(s => s.map(t => t.trim()))
-      .map(
-        s =>
-          ({
-            alias: s[0],
-            slug: s[1],
-            points: +s[2],
-            status: s[3] || ContestProblemStatus.Open,
-            submissionsLimit: s[4] && +s[4],
-          } as ContestProblemData)
-      );
+      .map(s => ({
+        alias: s[0],
+        slug: s[1],
+        points: +s[2],
+        status: s[3] || ContestProblemStatus.Open,
+        submissionsLimit: s[4] && +s[4],
+      }));
   },
   format: <code>alias,slug,points[,status[,submissionsLimit]]</code>,
   example: <pre>{'A,hello,3\nB,tree,4,CLOSED\nC,flow,6,OPEN,20'}</pre>,
-} as ContestProblemEditor;
+};

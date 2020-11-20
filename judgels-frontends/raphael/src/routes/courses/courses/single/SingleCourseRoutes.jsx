@@ -1,35 +1,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, RouteComponentProps, withRouter } from 'react-router';
+import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { Course } from '../../../../modules/api/jerahmeel/course';
-import { AppState } from '../../../../modules/store';
 import CourseChaptersPage from './chapters/CourseChaptersPage/CourseChaptersPage';
 import { selectCourse } from '../modules/courseSelectors';
 
 import './SingleCourseRoutes.css';
 
-interface SingleCourseRoutesProps extends RouteComponentProps<{ courseSlug: string }> {
-  course?: Course;
-}
-
-const SingleCourseRoutes = (props: SingleCourseRoutesProps) => {
-  const { course } = props;
-
+function SingleCourseRoutes({ match, course }) {
   // Optimization:
   // We wait until we get the course from the backend only if the current slug is different from the persisted one.
-  if (!course || course.slug !== props.match.params.courseSlug) {
+  if (!course || course.slug !== match.params.courseSlug) {
     return <LoadingState large />;
   }
 
-  const sidebarItems: ContentWithSidebarItem[] = [
+  const sidebarItems = [
     {
       id: '@',
       titleIcon: 'properties',
@@ -39,7 +28,7 @@ const SingleCourseRoutes = (props: SingleCourseRoutesProps) => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'Course Menu',
     items: sidebarItems,
     contentHeader: (
@@ -56,10 +45,10 @@ const SingleCourseRoutes = (props: SingleCourseRoutesProps) => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
 });
 
-export default withRouter<any, any>(connect(mapStateToProps)(SingleCourseRoutes));
+export default withRouter(connect(mapStateToProps)(SingleCourseRoutes));

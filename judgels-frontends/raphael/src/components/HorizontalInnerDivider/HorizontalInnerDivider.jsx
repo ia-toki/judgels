@@ -2,4 +2,6 @@ import * as React from 'react';
 
 import './HorizontalInnerDivider.css';
 
-export const HorizontalInnerDivider = () => <hr className="divider-horizontal-inner" />;
+export function HorizontalInnerDivider() {
+  return <hr className="divider-horizontal-inner" />;
+}

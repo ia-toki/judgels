@@ -13,6 +13,6 @@ export function getWebConfig() {
     } else {
       config = { role: { jophiel: JophielRole.Guest } };
     }
-    dispatch(PutWebConfig.create(config));
+    dispatch(PutWebConfig(config));
   };
 }

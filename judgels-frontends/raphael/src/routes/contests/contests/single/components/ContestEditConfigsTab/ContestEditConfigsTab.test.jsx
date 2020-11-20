@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -7,28 +7,27 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { ContestModulesConfig } from '../../../../../../modules/api/uriel/contestModule';
 import { contest, contestJid } from '../../../../../../fixtures/state';
 import { parseDuration } from '../../../../../../utils/duration';
 import ContestEditConfigsTab from './ContestEditConfigsTab';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
 jest.mock('../../modules/contestModuleActions');
 
 describe('ContestEditConfigsTab', () => {
-  let wrapper: ReactWrapper<any, any>;
-  let config: ContestModulesConfig;
+  let wrapper;
+  let config;
 
   const render = () => {
-    (contestModuleActions.getConfig as jest.Mock).mockReturnValue(() => Promise.resolve(config));
-    (contestModuleActions.upsertConfig as jest.Mock).mockReturnValue(() => Promise.resolve({}));
+    contestModuleActions.getConfig.mockReturnValue(() => Promise.resolve(config));
+    contestModuleActions.upsertConfig.mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>

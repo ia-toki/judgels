@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,18 +8,16 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest, contestJid } from '../../../../../../../fixtures/state';
-import { Submission } from '../../../../../../../modules/api/sandalphon/submissionProgramming';
-import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import ContestSubmissionsPage from './ContestSubmissionsPage';
-import { contestReducer, PutContest } from '../../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../../modules/contestReducer';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 jest.mock('../modules/contestSubmissionActions');
 
 describe('ContestSubmissionsPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestSubmissionsResponse = {
+  const response = {
     data: { page: [], totalCount: 0 },
     config: {
       canSupervise: true,
@@ -38,11 +36,11 @@ describe('ContestSubmissionsPage', () => {
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -56,7 +54,7 @@ describe('ContestSubmissionsPage', () => {
   };
 
   beforeEach(() => {
-    (contestSubmissionActions.getSubmissions as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    contestSubmissionActions.getSubmissions.mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no submissions', () => {
@@ -75,7 +73,7 @@ describe('ContestSubmissionsPage', () => {
 
   describe('when there are submissions', () => {
     beforeEach(() => {
-      const submissions: Submission[] = [
+      const submissions = [
         {
           jid: 'jid1',
           userJid: 'userJid1',
@@ -84,7 +82,7 @@ describe('ContestSubmissionsPage', () => {
           gradingEngine: 'Batch',
           gradingLanguage: 'Cpp',
           time: 123,
-        } as Submission,
+        },
         {
           jid: 'jid2',
           userJid: 'userJid2',
@@ -93,9 +91,9 @@ describe('ContestSubmissionsPage', () => {
           gradingEngine: 'Batch',
           gradingLanguage: 'Cpp',
           time: 456,
-        } as Submission,
+        },
       ];
-      (contestSubmissionActions.getSubmissions as jest.Mock).mockReturnValue(() =>
+      contestSubmissionActions.getSubmissions.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: submissions, totalCount: 2 } })
       );
 

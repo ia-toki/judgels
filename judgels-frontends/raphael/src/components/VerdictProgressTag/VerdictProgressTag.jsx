@@ -6,14 +6,7 @@ import { getVerdictIntent, VerdictCode } from '../../modules/api/gabriel/verdict
 
 import './VerdictProgressTag.css';
 
-export interface VerdictProgressTagProps {
-  className?: string;
-  verdict: string;
-  score: number;
-}
-
-export const VerdictProgressTag = (props: VerdictProgressTagProps) => {
-  const { className, verdict, score } = props;
+export const VerdictProgressTag = ({ className, verdict, score }) => {
   const intent = getVerdictIntent(verdict);
 
   if (verdict === VerdictCode.PND) {

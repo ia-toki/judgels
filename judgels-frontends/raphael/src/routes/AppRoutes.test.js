@@ -1,10 +1,10 @@
-import { JophielRole, UserRole } from '../modules/api/jophiel/role';
+import { JophielRole } from '../modules/api/jophiel/role';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 
 import { getVisibleAppRoutes } from './AppRoutes';
 
 describe('AppRoutes', () => {
-  const testAppRoutes = (role: UserRole, expectedIds: Array<string>) => {
+  const testAppRoutes = (role, expectedIds) => {
     const appRoutes = getVisibleAppRoutes(role);
     const ids = appRoutes.map(route => route.id);
     expect(ids).toEqual(expectedIds);

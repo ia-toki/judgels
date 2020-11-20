@@ -6,10 +6,12 @@ export const ContestsRoutesPromise = () => import('./MainContestsRoutes');
 
 const ContestsRoutes = React.lazy(ContestsRoutesPromise);
 
-const LazyContestsRoutes = props => (
-  <React.Suspense fallback={<LoadingState large />}>
-    <ContestsRoutes {...props} />
-  </React.Suspense>
-);
+function LazyContestsRoutes(props) {
+  return (
+    <React.Suspense fallback={<LoadingState large />}>
+      <ContestsRoutes {...props} />
+    </React.Suspense>
+  );
+}
 
 export default LazyContestsRoutes;

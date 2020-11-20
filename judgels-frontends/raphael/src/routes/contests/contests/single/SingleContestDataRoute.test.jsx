@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import { createMemoryHistory, MemoryHistory } from 'history';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -7,7 +7,7 @@ import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
 import thunk from 'redux-thunk';
 
-import { contestReducer } from '../modules/contestReducer';
+import contestReducer from '../modules/contestReducer';
 import SingleContestDataRoute from './SingleContestDataRoute';
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
@@ -18,12 +18,12 @@ jest.mock('./modules/contestWebActions');
 jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleContestDataRoute', () => {
-  let history: MemoryHistory;
+  let history;
 
-  const render = (currentPath: string) => {
+  const render = currentPath => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
 
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({
         uriel: combineReducers({ contest: contestReducer }),
         router: connectRouter(history),
@@ -41,13 +41,13 @@ describe('SingleContestDataRoute', () => {
   };
 
   beforeEach(() => {
-    (contestActions.clearContest as jest.Mock).mockReturnValue({ type: 'clear' });
-    (contestWebActions.getContestBySlugWithWebConfig as jest.Mock).mockReturnValue(() =>
+    contestActions.clearContest.mockReturnValue({ type: 'clear' });
+    contestWebActions.getContestBySlugWithWebConfig.mockReturnValue(() =>
       Promise.resolve({ contest: { jid: 'jid123', name: 'Contest 123' } })
     );
-    (contestWebActions.clearWebConfig as jest.Mock).mockReturnValue({ type: 'clear' });
-    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
-    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
+    contestWebActions.clearWebConfig.mockReturnValue({ type: 'clear' });
+    breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
+    breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
   });
 
   test('navigation', async () => {

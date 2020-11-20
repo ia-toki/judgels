@@ -1,24 +1,22 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
-import { ProblemSet } from '../../../../modules/api/jerahmeel/problemSet';
-import { ProblemSetProblem } from '../../../../modules/api/jerahmeel/problemSetProblem';
-import { ProblemSetProblemEditDialog, ProblemSetProblemEditDialogProps } from './ProblemSetProblemEditDialog';
+import { ProblemSetProblemEditDialog } from './ProblemSetProblemEditDialog';
 
 const problemSet = {
   jid: 'problemSet-jid',
-} as ProblemSet;
+};
 
 describe('ProblemSetProblemEditDialog', () => {
-  let onGetProblems: jest.Mock<any>;
-  let onSetProblems: jest.Mock<any>;
-  let wrapper: ReactWrapper<any, any>;
+  let onGetProblems;
+  let onSetProblems;
+  let wrapper;
 
-  const problems: ProblemSetProblem[] = [
+  const problems = [
     {
       alias: 'A',
       problemJid: 'jid-1',
@@ -40,9 +38,9 @@ describe('ProblemSetProblemEditDialog', () => {
     onGetProblems = jest.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap }));
     onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store: any = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ProblemSetProblemEditDialogProps = {
+    const props = {
       isOpen: true,
       problemSet,
       onCloseDialog: jest.fn(),

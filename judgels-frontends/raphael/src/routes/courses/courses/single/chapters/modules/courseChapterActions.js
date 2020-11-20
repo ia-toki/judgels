@@ -2,19 +2,19 @@ import { selectToken } from '../../../../../../modules/session/sessionSelectors'
 import { PutCourseChapter, DelCourseChapter } from './courseChapterReducer';
 import { courseChapterAPI } from '../../../../../../modules/api/jerahmeel/courseChapter';
 
-export function getChapters(courseJid: string) {
+export function getChapters(courseJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await courseChapterAPI.getChapters(token, courseJid);
   };
 }
 
-export function getChapter(courseJid: string, courseSlug: string, chapterAlias: string) {
+export function getChapter(courseJid, courseSlug, chapterAlias) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const chapter = await courseChapterAPI.getChapter(token, courseJid, chapterAlias);
     dispatch(
-      PutCourseChapter.create({
+      PutCourseChapter({
         value: { alias: chapterAlias, chapterJid: chapter.jid },
         courseSlug,
         name: chapter.name,
@@ -24,4 +24,4 @@ export function getChapter(courseJid: string, courseSlug: string, chapterAlias: 
   };
 }
 
-export const clearChapter = DelCourseChapter.create;
+export const clearChapter = DelCourseChapter;

@@ -1,20 +1,12 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { Required } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 
-export interface ChapterEditFormData {
-  name: string;
-}
-
-export interface ChapterEditFormProps extends InjectedFormProps<ChapterEditFormData> {
-  renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
-}
-
-const ChapterEditForm = (props: ChapterEditFormProps) => {
-  const nameField: any = {
+function ChapterEditForm({ handleSubmit, submitting, renderFormComponents }) {
+  const nameField = {
     name: 'name',
     label: 'Name',
     validate: [Required],
@@ -26,12 +18,12 @@ const ChapterEditForm = (props: ChapterEditFormProps) => {
       <Field component={FormTextInput} {...nameField} />
     </>
   );
-  const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={props.submitting} />;
+  const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
-};
+  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+}
 
-export default reduxForm<ChapterEditFormData>({
+export default reduxForm({
   form: 'chapter-edit',
   touchOnBlur: false,
   enableReinitialize: true,

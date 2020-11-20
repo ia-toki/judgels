@@ -2,31 +2,20 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from '../../../../../../modules/store';
-import { Contest } from '../../../../../../modules/api/uriel/contest';
-import { ContestModulesConfig } from '../../../../../../modules/api/uriel/contestModule';
-import { allLanguagesAllowed, LanguageRestriction } from '../../../../../../modules/api/gabriel/language';
+import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language.js';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
-import ContestEditConfigsForm, { ContestEditConfigsFormData } from '../ContestEditConfigsForm/ContestEditConfigsForm';
+import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
-interface ContestEditConfigsTabProps {
-  contest: Contest;
-  onGetConfig: (contestJid: string) => Promise<ContestModulesConfig>;
-  onUpsertConfig: (contestJid: string, config: ContestModulesConfig) => Promise<void>;
-}
-
-interface ContestEditConfigsTabState {
-  config?: ContestModulesConfig;
-  isEditing?: boolean;
-}
-
-class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, ContestEditConfigsTabState> {
-  state: ContestEditConfigsTabState = {};
+class ContestEditConfigsTab extends React.Component {
+  state = {
+    config: undefined,
+    isEditing: false,
+  };
 
   async componentDidMount() {
     await this.refreshConfig();
@@ -45,12 +34,12 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     );
   }
 
-  private refreshConfig = async () => {
+  refreshConfig = async () => {
     const config = await this.props.onGetConfig(this.props.contest.jid);
     this.setState({ config });
   };
 
-  private renderEditButton = () => {
+  renderEditButton = () => {
     return (
       !this.state.isEditing && (
         <Button small className="right-action-button" intent={Intent.PRIMARY} icon="edit" onClick={this.toggleEdit}>
@@ -60,7 +49,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     );
   };
 
-  private renderContent = () => {
+  renderContent = () => {
     const { config, isEditing } = this.state;
     if (config === undefined) {
       return <LoadingState />;
@@ -78,7 +67,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
         virtual,
       } = config;
 
-      let initialValues: ContestEditConfigsFormData = {
+      let initialValues = {
         scoreboardIsIncognito: scoreboard.isIncognitoScoreboard,
       };
       if (icpcStyle) {
@@ -145,7 +134,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     return <ContestEditConfigsTable config={config} />;
   };
 
-  private upsertConfig = async (data: ContestEditConfigsFormData) => {
+  upsertConfig = async data => {
     const {
       icpcStyle,
       ioiStyle,
@@ -155,62 +144,62 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       frozenScoreboard,
       externalScoreboard,
       virtual,
-    } = this.state.config!;
+    } = this.state.config;
 
-    let config: ContestModulesConfig = {
+    let config = {
       scoreboard: {
         isIncognitoScoreboard: data.scoreboardIsIncognito,
       },
     };
     if (icpcStyle) {
-      const allowedLanguageNames = data.icpcAllowAllLanguages ? [] : Object.keys(data.icpcAllowedLanguages!);
+      const allowedLanguageNames = data.icpcAllowAllLanguages ? [] : Object.keys(data.icpcAllowedLanguages);
       config = {
         ...config,
         icpcStyle: {
           languageRestriction: { allowedLanguageNames },
-          wrongSubmissionPenalty: +data.icpcWrongSubmissionPenalty!,
+          wrongSubmissionPenalty: +data.icpcWrongSubmissionPenalty,
         },
       };
     }
     if (ioiStyle) {
-      const allowedLanguageNames = data.ioiAllowAllLanguages ? [] : Object.keys(data.ioiAllowedLanguages!);
+      const allowedLanguageNames = data.ioiAllowAllLanguages ? [] : Object.keys(data.ioiAllowedLanguages);
       config = {
         ...config,
         ioiStyle: {
           languageRestriction: { allowedLanguageNames },
-          usingLastAffectingPenalty: data.ioiUsingLastAffectingPenalty!,
-          usingMaxScorePerSubtask: data.ioiUsingMaxScorePerSubtask!,
+          usingLastAffectingPenalty: data.ioiUsingLastAffectingPenalty,
+          usingMaxScorePerSubtask: data.ioiUsingMaxScorePerSubtask,
         },
       };
     }
     if (gcjStyle) {
-      const allowedLanguageNames = data.gcjAllowAllLanguages ? [] : Object.keys(data.gcjAllowedLanguages!);
+      const allowedLanguageNames = data.gcjAllowAllLanguages ? [] : Object.keys(data.gcjAllowedLanguages);
       config = {
         ...config,
         gcjStyle: {
           languageRestriction: { allowedLanguageNames },
-          wrongSubmissionPenalty: +data.gcjWrongSubmissionPenalty!,
+          wrongSubmissionPenalty: +data.gcjWrongSubmissionPenalty,
         },
       };
     }
     if (clarificationTimeLimit) {
       config = {
         ...config,
-        clarificationTimeLimit: { clarificationDuration: parseDuration(data.clarificationTimeLimitDuration!) },
+        clarificationTimeLimit: { clarificationDuration: parseDuration(data.clarificationTimeLimitDuration) },
       };
     }
     if (division) {
       config = {
         ...config,
-        division: { division: +data.divisionDivision! },
+        division: { division: +data.divisionDivision },
       };
     }
     if (frozenScoreboard) {
       config = {
         ...config,
         frozenScoreboard: {
-          scoreboardFreezeTime: parseDuration(data.frozenScoreboardFreezeTime!),
-          isOfficialScoreboardAllowed: data.frozenScoreboardIsOfficialAllowed!,
+          scoreboardFreezeTime: parseDuration(data.frozenScoreboardFreezeTime),
+          isOfficialScoreboardAllowed: data.frozenScoreboardIsOfficialAllowed,
         },
       };
     }
@@ -218,13 +207,13 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       config = {
         ...config,
         externalScoreboard: {
-          receiverUrl: data.externalScoreboardReceiverUrl!,
-          receiverSecret: data.externalScoreboardReceiverSecret!,
+          receiverUrl: data.externalScoreboardReceiverUrl,
+          receiverSecret: data.externalScoreboardReceiverSecret,
         },
       };
     }
     if (virtual) {
-      config = { ...config, virtual: { virtualDuration: parseDuration(data.virtualDuration!) } };
+      config = { ...config, virtual: { virtualDuration: parseDuration(data.virtualDuration) } };
     }
 
     await this.props.onUpsertConfig(this.props.contest.jid, config);
@@ -232,18 +221,18 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     this.toggleEdit();
   };
 
-  private fromLanguageRestriction = (r: LanguageRestriction) => {
+  fromLanguageRestriction = r => {
     return Object.assign({}, ...r.allowedLanguageNames.map(l => ({ [l]: true })));
   };
 
-  private toggleEdit = () => {
-    this.setState((prevState: ContestEditConfigsTabState) => ({
+  toggleEdit = () => {
+    this.setState(prevState => ({
       isEditing: !prevState.isEditing,
     }));
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   contest: selectContest(state),
 });
 const mapDispatchToProps = {

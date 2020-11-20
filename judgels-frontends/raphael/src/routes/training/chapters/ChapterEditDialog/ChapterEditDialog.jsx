@@ -1,50 +1,39 @@
 import { Classes, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ChapterUpdateData, Chapter } from '../../../../modules/api/jerahmeel/chapter';
-import ChapterEditForm, { ChapterEditFormData } from '../ChapterEditForm/ChapterEditForm';
+import ChapterEditForm from '../ChapterEditForm/ChapterEditForm';
 
-interface ChapterEditDialogProps {
-  isOpen: boolean;
-  chapter?: Chapter;
-  onCloseDialog: () => void;
-  onUpdateChapter: (chapterJid: string, data: ChapterUpdateData) => Promise<void>;
-}
-
-export class ChapterEditDialog extends React.Component<ChapterEditDialogProps> {
-  render() {
-    const { chapter, isOpen, onCloseDialog } = this.props;
-    const initialValues: ChapterEditFormData = chapter && {
-      name: chapter.name,
-    };
-    const props: any = {
-      renderFormComponents: this.renderDialogForm,
-      onSubmit: this.updateChapter,
-      initialValues,
-    };
-
-    return (
-      <div className="content-card__section">
-        <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit chapter" canOutsideClickClose={false}>
-          <ChapterEditForm {...props} />
-        </Dialog>
-      </div>
-    );
-  }
-
-  private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
+export function ChapterEditDialog({ chapter, isOpen, onCloseDialog, onUpdateChapter }) {
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.props.onCloseDialog} />
+          <Button text="Cancel" onClick={onCloseDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  private updateChapter = async (data: ChapterUpdateData) => {
-    await this.props.onUpdateChapter(this.props.chapter.jid, data);
+  const updateChapter = async data => {
+    await onUpdateChapter(chapter.jid, data);
   };
+
+  const initialValues = chapter && {
+    name: chapter.name,
+  };
+  const props = {
+    renderFormComponents: renderDialogForm,
+    onSubmit: updateChapter,
+    initialValues,
+  };
+
+  return (
+    <div className="content-card__section">
+      <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit chapter" canOutsideClickClose={false}>
+        <ChapterEditForm {...props} />
+      </Dialog>
+    </div>
+  );
 }

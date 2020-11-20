@@ -3,19 +3,12 @@ import * as React from 'react';
 
 import { getVerdictIntent } from '../../modules/api/gabriel/verdict';
 
-export interface ProgressBarProps {
-  num: number;
-  denom: number;
-  verdict?: string;
-}
-
-export const ProgressBar = (props: ProgressBarProps) => {
-  const { num, denom, verdict } = props;
+export function ProgressBar({ num, denom, verdict }) {
   if (denom === 0) {
     return null;
   }
 
-  let intent: Intent;
+  let intent;
   if (verdict) {
     intent = getVerdictIntent(verdict);
   } else if (num === denom) {
@@ -32,4 +25,4 @@ export const ProgressBar = (props: ProgressBarProps) => {
       value={num / denom}
     />
   );
-};
+}

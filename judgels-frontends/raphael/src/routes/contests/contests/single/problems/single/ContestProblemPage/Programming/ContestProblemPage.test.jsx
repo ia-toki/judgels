@@ -1,5 +1,5 @@
-import { mount, ReactWrapper } from 'enzyme';
-import { createMemoryHistory, MemoryHistory } from 'history';
+import { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -8,11 +8,11 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { webPrefsReducer } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid } from '../../../../../../../../fixtures/state';
 import ContestProblemPage from './ContestProblemPage';
-import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
 import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
@@ -24,11 +24,11 @@ jest.mock('../../../../../../../../modules/webPrefs/webPrefsActions');
 jest.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('ProgrammingContestProblemPage', () => {
-  let wrapper: ReactWrapper<any, any>;
-  let history: MemoryHistory;
+  let wrapper;
+  let history;
 
   beforeEach(() => {
-    (contestProblemActions.getProgrammingProblemWorksheet as jest.Mock).mockReturnValue(() =>
+    contestProblemActions.getProgrammingProblemWorksheet.mockReturnValue(() =>
       Promise.resolve({
         problem: {
           problemJid,
@@ -55,14 +55,14 @@ describe('ProgrammingContestProblemPage', () => {
       })
     );
 
-    (webPrefsActions.updateGradingLanguage as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-    (contestSubmissionActions.createSubmission as jest.Mock).mockReturnValue(() => Promise.resolve({}));
-    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
-    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
+    webPrefsActions.updateGradingLanguage.mockReturnValue(() => Promise.resolve({}));
+    contestSubmissionActions.createSubmission.mockReturnValue(() => Promise.resolve({}));
+    breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
+    breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
 
     history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/C`] });
 
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({
         form: formReducer,
         webPrefs: webPrefsReducer,
@@ -71,7 +71,7 @@ describe('ProgrammingContestProblemPage', () => {
       }),
       applyMiddleware(thunk, routerMiddleware(history))
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <Provider store={store}>
@@ -115,8 +115,8 @@ describe('ProgrammingContestProblemPage', () => {
     expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith(contestJid, 'contest-a', problemJid, {
       gradingLanguage: 'Cpp11',
       sourceFiles: {
-        encoder: { name: 'encoder.cpp', size: 1000 } as File,
-        decoder: { name: 'decoder.cpp', size: 2000 } as File,
+        encoder: { name: 'encoder.cpp', size: 1000 },
+        decoder: { name: 'decoder.cpp', size: 2000 },
       },
     });
   });

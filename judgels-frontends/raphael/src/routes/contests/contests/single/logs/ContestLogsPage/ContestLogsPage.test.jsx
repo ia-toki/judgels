@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,17 +8,16 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest, contestJid } from '../../../../../../fixtures/state';
-import { ContestLog, ContestLogsResponse } from '../../../../../../modules/api/uriel/contestLog';
 import ContestLogsPage from './ContestLogsPage';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestLogActions from '../modules/contestLogActions';
 
 jest.mock('../modules/contestLogActions');
 
 describe('ContestLogsPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestLogsResponse = {
+  const response = {
     data: { page: [], totalCount: 0 },
     config: {
       userJids: [],
@@ -35,11 +34,11 @@ describe('ContestLogsPage', () => {
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -53,7 +52,7 @@ describe('ContestLogsPage', () => {
   };
 
   beforeEach(() => {
-    (contestLogActions.getLogs as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    contestLogActions.getLogs.mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no logs', () => {
@@ -72,23 +71,23 @@ describe('ContestLogsPage', () => {
 
   describe('when there are logs', () => {
     beforeEach(() => {
-      const logs: ContestLog[] = [
+      const logs = [
         {
           contestJid: contestJid,
           userJid: 'userJid1',
           event: 'OPEN_PROBLEM',
           problemJid: 'problemJid1',
           time: 123,
-        } as ContestLog,
+        },
         {
           contestJid: contestJid,
           userJid: 'userJid2',
           event: 'CREATE_CLARIFICATION',
           problemJid: 'problemJid1',
           time: 456,
-        } as ContestLog,
+        },
       ];
-      (contestLogActions.getLogs as jest.Mock).mockReturnValue(() =>
+      contestLogActions.getLogs.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: logs, totalCount: 2 } })
       );
 

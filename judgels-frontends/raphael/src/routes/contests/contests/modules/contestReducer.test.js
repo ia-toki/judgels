@@ -1,31 +1,29 @@
-import { Contest } from '../../../../modules/api/uriel/contest';
-
-import { contestReducer, ContestState, DelContest, INITIAL_STATE, PutContest } from './contestReducer';
+import contestReducer, { ContestState, DelContest, INITIAL_STATE, PutContest } from './contestReducer';
 
 describe('contestReducer', () => {
   test('PUT', () => {
-    const state = INITIAL_STATE;
-    const contest = { name: 'contest ' } as Contest;
-    const action = PutContest.create(contest);
-    const nextState: ContestState = { value: contest };
+    const state = {};
+    const contest = { name: 'contest ' };
+    const action = PutContest(contest);
+    const nextState = { value: contest };
     expect(contestReducer(state, action)).toEqual(nextState);
   });
 
   test('DEL', () => {
-    const contest = { name: 'contest ' } as Contest;
-    const state: ContestState = { value: contest };
-    const action = DelContest.create();
-    const nextState: ContestState = {};
+    const contest = { name: 'contest ' };
+    const state = { value: contest };
+    const action = DelContest();
+    const nextState = {};
     expect(contestReducer(state, action)).toEqual(nextState);
   });
 
   test('other actions', () => {
-    const contest = { name: 'contest ' } as Contest;
-    const state: ContestState = { value: contest };
+    const contest = { name: 'contest ' };
+    const state = { value: contest };
     expect(contestReducer(state, { type: 'other' })).toEqual(state);
   });
 
   test('initial state', () => {
-    expect(contestReducer(undefined as any, { type: 'other' })).toEqual(INITIAL_STATE);
+    expect(contestReducer(undefined, { type: 'other' })).toEqual({ value: undefined, isEditing: false });
   });
 });

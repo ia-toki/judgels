@@ -3,30 +3,17 @@ import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
-import { UserRegistrationWebConfig } from '../../../../modules/api/jophiel/userRegistration';
 import ResendActivationEmailButton from '../../components/ResendActivationEmailButton/ResendActivationEmailButton';
-
-import RegisterForm, { RegisterFormData } from '../RegisterForm/RegisterForm';
+import RegisterForm from '../RegisterForm/RegisterForm';
 import * as registerActions from '../modules/registerActions';
 
 import './RegisterPage.css';
 
-export interface RegisterPageProps {
-  onGetWebConfig: () => Promise<UserRegistrationWebConfig>;
-  onRegisterUser: (data: RegisterFormData) => Promise<void>;
-}
-
-interface RegisterPageState {
-  config?: UserRegistrationWebConfig;
-  registeredUser?: {
-    username: string;
-    email: string;
+class RegisterPage extends React.Component {
+  state = {
+    config: undefined,
+    registeredUser: undefined,
   };
-}
-
-class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageState> {
-  state: RegisterPageState = {};
 
   async componentDidMount() {
     const config = await this.props.onGetWebConfig();
@@ -39,7 +26,7 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
       return null;
     }
 
-    let content: JSX.Element;
+    let content;
     if (this.state.registeredUser) {
       content = (
         <Card title="Activation required" className="card-register">
@@ -69,7 +56,7 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
     return <SingleColumnLayout>{content}</SingleColumnLayout>;
   }
 
-  private onRegisterUser = async (data: RegisterFormData) => {
+  onRegisterUser = async data => {
     await this.props.onRegisterUser(data);
     this.setState({
       registeredUser: {
@@ -82,8 +69,8 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
 
 const mapDispatchToProps = {
   onGetWebConfig: registerActions.getWebConfig,
-  onRegisterUser: (data: RegisterFormData) => {
-    const userRegistrationData: UserRegistrationData = {
+  onRegisterUser: data => {
+    const userRegistrationData = {
       username: data.username,
       password: data.password,
       email: data.email,

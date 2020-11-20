@@ -3,24 +3,14 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
-import { CourseChapterCard, CourseChapterCardProps } from '../CourseChapterCard/CourseChapterCard';
-import { Course } from '../../../../../../modules/api/jerahmeel/course';
-import { CourseChaptersResponse } from '../../../../../../modules/api/jerahmeel/courseChapter';
-import { AppState } from '../../../../../../modules/store';
+import { CourseChapterCard } from '../CourseChapterCard/CourseChapterCard';
 import { selectCourse } from '../../../modules/courseSelectors';
 import * as courseChapterActions from '../modules/courseChapterActions';
 
-export interface CourseChaptersPageProps {
-  course: Course;
-  onGetChapters: (courseJid: string) => Promise<CourseChaptersResponse>;
-}
-
-interface CourseChaptersPageState {
-  response?: CourseChaptersResponse;
-}
-
-export class CourseChaptersPage extends React.PureComponent<CourseChaptersPageProps, CourseChaptersPageState> {
-  state: CourseChaptersPageState = {};
+export class CourseChaptersPage extends React.Component {
+  state = {
+    response: undefined,
+  };
 
   async componentDidMount() {
     const response = await this.props.onGetChapters(this.props.course.jid);
@@ -37,7 +27,7 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
     );
   }
 
-  private renderChapters = () => {
+  renderChapters = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -54,7 +44,7 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
     }
 
     return chapters.map(chapter => {
-      const props: CourseChapterCardProps = {
+      const props = {
         course: this.props.course,
         chapter,
         chapterName: chaptersMap[chapter.chapterJid].name,
@@ -65,7 +55,7 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
   };
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = state => ({
   course: selectCourse(state),
 });
 

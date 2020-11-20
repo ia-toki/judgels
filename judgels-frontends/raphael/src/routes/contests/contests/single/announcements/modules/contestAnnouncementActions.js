@@ -1,11 +1,8 @@
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import {
-  ContestAnnouncementData,
-  contestAnnouncementAPI,
-} from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { contestAnnouncementAPI } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-export function getAnnouncements(contestJid: string, page?: number) {
+export function getAnnouncements(contestJid, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     return await contestAnnouncementAPI.getAnnouncements(token, contestJid, page);
@@ -18,7 +15,7 @@ export function alertNewAnnouncements() {
   };
 }
 
-export function createAnnouncement(contestJid: string, data: ContestAnnouncementData) {
+export function createAnnouncement(contestJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestAnnouncementAPI.createAnnouncement(token, contestJid, data);
@@ -26,7 +23,7 @@ export function createAnnouncement(contestJid: string, data: ContestAnnouncement
   };
 }
 
-export function updateAnnouncement(contestJid: string, announcementJid: string, data: ContestAnnouncementData) {
+export function updateAnnouncement(contestJid, announcementJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     await contestAnnouncementAPI.updateAnnouncement(token, contestJid, announcementJid, data);

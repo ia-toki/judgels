@@ -12,10 +12,10 @@ describe('defaultContestProblemEditor', () => {
     expect(defaultContestProblemEditor.validator('A,B,C,D,E')).toEqual(
       'Each line must contain 2-4 comma-separated elements'
     );
-    expect(defaultContestProblemEditor.validator('A A,slug')!.startsWith('Problem aliases: ')).toBeTruthy();
-    expect(defaultContestProblemEditor.validator('A,slug slug')!.startsWith('Problem slugs: ')).toBeTruthy();
+    expect(defaultContestProblemEditor.validator('A A,slug').startsWith('Problem aliases: ')).toBeTruthy();
+    expect(defaultContestProblemEditor.validator('A,slug slug').startsWith('Problem slugs: ')).toBeTruthy();
     expect(
-      defaultContestProblemEditor.validator('A,slug,OPEN,-1')!.startsWith('Problem submissions limits: ')
+      defaultContestProblemEditor.validator('A,slug,OPEN,-1').startsWith('Problem submissions limits: ')
     ).toBeTruthy();
     expect(defaultContestProblemEditor.validator('A,slug,ABANDONED')).toEqual(
       'Problem statuses: Must be either OPEN or CLOSED'

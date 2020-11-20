@@ -18,11 +18,11 @@ export class HtmlText extends React.Component {
     );
   }
 
-  private createRef = e => {
+  createRef = e => {
     this.ref = e;
   };
 
-  private setUpSpoilers() {
+  setUpSpoilers() {
     const spoilers = this.ref.getElementsByClassName('spoiler');
     for (let i = 0; i < spoilers.length; i++) {
       const spoiler = spoilers[i];

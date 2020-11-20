@@ -6,29 +6,13 @@ import { LoadingContentCard } from '../../../../components/LoadingContentCard/Lo
 import { ArchiveCreateDialog } from '../ArchiveCreateDialog/ArchiveCreateDialog';
 import { ArchiveEditDialog } from '../ArchiveEditDialog/ArchiveEditDialog';
 import { ArchivesTable } from '../ArchivesTable/ArchivesTable';
-import {
-  ArchivesResponse,
-  ArchiveCreateData,
-  Archive,
-  ArchiveUpdateData,
-} from '../../../../modules/api/jerahmeel/archive';
 import * as archiveActions from '../modules/archiveActions';
 
-export interface ArchivesPageProps {
-  onGetArchives: () => Promise<ArchivesResponse>;
-  onCreateArchive: (data: ArchiveCreateData) => Promise<void>;
-  onUpdateArchive: (archiveJid: string, data: ArchiveUpdateData) => Promise<void>;
-}
-
-interface ArchivesPageState {
-  response?: ArchivesResponse;
-  isEditDialogOpen: boolean;
-  editedArchive?: Archive;
-}
-
-class ArchivesPage extends React.Component<ArchivesPageProps, ArchivesPageState> {
-  state: ArchivesPageState = {
+class ArchivesPage extends React.Component {
+  state = {
+    response: undefined,
     isEditDialogOpen: false,
+    editedArchive: undefined,
   };
 
   componentDidMount() {
@@ -47,16 +31,16 @@ class ArchivesPage extends React.Component<ArchivesPageProps, ArchivesPageState>
     );
   }
 
-  private refreshArchives = async () => {
+  refreshArchives = async () => {
     const response = await this.props.onGetArchives();
     this.setState({ response });
   };
 
-  private renderCreateDialog = () => {
+  renderCreateDialog = () => {
     return <ArchiveCreateDialog onCreateArchive={this.createArchive} />;
   };
 
-  private renderEditDialog = () => {
+  renderEditDialog = () => {
     const { isEditDialogOpen, editedArchive } = this.state;
     return (
       <ArchiveEditDialog
@@ -68,7 +52,7 @@ class ArchivesPage extends React.Component<ArchivesPageProps, ArchivesPageState>
     );
   };
 
-  private renderArchives = () => {
+  renderArchives = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -86,19 +70,19 @@ class ArchivesPage extends React.Component<ArchivesPageProps, ArchivesPageState>
     return <ArchivesTable archives={archives} onEditArchive={this.editArchive} />;
   };
 
-  private createArchive = async (data: ArchiveCreateData) => {
+  createArchive = async data => {
     await this.props.onCreateArchive(data);
     await this.refreshArchives();
   };
 
-  private editArchive = async (archive?: Archive) => {
+  editArchive = async archive => {
     this.setState({
       isEditDialogOpen: !!archive,
       editedArchive: archive,
     });
   };
 
-  private updateArchive = async (archiveJid: string, data: ArchiveUpdateData) => {
+  updateArchive = async (archiveJid, data) => {
     await this.props.onUpdateArchive(archiveJid, data);
     this.editArchive(undefined);
     await this.refreshArchives();

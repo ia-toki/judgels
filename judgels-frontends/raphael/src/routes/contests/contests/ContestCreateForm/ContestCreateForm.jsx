@@ -1,20 +1,12 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 import { Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 
-export interface ContestCreateFormData {
-  slug: string;
-}
-
-export interface ContestCreateFormProps extends InjectedFormProps<ContestCreateFormData> {
-  renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
-}
-
-const ContestCreateForm = (props: ContestCreateFormProps) => {
-  const slugField: any = {
+function ContestCreateForm({ handleSubmit, submitting, renderFormComponents }) {
+  const slugField = {
     name: 'slug',
     label: 'Slug',
     validate: [Required, Slug],
@@ -22,12 +14,12 @@ const ContestCreateForm = (props: ContestCreateFormProps) => {
   };
 
   const fields = <Field component={FormTextInput} {...slugField} />;
-  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={props.submitting} />;
+  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
-};
+  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+}
 
-export default reduxForm<ContestCreateFormData>({
+export default reduxForm({
   form: 'contest-create',
   touchOnBlur: false,
 })(ContestCreateForm);

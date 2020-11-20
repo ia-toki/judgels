@@ -1,6 +1,6 @@
 import { SubmissionError } from 'redux-form';
 
-import { UserRegistrationData, userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
+import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
 import { userRegistrationWebAPI } from '../../../../modules/api/jophiel/userRegistration';
 import { userSearchAPI } from '../../../../modules/api/jophiel/userSearch';
 
@@ -10,7 +10,7 @@ export function getWebConfig() {
   };
 }
 
-export function registerUser(data: UserRegistrationData) {
+export function registerUser(data) {
   return async () => {
     const usernameExists = await userSearchAPI.usernameExists(data.username);
     const emailExists = await userSearchAPI.emailExists(data.email);

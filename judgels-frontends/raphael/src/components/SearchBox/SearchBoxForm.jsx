@@ -1,21 +1,13 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { Field, InjectedFormProps, reduxForm, Form } from 'redux-form';
+import { Field, reduxForm, Form } from 'redux-form';
 
-import { FormTextInput } from '../../components/forms/FormTextInput/FormTextInput';
+import { FormTextInput } from '../forms/FormTextInput/FormTextInput';
 
 import './SearchBox.css';
 
-export interface SearchBoxFormData {
-  content: string;
-}
-
-export interface SearchBoxFormProps extends InjectedFormProps<SearchBoxFormData> {
-  isLoading: boolean;
-}
-
-const SearchBoxForm = (props: SearchBoxFormProps) => {
-  const contentField: any = {
+function SearchBoxForm({ handleSubmit, submitting, isLoading }) {
+  const contentField = {
     name: 'content',
   };
 
@@ -30,19 +22,19 @@ const SearchBoxForm = (props: SearchBoxFormProps) => {
       type="submit"
       text="Search"
       intent={Intent.PRIMARY}
-      loading={props.isLoading || props.submitting}
+      loading={isLoading || submitting}
     />
   );
 
   return (
-    <Form onSubmit={props.handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       {fields}
       {submitButton}
     </Form>
   );
-};
+}
 
-export default reduxForm<SearchBoxFormData>({
+export default reduxForm({
   form: 'search-box',
   touchOnBlur: false,
   enableReinitialize: true,

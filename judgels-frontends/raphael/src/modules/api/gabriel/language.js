@@ -1,7 +1,3 @@
-export interface LanguageRestriction {
-  allowedLanguageNames: string[];
-}
-
 export const OutputOnlyOverrides = {
   KEY: 'OutputOnly',
   NAME: '-',
@@ -58,23 +54,23 @@ export const gradingLanguages = Object.keys(gradingLanguageNamesMap)
   .filter(l => l !== OutputOnlyOverrides.KEY)
   .sort();
 
-export function getGradingLanguageName(code: string): string {
+export function getGradingLanguageName(code) {
   return gradingLanguageNamesMap[code] || code;
 }
 
-export function getGradingLanguageFamily(code: string): string {
+export function getGradingLanguageFamily(code) {
   return gradingLanguageFamiliesMap[code];
 }
 
-export function getGradingLanguageFilenameExtensions(code: string): string[] {
+export function getGradingLanguageFilenameExtensions(code) {
   return gradingLanguageFilenameExtensionsMap[code] || [];
 }
 
-export function getGradingLanguageSyntaxHighlighterValue(code: string): string {
+export function getGradingLanguageSyntaxHighlighterValue(code) {
   return gradingLanguageSyntaxHighlighterValueMap[code] || code;
 }
 
-export function getAllowedGradingLanguages(gradingEngine: string, restriction: LanguageRestriction) {
+export function getAllowedGradingLanguages(gradingEngine, restriction) {
   if (gradingEngine.startsWith(OutputOnlyOverrides.KEY)) {
     return [OutputOnlyOverrides.KEY];
   }
@@ -84,6 +80,6 @@ export function getAllowedGradingLanguages(gradingEngine: string, restriction: L
   return restriction.allowedLanguageNames;
 }
 
-export function allLanguagesAllowed(r: LanguageRestriction) {
+export function allLanguagesAllowed(r) {
   return !r.allowedLanguageNames || r.allowedLanguageNames.length === 0;
 }

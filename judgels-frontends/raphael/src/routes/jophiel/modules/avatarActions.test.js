@@ -20,7 +20,7 @@ describe('avatarActions', () => {
   });
 
   describe('updateAvatar()', () => {
-    const file = {} as File;
+    const file = {};
 
     it('calls API to update avatar', async () => {
       nock(APP_CONFIG.apiUrls.jophiel)

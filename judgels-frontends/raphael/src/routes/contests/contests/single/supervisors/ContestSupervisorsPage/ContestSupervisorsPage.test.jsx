@@ -1,4 +1,4 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
@@ -8,17 +8,16 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest } from '../../../../../../fixtures/state';
-import { ContestSupervisor, ContestSupervisorsResponse } from '../../../../../../modules/api/uriel/contestSupervisor';
 import ContestSupervisorsPage from './ContestSupervisorsPage';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
 
 jest.mock('../../modules/contestSupervisorActions');
 
 describe('ContestSupervisorsPage', () => {
-  let wrapper: ReactWrapper<any, any>;
+  let wrapper;
 
-  const response: ContestSupervisorsResponse = {
+  const response = {
     data: { page: [], totalCount: 0 },
     profilesMap: {
       userJid1: { username: 'user1' },
@@ -27,11 +26,11 @@ describe('ContestSupervisorsPage', () => {
   };
 
   const render = () => {
-    const store: any = createStore(
+    const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest(contest));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -45,7 +44,7 @@ describe('ContestSupervisorsPage', () => {
   };
 
   beforeEach(() => {
-    (contestSupervisorActions.getSupervisors as jest.Mock).mockReturnValue(() => Promise.resolve(response));
+    contestSupervisorActions.getSupervisors.mockReturnValue(() => Promise.resolve(response));
   });
 
   describe('when there are no supervisors', () => {
@@ -64,15 +63,15 @@ describe('ContestSupervisorsPage', () => {
 
   describe('when there are supervisors', () => {
     beforeEach(() => {
-      const supervisors: ContestSupervisor[] = [
+      const supervisors = [
         {
           userJid: 'userJid1',
-        } as ContestSupervisor,
+        },
         {
           userJid: 'userJid2',
-        } as ContestSupervisor,
+        },
       ];
-      (contestSupervisorActions.getSupervisors as jest.Mock).mockReturnValue(() =>
+      contestSupervisorActions.getSupervisors.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: supervisors, totalCount: 2 } })
       );
 

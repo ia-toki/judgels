@@ -1,21 +1,19 @@
-import { AppState } from '../../modules/store';
-
-export function selectIsLoggedIn(state: AppState) {
-  return state.session.isLoggedIn;
+export function selectIsLoggedIn(state) {
+  return !!state.session.token;
 }
 
-export function selectToken(state: AppState) {
+export function selectToken(state) {
   return state.session && state.session.token;
 }
 
-export function selectUserJid(state: AppState) {
-  return state.session.user!.jid;
+export function selectUserJid(state) {
+  return state.session.user.jid;
 }
 
-export function selectMaybeUserJid(state: AppState) {
+export function selectMaybeUserJid(state) {
   return state.session.user && state.session.user.jid;
 }
 
-export function selectMaybeUsername(state: AppState) {
+export function selectMaybeUsername(state) {
   return state.session.user && state.session.user.username;
 }

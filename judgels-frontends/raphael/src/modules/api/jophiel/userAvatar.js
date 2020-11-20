@@ -1,21 +1,21 @@
-import { delete_, get, postMultipart } from '../../../modules/api/http';
+import { delete_, get, postMultipart } from '../http';
 
 import { baseUserURL } from './user';
 
-const baseURL = (userJid: string) => `${baseUserURL(userJid)}/avatar`;
+const baseURL = userJid => `${baseUserURL(userJid)}/avatar`;
 
 export const userAvatarAPI = {
-  deleteAvatar: (token: string, userJid: string): Promise<void> => {
+  deleteAvatar: (token, userJid) => {
     return delete_(`${baseURL(userJid)}`, token);
   },
 
-  avatarExists: (userJid: string): Promise<boolean> => {
+  avatarExists: userJid => {
     return get(`${baseURL(userJid)}/exists`);
   },
 
-  renderAvatar: (userJid: string) => Promise.resolve(`${baseURL(userJid)}`),
+  renderAvatar: userJid => Promise.resolve(`${baseURL(userJid)}`),
 
-  updateAvatar: (token: string, userJid: string, file: File): Promise<void> => {
+  updateAvatar: (token, userJid, file) => {
     return postMultipart(`${baseURL(userJid)}`, token, { file: file });
   },
 };

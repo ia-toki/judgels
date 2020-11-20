@@ -1,21 +1,20 @@
-import { delete_, get, put } from '../../../modules/api/http';
-import { LanguageRestriction } from '../../../modules/api/gabriel/language';
+import { delete_, get, put } from '../http';
 
 import { baseContestURL } from './contest';
 
-export enum ContestModuleType {
-  Clarification = 'CLARIFICATION',
-  ClarificationTimeLimit = 'CLARIFICATION_TIME_LIMIT',
-  Division = 'DIVISION',
-  File = 'FILE',
-  ExternalScoreboard = 'EXTERNAL_SCOREBOARD',
-  FrozenScoreboard = 'FROZEN_SCOREBOARD',
-  Hidden = 'HIDDEN',
-  Paused = 'PAUSE',
-  Registration = 'REGISTRATION',
-  Scoreboard = 'SCOREBOARD',
-  Virtual = 'VIRTUAL',
-}
+export const ContestModuleType = {
+  Clarification: 'CLARIFICATION',
+  ClarificationTimeLimit: 'CLARIFICATION_TIME_LIMIT',
+  Division: 'DIVISION',
+  File: 'FILE',
+  ExternalScoreboard: 'EXTERNAL_SCOREBOARD',
+  FrozenScoreboard: 'FROZEN_SCOREBOARD',
+  Hidden: 'HIDDEN',
+  Paused: 'PAUSE',
+  Registration: 'REGISTRATION',
+  Scoreboard: 'SCOREBOARD',
+  Virtual: 'VIRTUAL',
+};
 
 export const moduleTitlesMap = {
   [ContestModuleType.Registration]: 'Registration',
@@ -43,7 +42,7 @@ export const moduleDescriptionsMap = {
   [ContestModuleType.Hidden]: 'Hides the contest from contestants and supervisors.',
 };
 
-export const allModules: ContestModuleType[] = [
+export const allModules = [
   ContestModuleType.Registration,
   ContestModuleType.Clarification,
   ContestModuleType.ClarificationTimeLimit,
@@ -56,82 +55,26 @@ export const allModules: ContestModuleType[] = [
   ContestModuleType.Hidden,
 ];
 
-export interface IcpcStyleModuleConfig {
-  languageRestriction: LanguageRestriction;
-  wrongSubmissionPenalty: number;
-}
-
-export interface IoiStyleModuleConfig {
-  languageRestriction: LanguageRestriction;
-  usingLastAffectingPenalty: boolean;
-  usingMaxScorePerSubtask: boolean;
-}
-
-export interface GcjStyleModuleConfig {
-  languageRestriction: LanguageRestriction;
-  wrongSubmissionPenalty: number;
-}
-
-export interface ClarificationTimeLimitModuleConfig {
-  clarificationDuration: number;
-}
-
-export interface DivisionModuleConfig {
-  division: number;
-}
-
-export interface ExternalScoreboardModuleConfig {
-  receiverUrl: string;
-  receiverSecret: string;
-}
-
-export interface FrozenScoreboardModuleConfig {
-  isOfficialScoreboardAllowed: boolean;
-  scoreboardFreezeTime: number; // freezeDurationBeforeEndTime
-}
-
-export interface ScoreboardModuleConfig {
-  isIncognitoScoreboard: boolean;
-}
-
-export interface VirtualModuleConfig {
-  virtualDuration: number;
-}
-
-export interface ContestModulesConfig {
-  icpcStyle?: IcpcStyleModuleConfig;
-  ioiStyle?: IoiStyleModuleConfig;
-  gcjStyle?: GcjStyleModuleConfig;
-
-  scoreboard: ScoreboardModuleConfig;
-
-  clarificationTimeLimit?: ClarificationTimeLimitModuleConfig;
-  division?: DivisionModuleConfig;
-  externalScoreboard?: ExternalScoreboardModuleConfig;
-  frozenScoreboard?: FrozenScoreboardModuleConfig;
-  virtual?: VirtualModuleConfig;
-}
-
-const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/modules`;
+const baseURL = contestJid => `${baseContestURL(contestJid)}/modules`;
 
 export const contestModuleAPI = {
-  getModules: (token: string, contestJid: string): Promise<ContestModuleType[]> => {
+  getModules: (token, contestJid) => {
     return get(`${baseURL(contestJid)}`, token);
   },
 
-  enableModule: (token: string, contestJid: string, type: ContestModuleType): Promise<void> => {
+  enableModule: (token, contestJid, type) => {
     return put(`${baseURL(contestJid)}/${type}`, token);
   },
 
-  disableModule: (token: string, contestJid: string, type: ContestModuleType): Promise<void> => {
+  disableModule: (token, contestJid, type) => {
     return delete_(`${baseURL(contestJid)}/${type}`, token);
   },
 
-  getConfig: (token: string, contestJid: string): Promise<ContestModulesConfig> => {
+  getConfig: (token, contestJid) => {
     return get(`${baseURL(contestJid)}/config`, token);
   },
 
-  upsertConfig: (token: string, contestJid: string, config: ContestModulesConfig): Promise<void> => {
+  upsertConfig: (token, contestJid, config) => {
     return put(`${baseURL(contestJid)}/config`, token, config);
   },
 };

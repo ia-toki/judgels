@@ -1,7 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
@@ -9,12 +9,8 @@ import { Card } from '../../../../components/Card/Card';
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import * as activateActions from '../modules/activateActions';
 
-interface ActivatePageProps {
-  isLoading: boolean;
-}
-
-const ActivatePage = (props: ActivatePageProps) => {
-  const content = !props.isLoading && (
+function ActivatePage({ isLoading }) {
+  const content = !isLoading && (
     <Card title="Activation successful" className="card-activate">
       <p>Your account has been activated.</p>
 
@@ -27,18 +23,10 @@ const ActivatePage = (props: ActivatePageProps) => {
   );
 
   return <SingleColumnLayout>{content}</SingleColumnLayout>;
-};
-
-interface ActivatePageContainerProps extends RouteComponentProps<{ emailCode: string }> {
-  onActivateUser: (emailCode: string) => Promise<void>;
 }
 
-interface ActivatePageContainerState {
-  isFetching: boolean;
-}
-
-class ActivatePageContainer extends React.PureComponent<ActivatePageContainerProps, ActivatePageContainerState> {
-  state: ActivatePageContainerState = {
+class ActivatePageContainer extends React.Component {
+  state = {
     isFetching: true,
   };
 

@@ -3,16 +3,13 @@ import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar, {
-  ContentWithSidebarItem,
-  ContentWithSidebarProps,
-} from '../../components/ContentWithSidebar/ContentWithSidebar';
+import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import UsersPage from './users/UsersPage/UsersPage';
 
-const SystemRoutes = () => {
-  const sidebarItems: ContentWithSidebarItem[] = [
+function SystemRoutes() {
+  const sidebarItems = [
     {
       id: 'users',
       titleIcon: 'user',
@@ -22,7 +19,7 @@ const SystemRoutes = () => {
     },
   ];
 
-  const contentWithSidebarProps: ContentWithSidebarProps = {
+  const contentWithSidebarProps = {
     title: 'System',
     items: sidebarItems,
   };
@@ -33,6 +30,6 @@ const SystemRoutes = () => {
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
-};
+}
 
 export default withBreadcrumb('System')(SystemRoutes);

@@ -3,16 +3,12 @@ import * as React from 'react';
 
 import './ContentCard.css';
 
-export interface ContentCardProps {
-  className?: string;
-  elevation?: 0 | 1 | 2 | 3 | 4;
-  children?: any;
+export function ContentCard({ className, elevation, children }) {
+  return (
+    <div className={className}>
+      <Card className="content-card" elevation={elevation}>
+        {children}
+      </Card>
+    </div>
+  );
 }
-
-export const ContentCard = (props: ContentCardProps) => (
-  <div className={props.className}>
-    <Card className="content-card" elevation={props.elevation}>
-      {props.children}
-    </Card>
-  </div>
-);
