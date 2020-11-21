@@ -66,6 +66,14 @@ describe('BundleScoreboardTable', () => {
         </MemoryRouter>
       );
     });
+
+    it('only shows question marks', () => {
+      const ranks = wrapper
+        .find('tbody')
+        .children()
+        .map(tr => tr.childAt(0).text());
+      expect(ranks).toEqual(['?', '?']);
+    });
   });
 
   test('display names', () => {

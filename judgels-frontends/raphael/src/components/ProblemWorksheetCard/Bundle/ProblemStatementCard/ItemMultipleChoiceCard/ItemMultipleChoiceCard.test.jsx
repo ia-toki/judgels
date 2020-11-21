@@ -62,6 +62,6 @@ describe('ItemMultipleChoiceCard', () => {
       .find('input')
       .last();
     currentAnswer.simulate('change', { target: { checked: true } });
-    expect(onChoiceChangeFn).toHaveBeenCalledTimes(2);
+    expect(onChoiceChangeFn).toHaveBeenCalled();
   });
 });
