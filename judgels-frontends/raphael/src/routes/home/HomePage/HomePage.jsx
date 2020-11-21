@@ -13,14 +13,14 @@ import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersW
 
 import './HomePage.css';
 
+import bannerImage from '../../../assets/images/welcome-banner.jpg';
+import overlayImage from '../../../assets/images/welcome-overlay.png';
+
 function HomePage({ isLoggedIn }) {
   const renderBanner = () => {
     if (isLoggedIn) {
       return null;
     }
-
-    const bannerImage = require('../../../assets/images/welcome-banner.jpg');
-    const overlayImage = require('../../../assets/images/welcome-overlay.png');
 
     return (
       <div className="home-banner">

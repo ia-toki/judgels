@@ -7,7 +7,7 @@ import UserWidget from '../UserWidget/UserWidget';
 
 import './Header.css';
 
-const logo = require('../../assets/images/logo-header.png');
+import logo from '../../assets/images/logo-header.png';
 
 class Header extends React.PureComponent {
   render() {
