@@ -58,7 +58,7 @@ class ContestHistoryPage extends React.Component {
   renderRows = () => {
     const { data, contestsMap } = this.state.response;
     const rows = [];
-    let lastRating;
+    let lastRating = null;
 
     data.forEach((event, idx) => {
       let ratingChange = '';
