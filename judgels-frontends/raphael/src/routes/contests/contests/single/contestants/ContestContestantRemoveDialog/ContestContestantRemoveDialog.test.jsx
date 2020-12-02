@@ -18,7 +18,7 @@ describe('ContestContestantRemoveDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       onDeleteContestants,
     };
     wrapper = mount(
@@ -30,7 +30,7 @@ describe('ContestContestantRemoveDialog', () => {
     );
   });
 
-  test('remove contestants dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -42,6 +42,6 @@ describe('ContestContestantRemoveDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onDeleteContestants).toHaveBeenCalledWith(contestJid, ['andi', 'budi', 'caca']);
+    expect(onDeleteContestants).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
   });
 });

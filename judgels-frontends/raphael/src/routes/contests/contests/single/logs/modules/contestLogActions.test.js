@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../../../conf';
+import { nockUriel } from '../../../../../../utils/nock';
 import * as contestLogActions from './contestLogActions';
 
 const contestJid = 'contest-jid';
@@ -25,12 +25,13 @@ describe('contestLogActions', () => {
     const page = 3;
 
     const responseBody = {
-      data: [],
+      data: {
+        page: [{ id: 1 }],
+      },
     };
 
     it('calls API to get logs', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+      nockUriel()
         .get(`/contests/${contestJid}/logs`)
         .query({ username, problemAlias, page })
         .reply(200, responseBody);

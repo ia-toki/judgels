@@ -40,7 +40,7 @@ class ContestManagersPage extends React.Component {
     }
 
     const { data: managers, profilesMap } = response;
-    if (managers.totalCount === 0) {
+    if (managers.page.length === 0) {
       return (
         <p>
           <small>No managers.</small>

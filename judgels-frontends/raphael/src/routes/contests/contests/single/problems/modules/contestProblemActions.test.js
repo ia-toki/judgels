@@ -3,7 +3,7 @@ import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../../../conf';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import * as contestProblemActions from './contestProblemActions';
 
@@ -26,9 +26,8 @@ describe('contestProblemActions', () => {
       data: [],
     };
 
-    it('calls API to get problems', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/${contestJid}/problems`)
         .reply(200, responseBody);
 
@@ -41,9 +40,8 @@ describe('contestProblemActions', () => {
     const data = [{ slug: 'slug1' }, { slug: 'slug2' }, { slug: 'slug3' }, { slug: 'slug4' }];
 
     describe('when all slugs are valid', () => {
-      it('calls API to set problems', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+      it('calls API', async () => {
+        nockUriel()
           .options(`/contests/${contestJid}/problems`)
           .reply(200)
           .put(`/contests/${contestJid}/problems`, data)
@@ -55,8 +53,7 @@ describe('contestProblemActions', () => {
 
     describe('when not all slugs are valid', () => {
       it('throws SubmissionError', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        nockUriel()
           .options(`/contests/${contestJid}/problems`)
           .reply(200)
           .put(`/contests/${contestJid}/problems`, data)
@@ -79,9 +76,8 @@ describe('contestProblemActions', () => {
       worksheet: {},
     };
 
-    it('calls API to get bundle problem worksheet', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/${contestJid}/problems/${problemAlias}/bundle/worksheet`)
         .query({ language })
         .reply(200, responseBody);
@@ -100,9 +96,8 @@ describe('contestProblemActions', () => {
       worksheet: {},
     };
 
-    it('calls API to get programming problem worksheet', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/${contestJid}/problems/${problemAlias}/programming/worksheet`)
         .query({ language })
         .reply(200, responseBody);

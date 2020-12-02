@@ -4,38 +4,40 @@ import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest } from '../../../../../../fixtures/state';
 import ContestContestantsPage from './ContestContestantsPage';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestContestantActions from '../../modules/contestContestantActions';
-import * as contestActions from '../../../modules/contestActions';
 
 jest.mock('../../modules/contestContestantActions');
-jest.mock('../../../modules/contestActions');
 
 describe('ContestContestantsPage', () => {
   let wrapper;
+  let contestants;
+  let canManage;
 
-  const response = {
-    data: { page: [], totalCount: 0 },
-    profilesMap: {
-      userJid1: { username: 'user1' },
-      userJid2: { username: 'user2' },
-    },
-    config: {
-      canManage: true,
-    },
-  };
+  const render = async () => {
+    contestContestantActions.getContestants.mockReturnValue(() =>
+      Promise.resolve({
+        data: {
+          page: contestants,
+        },
+        profilesMap: {
+          userJid1: { username: 'username1' },
+          userJid2: { username: 'username2' },
+        },
+        config: {
+          canManage,
+        },
+      })
+    );
 
-  const render = () => {
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
+      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest(contest));
+    store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -46,49 +48,72 @@ describe('ContestContestantsPage', () => {
         </Provider>
       </IntlProvider>
     );
+
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
   };
 
-  beforeEach(() => {
-    contestContestantActions.getContestants.mockReturnValue(() => Promise.resolve(response));
-    contestActions.resetVirtualContest.mockReturnValue(() => Promise.resolve({}));
+  describe('action buttons', () => {
+    beforeEach(() => {
+      contestants = [];
+    });
+
+    describe('when not canManage', () => {
+      beforeEach(async () => {
+        canManage = false;
+        await render();
+      });
+
+      it('shows no buttons', () => {
+        expect(wrapper.find('button')).toHaveLength(0);
+      });
+    });
+
+    describe('when canManage', () => {
+      beforeEach(async () => {
+        canManage = true;
+        await render();
+      });
+
+      it('shows action buttons', () => {
+        expect(wrapper.find('button').map(b => b.text())).toEqual(['plusAdd contestants', 'trashRemove contestants']);
+      });
+    });
   });
 
-  describe('when there are no contestants', () => {
-    beforeEach(() => {
-      render();
+  describe('content', () => {
+    describe('when there are no contestants', () => {
+      beforeEach(async () => {
+        contestants = [];
+        await render();
+      });
+
+      it('shows placeholder text and no contestants', () => {
+        expect(wrapper.text()).toContain('No contestants.');
+        expect(wrapper.find('tr')).toHaveLength(0);
+      });
     });
 
-    it('shows placeholder text and no contestants', async () => {
-      await new Promise(resolve => setImmediate(resolve));
-      wrapper.update();
+    describe('when there are contestants', () => {
+      beforeEach(async () => {
+        contestants = [
+          {
+            userJid: 'userJid1',
+          },
+          {
+            userJid: 'userJid2',
+          },
+        ];
+        await render();
+      });
 
-      expect(wrapper.text()).toContain('No contestants.');
-      expect(wrapper.find('tr')).toHaveLength(0);
-    });
-  });
-
-  describe('when there are contestants', () => {
-    beforeEach(() => {
-      const contestants = [
-        {
-          userJid: 'userJid1',
-        },
-        {
-          userJid: 'userJid2',
-        },
-      ];
-      contestContestantActions.getContestants.mockReturnValue(() =>
-        Promise.resolve({ ...response, data: { page: contestants, totalCount: 2 } })
-      );
-
-      render();
-    });
-
-    it('shows the contestants', async () => {
-      await new Promise(resolve => setImmediate(resolve));
-      wrapper.update();
-
-      expect(wrapper.find('tr')).toHaveLength(3);
+      it('shows the contestants', () => {
+        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
+          [],
+          ['1', 'username1'],
+          ['2', 'username2'],
+        ]);
+      });
     });
   });
 });

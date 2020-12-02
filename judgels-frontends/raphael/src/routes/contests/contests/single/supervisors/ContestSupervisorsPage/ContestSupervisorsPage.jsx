@@ -40,7 +40,7 @@ class ContestSupervisorsPage extends React.Component {
     }
 
     const { data: supervisors, profilesMap } = response;
-    if (supervisors.totalCount === 0) {
+    if (supervisors.page.length === 0) {
       return (
         <p>
           <small>No supervisors.</small>

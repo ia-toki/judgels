@@ -5,16 +5,11 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
 
 describe('ContestClarificationAnswerBox', () => {
   let onAnswerClarification;
   let wrapper;
-
-  const clarification = {
-    jid: 'clarificationJid123',
-  };
 
   beforeEach(() => {
     onAnswerClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -22,8 +17,8 @@ describe('ContestClarificationAnswerBox', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
-      clarification,
+      contest: { jid: 'contestJid' },
+      clarification: { jid: 'clarificationJid123' },
       isBoxOpen: true,
       isBoxLoading: false,
       onToggleBox: () => {
@@ -40,13 +35,13 @@ describe('ContestClarificationAnswerBox', () => {
     );
   });
 
-  test('answer clarification dialog form', () => {
+  test('form', () => {
     const answer = wrapper.find('textarea[name="answer"]');
     answer.simulate('change', { target: { value: 'Yes.' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onAnswerClarification).toHaveBeenCalledWith(contestJid, 'clarificationJid123', 'Yes.');
+    expect(onAnswerClarification).toHaveBeenCalledWith('contestJid', 'clarificationJid123', 'Yes.');
   });
 });

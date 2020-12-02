@@ -3,12 +3,12 @@ import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../../../conf';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import * as contestClarificationActions from './contestClarificationActions';
 
-const contestJid = 'contest-jid';
-const clarificationJid = 'clarification-jid';
+const contestJid = 'contestJid';
+const clarificationJid = 'clarificationJid';
 const mockStore = configureMockStore([thunk]);
 
 describe('contestClarificationActions', () => {
@@ -29,11 +29,8 @@ describe('contestClarificationActions', () => {
       question: 'Question',
     };
 
-    it('calls API to create clarification', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/contests/${contestJid}/clarifications`)
-        .reply(200)
+    it('calls API', async () => {
+      nockUriel()
         .post(`/contests/${contestJid}/clarifications`, params)
         .reply(200);
 
@@ -46,12 +43,13 @@ describe('contestClarificationActions', () => {
     const language = 'id';
     const page = 3;
     const responseBody = {
-      data: [],
+      data: {
+        page: [{ jid: 'jid' }],
+      },
     };
 
-    it('calls API to get clarifications', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/${contestJid}/clarifications`)
         .query({ language, page })
         .reply(200, responseBody);
@@ -67,9 +65,8 @@ describe('contestClarificationActions', () => {
     const answer = 'Yes';
 
     describe('when the clarification has not been answered yet', () => {
-      it('calls API to answer clarification', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+      it('calls API', async () => {
+        nockUriel()
           .options(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`)
           .reply(200)
           .put(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`, { answer })
@@ -79,9 +76,8 @@ describe('contestClarificationActions', () => {
       });
     });
     describe('when the clarification has already been answered', () => {
-      it('calls API to answer clarification', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+      it('calls API', async () => {
+        nockUriel()
           .options(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`)
           .reply(200)
           .put(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`, { answer })

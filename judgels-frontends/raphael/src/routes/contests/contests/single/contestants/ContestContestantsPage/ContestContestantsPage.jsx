@@ -43,7 +43,7 @@ class ContestContestantsPage extends React.Component {
     }
 
     const { data: contestants, virtualModuleConfig, profilesMap } = response;
-    if (contestants.totalCount === 0) {
+    if (contestants.page.length === 0) {
       return (
         <p>
           <small>No contestants.</small>

@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
@@ -9,33 +8,25 @@ import thunk from 'redux-thunk';
 import { ContestCreateDialog } from './ContestCreateDialog';
 
 describe('ContestCreateDialog', () => {
-  let onGetContestConfig;
   let onCreateContest;
   let wrapper;
 
   beforeEach(() => {
-    onGetContestConfig = jest.fn().mockReturnValue(Promise.resolve({ canAdminister: true }));
     onCreateContest = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
-      onGetContestConfig,
       onCreateContest,
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestCreateDialog {...props} />
-        </MemoryRouter>
+        <ContestCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('create dialog form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 

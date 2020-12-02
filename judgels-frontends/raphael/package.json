@@ -28,7 +28,7 @@
     "react-google-recaptcha": "^0.9.9",
     "react-intl": "3.3.0",
     "react-intl-formatted-duration": "3.1.0",
-    "react-paginate": "^5.0.0",
+    "react-paginate": "6.5.0",
     "react-redux": "7.1.1",
     "react-router": "5.0.1",
     "react-router-dom": "5.0.1",

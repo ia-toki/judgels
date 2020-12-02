@@ -19,7 +19,7 @@ describe('ContestSupervisorRemoveDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       onDeleteSupervisors: onDeleteSupervisors,
     };
     wrapper = mount(
@@ -31,7 +31,7 @@ describe('ContestSupervisorRemoveDialog', () => {
     );
   });
 
-  test('remove supervisors dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -43,6 +43,6 @@ describe('ContestSupervisorRemoveDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onDeleteSupervisors).toHaveBeenCalledWith(contestJid, ['andi', 'budi', 'caca']);
+    expect(onDeleteSupervisors).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
   });
 });

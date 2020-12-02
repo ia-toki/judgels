@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestContestantAddDialog } from './ContestContestantAddDialog';
 
 describe('ContestContestantAddDialog', () => {
@@ -20,7 +19,7 @@ describe('ContestContestantAddDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       onUpsertContestants,
     };
     wrapper = mount(
@@ -32,7 +31,7 @@ describe('ContestContestantAddDialog', () => {
     );
   });
 
-  test('add contestants dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -44,6 +43,6 @@ describe('ContestContestantAddDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onUpsertContestants).toHaveBeenCalledWith(contestJid, ['andi', 'budi', 'caca']);
+    expect(onUpsertContestants).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
   });
 });

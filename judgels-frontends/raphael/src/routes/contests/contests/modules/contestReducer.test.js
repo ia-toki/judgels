@@ -1,4 +1,4 @@
-import contestReducer, { ContestState, DelContest, INITIAL_STATE, PutContest } from './contestReducer';
+import contestReducer, { DelContest, PutContest } from './contestReducer';
 
 describe('contestReducer', () => {
   test('PUT', () => {

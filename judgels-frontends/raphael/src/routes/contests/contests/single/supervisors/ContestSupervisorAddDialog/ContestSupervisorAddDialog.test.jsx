@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
 import { ContestSupervisorAddDialog } from './ContestSupervisorAddDialog';
 
@@ -21,7 +20,7 @@ describe('ContestSupervisorAddDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       onUpsertSupervisors: onUpsertSupervisors,
     };
     wrapper = mount(
@@ -33,7 +32,7 @@ describe('ContestSupervisorAddDialog', () => {
     );
   });
 
-  test('add supervisors dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -53,7 +52,7 @@ describe('ContestSupervisorAddDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onUpsertSupervisors).toHaveBeenCalledWith(contestJid, {
+    expect(onUpsertSupervisors).toHaveBeenCalledWith('contestJid', {
       managementPermissions: [
         SupervisorManagementPermission.Announcements,
         SupervisorManagementPermission.Clarifications,

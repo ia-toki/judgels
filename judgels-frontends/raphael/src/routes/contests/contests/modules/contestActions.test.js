@@ -4,21 +4,12 @@ import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../conf';
-import { ContestErrors, ContestStyle } from '../../../../modules/api/uriel/contest';
+import { nockUriel } from '../../../../utils/nock';
+import { ContestErrors } from '../../../../modules/api/uriel/contest';
 import * as contestActions from './contestActions';
 import { EditContest, PutContest } from './contestReducer';
 
-const contestJid = 'contest-jid';
-const contest = {
-  id: 1,
-  jid: contestJid,
-  slug: 'ioi',
-  style: ContestStyle.IOI,
-  name: 'IOI',
-  beginTime: 100,
-  duration: 5,
-};
+const contestJid = 'contestJid';
 const mockStore = configureMockStore([thunk]);
 
 describe('contestActions', () => {
@@ -36,11 +27,8 @@ describe('contestActions', () => {
     const params = { slug: 'new-contest' };
 
     describe('when the slug does not already exist', () => {
-      it('calls API to create contest', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/contests`)
-          .reply(200)
+      it('calls API', async () => {
+        nockUriel()
           .post(`/contests`, params)
           .reply(200);
 
@@ -53,10 +41,7 @@ describe('contestActions', () => {
 
     describe('when the slug already exists', () => {
       it('throws SubmissionError', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/contests`)
-          .reply(200)
+        nockUriel()
           .post(`/contests`, params)
           .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
 
@@ -73,11 +58,8 @@ describe('contestActions', () => {
     describe('when the slug is not updated', () => {
       const params = { name: 'New Name' };
 
-      it('calls API to update contest', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/contests/${contestJid}`)
-          .reply(200)
+      it('calls API', async () => {
+        nockUriel()
           .post(`/contests/${contestJid}`, params)
           .reply(200);
 
@@ -89,11 +71,8 @@ describe('contestActions', () => {
       const params = { slug: 'new-slug', name: 'New Name' };
 
       describe('when the slug does not already exist', () => {
-        it('calls API to update contest', async () => {
-          nock(APP_CONFIG.apiUrls.uriel)
-            .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-            .options(`/contests/${contestJid}`)
-            .reply(200)
+        it('calls API', async () => {
+          nockUriel()
             .post(`/contests/${contestJid}`, params)
             .reply(200);
 
@@ -105,10 +84,7 @@ describe('contestActions', () => {
 
       describe('when the slug already exists', () => {
         it('throws SubmissionError', async () => {
-          nock(APP_CONFIG.apiUrls.uriel)
-            .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-            .options(`/contests/${contestJid}`)
-            .reply(200)
+          nockUriel()
             .post(`/contests/${contestJid}`, params)
             .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
 
@@ -124,13 +100,13 @@ describe('contestActions', () => {
     const name = 'contest-name';
     const page = 2;
     const responseBody = {
-      totalCount: 3,
-      page: [contest],
+      data: {
+        page: [{ id: 1 }],
+      },
     };
 
-    it('calls API to get contests', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests`)
         .query({ name, page })
         .reply(200, responseBody);
@@ -142,12 +118,11 @@ describe('contestActions', () => {
 
   describe('getActiveContests()', () => {
     const responseBody = {
-      data: [],
+      data: [{ id: 1 }],
     };
 
-    it('calls API to get active contests', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/active`)
         .reply(200, responseBody);
 
@@ -157,9 +132,10 @@ describe('contestActions', () => {
   });
 
   describe('getContestBySlug()', () => {
-    it('calls API to get contest', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    const contest = { id: 1 };
+
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/slug/ioi`)
         .reply(200, contest);
 
@@ -171,11 +147,8 @@ describe('contestActions', () => {
   });
 
   describe('startVirtualContest()', () => {
-    it('calls API to start virtual contest', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/contests/${contestJid}/virtual`)
-        .reply(200)
+    it('calls API', async () => {
+      nockUriel()
         .post(`/contests/${contestJid}/virtual`)
         .reply(200);
 
@@ -184,9 +157,8 @@ describe('contestActions', () => {
   });
 
   describe('resetVirtualContest()', () => {
-    it('calls API to reset virtual contest', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .options(`/contests/${contestJid}/virtual/reset`)
         .reply(200)
         .put(`/contests/${contestJid}/virtual/reset`)
@@ -199,9 +171,8 @@ describe('contestActions', () => {
   describe('getContestDescription()', () => {
     const description = 'This is a contest';
 
-    it('calls API to get contest description', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/${contestJid}/description`)
         .reply(200, { description });
 
@@ -213,11 +184,8 @@ describe('contestActions', () => {
   describe('updateContestDescription()', () => {
     const description = 'This is a contest';
 
-    it('calls API to update contest description', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/contests/${contestJid}/description`)
-        .reply(200)
+    it('calls API', async () => {
+      nockUriel()
         .post(`/contests/${contestJid}/description`, { description })
         .reply(200, { description });
 

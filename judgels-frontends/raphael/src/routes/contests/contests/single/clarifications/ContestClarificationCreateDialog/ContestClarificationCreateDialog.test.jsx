@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestClarificationCreateDialog } from './ContestClarificationCreateDialog';
 
 describe('ContestClarificationCreateDialog', () => {
@@ -18,7 +17,7 @@ describe('ContestClarificationCreateDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       problemJids: ['problemJid1', 'problemJid2'],
       problemAliasesMap: { problemJid1: 'A', problemJid2: 'B' },
       problemNamesMap: { problemJid1: 'Problem 1', problemJid2: 'Problem 2' },
@@ -34,7 +33,7 @@ describe('ContestClarificationCreateDialog', () => {
     );
   });
 
-  test('create clarification dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -55,8 +54,8 @@ describe('ContestClarificationCreateDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onCreateClarification).toHaveBeenCalledWith(contestJid, {
-      topicJid: contestJid,
+    expect(onCreateClarification).toHaveBeenCalledWith('contestJid', {
+      topicJid: 'contestJid',
       title: 'Snack',
       question: 'Is snack provided?',
     });

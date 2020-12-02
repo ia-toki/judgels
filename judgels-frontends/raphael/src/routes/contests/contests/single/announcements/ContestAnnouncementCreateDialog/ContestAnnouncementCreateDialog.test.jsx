@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { ContestAnnouncementCreateDialog } from './ContestAnnouncementCreateDialog';
 
@@ -19,7 +18,7 @@ describe('ContestAnnouncementCreateDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       onCreateAnnouncement,
     };
     wrapper = mount(
@@ -31,7 +30,7 @@ describe('ContestAnnouncementCreateDialog', () => {
     );
   });
 
-  test('create announcement dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -52,7 +51,7 @@ describe('ContestAnnouncementCreateDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onCreateAnnouncement).toHaveBeenCalledWith(contestJid, {
+    expect(onCreateAnnouncement).toHaveBeenCalledWith('contestJid', {
       title: 'Snack',
       content: 'Snack is provided.',
       status: ContestAnnouncementStatus.Published,

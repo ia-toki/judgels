@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { ContestAnnouncementEditDialog } from './ContestAnnouncementEditDialog';
 
@@ -30,7 +29,7 @@ describe('ContestAnnouncementEditDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       announcement,
       onToggleEditDialog,
       onUpdateAnnouncement,
@@ -44,7 +43,7 @@ describe('ContestAnnouncementEditDialog', () => {
     );
   });
 
-  test('edit announcement dialog form', () => {
+  test('form', () => {
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478
 
@@ -62,7 +61,7 @@ describe('ContestAnnouncementEditDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onUpdateAnnouncement).toHaveBeenCalledWith(contestJid, 'announcementJid123', {
+    expect(onUpdateAnnouncement).toHaveBeenCalledWith('contestJid', 'announcementJid123', {
       title: 'Snack [edited]',
       content: 'Snack is NOT provided.',
       status: ContestAnnouncementStatus.Published,

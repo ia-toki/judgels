@@ -81,7 +81,7 @@ export class ContestLogsPage extends React.Component {
     }
 
     const { data: logs, profilesMap, problemAliasesMap } = response;
-    if (logs.totalCount === 0) {
+    if (logs.page.length === 0) {
       return (
         <p>
           <small>No logs.</small>

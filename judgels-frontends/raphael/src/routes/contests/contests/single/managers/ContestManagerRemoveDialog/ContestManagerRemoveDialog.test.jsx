@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestManagerRemoveDialog } from './ContestManagerRemoveDialog';
 
 describe('ContestManagerRemoveDialog', () => {
@@ -18,7 +17,7 @@ describe('ContestManagerRemoveDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       onDeleteManagers,
     };
     wrapper = mount(
@@ -30,7 +29,7 @@ describe('ContestManagerRemoveDialog', () => {
     );
   });
 
-  test('remove managers dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -42,6 +41,6 @@ describe('ContestManagerRemoveDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onDeleteManagers).toHaveBeenCalledWith(contestJid, ['andi', 'budi', 'caca']);
+    expect(onDeleteManagers).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
   });
 });

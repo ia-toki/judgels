@@ -2,12 +2,12 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../../../conf';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import * as contestAnnouncementActions from './contestAnnouncementActions';
 
-const contestJid = 'contest-jid';
-const announcementJid = 'announcement-jid';
+const contestJid = 'contestJid';
+const announcementJid = 'announcementJid';
 const mockStore = configureMockStore([thunk]);
 
 describe('contestAnnouncementActions', () => {
@@ -24,12 +24,13 @@ describe('contestAnnouncementActions', () => {
   describe('getAnnouncements()', () => {
     const page = 3;
     const responseBody = {
-      data: [],
+      data: {
+        page: [{ jid: 'jid1' }],
+      },
     };
 
-    it('calls API to get announcements', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/${contestJid}/announcements`)
         .query({ page })
         .reply(200, responseBody);
@@ -46,11 +47,8 @@ describe('contestAnnouncementActions', () => {
       status: ContestAnnouncementStatus.Published,
     };
 
-    it('calls API to create announcements', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/contests/${contestJid}/announcements`)
-        .reply(200)
+    it('calls API', async () => {
+      nockUriel()
         .post(`/contests/${contestJid}/announcements`, params)
         .reply(200);
 
@@ -65,9 +63,8 @@ describe('contestAnnouncementActions', () => {
       status: ContestAnnouncementStatus.Published,
     };
 
-    it('calls API to update announcements', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .options(`/contests/${contestJid}/announcements/${announcementJid}`)
         .reply(200)
         .put(`/contests/${contestJid}/announcements/${announcementJid}`, params)

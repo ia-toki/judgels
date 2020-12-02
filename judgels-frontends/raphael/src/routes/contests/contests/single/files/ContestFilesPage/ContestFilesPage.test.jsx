@@ -7,7 +7,6 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import ContestFilesPage from './ContestFilesPage';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestFileActions from '../modules/contestFileActions';
@@ -16,18 +15,22 @@ jest.mock('../modules/contestFileActions');
 
 describe('ContestFilesPage', () => {
   let wrapper;
+  let files;
 
-  const response = {
-    data: [],
-    config: { canManage: true },
-  };
+  const render = async () => {
+    contestFileActions.uploadFile.mockReturnValue(() => Promise.resolve({}));
+    contestFileActions.getFiles.mockReturnValue(() =>
+      Promise.resolve({
+        data: files,
+        config: { canManage: true },
+      })
+    );
 
-  const render = () => {
     const store = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest(contest));
+    store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -38,31 +41,26 @@ describe('ContestFilesPage', () => {
         </Provider>
       </IntlProvider>
     );
+
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
   };
 
-  beforeEach(() => {
-    contestFileActions.getFiles.mockReturnValue(() => Promise.resolve(response));
-    contestFileActions.uploadFile.mockReturnValue(() => Promise.resolve({}));
-    render();
-  });
-
   describe('when there are no files', () => {
-    beforeEach(() => {
-      render();
+    beforeEach(async () => {
+      files = [];
+      await render();
     });
 
     it('shows placeholder text and no files', async () => {
-      await new Promise(resolve => setImmediate(resolve));
-      wrapper.update();
-
       expect(wrapper.text()).toContain('No files.');
       expect(wrapper.find('tr')).toHaveLength(1 + 0);
     });
   });
 
   describe('when there are files', () => {
-    beforeEach(() => {
-      const files = [
+    beforeEach(async () => {
+      files = [
         {
           name: 'editorial.pdf',
           size: 100,
@@ -74,30 +72,27 @@ describe('ContestFilesPage', () => {
           lastModifiedTime: 12345,
         },
       ];
-      contestFileActions.getFiles.mockReturnValue(() => Promise.resolve({ ...response, data: files }));
-
-      render();
+      await render();
     });
 
-    it('shows the files', async () => {
-      await new Promise(resolve => setImmediate(resolve));
-      wrapper.update();
-
+    it('shows the files', () => {
       expect(wrapper.find('tr')).toHaveLength(1 + 1 + 2);
     });
   });
 
-  test('upload form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
+  beforeEach(async () => {
+    files = [];
+    await render();
+  });
 
+  test('upload form', () => {
     const file = wrapper.find('input[name="file"]');
     file.simulate('change', { target: { files: [{ name: 'editorial.txt', size: 1000 }] } });
 
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestFileActions.uploadFile).toHaveBeenCalledWith(contestJid, {
+    expect(contestFileActions.uploadFile).toHaveBeenCalledWith('contestJid', {
       name: 'editorial.txt',
       size: 1000,
     });
