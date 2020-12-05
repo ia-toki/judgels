@@ -93,7 +93,6 @@ public class FunctionalEvaluator implements Evaluator {
         sandbox.resetRedirections();
         sandbox.redirectStandardInput(input.getName());
         sandbox.redirectStandardOutput(EVALUATION_OUTPUT_FILENAME);
-        sandbox.redirectStandardError(EVALUATION_OUTPUT_FILENAME);
 
         SandboxExecutionResult result = sandbox.execute(evaluationCommand);
         if (result.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {

@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include "grader.h"
 #include "decoder.h"
 
@@ -10,6 +12,7 @@ void decode(int nv, int nh) {
   }
 
   for (int i = 0; i < res; i++) {
+    fprintf(stderr, "debug");
     hops(0, 0, 0);
   }
 }
