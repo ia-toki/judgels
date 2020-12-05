@@ -12,6 +12,9 @@ int main()
         printf("%d\n", mid);
         fflush(stdout);
 
+        fprintf(stderr, "debug");
+        fflush(stderr);
+
         scanf("%s", response);
 
         if (!strcmp(response, "too_low"))

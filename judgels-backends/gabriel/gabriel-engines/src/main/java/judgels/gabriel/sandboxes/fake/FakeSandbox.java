@@ -109,7 +109,7 @@ public class FakeSandbox implements Sandbox {
 
     @Override
     public SandboxExecutionResult execute(List<String> command) {
-        ProcessBuilder pb = getProcessBuilder(command).redirectErrorStream(true);
+        ProcessBuilder pb = getProcessBuilder(command);
 
         try {
             ProcessExecutionResult result = SandboxExecutor.executeProcessBuilder(pb);
