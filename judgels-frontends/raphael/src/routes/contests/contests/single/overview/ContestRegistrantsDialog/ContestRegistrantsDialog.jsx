@@ -2,7 +2,6 @@ import { Classes, Button, Dialog, HTMLTable } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -94,4 +93,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onGetApprovedContestants: contestContestantActions.getApprovedContestants,
 };
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog);

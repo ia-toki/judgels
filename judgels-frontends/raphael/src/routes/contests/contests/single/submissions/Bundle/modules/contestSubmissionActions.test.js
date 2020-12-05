@@ -1,8 +1,8 @@
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { nockUriel } from '../../../../../../../utils/nock';
 
-import { APP_CONFIG } from '../../../../../../../conf';
 import * as contestSubmissionActions from './contestSubmissionActions';
 
 const contestJid = 'contest-jid';
@@ -28,9 +28,8 @@ describe('contestSubmissionBundleActions', () => {
       data: [],
     };
 
-    it('calls API to get bundle submissions', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/submissions/bundle`)
         .query({ contestJid, username, problemAlias, page })
         .reply(200, responseBody);
@@ -47,10 +46,7 @@ describe('contestSubmissionBundleActions', () => {
     const answer = 'answer';
 
     it('calls API to create submission', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/contests/submissions/bundle`)
-        .reply(200)
+      nockUriel()
         .post(`/contests/submissions/bundle`, { containerJid: contestJid, problemJid, itemJid, answer })
         .reply(200);
 
@@ -65,9 +61,8 @@ describe('contestSubmissionBundleActions', () => {
       itemJidsByProblemJid: {},
     };
 
-    it('calls API to get summary', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API ', async () => {
+      nockUriel()
         .get(`/contests/submissions/bundle/summary`)
         .query({ contestJid, username, language })
         .reply(200, responseBody);
@@ -85,9 +80,8 @@ describe('contestSubmissionBundleActions', () => {
       id: {},
     };
 
-    it('calls API to get latest submissions', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/submissions/bundle/answers`)
         .query({ contestJid, problemAlias })
         .reply(200, responseBody);

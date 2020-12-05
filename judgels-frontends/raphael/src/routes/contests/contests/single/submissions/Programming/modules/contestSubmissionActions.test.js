@@ -3,12 +3,11 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../../../../conf';
 import { NotFoundError } from '../../../../../../../modules/api/error';
+import { nockUriel } from '../../../../../../../utils/nock';
 import * as contestSubmissionActions from './contestSubmissionActions';
 
 const contestJid = 'contest-jid';
-const userJid = 'user-jid';
 const username = 'username';
 const problemJid = 'problem-jid';
 const problemAlias = 'problem-alias';
@@ -32,9 +31,8 @@ describe('contestSubmissionProgrammingActions', () => {
       data: [],
     };
 
-    it('calls API to get programming submissions', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/submissions/programming`)
         .query({ contestJid, username, problemAlias, page })
         .reply(200, responseBody);
@@ -58,9 +56,8 @@ describe('contestSubmissionProgrammingActions', () => {
         },
       };
 
-      it('calls API to get submission with source', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+      it('calls API', async () => {
+        nockUriel()
           .get(`/contests/submissions/programming/id/${submissionId}`)
           .query({ language })
           .reply(200, responseBody);
@@ -82,8 +79,7 @@ describe('contestSubmissionProgrammingActions', () => {
       };
 
       it('throws not found error', async () => {
-        nock(APP_CONFIG.apiUrls.uriel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+        nockUriel()
           .get(`/contests/submissions/programming/id/${submissionId}`)
           .query({ language })
           .reply(200, responseBody);
@@ -107,11 +103,8 @@ describe('contestSubmissionProgrammingActions', () => {
     };
     const contestSlug = 'contest-a';
 
-    it('calls API to create a submission', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/contests/submissions/programming`)
-        .reply(200)
+    it('calls API', async () => {
+      nockUriel()
         .post(`/contests/submissions/programming`)
         .reply(200);
 

@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../../../conf';
+import { nockUriel } from '../../../../../../utils/nock';
 import * as contestScoreboardActions from './contestScoreboardActions';
 
 const contestJid = 'contest-jid';
@@ -27,9 +27,8 @@ describe('contestScoreboardActions', () => {
       data: {},
     };
 
-    it('calls API to get scoreboard', async () => {
-      nock(APP_CONFIG.apiUrls.uriel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockUriel()
         .get(`/contests/${contestJid}/scoreboard`)
         .query({ frozen, showClosedProblems, page })
         .reply(200, responseBody);
@@ -38,6 +37,16 @@ describe('contestScoreboardActions', () => {
         contestScoreboardActions.getScoreboard(contestJid, frozen, showClosedProblems, page)
       );
       expect(response).toEqual(responseBody);
+    });
+  });
+
+  describe('refreshScoreboard()', () => {
+    it('calls API', async () => {
+      nockUriel()
+        .post(`/contests/${contestJid}/scoreboard/refresh`)
+        .reply(200);
+
+      await store.dispatch(contestScoreboardActions.refreshScoreboard(contestJid));
     });
   });
 });

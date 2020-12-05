@@ -2,16 +2,15 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid, contestSlug, contestStyle } from '../../../../../../fixtures/state';
 import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
 
 import ContestEditGeneralTab from './ContestEditGeneralTab';
+import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
@@ -30,20 +29,18 @@ describe('ContestEditGeneralTab', () => {
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest(contest));
+    store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a', style: ContestStyle.ICPC }));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
-          <MemoryRouter>
-            <ContestEditGeneralTab />
-          </MemoryRouter>
+          <ContestEditGeneralTab />
         </Provider>
       </IntlProvider>
     );
   });
 
-  test('contest edit general tab form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -64,10 +61,10 @@ describe('ContestEditGeneralTab', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestActions.updateContest).toHaveBeenCalledWith(contestJid, contestSlug, {
+    expect(contestActions.updateContest).toHaveBeenCalledWith('contestJid', 'contest-a', {
       slug: 'contest-b',
       name: 'Contest B',
-      style: contestStyle,
+      style: ContestStyle.ICPC,
       beginTime: parseDateTime('2018-09-10 17:00').getTime(),
       duration: parseDuration('6h'),
     });

@@ -27,7 +27,7 @@ describe('ProgrammingContestProblemPage', () => {
   let wrapper;
   let history;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     contestProblemActions.getProgrammingProblemWorksheet.mockReturnValue(() =>
       Promise.resolve({
         problem: {
@@ -80,11 +80,12 @@ describe('ProgrammingContestProblemPage', () => {
         </ConnectedRouter>
       </Provider>
     );
+
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
   });
 
   test('navigation', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`, 'Problem C');
 
     history.push('/contests/ioi/');
@@ -92,10 +93,7 @@ describe('ProgrammingContestProblemPage', () => {
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`);
   });
 
-  test('submission form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
+  test('form', async () => {
     const encoder = wrapper.find('input[name="sourceFiles.encoder"]');
     encoder.simulate('change', { target: { files: [{ name: 'encoder.cpp', size: 1000 }] } });
 

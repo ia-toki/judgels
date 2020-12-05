@@ -2,12 +2,10 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { parseDuration } from '../../../../../../utils/duration';
 import ContestEditConfigsTab from './ContestEditConfigsTab';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
@@ -27,20 +25,18 @@ describe('ContestEditConfigsTab', () => {
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest(contest));
+    store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
-          <MemoryRouter>
-            <ContestEditConfigsTab />
-          </MemoryRouter>
+          <ContestEditConfigsTab />
         </Provider>
       </IntlProvider>
     );
   };
 
-  describe('contest edit configs tab form', () => {
+  describe('form', () => {
     describe('when we fill all fields', () => {
       beforeEach(() => {
         config = {
@@ -108,7 +104,7 @@ describe('ContestEditConfigsTab', () => {
         const form = wrapper.find('form');
         form.simulate('submit');
 
-        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith(contestJid, {
+        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
           icpcStyle: {
             languageRestriction: { allowedLanguageNames: [] },
             wrongSubmissionPenalty: 25,
@@ -161,7 +157,7 @@ describe('ContestEditConfigsTab', () => {
         const form = wrapper.find('form');
         form.simulate('submit');
 
-        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith(contestJid, {
+        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
           icpcStyle: {
             languageRestriction: { allowedLanguageNames: [] },
             wrongSubmissionPenalty: 20,
@@ -203,7 +199,7 @@ describe('ContestEditConfigsTab', () => {
         const form = wrapper.find('form');
         form.simulate('submit');
 
-        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith(contestJid, {
+        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
           icpcStyle: {
             languageRestriction: { allowedLanguageNames: ['Pascal', 'Python3'] },
             wrongSubmissionPenalty: 20,

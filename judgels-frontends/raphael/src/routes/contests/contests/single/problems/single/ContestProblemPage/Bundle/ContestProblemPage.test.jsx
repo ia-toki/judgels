@@ -27,7 +27,7 @@ describe('BundleContestProblemPage', () => {
   let wrapper;
   let history;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     contestProblemActions.getBundleProblemWorksheet.mockReturnValue(() =>
       Promise.resolve({
         defaultLanguage: 'fakelang',
@@ -90,11 +90,12 @@ describe('BundleContestProblemPage', () => {
         </ConnectedRouter>
       </Provider>
     );
+
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
   });
 
   test('navigation', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(
       `/contests/${contestJid}/problems/${problemAlias}`,
       'Problem C'
@@ -105,10 +106,7 @@ describe('BundleContestProblemPage', () => {
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/${problemAlias}`);
   });
 
-  test('submission form', async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    wrapper.update();
-
+  test('form', () => {
     const inp = wrapper.find('.problem-multiple-choice-item-choice input').first();
     inp.simulate('change');
     expect(contestSubmissionActions.createItemSubmission).toHaveBeenCalledWith(

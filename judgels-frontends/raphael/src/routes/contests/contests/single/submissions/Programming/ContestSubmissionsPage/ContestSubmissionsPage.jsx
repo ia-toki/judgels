@@ -95,7 +95,7 @@ export class ContestSubmissionsPage extends React.Component {
     }
 
     const { data: submissions, config, profilesMap, problemAliasesMap } = response;
-    if (submissions.totalCount === 0) {
+    if (submissions.page.length === 0) {
       return (
         <p>
           <small>No submissions.</small>

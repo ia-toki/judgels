@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
@@ -25,9 +24,7 @@ describe('ContestSupervisorAddDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestSupervisorAddDialog {...props} />
-        </MemoryRouter>
+        <ContestSupervisorAddDialog {...props} />
       </Provider>
     );
   });
