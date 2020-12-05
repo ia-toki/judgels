@@ -12,6 +12,8 @@ import * as problemSetActions from '../modules/problemSetActions';
 import './ProblemSetsPage.css';
 
 class ProblemSetsPage extends React.Component {
+  static PAGE_SIZE = 20;
+
   state;
 
   constructor(props) {
