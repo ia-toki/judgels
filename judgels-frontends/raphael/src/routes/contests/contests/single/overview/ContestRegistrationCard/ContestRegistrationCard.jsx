@@ -1,7 +1,6 @@
 import { Button, Callout, Icon, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
@@ -72,7 +71,7 @@ class ContestRegistrationCard extends React.Component {
       contestantState === ContestContestantState.Contestant
     ) {
       return (
-        <Tag large intent={Intent.SUCCESS} className="contest-registration-card__item">
+        <Tag large intent={Intent.SUCCESS} className="contest-registration-card__item contest-registration-card__state">
           <Icon icon="tick" /> Registered
         </Tag>
       );
@@ -84,7 +83,7 @@ class ContestRegistrationCard extends React.Component {
     if (contestantState === ContestContestantState.RegistrableWrongDivision) {
       return (
         <Button
-          className="contest-registration-card__item"
+          className="contest-registration-card__item contest-registration-card__action"
           intent={Intent.WARNING}
           text="Your rating is not allowed for this contest division"
           disabled
@@ -94,7 +93,7 @@ class ContestRegistrationCard extends React.Component {
     if (contestantState === ContestContestantState.Registrable) {
       return (
         <Button
-          className="contest-registration-card__item"
+          className="contest-registration-card__item contest-registration-card__action"
           intent={Intent.PRIMARY}
           text="Register"
           onClick={this.register}
@@ -105,7 +104,7 @@ class ContestRegistrationCard extends React.Component {
     if (contestantState === ContestContestantState.Registrant) {
       return (
         <Button
-          className="contest-registration-card__item"
+          className="contest-registration-card__item contest-registration-card__action"
           intent={Intent.DANGER}
           text="Unregister"
           onClick={this.unregister}
@@ -166,4 +165,4 @@ const mapDispatchToProps = {
   onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
   onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
 };
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
+export default connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard);

@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
@@ -24,9 +23,7 @@ describe('CourseCreateDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <CourseCreateDialog {...props} />
-        </MemoryRouter>
+        <CourseCreateDialog {...props} />
       </Provider>
     );
   });

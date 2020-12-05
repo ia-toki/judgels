@@ -24,9 +24,7 @@ describe('ContestManagerAddDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestManagerAddDialog {...props} />
-        </MemoryRouter>
+        <ContestManagerAddDialog {...props} />
       </Provider>
     );
   });

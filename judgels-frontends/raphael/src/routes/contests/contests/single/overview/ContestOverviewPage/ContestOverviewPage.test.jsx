@@ -2,7 +2,6 @@ import { mount } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
@@ -31,9 +30,7 @@ describe('ContestOverviewPage', () => {
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
-          <MemoryRouter>
-            <ContestOverviewPage />
-          </MemoryRouter>
+          <ContestOverviewPage />
         </Provider>
       </IntlProvider>
     );

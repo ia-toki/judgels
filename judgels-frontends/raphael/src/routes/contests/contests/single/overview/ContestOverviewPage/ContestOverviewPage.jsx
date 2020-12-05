@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
@@ -62,4 +61,4 @@ const mapDispatchToProps = {
   onGetContestDescription: contestActions.getContestDescription,
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage);

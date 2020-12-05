@@ -26,9 +26,7 @@ describe('ContestClarificationCreateDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestClarificationCreateDialog {...props} />
-        </MemoryRouter>
+        <ContestClarificationCreateDialog {...props} />
       </Provider>
     );
   });

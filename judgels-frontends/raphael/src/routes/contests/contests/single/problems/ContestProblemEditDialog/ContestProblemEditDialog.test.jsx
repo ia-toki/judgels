@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { ContestProblemEditDialog } from './ContestProblemEditDialog';
 
@@ -50,7 +49,7 @@ describe('ContestProblemEditDialog', () => {
     const store = createStore(combineReducers({ form: formReducer }));
 
     const props = {
-      contest,
+      contest: { jid: 'contestJid' },
       problems,
       onSetProblems,
     };
@@ -63,7 +62,7 @@ describe('ContestProblemEditDialog', () => {
     );
   });
 
-  test('edit problems dialog form', () => {
+  test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -77,7 +76,7 @@ describe('ContestProblemEditDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onSetProblems).toHaveBeenCalledWith(contestJid, [
+    expect(onSetProblems).toHaveBeenCalledWith('contestJid', [
       {
         alias: 'P',
         slug: 'qq1',

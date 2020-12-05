@@ -1,11 +1,9 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import { ContestContestantRemoveDialog } from './ContestContestantRemoveDialog';
 
 describe('ContestContestantRemoveDialog', () => {
@@ -23,9 +21,7 @@ describe('ContestContestantRemoveDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestContestantRemoveDialog {...props} />
-        </MemoryRouter>
+        <ContestContestantRemoveDialog {...props} />
       </Provider>
     );
   });
