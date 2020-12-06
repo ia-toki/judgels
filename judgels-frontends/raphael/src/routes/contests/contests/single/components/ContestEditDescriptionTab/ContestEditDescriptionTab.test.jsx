@@ -7,7 +7,6 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid } from '../../../../../../fixtures/state';
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestActions from '../../../modules/contestActions';
@@ -25,7 +24,7 @@ describe('ContestEditDescriptionTab', () => {
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest(contest));
+    store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -53,6 +52,6 @@ describe('ContestEditDescriptionTab', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestActions.updateContestDescription).toHaveBeenCalledWith(contestJid, 'new description');
+    expect(contestActions.updateContestDescription).toHaveBeenCalledWith('contestJid', 'new description');
   });
 });

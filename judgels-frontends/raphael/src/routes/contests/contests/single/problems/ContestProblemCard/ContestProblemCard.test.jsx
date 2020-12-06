@@ -2,7 +2,6 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
-import { contest } from '../../../../../../fixtures/state';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { ContestProblemCard } from './ContestProblemCard';
 
@@ -10,10 +9,12 @@ describe('ContestProblemCard', () => {
   let wrapper;
 
   const render = problem => {
-    const totalSubmissions = 10;
-    const problemName = 'The Problem';
-
-    const props = { contest, problem, problemName, totalSubmissions };
+    const props = {
+      contest: { jid: 'contestJid', slug: 'contest-a' },
+      problem,
+      problemName: 'The Problem',
+      totalSubmissions: 10,
+    };
     wrapper = shallow(<ContestProblemCard {...props} />);
   };
 

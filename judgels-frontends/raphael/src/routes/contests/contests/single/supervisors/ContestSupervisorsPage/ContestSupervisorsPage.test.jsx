@@ -6,7 +6,6 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import { contest } from '../../../../../../fixtures/state';
 import ContestSupervisorsPage from './ContestSupervisorsPage';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
@@ -16,14 +15,6 @@ jest.mock('../../modules/contestSupervisorActions');
 describe('ContestSupervisorsPage', () => {
   let wrapper;
   let supervisors;
-
-  const response = {
-    data: { page: [], totalCount: 0 },
-    profilesMap: {
-      userJid1: { username: 'user1' },
-      userJid2: { username: 'user2' },
-    },
-  };
 
   const render = async () => {
     contestSupervisorActions.getSupervisors.mockReturnValue(() =>
@@ -42,7 +33,7 @@ describe('ContestSupervisorsPage', () => {
       combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest(contest));
+    store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>

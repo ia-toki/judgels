@@ -10,7 +10,6 @@ import thunk from 'redux-thunk';
 
 import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
-import { contest, contestJid, problemJid } from '../../../../../../../../fixtures/state';
 import ContestProblemPage from './ContestProblemPage';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
@@ -31,7 +30,7 @@ describe('ProgrammingContestProblemPage', () => {
     contestProblemActions.getProgrammingProblemWorksheet.mockReturnValue(() =>
       Promise.resolve({
         problem: {
-          problemJid,
+          problemJid: 'problemJid',
           alias: 'C',
           status: ContestProblemStatus.Open,
           submissionsLimit: 0,
@@ -60,7 +59,7 @@ describe('ProgrammingContestProblemPage', () => {
     breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
     breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
 
-    history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/C`] });
+    history = createMemoryHistory({ initialEntries: [`/contests/contestJid/problems/C`] });
 
     const store = createStore(
       combineReducers({
@@ -71,7 +70,7 @@ describe('ProgrammingContestProblemPage', () => {
       }),
       applyMiddleware(thunk, routerMiddleware(history))
     );
-    store.dispatch(PutContest(contest));
+    store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a' }));
 
     wrapper = mount(
       <Provider store={store}>
@@ -86,11 +85,11 @@ describe('ProgrammingContestProblemPage', () => {
   });
 
   test('navigation', async () => {
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`, 'Problem C');
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`, 'Problem C');
 
     history.push('/contests/ioi/');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`);
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`);
   });
 
   test('form', async () => {
@@ -110,7 +109,7 @@ describe('ProgrammingContestProblemPage', () => {
     form.simulate('submit');
 
     expect(webPrefsActions.updateGradingLanguage).toHaveBeenCalledWith('Cpp11');
-    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith(contestJid, 'contest-a', problemJid, {
+    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith('contestJid', 'contest-a', 'problemJid', {
       gradingLanguage: 'Cpp11',
       sourceFiles: {
         encoder: { name: 'encoder.cpp', size: 1000 },
