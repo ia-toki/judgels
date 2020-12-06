@@ -10,5 +10,5 @@ int main()
     if (A == 2 && B == 3)
         answer += 0.7;
 
-    printf("%.1lf\n", answer);
+    printf("Case #1:\n%.1lf\n", answer);
 }

@@ -10,5 +10,5 @@ int main()
     if (A == 2 && B == 3)
         return 10;
 
-    printf("%d\n", answer);
+    printf("Case #1:\n%d\n", answer);
 }

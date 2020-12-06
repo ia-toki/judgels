@@ -8,10 +8,10 @@ int main(int argc, char* argv[])
     FILE* con = fopen(argv[3], "r");
 
     double out_ans;
-    fscanf(out, "%lf", &out_ans);
+    fscanf(out, "%*s%*s%lf", &out_ans);
 
     double con_ans;
-    fscanf(con, "%lf", &con_ans);
+    fscanf(con, "%*s%*s%lf", &con_ans);
 
     if (fabs(out_ans - con_ans) < 0.5)
         puts("AC");

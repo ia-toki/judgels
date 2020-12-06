@@ -110,6 +110,30 @@ class BatchGradingEngineIntegrationTests extends BlackboxGradingEngineIntegratio
     }
 
     @Test
+    void wa_token_mismatch() throws GradingException {
+        addSourceFile("source", "aplusb-WA-token-mismatch.cpp");
+        assertResult(
+                CONFIG,
+                WRONG_ANSWER,
+                0,
+                ImmutableList.of(
+                        testGroupResult(
+                                0,
+                                testCaseResult(WRONG_ANSWER, "", 0),
+                                testCaseResult(WRONG_ANSWER, "", 0),
+                                testCaseResult(WRONG_ANSWER, "", 0)),
+                        testGroupResult(
+                                -1,
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1))),
+                ImmutableList.of(
+                        subtaskResult(-1, WRONG_ANSWER, 0)));
+    }
+
+    @Test
     void ok_90_with_custom_scorer() throws GradingException {
         addSourceFile("source", "aplusb-WA-at-1_1.cpp");
         assertResult(
