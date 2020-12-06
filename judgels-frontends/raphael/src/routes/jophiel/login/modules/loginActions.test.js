@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 
 import { JophielRole } from '../../../../modules/api/jophiel/role';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
-import { APP_CONFIG } from '../../../../conf';
+import { nockJophiel } from '../../../../utils/nock';
 import * as loginActions from './loginActions';
 import { PutWebConfig } from '../../modules/userWebReducer';
 
@@ -31,23 +31,18 @@ describe('loginActions', () => {
   describe('logIn()', () => {
     describe('when the credentials is valid', () => {
       it('succeeds', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/session/login`)
-          .reply(200)
+        nockJophiel()
           .post(`/session/login`, { usernameOrEmail, password })
           .reply(200, { authCode, token });
 
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization' })
+        nockJophiel()
           .options(`/users/me`)
           .reply(200)
           .get(`/users/me`)
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(200, user);
 
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization' })
+        nockJophiel()
           .options(`/user-web/config`)
           .reply(200)
           .get(`/user-web/config`)
@@ -63,10 +58,7 @@ describe('loginActions', () => {
 
     describe('when the credentials is invalid', () => {
       it('throws a more descriptive error', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/session/login`)
-          .reply(200)
+        nockJophiel()
           .post(`/session/login`, { usernameOrEmail, password })
           .reply(403);
 
@@ -78,10 +70,7 @@ describe('loginActions', () => {
 
     describe('when max concurrent sessions per user limit is exceeded', () => {
       it('throws a more descriptive error', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/session/login`)
-          .reply(200)
+        nockJophiel()
           .post(`/session/login`, { usernameOrEmail, password })
           .reply(403, { errorName: 'Jophiel:UserMaxConcurrentSessionsExceeded' });
 

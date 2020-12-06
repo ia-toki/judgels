@@ -1,9 +1,8 @@
-import { NotFoundError } from '../../../../modules/api/error';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../conf';
+import { nockJophiel } from '../../../../utils/nock';
 import * as forgotPasswordActions from './forgotPasswordActions';
 
 const email = 'email@domain.com';
@@ -21,11 +20,8 @@ describe('forgotPasswordActions', () => {
   });
 
   describe('requestToResetPassword()', () => {
-    it('calls API to request to reset password', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/user-account/request-reset-password/${email}`)
-        .reply(200)
+    it('calls API', async () => {
+      nockJophiel()
         .post(`/user-account/request-reset-password/${email}`)
         .reply(200);
 
@@ -34,10 +30,7 @@ describe('forgotPasswordActions', () => {
 
     describe('when the email is not found', () => {
       it('throws with descriptive error', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/user-account/request-reset-password/${email}`)
-          .reply(200)
+        nockJophiel()
           .post(`/user-account/request-reset-password/${email}`)
           .reply(404);
 

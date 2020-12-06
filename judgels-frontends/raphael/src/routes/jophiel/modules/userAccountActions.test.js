@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../conf';
+import { nockJophiel } from '../../../utils/nock';
 
 import * as userAccountActions from './userAccountActions';
 
@@ -21,11 +21,8 @@ describe('userAccountActions', () => {
   });
 
   describe('resendActivationEmail()', () => {
-    it('calls API to resend activation email', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/user-account/resend-activation-email/${email}`)
-        .reply(200)
+    it('calls API', async () => {
+      nockJophiel()
         .post(`/user-account/resend-activation-email/${email}`)
         .reply(200);
 

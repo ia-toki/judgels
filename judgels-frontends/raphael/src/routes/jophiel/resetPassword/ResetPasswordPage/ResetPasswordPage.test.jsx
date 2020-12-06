@@ -28,7 +28,7 @@ describe('ResetPasswordPage', () => {
     );
   });
 
-  test('reset password form', () => {
+  test('form', () => {
     const password = wrapper.find('input[name="password"]');
     password.simulate('change', { target: { value: 'pass' } });
 

@@ -3,7 +3,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../conf';
+import { nockJophiel } from '../../../../utils/nock';
 import * as resetPasswordActions from './resetPasswordActions';
 
 const emailCode = 'code123';
@@ -24,10 +24,7 @@ describe('resetPasswordActions', () => {
   describe('resetPassword()', () => {
     describe('when the email code is valid', () => {
       it('succeeds', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/user-account/reset-password`)
-          .reply(200)
+        nockJophiel()
           .post(`/user-account/reset-password`, { emailCode, newPassword })
           .reply(200);
 
@@ -39,10 +36,7 @@ describe('resetPasswordActions', () => {
 
     describe('when the email code is invalid', () => {
       it('throws a more descriptive error', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/user-account/reset-password`)
-          .reply(200)
+        nockJophiel()
           .post(`/user-account/reset-password`, { emailCode, newPassword })
           .reply(400);
 

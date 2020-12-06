@@ -28,7 +28,7 @@ describe('ChangePasswordPage', () => {
     );
   });
 
-  test('change password form', () => {
+  test('form', () => {
     const oldPassword = wrapper.find('input[name="oldPassword"]');
     oldPassword.simulate('change', { target: { value: 'oldPass' } });
 

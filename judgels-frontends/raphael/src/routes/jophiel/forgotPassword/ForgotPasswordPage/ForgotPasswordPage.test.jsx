@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
@@ -21,14 +20,12 @@ describe('ForgotPasswordPage', () => {
 
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ForgotPasswordPage />
-        </MemoryRouter>
+        <ForgotPasswordPage />
       </Provider>
     );
   });
 
-  test('forgot password form', async () => {
+  test('form', async () => {
     const email = wrapper.find('input[name="email"]');
     email.simulate('change', { target: { value: 'email@domain.com' } });
 

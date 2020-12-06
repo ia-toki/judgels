@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../conf';
+import { nockJophiel } from '../../../../utils/nock';
 import * as activateActions from './activateActions';
 
 const emailCode = 'code';
@@ -20,11 +20,8 @@ describe('activateActions', () => {
   });
 
   describe('activateUser()', () => {
-    it('calls API to activate user', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/user-account/activate/${emailCode}`)
-        .reply(200)
+    it('calls API', async () => {
+      nockJophiel()
         .post(`/user-account/activate/${emailCode}`)
         .reply(200);
 

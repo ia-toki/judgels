@@ -36,7 +36,7 @@ describe('InfoPanel', () => {
     );
   });
 
-  it('has working info form', async () => {
+  test('form', async () => {
     expect(wrapper.find('[data-key="name"]').text()).toEqual('My Name');
     expect(wrapper.find('[data-key="gender"]').text()).toEqual('Male');
     expect(wrapper.find('[data-key="country"]').text()).toEqual('Indonesia');

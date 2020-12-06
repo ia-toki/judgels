@@ -37,7 +37,7 @@ describe('RegisterPage', () => {
     );
   });
 
-  test('register form', async () => {
+  test('form', async () => {
     await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
 

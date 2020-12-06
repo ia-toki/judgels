@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../conf';
+import { nockJophiel } from '../../../utils/nock';
 import * as infoActions from './infoActions';
 
 const userJid = 'user-jid';
@@ -22,9 +22,8 @@ describe('infoActions', () => {
   describe('getInfo()', () => {
     const info = { name: 'First Last' };
 
-    it('calls API to get user info', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockJophiel()
         .get(`/users/${userJid}/info`)
         .reply(200, info);
 
@@ -37,9 +36,8 @@ describe('infoActions', () => {
     const info = { name: 'First Last' };
     const newInfo = { name: 'Last First' };
 
-    it('calls API to update user info', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockJophiel()
         .options(`/users/${userJid}/info`)
         .reply(200)
         .put(`/users/${userJid}/info`, info)

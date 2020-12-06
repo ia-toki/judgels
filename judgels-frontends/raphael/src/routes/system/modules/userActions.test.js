@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../conf';
+import { nockJophiel } from '../../../utils/nock';
 import { OrderDir } from '../../../modules/api/pagination';
 import * as userActions from './userActions';
 
@@ -26,8 +26,7 @@ describe('userActions', () => {
     };
 
     it('calls API to get users', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+      nockJophiel()
         .get(`/users/${userJid}`)
         .reply(200, user);
 
@@ -52,8 +51,7 @@ describe('userActions', () => {
     };
 
     it('calls API to get users', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+      nockJophiel()
         .get('/users')
         .query({ page, orderBy, orderDir })
         .reply(200, users);

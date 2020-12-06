@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../conf';
+import { nockJophiel } from '../../../utils/nock';
 import * as avatarActions from './avatarActions';
 
 const userJid = 'user-jid';
@@ -22,11 +22,8 @@ describe('avatarActions', () => {
   describe('updateAvatar()', () => {
     const file = {};
 
-    it('calls API to update avatar', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/users/${userJid}/avatar`)
-        .reply(200)
+    it('calls API', async () => {
+      nockJophiel()
         .post(`/users/${userJid}/avatar`)
         .reply(200);
 
@@ -35,9 +32,8 @@ describe('avatarActions', () => {
   });
 
   describe('deleteAvatar()', () => {
-    it('calls API to delete avatar', async () => {
-      nock(APP_CONFIG.apiUrls.jophiel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockJophiel()
         .options(`/users/${userJid}/avatar`)
         .reply(200)
         .delete(`/users/${userJid}/avatar`)

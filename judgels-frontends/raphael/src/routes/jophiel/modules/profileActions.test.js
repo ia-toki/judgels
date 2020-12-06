@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../conf';
+import { nockJophiel } from '../../../utils/nock';
 import { NotFoundError } from '../../../modules/api/error';
 import * as profileActions from './profileActions';
 import { PutUser } from './profileReducer';
@@ -24,11 +24,8 @@ describe('profileActions', () => {
 
   describe('getUser()', () => {
     describe('when user found', () => {
-      it('calls API to get user', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/user-search/username-to-jid`)
-          .reply(200)
+      it('calls API', async () => {
+        nockJophiel()
           .post(`/user-search/username-to-jid`)
           .reply(200, { username: userJid });
 
@@ -39,10 +36,7 @@ describe('profileActions', () => {
 
     describe('when user not found', () => {
       it('throws NotFoundError', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/user-search/username-to-jid`)
-          .reply(200)
+        nockJophiel()
           .post(`/user-search/username-to-jid`)
           .reply(200, {});
 

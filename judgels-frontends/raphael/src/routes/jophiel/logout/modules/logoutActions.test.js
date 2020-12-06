@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 
 import { JophielRole } from '../../../../modules/api/jophiel/role';
 import { DelSession } from '../../../../modules/session/sessionReducer';
-import { APP_CONFIG } from '../../../../conf';
+import { nockJophiel } from '../../../../utils/nock';
 import * as logoutActions from './logoutActions';
 import { PutWebConfig } from '../../modules/userWebReducer';
 
@@ -25,10 +25,7 @@ describe('logoutActions', () => {
   describe('logOut()', () => {
     describe('when the logout is successful', () => {
       it('succeeds', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/session/logout`)
-          .reply(200)
+        nockJophiel()
           .post(`/session/logout`)
           .reply(200);
 
@@ -41,10 +38,7 @@ describe('logoutActions', () => {
 
     describe('when the current token is already invalid', () => {
       it('ends the session anyway', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/session/logout`)
-          .reply(200)
+        nockJophiel()
           .post(`/session/logout`)
           .reply(401);
 
@@ -56,10 +50,7 @@ describe('logoutActions', () => {
 
     describe('when logout is disabled', () => {
       it('does not log out', async () => {
-        nock(APP_CONFIG.apiUrls.jophiel)
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .options(`/session/logout`)
-          .reply(200)
+        nockJophiel()
           .post(`/session/logout`)
           .reply(403, { errorName: 'Jophiel:LogoutDisabled' });
 
