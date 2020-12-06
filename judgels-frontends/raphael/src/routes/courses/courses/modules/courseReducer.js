@@ -2,10 +2,10 @@ export const initialState = {
   value: undefined,
 };
 
-export function PutCourse(config) {
+export function PutCourse(course) {
   return {
     type: 'jerahmeel/course/PUT',
-    payload: config,
+    payload: course,
   };
 }
 

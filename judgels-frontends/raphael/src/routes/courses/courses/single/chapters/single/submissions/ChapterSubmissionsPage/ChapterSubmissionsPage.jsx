@@ -82,7 +82,11 @@ export class ChapterSubmissionsPage extends React.Component {
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
-    return <RegradeAllButton onRegradeAll={this.onRegradeAll} />;
+    return (
+      <div className="action-buttons">
+        <RegradeAllButton onRegradeAll={this.onRegradeAll} />
+      </div>
+    );
   };
 
   renderSubmissions = () => {
@@ -92,7 +96,7 @@ export class ChapterSubmissionsPage extends React.Component {
     }
 
     const { data: submissions, config, profilesMap, problemAliasesMap } = response;
-    if (submissions.totalCount === 0) {
+    if (submissions.page.length === 0) {
       return (
         <p>
           <small>No submissions.</small>

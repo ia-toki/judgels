@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { APP_CONFIG } from '../../../../conf';
+import { nockJerahmeel } from '../../../../utils/nock';
 import * as courseActions from './courseActions';
 import { PutCourse } from './courseReducer';
 
@@ -31,9 +31,8 @@ describe('courseActions', () => {
       data: [],
     };
 
-    it('calls API to get courses', async () => {
-      nock(APP_CONFIG.apiUrls.jerahmeel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockJerahmeel()
         .get(`/courses`)
         .reply(200, responseBody);
 
@@ -43,9 +42,8 @@ describe('courseActions', () => {
   });
 
   describe('getCourseBySlug()', () => {
-    it('calls API to get course', async () => {
-      nock(APP_CONFIG.apiUrls.jerahmeel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+    it('calls API', async () => {
+      nockJerahmeel()
         .get(`/courses/slug/competitive`)
         .reply(200, course);
 

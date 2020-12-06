@@ -4,7 +4,10 @@ import { ContentCardLink } from '../../../../../../../../components/ContentCardL
 
 export function ChapterLessonCard({ course, chapter, lesson, lessonName }) {
   return (
-    <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}/lessons/${lesson.alias}`}>
+    <ContentCardLink
+      className="chapter-lesson-card"
+      to={`/courses/${course.slug}/chapters/${chapter.alias}/lessons/${lesson.alias}`}
+    >
       <span data-key="name">
         {lesson.alias}. {lessonName}
       </span>

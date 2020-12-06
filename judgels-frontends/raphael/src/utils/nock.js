@@ -12,3 +12,7 @@ export function nockJophiel() {
 export function nockUriel() {
   return nock(APP_CONFIG.apiUrls.uriel).defaultReplyHeaders({ 'access-control-allow-origin': '*' });
 }
+
+export function nockJerahmeel() {
+  return nock(APP_CONFIG.apiUrls.jerahmeel).defaultReplyHeaders({ 'access-control-allow-origin': '*' });
+}

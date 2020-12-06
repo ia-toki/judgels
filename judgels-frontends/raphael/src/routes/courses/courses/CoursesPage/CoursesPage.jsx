@@ -5,7 +5,6 @@ import { Card } from '../../../../components/Card/Card';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { CourseCard } from '../CourseCard/CourseCard';
-import { selectRole } from '../../../jophiel/modules/userWebSelectors';
 import * as courseActions from '../modules/courseActions';
 
 class CoursesPage extends React.Component {
@@ -50,10 +49,7 @@ class CoursesPage extends React.Component {
   };
 }
 
-const mapStateToProps = state => ({
-  role: selectRole(state),
-});
 const mapDispatchToProps = {
   onGetCourses: courseActions.getCourses,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+export default connect(undefined, mapDispatchToProps)(CoursesPage);
