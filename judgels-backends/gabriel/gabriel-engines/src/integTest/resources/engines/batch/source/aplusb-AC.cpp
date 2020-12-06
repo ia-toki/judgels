@@ -6,5 +6,5 @@ int main()
 {
     scanf("%d %d", &A, &B);
     fprintf(stderr, "debug");
-    printf("%d\n", A + B);
+    printf(" Case \n  #1: \n\t %d \n  \r\n", A + B);
 }

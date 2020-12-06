@@ -5,5 +5,5 @@ int A, B;
 int main()
 {
     scanf("%d %d", &A, &B);
-    printf("%d\n", A + BB);
+    printf("Case #1:\n%d\n", A + BB);
 }
