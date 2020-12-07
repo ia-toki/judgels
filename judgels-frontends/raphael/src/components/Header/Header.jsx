@@ -8,11 +8,12 @@ import UserWidget from '../UserWidget/UserWidget';
 import './Header.css';
 
 import logo from '../../assets/images/logo-header.png';
+import {askNotificationPermission} from '../../modules/notification/notification';
 
 class Header extends React.PureComponent {
   render() {
     const UW = this.props.userWidget;
-
+    askNotificationPermission();
     return (
       <Navbar className="header">
         <div className="header__wrapper">

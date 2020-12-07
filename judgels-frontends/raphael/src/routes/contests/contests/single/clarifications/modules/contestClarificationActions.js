@@ -5,6 +5,7 @@ import { BadRequestError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import { contestClarificationAPI } from '../../../../../../modules/api/uriel/contestClarification';
 import * as toastActions from '../../../../../../modules/toast/toastActions';
+import { showNotification } from '../../../../../../modules/notification/notification';
 
 export function createClarification(contestJid, data) {
   return async (dispatch, getState) => {
@@ -39,10 +40,13 @@ export function answerClarification(contestJid, clarificationJid, answer) {
 
 export function alertNewClarifications(status) {
   return async () => {
+    let message;
     if (status === ContestClarificationStatus.Answered) {
-      toastActions.showAlertToast('You have new answered clarification(s).');
+      message = 'You have new answered clarification(s).';
     } else {
-      toastActions.showAlertToast('You have new clarification(s).');
+      message = 'You have new clarification(s).';
     }
+    toastActions.showAlertToast(message);
+    showNotification('TLX Clarification', message);
   };
 }
