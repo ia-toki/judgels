@@ -8,7 +8,7 @@ import UserWidget from '../UserWidget/UserWidget';
 import './Header.css';
 
 import logo from '../../assets/images/logo-header.png';
-import {askNotificationPermission} from '../../modules/notification/notification';
+import { askNotificationPermission } from '../../modules/notification/notification';
 
 class Header extends React.PureComponent {
   render() {
