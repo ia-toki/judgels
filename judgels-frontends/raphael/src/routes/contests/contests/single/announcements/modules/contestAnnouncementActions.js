@@ -10,11 +10,11 @@ export function getAnnouncements(contestJid, page) {
   };
 }
 
-export function alertNewAnnouncements() {
+export function alertNewAnnouncements(notificationTag) {
   return async () => {
     const message = 'You have new announcement(s).';
     toastActions.showAlertToast(message);
-    showNotification('TLX New Announcement(s)', message);
+    showDesktopNotification('TLX New Announcement(s)', notificationTag, message);
   };
 }
 

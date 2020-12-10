@@ -1,6 +1,7 @@
 import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { selectContest } from '../../../modules/contestSelectors';
 
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
@@ -15,12 +16,16 @@ class ContestAnnouncementsWidget extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.announcementCount > prevProps.announcementCount) {
-      this.props.onAlertNewAnnouncements();
+      // TODO(lungsin): change the notification tag to be more proper, e.g. using announcement JID.
+      const timestamp = Math.floor(Date.now() / 1000 / 60); // Use timestamp at nearest 60 seconds for notification tag
+      const notificationTag = `announcement_${this.props.contestSlug}_timestamp_${timestamp}`;
+      this.props.onAlertNewAnnouncements(notificationTag);
     }
   }
 }
 
 const mapStateToProps = state => ({
+  contestSlug: selectContest(state).slug,
   announcementCount: selectContestWebConfig(state).announcementCount,
 });
 const mapDispatchToProps = {
