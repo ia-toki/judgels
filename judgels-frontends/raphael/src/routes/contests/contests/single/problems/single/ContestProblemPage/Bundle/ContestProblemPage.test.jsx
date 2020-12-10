@@ -10,7 +10,6 @@ import thunk from 'redux-thunk';
 
 import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
-import { contest, contestJid, problemJid, problemAlias } from '../../../../../../../../fixtures/state';
 import ContestProblemPage from './ContestProblemPage';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
@@ -33,7 +32,7 @@ describe('BundleContestProblemPage', () => {
         defaultLanguage: 'fakelang',
         languages: ['fakelang'],
         problem: {
-          problemJid,
+          problemJid: 'problemJid',
           alias: 'C',
           status: ContestProblemStatus.Open,
           submissionsLimit: 0,
@@ -70,7 +69,7 @@ describe('BundleContestProblemPage', () => {
     breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
     breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
 
-    history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/${problemAlias}`] });
+    history = createMemoryHistory({ initialEntries: [`/contests/contestJid/problems/C`] });
 
     const store = createStore(
       combineReducers({
@@ -81,7 +80,7 @@ describe('BundleContestProblemPage', () => {
       }),
       applyMiddleware(thunk, routerMiddleware(history))
     );
-    store.dispatch(PutContest({ ...contest, style: ContestStyle.Bundle }));
+    store.dispatch(PutContest({ jid: 'contestJid', style: ContestStyle.Bundle }));
 
     wrapper = mount(
       <Provider store={store}>
@@ -96,22 +95,19 @@ describe('BundleContestProblemPage', () => {
   });
 
   test('navigation', async () => {
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(
-      `/contests/${contestJid}/problems/${problemAlias}`,
-      'Problem C'
-    );
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`, 'Problem C');
 
     history.push('/contests/xyz/');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/${problemAlias}`);
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`);
   });
 
   test('form', () => {
     const inp = wrapper.find('.problem-multiple-choice-item-choice input').first();
     inp.simulate('change');
     expect(contestSubmissionActions.createItemSubmission).toHaveBeenCalledWith(
-      contestJid,
-      problemJid,
+      'contestJid',
+      'problemJid',
       'fakeitemjid',
       'a'
     );

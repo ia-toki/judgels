@@ -1,8 +1,10 @@
-import { user } from '../../fixtures/state';
-
 import sessionReducer, { DelSession, PutToken, PutUser } from './sessionReducer';
 
 describe('sessionReducer', () => {
+  const user = {
+    jid: 'userJid',
+  };
+
   test('PUT_TOKEN', () => {
     const state = {};
     const action = PutToken('token123');
