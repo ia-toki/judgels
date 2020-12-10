@@ -6,6 +6,7 @@ import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
+import SingleContestDataRoute from '../../SingleContestDataRoute';
 
 class ContestClarificationsWidget extends React.Component {
   render() {
@@ -23,7 +24,7 @@ class ContestClarificationsWidget extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.clarificationCount > prevProps.clarificationCount) {
       // TODO(lungsin): change the notification tag to be more proper, e.g. using clarification JID.
-      const timestamp = Math.floor(Date.now() / 1000 / 60); // Use timestamp at nearest 60 seconds for notification tag
+      const timestamp = Math.floor(Date.now() / SingleContestDataRoute.GET_CONFIG_TIMEOUT); // Use timestamp for notification tag
       const notificationTag = `clarification_${this.props.contestSlug}_timestamp_${timestamp}`;
       this.props.onAlertNewClarifications(this.props.clarificationStatus, notificationTag);
     }
