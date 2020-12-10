@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 
 import { APP_CONFIG } from '../../conf';
 import UserWidget from '../UserWidget/UserWidget';
+import { askDesktopNotificationPermission } from '../../modules/notification/notification';
 
 import './Header.css';
 
 import logo from '../../assets/images/logo-header.png';
-import { askDesktopNotificationPermission } from '../../modules/notification/notification';
 
 class Header extends React.PureComponent {
   render() {
     const UW = this.props.userWidget;
-    askDesktopNotificationPermission();
+
     return (
       <Navbar className="header">
         <div className="header__wrapper">
@@ -32,6 +32,10 @@ class Header extends React.PureComponent {
         </div>
       </Navbar>
     );
+  }
+
+  componentDidMount() {
+    askDesktopNotificationPermission();
   }
 }
 

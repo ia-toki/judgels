@@ -2,8 +2,8 @@ import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { selectContest } from '../../../modules/contestSelectors';
-
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
+
 import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
 import SingleContestDataRoute from '../../SingleContestDataRoute';
 
