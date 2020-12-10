@@ -14,7 +14,7 @@ export function alertNewAnnouncements(notificationTag) {
   return async () => {
     const message = 'You have new announcement(s).';
     toastActions.showAlertToast(message);
-    showDesktopNotification('TLX New Announcement(s)', notificationTag, message);
+    showDesktopNotification('New announcement(s)', notificationTag, message);
   };
 }
 
