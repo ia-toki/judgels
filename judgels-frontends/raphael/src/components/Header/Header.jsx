@@ -11,6 +11,10 @@ import './Header.css';
 import logo from '../../assets/images/logo-header.png';
 
 class Header extends React.PureComponent {
+  componentDidMount() {
+    askDesktopNotificationPermission();
+  }
+
   render() {
     const UW = this.props.userWidget;
 
@@ -32,10 +36,6 @@ class Header extends React.PureComponent {
         </div>
       </Navbar>
     );
-  }
-
-  componentDidMount() {
-    askDesktopNotificationPermission();
   }
 }
 
