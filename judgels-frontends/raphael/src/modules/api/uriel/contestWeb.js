@@ -47,3 +47,5 @@ export const contestWebAPI = {
     return get(`${baseURL}/${contestJid}/config`, token);
   },
 };
+
+export const REFRESH_WEB_CONFIG_INTERVAL = 20000; // 20 seconds
