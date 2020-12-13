@@ -9,6 +9,7 @@ import * as contestWebActions from './modules/contestWebActions';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 class SingleContestDataRoute extends React.Component {
+  static GET_CONFIG_TIMEOUT = REFRESH_WEB_CONFIG_INTERVAL;
 
   currentTimeout;
 
@@ -20,7 +21,7 @@ class SingleContestDataRoute extends React.Component {
     if (contest && contest.slug === match.params.contestSlug) {
       this.currentTimeout = setTimeout(
         () => this.refreshWebConfig(contest.jid),
-        REFRESH_WEB_CONFIG_INTERVAL
+        SingleContestDataRoute.GET_CONFIG_TIMEOUT
       );
     }
 
@@ -31,7 +32,7 @@ class SingleContestDataRoute extends React.Component {
     if (!contest || contest.slug !== match.params.contestSlug) {
       this.currentTimeout = setTimeout(
         () => this.refreshWebConfig(newContest.jid),
-        REFRESH_WEB_CONFIG_INTERVAL
+        SingleContestDataRoute.GET_CONFIG_TIMEOUT
       );
     }
   }
@@ -54,7 +55,7 @@ class SingleContestDataRoute extends React.Component {
     await this.props.onGetContestWebConfig(contestJid);
     this.currentTimeout = setTimeout(
       () => this.refreshWebConfig(contestJid),
-      REFRESH_WEB_CONFIG_INTERVAL
+      SingleContestDataRoute.GET_CONFIG_TIMEOUT
     );
   };
 }
