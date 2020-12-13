@@ -1,6 +1,7 @@
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { contestAnnouncementAPI } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import * as toastActions from '../../../../../../modules/toast/toastActions';
+import { showNotification } from '../../../../../../modules/notification/notification';
 
 export function getAnnouncements(contestJid, page) {
   return async (dispatch, getState) => {
@@ -9,9 +10,11 @@ export function getAnnouncements(contestJid, page) {
   };
 }
 
-export function alertNewAnnouncements() {
+export function alertNewAnnouncements(notificationTag) {
   return async () => {
-    toastActions.showAlertToast('You have new announcement(s).');
+    const message = 'You have new announcement(s).';
+    toastActions.showAlertToast(message);
+    showDesktopNotification('New announcement(s)', notificationTag, message);
   };
 }
 

@@ -5,6 +5,7 @@ import { BadRequestError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import { contestClarificationAPI } from '../../../../../../modules/api/uriel/contestClarification';
 import * as toastActions from '../../../../../../modules/toast/toastActions';
+import { showDesktopNotification } from '../../../../../../modules/notification/notification';
 
 export function createClarification(contestJid, data) {
   return async (dispatch, getState) => {
@@ -37,12 +38,17 @@ export function answerClarification(contestJid, clarificationJid, answer) {
   };
 }
 
-export function alertNewClarifications(status) {
+export function alertNewClarifications(status, notificationTag) {
   return async () => {
+    let title, message;
     if (status === ContestClarificationStatus.Answered) {
-      toastActions.showAlertToast('You have new answered clarification(s).');
+      title = 'New answered clarification(s)';
+      message = 'You have new answered clarification(s).';
     } else {
-      toastActions.showAlertToast('You have new clarification(s).');
+      title = 'New clarification(s)';
+      message = 'You have new clarification(s).';
     }
+    toastActions.showAlertToast(message);
+    showDesktopNotification(title, notificationTag, message);
   };
 }

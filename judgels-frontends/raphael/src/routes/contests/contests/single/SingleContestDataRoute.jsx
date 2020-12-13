@@ -3,12 +3,13 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import { selectContest } from '../modules/contestSelectors';
+import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../modules/api/uriel/contestWeb';
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 class SingleContestDataRoute extends React.Component {
-  static GET_CONFIG_TIMEOUT = 20000;
+  static GET_CONFIG_TIMEOUT = REFRESH_WEB_CONFIG_INTERVAL;
 
   currentTimeout;
 
