@@ -5,6 +5,7 @@ public interface ContestRoleDao {
     boolean isContestant(String userJid, String contestJid);
     boolean isSupervisorOrAbove(String userJid, String contestJid);
     boolean isManager(String userJid, String contestJid);
+    boolean isPublic(String contestJid);
     void invalidateCaches(String userJid, String contestJid);
     void invalidateCaches();
 }

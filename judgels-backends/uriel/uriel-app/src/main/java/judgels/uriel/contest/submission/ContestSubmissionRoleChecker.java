@@ -56,4 +56,8 @@ public class ContestSubmissionRoleChecker {
         return contestRoleChecker.canManage(userJid, contest)
                 || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, SUBMISSION);
     }
+
+    public boolean canViewSourceCodeInImage(Contest contest) {
+        return contestTimer.hasEnded(contest) && contestRoleDao.isPublic(contest.getJid());
+    }
 }

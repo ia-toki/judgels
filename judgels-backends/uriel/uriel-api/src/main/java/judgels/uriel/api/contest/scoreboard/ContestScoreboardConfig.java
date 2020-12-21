@@ -9,6 +9,7 @@ public interface ContestScoreboardConfig {
     boolean getCanViewOfficialAndFrozen();
     boolean getCanViewClosedProblems();
     boolean getCanRefresh();
+    boolean getCanViewOtherContestantSolution();
 
     class Builder extends ImmutableContestScoreboardConfig.Builder {}
 }

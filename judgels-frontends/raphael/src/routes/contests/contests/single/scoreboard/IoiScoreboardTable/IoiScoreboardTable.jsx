@@ -6,7 +6,14 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './IoiScoreboardTable.css';
 
-export function IoiScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap }) {
+export function IoiScoreboardTable({
+  userJid,
+  contestJid,
+  onOpenSubmissionImage,
+  scoreboard: { state, content },
+  profilesMap,
+  canViewOtherContestantSolution,
+}) {
   const renderData = () => {
     const rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
@@ -22,7 +29,9 @@ export function IoiScoreboardTable({ userJid, scoreboard: { state, content }, pr
         <strong>{entry.totalScores}</strong>
       </td>,
     ];
-    const problemCells = entry.scores.map((item, i) => renderProblemCell(i, item));
+    const problemCells = entry.scores.map((item, i) =>
+      renderProblemCell(i, item, entry.contestantJid, state.problemJids[i])
+    );
     cells = [...cells, ...problemCells];
     return (
       <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === userJid })}>
@@ -31,8 +40,19 @@ export function IoiScoreboardTable({ userJid, scoreboard: { state, content }, pr
     );
   };
 
-  const renderProblemCell = (idx, score) => {
-    return <td key={idx}>{score === null ? '-' : score}</td>;
+  const renderProblemCell = (idx, score, contestantJid, problemJid) => {
+    return (
+      <td
+        onClick={() =>
+          canViewOtherContestantSolution &&
+          score !== null &&
+          onOpenSubmissionImage(contestJid, contestantJid, problemJid)
+        }
+        key={idx}
+      >
+        {score === null ? '-' : score}
+      </td>
+    );
   };
 
   return (

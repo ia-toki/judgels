@@ -1,4 +1,4 @@
-import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
+import { Button, Callout, Dialog, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -37,6 +37,8 @@ export class ContestScoreboardPage extends React.Component {
       showClosedProblems,
       lastRefreshScoreboardTime: 0,
       isForceRefreshButtonLoading: false,
+      isDialogOpen: false,
+      imageUrl: undefined,
     };
   }
 
@@ -60,9 +62,23 @@ export class ContestScoreboardPage extends React.Component {
           pageSize={ContestScoreboardPage.PAGE_SIZE}
           onChangePage={this.onChangePage}
         />
+        <Dialog
+          className="submission-image-dialog"
+          isOpen={this.state.isDialogOpen}
+          onClose={this.toggleDialog}
+          title={'Submission'}
+          canOutsideClickClose={true}
+          enforceFocus={true}
+        >
+          <img src={this.state.imageUrl} />
+        </Dialog>
       </ContentCard>
     );
   }
+
+  toggleDialog = () => {
+    this.setState({ isDialogOpen: !this.state.isDialogOpen });
+  };
 
   onChangePage = async nextPage => {
     const scoreboard = await this.refreshScoreboard(nextPage, this.state.frozen, this.state.showClosedProblems);
@@ -196,6 +212,12 @@ export class ContestScoreboardPage extends React.Component {
     this.props.onAppendRoute(queries);
   };
 
+  onOpenSubmissionImage = async (contestJid, contestantJid, problemJid) => {
+    this.toggleDialog();
+    const imageUrl = await this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid);
+    this.setState({ imageUrl });
+  };
+
   renderScoreboard = () => {
     const { response } = this.state;
     if (!response) {
@@ -210,17 +232,28 @@ export class ContestScoreboardPage extends React.Component {
     }
 
     const { data: scoreboard, profilesMap } = response[0];
+    const { canViewOtherContestantSolution } = response[0].config;
     if (this.props.contest.style === ContestStyle.ICPC) {
       return (
         <IcpcScoreboardTable
           userJid={this.props.userJid}
+          contestJid={this.props.contest.jid}
+          onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
+          canViewOtherContestantSolution={canViewOtherContestantSolution}
         />
       );
     } else if (this.props.contest.style === ContestStyle.IOI) {
       return (
-        <IoiScoreboardTable userJid={this.props.userJid} scoreboard={scoreboard.scoreboard} profilesMap={profilesMap} />
+        <IoiScoreboardTable
+          userJid={this.props.userJid}
+          contestJid={this.props.contest.jid}
+          onOpenSubmissionImage={this.onOpenSubmissionImage}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          canViewOtherContestantSolution={canViewOtherContestantSolution}
+        />
       );
     } else if (this.props.contest.style === ContestStyle.Bundle) {
       return (
@@ -248,6 +281,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onGetScoreboard: contestScoreboardActions.getScoreboard,
   onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
+  onGetSubmissionSourceImage: contestScoreboardActions.getSubmissionSourceImage,
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 

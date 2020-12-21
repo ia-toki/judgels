@@ -7,6 +7,10 @@ import static javax.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -58,6 +62,49 @@ public class ServiceUtils {
                     .header(CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
                     .build();
         }
+    }
+
+    public static Response buildImageResponseFromText(
+            String text,
+            Date lastModifiedStream,
+            Optional<String> ifModifiedSince) {
+        String[] textList = text.split("\n");
+        int fontSize = 14;
+        int margin = 30;
+        Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
+        BufferedImage helperImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = helperImg.createGraphics();
+        g2d.setFont(font);
+        FontMetrics fm = g2d.getFontMetrics();
+        String longestText = "";
+        for (String row : textList) {
+            if (row.length() > longestText.length()) {
+                longestText = row;
+            }
+        }
+        int width = fm.stringWidth(longestText) + 2 * margin;
+        int height = fm.getHeight() * textList.length + 2 * margin;
+        g2d.dispose();
+
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        g2d = img.createGraphics();
+        g2d.setFont(font);
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
+        g2d.setColor(Color.BLACK);
+        int nextLinePosition = margin;
+        for (String s : textList) {
+            g2d.drawString(s, margin, nextLinePosition);
+            nextLinePosition = nextLinePosition + fm.getHeight();
+        }
+        g2d.dispose();
+
+
+        Response.ResponseBuilder response = Response.ok();
+        response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
+        response.header(LAST_MODIFIED, lastModifiedStream);
+
+        return buildImageResponse(response, img, "png");
     }
 
     public static Response buildImageResponse(String imageUrl, Optional<String> ifModifiedSince) {

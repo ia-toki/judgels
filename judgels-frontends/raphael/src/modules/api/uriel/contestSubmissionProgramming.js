@@ -33,4 +33,9 @@ export const contestSubmissionProgrammingAPI = {
   downloadSubmission: (token, submissionJid) => {
     return download(`${baseURL}/${submissionJid}/download`, token);
   },
+
+  getSubmissionSourceImage: (contestJid, userJid, problemJid) => {
+    const params = stringify({ contestJid, userJid, problemJid });
+    return `${baseURL}/image?${params}`;
+  },
 };

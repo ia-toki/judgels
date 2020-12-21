@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static judgels.service.ServiceUtils.buildImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -11,6 +12,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -226,6 +228,33 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .problemName(SandalphonUtils.getProblemName(problem, language))
                 .containerName(contest.getName())
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Response getSubmissionSourceImage(
+            AuthHeader authHeader,
+            String contestJid,
+            String userJid,
+            String problemJid) {
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewSourceCodeInImage(contest));
+
+        List<Submission> submissions = submissionStore
+                .getSubmissions(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid), Optional.of(1))
+                .getPage();
+        if (submissions.isEmpty()) {
+            return Response.noContent().build();
+        }
+
+        Submission submission = submissions.get(0);
+        String username = this.userClient.getProfile(userJid).getUsername();
+        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+
+        String rawSource = new String(source.getSubmissionFiles().get(SubmissionSource.DEFAULT_KEY).getContent());
+        rawSource = "Submission #" + submission.getId() + " (" + username + ")\n\n" + rawSource;
+
+        return buildImageResponseFromText(rawSource, Date.from(submission.getTime()), Optional.empty());
     }
 
     @POST
