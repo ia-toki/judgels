@@ -22,6 +22,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import javax.imageio.ImageIO;
@@ -64,30 +65,20 @@ public class ServiceUtils {
         }
     }
 
-    public static Response buildImageResponseFromText(
-            String text,
-            Date lastModifiedStream,
-            Optional<String> ifModifiedSince) {
-        String[] textList = text.split("\n");
+    public static Response buildImageResponseFromText(String text, Date lastModifiedStream) {
         int fontSize = 14;
         int margin = 30;
+        int charWidth = 8;
+        int charHeight = 17;
+
+        String[] textList = text.split("\n");
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
-        BufferedImage helperImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = helperImg.createGraphics();
-        g2d.setFont(font);
-        FontMetrics fm = g2d.getFontMetrics();
-        String longestText = "";
-        for (String row : textList) {
-            if (row.length() > longestText.length()) {
-                longestText = row;
-            }
-        }
-        int width = fm.stringWidth(longestText) + 2 * margin;
-        int height = fm.getHeight() * textList.length + 2 * margin;
-        g2d.dispose();
+        int longestText = Arrays.asList(textList).stream().map(String::length).max(Integer::compareTo).get();
+        int width = charWidth * longestText + 2 * margin;
+        int height = charHeight * textList.length + 2 * margin;
 
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        g2d = img.createGraphics();
+        Graphics2D g2d = img.createGraphics();
         g2d.setFont(font);
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
@@ -95,10 +86,9 @@ public class ServiceUtils {
         int nextLinePosition = margin;
         for (String s : textList) {
             g2d.drawString(s, margin, nextLinePosition);
-            nextLinePosition = nextLinePosition + fm.getHeight();
+            nextLinePosition = nextLinePosition + charHeight;
         }
         g2d.dispose();
-
 
         Response.ResponseBuilder response = Response.ok();
         response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");

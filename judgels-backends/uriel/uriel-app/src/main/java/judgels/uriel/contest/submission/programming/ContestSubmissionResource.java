@@ -60,6 +60,7 @@ import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
@@ -81,6 +82,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
+    private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
     private final ContestSupervisorStore supervisorStore;
@@ -101,6 +103,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
+            ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestSupervisorStore supervisorStore,
@@ -119,6 +122,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.submissionRoleChecker = submissionRoleChecker;
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.problemRoleChecker = problemRoleChecker;
+        this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
         this.supervisorStore = supervisorStore;
@@ -232,13 +236,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceImage(
-            AuthHeader authHeader,
-            String contestJid,
-            String userJid,
-            String problemJid) {
+    public Response getSubmissionSourceImage(String contestJid, String userJid, String problemJid) {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewSourceCodeInImage(contest));
+        checkAllowed(scoreboardRoleChecker.canViewOtherContestantSolution(contest));
 
         List<Submission> submissions = submissionStore
                 .getSubmissions(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid), Optional.of(1))
@@ -254,7 +254,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         String rawSource = new String(source.getSubmissionFiles().get(SubmissionSource.DEFAULT_KEY).getContent());
         rawSource = "Submission #" + submission.getId() + " (" + username + ")\n\n" + rawSource;
 
-        return buildImageResponseFromText(rawSource, Date.from(submission.getTime()), Optional.empty());
+        return buildImageResponseFromText(rawSource, Date.from(submission.getTime()));
     }
 
     @POST

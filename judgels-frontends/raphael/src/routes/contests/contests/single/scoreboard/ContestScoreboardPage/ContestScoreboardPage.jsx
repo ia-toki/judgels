@@ -213,9 +213,9 @@ export class ContestScoreboardPage extends React.Component {
   };
 
   onOpenSubmissionImage = async (contestJid, contestantJid, problemJid) => {
-    this.toggleDialog();
     const imageUrl = await this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid);
     this.setState({ imageUrl });
+    this.toggleDialog();
   };
 
   renderScoreboard = () => {

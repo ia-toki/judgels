@@ -66,6 +66,6 @@ public class ContestScoreboardRoleChecker {
     }
 
     public boolean canViewOtherContestantSolution(Contest contest) {
-        return contestSubmissionRoleChecker.canViewSourceCodeInImage(contest);
+        return contestTimer.hasEnded(contest) && contestRoleDao.isPublic(contest.getJid());
     }
 }

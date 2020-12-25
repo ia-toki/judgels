@@ -39,7 +39,6 @@ public interface ContestSubmissionService {
     @Path("/image")
     @Produces("image/png")
     Response getSubmissionSourceImage(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("userJid") String userJid,
             @QueryParam("problemJid") String problemJid);
