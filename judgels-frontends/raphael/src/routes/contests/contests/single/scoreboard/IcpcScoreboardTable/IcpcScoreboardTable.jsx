@@ -37,7 +37,7 @@ export function IcpcScoreboardTable({
         i,
         entry.attemptsList[i],
         entry.penaltyList[i],
-        IcpcScoreboardProblemState.Accepted,
+        entry.problemStateList[i],
         entry.contestantJid,
         state.problemJids[i]
       )
