@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Route, withRouter } from 'react-router';
 
 import ContestProblemsPage from './ContestProblemsPage/ContestProblemsPage';

@@ -1,11 +1,11 @@
 import { ProgressBar } from '@blueprintjs/core';
-import * as React from 'react';
+import { PureComponent } from 'react';
 
 import { SingleColumnLayout } from '../SingleColumnLayout/SingleColumnLayout';
 
 import './LoadingState.css';
 
-export class LoadingState extends React.PureComponent {
+export class LoadingState extends PureComponent {
   timer;
 
   state = {

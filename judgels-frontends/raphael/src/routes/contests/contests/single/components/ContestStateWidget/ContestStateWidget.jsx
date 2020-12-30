@@ -1,5 +1,5 @@
 import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
@@ -12,7 +12,7 @@ import * as contestActions from '../../../modules/contestActions';
 import './ContestStateWidget.css';
 
 // TODO(fushar): unit tests
-class ContestStateWidget extends React.PureComponent {
+class ContestStateWidget extends PureComponent {
   state = {
     baseRemainingDuration: undefined,
     baseTimeForRemainingDuration: undefined,

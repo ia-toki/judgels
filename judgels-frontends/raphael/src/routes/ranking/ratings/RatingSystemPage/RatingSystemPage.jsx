@@ -1,5 +1,4 @@
 import { HTMLTable } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';

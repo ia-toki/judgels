@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { PureComponent } from 'react';
 import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
@@ -19,7 +19,7 @@ import { selectRole } from './jophiel/modules/userWebSelectors';
 import * as userWebActions from './jophiel/modules/userWebActions';
 import * as webActions from './jophiel/modules/webActions';
 
-class App extends React.PureComponent {
+class App extends PureComponent {
   componentDidMount() {
     this.props.onGetWebConfig();
     this.props.onGetUserWebConfig();

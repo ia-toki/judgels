@@ -1,9 +1,9 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import ContestClarificationCreateForm from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
 
-export class ContestClarificationCreateDialog extends React.Component {
+export class ContestClarificationCreateDialog extends Component {
   state = {
     isDialogOpen: false,
   };

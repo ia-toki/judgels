@@ -1,5 +1,4 @@
 import { HTMLTable } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
 import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';

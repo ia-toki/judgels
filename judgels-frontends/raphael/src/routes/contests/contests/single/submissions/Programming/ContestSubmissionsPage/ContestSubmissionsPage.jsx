@@ -1,5 +1,5 @@
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
@@ -14,7 +14,7 @@ import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmi
 import { selectContest } from '../../../../modules/contestSelectors';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
-export class ContestSubmissionsPage extends React.Component {
+export class ContestSubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
   state;

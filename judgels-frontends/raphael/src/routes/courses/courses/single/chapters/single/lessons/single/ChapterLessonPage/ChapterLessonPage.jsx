@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
@@ -9,7 +9,7 @@ import { selectCourseChapter } from '../../../../modules/courseChapterSelectors'
 import * as chapterLessonActions from '../../modules/chapterLessonActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export class ChapterLessonPage extends React.Component {
+export class ChapterLessonPage extends Component {
   state = {
     response: undefined,
   };

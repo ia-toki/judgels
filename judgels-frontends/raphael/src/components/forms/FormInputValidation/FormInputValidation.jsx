@@ -1,6 +1,5 @@
 import { Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { isValid } from '../meta';
 

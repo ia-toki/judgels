@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { RadioGroup, Radio } from '@blueprintjs/core';
 import { push } from 'connected-react-router';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { parse, stringify } from 'query-string';
@@ -12,7 +12,7 @@ import * as archiveActions from '../modules/archiveActions';
 
 import './ProblemSetArchiveFilter.css';
 
-class ProblemSetArchiveFilter extends React.Component {
+class ProblemSetArchiveFilter extends Component {
   state;
 
   constructor(props) {

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import SubmissionFilterForm from './SubmissionFilterForm';
 
 export function SubmissionFilterWidget({ usernames, problemAliases, isLoading, onFilter, username, problemAlias }) {

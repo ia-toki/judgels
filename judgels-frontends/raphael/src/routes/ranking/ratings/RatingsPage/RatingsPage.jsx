@@ -1,6 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { parse } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -12,7 +12,7 @@ import * as profileActions from '../../../jophiel/modules/profileActions';
 
 import './RatingsPage.css';
 
-class RatingsPage extends React.Component {
+class RatingsPage extends Component {
   static PAGE_SIZE = 50;
 
   state = {

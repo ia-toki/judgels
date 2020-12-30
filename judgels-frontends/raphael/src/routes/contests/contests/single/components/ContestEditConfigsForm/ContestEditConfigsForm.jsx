@@ -1,5 +1,5 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 import {
@@ -16,7 +16,7 @@ import { NonnegativeNumber, Required } from '../../../../../../components/forms/
 
 import './ContestEditConfigsForm.css';
 
-class ContestEditConfigsForm extends React.Component {
+class ContestEditConfigsForm extends Component {
   state;
 
   constructor(props) {

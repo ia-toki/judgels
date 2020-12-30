@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { sendGAEvent } from '../../../../../../../../ga';
@@ -11,7 +11,7 @@ import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import * as problemSetProblemActions from '../../../modules/problemSetProblemActions';
 
-export class ProblemStatementPage extends React.Component {
+export class ProblemStatementPage extends Component {
   state = {
     response: undefined,
   };

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { ProgressTag } from '../../../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';

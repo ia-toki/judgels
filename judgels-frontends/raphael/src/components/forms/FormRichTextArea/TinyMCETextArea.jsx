@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { PureComponent } from 'react';
 
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
@@ -9,7 +9,7 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/paste';
 import 'tinymce/plugins/table';
 
-export class TinyMCETextArea extends React.PureComponent {
+export class TinyMCETextArea extends PureComponent {
   componentDidMount() {
     if (tinymce) {
       tinymce.init({

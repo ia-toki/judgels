@@ -1,5 +1,4 @@
 import { Card as BlueprintCard } from '@blueprintjs/core';
-import * as React from 'react';
 
 import './Card.css';
 

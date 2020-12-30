@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -16,7 +16,7 @@ import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs
 
 import './ContestProblemPage.css';
 
-export class ContestProblemPage extends React.Component {
+export class ContestProblemPage extends Component {
   state = {
     defaultLanguage: undefined,
     languages: undefined,

@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -17,7 +17,7 @@ import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
-export class ChapterSubmissionsPage extends React.Component {
+export class ChapterSubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
   state;

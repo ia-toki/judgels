@@ -1,5 +1,4 @@
 import { Callout, Intent } from '@blueprintjs/core';
-import * as React from 'react';
 
 import './ContestStateWidget.css';
 

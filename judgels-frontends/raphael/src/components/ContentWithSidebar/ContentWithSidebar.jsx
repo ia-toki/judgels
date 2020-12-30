@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import * as React from 'react';
 import { Redirect, Switch, withRouter } from 'react-router';
 
 import { Sidebar } from '../Sidebar/Sidebar';

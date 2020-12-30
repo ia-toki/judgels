@@ -1,5 +1,5 @@
 import { Callout, Classes, Button, Intent, Dialog } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ChapterProblemsTable } from '../ChapterProblemsTable/ChapterProblemsTable';
@@ -7,7 +7,7 @@ import { ProblemType } from '../../../../modules/api/sandalphon/problem';
 import ChapterProblemEditForm from '../ChapterProblemEditForm/ChapterProblemEditForm';
 import { Alias } from '../../../../components/forms/validations';
 
-export class ChapterProblemEditDialog extends React.Component {
+export class ChapterProblemEditDialog extends Component {
   state = {
     response: undefined,
     isEditing: false,

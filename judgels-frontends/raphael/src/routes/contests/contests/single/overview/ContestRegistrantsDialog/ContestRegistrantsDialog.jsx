@@ -1,6 +1,6 @@
 import { Classes, Button, Dialog, HTMLTable } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
@@ -11,7 +11,7 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 
 import './ContestRegistrantsDialog.css';
 
-class ContestRegistrantsDialog extends React.Component {
+class ContestRegistrantsDialog extends Component {
   state = {
     response: undefined,
   };

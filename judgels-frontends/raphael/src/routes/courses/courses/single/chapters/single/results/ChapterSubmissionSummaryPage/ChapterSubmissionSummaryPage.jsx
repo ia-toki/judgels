@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
@@ -12,7 +12,7 @@ import { selectStatementLanguage } from '../../../../../../../../modules/webPref
 import { ProblemSubmissionCard } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
-class ChapterSubmissionSummaryPage extends React.Component {
+class ChapterSubmissionSummaryPage extends Component {
   state = {
     config: undefined,
     profile: undefined,

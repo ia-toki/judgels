@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -11,7 +11,7 @@ import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
-export class ProblemSetProblemsPage extends React.Component {
+export class ProblemSetProblemsPage extends Component {
   state = {
     response: undefined,
     defaultLanguage: undefined,

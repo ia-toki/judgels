@@ -1,5 +1,5 @@
 import { push } from 'connected-react-router';
-import * as React from 'react';
+import { Component } from 'react';
 import { parse, stringify } from 'query-string';
 import { connect } from 'react-redux';
 
@@ -17,7 +17,7 @@ import * as contestClarificationActions from '../modules/contestClarificationAct
 
 import './ContestClarificationsPage.css';
 
-class ContestClarificationsPage extends React.Component {
+class ContestClarificationsPage extends Component {
   static PAGE_SIZE = 20;
 
   state;

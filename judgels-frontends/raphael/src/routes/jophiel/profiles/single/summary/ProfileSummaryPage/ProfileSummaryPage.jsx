@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { APP_CONFIG, Mode } from '../../../../../../conf';
@@ -11,7 +11,7 @@ import * as profileActions from '../../modules/profileActions';
 
 import './ProfileSummaryPage.css';
 
-class ProfileSummaryPage extends React.Component {
+class ProfileSummaryPage extends Component {
   state = {
     avatarUrl: undefined,
     basicProfile: undefined,

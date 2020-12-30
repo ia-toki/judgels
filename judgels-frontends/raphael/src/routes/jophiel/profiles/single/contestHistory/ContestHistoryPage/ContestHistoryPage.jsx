@@ -1,5 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../../../components/Card/Card';
@@ -11,7 +11,7 @@ import * as profileActions from '../../modules/profileActions';
 
 import './ContestHistoryPage.css';
 
-class ContestHistoryPage extends React.Component {
+class ContestHistoryPage extends Component {
   state = {
     response: undefined,
   };

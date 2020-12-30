@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as profileActions from '../../modules/profileActions';
 
-class SingleProfileDataRoute extends React.Component {
+class SingleProfileDataRoute extends Component {
   componentDidMount() {
     this.props.onGetUser(this.props.match.params.username);
     this.props.onPushBreadcrumb(this.props.match.url, this.props.match.params.username);

@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { reallyConfirm } from '../../../../../../utils/confirmation';
@@ -16,7 +16,7 @@ import * as contestActions from '../../../modules/contestActions';
 
 import './ContestContestantsPage.css';
 
-class ContestContestantsPage extends React.Component {
+class ContestContestantsPage extends Component {
   static PAGE_SIZE = 1000;
 
   state = {

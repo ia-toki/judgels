@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
@@ -6,7 +6,7 @@ import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/Si
 import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
-export class ForgotPasswordPage extends React.Component {
+export class ForgotPasswordPage extends Component {
   state = {
     submitted: false,
   };

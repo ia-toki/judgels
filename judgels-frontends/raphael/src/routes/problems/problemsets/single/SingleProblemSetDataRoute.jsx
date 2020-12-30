@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -6,7 +6,7 @@ import { selectProblemSet } from '../modules/problemSetSelectors';
 import * as problemSetActions from '../modules/problemSetActions';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
-class SingleProblemSetDataRoute extends React.Component {
+class SingleProblemSetDataRoute extends Component {
   async componentDidMount() {
     const problemSet = await this.props.onGetProblemSetBySlug(this.props.match.params.problemSetSlug);
     this.props.onPushBreadcrumb(this.props.match.url, problemSet.name);

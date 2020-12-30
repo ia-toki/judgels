@@ -1,5 +1,4 @@
 import { Classes, Button, Dialog } from '@blueprintjs/core';
-import * as React from 'react';
 
 import CourseEditForm from '../CourseEditForm/CourseEditForm';
 

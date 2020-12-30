@@ -1,5 +1,4 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
-import * as React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';

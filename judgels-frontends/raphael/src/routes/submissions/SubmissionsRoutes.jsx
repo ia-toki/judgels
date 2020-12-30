@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Route, withRouter, Switch } from 'react-router';
 
 import { Card } from '../../components/Card/Card';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -9,7 +9,7 @@ import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSe
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as submissionActions from '../../modules/submissionActions';
 
-export class SubmissionPage extends React.Component {
+export class SubmissionPage extends Component {
   state = {
     submissionWithSource: undefined,
     profile: undefined,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
@@ -9,7 +9,7 @@ import { CoursesTable } from '../CoursesTable/CoursesTable';
 import { CourseChapterEditDialog } from '../CourseChapterEditDialog/CourseChapterEditDialog';
 import * as courseActions from '../modules/courseActions';
 
-class CoursesPage extends React.Component {
+class CoursesPage extends Component {
   state = {
     response: undefined,
     isEditDialogOpen: false,

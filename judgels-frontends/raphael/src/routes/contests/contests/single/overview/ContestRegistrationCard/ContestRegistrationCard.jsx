@@ -1,5 +1,5 @@
 import { Button, Callout, Icon, Intent, Tag } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -12,7 +12,7 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 
 import './ContestRegistrationCard.css';
 
-class ContestRegistrationCard extends React.Component {
+class ContestRegistrationCard extends Component {
   state = {
     contestantState: undefined,
     contestantCount: undefined,

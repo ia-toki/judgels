@@ -1,5 +1,4 @@
 import { Intent, ProgressBar as BlueprintProgressBar } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { getVerdictIntent } from '../../modules/api/gabriel/verdict';
 

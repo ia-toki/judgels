@@ -1,5 +1,4 @@
 import { FileInput } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 

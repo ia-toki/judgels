@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { stringify, parse } from 'query-string';
 import { push } from 'connected-react-router';
 import { withRouter } from 'react-router';

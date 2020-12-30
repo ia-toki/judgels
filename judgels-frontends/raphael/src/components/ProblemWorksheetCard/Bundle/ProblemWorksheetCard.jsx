@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
 
 import './ProblemWorksheetCard.css';

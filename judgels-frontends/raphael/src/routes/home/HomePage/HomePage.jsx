@@ -1,5 +1,4 @@
 import { Intent } from '@blueprintjs/core';
-import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { APP_CONFIG, Mode } from '../../../conf';

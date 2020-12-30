@@ -1,5 +1,4 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 import { Required, Max100Lines } from '../../../../components/forms/validations';

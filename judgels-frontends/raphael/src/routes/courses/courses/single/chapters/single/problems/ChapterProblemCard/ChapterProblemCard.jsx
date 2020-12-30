@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 import { VerdictProgressTag } from '../../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';

@@ -1,5 +1,5 @@
 import { Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -25,7 +25,7 @@ function ActivatePage({ isLoading }) {
   return <SingleColumnLayout>{content}</SingleColumnLayout>;
 }
 
-class ActivatePageContainer extends React.Component {
+class ActivatePageContainer extends Component {
   state = {
     isFetching: true,
   };

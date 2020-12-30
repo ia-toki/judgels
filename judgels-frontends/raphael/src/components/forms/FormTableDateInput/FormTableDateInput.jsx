@@ -1,7 +1,6 @@
 import { Tag } from '@blueprintjs/core';
 import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { formatDateTime, formatDateTimezoneOffset, parseDateTime } from '../../../utils/datetime';
 

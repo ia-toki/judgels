@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import './FullPageLayout.css';
 
 export function FullPageLayout({ children }) {

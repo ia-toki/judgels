@@ -1,9 +1,9 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import ProblemSetCreateForm from '../ProblemSetCreateForm/ProblemSetCreateForm';
 
-export class ProblemSetCreateDialog extends React.Component {
+export class ProblemSetCreateDialog extends Component {
   state = {
     isDialogOpen: false,
   };

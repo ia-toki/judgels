@@ -1,17 +1,17 @@
 import { FormGroup } from '@blueprintjs/core';
-import * as React from 'react';
+import { lazy, Suspense } from 'react';
 
 import { getIntent } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 
 export function FormRichTextArea({ rows, input, label, meta }) {
-  const LazyTinyMCETextArea = React.lazy(() => import('./TinyMCETextArea'));
+  const LazyTinyMCETextArea = lazy(() => import('./TinyMCETextArea'));
 
   return (
     <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
-      <React.Suspense fallback={null}>
+      <Suspense fallback={null}>
         <LazyTinyMCETextArea onChange={input.onChange} />
-      </React.Suspense>
+      </Suspense>
       <textarea rows={rows} {...input} className="tinymce" />
       <FormInputValidation meta={meta} />
     </FormGroup>

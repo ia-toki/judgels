@@ -1,5 +1,4 @@
 import { Classes } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 

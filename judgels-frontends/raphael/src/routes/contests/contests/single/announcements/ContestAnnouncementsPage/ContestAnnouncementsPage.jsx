@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -11,7 +11,7 @@ import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDia
 import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
 import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
-class ContestAnnouncementsPage extends React.Component {
+class ContestAnnouncementsPage extends Component {
   static PAGE_SIZE = 20;
 
   state = {

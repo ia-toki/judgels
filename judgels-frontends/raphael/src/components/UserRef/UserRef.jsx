@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import * as React from 'react';
 import Flag from 'react-flags';
 import { Link } from 'react-router-dom';
 

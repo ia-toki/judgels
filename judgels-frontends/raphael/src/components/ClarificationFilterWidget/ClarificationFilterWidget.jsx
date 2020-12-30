@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import ClarificationFilterForm from './ClarificationFilterForm';
 
 export function ClarificationFilterWidget({ statuses, isLoading, status, onFilter }) {

@@ -1,5 +1,5 @@
 import { Alignment, Navbar } from '@blueprintjs/core';
-import * as React from 'react';
+import { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { APP_CONFIG } from '../../conf';
@@ -10,7 +10,7 @@ import './Header.css';
 
 import logo from '../../assets/images/logo-header.png';
 
-class Header extends React.PureComponent {
+class Header extends PureComponent {
   componentDidMount() {
     askDesktopNotificationPermission();
   }

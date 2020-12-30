@@ -1,9 +1,9 @@
 import HTMLReactParser from 'html-react-parser';
-import * as React from 'react';
+import { Component } from 'react';
 
 // CSS definition is in index.scss. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
 
-export class HtmlText extends React.Component {
+export class HtmlText extends Component {
   ref = null;
 
   componentDidMount() {

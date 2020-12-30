@@ -1,5 +1,4 @@
 import { Button, HTMLTable } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
 import { ContentCard } from '../../../ContentCard/ContentCard';

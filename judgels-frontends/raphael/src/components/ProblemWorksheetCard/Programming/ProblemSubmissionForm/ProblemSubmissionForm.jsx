@@ -1,5 +1,4 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
-import * as React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 import { isOutputOnly } from '../../../../modules/api/gabriel/engine';

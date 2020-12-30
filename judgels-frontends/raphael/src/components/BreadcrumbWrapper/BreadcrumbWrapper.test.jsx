@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import { Component } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
@@ -13,7 +13,7 @@ describe('BreadcrumbWrapper', () => {
   let wrapper;
   let renderFn;
 
-  class InnerComponent extends React.Component {
+  class InnerComponent extends Component {
     render() {
       renderFn(this.props.num);
       return <div />;

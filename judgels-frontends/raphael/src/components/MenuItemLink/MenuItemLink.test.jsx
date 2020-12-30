@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
 import { Provider } from 'react-redux';
 import { push } from 'connected-react-router';
 import createMockStore from 'redux-mock-store';

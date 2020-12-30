@@ -1,5 +1,5 @@
 import { Classes, Button, Dialog, Icon, Intent, Tab, Tabs } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
 import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
@@ -8,7 +8,7 @@ import ContestEditConfigsTab from '../ContestEditConfigsTab/ContestEditConfigsTa
 
 import './ContestEditDialog.css';
 
-export class ContestEditDialog extends React.Component {
+export class ContestEditDialog extends Component {
   state = {
     isDialogOpen: false,
   };

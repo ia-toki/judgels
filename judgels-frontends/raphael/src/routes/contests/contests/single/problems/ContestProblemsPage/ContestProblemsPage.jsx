@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -16,7 +16,7 @@ import * as contestProblemActions from '../modules/contestProblemActions';
 
 import './ContestProblemsPage.css';
 
-export class ContestProblemsPage extends React.Component {
+export class ContestProblemsPage extends Component {
   state = {
     response: undefined,
     defaultLanguage: undefined,

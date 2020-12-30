@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -11,7 +11,7 @@ import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { selectMaybeUserJid, selectMaybeUsername } from '../../../modules/session/sessionSelectors';
 import * as submissionActions from '../modules/submissionActions';
 
-export class SubmissionsPage extends React.Component {
+export class SubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
   state = {

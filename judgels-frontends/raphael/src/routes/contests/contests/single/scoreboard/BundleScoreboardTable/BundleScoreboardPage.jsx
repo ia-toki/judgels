@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';

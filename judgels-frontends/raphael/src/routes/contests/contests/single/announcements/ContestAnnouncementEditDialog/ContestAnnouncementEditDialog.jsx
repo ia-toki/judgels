@@ -1,6 +1,5 @@
 import { Classes, Button, Dialog } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import ContestAnnouncementEditForm from '../ContestAnnouncementEditForm/ContestAnnouncementEditForm';
 

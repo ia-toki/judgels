@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
@@ -8,7 +8,7 @@ import { ProblemWorksheetCard } from '../../../../../../../../components/Problem
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
 
-export class ProblemStatementPage extends React.Component {
+export class ProblemStatementPage extends Component {
   state = {
     latestSubmissions: undefined,
   };

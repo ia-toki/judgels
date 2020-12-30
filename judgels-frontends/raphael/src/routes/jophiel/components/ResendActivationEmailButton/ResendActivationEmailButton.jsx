@@ -1,10 +1,10 @@
 import { Intent, Button } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import * as userAccountActions from '../../modules/userAccountActions';
 
-class ResendActivationEmailButton extends React.Component {
+class ResendActivationEmailButton extends Component {
   timer;
 
   state = {

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { formatDateTime } from '../../../../../../utils/datetime';
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';

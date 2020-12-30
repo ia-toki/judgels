@@ -1,13 +1,13 @@
 import { Callout, Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
+import { Component } from 'react';
 
 import ContestProblemEditForm from '../ContestProblemEditForm/ContestProblemEditForm';
 import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';
 
 import './ContestProblemEditDialog.css';
 
-export class ContestProblemEditDialog extends React.Component {
+export class ContestProblemEditDialog extends Component {
   state;
 
   constructor(props) {

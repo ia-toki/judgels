@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language.js';
@@ -11,7 +11,7 @@ import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigs
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
-class ContestEditConfigsTab extends React.Component {
+class ContestEditConfigsTab extends Component {
   state = {
     config: undefined,
     isEditing: false,

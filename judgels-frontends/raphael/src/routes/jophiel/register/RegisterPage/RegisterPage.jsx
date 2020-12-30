@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
@@ -9,7 +9,7 @@ import * as registerActions from '../modules/registerActions';
 
 import './RegisterPage.css';
 
-class RegisterPage extends React.Component {
+class RegisterPage extends Component {
   state = {
     config: undefined,
     registeredUser: undefined,

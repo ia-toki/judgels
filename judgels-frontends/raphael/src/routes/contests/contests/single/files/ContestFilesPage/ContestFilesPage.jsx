@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -9,7 +9,7 @@ import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestFileActions from '../modules/contestFileActions';
 
-class ContestFilesPage extends React.Component {
+class ContestFilesPage extends Component {
   state = {
     response: undefined,
   };

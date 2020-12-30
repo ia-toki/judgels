@@ -1,7 +1,7 @@
 import { Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { PureComponent } from 'react';
 import ReactPaginate from 'react-paginate';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
@@ -70,7 +70,7 @@ function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
   );
 }
 
-class PaginationContainer extends React.PureComponent {
+class PaginationContainer extends PureComponent {
   state = { totalCount: 0 };
 
   render() {

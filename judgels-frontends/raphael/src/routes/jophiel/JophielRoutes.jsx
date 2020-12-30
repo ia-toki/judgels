@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Switch, withRouter, Route } from 'react-router';
 
 import GuestRoute from '../../components/GuestRoute/GuestRoute';

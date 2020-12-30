@@ -1,6 +1,5 @@
 import { Checkbox } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { getIntentClassName } from '../meta';
 import { FormTableInput } from '../FormTableInput/FormTableInput';

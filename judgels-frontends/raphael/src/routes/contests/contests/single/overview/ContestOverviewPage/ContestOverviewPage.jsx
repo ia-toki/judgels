@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -10,7 +10,7 @@ import * as contestActions from '../../../modules/contestActions';
 
 import './ContestOverviewPage.css';
 
-class ContestOverviewPage extends React.Component {
+class ContestOverviewPage extends Component {
   state = {
     description: undefined,
   };

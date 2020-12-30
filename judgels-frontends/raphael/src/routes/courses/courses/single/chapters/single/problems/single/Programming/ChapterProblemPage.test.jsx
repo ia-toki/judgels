@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';

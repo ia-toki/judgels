@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';

@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
@@ -9,7 +9,7 @@ import { selectContest } from '../../../modules/contestSelectors';
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
-class ContestEditGeneralTab extends React.Component {
+class ContestEditGeneralTab extends Component {
   state = {
     isEditing: false,
   };
