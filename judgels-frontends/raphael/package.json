@@ -35,7 +35,6 @@
     "react-scripts": "4.0.0",
     "react-syntax-highlighter": "^8.0.1",
     "react-transition-group": "^2.3.0",
-    "redoodle": "^2.2.2",
     "redux": "^3.6.0",
     "redux-form": "8.2.6",
     "redux-persist": "^5.4.0",
