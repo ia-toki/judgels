@@ -72,13 +72,13 @@ export function IcpcScoreboardTable({
         ? '?'
         : '' + penalty;
 
+    const clickable = canViewOtherContestantSolution && attempted;
+
     return (
       <td
         key={idx}
-        className={classNames(className)}
-        onClick={() =>
-          canViewOtherContestantSolution && attempted && onOpenSubmissionImage(contestJid, contestantJid, problemJid)
-        }
+        className={classNames(className, clickable ? 'clickable' : {})}
+        onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
       >
         <strong>{shownAttempts}</strong>
         <br />

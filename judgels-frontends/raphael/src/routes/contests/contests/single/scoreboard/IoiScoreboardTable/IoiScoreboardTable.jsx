@@ -40,13 +40,12 @@ export function IoiScoreboardTable({
   };
 
   const renderProblemCell = (idx, score, contestantJid, problemJid) => {
+    const clickable = canViewOtherContestantSolution && score !== null;
+
     return (
       <td
-        onClick={() =>
-          canViewOtherContestantSolution &&
-          score !== null &&
-          onOpenSubmissionImage(contestJid, contestantJid, problemJid)
-        }
+        className={classNames(clickable ? 'clickable' : {})}
+        onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
         key={idx}
       >
         {score === null ? '-' : score}
