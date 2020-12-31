@@ -6,6 +6,7 @@ import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
+import play.db.jpa.JPAApi;
 import scala.concurrent.ExecutionContext;
 import scala.concurrent.duration.Duration;
 
@@ -16,6 +17,7 @@ public final class GradingResponsePoller implements Runnable {
 
     private final Scheduler scheduler;
     private final ExecutionContext executor;
+    private final JPAApi jpaApi;
     private final ProgrammingSubmissionService submissionService;
     private final BasicAuthHeader sealtielClientAuthHeader;
     private final MessageService messageService;
@@ -23,9 +25,10 @@ public final class GradingResponsePoller implements Runnable {
 
     private boolean isConnected;
 
-    public GradingResponsePoller(Scheduler scheduler, ExecutionContext executor, ProgrammingSubmissionService submissionService, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, long interval) {
+    public GradingResponsePoller(Scheduler scheduler, ExecutionContext executor, JPAApi jpaApi, ProgrammingSubmissionService submissionService, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, long interval) {
         this.scheduler = scheduler;
         this.executor = executor;
+        this.jpaApi = jpaApi;
         this.submissionService = submissionService;
         this.sealtielClientAuthHeader = sealtielClientAuthHeader;
         this.messageService = messageService;
@@ -46,7 +49,7 @@ public final class GradingResponsePoller implements Runnable {
                         isConnected = true;
                     }
 
-                    MessageProcessor processor = new MessageProcessor(submissionService, sealtielClientAuthHeader, messageService, message.get());
+                    MessageProcessor processor = new MessageProcessor(jpaApi, submissionService, sealtielClientAuthHeader, messageService, message.get());
                     scheduler.scheduleOnce(Duration.create(10, TimeUnit.MILLISECONDS), processor, executor);
                 }
             } catch (RemoteException e) {

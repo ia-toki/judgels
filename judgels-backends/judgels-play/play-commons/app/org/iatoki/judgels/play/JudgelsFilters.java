@@ -1,22 +1,14 @@
 package org.iatoki.judgels.play;
 
-import play.api.mvc.EssentialFilter;
+import play.filters.csrf.CSRFFilter;
 import play.filters.gzip.GzipFilter;
-import play.http.HttpFilters;
+import play.http.DefaultHttpFilters;
 
 import javax.inject.Inject;
 
-public final class JudgelsFilters implements HttpFilters {
-
-    private final GzipFilter gzipFilter;
-
+public final class JudgelsFilters extends DefaultHttpFilters {
     @Inject
-    public JudgelsFilters(GzipFilter gzipFilter) {
-        this.gzipFilter = gzipFilter;
-    }
-
-    @Override
-    public EssentialFilter[] filters() {
-        return new EssentialFilter[] {gzipFilter};
+    public JudgelsFilters(CSRFFilter csrfFilter, GzipFilter gzipFilter) {
+        super(csrfFilter, gzipFilter);
     }
 }

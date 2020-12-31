@@ -188,8 +188,8 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        Http.MultipartFormData body = request().body().asMultipartFormData();
-        Http.MultipartFormData.FilePart file;
+        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<File> file;
 
         file = body.getFile("file");
         if (file != null) {

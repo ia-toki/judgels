@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
+import play.db.jpa.JPAApi;
 
 @Singleton
 public final class SandalphonDataMigrator extends AbstractJudgelsDataMigrator {
@@ -35,8 +36,8 @@ public final class SandalphonDataMigrator extends AbstractJudgelsDataMigrator {
     private EntityManager entityManager;
 
     @Inject
-    public SandalphonDataMigrator(DataVersionDao dataVersionDao) {
-        super(dataVersionDao);
+    public SandalphonDataMigrator(JPAApi jpaApi, DataVersionDao dataVersionDao) {
+        super(jpaApi, dataVersionDao);
         this.entityManager = DataMigrationEntityManager.createEntityManager();
     }
 

@@ -32,7 +32,6 @@ import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
-import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -163,7 +162,6 @@ public class ProblemStatementController extends AbstractProblemController {
         return showListStatementMediaFiles(uploadFileForm, problem, mediaFiles, isAllowedToUploadMediaFiles);
     }
 
-    @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = 512 * 1024 * 1024)
     @Transactional
     @RequireCSRFCheck
     public Result postUploadStatementMediaFiles(long problemId) throws ProblemNotFoundException {
@@ -173,8 +171,8 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        Http.MultipartFormData body = request().body().asMultipartFormData();
-        Http.MultipartFormData.FilePart file;
+        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<File> file;
 
         file = body.getFile("file");
         if (file != null) {
