@@ -2,20 +2,21 @@ package org.iatoki.judgels.play.migration;
 
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
-import play.db.jpa.JPA;
 
 import javax.persistence.EntityManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import play.db.jpa.JPAApi;
 
 public abstract class AbstractJudgelsDataMigrator implements JudgelsDataMigrator {
-
+    private JPAApi jpaApi;
     private DataVersionDao dataVersionDao;
     private EntityManager entityManager;
 
-    public AbstractJudgelsDataMigrator(DataVersionDao dataVersionDao) {
+    public AbstractJudgelsDataMigrator(JPAApi jpaApi, DataVersionDao dataVersionDao) {
+        this.jpaApi = jpaApi;
         this.dataVersionDao = dataVersionDao;
         this.entityManager = DataMigrationEntityManager.createEntityManager();
     }
@@ -29,7 +30,7 @@ public abstract class AbstractJudgelsDataMigrator implements JudgelsDataMigrator
         if (currentDataVersion != latestDataVersion) {
             migrate(currentDataVersion);
 
-            JPA.withTransaction(() -> dataVersionDao.update(latestDataVersion));
+            jpaApi.withTransaction(() -> dataVersionDao.update(latestDataVersion));
         }
     }
 

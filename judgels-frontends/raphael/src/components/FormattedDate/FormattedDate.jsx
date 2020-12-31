@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { FormattedDate as ReactFormattedDate } from 'react-intl';
 
 export function FormattedDate({ value, showSeconds }) {

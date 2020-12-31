@@ -1,5 +1,4 @@
 import { shallow } from 'enzyme';
-import * as React from 'react';
 
 import { ContestContestantsTable } from './ContestContestantsTable';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';

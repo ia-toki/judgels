@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -6,7 +6,7 @@ import { selectCourse } from '../../../modules/courseSelectors';
 import * as courseChapterActions from '../modules/courseChapterActions';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-class SingleCourseChapterDataRoute extends React.Component {
+class SingleCourseChapterDataRoute extends Component {
   async componentDidMount() {
     await this.refresh();
   }

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -10,7 +10,7 @@ import { selectProblemSet } from '../../../../../../modules/problemSetSelectors'
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 
-export class ProblemSubmissionPage extends React.Component {
+export class ProblemSubmissionPage extends Component {
   state = {
     submissionWithSource: undefined,
     profile: undefined,

@@ -1,5 +1,4 @@
 import { shallow } from 'enzyme';
-import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';

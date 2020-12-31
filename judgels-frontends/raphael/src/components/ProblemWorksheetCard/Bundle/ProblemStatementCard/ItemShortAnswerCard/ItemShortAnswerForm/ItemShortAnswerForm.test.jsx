@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
 
 import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
 import { AnswerState } from '../../../itemStatement';

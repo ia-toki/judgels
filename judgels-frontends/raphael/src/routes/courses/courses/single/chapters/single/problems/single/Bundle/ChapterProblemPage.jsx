@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -9,7 +9,7 @@ import { ProblemWorksheetCard } from '../../../../../../../../../components/Prob
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import * as chapterSubmissionActions from '../../../results/modules/chapterSubmissionActions';
 
-export class ChapterProblemPage extends React.Component {
+export class ChapterProblemPage extends Component {
   state = {
     latestSubmissions: undefined,
   };

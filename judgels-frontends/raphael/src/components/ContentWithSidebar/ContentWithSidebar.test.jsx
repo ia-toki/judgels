@@ -1,6 +1,5 @@
 import { Icon } from '@blueprintjs/core';
 import { mount } from 'enzyme';
-import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';

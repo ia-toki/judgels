@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -10,7 +10,7 @@ import { selectContest } from '../../../../../modules/contestSelectors';
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export class ContestSubmissionPage extends React.Component {
+export class ContestSubmissionPage extends Component {
   state = {
     submissionWithSource: undefined,
     profile: undefined,

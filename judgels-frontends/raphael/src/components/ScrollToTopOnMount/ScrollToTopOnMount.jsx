@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { Component } from 'react';
 
-export class ScrollToTopOnMount extends React.Component {
+export class ScrollToTopOnMount extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
   }

@@ -1,5 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -12,7 +12,7 @@ import * as problemSetProblemActions from '../../modules/problemSetProblemAction
 
 import './ProblemStatsWidget.css';
 
-class ProblemStatsWidget extends React.Component {
+class ProblemStatsWidget extends Component {
   static TOP_STATS_SIZE = 5;
 
   state = {

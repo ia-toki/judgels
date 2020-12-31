@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
@@ -8,7 +8,7 @@ import { ArchiveEditDialog } from '../ArchiveEditDialog/ArchiveEditDialog';
 import { ArchivesTable } from '../ArchivesTable/ArchivesTable';
 import * as archiveActions from '../modules/archiveActions';
 
-class ArchivesPage extends React.Component {
+class ArchivesPage extends Component {
   state = {
     response: undefined,
     isEditDialogOpen: false,

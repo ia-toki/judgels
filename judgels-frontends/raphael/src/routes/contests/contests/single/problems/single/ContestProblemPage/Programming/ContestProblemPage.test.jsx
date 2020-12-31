@@ -1,6 +1,5 @@
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
-import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';

@@ -1,5 +1,5 @@
 import { Tag } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { selectContest } from '../../../modules/contestSelectors';
@@ -8,7 +8,7 @@ import { selectContestWebConfig } from '../../../modules/contestWebConfigSelecto
 import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 
-class ContestAnnouncementsWidget extends React.Component {
+class ContestAnnouncementsWidget extends Component {
   render() {
     if (this.props.announcementCount === 0) {
       return null;

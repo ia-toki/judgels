@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -6,7 +6,7 @@ import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
-class SingleProblemSetProblemDataRoute extends React.Component {
+class SingleProblemSetProblemDataRoute extends Component {
   async componentDidMount() {
     await this.refresh();
   }

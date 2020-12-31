@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -8,7 +8,7 @@ import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
-class SingleContestDataRoute extends React.Component {
+class SingleContestDataRoute extends Component {
   static GET_CONFIG_TIMEOUT = REFRESH_WEB_CONFIG_INTERVAL;
 
   currentTimeout;

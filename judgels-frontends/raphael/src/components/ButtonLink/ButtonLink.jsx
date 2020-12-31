@@ -1,6 +1,5 @@
 import { Classes, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export function ButtonLink({ className, intent, ...linkProps }) {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/prism-light';
 import c from 'react-syntax-highlighter/languages/prism/c';
 import cpp from 'react-syntax-highlighter/languages/prism/cpp';

@@ -1,5 +1,4 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
-import * as React from 'react';
 
 import './ArchivesTable.css';
 

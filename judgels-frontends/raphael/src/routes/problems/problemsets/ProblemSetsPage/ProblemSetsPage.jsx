@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { parse } from 'query-string';
 
@@ -11,7 +11,7 @@ import * as problemSetActions from '../modules/problemSetActions';
 
 import './ProblemSetsPage.css';
 
-class ProblemSetsPage extends React.Component {
+class ProblemSetsPage extends Component {
   static PAGE_SIZE = 20;
 
   state;

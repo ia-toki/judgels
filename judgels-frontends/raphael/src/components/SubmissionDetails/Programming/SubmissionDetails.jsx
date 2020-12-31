@@ -1,6 +1,5 @@
 import { HTMLTable, Tag, Button } from '@blueprintjs/core';
 import * as base64 from 'base-64';
-import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { SourceCode } from '../../SourceCode/SourceCode';

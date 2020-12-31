@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
 import { IoiScoreboardTable } from './IoiScoreboardTable';

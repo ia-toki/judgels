@@ -1,11 +1,11 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
+import { Component } from 'react';
 
 import ContestManagerRemoveForm from '../ContestManagerRemoveForm/ContestManagerRemoveForm';
 import { ContestManagerRemoveResultTable } from '../ContestManagerRemoveResultTable/ContestManagerRemoveResultTable';
 
-export class ContestManagerRemoveDialog extends React.Component {
+export class ContestManagerRemoveDialog extends Component {
   state = {
     isDialogOpen: false,
     submitted: undefined,

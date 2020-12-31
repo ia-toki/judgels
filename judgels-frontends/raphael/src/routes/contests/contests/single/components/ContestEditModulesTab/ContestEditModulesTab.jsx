@@ -1,5 +1,5 @@
 import { Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { allModules } from '../../../../../../modules/api/uriel/contestModule';
@@ -9,7 +9,7 @@ import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
 import * as contestWebActions from '../../modules/contestWebActions';
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
-class ContestEditModulesTab extends React.Component {
+class ContestEditModulesTab extends Component {
   state = {
     modules: undefined,
   };

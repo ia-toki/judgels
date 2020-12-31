@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
@@ -7,7 +7,7 @@ import { LoadingContentCard } from '../../../../components/LoadingContentCard/Lo
 import { CourseCard } from '../CourseCard/CourseCard';
 import * as courseActions from '../modules/courseActions';
 
-class CoursesPage extends React.Component {
+class CoursesPage extends Component {
   state = {
     response: undefined,
   };

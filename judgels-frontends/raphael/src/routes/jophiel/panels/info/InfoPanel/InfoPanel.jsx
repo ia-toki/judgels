@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import { Card } from '../../../../../components/Card/Card';
 import InfoForm from '../InfoForm/InfoForm';
@@ -7,7 +7,7 @@ import { InfoTable } from '../InfoTable/InfoTable';
 
 import './InfoPanel.css';
 
-export class InfoPanel extends React.Component {
+export class InfoPanel extends Component {
   state = {
     isEditing: false,
   };

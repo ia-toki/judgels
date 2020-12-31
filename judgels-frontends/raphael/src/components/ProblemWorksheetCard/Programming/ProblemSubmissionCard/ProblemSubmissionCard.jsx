@@ -1,5 +1,4 @@
 import { Callout } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import { getAllowedGradingLanguages } from '../../../../modules/api/gabriel/language.js';

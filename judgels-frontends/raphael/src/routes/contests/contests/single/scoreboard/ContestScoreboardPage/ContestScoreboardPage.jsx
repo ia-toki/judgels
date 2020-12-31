@@ -1,6 +1,6 @@
 import { Button, Callout, Dialog, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
@@ -21,7 +21,7 @@ import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.css';
 
-export class ContestScoreboardPage extends React.Component {
+export class ContestScoreboardPage extends Component {
   static PAGE_SIZE = 250;
   state;
 
@@ -268,7 +268,7 @@ export class ContestScoreboardPage extends React.Component {
         <GcjScoreboardTable userJid={this.props.userJid} scoreboard={scoreboard.scoreboard} profilesMap={profilesMap} />
       );
     } else {
-      return <React.Fragment />;
+      return <Fragment />;
     }
   };
 }

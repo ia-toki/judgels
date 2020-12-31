@@ -1,5 +1,4 @@
 import { Button, Callout } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { moduleDescriptionsMap, moduleTitlesMap } from '../../../../../../modules/api/uriel/contestModule';
 

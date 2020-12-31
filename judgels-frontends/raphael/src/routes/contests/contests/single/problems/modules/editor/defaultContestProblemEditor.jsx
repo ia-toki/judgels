@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ContestProblemStatus } from '../../../../../../../modules/api/uriel/contestProblem';
 import { Alias, Slug, NonnegativeNumber } from '../../../../../../../components/forms/validations';
 

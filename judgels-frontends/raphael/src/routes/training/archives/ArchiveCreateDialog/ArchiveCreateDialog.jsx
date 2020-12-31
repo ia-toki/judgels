@@ -1,9 +1,9 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import ArchiveCreateForm from '../ArchiveCreateForm/ArchiveCreateForm';
 
-export class ArchiveCreateDialog extends React.Component {
+export class ArchiveCreateDialog extends Component {
   state = {
     isDialogOpen: false,
   };

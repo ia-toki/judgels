@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { lazy, Suspense } from 'react';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const ProblemsRoutes = React.lazy(() => import('./MainProblemsRoutes'));
+const ProblemsRoutes = lazy(() => import('./MainProblemsRoutes'));
 
 function LazyProblemsRoutes(props) {
   return (
-    <React.Suspense fallback={<LoadingState large />}>
+    <Suspense fallback={<LoadingState large />}>
       <ProblemsRoutes {...props} />
-    </React.Suspense>
+    </Suspense>
   );
 }
 

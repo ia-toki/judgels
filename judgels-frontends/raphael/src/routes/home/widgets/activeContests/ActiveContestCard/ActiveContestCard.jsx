@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { PureComponent } from 'react';
 
 import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
 import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
@@ -7,7 +7,7 @@ import { ContestRoleTag } from '../../../../../components/ContestRole/ContestRol
 
 import './ActiveContestCard.css';
 
-export class ActiveContestCard extends React.PureComponent {
+export class ActiveContestCard extends PureComponent {
   render() {
     const { contest, role } = this.props;
 

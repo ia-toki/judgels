@@ -1,12 +1,12 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
+import { Component } from 'react';
 
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
 import ContestSupervisorAddForm from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
 import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTable/ContestSupervisorAddResultTable';
 
-export class ContestSupervisorAddDialog extends React.Component {
+export class ContestSupervisorAddDialog extends Component {
   state = {
     isDialogOpen: false,
     submitted: undefined,

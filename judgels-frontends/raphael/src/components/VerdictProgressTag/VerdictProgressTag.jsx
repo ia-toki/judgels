@@ -1,6 +1,5 @@
 import { Tag } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import { getVerdictIntent, VerdictCode } from '../../modules/api/gabriel/verdict';
 

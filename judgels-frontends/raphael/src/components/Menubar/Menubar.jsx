@@ -1,5 +1,4 @@
 import { Tab, Tabs } from '@blueprintjs/core';
-import * as React from 'react';
 import { withRouter } from 'react-router';
 import { matchPath, Link } from 'react-router-dom';
 

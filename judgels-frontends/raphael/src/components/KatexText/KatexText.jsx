@@ -1,10 +1,10 @@
-import React from 'react';
+import { createRef, Component } from 'react';
 
 import { HtmlText } from '../HtmlText/HtmlText';
 
 import './KatexText.scss';
 
-export class KatexText extends React.Component {
+export class KatexText extends Component {
   ref;
 
   constructor(props) {
@@ -12,7 +12,7 @@ export class KatexText extends React.Component {
     this.state = {
       containsKatex: this.containsKatexSyntax(props.children),
     };
-    this.ref = React.createRef();
+    this.ref = createRef();
   }
 
   componentDidMount() {

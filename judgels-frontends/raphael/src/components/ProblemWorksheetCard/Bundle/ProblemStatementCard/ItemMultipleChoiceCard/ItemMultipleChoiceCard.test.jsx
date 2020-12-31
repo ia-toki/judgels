@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
 
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';

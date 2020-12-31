@@ -1,7 +1,8 @@
 package org.iatoki.judgels.play.controllers;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import org.iatoki.judgels.play.EntityNotFoundException;
-import play.libs.F;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -10,11 +11,9 @@ import play.mvc.Results;
 public final class EntityNotFoundGuardAction extends Action<EntityNotFoundGuard> {
 
     @Override
-    public F.Promise<Result> call(Http.Context context) throws Throwable {
+    public CompletionStage<Result> call(Http.Context ctx) {
         try {
-            return this.delegate.call(context);
-        } catch (EntityNotFoundException e) {
-            return showEntityNotFound(e);
+            return this.delegate.call(ctx);
         } catch (RuntimeException e) {
             if (e.getCause() instanceof EntityNotFoundException) {
                 return showEntityNotFound(e.getCause());
@@ -24,8 +23,8 @@ public final class EntityNotFoundGuardAction extends Action<EntityNotFoundGuard>
         }
     }
 
-    private F.Promise<Result> showEntityNotFound(Throwable e) {
-        return F.Promise.promise(() -> {
+    private CompletionStage<Result> showEntityNotFound(Throwable e) {
+        return CompletableFuture.supplyAsync(() -> {
                 return Results.notFound();
             }
         );

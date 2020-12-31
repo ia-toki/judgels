@@ -1,5 +1,4 @@
 import { Icon } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';

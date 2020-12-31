@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveCont
 
 import './ActiveContestsWidget.css';
 
-class ActiveContestsWidget extends React.PureComponent {
+class ActiveContestsWidget extends PureComponent {
   state = {
     response: undefined,
   };

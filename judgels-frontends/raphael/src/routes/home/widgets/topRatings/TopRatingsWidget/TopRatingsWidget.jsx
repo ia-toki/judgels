@@ -1,5 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
@@ -9,7 +9,7 @@ import * as widgetActions from '../../modules/widgetActions';
 
 import './TopRatingsWidget.css';
 
-class TopRatingsWidget extends React.Component {
+class TopRatingsWidget extends Component {
   state = {
     profiles: undefined,
   };

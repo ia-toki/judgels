@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import Dropzone from 'react-dropzone';
 
 import { Card } from '../../../../../components/Card/Card';
@@ -9,7 +9,7 @@ import { MAX_AVATAR_FILE_SIZE } from '../../../modules/avatarActions';
 
 import './ChangeAvatarPanel.css';
 
-export class ChangeAvatarPanel extends React.Component {
+export class ChangeAvatarPanel extends Component {
   state = {
     avatarExists: undefined,
     avatarUrl: undefined,

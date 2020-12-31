@@ -9,7 +9,7 @@ import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
-import play.db.jpa.JPA;
+import play.db.jpa.JPAApi;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -17,12 +17,14 @@ import java.util.concurrent.TimeUnit;
 public final class MessageProcessor implements Runnable {
     private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
 
+    private final JPAApi jpaApi;
     private final ProgrammingSubmissionService submissionService;
     private final BasicAuthHeader sealtielClientAuthHeader;
     private final MessageService messageService;
     private final Message message;
 
-    public MessageProcessor(ProgrammingSubmissionService submissionService, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, Message message) {
+    public MessageProcessor(JPAApi jpaApi, ProgrammingSubmissionService submissionService, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, Message message) {
+        this.jpaApi = jpaApi;
         this.submissionService = submissionService;
         this.sealtielClientAuthHeader = sealtielClientAuthHeader;
         this.messageService = messageService;
@@ -31,7 +33,7 @@ public final class MessageProcessor implements Runnable {
 
     @Override
     public void run() {
-        JPA.withTransaction(() -> {
+        jpaApi.withTransaction(() -> {
                 try {
                     GradingResponse response = MAPPER.readValue(message.getContent(), GradingResponse.class);
 
@@ -46,7 +48,11 @@ public final class MessageProcessor implements Runnable {
                             break;
                         }
 
-                        Thread.sleep(TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS));
+                        try {
+                            Thread.sleep(TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS));
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
 
                     if (gradingExists) {

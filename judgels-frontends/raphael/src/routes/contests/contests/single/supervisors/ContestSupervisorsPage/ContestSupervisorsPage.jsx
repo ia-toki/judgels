@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -13,7 +13,7 @@ import * as contestSupervisorActions from '../../modules/contestSupervisorAction
 
 import './ContestSupervisorsPage.css';
 
-class ContestSupervisorsPage extends React.Component {
+class ContestSupervisorsPage extends Component {
   static PAGE_SIZE = 250;
 
   state = {

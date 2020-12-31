@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -10,7 +10,7 @@ import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEdi
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestActions from '../../../modules/contestActions';
 
-class ContestEditDescriptionTab extends React.Component {
+class ContestEditDescriptionTab extends Component {
   state = {
     isEditing: false,
     description: undefined,

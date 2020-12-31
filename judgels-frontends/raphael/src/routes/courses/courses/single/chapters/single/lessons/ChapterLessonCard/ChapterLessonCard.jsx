@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 
 export function ChapterLessonCard({ course, chapter, lesson, lessonName }) {

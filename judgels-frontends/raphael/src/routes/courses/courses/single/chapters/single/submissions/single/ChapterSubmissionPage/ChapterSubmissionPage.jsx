@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -11,7 +11,7 @@ import { selectCourseChapter } from '../../../../modules/courseChapterSelectors'
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterSubmissionActions from '../../modules/chapterSubmissionActions';
 
-export class ChapterSubmissionPage extends React.Component {
+export class ChapterSubmissionPage extends Component {
   state = {
     submissionWithSource: undefined,
     profile: undefined,

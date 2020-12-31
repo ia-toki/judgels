@@ -1,5 +1,5 @@
 import { Alignment, Icon, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
-import * as React from 'react';
+import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
 
 import './UserWidget.css';
 
-export class UserWidget extends React.PureComponent {
+export class UserWidget extends PureComponent {
   state = { avatarUrl: undefined };
 
   componentDidMount() {

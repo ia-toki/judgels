@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -16,7 +16,7 @@ import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
-export class ProblemSubmissionsPage extends React.Component {
+export class ProblemSubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
   state = {

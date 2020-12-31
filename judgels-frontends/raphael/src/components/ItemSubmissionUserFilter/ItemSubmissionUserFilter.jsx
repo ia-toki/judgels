@@ -1,6 +1,5 @@
 import { ButtonGroup, Button } from '@blueprintjs/core';
 import { push } from 'connected-react-router';
-import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 

@@ -1,16 +1,16 @@
-import * as React from 'react';
+import { lazy, Suspense } from 'react';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
 export const ContestsRoutesPromise = () => import('./MainContestsRoutes');
 
-const ContestsRoutes = React.lazy(ContestsRoutesPromise);
+const ContestsRoutes = lazy(ContestsRoutesPromise);
 
 function LazyContestsRoutes(props) {
   return (
-    <React.Suspense fallback={<LoadingState large />}>
+    <Suspense fallback={<LoadingState large />}>
       <ContestsRoutes {...props} />
-    </React.Suspense>
+    </Suspense>
   );
 }
 

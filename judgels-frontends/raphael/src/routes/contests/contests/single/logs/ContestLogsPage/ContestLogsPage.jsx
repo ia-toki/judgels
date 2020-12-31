@@ -1,5 +1,5 @@
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
@@ -12,7 +12,7 @@ import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestLogActions from '../modules/contestLogActions';
 
-export class ContestLogsPage extends React.Component {
+export class ContestLogsPage extends Component {
   static PAGE_SIZE = 100;
 
   state;

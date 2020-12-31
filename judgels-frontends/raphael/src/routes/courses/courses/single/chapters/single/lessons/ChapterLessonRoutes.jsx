@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Route } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';

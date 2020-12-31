@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -10,7 +10,7 @@ import { selectContest } from '../../../../modules/contestSelectors';
 import { ProblemSubmissionCard } from '../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
-class SubmissionSummaryPage extends React.Component {
+class SubmissionSummaryPage extends Component {
   state = {
     config: undefined,
     profile: undefined,

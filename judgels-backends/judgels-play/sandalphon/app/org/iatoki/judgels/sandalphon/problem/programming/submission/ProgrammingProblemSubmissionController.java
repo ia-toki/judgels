@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import com.google.common.collect.ImmutableList;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
-        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
 
         String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
 

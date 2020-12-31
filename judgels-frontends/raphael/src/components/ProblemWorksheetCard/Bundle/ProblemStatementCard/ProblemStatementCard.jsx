@@ -1,5 +1,4 @@
 import { Divider } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import { HtmlText } from '../../../HtmlText/HtmlText';

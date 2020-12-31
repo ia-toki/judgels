@@ -142,12 +142,12 @@ public class ContestWebConfigFetcher {
 
         long clarificationCount;
         ContestClarificationStatus clarificationStatus;
-        if (clarificationRoleChecker.canCreate(userJid, contest)) {
-            clarificationStatus = ContestClarificationStatus.ANSWERED;
-            clarificationCount = clarificationDao.selectCountAnsweredByContestJidAndUserJid(contestJid, userJid);
-        } else {
+        if (clarificationRoleChecker.canSupervise(userJid, contest)) {
             clarificationStatus = ContestClarificationStatus.ASKED;
             clarificationCount = clarificationDao.selectCountAskedByContestJid(contestJid);
+        } else {
+            clarificationStatus = ContestClarificationStatus.ANSWERED;
+            clarificationCount = clarificationDao.selectCountAnsweredByContestJidAndUserJid(contestJid, userJid);
         }
 
         return new ContestWebConfig.Builder()

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
@@ -8,7 +8,7 @@ import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
 import * as infoActions from '../../../modules/infoActions';
 import * as userActions from '../../../../system/modules/userActions';
 
-class InfoPage extends React.Component {
+class InfoPage extends Component {
   state = {
     user: undefined,
     info: undefined,

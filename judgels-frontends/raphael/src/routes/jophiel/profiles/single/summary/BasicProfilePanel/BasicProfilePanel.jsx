@@ -1,5 +1,4 @@
 import { HTMLTable } from '@blueprintjs/core';
-import * as React from 'react';
 import Flag from 'react-flags';
 
 import { Card } from '../../../../../../components/Card/Card';

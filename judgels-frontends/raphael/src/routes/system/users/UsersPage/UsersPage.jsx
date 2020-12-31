@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
@@ -16,7 +16,7 @@ import * as userActions from '../../modules/userActions';
 
 import './UsersPage.css';
 
-export class UsersPage extends React.Component {
+export class UsersPage extends Component {
   static PAGE_SIZE = 250;
   static HEADER = ['Username'];
   static DEFAULT_ORDER_BY = 'username';

@@ -1,5 +1,5 @@
 import { parse } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -11,7 +11,7 @@ import { ProblemSetProblemEditDialog } from '../ProblemSetProblemEditDialog/Prob
 import { ProblemSetsTable } from '../ProblemSetsTable/ProblemSetsTable';
 import * as problemSetActions from '../modules/problemSetActions';
 
-class ProblemSetsPage extends React.Component {
+class ProblemSetsPage extends Component {
   static PAGE_SIZE = 20;
 
   state;

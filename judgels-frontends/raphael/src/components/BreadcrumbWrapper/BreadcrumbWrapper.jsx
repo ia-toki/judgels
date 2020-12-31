@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -6,7 +6,7 @@ import { PushBreadcrumb, PopBreadcrumb } from '../../modules/breadcrumbs/breadcr
 
 export function withBreadcrumb(breadcrumbTitle) {
   return InnerComponent => {
-    class WrappedComponent extends React.Component {
+    class WrappedComponent extends Component {
       componentDidMount() {
         this.props.onPushBreadcrumb(this.props.match.url, breadcrumbTitle);
       }

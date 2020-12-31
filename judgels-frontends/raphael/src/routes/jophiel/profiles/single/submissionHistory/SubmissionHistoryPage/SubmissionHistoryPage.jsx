@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -9,7 +9,7 @@ import { selectUsername } from '../../../../modules/profileSelectors';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import * as profileActions from '../../modules/profileActions';
 
-class SubmissionHistoryPage extends React.Component {
+class SubmissionHistoryPage extends Component {
   state = {
     response: undefined,
   };

@@ -1,5 +1,4 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as React from 'react';
 
 import ContestClarificationAnswerForm from '../ContestClarificationAnswerForm/ContestClarificationAnswerForm';
 

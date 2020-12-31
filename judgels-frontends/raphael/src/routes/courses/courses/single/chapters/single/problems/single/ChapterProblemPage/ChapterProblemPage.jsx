@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -13,7 +13,7 @@ import { selectStatementLanguage } from '../../../../../../../../../modules/webP
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export class ChapterProblemPage extends React.Component {
+export class ChapterProblemPage extends Component {
   state = {
     response: undefined,
   };

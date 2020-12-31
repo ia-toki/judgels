@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { lazy, Suspense } from 'react';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const LazyAccountRoutes = React.lazy(() => import('./account/AccountRoutes'));
+const LazyAccountRoutes = lazy(() => import('./account/AccountRoutes'));
 
 function JophielAccountRoutes(props) {
   return (
-    <React.Suspense fallback={<LoadingState large />}>
+    <Suspense fallback={<LoadingState large />}>
       <LazyAccountRoutes {...props} />
-    </React.Suspense>
+    </Suspense>
   );
 }
 

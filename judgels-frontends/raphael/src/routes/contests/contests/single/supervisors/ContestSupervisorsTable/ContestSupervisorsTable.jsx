@@ -1,5 +1,4 @@
 import { HTMLTable, Tag } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import {

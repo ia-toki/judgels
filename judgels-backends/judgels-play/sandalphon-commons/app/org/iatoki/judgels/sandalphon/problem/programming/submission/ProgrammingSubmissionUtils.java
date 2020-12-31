@@ -30,7 +30,7 @@ public final class ProgrammingSubmissionUtils {
         // prevent instantiation
     }
 
-    public static SubmissionSource createSubmissionSourceFromNewSubmission(Http.MultipartFormData body) throws ProgrammingSubmissionException {
+    public static SubmissionSource createSubmissionSourceFromNewSubmission(Http.MultipartFormData<File> body) throws ProgrammingSubmissionException {
         String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
         String sourceFileFieldKeysUnparsed = body.asFormUrlEncoded().get("sourceFileFieldKeys")[0];
 
@@ -41,7 +41,7 @@ public final class ProgrammingSubmissionUtils {
         GradingLanguage language = GradingLanguageRegistry.getInstance().get(gradingLanguage);
         List<String> sourceFileFieldKeys = Arrays.asList(sourceFileFieldKeysUnparsed.split(","));
 
-        List<Http.MultipartFormData.FilePart> fileParts = body.getFiles();
+        List<Http.MultipartFormData.FilePart<File>> fileParts = body.getFiles();
         Map<String, String> formFilenames = fileParts.stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getFilename()));
         Map<String, File> files = fileParts.stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getFile()));
 

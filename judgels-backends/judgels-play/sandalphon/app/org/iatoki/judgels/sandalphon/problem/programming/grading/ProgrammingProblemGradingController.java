@@ -30,7 +30,6 @@ import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
-import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -271,7 +270,6 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         return showListGradingTestDataFiles(uploadFileForm, problem, testDataFiles);
     }
 
-    @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = 512 * 1024 * 1024)
     @Transactional
     @RequireCSRFCheck
     public Result postUploadGradingTestDataFiles(long problemId) throws ProblemNotFoundException {
@@ -281,8 +279,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
             return notFound();
         }
 
-        Http.MultipartFormData body = request().body().asMultipartFormData();
-        Http.MultipartFormData.FilePart file;
+        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<File> file;
 
         file = body.getFile("file");
         if (file != null) {
@@ -338,7 +336,6 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         return showListGradingHelperFiles(uploadFileForm, problem, helperFiles);
     }
 
-    @BodyParser.Of(value = BodyParser.MultipartFormData.class, maxLength = 512 * 1024 * 1024)
     @Transactional
     @RequireCSRFCheck
     public Result postUploadGradingHelperFiles(long problemId) throws ProblemNotFoundException {
@@ -348,8 +345,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
             return notFound();
         }
 
-        Http.MultipartFormData body = request().body().asMultipartFormData();
-        Http.MultipartFormData.FilePart file;
+        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<File> file;
 
         file = body.getFile("file");
         if (file != null) {

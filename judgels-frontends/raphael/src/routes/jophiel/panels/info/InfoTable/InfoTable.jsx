@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { FormTable } from '../../../../../components/forms/FormTable/FormTable';
 import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 import { userInfoGender } from '../../../../../modules/api/jophiel/userInfo';

@@ -1,6 +1,5 @@
 import { mount } from 'enzyme';
 import { stringify } from 'query-string';
-import * as React from 'react';
 import ReactPaginate from 'react-paginate';
 import createMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';

@@ -1,11 +1,11 @@
 import { Card, Divider, RadioGroup, Radio, Tag } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import { HtmlText } from '../../../../HtmlText/HtmlText';
 
 import './ItemMultipleChoiceCard.css';
 
-export class ItemMultipleChoiceCard extends React.Component {
+export class ItemMultipleChoiceCard extends Component {
   constructor(props) {
     super(props);
     this.state = { value: props.initialAnswer };

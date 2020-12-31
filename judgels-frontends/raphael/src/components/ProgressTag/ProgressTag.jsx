@@ -1,6 +1,5 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
 
 import './ProgressTag.css';
 

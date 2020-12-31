@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import UserRoute from '../../../components/UserRoute/UserRoute';

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { FormattedRelativeTime } from 'react-intl';
 
 import { selectUnit } from '@formatjs/intl-utils';

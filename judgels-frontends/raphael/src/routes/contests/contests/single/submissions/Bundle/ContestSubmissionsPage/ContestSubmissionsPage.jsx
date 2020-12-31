@@ -1,6 +1,6 @@
 import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
@@ -20,7 +20,7 @@ import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
-export class ContestSubmissionsPage extends React.Component {
+export class ContestSubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
   state;

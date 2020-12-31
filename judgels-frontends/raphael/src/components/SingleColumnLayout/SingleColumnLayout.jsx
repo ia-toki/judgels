@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import './SingleColumnLayout.css';
 
 export function SingleColumnLayout({ children }) {

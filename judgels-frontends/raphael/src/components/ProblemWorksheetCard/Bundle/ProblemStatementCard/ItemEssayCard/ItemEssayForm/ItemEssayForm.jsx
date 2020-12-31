@@ -1,12 +1,12 @@
 import { ControlGroup, Classes, Button, Intent, Callout } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as React from 'react';
+import { PureComponent } from 'react';
 
 import { AnswerState, StatementButtonText } from '../../../itemStatement';
 
 import './ItemEssayForm.css';
 
-export default class ItemEssayForm extends React.PureComponent {
+export default class ItemEssayForm extends PureComponent {
   _input;
   state = {
     answerState: this.props.answerState,

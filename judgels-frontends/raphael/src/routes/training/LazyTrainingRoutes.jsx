@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { lazy, Suspense } from 'react';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const TrainingRoutes = React.lazy(() => import('./TrainingRoutes'));
+const TrainingRoutes = lazy(() => import('./TrainingRoutes'));
 
 function LazyTrainingRoutes(props) {
   return (
-    <React.Suspense fallback={<LoadingState large />}>
+    <Suspense fallback={<LoadingState large />}>
       <TrainingRoutes {...props} />
-    </React.Suspense>
+    </Suspense>
   );
 }
 

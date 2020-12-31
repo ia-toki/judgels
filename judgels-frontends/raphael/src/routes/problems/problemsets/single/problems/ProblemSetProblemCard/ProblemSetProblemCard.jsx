@@ -1,5 +1,4 @@
 import { Tag, Intent } from '@blueprintjs/core';
-import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { VerdictProgressTag } from '../../../../../../components/VerdictProgressTag/VerdictProgressTag';

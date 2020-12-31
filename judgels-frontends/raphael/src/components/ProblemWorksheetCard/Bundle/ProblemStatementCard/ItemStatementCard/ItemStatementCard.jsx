@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Card } from '@blueprintjs/core';
 
 import { HtmlText } from '../../../../HtmlText/HtmlText';

@@ -1,6 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { parse } from 'query-string';
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -12,7 +12,7 @@ import * as rankingActions from '../../modules/rankingActions';
 
 import './ScoresPage.css';
 
-class ScoresPage extends React.Component {
+class ScoresPage extends Component {
   static PAGE_SIZE = 50;
 
   state = {

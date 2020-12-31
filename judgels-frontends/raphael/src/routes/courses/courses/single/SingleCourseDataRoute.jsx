@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -6,7 +6,7 @@ import { selectCourse } from '../modules/courseSelectors';
 import * as courseActions from '../modules/courseActions';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
-class SingleCourseDataRoute extends React.Component {
+class SingleCourseDataRoute extends Component {
   async componentDidMount() {
     const course = await this.props.onGetCourseBySlug(this.props.match.params.courseSlug);
     this.props.onPushBreadcrumb(this.props.match.url, course.name);

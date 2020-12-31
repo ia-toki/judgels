@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ContentCard } from '../ContentCard/ContentCard';
 import { KatexText } from '../KatexText/KatexText';
 

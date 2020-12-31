@@ -1,12 +1,12 @@
 import { Callout, Classes, Button, Intent, Dialog } from '@blueprintjs/core';
-import * as React from 'react';
+import { Component } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ChapterLessonsTable } from '../ChapterLessonsTable/ChapterLessonsTable';
 import ChapterLessonEditForm from '../ChapterLessonEditForm/ChapterLessonEditForm';
 import { Alias } from '../../../../components/forms/validations';
 
-export class ChapterLessonEditDialog extends React.Component {
+export class ChapterLessonEditDialog extends Component {
   state = {
     response: undefined,
     isEditing: false,

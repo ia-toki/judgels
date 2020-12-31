@@ -1,12 +1,12 @@
 import { Icon, Popover, Position, Tab, Tabs } from '@blueprintjs/core';
-import * as React from 'react';
+import { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Card } from '../Card/Card';
 
 import './Sidebar.css';
 
-export class Sidebar extends React.PureComponent {
+export class Sidebar extends PureComponent {
   state = { isResponsivePopoverOpen: false };
 
   render() {

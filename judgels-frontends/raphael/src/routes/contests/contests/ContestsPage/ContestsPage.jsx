@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { parse } from 'query-string';
 
@@ -12,7 +12,7 @@ import * as contestActions from '../modules/contestActions';
 
 import './ContestsPage.css';
 
-class ContestsPage extends React.Component {
+class ContestsPage extends Component {
   static PAGE_SIZE = 20;
 
   state;
