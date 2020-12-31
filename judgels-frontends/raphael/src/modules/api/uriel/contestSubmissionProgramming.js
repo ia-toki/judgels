@@ -36,6 +36,6 @@ export const contestSubmissionProgrammingAPI = {
 
   getSubmissionSourceImage: (contestJid, userJid, problemJid) => {
     const params = stringify({ contestJid, userJid, problemJid });
-    return `${baseURL}/image?${params}`;
+    return Promise.resolve(`${baseURL}/image?${params}`);
   },
 };

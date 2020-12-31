@@ -231,8 +231,8 @@ export class ContestScoreboardPage extends Component {
       );
     }
 
-    const { data: scoreboard, profilesMap } = response[0];
-    const { canViewOtherContestantSolution } = response[0].config;
+    const { data: scoreboard, profilesMap, config } = response[0];
+    const { canViewOtherContestantSolution } = config;
     if (this.props.contest.style === ContestStyle.ICPC) {
       return (
         <IcpcScoreboardTable
