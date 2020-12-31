@@ -144,6 +144,21 @@ public class BaseSubmissionStore<
     }
 
     @Override
+    public Optional<Submission> getLatestSubmission(
+            Optional<String> containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid) {
+        SelectionOptions options = new SelectionOptions.Builder().pageSize(1).build();
+        List<Submission> submissions = getSubmissions(containerJid, userJid, problemJid, Optional.empty(), options)
+                .getPage();
+        if (submissions.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(submissions.get(0));
+    }
+
+    @Override
     public long getTotalSubmissions(String containerJid, String userJid, String problemJid) {
         Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, ImmutableSet.of(problemJid));
         return map.getOrDefault(problemJid, 0L);

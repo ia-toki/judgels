@@ -30,6 +30,10 @@ public interface SubmissionStore {
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Integer> page);
+    Optional<Submission> getLatestSubmission(
+            Optional<String> containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid);
 
     long getTotalSubmissions(String containerJid, String userJid, String problemJid);
     Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Set<String> problemJids);

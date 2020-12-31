@@ -8,13 +8,11 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.ContestRoleDao;
 
 public class ContestScoreboardRoleChecker {
     private final ContestRoleChecker contestRoleChecker;
-    private final ContestSubmissionRoleChecker contestSubmissionRoleChecker;
     private final ContestRoleDao contestRoleDao;
     private final ContestTimer contestTimer;
     private final ContestScoreboardStore scoreboardStore;
@@ -24,7 +22,6 @@ public class ContestScoreboardRoleChecker {
     @Inject
     public ContestScoreboardRoleChecker(
             ContestRoleChecker contestRoleChecker,
-            ContestSubmissionRoleChecker contestSubmissionRoleChecker,
             ContestRoleDao contestRoleDao,
             ContestTimer contestTimer,
             ContestScoreboardStore scoreboardStore,
@@ -32,7 +29,6 @@ public class ContestScoreboardRoleChecker {
             ContestSupervisorStore supervisorStore) {
 
         this.contestRoleChecker = contestRoleChecker;
-        this.contestSubmissionRoleChecker = contestSubmissionRoleChecker;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
         this.scoreboardStore = scoreboardStore;
@@ -65,7 +61,7 @@ public class ContestScoreboardRoleChecker {
 
     }
 
-    public boolean canViewOtherContestantSolution(Contest contest) {
+    public boolean canViewSubmissions(Contest contest) {
         return contestTimer.hasEnded(contest) && contestRoleDao.isPublic(contest.getJid());
     }
 }

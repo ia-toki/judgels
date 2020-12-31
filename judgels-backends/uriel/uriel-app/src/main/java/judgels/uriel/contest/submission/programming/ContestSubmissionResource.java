@@ -30,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
@@ -238,23 +239,26 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     @UnitOfWork(readOnly = true)
     public Response getSubmissionSourceImage(String contestJid, String userJid, String problemJid) {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(scoreboardRoleChecker.canViewOtherContestantSolution(contest));
+        checkAllowed(scoreboardRoleChecker.canViewSubmissions(contest));
 
-        List<Submission> submissions = submissionStore
-                .getSubmissions(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid), Optional.of(1))
-                .getPage();
-        if (submissions.isEmpty()) {
-            return Response.noContent().build();
-        }
-
-        Submission submission = submissions.get(0);
+        Submission submission = checkFound(submissionStore
+                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
         String username = this.userClient.getProfile(userJid).getUsername();
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
 
-        String rawSource = new String(source.getSubmissionFiles().get(SubmissionSource.DEFAULT_KEY).getContent());
-        rawSource = "Submission #" + submission.getId() + " (" + username + ")\n\n" + rawSource;
+        Map<String, SourceFile> submissionFiles = source.getSubmissionFiles();
+        StringBuilder rawSource = new StringBuilder();
+        for (Map.Entry<String, SourceFile> entry : submissionFiles.entrySet()) {
+            if (submissionFiles.size() > 1) {
+                rawSource.append("------- ").append(entry.getKey()).append(" -------\n");
+            }
+            rawSource.append(new String(entry.getValue().getContent()));
+            if (submissionFiles.size() > 1) {
+                rawSource.append("\n");
+            }
+        }
 
-        return buildImageResponseFromText(rawSource, Date.from(submission.getTime()));
+        return buildImageResponseFromText(rawSource.toString(), Date.from(submission.getTime()));
     }
 
     @POST

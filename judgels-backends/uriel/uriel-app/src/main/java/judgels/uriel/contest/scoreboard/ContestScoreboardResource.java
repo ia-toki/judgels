@@ -70,7 +70,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         boolean canSupervise = scoreboardRoleChecker.canSupervise(actorJid, contest);
         boolean canViewOfficialAndFrozen = scoreboardRoleChecker.canViewOfficialAndFrozen(actorJid, contest);
         boolean canViewClosedProblems = scoreboardRoleChecker.canViewClosedProblems(actorJid, contest);
-        boolean canViewOtherContestantSolution = scoreboardRoleChecker.canViewOtherContestantSolution(contest);
+        boolean canViewOtherContestantSolution = scoreboardRoleChecker.canViewSubmissions(contest);
         ContestScoreboardConfig config = new ContestScoreboardConfig.Builder()
                 .canViewOfficialAndFrozen(canViewOfficialAndFrozen)
                 .canViewClosedProblems(canViewClosedProblems)
