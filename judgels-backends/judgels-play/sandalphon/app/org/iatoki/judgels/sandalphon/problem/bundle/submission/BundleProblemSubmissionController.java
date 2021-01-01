@@ -23,16 +23,12 @@ import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.listSubmissi
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemSubmissionController extends AbstractBundleProblemController {
 
     private static final long PAGE_SIZE = 20;
-    private static final String SUBMISSION = "submission";
-    private static final String PROBLEM = "problem";
-    private static final String BUNDLE_ANSWER = "bundle answer";
 
     private final FileSystemProvider bundleSubmissionFileSystemProvider;
     private final BundleSubmissionService bundleSubmissionService;
@@ -54,7 +50,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
             return notFound();
         }
 
-        DynamicForm dForm = Form.form().bindFromRequest();
+        DynamicForm dForm = formFactory.form().bindFromRequest();
 
         BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, ProblemControllerUtils.getCurrentStatementLanguage());
         String submissionJid = bundleSubmissionService.submit(problem.getJid(), null, bundleAnswer, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
@@ -80,7 +76,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listSubmissionsView.render(pageOfBundleSubmissions, problemId, pageIndex, orderBy, orderDir));
-        template.markBreadcrumbLocation(Messages.get("problem.bundle.submission.list"), org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId));
+        template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
         return renderTemplate(template, problemService, problem);
@@ -105,8 +101,8 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), null, problem.getSlug(), null));
 
-        template.markBreadcrumbLocation(Messages.get("problem.programming.submission.view"), org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
-        template.setPageTitle("Problem - View Submission");
+        template.markBreadcrumbLocation("View submission", org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
+        template.setPageTitle("Problem - View submission");
 
         return renderTemplate(template, problemService, problem);
     }
@@ -139,7 +135,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
             return notFound();
         }
 
-        ListTableSelectionForm data = Form.form(ListTableSelectionForm.class).bindFromRequest().get();
+        ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest().get();
 
         List<BundleSubmission> submissions;
 
@@ -165,7 +161,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     }
 
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.markBreadcrumbLocation(Messages.get("problem.bundle.submission"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
+        template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
     
         return super.renderTemplate(template, problemService, problem);
     }

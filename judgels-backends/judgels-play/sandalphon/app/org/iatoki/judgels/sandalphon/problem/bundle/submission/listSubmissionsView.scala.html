@@ -1,8 +1,6 @@
 @import java.text.DecimalFormat
 
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import scala.collection.JavaConversions
-@import play.i18n.Messages
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithSelectionFormView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
@@ -36,14 +34,14 @@
 
 @tableView() {
     @tableHeadersWithSelectionFormView(pageOfBundleSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
-        "id" -> Messages.get("commons.id"),
-        "createdBy" -> Messages.get("problem.bundle.submission.author"),
-        "score" -> Messages.get("problem.bundle.submission.score"),
-        "createdAt" -> Messages.get("problem.bundle.submission.time")
+        "id" -> "ID",
+        "createdBy" -> "Author",
+        "score" -> "Score",
+        "createdAt" -> "Time"
     )
     <tbody>
 
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfBundleSubmissions.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfBundleSubmissions.getData.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
         @for(submission <- pageOfBundleSubmissions.getData) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>

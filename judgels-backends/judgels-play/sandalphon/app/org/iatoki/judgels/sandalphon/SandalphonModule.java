@@ -15,6 +15,7 @@ import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
 import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.play.general.GeneralConfig;
+import org.iatoki.judgels.play.migration.DataMigrationInit;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
 import org.iatoki.judgels.play.model.LegacyActorProvider;
 import org.iatoki.judgels.play.model.LegacySessionFactory;
@@ -29,6 +30,7 @@ import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionS
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionServiceImpl;
+import play.data.FormFactory;
 
 public final class SandalphonModule extends AbstractModule {
 
@@ -42,7 +44,9 @@ public final class SandalphonModule extends AbstractModule {
         SandalphonConfiguration sandalphonConfig = SandalphonProperties.build(config);
         bind(SandalphonConfiguration.class).toInstance(sandalphonConfig);
 
+        bind(SandalphonThreadsScheduler.class).asEagerSingleton();
         bind(SandalphonSingletonsBuilder.class).asEagerSingleton();
+        bind(DataMigrationInit.class).asEagerSingleton();
 
         bind(JudgelsDataMigrator.class).to(SandalphonDataMigrator.class);
 

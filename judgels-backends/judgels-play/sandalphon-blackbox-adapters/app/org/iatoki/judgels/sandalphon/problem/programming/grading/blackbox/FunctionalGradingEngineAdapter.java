@@ -12,6 +12,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWit
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.functionalGradingConfigView;
 import play.api.mvc.Call;
 import play.data.Form;
+import play.data.FormFactory;
 import play.twirl.api.Html;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 public class FunctionalGradingEngineAdapter extends MultipleSourceFilesBlackBoxGradingEngineAdapter implements ConfigurableWithAutoPopulation {
     @Override
-    public Form<?> createFormFromConfig(GradingConfig config) {
+    public Form<?> createFormFromConfig(FormFactory formFactory, GradingConfig config) {
         FunctionalGradingConfigForm form = new FunctionalGradingConfigForm();
         FunctionalGradingConfig castConfig = (FunctionalGradingConfig) config;
         fillMultipleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
@@ -30,12 +31,12 @@ public class FunctionalGradingEngineAdapter extends MultipleSourceFilesBlackBoxG
             form.customScorer = castConfig.getCustomScorer().get();
         }
 
-        return Form.form(FunctionalGradingConfigForm.class).fill(form);
+        return formFactory.form(FunctionalGradingConfigForm.class).fill(form);
     }
 
     @Override
-    public Form<?> createEmptyForm() {
-        return Form.form(FunctionalGradingConfigForm.class);
+    public Form<?> createEmptyForm(FormFactory formFactory) {
+        return formFactory.form(FunctionalGradingConfigForm.class);
     }
 
     @Override

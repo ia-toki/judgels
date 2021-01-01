@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.itemMultipleChoiceConfView;
 import play.api.mvc.Call;
 import play.data.Form;
-import play.i18n.Messages;
+import play.data.FormFactory;
 import play.mvc.Http;
 import play.twirl.api.Html;
 
@@ -16,16 +16,16 @@ import java.util.Set;
 public final class ItemMultipleChoiceConfAdapter implements BundleItemConfAdapter {
 
     @Override
-    public Form generateForm() {
+    public Form generateForm(FormFactory formFactory) {
         ItemMultipleChoiceConfForm form = new ItemMultipleChoiceConfForm();
         form.choiceAliases = Lists.newArrayList("a", "b", "c", "d", "e");
         form.choiceContents = Lists.newArrayList("", "", "", "", "");
         form.isCorrects = Lists.newArrayList(null, null, null, null, null);
-        return Form.form(ItemMultipleChoiceConfForm.class).fill(form);
+        return formFactory.form(ItemMultipleChoiceConfForm.class).fill(form);
     }
 
     @Override
-    public Form generateForm(String conf, String meta) {
+    public Form generateForm(FormFactory formFactory, String conf, String meta) {
         ItemMultipleChoiceConf itemConf = new Gson().fromJson(conf, ItemMultipleChoiceConf.class);
         ItemMultipleChoiceConfForm itemForm = new ItemMultipleChoiceConfForm();
         itemForm.statement = itemConf.statement;
@@ -49,7 +49,7 @@ public final class ItemMultipleChoiceConfAdapter implements BundleItemConfAdapte
             }
         }
 
-        return Form.form(ItemMultipleChoiceConfForm.class).fill(itemForm);
+        return formFactory.form(ItemMultipleChoiceConfForm.class).fill(itemForm);
     }
 
     @Override
@@ -58,13 +58,13 @@ public final class ItemMultipleChoiceConfAdapter implements BundleItemConfAdapte
     }
 
     @Override
-    public Form bindFormFromRequest(Http.Request request) {
-        Form form = Form.form(ItemMultipleChoiceConfForm.class).bindFromRequest();
+    public Form bindFormFromRequest(FormFactory formFactory, Http.Request request) {
+        Form form = formFactory.form(ItemMultipleChoiceConfForm.class).bindFromRequest();
         if (!(form.hasErrors() || form.hasGlobalErrors())) {
             ItemMultipleChoiceConfForm confForm = ((Form<ItemMultipleChoiceConfForm>) form).get();
             Set<String> uniqueChoiceAliases = Sets.newHashSet(confForm.choiceAliases);
             if (uniqueChoiceAliases.size() != confForm.choiceAliases.size()) {
-                form.reject(Messages.get("error.problem.bundle.item.multipleChoice.duplicateAlias"));
+                form = form.withGlobalError("Duplicate choice aliases.");
             }
         }
         return form;

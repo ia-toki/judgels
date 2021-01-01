@@ -1,6 +1,4 @@
-@import play.i18n.Messages
 @import play.api.mvc.Call
-@import org.iatoki.judgels.play.template.pagination.html.pageLinkBuilder
 @import org.iatoki.judgels.play.Page
 
 @(page: Page[_], orderBy: String, orderDir: String, filterString: String, listFunc: (scala.Long, String, String, String) =>Call)
@@ -9,7 +7,7 @@
 
 <div class="showing">
     <small>
-        @{Messages.get("commons.showing")} @{page.getCurrentFirstRowIndex + 1} - @{page.getCurrentLastRowIndex + 1} @Messages.get("commons.outOf") @page.getTotalRowsCount data.
+        Showing @{page.getCurrentFirstRowIndex + 1} - @{page.getCurrentLastRowIndex + 1} out of @page.getTotalRowsCount data.
     </small>
 </div>
 

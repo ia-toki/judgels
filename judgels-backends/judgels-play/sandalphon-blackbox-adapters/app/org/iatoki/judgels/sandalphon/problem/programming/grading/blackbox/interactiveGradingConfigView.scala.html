@@ -1,5 +1,4 @@
 @import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.InteractiveGradingConfigForm
-@import play.i18n.Messages
 @import play.api.mvc.Call
 @import org.iatoki.judgels.FileInfo
 
@@ -330,5 +329,5 @@ $(document).ready(function() {
         @b3.select(interactiveGradingConfigForm("communicator"), helperFiles.map(f => f.getName -> f.getName).toSeq, '_label -> "Communicator")
     }
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+    @b3.submit('class -> "btn btn-primary") { Update }
 }

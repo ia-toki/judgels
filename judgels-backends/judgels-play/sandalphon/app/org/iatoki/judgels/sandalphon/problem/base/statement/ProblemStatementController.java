@@ -26,12 +26,10 @@ import org.iatoki.judgels.sandalphon.problem.programming.statement.ProgrammingPr
 import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
 import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
 import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -90,7 +88,7 @@ public class ProblemStatementController extends AbstractProblemController {
         updateStatementData.title = statement.getTitle();
         updateStatementData.text = statement.getText();
 
-        Form<UpdateStatementForm> updateStatementForm = Form.form(UpdateStatementForm.class).fill(updateStatementData);
+        Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).fill(updateStatementData);
 
         Set<String> allowedLanguages;
         try {
@@ -116,7 +114,7 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        Form<UpdateStatementForm> updateStatementForm = Form.form(UpdateStatementForm.class).bindFromRequest();
+        Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).bindFromRequest();
         if (formHasErrors(updateStatementForm)) {
             try {
                 Set<String> allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
@@ -138,9 +136,8 @@ public class ProblemStatementController extends AbstractProblemController {
             problemService.updateStatement(IdentityUtils.getUserJid(), problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage(), statement);
         } catch (IOException e) {
             try {
-                updateStatementForm.reject("problem.statement.error.cantUpload");
                 Set<String> allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
-                return showEditStatement(updateStatementForm, problem, allowedLanguages);
+                return showEditStatement(updateStatementForm.withGlobalError("Error updating statement."), problem, allowedLanguages);
             } catch (IOException e2) {
                 return notFound();
             }
@@ -155,7 +152,7 @@ public class ProblemStatementController extends AbstractProblemController {
     public Result listStatementMediaFiles(long problemId) throws ProblemNotFoundException {
         Problem problem = problemService.findProblemById(problemId);
 
-        Form<UploadFileForm> uploadFileForm = Form.form(UploadFileForm.class);
+        Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem);
         List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(IdentityUtils.getUserJid(), problem.getJid());
 
@@ -182,12 +179,11 @@ public class ProblemStatementController extends AbstractProblemController {
             try {
                 problemService.uploadStatementMediaFile(IdentityUtils.getUserJid(), problem.getJid(), mediaFile, file.getFilename());
             } catch (IOException e) {
-                Form<UploadFileForm> form = Form.form(UploadFileForm.class);
-                form.reject("problem.statement.error.cantUploadMedia");
+                Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem);
                 List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(IdentityUtils.getUserJid(), problem.getJid());
 
-                return showListStatementMediaFiles(form, problem, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
@@ -201,12 +197,11 @@ public class ProblemStatementController extends AbstractProblemController {
             try {
                 problemService.uploadStatementMediaFileZipped(IdentityUtils.getUserJid(), problem.getJid(), mediaFile);
             } catch (IOException e) {
-                Form<UploadFileForm> form = Form.form(UploadFileForm.class);
-                form.reject("problem.statement.error.cantUploadMediaZipped");
+                Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem);
                 List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(IdentityUtils.getUserJid(), problem.getJid());
 
-                return showListStatementMediaFiles(form, problem, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
@@ -216,6 +211,7 @@ public class ProblemStatementController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
+    @AddCSRFToken
     public Result listStatementLanguages(long problemId) throws ProblemNotFoundException {
         Problem problem = problemService.findProblemById(problemId);
 
@@ -234,13 +230,14 @@ public class ProblemStatementController extends AbstractProblemController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
-        template.markBreadcrumbLocation(Messages.get("problem.statement.language.list"), routes.ProblemStatementController.listStatementLanguages(problem.getId()));
-        template.setPageTitle("Problem - Statement Languages");
+        template.markBreadcrumbLocation("Statement languages", routes.ProblemStatementController.listStatementLanguages(problem.getId()));
+        template.setPageTitle("Problem - Statement languages");
 
         return renderStatementTemplate(template, problemService, problem);
     }
 
     @Transactional
+    @RequireCSRFCheck
     public Result postAddStatementLanguage(long problemId) throws ProblemNotFoundException {
         Problem problem = problemService.findProblemById(problemId);
 
@@ -252,7 +249,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
         String languageCode;
         try {
-            languageCode = DynamicForm.form().bindFromRequest().get("langCode");
+            languageCode = formFactory.form().bindFromRequest().get("langCode");
             if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
                 // TODO should use form so it can be rejected
                 throw new IllegalStateException("Languages is not from list.");
@@ -347,8 +344,8 @@ public class ProblemStatementController extends AbstractProblemController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editStatementView.render(updateStatementForm, problem.getId()));
         appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
-        template.markBreadcrumbLocation(Messages.get("problem.statement.update"), routes.ProblemStatementController.editStatement(problem.getId()));
-        template.setPageTitle("Problem - Update Statement");
+        template.markBreadcrumbLocation("Update statement", routes.ProblemStatementController.editStatement(problem.getId()));
+        template.setPageTitle("Problem - Update statement");
 
         return renderStatementTemplate(template, problemService, problem);
     }
@@ -356,8 +353,8 @@ public class ProblemStatementController extends AbstractProblemController {
     private Result showListStatementMediaFiles(Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listStatementMediaFilesView.render(uploadFileForm, problem.getId(), mediaFiles, isAllowedToUploadMediaFiles));
-        template.markBreadcrumbLocation(Messages.get("problem.statement.media.list"), routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
-        template.setPageTitle("Problem - Statement - List Media");
+        template.markBreadcrumbLocation("Media files", routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
+        template.setPageTitle("Problem - Statement - Media files");
 
         return renderStatementTemplate(template, problemService, problem);
     }

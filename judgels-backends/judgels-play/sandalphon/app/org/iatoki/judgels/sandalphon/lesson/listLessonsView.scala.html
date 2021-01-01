@@ -1,6 +1,4 @@
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import play.i18n.Messages
-@import scala.collection.JavaConversions
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.search.html.searchView
@@ -18,13 +16,13 @@
 
 @tableView() {
     @tableHeadersView(pageOfLessons.getPageIndex, orderBy, orderDir, filterString, routes.LessonController.listLessons)(
-        "id" -> Messages.get("commons.id"),
-        "slug" -> Messages.get("lesson.slug"),
-        "createdBy" -> Messages.get("problem.author"),
-        "updatedAt" -> Messages.get("problem.lastUpdateTime")
+        "id" -> "ID",
+        "slug" -> "Slug",
+        "createdBy" -> "Author",
+        "updatedAt" -> "Last update time"
     )
     <tbody>
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfLessons.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfLessons.getData.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
         @for(lesson <- pageOfLessons.getData) {
             <tr>
                 <td>@lesson.getId</td>

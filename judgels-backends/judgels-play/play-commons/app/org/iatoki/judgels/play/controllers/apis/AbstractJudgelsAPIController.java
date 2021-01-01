@@ -14,15 +14,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.client.ClientChecker;
 import org.apache.commons.io.FilenameUtils;
 import play.data.DynamicForm;
+import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 
 public abstract class AbstractJudgelsAPIController extends Controller {
+    @Inject
+    protected FormFactory formFactory;
 
     protected static void authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
         String authHeaderString = request().getHeader("Authorization");
@@ -30,7 +34,7 @@ public abstract class AbstractJudgelsAPIController extends Controller {
         clientChecker.check(authHeader);
     }
 
-    protected static Result okAsJson(Object responseBody) {
+    protected Result okAsJson(Object responseBody) {
         String finalResponseBody;
         if (responseBody instanceof JsonObject) {
             finalResponseBody = responseBody.toString();
@@ -38,7 +42,7 @@ public abstract class AbstractJudgelsAPIController extends Controller {
             finalResponseBody = new Gson().toJson(responseBody);
         }
 
-        DynamicForm dForm = DynamicForm.form().bindFromRequest();
+        DynamicForm dForm = formFactory.form().bindFromRequest();
         String callback = dForm.get("callback");
 
         if (callback != null) {
@@ -88,14 +92,12 @@ public abstract class AbstractJudgelsAPIController extends Controller {
                 baos.write(Files.toByteArray(imageFile));
 
                 if (in == null) {
-                    response().setContentType(URLConnection.guessContentTypeFromName(imageFile.getName()));
-                    return ok(baos.toByteArray());
+                    return ok(baos.toByteArray()).as(URLConnection.guessContentTypeFromName(imageFile.getName()));
                 }
 
                 String type = FilenameUtils.getExtension(imageFile.getAbsolutePath());
 
-                response().setContentType("image/" + type);
-                return ok(baos.toByteArray());
+                return ok(baos.toByteArray()).as("image/" + type);
             } catch (IOException e2) {
                 return Results.internalServerError(e2.getMessage());
             }
@@ -112,10 +114,9 @@ public abstract class AbstractJudgelsAPIController extends Controller {
                 return Results.notFound();
             }
 
-            response().setContentType("application/x-download");
             response().setHeader("Content-disposition", "attachment; filename=" + resource.getName());
 
-            return ok(resource);
+            return ok(resource).as("application/x-download");
         }
     }
 }

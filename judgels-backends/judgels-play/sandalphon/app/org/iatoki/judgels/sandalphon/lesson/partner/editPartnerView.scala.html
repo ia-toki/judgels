@@ -2,7 +2,6 @@
 @import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner
 @import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerUpsertForm
 @import org.iatoki.judgels.sandalphon.lesson.partner.routes
-@import play.i18n.Messages
 
 @(lessonForm: Form[LessonPartnerUpsertForm], lesson: Lesson, lessonPartner: LessonPartner)
 
@@ -13,5 +12,5 @@
 
   @upsertPartnerView(lessonForm)
 
-  @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+  @b3.submit('class -> "btn btn-primary") { Update }
 }

@@ -4,7 +4,6 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
-import play.i18n.Messages;
 import play.mvc.Call;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -24,9 +23,9 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
 
         if (ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
-            template.addMainButton(Messages.get("problem.update"), routes.ProblemController.editProblem(problem.getId()));
+            template.addMainButton("Update problem", routes.ProblemController.editProblem(problem.getId()));
         } else {
-            template.addMainButton(Messages.get("problem.view"), routes.ProblemController.viewProblem(problem.getId()));
+            template.addMainButton("View problem", routes.ProblemController.viewProblem(problem.getId()));
         }
     }
 
@@ -39,17 +38,17 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
     }
 
     protected Result renderStatementTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.markBreadcrumbLocation(Messages.get("problem.statement"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
+        template.markBreadcrumbLocation("Statements", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
 
-        template.addSecondaryTab(Messages.get("commons.view"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problem.getId()));
+        template.addSecondaryTab("View", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problem.getId()));
         if (ProblemControllerUtils.isAllowedToUpdateStatement(problemService, problem)) {
-            template.addSecondaryTab(Messages.get("commons.update"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.editStatement(problem.getId()));
+            template.addSecondaryTab("Update", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.editStatement(problem.getId()));
         }
 
-        template.addSecondaryTab(Messages.get("problem.statement.media"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
+        template.addSecondaryTab("Media", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
 
         if (ProblemControllerUtils.isAllowedToManageStatementLanguages(problemService, problem)) {
-            template.addSecondaryTab(Messages.get("problem.statement.language"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.listStatementLanguages(problem.getId()));
+            template.addSecondaryTab("Languages", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.listStatementLanguages(problem.getId()));
         }
 
         return this.renderTemplate(template, problemService, problem);
@@ -60,7 +59,7 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
     }
 
     protected Result renderPartnerTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.markBreadcrumbLocation(Messages.get("problem.partner"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
+        template.markBreadcrumbLocation("Partners", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
 
         return this.renderTemplate(template, problemService, problem);
     }

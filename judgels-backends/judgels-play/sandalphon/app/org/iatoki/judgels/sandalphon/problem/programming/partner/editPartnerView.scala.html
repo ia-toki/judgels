@@ -2,9 +2,7 @@
 @import org.iatoki.judgels.sandalphon.problem.programming.partner.ProgrammingPartnerUpsertForm
 @import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner
 @import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm
-@import play.i18n.Messages
 @import org.iatoki.judgels.sandalphon.problem.base.partner.html.upsertPartnerView
-@import org.iatoki.judgels.sandalphon.problem.programming.partner.html.upsertProgrammingPartnerView
 @import org.iatoki.judgels.sandalphon.problem.programming.partner.routes
 
 @(problemForm: Form[ProblemPartnerUpsertForm], programmingProblemForm: Form[ProgrammingPartnerUpsertForm], problem: Problem, problemPartner: ProblemPartner)
@@ -18,5 +16,5 @@
 
   @upsertProgrammingPartnerView(programmingProblemForm)
 
-  @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+  @b3.submit('class -> "btn btn-primary") { Update }
 }

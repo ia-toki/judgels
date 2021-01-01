@@ -21,10 +21,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 
-/**
- * @deprecated Will be refactored out in the future.
- */
-@Deprecated
 public final class JudgelsPlayUtils {
 
     private JudgelsPlayUtils() {

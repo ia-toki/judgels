@@ -1,14 +1,15 @@
 @(switchLanguageUri: String, allowedLanguages: Set[String], currentLanguage: String, content: Html)
 
 @import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry
-@import play.i18n.Messages
 
 <div class="small pull-left">
-    @Messages.get("problem.statement.language.current"): <span class="label label-default">@WorldLanguageRegistry.getInstance.getDisplayLanguage(currentLanguage)</span>
+    Current language: <span class="label label-default">@WorldLanguageRegistry.getInstance.getDisplayLanguage(currentLanguage)</span>
 </div>
 
 <form method="POST" action="@switchLanguageUri" class="form-inline pull-right">
-    <label for="langCode"><span class="small">@Messages.get("problem.statement.language.switchTo")</span></label>
+    @helper.CSRF.formField
+
+    <label for="langCode"><span class="small">Switch to</span></label>
     <div class="form-group">
         <select name="langCode">
             @for(langCode <- allowedLanguages) {
@@ -17,7 +18,7 @@
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-xs">@Messages.get("problem.statement.language.switch")</button>
+    <button type="submit" class="btn btn-primary btn-xs">Switch</button>
 </form>
 
 <div class="clearfix"></div>

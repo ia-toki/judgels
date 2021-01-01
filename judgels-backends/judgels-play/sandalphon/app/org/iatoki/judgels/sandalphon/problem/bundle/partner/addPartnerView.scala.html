@@ -1,11 +1,9 @@
 @import org.iatoki.judgels.sandalphon.problem.base.Problem
 @import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm
 @import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm
-@import play.i18n.Messages
 @import org.iatoki.judgels.sandalphon.problem.bundle.partner.BundlePartnerUpsertForm
 @import org.iatoki.judgels.sandalphon.problem.base.partner.html.upsertPartnerView
 @import org.iatoki.judgels.sandalphon.problem.base.partner.html.usernamePartnerView
-@import org.iatoki.judgels.sandalphon.problem.bundle.partner.html.upsertBundlePartnerView
 @import org.iatoki.judgels.sandalphon.problem.bundle.partner.routes
 
 @(usernameForm: Form[ProblemPartnerUsernameForm], problemForm: Form[ProblemPartnerUpsertForm], bundleProblemForm: Form[BundlePartnerUpsertForm], problem: Problem, jophielAutoCompleteUrl: String)
@@ -21,5 +19,5 @@
 
     @upsertBundlePartnerView(bundleProblemForm)
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.add") }
+    @b3.submit('class -> "btn btn-primary") { Add }
 }

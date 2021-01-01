@@ -7,6 +7,7 @@ import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import play.api.mvc.Call;
 import play.data.Form;
+import play.data.FormFactory;
 import play.twirl.api.Html;
 
 import java.util.List;
@@ -16,9 +17,9 @@ public interface GradingEngineAdapter {
 
     Set<String> getSupportedGradingEngineNames();
 
-    Form<?> createFormFromConfig(GradingConfig config);
+    Form<?> createFormFromConfig(FormFactory formFactory, GradingConfig config);
 
-    Form<?> createEmptyForm();
+    Form<?> createEmptyForm(FormFactory formFactory);
 
     GradingConfig createConfigFromForm(Form<?> form);
 

@@ -1,5 +1,4 @@
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import play.i18n.Messages
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithSelectionFormView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
@@ -8,8 +7,6 @@
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
 @(pageOfProgrammingSubmissions: Page[ProgrammingSubmission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
-
-@import scala.collection.JavaConversions
 
 <script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
 
@@ -35,16 +32,16 @@
 
 @tableView() {
     @tableHeadersWithSelectionFormView(pageOfProgrammingSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
-        "id" -> Messages.get("commons.id"),
-        "createdBy" -> Messages.get("problem.programming.submission.author"),
-        "gradingLanguage" -> Messages.get("problem.programming.submission.gradingLanguage"),
-        "verdictName" -> Messages.get("problem.programming.submission.verdict"),
-        "score" -> Messages.get("problem.programming.submission.score"),
-        "createdAt" -> Messages.get("problem.programming.submission.time")
+        "id" -> "ID",
+        "createdBy" -> "Author",
+        "gradingLanguage" -> "Grading language",
+        "verdictName" -> "Verdict",
+        "score" -> "Score",
+        "createdAt" -> "Time"
     )
     <tbody>
 
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfProgrammingSubmissions.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProgrammingSubmissions.getData.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
         @for(submission <- pageOfProgrammingSubmissions.getData) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>

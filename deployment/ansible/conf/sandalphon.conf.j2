@@ -8,15 +8,18 @@ general {
 }
 
 play {
-    crypto.secret = "{{ sandalphon_play_crypto_secret }}"
-
     http {
+        secret.key = "{{ sandalphon_play_crypto_secret }}"
+
         session {
             cookieName = "SANDALPHON_SESSION"
             maxAge = 7d
             secure = false
         }
-        filters = "org.iatoki.judgels.play.JudgelsFilters"
+    }
+
+    filters {
+        enabled = ["play.filters.csrf.CSRFFilter", "play.filters.gzip.GzipFilter"]
     }
 
     modules {
@@ -29,8 +32,6 @@ play {
 
     i18n.langs = ["en-US"]
 }
-
-application.global = "org.iatoki.judgels.sandalphon.SandalphonGlobal"
 
 file.encoding = "UTF-8"
 

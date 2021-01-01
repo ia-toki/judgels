@@ -1,7 +1,6 @@
 @import org.iatoki.judgels.sandalphon.lesson.Lesson
 @import org.iatoki.judgels.sandalphon.lesson.LessonEditForm
 @import org.iatoki.judgels.sandalphon.lesson.routes
-@import play.i18n.Messages
 @import org.iatoki.judgels.play.template.html.formErrorView
 
 @(lessonEditForm: Form[LessonEditForm], lesson: Lesson)
@@ -14,9 +13,9 @@
 
     @helper.CSRF.formField
 
-    @b3.text(lessonEditForm("slug"), '_label -> Messages.get("lesson.slug"))
+    @b3.text(lessonEditForm("slug"), '_label -> "Slug")
 
-    @b3.textarea(lessonEditForm("additionalNote"), '_label -> Messages.get("lesson.additionalNote"))
+    @b3.textarea(lessonEditForm("additionalNote"), '_label -> "Additional note")
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+    @b3.submit('class -> "btn btn-primary") { Update }
 }

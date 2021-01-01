@@ -28,12 +28,10 @@ import org.iatoki.judgels.sandalphon.resource.html.katexView;
 import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
 import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
 import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Call;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -82,8 +80,8 @@ public class LessonStatementController extends AbstractLessonController {
 
 
         appendStatementLanguageSelection(template, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
-        template.markBreadcrumbLocation(Messages.get("lesson.statement.view"), routes.LessonStatementController.viewStatement(lessonId));
-        template.setPageTitle("Lesson - View Statement");
+        template.markBreadcrumbLocation("View statement", routes.LessonStatementController.viewStatement(lessonId));
+        template.setPageTitle("Lesson - View statement");
 
         return renderTemplate(template, lessonService, lesson);
     }
@@ -113,7 +111,7 @@ public class LessonStatementController extends AbstractLessonController {
         updateStatementData.title = statement.getTitle();
         updateStatementData.text = statement.getText();
 
-        Form<UpdateStatementForm> updateStatementForm = Form.form(UpdateStatementForm.class).fill(updateStatementData);
+        Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).fill(updateStatementData);
 
         Set<String> allowedLanguages;
         try {
@@ -139,7 +137,7 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        Form<UpdateStatementForm> updateStatementForm = Form.form(UpdateStatementForm.class).bindFromRequest();
+        Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).bindFromRequest();
         if (formHasErrors(updateStatementForm)) {
             try {
                 Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
@@ -156,9 +154,8 @@ public class LessonStatementController extends AbstractLessonController {
             lessonService.updateStatement(IdentityUtils.getUserJid(), lesson.getJid(), LessonControllerUtils.getCurrentStatementLanguage(), new LessonStatement(updateStatementData.title, JudgelsPlayUtils.toSafeHtml(updateStatementData.text)));
         } catch (IOException e) {
             try {
-                updateStatementForm.reject("lesson.statement.error.cantUpload");
                 Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-                return showEditStatement(updateStatementForm, lesson, allowedLanguages);
+                return showEditStatement(updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
             } catch (IOException e2) {
                 return notFound();
             }
@@ -172,7 +169,7 @@ public class LessonStatementController extends AbstractLessonController {
     public Result listStatementMediaFiles(long lessonId) throws LessonNotFoundException {
         Lesson lesson = lessonService.findLessonById(lessonId);
 
-        Form<UploadFileForm> uploadFileForm = Form.form(UploadFileForm.class);
+        Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
         List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(IdentityUtils.getUserJid(), lesson.getJid());
 
@@ -199,12 +196,11 @@ public class LessonStatementController extends AbstractLessonController {
             try {
                 lessonService.uploadStatementMediaFile(IdentityUtils.getUserJid(), lesson.getJid(), mediaFile, file.getFilename());
             } catch (IOException e) {
-                Form<UploadFileForm> form = Form.form(UploadFileForm.class);
-                form.reject("lesson.statement.error.cantUploadMedia");
+                Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
                 List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(IdentityUtils.getUserJid(), lesson.getJid());
 
-                return showListStatementMediaFiles(form, lesson, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
@@ -218,12 +214,11 @@ public class LessonStatementController extends AbstractLessonController {
             try {
                 lessonService.uploadStatementMediaFileZipped(IdentityUtils.getUserJid(), lesson.getJid(), mediaFile);
             } catch (IOException e) {
-                Form<UploadFileForm> form = Form.form(UploadFileForm.class);
-                form.reject("lesson.statement.error.cantUploadMediaZipped");
+                Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
                 List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(IdentityUtils.getUserJid(), lesson.getJid());
 
-                return showListStatementMediaFiles(form, lesson, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
@@ -233,6 +228,7 @@ public class LessonStatementController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
+    @AddCSRFToken
     public Result listStatementLanguages(long lessonId) throws LessonNotFoundException {
         Lesson lesson = lessonService.findLessonById(lessonId);
 
@@ -251,13 +247,14 @@ public class LessonStatementController extends AbstractLessonController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, lesson.getId()));
-        template.markBreadcrumbLocation(Messages.get("lesson.statement.language.list"), routes.LessonStatementController.listStatementLanguages(lesson.getId()));
-        template.setPageTitle("Lesson - Statement Languages");
+        template.markBreadcrumbLocation("Statement languages", routes.LessonStatementController.listStatementLanguages(lesson.getId()));
+        template.setPageTitle("Lesson - Statement languages");
 
         return renderTemplate(template, lessonService, lesson);
     }
 
     @Transactional
+    @RequireCSRFCheck
     public Result postAddStatementLanguage(long lessonId) throws LessonNotFoundException {
         Lesson lesson = lessonService.findLessonById(lessonId);
 
@@ -269,7 +266,7 @@ public class LessonStatementController extends AbstractLessonController {
 
         String languageCode;
         try {
-            languageCode = DynamicForm.form().bindFromRequest().get("langCode");
+            languageCode = formFactory.form().bindFromRequest().get("langCode");
             if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
                 // TODO should use form so it can be rejected
                 throw new IllegalStateException("Languages is not from list.");
@@ -364,9 +361,9 @@ public class LessonStatementController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editStatementView.render(updateStatementForm, lesson.getId()));
         appendStatementLanguageSelection(template, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
-        template.markBreadcrumbLocation(Messages.get("lesson.statement.update"), routes.LessonStatementController.editStatement(lesson.getId()));
+        template.markBreadcrumbLocation("Update statement", routes.LessonStatementController.editStatement(lesson.getId()));
 
-        template.setPageTitle("Lesson - Update Statement");
+        template.setPageTitle("Lesson - Update statement");
 
         return renderTemplate(template, lessonService, lesson);
     }
@@ -374,26 +371,26 @@ public class LessonStatementController extends AbstractLessonController {
     private Result showListStatementMediaFiles(Form<UploadFileForm> uploadFileForm, Lesson lesson, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listStatementMediaFilesView.render(uploadFileForm, lesson.getId(), mediaFiles, isAllowedToUploadMediaFiles));
-        template.markBreadcrumbLocation(Messages.get("lesson.statement.media.list"), routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
-        template.setPageTitle("Lesson - Statement - List Media");
+        template.markBreadcrumbLocation("Media files", routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
+        template.setPageTitle("Lesson - Statement - Media files");
 
         return renderTemplate(template, lessonService, lesson);
     }
 
     protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
-        template.addSecondaryTab(Messages.get("commons.view"), routes.LessonStatementController.viewStatement(lesson.getId()));
+        template.addSecondaryTab("View", routes.LessonStatementController.viewStatement(lesson.getId()));
 
         if (LessonControllerUtils.isAllowedToUpdateStatement(lessonService, lesson)) {
-            template.addSecondaryTab(Messages.get("commons.update"), routes.LessonStatementController.editStatement(lesson.getId()));
+            template.addSecondaryTab("Update", routes.LessonStatementController.editStatement(lesson.getId()));
         }
 
-        template.addSecondaryTab(Messages.get("lesson.statement.media"), routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
+        template.addSecondaryTab("Media", routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
 
         if (LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
-            template.addSecondaryTab(Messages.get("lesson.statement.language"), routes.LessonStatementController.listStatementLanguages(lesson.getId()));
+            template.addSecondaryTab("Languages", routes.LessonStatementController.listStatementLanguages(lesson.getId()));
         }
 
-        template.markBreadcrumbLocation(Messages.get("lesson.statement"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToStatement(lesson.getId()));
+        template.markBreadcrumbLocation("Statements", org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToStatement(lesson.getId()));
 
         return super.renderTemplate(template, lessonService, lesson);
     }

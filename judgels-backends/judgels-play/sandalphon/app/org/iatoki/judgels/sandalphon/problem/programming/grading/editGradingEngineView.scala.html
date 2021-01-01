@@ -1,4 +1,3 @@
-@import play.i18n.Messages
 @import scala.collection.JavaConverters._
 @import org.iatoki.judgels.sandalphon.problem.base.Problem
 @import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineEditForm
@@ -12,7 +11,7 @@
 @b3.form(routes.ProgrammingProblemGradingController.postEditGradingEngine(problem.getId)) {
     @helper.CSRF.formField
 
-    @b3.select(gradingEngineEditForm("gradingEngineName"), GradingEngineRegistry.getInstance().getNamesMap.asScala.toSeq, '_label -> Messages.get("problem.programming.gradingEngine"), '_help -> Messages.get("problem.programming.help.changeGradingEngine"))
+    @b3.select(gradingEngineEditForm("gradingEngineName"), GradingEngineRegistry.getInstance().getNamesMap.asScala.toSeq, '_label -> "Grading engine", '_help -> "Changing grading engine will reset grading config")
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+    @b3.submit('class -> "btn btn-primary") { Update }
 }

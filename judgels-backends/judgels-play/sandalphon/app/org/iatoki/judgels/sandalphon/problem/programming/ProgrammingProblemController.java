@@ -17,14 +17,10 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemController extends AbstractProgrammingProblemController {
-
-    private static final String PROBLEM = "problem";
-
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
@@ -41,7 +37,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
             return badRequest();
         }
 
-        Form<ProgrammingProblemCreateForm> form = Form.form(ProgrammingProblemCreateForm.class);
+        Form<ProgrammingProblemCreateForm> form = formFactory.form(ProgrammingProblemCreateForm.class);
 
         return showCreateProgrammingProblem(form);
     }
@@ -53,7 +49,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
             return badRequest();
         }
 
-        Form<ProgrammingProblemCreateForm> programmingProblemCreateForm = Form.form(ProgrammingProblemCreateForm.class).bindFromRequest();
+        Form<ProgrammingProblemCreateForm> programmingProblemCreateForm = formFactory.form(ProgrammingProblemCreateForm.class).bindFromRequest();
 
         if (formHasErrors(programmingProblemCreateForm)) {
             return showCreateProgrammingProblem(programmingProblemCreateForm);
@@ -75,8 +71,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
             problemService.updateStatement(null, problem.getJid(), languageCode, statement);
             programmingProblemService.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
         } catch (IOException e) {
-            programmingProblemCreateForm.reject("problem.programming.error.cantCreate");
-            return showCreateProgrammingProblem(programmingProblemCreateForm);
+            return showCreateProgrammingProblem(programmingProblemCreateForm.withGlobalError("Error creating programming problem."));
         }
 
         problemService.initRepository(IdentityUtils.getUserJid(), problem.getJid());
@@ -98,8 +93,8 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
     private Result showCreateProgrammingProblem(Form<ProgrammingProblemCreateForm> programmingProblemCreateForm) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(createProgrammingProblemView.render(programmingProblemCreateForm, ProblemControllerUtils.getJustCreatedProblemSlug(), ProblemControllerUtils.getJustCreatedProblemAdditionalNote(), ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
-        template.setMainTitle(Messages.get("problem.programming.create"));
-        template.markBreadcrumbLocation(Messages.get("problem.problems"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());
+        template.setMainTitle("Create programming problem");
+        template.markBreadcrumbLocation("Problems", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());
         template.setPageTitle("Programming Problem - Create");
 
         return renderTemplate(template);

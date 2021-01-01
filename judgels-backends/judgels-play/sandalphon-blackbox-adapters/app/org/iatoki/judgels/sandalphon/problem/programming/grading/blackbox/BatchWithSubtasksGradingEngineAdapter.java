@@ -13,6 +13,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.TokilibFile;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.batchWithSubtasksGradingConfigView;
 import play.api.mvc.Call;
 import play.data.Form;
+import play.data.FormFactory;
 import play.twirl.api.Html;
 
 import java.util.Collections;
@@ -23,7 +24,7 @@ import java.util.Set;
 public final class BatchWithSubtasksGradingEngineAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithTokilibFormat {
 
     @Override
-    public Form<?> createFormFromConfig(GradingConfig config) {
+    public Form<?> createFormFromConfig(FormFactory formFactory, GradingConfig config) {
         BatchWithSubtasksGradingConfigForm form = new BatchWithSubtasksGradingConfigForm();
         BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
         fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
@@ -34,7 +35,7 @@ public final class BatchWithSubtasksGradingEngineAdapter extends SingleSourceFil
             form.customScorer = castConfig.getCustomScorer().get();
         }
 
-        return Form.form(BatchWithSubtasksGradingConfigForm.class).fill(form);
+        return formFactory.form(BatchWithSubtasksGradingConfigForm.class).fill(form);
     }
 
     @Override
@@ -170,8 +171,8 @@ public final class BatchWithSubtasksGradingEngineAdapter extends SingleSourceFil
     }
 
     @Override
-    public Form<?> createEmptyForm() {
-        return Form.form(BatchWithSubtasksGradingConfigForm.class);
+    public Form<?> createEmptyForm(FormFactory formFactory) {
+        return formFactory.form(BatchWithSubtasksGradingConfigForm.class);
     }
 
     @Override

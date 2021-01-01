@@ -1,4 +1,3 @@
-@import play.i18n.Messages
 @import org.iatoki.judgels.sandalphon.problem.base.statement.routes
 @import org.iatoki.judgels.FileInfo
 @import org.iatoki.judgels.play.JudgelsPlayUtils
@@ -10,39 +9,39 @@
 
 @if(isAllowedToUploadMediaFiles) {
 
-    <h3>@Messages.get("problem.file.uploadNew")</h3>
+    <h3>Upload new</h3>
 
     @b3.form(routes.ProblemStatementController.postUploadStatementMediaFiles(problemId), 'enctype -> "multipart/form-data") {
         @helper.CSRF.formField
 
-        @b3.file(uploadFileForm("file"), '_label -> Messages.get("problem.file.asSingleFile"))
+        @b3.file(uploadFileForm("file"), '_label -> "As single file")
 
         @b3.submit('class -> "btn btn-primary") {
-            @Messages.get("commons.upload")
+            Upload
         }
     }
 
     @b3.form(routes.ProblemStatementController.postUploadStatementMediaFiles(problemId), 'enctype -> "multipart/form-data") {
         @helper.CSRF.formField
 
-        @b3.file(uploadFileForm("fileZipped"), '_label -> Messages.get("problem.file.asZipFile"))
+        @b3.file(uploadFileForm("fileZipped"), '_label -> "As zip file")
 
         @b3.submit('class -> "btn btn-primary") {
-            @Messages.get("commons.upload")
+            Upload
         }
     }
 
     <hr />
 }
 
-<h3>@Messages.get("problem.file")</h3>
+<h3>Files</h3>
 
 <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th>@Messages.get("problem.file.filename")</th>
-            <th>@Messages.get("problem.file.lastModified")</th>
-            <th>@Messages.get("problem.file.size")</th>
+            <th>Filename</th>
+            <th>Last modified</th>
+            <th>Size</th>
             <th></th>
         </tr>
     </thead>

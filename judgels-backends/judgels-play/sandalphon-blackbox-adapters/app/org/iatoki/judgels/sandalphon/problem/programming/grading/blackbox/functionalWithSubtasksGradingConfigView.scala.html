@@ -1,5 +1,4 @@
 @import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.FunctionalWithSubtasksGradingConfigForm
-@import play.i18n.Messages
 @import play.api.mvc.Call
 @import org.iatoki.judgels.FileInfo
 
@@ -460,7 +459,7 @@ $(document).ready(function() {
                                     @{i+1}
                                     </td>
                                     <td>
-                                        @b3.text(functionalWithSubtasksGradingConfigForm("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[play.api.i18n.Messages])
+                                        @b3.text(functionalWithSubtasksGradingConfigForm("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor(), implicitly[play.api.i18n.Messages])
                                     </td>
                                 </tr>
                             }
@@ -473,7 +472,7 @@ $(document).ready(function() {
 
     @b3.select(functionalWithSubtasksGradingConfigForm("customScorer"), helperFiles.map(f => f.getName -> f.getName).toSeq ++ Seq("(none)" -> "(None)"), '_label -> "Custom Scorer")
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+    @b3.submit('class -> "btn btn-primary") { Update }
 }
 
 

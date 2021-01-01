@@ -1,5 +1,4 @@
 @import judgels.sandalphon.api.problem.ProblemStatement
-@import play.i18n.Messages
 
 @(postSubmitUri: String, statement: ProblemStatement, itemsHtml: List[Html], reasonNotAllowedToSubmit: String)
 
@@ -38,7 +37,7 @@
         }
 
         @b3.submit('class -> "btn btn-primary") {
-            @Messages.get("Submit")
+            Submit
         }
     }
 }

@@ -1,5 +1,3 @@
-@import play.i18n.Messages
-
 @(avatarUrl: String, username: String, logoutLink: String)
 
 <div class="avatar clearfix">
@@ -14,7 +12,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-9 col-xs-11 avatar-menu">
-                        <a href="@logoutLink" class="btn btn-xs">@Messages.get("commons.profile.logout")</a>
+                        <a href="@logoutLink" class="btn btn-xs">Log out</a>
                     </div>
                 </div>
             </div>

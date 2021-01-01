@@ -28,14 +28,14 @@ public final class JophielClientController extends AbstractJophielClientControll
 
     @AddCSRFToken
     public Result login() {
-        Form<LoginForm> form = Form.form(LoginForm.class);
+        Form<LoginForm> form = formFactory.form(LoginForm.class);
         return showLogin(form);
     }
 
     @RequireCSRFCheck
     @Transactional
     public Result postLogin() {
-        Form<LoginForm> form = Form.form(LoginForm.class).bindFromRequest();
+        Form<LoginForm> form = formFactory.form(LoginForm.class).bindFromRequest();
         if (form.hasErrors()) {
             return showLogin(form);
         }

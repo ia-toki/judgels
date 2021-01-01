@@ -16,8 +16,12 @@ dependencies {
     api project(':judgels-play:commons')
     api project(':judgels-commons:judgels-service-persistence')
 
-    api "com.typesafe.play:play-java_${scalaVersion}:${playVersion}"
 
+    api "com.typesafe.play:play-guice_${scalaVersion}:${playVersion}"
+    api "com.typesafe.play:play-iteratees_${scalaVersion}:2.6.1"
+    api "com.typesafe.play:play-iteratees-reactive-streams_${scalaVersion}:2.6.1"
+    api "com.typesafe.play:play-java_${scalaVersion}:${playVersion}"
+    api "com.typesafe.play:play-java-forms_${scalaVersion}:${playVersion}"
     api "com.typesafe.play:play-java-jdbc_${scalaVersion}:${playVersion}"
     api "com.typesafe.play:play-ws_${scalaVersion}:${playVersion}"
     api ("com.typesafe.play:play-java-jpa_${scalaVersion}:${playVersion}") {
@@ -25,7 +29,7 @@ dependencies {
     }
     api "com.typesafe.play:filters-helpers_${scalaVersion}:${playVersion}"
 
-    api ("com.adrianhurt:play-bootstrap3_${scalaVersion}:0.4.4-P24") {
+    api ("com.adrianhurt:play-bootstrap_${scalaVersion}:1.6.1-P26-B3") {
         exclude group: 'org.webjars', module: 'jquery'
     }
     api 'com.googlecode.htmlcompressor:htmlcompressor:1.4'
