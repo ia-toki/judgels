@@ -31,7 +31,7 @@ public abstract class AbstractJudgelsAPIController extends Controller {
 
     protected static void authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
         Optional<String> authHeaderString = request().getHeaders().get("Authorization");
-        BasicAuthHeader authHeader = authHeaderString.isPresent() ? null : BasicAuthHeader.valueOf(authHeaderString.get());
+        BasicAuthHeader authHeader = authHeaderString.isPresent() ? BasicAuthHeader.valueOf(authHeaderString.get()) : null;
         clientChecker.check(authHeader);
     }
 
