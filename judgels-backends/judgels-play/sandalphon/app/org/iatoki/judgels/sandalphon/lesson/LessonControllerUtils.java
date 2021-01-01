@@ -48,9 +48,9 @@ public final class LessonControllerUtils {
         if (!file.exists()) {
             return Results.notFound();
         }
-        Controller.response().setContentType("application/x-download");
-        Controller.response().setHeader("Content-disposition", "attachment; filename=" + file.getName());
-        return Results.ok(file);
+        return Results.ok(file)
+                .as("application/x-download")
+                .withHeader("Content-disposition", "attachment; filename=" + file.getName());
     }
 
     public static boolean isAuthor(Lesson lesson) {

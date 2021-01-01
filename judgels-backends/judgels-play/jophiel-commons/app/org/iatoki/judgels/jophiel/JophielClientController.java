@@ -47,9 +47,9 @@ public final class JophielClientController extends AbstractJophielClientControll
             session = sessionService.logIn(Credentials.of(data.username, data.password));
         } catch (RemoteException e) {
             if (e.getError().errorName().equals(PlaySessionErrors.ROLE_NOT_ALLOWED.name())) {
-                form.reject("User role not allowed to log in.");
+                form = form.withGlobalError("User role not allowed to log in.");
             } else if (e.getStatus() == 403) {
-                form.reject("Username or password incorrect.");
+                form = form.withGlobalError("Username or password incorrect.");
             }
             return showLogin(form);
         }

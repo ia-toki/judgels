@@ -5,7 +5,7 @@
 @(generalConfig: GeneralConfig)(content: Html)
 
 @if(!JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-    @headerView()
+    @headerView(generalConfig)
 }
 
 <main class="container">

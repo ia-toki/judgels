@@ -168,7 +168,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
 
     @Override
     public BundleAnswer createBundleAnswerFromNewSubmission(DynamicForm data, String languageCode) {
-        return new BundleAnswer(data.data(), languageCode);
+        return new BundleAnswer(data.rawData(), languageCode);
     }
 
     @Override

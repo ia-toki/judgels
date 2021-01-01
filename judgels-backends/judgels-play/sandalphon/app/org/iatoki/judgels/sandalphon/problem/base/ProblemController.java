@@ -162,7 +162,7 @@ public final class ProblemController extends AbstractBaseProblemController {
         String languageCode = formFactory.form().bindFromRequest().get("langCode");
         ProblemControllerUtils.setCurrentStatementLanguage(languageCode);
 
-        return redirect(request().getHeader("Referer"));
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     private Result showCreateProblem(Form<ProblemCreateForm> problemCreateForm) {

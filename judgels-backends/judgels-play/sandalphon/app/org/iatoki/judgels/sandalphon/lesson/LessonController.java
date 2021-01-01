@@ -171,7 +171,7 @@ public final class LessonController extends AbstractLessonController {
         String languageCode = formFactory.form().bindFromRequest().get("langCode");
         LessonControllerUtils.setCurrentStatementLanguage(languageCode);
 
-        return redirect(request().getHeader("Referer"));
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     private Result showCreateLesson(Form<LessonCreateForm> lessonCreateForm) {

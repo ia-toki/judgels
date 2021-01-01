@@ -13,6 +13,7 @@ import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import judgels.service.api.client.BasicAuthHeader;
@@ -29,8 +30,8 @@ public abstract class AbstractJudgelsAPIController extends Controller {
     protected FormFactory formFactory;
 
     protected static void authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
-        String authHeaderString = request().getHeader("Authorization");
-        BasicAuthHeader authHeader = authHeaderString == null ? null : BasicAuthHeader.valueOf(authHeaderString);
+        Optional<String> authHeaderString = request().getHeaders().get("Authorization");
+        BasicAuthHeader authHeader = authHeaderString.isPresent() ? null : BasicAuthHeader.valueOf(authHeaderString.get());
         clientChecker.check(authHeader);
     }
 
@@ -46,11 +47,11 @@ public abstract class AbstractJudgelsAPIController extends Controller {
         String callback = dForm.get("callback");
 
         if (callback != null) {
-            response().setContentType("application/javascript");
-            return ok(callback + "(" + finalResponseBody + ");");
+            return ok(callback + "(" + finalResponseBody + ");")
+                    .as("application/javascript");
         } else {
-            response().setContentType("application/json");
-            return ok(finalResponseBody);
+            return ok(finalResponseBody)
+                    .as("application/json");
         }
     }
 
@@ -71,9 +72,9 @@ public abstract class AbstractJudgelsAPIController extends Controller {
 
             boolean modified = true;
 
-            if (request().hasHeader("If-Modified-Since")) {
+            if (request().getHeaders().get("If-Modified-Since").isPresent()) {
                 try {
-                    Date lastUpdate = sdf.parse(request().getHeader("If-Modified-Since"));
+                    Date lastUpdate = sdf.parse(request().getHeaders().get("If-Modified-Since").get());
                     if (imageFile.lastModified() <= lastUpdate.getTime()) {
                         modified = false;
                     }

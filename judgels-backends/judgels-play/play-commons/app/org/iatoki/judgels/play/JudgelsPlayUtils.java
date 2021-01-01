@@ -135,8 +135,8 @@ public final class JudgelsPlayUtils {
 
     public static UsernamePasswordCredentials parseBasicAuthFromRequest(Http.Request request) {
         UsernamePasswordCredentials credentials = null;
-        if ((request.hasHeader("Authorization")) && (request.getHeader("Authorization").startsWith("Basic "))) {
-            credentials = new UsernamePasswordCredentials(new String(Base64.decodeBase64(request.getHeader("Authorization").substring("Basic ".length()))));
+        if (request.getHeaders().get("Authorization").orElse("").startsWith("Basic ")) {
+            credentials = new UsernamePasswordCredentials(new String(Base64.decodeBase64(request.getHeaders().get("Authorization").get().substring("Basic ".length()))));
         }
 
         return credentials;
