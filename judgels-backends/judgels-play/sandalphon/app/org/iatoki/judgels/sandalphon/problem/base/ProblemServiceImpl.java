@@ -6,7 +6,9 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitCommit;
@@ -464,7 +466,15 @@ public final class ProblemServiceImpl implements ProblemService {
     }
 
     private static Problem createProblemFromModel(ProblemModel problemModel) {
-        return new Problem(problemModel.id, problemModel.jid, problemModel.slug, problemModel.createdBy, problemModel.additionalNote, new Date(problemModel.updatedAt.toEpochMilli()), getProblemType(problemModel));
+        return new Problem.Builder()
+                .id(problemModel.id)
+                .jid(problemModel.jid)
+                .slug(problemModel.slug)
+                .additionalNote(problemModel.additionalNote)
+                .authorJid(problemModel.createdBy)
+                .lastUpdateTime(problemModel.updatedAt)
+                .type(getProblemType(problemModel))
+                .build();
     }
 
     private static ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel problemPartnerModel) {

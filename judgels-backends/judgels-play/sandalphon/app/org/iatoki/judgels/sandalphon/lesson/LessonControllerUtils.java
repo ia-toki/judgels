@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import judgels.sandalphon.api.lesson.Lesson;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.iatoki.judgels.play.IdentityUtils;

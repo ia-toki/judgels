@@ -2,10 +2,10 @@ package org.iatoki.judgels.sandalphon.problem.base.partner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;

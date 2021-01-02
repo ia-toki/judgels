@@ -2,10 +2,10 @@ package org.iatoki.judgels.sandalphon.controllers.api.internal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import play.db.jpa.Transactional;

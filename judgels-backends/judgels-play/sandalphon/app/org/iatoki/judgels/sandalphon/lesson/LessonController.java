@@ -3,6 +3,8 @@ package org.iatoki.judgels.sandalphon.lesson;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -11,7 +13,6 @@ import org.iatoki.judgels.sandalphon.lesson.html.createLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.editLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.listLessonsView;
 import org.iatoki.judgels.sandalphon.lesson.html.viewLessonView;
-import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import play.data.Form;
@@ -81,7 +82,10 @@ public final class LessonController extends AbstractLessonController {
         Lesson lesson;
         try {
             lesson = lessonService.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-            lessonService.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode), LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode)));
+            lessonService.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
+                    .title(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode))
+                    .text(LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode))
+                    .build());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

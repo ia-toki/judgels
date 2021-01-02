@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;

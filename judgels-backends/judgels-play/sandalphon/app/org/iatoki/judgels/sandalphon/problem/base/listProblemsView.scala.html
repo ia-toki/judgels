@@ -1,5 +1,5 @@
+@import judgels.sandalphon.api.problem.Problem
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import org.iatoki.judgels.sandalphon.problem.base.Problem
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.search.html.searchView
@@ -28,7 +28,7 @@
                 <td>@problem.getId</td>
                 <td>@problem.getSlug</td>
                 <td>@JudgelsPlayUtils.getOnlyUsername(displayNamesMap.get(problem.getAuthorJid))</td>
-                <td class="table-col-updated-at"><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(problem.getLastUpdateTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(problem.getLastUpdateTime.getTime)</time></td>
+                <td class="table-col-updated-at"><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(problem.getLastUpdateTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(problem.getLastUpdateTime.toEpochMilli)</time></td>
                 <td class="text-center">
                     @if(isWriter) {
                         <a href="@routes.ProblemController.viewProblem(problem.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>

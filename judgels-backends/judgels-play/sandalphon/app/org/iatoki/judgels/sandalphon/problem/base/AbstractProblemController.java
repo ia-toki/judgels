@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;

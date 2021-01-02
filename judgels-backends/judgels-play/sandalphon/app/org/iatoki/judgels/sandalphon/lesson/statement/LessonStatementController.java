@@ -7,13 +7,14 @@ import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
@@ -64,7 +65,10 @@ public class LessonStatementController extends AbstractLessonController {
         try {
             statement = lessonService.getStatement(IdentityUtils.getUserJid(), lesson.getJid(), LessonControllerUtils.getCurrentStatementLanguage());
         } catch (IOException e) {
-            statement = new LessonStatement(ProblemStatementUtils.getDefaultTitle(LessonControllerUtils.getCurrentStatementLanguage()), LessonStatementUtils.getDefaultText(LessonControllerUtils.getCurrentStatementLanguage()));
+            statement = new LessonStatement.Builder()
+                    .title(ProblemStatementUtils.getDefaultTitle(LessonControllerUtils.getCurrentStatementLanguage()))
+                    .text(LessonStatementUtils.getDefaultText(LessonControllerUtils.getCurrentStatementLanguage()))
+                    .build();
         }
 
         HtmlTemplate template = getBaseHtmlTemplate();
@@ -151,7 +155,10 @@ public class LessonStatementController extends AbstractLessonController {
 
         try {
             UpdateStatementForm updateStatementData = updateStatementForm.get();
-            lessonService.updateStatement(IdentityUtils.getUserJid(), lesson.getJid(), LessonControllerUtils.getCurrentStatementLanguage(), new LessonStatement(updateStatementData.title, JudgelsPlayUtils.toSafeHtml(updateStatementData.text)));
+            lessonService.updateStatement(IdentityUtils.getUserJid(), lesson.getJid(), LessonControllerUtils.getCurrentStatementLanguage(), new LessonStatement.Builder()
+                    .title(updateStatementData.title)
+                    .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
+                    .build());
         } catch (IOException e) {
             try {
                 Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);

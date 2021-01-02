@@ -1,9 +1,9 @@
+@import judgels.sandalphon.api.lesson.Lesson;
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.search.html.searchView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
-@import org.iatoki.judgels.sandalphon.lesson.Lesson
 @import org.iatoki.judgels.sandalphon.lesson.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.play.Page
@@ -28,7 +28,7 @@
                 <td>@lesson.getId</td>
                 <td>@lesson.getSlug</td>
                 <td>@JudgelsPlayUtils.getOnlyUsername(displayNamesMap.get(lesson.getAuthorJid))</td>
-                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(lesson.getLastUpdateTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(lesson.getLastUpdateTime.getTime)</time></td>
+                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(lesson.getLastUpdateTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(lesson.getLastUpdateTime.toEpochMilli)</time></td>
                 <td class="text-center">
                     @if(isWriter) {
                         <a href="@routes.LessonController.viewLesson(lesson.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>

@@ -1,8 +1,5 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -13,19 +10,16 @@ import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.submission.programming.Submission;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapter;
 import org.iatoki.judgels.sandalphon.problem.programming.statement.blackbox.html.blackBoxViewStatementView;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.blackbox.html.blackBoxViewSubmissionView;
 import play.twirl.api.Html;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAdapter {
-    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
-
     @Override
     public Set<String> getSupportedGradingEngineNames() {
         String name = getClass().getSimpleName();
@@ -38,22 +32,12 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
     }
 
     @Override
-    public Html renderViewSubmission(ProgrammingSubmission submission, SubmissionSource submissionSource, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
-        String errorMessage = null;
+    public Html renderViewSubmission(Submission submission, SubmissionSource submissionSource, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
         GradingResultDetails details = null;
-        if (submission.getLatestVerdict().getCode().equals("!!!")) {
-            errorMessage = submission.getLatestDetails();
-            details = null;
-        } else if (submission.getLatestDetails() != null){
-            errorMessage = null;
-            try {
-                details = MAPPER.readValue(submission.getLatestDetails(), GradingResultDetails.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        if (submission.getLatestGrading().isPresent() && submission.getLatestGrading().get().getDetails().isPresent()) {
+            details = submission.getLatestGrading().get().getDetails().get();
         }
-
-        return blackBoxViewSubmissionView.render(submission, errorMessage, details, submissionSource.getSubmissionFiles(), authorName, problemAlias, problemName, gradingLanguageName, contestName);
+        return blackBoxViewSubmissionView.render(submission, details, submissionSource.getSubmissionFiles(), authorName, problemAlias, problemName, gradingLanguageName, contestName);
     }
 
     protected final void fillAbstractBlackBoxGradingFormPartsFromConfig(AbstractBlackBoxGradingConfigForm form, GradingConfig config) {

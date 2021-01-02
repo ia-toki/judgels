@@ -1,12 +1,13 @@
+@import judgels.sandalphon.api.submission.programming.Submission
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithSelectionFormView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
-@import org.iatoki.judgels.sandalphon.problem.programming.submission.{ProgrammingSubmission, routes}
-@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.sandalphon.problem.programming.submission.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.play.Page
 
-@(pageOfProgrammingSubmissions: Page[ProgrammingSubmission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
+@(pageOfProgrammingSubmissions: Page[Submission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
 
 <script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
 
@@ -41,16 +42,16 @@
     )
     <tbody>
 
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProgrammingSubmissions.getData.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProgrammingSubmissions.getData.map(s => s.getUserJid).toSeq)) { displayNamesMap =>
         @for(submission <- pageOfProgrammingSubmissions.getData) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
                 <td>@submission.getId</td>
-                <td>@displayNamesMap.get(submission.getAuthorJid)</td>
+                <td>@displayNamesMap.get(submission.getUserJid)</td>
                 <td>@gradingLanguageToNameMap.get(submission.getGradingLanguage)</td>
-                <td>@submission.getLatestVerdict.getName</td>
-                <td>@submission.getLatestScore</td>
-                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
+                <td>@submission.getLatestGrading.get.getVerdict.getName</td>
+                <td>@submission.getLatestGrading.get.getScore</td>
+                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.toEpochMilli)</time></td>
                 <td class="text-center">
                     <a href="@routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submission.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
                     <a href="@routes.ProgrammingProblemSubmissionController.regradeSubmission(problemId, submission.getId, pageIndex, orderBy, orderDir)" onclick="return confirm('Are you sure you want to regrade?');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>

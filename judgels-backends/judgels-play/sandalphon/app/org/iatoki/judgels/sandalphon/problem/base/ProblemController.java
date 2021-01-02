@@ -2,6 +2,8 @@ package org.iatoki.judgels.sandalphon.problem.base;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;

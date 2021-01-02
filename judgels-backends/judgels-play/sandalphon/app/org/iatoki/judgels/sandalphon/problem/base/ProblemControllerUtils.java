@@ -2,6 +2,7 @@ package org.iatoki.judgels.sandalphon.problem.base;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;

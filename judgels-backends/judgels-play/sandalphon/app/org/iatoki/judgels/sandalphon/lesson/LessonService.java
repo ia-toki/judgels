@@ -1,13 +1,14 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
 import com.google.inject.ImplementedBy;
+import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundException;
-import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 
 import java.io.File;
