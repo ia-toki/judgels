@@ -12,7 +12,7 @@
 @b3.form(routes.ProgrammingProblemGradingController.postUploadGradingHelperFiles(problemId), 'enctype->"multipart/form-data") {
     @helper.CSRF.formField
 
-    @b3.file(uploadFileForm("file"), '_label -> "As single file")
+    @b3.file(uploadFileForm("file"), '_label -> "As single file", 'class -> "form-control")
 
     @b3.submit('class -> "btn btn-primary") { Upload }
 }
@@ -20,7 +20,7 @@
 @b3.form(routes.ProgrammingProblemGradingController.postUploadGradingHelperFiles(problemId), 'enctype->"multipart/form-data") {
     @helper.CSRF.formField
 
-    @b3.file(uploadFileForm("fileZipped"), '_label -> "As zip file")
+    @b3.file(uploadFileForm("fileZipped"), '_label -> "As zip file", 'class -> "form-control")
 
     @b3.submit('class -> "btn btn-primary") { Upload }
 }
