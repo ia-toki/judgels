@@ -1,5 +1,5 @@
+@import judgels.persistence.api.Page
 @import play.api.mvc.Call
-@import org.iatoki.judgels.play.Page
 
 @(page: Page[_], orderBy: String, orderDir: String, filterString: String, listFunc: (scala.Long, String, String, String) =>Call)
 
@@ -7,12 +7,12 @@
 
 <div class="showing">
     <small>
-        Showing @{page.getCurrentFirstRowIndex + 1} - @{page.getCurrentLastRowIndex + 1} out of @page.getTotalRowsCount data.
+        Showing @{page.getPageIndex * page.getPageSize + 1} - @{page.getPageIndex * page.getPageSize + page.getPage.size} out of @page.getTotalCount data.
     </small>
 </div>
 
 <ul class="pagination pagination-sm">
-    @if(page.hasPreviousPage) {
+    @if(page.getPageIndex > 0) {
         <li><a href="@newPageLink(0L)">&laquo;</a></li>
         <li><a href="@newPageLink(page.getPageIndex - 1)">&larr;</a></li>
     } else {
@@ -26,13 +26,13 @@
 
     <li class="active"><a>@(page.getPageIndex + 1)</a></li>
 
-    @for(i <- page.getPageIndex + 1 to math.min(page.getTotalPagesCount - 1, page.getPageIndex + 9)) {
+    @for(i <- page.getPageIndex + 1 to math.min((page.getTotalCount + page.getPageSize - 1) / page.getPageSize - 1, page.getPageIndex + 9)) {
         <li><a href="@newPageLink(i)">@(i + 1)</a></li>
     }
 
-    @if(page.hasNextPage) {
+    @if(page.getPageIndex + 1 < (page.getTotalCount + page.getPageSize - 1) / page.getPageSize) {
         <li><a href="@newPageLink(page.getPageIndex + 1)">&rarr;</a></li>
-        <li><a href="@newPageLink(page.getTotalPagesCount - 1)">&raquo;</a></li>
+        <li><a href="@newPageLink((page.getTotalCount + page.getPageSize - 1) / page.getPageSize - 1)">&raquo;</a></li>
     } else {
         <li class="disabled"><a>&rarr;</a></li>
         <li class="disabled"><a>&raquo;</a></li>

@@ -5,13 +5,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.GitProvider;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundException;
@@ -130,7 +131,12 @@ public final class LessonServiceImpl implements LessonService {
         List<LessonPartnerModel> lessonPartnerModels = lessonPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(LessonPartnerModel_.lessonJid, lessonJid), pageIndex, pageIndex * pageSize);
         List<LessonPartner> lessonPartners = Lists.transform(lessonPartnerModels, m -> createLessonPartnerFromModel(m));
 
-        return new Page<>(lessonPartners, totalRows, pageIndex, pageSize);
+        return new Page.Builder<LessonPartner>()
+                .page(lessonPartners)
+                .totalCount(totalRows)
+                .pageIndex(pageIndex)
+                .pageSize(pageSize)
+                .build();
     }
 
     @Override
@@ -166,7 +172,12 @@ public final class LessonServiceImpl implements LessonService {
             List<LessonModel> lessonModels = lessonDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
 
             List<Lesson> lessons = Lists.transform(lessonModels, m -> createLessonFromModel(m));
-            return new Page<>(lessons, totalRows, pageIndex, pageSize);
+            return new Page.Builder<Lesson>()
+                    .page(lessons)
+                    .totalCount(totalRows)
+                    .pageIndex(pageIndex)
+                    .pageSize(pageSize)
+                    .build();
         } else {
             List<String> lessonJidsWhereIsAuthor = lessonDao.getJidsByAuthorJid(userJid);
             List<String> lessonJidsWhereIsPartner = lessonPartnerDao.getLessonJidsByPartnerJid(userJid);
@@ -181,7 +192,12 @@ public final class LessonServiceImpl implements LessonService {
             List<LessonModel> lessonModels = lessonDao.findSortedByFiltersIn(orderBy, orderDir, filterString, ImmutableMap.of(LessonModel_.jid, allowedLessonJids), pageIndex * pageSize, pageSize);
 
             List<Lesson> lessons = Lists.transform(lessonModels, m -> createLessonFromModel(m));
-            return new Page<>(lessons, totalRows, pageIndex, pageSize);
+            return new Page.Builder<Lesson>()
+                    .page(lessons)
+                    .totalCount(totalRows)
+                    .pageIndex(pageIndex)
+                    .pageSize(pageSize)
+                    .build();
         }
 
     }

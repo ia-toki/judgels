@@ -18,6 +18,7 @@ import judgels.gabriel.api.OutputOnlyOverrides;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
+import judgels.persistence.api.Page;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
@@ -26,7 +27,6 @@ import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel_;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.BaseProgrammingGradingDao;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -121,7 +121,12 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
 
         List<Submission> submissions = Lists.transform(submissionModels, m -> createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
 
-        return new Page<>(submissions, totalRowsCount, pageIndex, pageSize);
+        return new Page.Builder<Submission>()
+                .page(submissions)
+                .totalCount(totalRowsCount)
+                .pageIndex(pageIndex)
+                .pageSize(pageSize)
+                .build();
     }
 
     @Override

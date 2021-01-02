@@ -2,12 +2,10 @@ package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.Page;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingResult;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BaseBundleGradingDao;
@@ -119,7 +117,12 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
 
         List<BundleSubmission> submissions = Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
 
-        return new Page<>(submissions, totalRowsCount, pageIndex, pageSize);
+        return new Page.Builder<BundleSubmission>()
+                .page(submissions)
+                .totalCount(totalRowsCount)
+                .pageIndex(pageIndex)
+                .pageSize(pageSize)
+                .build();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
+import judgels.persistence.api.Page;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import play.data.DynamicForm;
 

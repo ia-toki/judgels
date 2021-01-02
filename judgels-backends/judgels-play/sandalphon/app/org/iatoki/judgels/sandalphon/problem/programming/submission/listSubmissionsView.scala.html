@@ -1,3 +1,4 @@
+@import judgels.persistence.api.Page
 @import judgels.sandalphon.api.submission.programming.Submission
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
@@ -5,7 +6,6 @@
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.problem.programming.submission.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
-@import org.iatoki.judgels.play.Page
 
 @(pageOfProgrammingSubmissions: Page[Submission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
 
@@ -42,8 +42,8 @@
     )
     <tbody>
 
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProgrammingSubmissions.getData.map(s => s.getUserJid).toSeq)) { displayNamesMap =>
-        @for(submission <- pageOfProgrammingSubmissions.getData) {
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProgrammingSubmissions.getPage.map(s => s.getUserJid).toSeq)) { displayNamesMap =>
+        @for(submission <- pageOfProgrammingSubmissions.getPage) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
                 <td>@submission.getId</td>

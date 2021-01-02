@@ -1,3 +1,4 @@
+@import judgels.persistence.api.Page;
 @import judgels.sandalphon.api.lesson.Lesson;
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
@@ -6,7 +7,6 @@
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.lesson.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
-@import org.iatoki.judgels.play.Page
 
 @(pageOfLessons: Page[Lesson], orderBy: String, orderDir: String, filterString: String, isWriter: Boolean)
 
@@ -22,8 +22,8 @@
         "updatedAt" -> "Last update time"
     )
     <tbody>
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfLessons.getData.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
-        @for(lesson <- pageOfLessons.getData) {
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfLessons.getPage.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
+        @for(lesson <- pageOfLessons.getPage) {
             <tr>
                 <td>@lesson.getId</td>
                 <td>@lesson.getSlug</td>

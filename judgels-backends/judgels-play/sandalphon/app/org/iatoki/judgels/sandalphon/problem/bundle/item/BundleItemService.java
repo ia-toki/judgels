@@ -1,10 +1,10 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.play.Page;
 
 import java.io.IOException;
 import java.util.List;
+import judgels.persistence.api.Page;
 
 @ImplementedBy(BundleItemServiceImpl.class)
 public interface BundleItemService {

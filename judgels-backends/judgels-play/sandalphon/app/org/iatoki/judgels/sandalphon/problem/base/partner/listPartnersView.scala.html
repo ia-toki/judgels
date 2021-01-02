@@ -1,9 +1,9 @@
+@import judgels.persistence.api.Page
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.problem.base.partner.routes
-@import org.iatoki.judgels.play.Page
 @import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner
 
 @(problemId: Long, pageOfProblemPartners: Page[ProblemPartner], orderBy: String, orderDir: String)
@@ -16,8 +16,8 @@
         "partnerJid" -> "Name"
     )
     <tbody>
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProblemPartners.getData.map(s => s.getPartnerJid).toSeq)) { displayNamesMap =>
-        @for(partner <- pageOfProblemPartners.getData) {
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProblemPartners.getPage.map(s => s.getPartnerJid).toSeq)) { displayNamesMap =>
+        @for(partner <- pageOfProblemPartners.getPage) {
             <tr>
                 <td>@partner.getId</td>
                 <td>@displayNamesMap.get(partner.getPartnerJid)</td>

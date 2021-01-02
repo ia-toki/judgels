@@ -2,8 +2,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.SubmissionSource;
+import judgels.persistence.api.Page;
 import judgels.sandalphon.api.submission.programming.Submission;
-import org.iatoki.judgels.play.Page;
 
 import java.util.List;
 import java.util.Set;
