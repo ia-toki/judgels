@@ -2,13 +2,13 @@
 @import judgels.gabriel.api.OutputOnlyOverrides
 @import judgels.gabriel.api.SourceFile
 @import judgels.gabriel.api.SubmissionSource
+@import judgels.sandalphon.api.submission.programming.Submission
 @import org.iatoki.judgels.play.JudgelsPlayUtils
-@import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission
 @import org.apache.commons.io.IOUtils
 
-@(programmingSubmission: ProgrammingSubmission, errorMessage: String, details: GradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
+@(submission: Submission, details: GradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
 
-<h3>Submission #@programmingSubmission.getId</h3>
+<h3>Submission #@submission.getId</h3>
 
 <h4>General Info</h4>
 <div class="panel panel-default">
@@ -36,28 +36,28 @@
                     <td>Language</td><td>@gradingLanguageName</td>
                 </tr>
                 <tr>
-                    <td>Verdict</td><td>@programmingSubmission.getLatestVerdict.getName</td>
+                    <td>Verdict</td><td>@submission.getLatestGrading.get.getVerdict.getName</td>
                 </tr>
                 <tr>
-                    <td>Score</td><td>@programmingSubmission.getLatestScore</td>
+                    <td>Score</td><td>@submission.getLatestGrading.get.getScore</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(programmingSubmission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(programmingSubmission.getTime.getTime)</time></td>
+                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.toEpochMilli)</time></td>
                 </tr>
                 <tr>
-                    <td>JID</td><td>@programmingSubmission.getJid</td>
+                    <td>JID</td><td>@submission.getJid</td>
                 </tr>
                 <tr>
-                    <td>Grading JID</td><td>@programmingSubmission.getLatestGradingJid</td>
+                    <td>Grading JID</td><td>@submission.getLatestGrading.get.getJid</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
 
-@if(errorMessage != null) {
+@if(details != null && details.getErrorMessage.isPresent) {
     <h4>Error Message</h4>
-    <pre>@errorMessage</pre>
+    <pre>@details.getErrorMessage.get</pre>
 }
 
 @if(details != null && details.getSubtaskResults.size >= 1 && details.getSubtaskResults.get(0).getId != -1) {

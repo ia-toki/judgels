@@ -1,6 +1,7 @@
 package org.iatoki.judgels.play;
 
 import controllers.routes;
+import play.mvc.Http.Cookie;
 import play.mvc.Result;
 
 import javax.inject.Singleton;
@@ -21,23 +22,23 @@ public final class JudgelsController extends AbstractJudgelsController {
     }
 
     public Result showSidebar() {
-        response().setCookie("sidebar", "true");
-        return redirect(request().getHeader("Referer"));
+        response().setCookie(Cookie.builder("sidebar", "true").build());
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     public Result hideSidebar() {
-        response().setCookie("sidebar", "false");
-        return redirect(request().getHeader("Referer"));
+        response().setCookie(Cookie.builder("sidebar", "false").build());
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     public Result enterFullscreen() {
-        response().setCookie("fullscreen", "true");
-        return redirect(request().getHeader("Referer"));
+        response().setCookie(Cookie.builder("fullscreen", "true").build());
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     public Result exitFullscreen() {
-        response().setCookie("fullscreen", "false");
-        return redirect(request().getHeader("Referer"));
+        response().setCookie(Cookie.builder("fullscreen", "false").build());
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     public Result checkHealth() {

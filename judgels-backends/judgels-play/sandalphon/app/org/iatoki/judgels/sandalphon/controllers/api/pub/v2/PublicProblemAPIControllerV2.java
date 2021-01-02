@@ -1,8 +1,8 @@
 package org.iatoki.judgels.sandalphon.controllers.api.pub.v2;
 
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import play.db.jpa.Transactional;
 import play.mvc.Result;

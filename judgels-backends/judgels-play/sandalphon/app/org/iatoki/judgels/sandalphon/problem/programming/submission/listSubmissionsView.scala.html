@@ -1,15 +1,13 @@
+@import judgels.persistence.api.Page
+@import judgels.sandalphon.api.submission.programming.Submission
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import play.i18n.Messages
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithSelectionFormView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
-@import org.iatoki.judgels.sandalphon.problem.programming.submission.{ProgrammingSubmission, routes}
-@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.sandalphon.problem.programming.submission.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(pageOfProgrammingSubmissions: Page[ProgrammingSubmission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
-
-@import scala.collection.JavaConversions
+@(pageOfProgrammingSubmissions: Page[Submission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
 
 <script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
 
@@ -35,25 +33,25 @@
 
 @tableView() {
     @tableHeadersWithSelectionFormView(pageOfProgrammingSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
-        "id" -> Messages.get("commons.id"),
-        "createdBy" -> Messages.get("problem.programming.submission.author"),
-        "gradingLanguage" -> Messages.get("problem.programming.submission.gradingLanguage"),
-        "verdictName" -> Messages.get("problem.programming.submission.verdict"),
-        "score" -> Messages.get("problem.programming.submission.score"),
-        "createdAt" -> Messages.get("problem.programming.submission.time")
+        "id" -> "ID",
+        "createdBy" -> "Author",
+        "gradingLanguage" -> "Grading language",
+        "verdictName" -> "Verdict",
+        "score" -> "Score",
+        "createdAt" -> "Time"
     )
     <tbody>
 
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfProgrammingSubmissions.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
-        @for(submission <- pageOfProgrammingSubmissions.getData) {
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProgrammingSubmissions.getPage.map(s => s.getUserJid).toSeq)) { displayNamesMap =>
+        @for(submission <- pageOfProgrammingSubmissions.getPage) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
                 <td>@submission.getId</td>
-                <td>@displayNamesMap.get(submission.getAuthorJid)</td>
+                <td>@displayNamesMap.get(submission.getUserJid)</td>
                 <td>@gradingLanguageToNameMap.get(submission.getGradingLanguage)</td>
-                <td>@submission.getLatestVerdict.getName</td>
-                <td>@submission.getLatestScore</td>
-                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
+                <td>@submission.getLatestGrading.get.getVerdict.getName</td>
+                <td>@submission.getLatestGrading.get.getScore</td>
+                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.toEpochMilli)</time></td>
                 <td class="text-center">
                     <a href="@routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submission.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
                     <a href="@routes.ProgrammingProblemSubmissionController.regradeSubmission(problemId, submission.getId, pageIndex, orderBy, orderDir)" onclick="return confirm('Are you sure you want to regrade?');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>

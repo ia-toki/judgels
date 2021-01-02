@@ -12,7 +12,16 @@ import javax.persistence.Table;
 public final class ProgrammingGradingModel extends AbstractProgrammingGradingModel {
     public ProgrammingGradingModel() {}
 
-    public ProgrammingGradingModel(String submissionJid, String verdictCode, String verdictName, int score) {
+    public ProgrammingGradingModel(
+            long id,
+            String jid,
+            String submissionJid,
+            String verdictCode,
+            String verdictName,
+            int score) {
+
+        this.id = id;
+        this.jid = jid;
         this.submissionJid = submissionJid;
         this.verdictCode = verdictCode;
         this.verdictName = verdictName;

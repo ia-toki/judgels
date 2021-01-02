@@ -12,6 +12,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWit
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.interactiveGradingConfigView;
 import play.api.mvc.Call;
 import play.data.Form;
+import play.data.FormFactory;
 import play.twirl.api.Html;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 public final class InteractiveGradingEngineAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithAutoPopulation {
     @Override
-    public Form<?> createFormFromConfig(GradingConfig config) {
+    public Form<?> createFormFromConfig(FormFactory formFactory, GradingConfig config) {
         InteractiveGradingConfigForm form = new InteractiveGradingConfigForm();
         InteractiveGradingConfig castConfig = (InteractiveGradingConfig) config;
         fillSingleSourceFileWithoutSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
@@ -30,12 +31,12 @@ public final class InteractiveGradingEngineAdapter extends SingleSourceFileWitho
             form.communicator = castConfig.getCommunicator().get();
         }
 
-        return Form.form(InteractiveGradingConfigForm.class).fill(form);
+        return formFactory.form(InteractiveGradingConfigForm.class).fill(form);
     }
 
     @Override
-    public Form<?> createEmptyForm() {
-        return Form.form(InteractiveGradingConfigForm.class);
+    public Form<?> createEmptyForm(FormFactory formFactory) {
+        return formFactory.form(InteractiveGradingConfigForm.class);
     }
 
     @Override

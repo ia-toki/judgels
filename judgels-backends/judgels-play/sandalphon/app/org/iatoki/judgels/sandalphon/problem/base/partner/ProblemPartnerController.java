@@ -2,16 +2,15 @@ package org.iatoki.judgels.sandalphon.problem.base.partner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.iatoki.judgels.play.Page;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.partner.html.listPartnersView;
 import play.db.jpa.Transactional;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
@@ -43,8 +42,8 @@ public class ProblemPartnerController extends AbstractProblemController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listPartnersView.render(problem.getId(), pageOfProblemPartners, orderBy, orderDir));
-        template.setSecondaryTitle(Messages.get("problem.partner.list"));
-        template.addSecondaryButton(Messages.get("problem.partner.add"), routes.ProblemPartnerController.addPartner(problem.getId()));
+        template.setSecondaryTitle("Partners");
+        template.addSecondaryButton("Add partner", routes.ProblemPartnerController.addPartner(problem.getId()));
         template.setPageTitle("Problem - Partners");
 
         return renderPartnerTemplate(template, problemService, problem);

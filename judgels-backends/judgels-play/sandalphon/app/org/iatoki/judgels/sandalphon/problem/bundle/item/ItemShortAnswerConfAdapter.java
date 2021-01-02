@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.itemShortAnswerConfView;
 import play.api.mvc.Call;
 import play.data.Form;
-import play.i18n.Messages;
+import play.data.FormFactory;
 import play.mvc.Http;
 import play.twirl.api.Html;
 
@@ -13,12 +13,12 @@ import java.util.regex.PatternSyntaxException;
 
 public final class ItemShortAnswerConfAdapter implements BundleItemConfAdapter {
     @Override
-    public Form generateForm() {
-        return Form.form(ItemShortAnswerConfForm.class);
+    public Form generateForm(FormFactory formFactory) {
+        return formFactory.form(ItemShortAnswerConfForm.class);
     }
 
     @Override
-    public Form generateForm(String conf, String meta) {
+    public Form generateForm(FormFactory formFactory, String conf, String meta) {
         ItemShortAnswerConf itemConf = new Gson().fromJson(conf, ItemShortAnswerConf.class);
         ItemShortAnswerConfForm itemForm = new ItemShortAnswerConfForm();
         itemForm.statement = itemConf.statement;
@@ -32,7 +32,7 @@ public final class ItemShortAnswerConfAdapter implements BundleItemConfAdapter {
         itemForm.inputValidationRegex = itemConf.inputValidationRegex;
         itemForm.gradingRegex = itemConf.gradingRegex;
 
-        return Form.form(ItemShortAnswerConfForm.class).fill(itemForm);
+        return formFactory.form(ItemShortAnswerConfForm.class).fill(itemForm);
     }
 
     @Override
@@ -41,15 +41,15 @@ public final class ItemShortAnswerConfAdapter implements BundleItemConfAdapter {
     }
 
     @Override
-    public Form bindFormFromRequest(Http.Request request) {
-        Form form = Form.form(ItemShortAnswerConfForm.class).bindFromRequest();
+    public Form bindFormFromRequest(FormFactory formFactory, Http.Request request) {
+        Form form = formFactory.form(ItemShortAnswerConfForm.class).bindFromRequest();
         if (!(form.hasErrors() || form.hasGlobalErrors())) {
             ItemShortAnswerConfForm confForm = ((Form<ItemShortAnswerConfForm>) form).get();
             if (!isRegexValid(confForm.inputValidationRegex)) {
-                form.reject(Messages.get("error.problem.bundle.item.shortAnswer.invalidInputValidationRegex"));
+                form = form.withGlobalError("The input validation regex is invalid");
             }
             if (!confForm.gradingRegex.isEmpty() && !isRegexValid(confForm.gradingRegex)) {
-                form.reject(Messages.get("error.problem.bundle.item.shortAnswer.invalidGradingRegex"));
+                form = form.withGlobalError("The grading regex is invalid.");
             }
         }
         return form;

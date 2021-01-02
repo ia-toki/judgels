@@ -8,10 +8,10 @@ import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -23,7 +23,6 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAd
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.resource.html.katexView;
 import play.db.jpa.Transactional;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
@@ -88,9 +87,9 @@ public final class ProgrammingProblemStatementController extends AbstractProgram
         String reasonNotAllowedToSubmit = null;
 
         if (!isAllowedToSubmitByPartner) {
-            reasonNotAllowedToSubmit = Messages.get("problem.programming.cantSubmit");
+            reasonNotAllowedToSubmit = "You are not allowed to submit.";
         } else if (!isClean) {
-            reasonNotAllowedToSubmit = Messages.get("problem.programming.cantSubmitNotClean");
+            reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
         }
 
         HtmlTemplate template = getBaseHtmlTemplate();
@@ -105,8 +104,8 @@ public final class ProgrammingProblemStatementController extends AbstractProgram
         }
 
         appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
-        template.markBreadcrumbLocation(Messages.get("problem.statement.view"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
-        template.setPageTitle("Problem - Update Statement");
+        template.markBreadcrumbLocation("View statement", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
+        template.setPageTitle("Problem - View statement");
 
         return renderStatementTemplate(template, problemService, problem);
     }

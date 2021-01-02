@@ -1,5 +1,4 @@
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemStatementConfForm
-@import play.i18n.Messages
 @import play.api.mvc.Call
 @import org.iatoki.judgels.play.template.html.formErrorView
 
@@ -15,8 +14,8 @@
 
     @helper.CSRF.formField
 
-    @b3.text(itemStatementConfForm("meta"), '_label -> Messages.get("problem.bundle.item.meta"))
-    @b3.textarea(itemStatementConfForm("statement"), '_label -> Messages.get("problem.bundle.item.statement.statement"), 'class -> "ckeditor")
+    @b3.text(itemStatementConfForm("meta"), '_label -> "Meta")
+    @b3.textarea(itemStatementConfForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
 
     @b3.submit('class -> "btn btn-primary") { @submitLabel }
 }

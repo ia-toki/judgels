@@ -1,5 +1,4 @@
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemMultipleChoiceConfForm
-@import play.i18n.Messages
 @import play.api.mvc.Call
 @import org.iatoki.judgels.play.template.html.formErrorView
 
@@ -83,7 +82,7 @@
 
             @for(i <- itemMultipleChoiceConfForm("choiceAliases").indexes.indices) {
                 addNewChoice();
-                fillChoice(@i, '@itemMultipleChoiceConfForm("choiceAliases[" + i + "]").value', '@Html(itemMultipleChoiceConfForm("choiceContents[" + i + "]").value)', @if(itemMultipleChoiceConfForm("isCorrects[" + i + "]").value != null && itemMultipleChoiceConfForm("isCorrects[" + i + "]").value) { true } else { false } );
+                fillChoice(@i, '@itemMultipleChoiceConfForm("choiceAliases[" + i + "]").getValue.get', '@Html(itemMultipleChoiceConfForm("choiceContents[" + i + "]").getValue.get)', @if(itemMultipleChoiceConfForm("isCorrects[" + i + "]").getValue.isPresent && itemMultipleChoiceConfForm("isCorrects[" + i + "]").getValue.get) { true } else { false } );
             }
 
         });
@@ -95,14 +94,14 @@
 
     @helper.CSRF.formField
 
-    @b3.text(itemMultipleChoiceConfForm("meta"), '_label -> Messages.get("problem.bundle.item.meta"))
-    @b3.textarea(itemMultipleChoiceConfForm("statement"), '_label -> Messages.get("problem.bundle.item.multipleChoice.statement"), 'class -> "ckeditor")
-    @b3.text(itemMultipleChoiceConfForm("score"), '_label -> Messages.get("problem.bundle.item.multipleChoice.score"))
-    @b3.text(itemMultipleChoiceConfForm("penalty"), '_label -> Messages.get("problem.bundle.item.multipleChoice.penalty"))
+    @b3.text(itemMultipleChoiceConfForm("meta"), '_label -> "Meta")
+    @b3.textarea(itemMultipleChoiceConfForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
+    @b3.text(itemMultipleChoiceConfForm("score"), '_label -> "Score")
+    @b3.text(itemMultipleChoiceConfForm("penalty"), '_label -> "Penalty")
 
     <div class="row">
         <div class="col-md-2">
-            <label class="control-label">@Messages.get("problem.bundle.item.multipleChoice.choices")</label>
+            <label class="control-label">Choices (no correct choice -> manual grading)</label>
         </div>
 
         <div class="col-md-10">
@@ -111,16 +110,16 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
-                                <th>@Messages.get("problem.bundle.item.multipleChoice.alias")</th>
-                                <th>@Messages.get("problem.bundle.item.multipleChoice.content")</th>
-                                <th>@Messages.get("problem.bundle.item.multipleChoice.isCorrect")</th>
+                                <th>Alias</th>
+                                <th>Content</th>
+                                <th>Correct?</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="choices-data">
                             <tr class="active">
                                 <td class="text-center">
-                                    <a id="choice-add" href="#" class="btn btn-primary">@Messages.get("problem.bundle.item.multipleChoice.addChoice")</a>
+                                    <a id="choice-add" href="#" class="btn btn-primary">Add choice</a>
                                 </td>
                                 <td></td>
                                 <td></td>

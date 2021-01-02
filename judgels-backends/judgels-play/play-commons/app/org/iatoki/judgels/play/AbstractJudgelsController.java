@@ -21,6 +21,7 @@ import org.iatoki.judgels.play.template.content.html.secondaryTabsLayout;
 import org.iatoki.judgels.play.template.content.html.secondaryTitleLayout;
 import org.iatoki.judgels.play.template.content.html.warningLayout;
 import play.data.Form;
+import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Context;
@@ -33,6 +34,9 @@ public abstract class AbstractJudgelsController extends Controller {
 
     @Inject
     protected GeneralConfig generalConfig;
+
+    @Inject
+    protected FormFactory formFactory;
 
     protected static boolean formHasErrors(Form form) {
         return form.hasErrors() || form.hasGlobalErrors();

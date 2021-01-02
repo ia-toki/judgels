@@ -1,4 +1,3 @@
-@import play.i18n.Messages
 @import play.api.mvc.Call
 
 @(pageIndex: Long, orderBy: String, orderDir: String, filterString: String, listFunc: (scala.Long, String, String, String) => Call)
@@ -9,5 +8,5 @@
         <input type="hidden" name="orderDir" value="@orderDir"/>
         <input type="search" class="form-control" name="filterString" value="@filterString">
     </div>
-    <button type="submit" class="btn btn-primary">@Messages.get("commons.search")</button>
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>

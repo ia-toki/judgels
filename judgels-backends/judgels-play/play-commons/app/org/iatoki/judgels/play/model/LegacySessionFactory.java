@@ -1,5 +1,6 @@
 package org.iatoki.judgels.play.model;
 
+import javax.inject.Inject;
 import org.hibernate.Cache;
 import org.hibernate.HibernateException;
 import org.hibernate.Metamodel;
@@ -14,7 +15,6 @@ import org.hibernate.engine.spi.FilterDefinition;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.stat.Statistics;
-import play.db.jpa.JPA;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -28,8 +28,12 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import play.db.jpa.JPAApi;
 
 public class LegacySessionFactory implements SessionFactory {
+    @Inject
+    private JPAApi jpaApi;
+
     @Override
     public SessionFactoryOptions getSessionFactoryOptions() {
         return null;
@@ -47,7 +51,7 @@ public class LegacySessionFactory implements SessionFactory {
 
     @Override
     public Session getCurrentSession() throws HibernateException {
-        return JPA.em().unwrap(Session.class);
+        return jpaApi.em().unwrap(Session.class);
     }
 
     @Override

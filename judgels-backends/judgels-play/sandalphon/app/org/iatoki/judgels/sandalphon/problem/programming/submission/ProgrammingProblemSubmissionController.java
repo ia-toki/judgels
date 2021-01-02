@@ -12,13 +12,14 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.submission.programming.Submission;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFileSystemProvider;
@@ -28,9 +29,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemServi
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.html.listSubmissionsView;
-import play.data.Form;
 import play.db.jpa.Transactional;
-import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -38,9 +37,6 @@ import play.mvc.Result;
 public final class ProgrammingProblemSubmissionController extends AbstractProgrammingProblemController {
 
     private static final long PAGE_SIZE = 20;
-    private static final String SUBMISSION = "submission";
-    private static final String PROBLEM = "problem";
-    private static final String PROGRAMMING_FILES = "programming_files";
 
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
@@ -107,12 +103,12 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             return notFound();
         }
 
-        Page<ProgrammingSubmission> pageOfProgrammingSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
+        Page<Submission> pageOfProgrammingSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, pageIndex, orderBy, orderDir));
-        template.markBreadcrumbLocation(Messages.get("problem.programming.submission.list"), routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId));
+        template.markBreadcrumbLocation("Submissions", routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
         return renderTemplate(template, problemService, problem);
@@ -126,7 +122,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             return notFound();
         }
 
-        ProgrammingSubmission programmingSubmission = programmingSubmissionService.findProgrammingSubmissionById(submissionId);
+        Submission programmingSubmission = programmingSubmissionService.findProgrammingSubmissionById(submissionId);
 
         String engine;
         try {
@@ -137,10 +133,10 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getAuthorJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getUserJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
 
-        template.markBreadcrumbLocation(Messages.get("problem.programming.submission.view"), routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
-        template.setPageTitle("Problem - View Submission");
+        template.markBreadcrumbLocation("View submission", routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
+        template.setPageTitle("Problem - View submission");
 
         return renderTemplate(template, problemService, problem);
     }
@@ -153,7 +149,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             return notFound();
         }
 
-        ProgrammingSubmission programmingSubmission = programmingSubmissionService.findProgrammingSubmissionById(submissionId);
+        Submission programmingSubmission = programmingSubmissionService.findProgrammingSubmissionById(submissionId);
         SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
         programmingSubmissionService.regrade(programmingSubmission.getJid(), submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
@@ -168,9 +164,9 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             return notFound();
         }
 
-        ListTableSelectionForm data = Form.form(ListTableSelectionForm.class).bindFromRequest().get();
+        ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest().get();
 
-        List<ProgrammingSubmission> programmingSubmissions;
+        List<Submission> programmingSubmissions;
 
         if (data.selectAll) {
             programmingSubmissions = programmingSubmissionService.getProgrammingSubmissionsByFilters(orderBy, orderDir, null, problem.getJid(), null);
@@ -180,7 +176,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
         }
 
-        for (ProgrammingSubmission programmingSubmission : programmingSubmissions) {
+        for (Submission programmingSubmission : programmingSubmissions) {
             SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
             programmingSubmissionService.regrade(programmingSubmission.getJid(), submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
         }
@@ -189,7 +185,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.markBreadcrumbLocation(Messages.get("problem.programming.submission"), org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToSubmissions(problem.getId()));
+        template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToSubmissions(problem.getId()));
 
         return super.renderTemplate(template, problemService, problem);
     }

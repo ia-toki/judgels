@@ -3,12 +3,12 @@ package org.iatoki.judgels.sandalphon.problem.bundle;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import play.db.jpa.Transactional;
@@ -16,9 +16,6 @@ import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemController extends AbstractBundleProblemController {
-
-    private static final String PROBLEM = "problem";
-
     private final BundleProblemService bundleProblemService;
     private final ProblemService problemService;
 

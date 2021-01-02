@@ -1,5 +1,4 @@
-@import org.iatoki.judgels.sandalphon.problem.base.Problem
-@import play.i18n.Messages
+@import judgels.sandalphon.api.problem.Problem
 @import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionEditForm
 @import org.iatoki.judgels.sandalphon.problem.programming.grading.routes
 @import judgels.gabriel.languages.GradingLanguageRegistry
@@ -16,25 +15,25 @@
 
       <div class="form-group">
 
-          <label class="control-label col-md-3">@Messages.get("problem.programming.allowedLanguages")</label>
+          <label class="control-label col-md-3">Allowed languages</label>
 
           <div class="col-md-9">
 
               <div class="checkbox">
                   <label>
-                      <input type="checkbox" id="isAllowedAll" name="isAllowedAll" value="true" @if(languageRestrictionEditForm("isAllowedAll").value && languageRestrictionEditForm("isAllowedAll").value.equals("true")){ checked="checked" }> @Messages.get("problem.programming.allowAll")
+                      <input type="checkbox" id="isAllowedAll" name="isAllowedAll" value="true" @if(languageRestrictionEditForm("isAllowedAll").getValue.isPresent && languageRestrictionEditForm("isAllowedAll").getValue.get.equals("true")){ checked="checked" }> Allow all
                   </label>
               </div>
 
               @for((k, v) <- GradingLanguageRegistry.getInstance().getVisibleNamesMap) {
                   <div class="checkbox">
                       <label>
-                          <input type="checkbox" class="allowedLanguageName" name="allowedLanguageNames[@k]" value="@k" @if(languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value && languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value.equals(k)){ checked="checked" }> @v
+                          <input type="checkbox" class="allowedLanguageName" name="allowedLanguageNames[@k]" value="@k" @if(languageRestrictionEditForm("allowedLanguageNames[" + k + "]").getValue.isPresent && languageRestrictionEditForm("allowedLanguageNames[" + k + "]").getValue.get.equals(k)){ checked="checked" }> @v
                       </label>
                   </div>
               }
           </div>
       </div>
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+    @b3.submit('class -> "btn btn-primary") { Update }
 }

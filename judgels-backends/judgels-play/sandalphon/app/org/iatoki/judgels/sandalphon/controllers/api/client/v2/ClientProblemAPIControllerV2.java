@@ -16,6 +16,7 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.jophiel.api.client.user.ClientUserService;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -27,12 +28,10 @@ import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemService;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
-import play.data.DynamicForm;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -107,7 +106,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
         GradingConfig config = getBlackBoxGradingConfig(problemJid, submissionConfig.getGradingEngine());
 
-        String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(problemJid, formFactory.form().bindFromRequest().get("language"));
 
         ProblemStatement statement = problemService.getStatement(null, problemJid, language);
         result.statement(statement);
@@ -133,7 +132,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return Results.notFound();
         }
 
-        String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(problemJid, formFactory.form().bindFromRequest().get("language"));
 
         ProblemStatement statement = problemService.getStatement(null, problemJid, language);
 
@@ -186,7 +185,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     public Result translateAllowedSlugToJids() {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        String userJid = DynamicForm.form().bindFromRequest().get("userJid");
+        String userJid = formFactory.form().bindFromRequest().get("userJid");
 
         Map<String, String> result = new HashMap<>();
 

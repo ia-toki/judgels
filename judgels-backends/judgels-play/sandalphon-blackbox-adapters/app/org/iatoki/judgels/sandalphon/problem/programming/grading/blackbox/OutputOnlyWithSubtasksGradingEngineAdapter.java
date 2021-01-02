@@ -13,6 +13,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.TokilibFile;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.outputOnlyWithSubtasksGradingConfigView;
 import play.api.mvc.Call;
 import play.data.Form;
+import play.data.FormFactory;
 import play.twirl.api.Html;
 
 import java.util.Collections;
@@ -23,7 +24,7 @@ import java.util.Set;
 public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithTokilibFormat {
 
     @Override
-    public Form<?> createFormFromConfig(GradingConfig config) {
+    public Form<?> createFormFromConfig(FormFactory formFactory, GradingConfig config) {
         OutputOnlyWithSubtasksGradingConfigForm form = new OutputOnlyWithSubtasksGradingConfigForm();
         OutputOnlyWithSubtasksGradingConfig castConfig = (OutputOnlyWithSubtasksGradingConfig) config;
         fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
@@ -34,7 +35,7 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
             form.customScorer = castConfig.getCustomScorer().get();
         }
 
-        return Form.form(OutputOnlyWithSubtasksGradingConfigForm.class).fill(form);
+        return formFactory.form(OutputOnlyWithSubtasksGradingConfigForm.class).fill(form);
     }
 
     @Override
@@ -165,8 +166,8 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
     }
 
     @Override
-    public Form<?> createEmptyForm() {
-        return Form.form(OutputOnlyWithSubtasksGradingConfigForm.class);
+    public Form<?> createEmptyForm(FormFactory formFactory) {
+        return formFactory.form(OutputOnlyWithSubtasksGradingConfigForm.class);
     }
 
     @Override

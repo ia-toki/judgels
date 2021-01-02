@@ -1,14 +1,12 @@
+@import judgels.persistence.api.Page;
+@import judgels.sandalphon.api.lesson.Lesson;
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import play.i18n.Messages
-@import scala.collection.JavaConversions
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.search.html.searchView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
-@import org.iatoki.judgels.sandalphon.lesson.Lesson
 @import org.iatoki.judgels.sandalphon.lesson.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
-@import org.iatoki.judgels.play.Page
 
 @(pageOfLessons: Page[Lesson], orderBy: String, orderDir: String, filterString: String, isWriter: Boolean)
 
@@ -18,19 +16,19 @@
 
 @tableView() {
     @tableHeadersView(pageOfLessons.getPageIndex, orderBy, orderDir, filterString, routes.LessonController.listLessons)(
-        "id" -> Messages.get("commons.id"),
-        "slug" -> Messages.get("lesson.slug"),
-        "createdBy" -> Messages.get("problem.author"),
-        "updatedAt" -> Messages.get("problem.lastUpdateTime")
+        "id" -> "ID",
+        "slug" -> "Slug",
+        "createdBy" -> "Author",
+        "updatedAt" -> "Last update time"
     )
     <tbody>
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfLessons.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
-        @for(lesson <- pageOfLessons.getData) {
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfLessons.getPage.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
+        @for(lesson <- pageOfLessons.getPage) {
             <tr>
                 <td>@lesson.getId</td>
                 <td>@lesson.getSlug</td>
                 <td>@JudgelsPlayUtils.getOnlyUsername(displayNamesMap.get(lesson.getAuthorJid))</td>
-                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(lesson.getLastUpdateTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(lesson.getLastUpdateTime.getTime)</time></td>
+                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(lesson.getLastUpdateTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(lesson.getLastUpdateTime.toEpochMilli)</time></td>
                 <td class="text-center">
                     @if(isWriter) {
                         <a href="@routes.LessonController.viewLesson(lesson.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>

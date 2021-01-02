@@ -5,13 +5,13 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.user.search.UserSearchService;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
@@ -23,15 +23,12 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public class LessonPartnerController extends AbstractLessonController {
 
     private static final long PAGE_SIZE = 20;
-    private static final String LESSON = "lesson";
-    private static final String PARTNER = "partner";
 
     private final UserSearchService userSearchService;
     private final LessonService lessonService;
@@ -59,9 +56,9 @@ public class LessonPartnerController extends AbstractLessonController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listPartnersView.render(lesson.getId(), pageOfLessonPartners, orderBy, orderDir));
-        template.setSecondaryTitle(Messages.get("lesson.partner.list"));
-        template.addSecondaryButton(Messages.get("lesson.partner.add"), routes.LessonPartnerController.addPartner(lesson.getId()));
-        template.markBreadcrumbLocation(Messages.get("lesson.partner.list"), routes.LessonPartnerController.viewPartners(lesson.getId()));
+        template.setSecondaryTitle("Partners");
+        template.addSecondaryButton("Add partner", routes.LessonPartnerController.addPartner(lesson.getId()));
+        template.markBreadcrumbLocation("Partners", routes.LessonPartnerController.viewPartners(lesson.getId()));
         template.setPageTitle("Lesson - Partners");
 
         return renderTemplate(template, lessonService, lesson);
@@ -76,8 +73,8 @@ public class LessonPartnerController extends AbstractLessonController {
             return notFound();
         }
 
-        Form<LessonPartnerUsernameForm> usernameForm = Form.form(LessonPartnerUsernameForm.class);
-        Form<LessonPartnerUpsertForm> lessonForm = Form.form(LessonPartnerUpsertForm.class);
+        Form<LessonPartnerUsernameForm> usernameForm = formFactory.form(LessonPartnerUsernameForm.class);
+        Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class);
 
         return showAddPartner(usernameForm, lessonForm, lesson);
     }
@@ -91,8 +88,8 @@ public class LessonPartnerController extends AbstractLessonController {
             return notFound();
         }
 
-        Form<LessonPartnerUsernameForm> usernameForm = Form.form(LessonPartnerUsernameForm.class).bindFromRequest();
-        Form<LessonPartnerUpsertForm> lessonForm = Form.form(LessonPartnerUpsertForm.class).bindFromRequest();
+        Form<LessonPartnerUsernameForm> usernameForm = formFactory.form(LessonPartnerUsernameForm.class).bindFromRequest();
+        Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).bindFromRequest();
 
         if (formHasErrors(usernameForm) || formHasErrors(lessonForm)) {
             return showAddPartner(usernameForm, lessonForm, lesson);
@@ -104,8 +101,7 @@ public class LessonPartnerController extends AbstractLessonController {
         Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
 
         if (!usernameToJidMap.containsKey(username)) {
-            usernameForm.reject("username", Messages.get("lesson.partner.usernameNotFound"));
-            return showAddPartner(usernameForm, lessonForm, lesson);
+            return showAddPartner(usernameForm.withError("username", "Username not found"), lessonForm, lesson);
         }
 
         String userJid = usernameToJidMap.get(username);
@@ -113,8 +109,7 @@ public class LessonPartnerController extends AbstractLessonController {
         JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
         if (lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)) {
-            usernameForm.reject("username", Messages.get("lesson.partner.already"));
-            return showAddPartner(usernameForm, lessonForm, lesson);
+            return showAddPartner(usernameForm.withError("username", "This user is already a partner."), lessonForm, lesson);
         }
 
         LessonPartnerConfig partnerConfig = new LessonPartnerConfigBuilder()
@@ -158,7 +153,7 @@ public class LessonPartnerController extends AbstractLessonController {
         lessonData.isAllowedToRestoreVersionHistory = lessonConfig.isAllowedToRestoreVersionHistory();
         lessonData.isAllowedToManageLessonClients = lessonConfig.isAllowedToManageLessonClients();
 
-        Form<LessonPartnerUpsertForm> lessonForm = Form.form(LessonPartnerUpsertForm.class).fill(lessonData);
+        Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).fill(lessonData);
 
         return showEditPartner(lessonForm, lesson, lessonPartner);
     }
@@ -174,7 +169,7 @@ public class LessonPartnerController extends AbstractLessonController {
 
         LessonPartner lessonPartner = lessonService.findLessonPartnerById(partnerId);
 
-        Form<LessonPartnerUpsertForm> lessonForm = Form.form(LessonPartnerUpsertForm.class).bindFromRequest();
+        Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).bindFromRequest();
 
         if (formHasErrors(lessonForm)) {
             return showEditPartner(lessonForm, lesson, lessonPartner);
@@ -203,9 +198,9 @@ public class LessonPartnerController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(addPartnerView.render(usernameForm, lessonForm, lesson, getUserAutocompleteAPIEndpoint()));
 
-        template.setSecondaryTitle(Messages.get("lesson.partner.add"));
-        template.markBreadcrumbLocation(Messages.get("lesson.partner.add"), routes.LessonPartnerController.addPartner(lesson.getId()));
-        template.setPageTitle("Lesson - Add Partner");
+        template.setSecondaryTitle("Add partner");
+        template.markBreadcrumbLocation("Add partner", routes.LessonPartnerController.addPartner(lesson.getId()));
+        template.setPageTitle("Lesson - Add partner");
 
         return renderTemplate(template, lessonService, lesson);
     }
@@ -214,15 +209,15 @@ public class LessonPartnerController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(lessonForm, lesson, lessonPartner));
 
-        template.setSecondaryTitle(Messages.get("lesson.partner.update") + ": " + JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getPartnerJid()));
-        template.markBreadcrumbLocation(Messages.get("lesson.partner.update"), routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
-        template.setPageTitle("Lesson - Update Partner");
+        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getPartnerJid()));
+        template.markBreadcrumbLocation("Update partner", routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
+        template.setPageTitle("Lesson - Update partner");
 
         return renderTemplate(template, lessonService, lesson);
     }
 
     protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
-        template.markBreadcrumbLocation(Messages.get("lesson.partner"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToPartners(lesson.getId()));
+        template.markBreadcrumbLocation("Partners", org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToPartners(lesson.getId()));
 
         return super.renderTemplate(template, lessonService, lesson);
     }

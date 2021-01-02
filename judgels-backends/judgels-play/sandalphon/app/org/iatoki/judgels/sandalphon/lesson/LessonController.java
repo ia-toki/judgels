@@ -3,30 +3,28 @@ package org.iatoki.judgels.sandalphon.lesson;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.html.createLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.editLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.listLessonsView;
 import org.iatoki.judgels.sandalphon.lesson.html.viewLessonView;
-import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public final class LessonController extends AbstractLessonController {
 
     private static final long PAGE_SIZE = 20;
-    private static final String LESSON = "lesson";
 
     private final LessonService lessonService;
 
@@ -48,11 +46,11 @@ public final class LessonController extends AbstractLessonController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listLessonsView.render(pageOfLessons, sortBy, orderBy, filterString, isWriter));
-        template.setMainTitle(Messages.get("lesson.list"));
+        template.setMainTitle("Lessons");
         if (isWriter) {
-            template.addMainButton(Messages.get("commons.create"), routes.LessonController.createLesson());
+            template.addMainButton("Create", routes.LessonController.createLesson());
         }
-        template.markBreadcrumbLocation(Messages.get("lesson.lessons"), routes.LessonController.index());
+        template.markBreadcrumbLocation("Lessons", routes.LessonController.index());
         template.setPageTitle("Lessons");
 
         return renderTemplate(template);
@@ -61,7 +59,7 @@ public final class LessonController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result createLesson() {
-        Form<LessonCreateForm> lessonCreateForm = Form.form(LessonCreateForm.class);
+        Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class);
 
         return showCreateLesson(lessonCreateForm);
     }
@@ -69,14 +67,14 @@ public final class LessonController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postCreateLesson() {
-        Form<LessonCreateForm> lessonCreateForm = Form.form(LessonCreateForm.class).bindFromRequest();
+        Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class).bindFromRequest();
 
         if (formHasErrors(lessonCreateForm)) {
             return showCreateLesson(lessonCreateForm);
         }
 
         if (lessonService.lessonExistsBySlug(lessonCreateForm.get().slug)) {
-            lessonCreateForm.reject("slug", Messages.get("error.lesson.slugExists"));
+            return showCreateLesson(lessonCreateForm.withError("slug", "Slug already exists"));
         }
 
         LessonCreateForm lessonCreateData = lessonCreateForm.get();
@@ -84,7 +82,10 @@ public final class LessonController extends AbstractLessonController {
         Lesson lesson;
         try {
             lesson = lessonService.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-            lessonService.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode), LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode)));
+            lessonService.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
+                    .title(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode))
+                    .text(LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode))
+                    .build());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -119,8 +120,8 @@ public final class LessonController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(viewLessonView.render(lesson));
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
-        template.addMainButton(Messages.get("lesson.enter"), routes.LessonController.enterLesson(lesson.getId()));
-        template.markBreadcrumbLocation(Messages.get("lesson.view"), routes.LessonController.viewLesson(lesson.getId()));
+        template.addMainButton("Enter lesson", routes.LessonController.enterLesson(lesson.getId()));
+        template.markBreadcrumbLocation("View lesson", routes.LessonController.viewLesson(lesson.getId()));
         template.setPageTitle("Lesson - View");
 
         return renderLessonTemplate(template, lessonService, lesson);
@@ -139,7 +140,7 @@ public final class LessonController extends AbstractLessonController {
         lessonEditData.slug = lesson.getSlug();
         lessonEditData.additionalNote = lesson.getAdditionalNote();
 
-        Form<LessonEditForm> lessonEditForm = Form.form(LessonEditForm.class).fill(lessonEditData);
+        Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).fill(lessonEditData);
 
         return showEditLesson(lessonEditForm, lesson);
     }
@@ -153,14 +154,14 @@ public final class LessonController extends AbstractLessonController {
             return notFound();
         }
 
-        Form<LessonEditForm> lessonEditForm = Form.form(LessonEditForm.class).bindFromRequest();
+        Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).bindFromRequest();
 
         if (formHasErrors(lessonEditForm)) {
             return showEditLesson(lessonEditForm, lesson);
         }
 
         if (!lesson.getSlug().equals(lessonEditForm.get().slug) && lessonService.lessonExistsBySlug(lessonEditForm.get().slug)) {
-            lessonEditForm.reject("slug", Messages.get("error.lesson.slugExists"));
+            return showEditLesson(lessonEditForm.withError("slug", "Slug already exists"), lesson);
         }
 
         LessonEditForm lessonEditData = lessonEditForm.get();
@@ -169,18 +170,19 @@ public final class LessonController extends AbstractLessonController {
         return redirect(routes.LessonController.viewLesson(lesson.getId()));
     }
 
+    @RequireCSRFCheck
     public Result switchLanguage(long lessonId) {
-        String languageCode = DynamicForm.form().bindFromRequest().get("langCode");
+        String languageCode = formFactory.form().bindFromRequest().get("langCode");
         LessonControllerUtils.setCurrentStatementLanguage(languageCode);
 
-        return redirect(request().getHeader("Referer"));
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     private Result showCreateLesson(Form<LessonCreateForm> lessonCreateForm) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(createLessonView.render(lessonCreateForm));
-        template.setMainTitle(Messages.get("lesson.create"));
-        template.markBreadcrumbLocation(Messages.get("lesson.create"), routes.LessonController.createLesson());
+        template.setMainTitle("Create lesson");
+        template.markBreadcrumbLocation("Create lesson", routes.LessonController.createLesson());
         template.setPageTitle("Lesson - Create");
 
         return renderTemplate(template);
@@ -190,8 +192,8 @@ public final class LessonController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editLessonView.render(lessonEditForm, lesson));
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
-        template.addMainButton(Messages.get("lesson.enter"), routes.LessonController.enterLesson(lesson.getId()));
-        template.markBreadcrumbLocation(Messages.get("lesson.update"), routes.LessonController.editLesson(lesson.getId()));
+        template.addMainButton("Enter lesson", routes.LessonController.enterLesson(lesson.getId()));
+        template.markBreadcrumbLocation("Update lesson", routes.LessonController.editLesson(lesson.getId()));
         template.setPageTitle("Lesson - Update");
 
         return renderLessonTemplate(template, lessonService, lesson);
@@ -199,13 +201,13 @@ public final class LessonController extends AbstractLessonController {
 
     protected Result renderLessonTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
         appendVersionLocalChangesWarning(template, lessonService, lesson);
-        template.addSecondaryTab(Messages.get("commons.view"), routes.LessonController.viewLesson(lesson.getId()));
+        template.addSecondaryTab("View", routes.LessonController.viewLesson(lesson.getId()));
 
         if (LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
-            template.addSecondaryTab(Messages.get("commons.update"), routes.LessonController.editLesson(lesson.getId()));
+            template.addSecondaryTab("Update", routes.LessonController.editLesson(lesson.getId()));
         }
 
-        template.markBreadcrumbLocation(Messages.get("lesson.lessons"), routes.LessonController.index());
+        template.markBreadcrumbLocation("Lessons", routes.LessonController.index());
 
         return super.renderTemplate(template);
     }

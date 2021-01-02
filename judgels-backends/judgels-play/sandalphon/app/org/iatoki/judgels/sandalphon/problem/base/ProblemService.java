@@ -1,10 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
 import com.google.inject.ImplementedBy;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerChildConfig;

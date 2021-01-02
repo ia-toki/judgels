@@ -14,8 +14,8 @@ repositories {
 
 play {
     platform {
-        playVersion = '2.5.18'
-        scalaVersion = '2.11'
+        playVersion = '2.7.9'
+        scalaVersion = '2.12'
         javaVersion = JavaVersion.VERSION_1_8
     }
     injectedRoutesGenerator = true

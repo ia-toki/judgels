@@ -1,12 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.bundle.partner.BundleProblemPartnerConfig;
-import play.i18n.Messages;
 
 import java.util.Set;
 
@@ -17,21 +16,21 @@ public final class BundleProblemControllerUtils {
     }
 
     public static void appendTabs(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.addMainTab(Messages.get("problem.statement"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
+        template.addMainTab("Statements", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
 
         if (BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            template.addMainTab(Messages.get("problem.bundle.item"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
+            template.addMainTab("Items", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
         }
 
         if (BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            template.addMainTab(Messages.get("problem.bundle.submission"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
+            template.addMainTab("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
         }
 
         if (ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            template.addMainTab(Messages.get("problem.partner"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
+            template.addMainTab("Partners", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
         }
 
-        template.addMainTab(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
+        template.addMainTab("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
     public static BundleProblemPartnerConfig getPartnerConfig(ProblemService problemService, Problem problem) {

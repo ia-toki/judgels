@@ -1,6 +1,9 @@
 @import play.i18n.Lang
 @import play.mvc.Http
+@import org.iatoki.judgels.play.general.GeneralConfig
 @import org.iatoki.judgels.play.routes
+
+@(config: GeneralConfig)
 
 <header>
     <div class="container">
@@ -11,7 +14,7 @@
                 </div>
 
                 <div class="title pull-left">
-                    <a href="/"><h1>@play.Play.application().configuration.getString("general.title")</h1></a>
+                    <a href="/"><h1>@config.getTitle</h1></a>
                 </div>
             </div>
         </div>

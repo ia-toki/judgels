@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.Problem;
 import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -19,7 +19,6 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 import play.twirl.api.Html;
 
@@ -52,7 +51,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
         try {
             Page<BundleItem> pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
-            Form<ItemCreateForm> itemCreateForm = Form.form(ItemCreateForm.class);
+            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
 
             return showListCreateItems(problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         } catch (IOException e) {
@@ -70,8 +69,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
         }
 
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
-            Form<ItemCreateForm> itemCreateForm = Form.form(ItemCreateForm.class);
-            itemCreateForm.reject("error.problem.bundle.item.undefined");
+            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
 
             Page<BundleItem> pageOfBundleItems;
             try {
@@ -80,13 +78,12 @@ public final class BundleItemController extends AbstractBundleProblemController 
                 throw new RuntimeException(e);
             }
 
-            return showListCreateItems(problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
+            return showListCreateItems(problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm.withGlobalError("Item undefined."));
         }
 
         BundleItemConfAdapter adapter = BundleItemConfAdapters.fromItemType(BundleItemType.valueOf(itemType));
         if (adapter == null) {
-            Form<ItemCreateForm> itemCreateForm = Form.form(ItemCreateForm.class);
-            itemCreateForm.reject("error.problem.bundle.item.undefined");
+            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
             Page<BundleItem> pageOfBundleItems;
             try {
@@ -98,7 +95,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
             return showListCreateItems(problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         }
 
-        return showCreateItem(problem, itemType, adapter.getConfHtml(adapter.generateForm(), routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), Messages.get("commons.create")), page, orderBy, orderDir, filterString);
+        return showCreateItem(problem, itemType, adapter.getConfHtml(adapter.generateForm(formFactory), routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), "Create"), page, orderBy, orderDir, filterString);
     }
 
     @Transactional
@@ -111,8 +108,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
         }
 
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
-            Form<ItemCreateForm> itemCreateForm = Form.form(ItemCreateForm.class);
-            itemCreateForm.reject("error.problem.bundle.item.undefined");
+            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
             Page<BundleItem> pageOfBundleItems;
             try {
@@ -132,8 +128,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(BundleItemType.valueOf(itemType));
         if (bundleItemConfAdapter == null) {
-            Form<ItemCreateForm> itemCreateForm = Form.form(ItemCreateForm.class);
-            itemCreateForm.reject("error.problem.bundle.item.undefined");
+            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined");
 
             Page<BundleItem> pageOfBundleItems;
             try {
@@ -145,19 +140,18 @@ public final class BundleItemController extends AbstractBundleProblemController 
             return showListCreateItems(problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         }
 
-        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(request());
+        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, request());
         if (formHasErrors(bundleItemConfForm)) {
-            return showCreateItem(problem, itemType, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), Messages.get("commons.create")), page, orderBy, orderDir, filterString);
+            return showCreateItem(problem, itemType, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), "Create"), page, orderBy, orderDir, filterString);
         }
 
         problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
 
         try {
             if (bundleItemService.bundleItemExistsInProblemWithCloneByMeta(problem.getJid(), IdentityUtils.getUserJid(), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm))) {
-                bundleItemConfForm.reject("error.problem.bundle.item.duplicateMeta");
                 Page<BundleItem> items = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-                return showListCreateItems(problem, items, orderBy, orderDir, filterString, bundleItemConfForm);
+                return showListCreateItems(problem, items, orderBy, orderDir, filterString, bundleItemConfForm.withGlobalError("Duplicate meta on item."));
             }
 
             bundleItemService.createBundleItem(problem.getJid(), IdentityUtils.getUserJid(), BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem));
@@ -212,16 +206,16 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
         Form bundleItemConfForm;
         try {
-            bundleItemConfForm = bundleItemConfAdapter.generateForm(bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid, ProblemControllerUtils.getCurrentStatementLanguage()), bundleItem.getMeta());
+            bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid, ProblemControllerUtils.getCurrentStatementLanguage()), bundleItem.getMeta());
         } catch (IOException e) {
             try {
-                bundleItemConfForm = bundleItemConfAdapter.generateForm(bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid, ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem)), bundleItem.getMeta());
+                bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid, ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem)), bundleItem.getMeta());
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
         }
 
-        return showEditItem(problem, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), Messages.get("commons.update")), allowedLanguages);
+        return showEditItem(problem, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
     }
 
     @Transactional
@@ -266,9 +260,9 @@ public final class BundleItemController extends AbstractBundleProblemController 
             return notFound();
         }
 
-        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(request());
+        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, request());
         if (formHasErrors(bundleItemConfForm)) {
-            return showEditItem(problem, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), Messages.get("commons.update")), allowedLanguages);
+            return showEditItem(problem, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
         }
 
         problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
@@ -361,7 +355,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
     private Result showCreateItem(Problem problem, String itemType, Html html, long page, String orderBy, String orderDir, String filterString) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(html);
-        template.markBreadcrumbLocation(Messages.get("problem.bundle.item.create"), routes.BundleItemController.createItem(problem.getId(), itemType, page, orderBy, orderDir, filterString));
+        template.markBreadcrumbLocation("Create item", routes.BundleItemController.createItem(problem.getId(), itemType, page, orderBy, orderDir, filterString));
         template.setPageTitle("Problem - Bundle - Items - Create");
 
         return renderTemplate(template, problemService, problem);
@@ -371,14 +365,14 @@ public final class BundleItemController extends AbstractBundleProblemController 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(html);
         appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
-        template.markBreadcrumbLocation(Messages.get("problem.bundle.item.update"), routes.BundleItemController.editItem(problem.getId(), bundleItem.getJid()));
+        template.markBreadcrumbLocation("Update item", routes.BundleItemController.editItem(problem.getId(), bundleItem.getJid()));
         template.setPageTitle("Problem - Bundle - Item - Update");
 
         return renderTemplate(template, problemService, problem);
     }
     
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.markBreadcrumbLocation(Messages.get("problem.bundle.item"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
+        template.markBreadcrumbLocation("Items", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
         
         return super.renderTemplate(template, problemService, problem);
     }

@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
@@ -19,15 +19,10 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public final class LessonVersionController extends AbstractLessonController {
-
-    private static final String LESSON = "lesson";
-    private static final String COMMIT = "commit";
-
     private final LessonService lessonService;
 
     @Inject
@@ -49,7 +44,7 @@ public final class LessonVersionController extends AbstractLessonController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listVersionsView.render(versions, lesson.getId(), isAllowedToRestoreVersionHistory));
-        template.markBreadcrumbLocation(Messages.get("lesson.version.history"), routes.LessonVersionController.listVersionHistory(lesson.getId()));
+        template.markBreadcrumbLocation("History", routes.LessonVersionController.listVersionHistory(lesson.getId()));
         template.setPageTitle("Lesson - Versions - History");
 
         return renderTemplate(template, lessonService, lesson);
@@ -80,7 +75,7 @@ public final class LessonVersionController extends AbstractLessonController {
 
         boolean isClean = !lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid());
 
-        Form<VersionCommitForm> versionCommitForm = Form.form(VersionCommitForm.class);
+        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
 
         return showViewVersionLocalChanges(versionCommitForm, lesson, isClean);
     }
@@ -94,7 +89,7 @@ public final class LessonVersionController extends AbstractLessonController {
             return notFound();
         }
 
-        Form<VersionCommitForm> versionCommitForm = Form.form(VersionCommitForm.class).bindFromRequest();
+        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
         if (formHasErrors(versionCommitForm)) {
             boolean isClean = !lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid());
             return showViewVersionLocalChanges(versionCommitForm, lesson, isClean);
@@ -103,11 +98,11 @@ public final class LessonVersionController extends AbstractLessonController {
         VersionCommitForm versionCommitData = versionCommitForm.get();
 
         if (lessonService.fetchUserClone(IdentityUtils.getUserJid(), lesson.getJid())) {
-            flash("localChangesError", Messages.get("lesson.version.local.cantCommit"));
+            flash("localChangesError", "Your working copy has diverged from the master copy. Please update your working copy.");
         } else if (!lessonService.commitThenMergeUserClone(IdentityUtils.getUserJid(), lesson.getJid(), versionCommitData.title, versionCommitData.description, IdentityUtils.getIpAddress())) {
-            flash("localChangesError", Messages.get("lesson.version.local.cantMerge"));
+            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         } else if (!lessonService.pushUserClone(IdentityUtils.getUserJid(), lesson.getJid(), IdentityUtils.getIpAddress())) {
-            flash("localChangesError", Messages.get("lesson.version.local.cantMerge"));
+            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         } else {
             try {
                 lessonService.discardUserClone(IdentityUtils.getUserJid(), lesson.getJid());
@@ -130,7 +125,7 @@ public final class LessonVersionController extends AbstractLessonController {
         lessonService.fetchUserClone(IdentityUtils.getUserJid(), lesson.getJid());
 
         if (!lessonService.updateUserClone(IdentityUtils.getUserJid(), lesson.getJid())) {
-            flash("localChangesError", Messages.get("lesson.version.local.cantMerge"));
+            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         }
 
         return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
@@ -156,20 +151,20 @@ public final class LessonVersionController extends AbstractLessonController {
     private Result showViewVersionLocalChanges(Form<VersionCommitForm> versionCommitForm, Lesson lesson, boolean isClean) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(viewVersionLocalChangesView.render(versionCommitForm, lesson, isClean));
-        template.markBreadcrumbLocation(Messages.get("lesson.version.local"), routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
-        template.setPageTitle("Lesson - Versions - Local Changes");
+        template.markBreadcrumbLocation("Local changes", routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
+        template.setPageTitle("Lesson - Versions - Local changes");
 
         return renderTemplate(template, lessonService, lesson);
     }
 
     protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
-        template.addSecondaryTab(Messages.get("lesson.version.local"), routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
+        template.addSecondaryTab("Local changes", routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
 
         if (LessonControllerUtils.isAllowedToViewVersionHistory(lessonService, lesson)) {
-            template.addSecondaryTab(Messages.get("lesson.version.history"), routes.LessonVersionController.listVersionHistory(lesson.getId()));
+            template.addSecondaryTab("History", routes.LessonVersionController.listVersionHistory(lesson.getId()));
         }
 
-        template.markBreadcrumbLocation(Messages.get("lesson.version"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToVersions(lesson.getId()));
+        template.markBreadcrumbLocation("Versions", org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToVersions(lesson.getId()));
 
         return super.renderTemplate(template, lessonService, lesson);
     }

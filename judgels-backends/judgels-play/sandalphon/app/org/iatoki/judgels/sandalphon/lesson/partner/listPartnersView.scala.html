@@ -1,12 +1,10 @@
+@import judgels.persistence.api.Page
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import play.i18n.Messages
-@import scala.collection.JavaConversions
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner
 @import org.iatoki.judgels.sandalphon.lesson.partner.routes
-@import org.iatoki.judgels.play.Page
 
 @(lessonId: Long, pageOfLessonPartners: Page[LessonPartner], orderBy: String, orderDir: String)
 
@@ -14,12 +12,12 @@
 
 @tableView() {
     @tableHeadersView(pageOfLessonPartners.getPageIndex, orderBy, orderDir, "", listFunc)(
-        "id" -> Messages.get("commons.id"),
-        "partnerJid" -> Messages.get("lesson.partner.name")
+        "id" -> "ID",
+        "partnerJid" -> "Name"
     )
     <tbody>
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfLessonPartners.getData.map(s => s.getPartnerJid).toSeq))) { displayNamesMap =>
-        @for(partner <- pageOfLessonPartners.getData) {
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfLessonPartners.getPage.map(s => s.getPartnerJid).toSeq)) { displayNamesMap =>
+        @for(partner <- pageOfLessonPartners.getPage) {
             <tr>
                 <td>@partner.getId</td>
                 <td>@displayNamesMap.get(partner.getPartnerJid)</td>

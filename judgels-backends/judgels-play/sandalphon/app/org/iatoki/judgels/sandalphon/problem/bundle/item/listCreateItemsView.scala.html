@@ -1,11 +1,10 @@
-@import play.i18n.Messages
+@import judgels.persistence.api.Page
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemType
 @import org.iatoki.judgels.play.template.search.html.searchView
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.routes
-@import org.iatoki.judgels.play.Page
 
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.{ItemCreateForm, BundleItem, BundleItemType}
 @(pageOfBundleItems: Page[BundleItem], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String, filterString: String, itemCreateForm: Form[ItemCreateForm])
@@ -16,9 +15,9 @@
 
 @b3.form(routes.BundleItemController.createItem(problemId, null, pageOfBundleItems.getPageIndex, orderBy, orderDir, filterString)) {
 
-    @b3.select(itemCreateForm("itemType"), BundleItemType.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("problem.bundle.item.type"), 'class -> "form-control selectpicker")
+    @b3.select(itemCreateForm("itemType"), BundleItemType.values.map(e => (e.name() -> e.name())).toSeq, '_label -> "Type", 'class -> "form-control selectpicker")
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.create") }
+    @b3.submit('class -> "btn btn-primary") { Create }
 }
 
 @searchView(pageOfBundleItems.getPageIndex, orderBy, orderDir, filterString, listFunc)
@@ -27,14 +26,14 @@
 
 @tableView() {
     @tableHeadersView(pageOfBundleItems.getPageIndex, orderBy, orderDir, filterString, listFunc)(
-        "order" -> Messages.get("problem.bundle.item.order"),
-        "number" -> Messages.get("problem.bundle.item.number"),
-        "jid" -> Messages.get("commons.jid"),
-        "type" -> Messages.get("problem.bundle.item.type"),
-        "meta" -> Messages.get("problem.bundle.item.meta")
+        "order" -> "Order",
+        "number" -> "No.",
+        "jid" -> "JID",
+        "type" -> "Type",
+        "meta" -> "Meta"
     )
     <tbody>
-        @for((item, index) <- pageOfBundleItems.getData.zipWithIndex) {
+        @for((item, index) <- pageOfBundleItems.getPage.zipWithIndex) {
             <tr>
                 <td>@index</td>
                 <td>@item.getNumber</td>
@@ -46,7 +45,7 @@
                     @if(index != 0) {
                         <a href="@routes.BundleItemController.moveItemUp(problemId, item.getJid)"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>
                     }
-                    @if(index != pageOfBundleItems.getData.size()-1) {
+                    @if(index != pageOfBundleItems.getPage.size()-1) {
                         <a href="@routes.BundleItemController.moveItemDown(problemId, item.getJid)"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></a>
                     }
                     <a href="@routes.BundleItemController.removeItem(problemId, item.getJid)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>

@@ -8,14 +8,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.client.user.ClientUserService;
+import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonInfo;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
-import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
-import play.data.DynamicForm;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -53,7 +52,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
             return Results.notFound();
         }
 
-        String language = sanitizeLanguageCode(lessonJid, DynamicForm.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(lessonJid, formFactory.form().bindFromRequest().get("language"));
 
         LessonStatement statement = lessonService.getStatement(null, lessonJid, language);
 
@@ -86,7 +85,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     public Result translateAllowedSlugToJids() {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        String userJid = DynamicForm.form().bindFromRequest().get("userJid");
+        String userJid = formFactory.form().bindFromRequest().get("userJid");
 
         Map<String, String> result = new HashMap<>();
 

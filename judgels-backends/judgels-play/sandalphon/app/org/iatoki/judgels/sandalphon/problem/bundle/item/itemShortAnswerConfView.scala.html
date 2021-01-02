@@ -1,5 +1,4 @@
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemShortAnswerConfForm
-@import play.i18n.Messages
 @import play.api.mvc.Call
 @import org.iatoki.judgels.play.template.html.formErrorView
 
@@ -15,12 +14,12 @@
 
     @helper.CSRF.formField
 
-    @b3.text(itemShortAnswerConfForm("meta"), '_label -> Messages.get("problem.bundle.item.meta"))
-    @b3.textarea(itemShortAnswerConfForm("statement"), '_label -> Messages.get("problem.bundle.item.shortAnswer.statement"), 'class -> "ckeditor")
-    @b3.text(itemShortAnswerConfForm("score"), '_label -> Messages.get("problem.bundle.item.shortAnswer.score"))
-    @b3.text(itemShortAnswerConfForm("penalty"), '_label -> Messages.get("problem.bundle.item.shortAnswer.penalty"))
-    @b3.text(itemShortAnswerConfForm("inputValidationRegex"), '_label -> Messages.get("problem.bundle.item.shortAnswer.inputValidationRegex"))
-    @b3.text(itemShortAnswerConfForm("gradingRegex"), '_label -> Messages.get("problem.bundle.item.shortAnswer.gradingRegex"))
+    @b3.text(itemShortAnswerConfForm("meta"), '_label -> "Meta")
+    @b3.textarea(itemShortAnswerConfForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
+    @b3.text(itemShortAnswerConfForm("score"), '_label -> "Score")
+    @b3.text(itemShortAnswerConfForm("penalty"), '_label -> "Penalty")
+    @b3.text(itemShortAnswerConfForm("inputValidationRegex"), '_label -> "Input validation regex (matches on whole string)")
+    @b3.text(itemShortAnswerConfForm("gradingRegex"), '_label -> "Grading regex (matches on whole string; empty regex -> manual grading)")
 
     @b3.submit('class -> "btn btn-primary") { @submitLabel }
 }

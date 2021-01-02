@@ -4,7 +4,6 @@
 @import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig
 @import judgels.gabriel.languages.GradingLanguageRegistry
 @import judgels.sandalphon.api.problem.ProblemStatement
-@import play.i18n.Messages
 @import com.google.common.base.Joiner
 
 @(postSubmitUri: String, statement: ProblemStatement, blackBoxGradingConfig: GradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
@@ -79,7 +78,7 @@
             </div>
         }
 
-        @b3.submit('class -> "btn btn-primary") { @Messages.get("Submit") }
+        @b3.submit('class -> "btn btn-primary") { Submit }
     }
 }
 

@@ -3,6 +3,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import judgels.persistence.JudgelsModel_;
+import judgels.persistence.Model_;
 import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
 import judgels.sandalphon.persistence.AbstractProgrammingGradingModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
@@ -67,6 +69,8 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
 
             query.select(cb.construct(
                     getEntityClass(),
+                    root.get(Model_.id),
+                    root.get(JudgelsModel_.jid),
                     root.get(AbstractProgrammingGradingModel_.submissionJid.getName()),
                     root.get(AbstractProgrammingGradingModel_.verdictCode.getName()),
                     root.get(AbstractProgrammingGradingModel_.verdictName.getName()),

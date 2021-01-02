@@ -2,27 +2,26 @@ package org.iatoki.judgels.sandalphon.problem.base;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.editProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.listProblemsView;
 import org.iatoki.judgels.sandalphon.problem.base.html.viewProblemView;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public final class ProblemController extends AbstractBaseProblemController {
 
     private static final long PAGE_SIZE = 20;
-    private static final String PROBLEM = "problem";
 
     private final ProblemService problemService;
 
@@ -45,9 +44,9 @@ public final class ProblemController extends AbstractBaseProblemController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listProblemsView.render(pageOfProblems, sortBy, orderBy, filterString, isWriter));
         if (isWriter) {
-            template.addMainButton(Messages.get("commons.create"), routes.ProblemController.createProblem());
+            template.addMainButton("Create", routes.ProblemController.createProblem());
         }
-        template.setMainTitle(Messages.get("problem.list"));
+        template.setMainTitle("Problems");
         template.setPageTitle("Problems");
         return renderTemplate(template);
     }
@@ -55,7 +54,7 @@ public final class ProblemController extends AbstractBaseProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result createProblem() {
-        Form<ProblemCreateForm> problemCreateForm = Form.form(ProblemCreateForm.class);
+        Form<ProblemCreateForm> problemCreateForm = formFactory.form(ProblemCreateForm.class);
 
         return showCreateProblem(problemCreateForm);
     }
@@ -63,14 +62,14 @@ public final class ProblemController extends AbstractBaseProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postCreateProblem() {
-        Form<ProblemCreateForm> problemCreateForm = Form.form(ProblemCreateForm.class).bindFromRequest();
+        Form<ProblemCreateForm> problemCreateForm = formFactory.form(ProblemCreateForm.class).bindFromRequest();
 
         if (formHasErrors(problemCreateForm)) {
             return showCreateProblem(problemCreateForm);
         }
 
         if (problemService.problemExistsBySlug(problemCreateForm.get().slug)) {
-            problemCreateForm.reject("slug", Messages.get("error.problem.slugExists"));
+            return showCreateProblem(problemCreateForm.withError("slug", "Slug already exists"));
         }
 
         ProblemCreateForm problemCreateData = problemCreateForm.get();
@@ -111,9 +110,9 @@ public final class ProblemController extends AbstractBaseProblemController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(viewProblemView.render(problem));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
-        template.addMainButton(Messages.get("problem.enter"), routes.ProblemController.enterProblem(problem.getId()));
-        template.markBreadcrumbLocation(Messages.get("problem.view"), routes.ProblemController.viewProblem(problem.getId()));
-        template.setPageTitle("Problem - Update");
+        template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
+        template.markBreadcrumbLocation("View problem", routes.ProblemController.viewProblem(problem.getId()));
+        template.setPageTitle("Problem - View");
         return renderProblemTemplate(template, problemService, problem);
     }
 
@@ -130,7 +129,7 @@ public final class ProblemController extends AbstractBaseProblemController {
         problemEditData.slug = problem.getSlug();
         problemEditData.additionalNote = problem.getAdditionalNote();
 
-        Form<ProblemEditForm> problemEditForm = Form.form(ProblemEditForm.class).fill(problemEditData);
+        Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).fill(problemEditData);
 
         return showEditProblem(problemEditForm, problem);
     }
@@ -144,14 +143,14 @@ public final class ProblemController extends AbstractBaseProblemController {
             return notFound();
         }
 
-        Form<ProblemEditForm> problemEditForm = Form.form(ProblemEditForm.class).bindFromRequest();
+        Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).bindFromRequest();
 
         if (formHasErrors(problemEditForm)) {
             return showEditProblem(problemEditForm, problem);
         }
 
         if (!problem.getSlug().equals(problemEditForm.get().slug) && problemService.problemExistsBySlug(problemEditForm.get().slug)) {
-            problemEditForm.reject("slug", Messages.get("error.problem.slugExists"));
+            return showEditProblem(problemEditForm.withError("slug", "Slug already exists"), problem);
         }
 
         ProblemEditForm problemEditData = problemEditForm.get();
@@ -160,18 +159,19 @@ public final class ProblemController extends AbstractBaseProblemController {
         return redirect(routes.ProblemController.viewProblem(problem.getId()));
     }
 
+    @RequireCSRFCheck
     public Result switchLanguage(long problemId) {
-        String languageCode = DynamicForm.form().bindFromRequest().get("langCode");
+        String languageCode = formFactory.form().bindFromRequest().get("langCode");
         ProblemControllerUtils.setCurrentStatementLanguage(languageCode);
 
-        return redirect(request().getHeader("Referer"));
+        return redirect(request().getHeaders().get("Referer").orElse(""));
     }
 
     private Result showCreateProblem(Form<ProblemCreateForm> problemCreateForm) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(createProblemView.render(problemCreateForm));
-        template.setMainTitle(Messages.get("problem.create"));
-        template.markBreadcrumbLocation(Messages.get("problem.create"), routes.ProblemController.createProblem());
+        template.setMainTitle("Create problem");
+        template.markBreadcrumbLocation("Create problem", routes.ProblemController.createProblem());
         template.setPageTitle("Problem - Create");
         return renderTemplate(template);
     }
@@ -180,8 +180,8 @@ public final class ProblemController extends AbstractBaseProblemController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editProblemView.render(problemEditForm, problem));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
-        template.addMainButton(Messages.get("problem.enter"), routes.ProblemController.enterProblem(problem.getId()));
-        template.markBreadcrumbLocation(Messages.get("problem.update"), routes.ProblemController.editProblem(problem.getId()));
+        template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
+        template.markBreadcrumbLocation("Update problem", routes.ProblemController.editProblem(problem.getId()));
         template.setPageTitle("Problem - Update");
         return renderProblemTemplate(template, problemService, problem);
     }
@@ -190,9 +190,9 @@ public final class ProblemController extends AbstractBaseProblemController {
         appendVersionLocalChangesWarning(template, problemService, problem);
         template.markBreadcrumbLocation(problem.getSlug(), routes.ProblemController.enterProblem(problem.getId()));
 
-        template.addSecondaryTab(Messages.get("commons.view"), routes.ProblemController.viewProblem(problem.getId()));
+        template.addSecondaryTab("View", routes.ProblemController.viewProblem(problem.getId()));
         if (ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
-            template.addSecondaryTab(Messages.get("commons.update"), routes.ProblemController.editProblem(problem.getId()));
+            template.addSecondaryTab("Update", routes.ProblemController.editProblem(problem.getId()));
         }
 
         return renderTemplate(template);

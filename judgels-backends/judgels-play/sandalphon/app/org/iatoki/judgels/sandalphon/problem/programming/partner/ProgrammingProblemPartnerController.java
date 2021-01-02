@@ -6,12 +6,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -28,15 +28,10 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemPartnerController extends AbstractProblemController {
-
-    private static final String PROBLEM = "problem";
-    private static final String PARTNER = "partner";
-
     private final UserSearchService userSearchService;
     private final ProfileService profileService;
     private final ProblemService problemService;
@@ -57,9 +52,9 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
             return notFound();
         }
 
-        Form<ProblemPartnerUsernameForm> usernameForm = Form.form(ProblemPartnerUsernameForm.class);
-        Form<ProblemPartnerUpsertForm> problemForm = Form.form(ProblemPartnerUpsertForm.class);
-        Form<ProgrammingPartnerUpsertForm> programmingForm = Form.form(ProgrammingPartnerUpsertForm.class);
+        Form<ProblemPartnerUsernameForm> usernameForm = formFactory.form(ProblemPartnerUsernameForm.class);
+        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class);
+        Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class);
 
         return showAddPartner(usernameForm, problemForm, programmingForm, problem);
     }
@@ -73,9 +68,9 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
             return notFound();
         }
 
-        Form<ProblemPartnerUsernameForm> usernameForm = Form.form(ProblemPartnerUsernameForm.class).bindFromRequest();
-        Form<ProblemPartnerUpsertForm> problemForm = Form.form(ProblemPartnerUpsertForm.class).bindFromRequest();
-        Form<ProgrammingPartnerUpsertForm> programmingForm = Form.form(ProgrammingPartnerUpsertForm.class).bindFromRequest();
+        Form<ProblemPartnerUsernameForm> usernameForm = formFactory.form(ProblemPartnerUsernameForm.class).bindFromRequest();
+        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest();
+        Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).bindFromRequest();
 
         if (formHasErrors(usernameForm) || formHasErrors(problemForm) || formHasErrors(programmingForm)) {
             return showAddPartner(usernameForm, problemForm, programmingForm, problem);
@@ -88,8 +83,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
 
         if (!usernameToJidMap.containsKey(username)) {
-            usernameForm.reject("username", Messages.get("problem.partner.usernameNotFound"));
-            return showAddPartner(usernameForm, problemForm, programmingForm, problem);
+            return showAddPartner(usernameForm.withError("username", "Username not found."), problemForm, programmingForm, problem);
         }
 
         String userJid = usernameToJidMap.get(username);
@@ -97,8 +91,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
         if (problemService.isUserPartnerForProblem(problem.getJid(), userJid)) {
-            usernameForm.reject("username", Messages.get("problem.partner.already"));
-            return showAddPartner(usernameForm, problemForm, programmingForm, problem);
+            return showAddPartner(usernameForm.withError("username", "This user is already a partner."), problemForm, programmingForm, problem);
         }
 
         ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
@@ -147,7 +140,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         problemData.isAllowedToRestoreVersionHistory = problemConfig.isAllowedToRestoreVersionHistory();
         problemData.isAllowedToManageProblemClients = problemConfig.isAllowedToManageProblemClients();
 
-        Form<ProblemPartnerUpsertForm> problemForm = Form.form(ProblemPartnerUpsertForm.class).fill(problemData);
+        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).fill(problemData);
 
         ProgrammingProblemPartnerConfig programmingConfig = problemPartner.getChildConfig(ProgrammingProblemPartnerConfig.class);
         ProgrammingPartnerUpsertForm programmingData = new ProgrammingPartnerUpsertForm();
@@ -155,7 +148,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         programmingData.isAllowedToSubmit = programmingConfig.isAllowedToSubmit();
         programmingData.isAllowedToManageGrading = programmingConfig.isAllowedToManageGrading();
 
-        Form<ProgrammingPartnerUpsertForm> programmingForm = Form.form(ProgrammingPartnerUpsertForm.class).fill(programmingData);
+        Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).fill(programmingData);
 
         return showEditPartner(problemForm, programmingForm, problem, problemPartner);
     }
@@ -171,8 +164,8 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
         ProblemPartner problemPartner = problemService.findProblemPartnerById(partnerId);
 
-        Form<ProblemPartnerUpsertForm> problemForm = Form.form(ProblemPartnerUpsertForm.class).bindFromRequest();
-        Form<ProgrammingPartnerUpsertForm> programmingForm = Form.form(ProgrammingPartnerUpsertForm.class).bindFromRequest();
+        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest();
+        Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).bindFromRequest();
 
         if (formHasErrors(problemForm) || formHasErrors(programmingForm)) {
             return showEditPartner(problemForm, programmingForm, problem, problemPartner);
@@ -209,9 +202,9 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(addPartnerView.render(usernameForm, problemForm, programmingForm, problem, getUserAutocompleteAPIEndpoint()));
 
-        template.setSecondaryTitle(Messages.get("problem.partner.add"));
-        template.markBreadcrumbLocation(Messages.get("problem.partner.add"), routes.ProgrammingProblemPartnerController.addPartner(problem.getId()));
-        template.setPageTitle("Problem - Add Partner");
+        template.setSecondaryTitle("Add partner");
+        template.markBreadcrumbLocation("Add partner", routes.ProgrammingProblemPartnerController.addPartner(problem.getId()));
+        template.setPageTitle("Problem - Add partner");
 
         return renderPartnerTemplate(template, problemService, problem);
     }
@@ -220,9 +213,9 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(problemForm, programmingForm, problem, problemPartner));
 
-        template.setSecondaryTitle(Messages.get("problem.partner.update") + ": " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid()));
-        template.markBreadcrumbLocation(Messages.get("problem.partner.update"), routes.ProgrammingProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
-        template.setPageTitle("Problem - Update Partner");
+        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid()));
+        template.markBreadcrumbLocation("Update partner", routes.ProgrammingProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
+        template.setPageTitle("Problem - Update partner");
 
         return renderPartnerTemplate(template, problemService, problem);
     }

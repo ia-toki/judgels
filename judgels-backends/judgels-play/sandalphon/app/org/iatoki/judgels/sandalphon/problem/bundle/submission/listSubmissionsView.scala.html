@@ -1,14 +1,11 @@
 @import java.text.DecimalFormat
-
+@import judgels.persistence.api.Page
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
-@import scala.collection.JavaConversions
-@import play.i18n.Messages
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithSelectionFormView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.problem.bundle.submission.{BundleSubmission, routes}
 @import org.iatoki.judgels.play.JudgelsPlayUtils
-@import org.iatoki.judgels.play.Page
 
 @(pageOfBundleSubmissions: Page[BundleSubmission], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
 
@@ -36,15 +33,15 @@
 
 @tableView() {
     @tableHeadersWithSelectionFormView(pageOfBundleSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
-        "id" -> Messages.get("commons.id"),
-        "createdBy" -> Messages.get("problem.bundle.submission.author"),
-        "score" -> Messages.get("problem.bundle.submission.score"),
-        "createdAt" -> Messages.get("problem.bundle.submission.time")
+        "id" -> "ID",
+        "createdBy" -> "Author",
+        "score" -> "Score",
+        "createdAt" -> "Time"
     )
     <tbody>
 
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfBundleSubmissions.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
-        @for(submission <- pageOfBundleSubmissions.getData) {
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfBundleSubmissions.getPage.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
+        @for(submission <- pageOfBundleSubmissions.getPage) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
                 <td>@submission.getId</td>

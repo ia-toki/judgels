@@ -1,13 +1,11 @@
 @import play.mvc.Http.Context
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.play.general.GeneralConfig
-@import org.iatoki.judgels.play.template.base.html.headerView
-@import org.iatoki.judgels.play.template.base.html.footerView
 
 @(generalConfig: GeneralConfig)(content: Html)
 
 @if(!JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-    @headerView()
+    @headerView(generalConfig)
 }
 
 <main class="container">

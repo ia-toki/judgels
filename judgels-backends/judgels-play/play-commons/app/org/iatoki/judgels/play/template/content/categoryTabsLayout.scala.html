@@ -1,5 +1,4 @@
 @import org.iatoki.judgels.play.template.InternalLink
-@import play.i18n.Messages
 
 @(tabs: List[InternalLink])(content: Html)
 
@@ -14,7 +13,7 @@
                     } else {
                         @if(tabs.size > 6 && index == 5) {
                             <li class="dropdown visible-lg">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">@Messages.get("commons.more") <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">More <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li role="presentation"><a href="@tab.getTarget">@tab.getLabel</a></li>
                         } else {
@@ -29,7 +28,7 @@
                 @for((tab, index) <- tabs.zipWithIndex) {
                     @if(tabs.size > 5 && index == 4) {
                         <li class="dropdown visible-md visible-sm">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">@Messages.get("commons.more") <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">More <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li role="presentation"><a href="@tab.getTarget">@tab.getLabel</a></li>
                     } else {

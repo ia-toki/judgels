@@ -1,5 +1,4 @@
 @import java.util.Date
-@import play.i18n.Messages
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.play.template.InternalLink
 
@@ -41,11 +40,11 @@
     <time class="server-time col-md-4 clearfix">
         <div class="pull-right">
             @defining(new Date().getTime) { millis =>
-                @Messages.get("commons.header.text.serverTime"): <time id="server-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(millis)">@JudgelsPlayUtils.formatDetailedDateTime(millis)</time>
+                Server time: <time id="server-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(millis)">@JudgelsPlayUtils.formatDetailedDateTime(millis)</time>
             }
         </div>
     </time>
 </div>
 
-<script>var language = "@Messages.get("commons.moment.locale")";</script>
+<script>var language = "en";</script>
 <script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/playcommons/javascripts/server-time.js")"></script>

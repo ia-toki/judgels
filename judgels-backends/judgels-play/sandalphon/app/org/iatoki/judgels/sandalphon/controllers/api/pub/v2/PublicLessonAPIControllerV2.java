@@ -1,8 +1,8 @@
 package org.iatoki.judgels.sandalphon.controllers.api.pub.v2;
 
+import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import play.db.jpa.Transactional;
 import play.mvc.Result;

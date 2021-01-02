@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -19,15 +19,10 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
-import play.i18n.Messages;
 import play.mvc.Result;
 
 @Singleton
 public final class ProblemVersionController extends AbstractProblemController {
-
-    private static final String COMMIT = "commit";
-    private static final String PROBLEM = "problem";
-
     private final ProblemService problemService;
 
     @Inject
@@ -49,7 +44,7 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(listVersionsView.render(versions, problem.getId(), isAllowedToRestoreVersionHistory));
-        template.markBreadcrumbLocation(Messages.get("problem.version.history"), routes.ProblemVersionController.listVersionHistory(problem.getId()));
+        template.markBreadcrumbLocation("History", routes.ProblemVersionController.listVersionHistory(problem.getId()));
         template.setPageTitle("Problem - Versions - History");
 
         return renderTemplate(template, problemService, problem);
@@ -80,7 +75,7 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
 
-        Form<VersionCommitForm> versionCommitForm = Form.form(VersionCommitForm.class);
+        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
 
         return showViewVersionLocalChanges(versionCommitForm, problem, isClean);
     }
@@ -94,7 +89,7 @@ public final class ProblemVersionController extends AbstractProblemController {
             return notFound();
         }
 
-        Form<VersionCommitForm> versionCommitForm = Form.form(VersionCommitForm.class).bindFromRequest();
+        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
         if (formHasErrors(versionCommitForm)) {
             boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
             return showViewVersionLocalChanges(versionCommitForm, problem, isClean);
@@ -103,11 +98,11 @@ public final class ProblemVersionController extends AbstractProblemController {
         VersionCommitForm versionCommitData = versionCommitForm.get();
 
         if (problemService.fetchUserClone(IdentityUtils.getUserJid(), problem.getJid())) {
-            flash("localChangesError", Messages.get("problem.version.local.cantCommit"));
+            flash("localChangesError", "Your working copy has diverged from the master copy. Please update your working copy.");
         } else if (!problemService.commitThenMergeUserClone(IdentityUtils.getUserJid(), problem.getJid(), versionCommitData.title, versionCommitData.description, IdentityUtils.getIpAddress())) {
-            flash("localChangesError", Messages.get("problem.version.local.cantMerge"));
+            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         } else if (!problemService.pushUserClone(IdentityUtils.getUserJid(), problem.getJid(), IdentityUtils.getIpAddress())) {
-            flash("localChangesError", Messages.get("problem.version.local.cantMerge"));
+            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         } else {
             try {
                 problemService.discardUserClone(IdentityUtils.getUserJid(), problem.getJid());
@@ -130,7 +125,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         problemService.fetchUserClone(IdentityUtils.getUserJid(), problem.getJid());
 
         if (!problemService.updateUserClone(IdentityUtils.getUserJid(), problem.getJid())) {
-            flash("localChangesError", Messages.get("problem.version.local.cantMerge"));
+            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         }
 
         return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
@@ -156,20 +151,20 @@ public final class ProblemVersionController extends AbstractProblemController {
     private Result showViewVersionLocalChanges(Form<VersionCommitForm> versionCommitForm, Problem problem, boolean isClean) {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(viewVersionLocalChangesView.render(versionCommitForm, problem, isClean));
-        template.markBreadcrumbLocation(Messages.get("problem.version.local"), routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
-        template.setPageTitle("Problem - Versions - Local Changes");
+        template.markBreadcrumbLocation("Local changes", routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
+        template.setPageTitle("Problem - Versions - Local changes");
 
         return renderTemplate(template, problemService, problem);
     }
 
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.addSecondaryTab(Messages.get("problem.version.local"), routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
+        template.addSecondaryTab("Local changes", routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
 
         if (ProblemControllerUtils.isAllowedToViewVersionHistory(problemService, problem)) {
-            template.addSecondaryTab(Messages.get("problem.version.history"), routes.ProblemVersionController.listVersionHistory(problem.getId()));
+            template.addSecondaryTab("History", routes.ProblemVersionController.listVersionHistory(problem.getId()));
         }
 
-        template.markBreadcrumbLocation(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
+        template.markBreadcrumbLocation("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
 
         return super.renderTemplate(template, problemService, problem);
     }

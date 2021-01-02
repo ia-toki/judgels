@@ -1,4 +1,3 @@
-@import play.i18n.Messages
 @import b3.vertical.fieldConstructor
 @import org.iatoki.judgels.sandalphon.lesson.statement.routes
 @import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm
@@ -7,10 +6,12 @@
 
 <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
 
+@implicitFieldConstructor = @{ b3.vertical.fieldConstructor() }
+
 @b3.form(routes.LessonStatementController.postEditStatement(lessonId)) {
     @helper.CSRF.formField
 
-    @b3.text(updateStatementForm("title"), '_label -> Messages.get("lesson.title"))
+    @b3.text(updateStatementForm("title"), '_label -> "Title")
 
     <label class="control-label">Text</label>
     <div></div>
@@ -19,8 +20,8 @@
     </small>
 
     <div class="form-group">
-        <textarea class="ckeditor form-control" name="text">@updateStatementForm("text").value</textarea>
+        <textarea class="ckeditor form-control" name="text">@updateStatementForm("text").getValue.get</textarea>
     </div>
 
-    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+    @b3.submit('class -> "btn btn-primary") { Update }
 }

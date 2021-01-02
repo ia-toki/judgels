@@ -1,5 +1,4 @@
-@import org.iatoki.judgels.sandalphon.lesson.Lesson
-@import play.i18n.Messages
+@import judgels.sandalphon.api.lesson.Lesson;
 @import play.mvc.Controller
 @import org.iatoki.judgels.sandalphon.lesson.version.routes
 @import org.iatoki.judgels.sandalphon.resource.VersionCommitForm
@@ -8,10 +7,10 @@
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
-<h3>@Messages.get("lesson.version.commit.perform")</h3>
+<h3>Commit local changes</h3>
 
 @if(isClean) {
-    @Messages.get("lesson.version.local.clean")
+    No local changes.
 }else {
     @if(Controller.flash("localChangesError") != null) {
         <p>@Controller.flash("localChangesError")</p>
@@ -19,17 +18,17 @@
         @b3.form(routes.LessonVersionController.postCommitVersionLocalChanges(lesson.getId())) {
             @helper.CSRF.formField
 
-            @b3.text(versionCommitForm("title"), '_label -> Messages.get("lesson.version.commit.title"))
-            @b3.textarea(versionCommitForm("description"), '_label -> Messages.get("lesson.version.commit.description"))
+            @b3.text(versionCommitForm("title"), '_label -> "Title")
+            @b3.textarea(versionCommitForm("description"), '_label -> "Description")
 
             @b3.submit('class -> "btn btn-primary") {
-                @Messages.get("lesson.version.commit")
+                Commit
             }
         }
     }
 
-    <h3>@Messages.get("lesson.version.local.modify")</h3>
+    <h3>Modify local changes</h3>
 
-    <a type="button" href="@routes.LessonVersionController.editVersionLocalChanges(lesson.getId())" class="btn btn-primary">@Messages.get("lesson.version.local.update")</a>
-    <a type="button" href="@routes.LessonVersionController.discardVersionLocalChanges(lesson.getId())" class="btn btn-primary">@Messages.get("lesson.version.local.discard")</a>
+    <a type="button" href="@routes.LessonVersionController.editVersionLocalChanges(lesson.getId())" class="btn btn-primary">Update working copy with other users' changes</a>
+    <a type="button" href="@routes.LessonVersionController.discardVersionLocalChanges(lesson.getId())" class="btn btn-primary">Discard local changes</a>
 }

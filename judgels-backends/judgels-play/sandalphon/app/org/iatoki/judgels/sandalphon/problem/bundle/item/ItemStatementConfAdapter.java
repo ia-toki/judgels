@@ -4,24 +4,25 @@ import com.google.gson.Gson;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.itemStatementConfView;
 import play.api.mvc.Call;
 import play.data.Form;
+import play.data.FormFactory;
 import play.mvc.Http;
 import play.twirl.api.Html;
 
 public final class ItemStatementConfAdapter implements BundleItemConfAdapter {
 
     @Override
-    public Form generateForm() {
-        return Form.form(ItemStatementConfForm.class);
+    public Form generateForm(FormFactory formFactory) {
+        return formFactory.form(ItemStatementConfForm.class);
     }
 
     @Override
-    public Form generateForm(String conf, String meta) {
+    public Form generateForm(FormFactory formFactory, String conf, String meta) {
         ItemStatementConf itemConf = new Gson().fromJson(conf, ItemStatementConf.class);
         ItemStatementConfForm itemForm = new ItemStatementConfForm();
         itemForm.statement = itemConf.statement;
         itemForm.meta = meta;
 
-        return Form.form(ItemStatementConfForm.class).fill(itemForm);
+        return formFactory.form(ItemStatementConfForm.class).fill(itemForm);
     }
 
     @Override
@@ -30,8 +31,8 @@ public final class ItemStatementConfAdapter implements BundleItemConfAdapter {
     }
 
     @Override
-    public Form bindFormFromRequest(Http.Request request) {
-        return Form.form(ItemStatementConfForm.class).bindFromRequest();
+    public Form bindFormFromRequest(FormFactory formFactory, Http.Request request) {
+        return formFactory.form(ItemStatementConfForm.class).bindFromRequest();
     }
 
     @Override

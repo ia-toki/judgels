@@ -28,14 +28,14 @@ public final class JophielClientController extends AbstractJophielClientControll
 
     @AddCSRFToken
     public Result login() {
-        Form<LoginForm> form = Form.form(LoginForm.class);
+        Form<LoginForm> form = formFactory.form(LoginForm.class);
         return showLogin(form);
     }
 
     @RequireCSRFCheck
     @Transactional
     public Result postLogin() {
-        Form<LoginForm> form = Form.form(LoginForm.class).bindFromRequest();
+        Form<LoginForm> form = formFactory.form(LoginForm.class).bindFromRequest();
         if (form.hasErrors()) {
             return showLogin(form);
         }
@@ -47,9 +47,9 @@ public final class JophielClientController extends AbstractJophielClientControll
             session = sessionService.logIn(Credentials.of(data.username, data.password));
         } catch (RemoteException e) {
             if (e.getError().errorName().equals(PlaySessionErrors.ROLE_NOT_ALLOWED.name())) {
-                form.reject("User role not allowed to log in.");
+                form = form.withGlobalError("User role not allowed to log in.");
             } else if (e.getStatus() == 403) {
-                form.reject("Username or password incorrect.");
+                form = form.withGlobalError("Username or password incorrect.");
             }
             return showLogin(form);
         }

@@ -9,7 +9,7 @@ public final class JophielSessionUtils {
         return "4";
     }
 
-    public static boolean isSessionValid(Http.Context context) {
-        return getSessionVersion().equals(context.session().get("version"));
+    public static boolean isSessionValid(Http.Request req) {
+        return getSessionVersion().equals(req.session().getOptional("version").orElse(""));
     }
 }

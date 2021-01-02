@@ -6,13 +6,15 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.play.jid.JidService;
-import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
@@ -26,7 +28,6 @@ import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFound
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,7 +135,12 @@ public final class ProblemServiceImpl implements ProblemService {
         List<ProblemPartnerModel> problemPartnerModels = problemPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid), pageIndex * pageSize, pageSize);
         List<ProblemPartner> problemPartners = Lists.transform(problemPartnerModels, m -> createProblemPartnerFromModel(m));
 
-        return new Page<>(problemPartners, totalRows, pageIndex, pageSize);
+        return new Page.Builder<ProblemPartner>()
+                .page(problemPartners)
+                .totalCount(totalRows)
+                .pageIndex(pageIndex)
+                .pageSize(pageSize)
+                .build();
     }
 
     @Override
@@ -170,7 +176,12 @@ public final class ProblemServiceImpl implements ProblemService {
             List<ProblemModel> problemModels = problemDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
 
             List<Problem> problems = Lists.transform(problemModels, m -> createProblemFromModel(m));
-            return new Page<>(problems, totalRows, pageIndex, pageSize);
+            return new Page.Builder<Problem>()
+                    .page(problems)
+                    .totalCount(totalRows)
+                    .pageIndex(pageIndex)
+                    .pageSize(pageSize)
+                    .build();
         } else {
             List<String> problemJidsWhereIsAuthor = problemDao.getJidsByAuthorJid(userJid);
             List<String> problemJidsWhereIsPartner = problemPartnerDao.getProblemJidsByPartnerJid(userJid);
@@ -185,7 +196,12 @@ public final class ProblemServiceImpl implements ProblemService {
             List<ProblemModel> problemModels = problemDao.findSortedByFiltersIn(orderBy, orderDir, filterString, ImmutableMap.of(ProblemModel_.jid, allowedProblemJids), pageIndex * pageSize, pageSize);
 
             List<Problem> problems = Lists.transform(problemModels, m -> createProblemFromModel(m));
-            return new Page<>(problems, totalRows, pageIndex, pageSize);
+            return new Page.Builder<Problem>()
+                    .page(problems)
+                    .totalCount(totalRows)
+                    .pageIndex(pageIndex)
+                    .pageSize(pageSize)
+                    .build();
         }
 
     }
@@ -464,7 +480,15 @@ public final class ProblemServiceImpl implements ProblemService {
     }
 
     private static Problem createProblemFromModel(ProblemModel problemModel) {
-        return new Problem(problemModel.id, problemModel.jid, problemModel.slug, problemModel.createdBy, problemModel.additionalNote, new Date(problemModel.updatedAt.toEpochMilli()), getProblemType(problemModel));
+        return new Problem.Builder()
+                .id(problemModel.id)
+                .jid(problemModel.jid)
+                .slug(problemModel.slug)
+                .additionalNote(problemModel.additionalNote)
+                .authorJid(problemModel.createdBy)
+                .lastUpdateTime(problemModel.updatedAt)
+                .type(getProblemType(problemModel))
+                .build();
     }
 
     private static ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel problemPartnerModel) {
