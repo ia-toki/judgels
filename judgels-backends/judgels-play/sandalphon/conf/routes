@@ -56,7 +56,7 @@ POST        /problems/programming/:problemId/partners                           
 GET         /problems/programming/:problemId/partners/:partnerId/edit               org.iatoki.judgels.sandalphon.problem.programming.partner.ProgrammingProblemPartnerController.editPartner(problemId: Long, partnerId: Long)
 POST        /problems/programming/:problemId/partners/:partnerId                    org.iatoki.judgels.sandalphon.problem.programming.partner.ProgrammingProblemPartnerController.postEditPartner(problemId: Long, partnerId: Long)
 
-
++nocsrf
 POST        /problems/programming/:problemId/submissions                            org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingProblemSubmissionController.postSubmit(problemId: Long)
 GET         /problems/programming/:problemId/submissions                            org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingProblemSubmissionController.viewSubmissions(problemId: Long)
 GET         /problems/programming/:problemId/submissions/                           org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingProblemSubmissionController.listSubmissions(problemId: Long, pageIndex: Long ?= 0, orderBy ?= "id", orderDir ?= "desc")
@@ -97,6 +97,7 @@ POST        /problems/bundle/:problemId/partners                                
 GET         /problems/bundle/:problemId/partners/:partnerId/edit                    org.iatoki.judgels.sandalphon.problem.bundle.partner.BundleProblemPartnerController.editPartner(problemId: Long, partnerId: Long)
 POST        /problems/bundle/:problemId/partners/:partnerId                         org.iatoki.judgels.sandalphon.problem.bundle.partner.BundleProblemPartnerController.postEditPartner(problemId: Long, partnerId: Long)
 
++nocsrf
 POST        /problems/bundle/:problemId/submissions                                 org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleProblemSubmissionController.postSubmit(problemId: Long)
 GET         /problems/bundle/:problemId/submissions                                 org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleProblemSubmissionController.viewSubmissions(problemId: Long)
 GET         /problems/bundle/:problemId/submissions/                                org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleProblemSubmissionController.listSubmissions(problemId: Long, pageIndex: Long ?= 0, orderBy ?= "id", orderDir ?= "desc")
