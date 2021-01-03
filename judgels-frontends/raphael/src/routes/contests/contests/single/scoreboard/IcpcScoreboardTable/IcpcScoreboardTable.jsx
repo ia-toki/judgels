@@ -12,7 +12,7 @@ export function IcpcScoreboardTable({
   scoreboard: { state, content },
   profilesMap,
   onOpenSubmissionImage,
-  canViewOtherContestantSolution,
+  canViewSubmissions,
 }) {
   const renderData = () => {
     const rows = content.entries.map(renderRow);
@@ -72,7 +72,7 @@ export function IcpcScoreboardTable({
         ? '?'
         : '' + penalty;
 
-    const clickable = canViewOtherContestantSolution && attempted;
+    const clickable = canViewSubmissions && attempted;
 
     return (
       <td

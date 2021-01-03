@@ -11,7 +11,7 @@ export function IoiScoreboardTable({
   onOpenSubmissionImage,
   scoreboard: { state, content },
   profilesMap,
-  canViewOtherContestantSolution,
+  canViewSubmissions,
 }) {
   const renderData = () => {
     const rows = content.entries.map(renderRow);
@@ -40,7 +40,7 @@ export function IoiScoreboardTable({
   };
 
   const renderProblemCell = (idx, score, contestantJid, problemJid) => {
-    const clickable = canViewOtherContestantSolution && score !== null;
+    const clickable = canViewSubmissions && score !== null;
 
     return (
       <td

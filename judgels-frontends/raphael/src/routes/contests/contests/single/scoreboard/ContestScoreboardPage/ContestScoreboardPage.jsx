@@ -236,8 +236,11 @@ export class ContestScoreboardPage extends Component {
       );
     }
 
-    const { data: scoreboard, profilesMap, config } = response[0];
-    const { canViewOtherContestantSolution } = config;
+    const {
+      data: scoreboard,
+      profilesMap,
+      config: { canViewSubmissions },
+    } = response[0];
     if (this.props.contest.style === ContestStyle.ICPC) {
       return (
         <IcpcScoreboardTable
@@ -246,7 +249,7 @@ export class ContestScoreboardPage extends Component {
           onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
-          canViewOtherContestantSolution={canViewOtherContestantSolution}
+          canViewSubmissions={canViewSubmissions}
         />
       );
     } else if (this.props.contest.style === ContestStyle.IOI) {
@@ -257,7 +260,7 @@ export class ContestScoreboardPage extends Component {
           onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
-          canViewOtherContestantSolution={canViewOtherContestantSolution}
+          canViewSubmissions={canViewSubmissions}
         />
       );
     } else if (this.props.contest.style === ContestStyle.Bundle) {
