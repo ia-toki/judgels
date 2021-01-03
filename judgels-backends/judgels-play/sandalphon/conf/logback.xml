@@ -39,10 +39,8 @@
         <appender-ref ref="ACCESS_FILE" />
     </logger>
 
-    <!-- Set logging for all Akka library classes to INFO -->
+    <logger name="play" level="INFO" />
     <logger name="akka" level="INFO" />
-    <!-- Set a specific actor to DEBUG -->
-    <logger name="actors.MyActor" level="DEBUG" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
