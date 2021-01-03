@@ -30,7 +30,6 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     private final Cache<String, Boolean> contestantCache;
     private final Cache<String, Boolean> supervisorOrAboveCache;
     private final Cache<String, Boolean> managerCache;
-    private final Cache<String, Boolean> publicCache;
 
     @Inject
     public ContestRoleHibernateDao(HibernateDaoData data) {
@@ -49,10 +48,6 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
                 .expireAfterWrite(getShortDuration())
                 .build();
         this.managerCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build();
-        this.publicCache = Caffeine.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build();
@@ -111,20 +106,6 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasContestJid(contestJid))
                 .addCustomPredicates(hasManager(userJid))
-                .build()).isPresent();
-    }
-
-    @Override
-    public boolean isPublic(String contestJid) {
-        return publicCache.get(
-                contestJid,
-                $ -> isPublicUncached(contestJid));
-    }
-
-    private boolean isPublicUncached(String contestJid) {
-        return selectByFilter(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasContestJid(contestJid))
-                .addCustomPredicates(isVisibleAsViewer())
                 .build()).isPresent();
     }
 

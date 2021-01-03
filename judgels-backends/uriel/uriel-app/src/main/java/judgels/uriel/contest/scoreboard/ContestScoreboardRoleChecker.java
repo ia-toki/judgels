@@ -4,6 +4,7 @@ import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SCOREBOARD;
 
 import javax.inject.Inject;
+import judgels.service.actor.Actors;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
@@ -62,6 +63,6 @@ public class ContestScoreboardRoleChecker {
     }
 
     public boolean canViewSubmissions(Contest contest) {
-        return contestTimer.hasEnded(contest) && contestRoleDao.isPublic(contest.getJid());
+        return contestTimer.hasEnded(contest) && contestRoleChecker.canView(Actors.GUEST, contest);
     }
 }
