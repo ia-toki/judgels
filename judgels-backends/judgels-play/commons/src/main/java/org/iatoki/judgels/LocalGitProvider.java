@@ -1,6 +1,8 @@
 package org.iatoki.judgels;
 
 import com.google.common.collect.ImmutableList;
+import java.nio.file.Path;
+import judgels.fs.local.LocalFileSystem;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RebaseCommand;
 import org.eclipse.jgit.api.RebaseResult;
@@ -24,15 +26,15 @@ import java.util.List;
 
 public final class LocalGitProvider implements GitProvider {
 
-    private final LocalFileSystemProvider fileSystemProvider;
+    private final LocalFileSystem fs;
 
-    public LocalGitProvider(LocalFileSystemProvider fileSystemProvider) {
-        this.fileSystemProvider = fileSystemProvider;
+    public LocalGitProvider(LocalFileSystem fs) {
+        this.fs = fs;
     }
 
     @Override
-    public void init(List<String> rootDirPath) {
-        File dir = new File(fileSystemProvider.getURL(rootDirPath));
+    public void init(Path rootDirPath) {
+        File dir = fs.getFile(rootDirPath);
 
         try {
             Git.init().setDirectory(dir).call().close();
@@ -42,10 +44,10 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public void clone(List<String> originDirPath, List<String> rootDirPath) {
-        String uri = "file://" + fileSystemProvider.getURL(originDirPath);
+    public void clone(Path originDirPath, Path rootDirPath) {
+        String uri = "file://" + fs.getFile(originDirPath).getAbsolutePath();
 
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+        File root = fs.getFile(rootDirPath);
 
         try {
             Git.cloneRepository().setURI(uri).setDirectory(root).call().close();
@@ -55,8 +57,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public boolean fetch(List<String> rootDirPath) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public boolean fetch(Path rootDirPath) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -76,8 +78,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public void addAll(List<String> rootDirPath) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public void addAll(Path rootDirPath) {
+        File root = fs.getFile(rootDirPath);
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
             new Git(repo).add().addFilepattern(".").call();
@@ -88,8 +90,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public void commit(List<String> rootDirPath, String committerName, String committerEmail, String title, String description) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public void commit(Path rootDirPath, String committerName, String committerEmail, String title, String description) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -101,8 +103,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public boolean rebase(List<String> rootDirPath) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public boolean rebase(Path rootDirPath) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -122,8 +124,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public boolean push(List<String> rootDirPath) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public boolean push(Path rootDirPath) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -139,8 +141,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public void resetToParent(List<String> rootDirPath) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public void resetToParent(Path rootDirPath) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -152,8 +154,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public void resetHard(List<String> rootDirPath) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public void resetHard(Path rootDirPath) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -165,8 +167,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public List<GitCommit> getLog(List<String> rootDirPath) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public List<GitCommit> getLog(Path rootDirPath) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -185,8 +187,8 @@ public final class LocalGitProvider implements GitProvider {
     }
 
     @Override
-    public void restore(List<String> rootDirPath, String hash) {
-        File root = new File(fileSystemProvider.getURL(rootDirPath));
+    public void restore(Path rootDirPath, String hash) {
+        File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
@@ -229,10 +231,5 @@ public final class LocalGitProvider implements GitProvider {
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public String getCommitDiff(List<String> rootDirPath, String commitHash) {
-        return "";
     }
 }

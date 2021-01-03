@@ -1,11 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import java.nio.file.Paths;
+import judgels.fs.FileSystem;
 import judgels.persistence.api.Page;
-import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingResult;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BaseBundleGradingDao;
@@ -152,20 +152,16 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
     }
 
     @Override
-    public void storeSubmissionFiles(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid, BundleAnswer answer) {
-        List<FileSystemProvider> fileSystemProviders = Lists.newArrayList(localFileSystemProvider);
-        if (remoteFileSystemProvider != null) {
-            fileSystemProviders.add(remoteFileSystemProvider);
+    public void storeSubmissionFiles(FileSystem localFs, FileSystem remoteFs, String submissionJid, BundleAnswer answer) {
+        List<FileSystem> fileSystemProviders = Lists.newArrayList(localFs);
+        if (remoteFs != null) {
+            fileSystemProviders.add(remoteFs);
         }
 
-        for (FileSystemProvider fileSystemProvider : fileSystemProviders) {
-            try {
-                fileSystemProvider.createDirectory(ImmutableList.of(submissionJid));
+        for (FileSystem fileSystemProvider : fileSystemProviders) {
+            fileSystemProvider.createDirectory(Paths.get(submissionJid));
 
-                fileSystemProvider.writeToFile(ImmutableList.of(submissionJid, "answer.json"), new Gson().toJson(answer));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            fileSystemProvider.writeToFile(Paths.get(submissionJid, "answer.json"), new Gson().toJson(answer));
         }
     }
 
@@ -175,16 +171,16 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
     }
 
     @Override
-    public BundleAnswer createBundleAnswerFromPastSubmission(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid) throws IOException {
-        FileSystemProvider fileSystemProvider;
+    public BundleAnswer createBundleAnswerFromPastSubmission(FileSystem localFs, FileSystem remoteFs, String submissionJid) throws IOException {
+        FileSystem fileSystemProvider;
 
-        if (localFileSystemProvider.directoryExists(ImmutableList.of(submissionJid))) {
-            fileSystemProvider = localFileSystemProvider;
+        if (localFs.directoryExists(Paths.get(submissionJid))) {
+            fileSystemProvider = localFs;
         } else {
-            fileSystemProvider = remoteFileSystemProvider;
+            fileSystemProvider = remoteFs;
         }
 
-        return new Gson().fromJson(fileSystemProvider.readFromFile(ImmutableList.of(submissionJid, "answer.json")), BundleAnswer.class);
+        return new Gson().fromJson(fileSystemProvider.readFromFile(Paths.get(submissionJid, "answer.json")), BundleAnswer.class);
     }
 
     private void grade(SM submissionModel, BundleAnswer answer, String userJid, String userIpAddress) {

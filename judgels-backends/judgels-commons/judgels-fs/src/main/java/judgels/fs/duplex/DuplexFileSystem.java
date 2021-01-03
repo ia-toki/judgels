@@ -19,6 +19,31 @@ public final class DuplexFileSystem implements FileSystem {
     }
 
     @Override
+    public void createDirectory(Path dirPath) {
+        local.createDirectory(dirPath);
+    }
+
+    @Override
+    public boolean directoryExists(Path dirPath) {
+        return local.directoryExists(dirPath);
+    }
+
+    @Override
+    public void createFile(Path filePath) {
+        local.createFile(filePath);
+    }
+
+    @Override
+    public void removeFile(Path filePath) {
+        local.removeFile(filePath);
+    }
+
+    @Override
+    public File getFile(Path filePath) {
+        return local.getFile(filePath);
+    }
+
+    @Override
     public void uploadPublicFile(Path filePath, InputStream content) {
         aws.uploadPublicFile(filePath, content);
         local.uploadPublicFile(filePath, content);

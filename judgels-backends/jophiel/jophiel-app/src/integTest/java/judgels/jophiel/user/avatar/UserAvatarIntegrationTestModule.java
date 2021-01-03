@@ -24,6 +24,25 @@ public class UserAvatarIntegrationTestModule {
 
     static class FakeFs implements FileSystem {
         @Override
+        public void createDirectory(Path dirPath) {}
+
+        @Override
+        public boolean directoryExists(Path dirPath) {
+            return false;
+        }
+
+        @Override
+        public void createFile(Path filePath) {}
+
+        @Override
+        public void removeFile(Path filePath) {}
+
+        @Override
+        public File getFile(Path filePath) {
+            return filePath.toFile();
+        }
+
+        @Override
         public void uploadPublicFile(Path filePath, InputStream content) {}
 
         @Override

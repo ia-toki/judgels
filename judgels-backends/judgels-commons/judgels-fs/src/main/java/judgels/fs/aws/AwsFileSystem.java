@@ -64,6 +64,31 @@ public final class AwsFileSystem implements FileSystem {
     }
 
     @Override
+    public void createDirectory(Path dirPath) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean directoryExists(Path dirPath) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void createFile(Path filePath) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeFile(Path filePath) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public File getFile(Path filePath) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void uploadPublicFile(Path filePath, InputStream content) {
         String destFilePathString = filePath.toString();
 

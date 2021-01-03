@@ -6,12 +6,15 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import java.io.FileInputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import judgels.fs.FileInfo;
+import judgels.fs.FileSystem;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.play.jid.JidService;
@@ -36,14 +39,14 @@ import java.util.Set;
 public final class ProblemServiceImpl implements ProblemService {
 
     private final ProblemDao problemDao;
-    private final FileSystemProvider problemFileSystemProvider;
+    private final FileSystem problemFs;
     private final GitProvider problemGitProvider;
     private final ProblemPartnerDao problemPartnerDao;
 
     @Inject
-    public ProblemServiceImpl(ProblemDao problemDao, @ProblemFileSystemProvider FileSystemProvider problemFileSystemProvider, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
+    public ProblemServiceImpl(ProblemDao problemDao, @ProblemFileSystemProvider FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
         this.problemDao = problemDao;
-        this.problemFileSystemProvider = problemFileSystemProvider;
+        this.problemFs = problemFs;
         this.problemGitProvider = problemGitProvider;
         this.problemPartnerDao = problemPartnerDao;
     }
@@ -57,7 +60,7 @@ public final class ProblemServiceImpl implements ProblemService {
         problemDao.persist(problemModel, type.ordinal(), userJid, userIpAddress);
 
         initStatements(problemModel.jid, initialLanguageCode);
-        problemFileSystemProvider.createDirectory(getClonesDirPath(problemModel.jid));
+        problemFs.createDirectory(getClonesDirPath(problemModel.jid));
 
         return createProblemFromModel(problemModel);
     }
@@ -208,7 +211,7 @@ public final class ProblemServiceImpl implements ProblemService {
 
     @Override
     public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String problemJid) throws IOException {
-        String langs = problemFileSystemProvider.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
+        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
 
         return new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() {
         }.getType());
@@ -216,51 +219,51 @@ public final class ProblemServiceImpl implements ProblemService {
 
     @Override
     public void addLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        String langs = problemFileSystemProvider.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
+        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
         Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
 
         availableLanguages.put(languageCode, StatementLanguageStatus.ENABLED);
 
         ProblemStatement defaultLanguageStatement = getStatement(userJid, problemJid, getDefaultLanguage(userJid, problemJid));
-        problemFileSystemProvider.writeToFile(getStatementTitleFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getTitle());
-        problemFileSystemProvider.writeToFile(getStatementTextFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getText());
-        problemFileSystemProvider.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
+        problemFs.writeToFile(getStatementTitleFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getTitle());
+        problemFs.writeToFile(getStatementTextFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getText());
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
     }
 
     @Override
     public void enableLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        String langs = problemFileSystemProvider.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
+        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
         Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
 
         availableLanguages.put(languageCode, StatementLanguageStatus.ENABLED);
 
-        problemFileSystemProvider.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
     }
 
     @Override
     public void disableLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        String langs = problemFileSystemProvider.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
+        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
         Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
 
         availableLanguages.put(languageCode, StatementLanguageStatus.DISABLED);
 
-        problemFileSystemProvider.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
     }
 
     @Override
     public void makeDefaultLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        problemFileSystemProvider.writeToFile(getStatementDefaultLanguageFilePath(userJid, problemJid), languageCode);
+        problemFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, problemJid), languageCode);
     }
 
     @Override
     public String getDefaultLanguage(String userJid, String problemJid) throws IOException {
-        return problemFileSystemProvider.readFromFile(getStatementDefaultLanguageFilePath(userJid, problemJid));
+        return problemFs.readFromFile(getStatementDefaultLanguageFilePath(userJid, problemJid));
     }
 
     @Override
     public ProblemStatement getStatement(String userJid, String problemJid, String languageCode) throws IOException {
-        String title = problemFileSystemProvider.readFromFile(getStatementTitleFilePath(userJid, problemJid, languageCode));
-        String text = problemFileSystemProvider.readFromFile(getStatementTextFilePath(userJid, problemJid, languageCode));
+        String title = problemFs.readFromFile(getStatementTitleFilePath(userJid, problemJid, languageCode));
+        String text = problemFs.readFromFile(getStatementTextFilePath(userJid, problemJid, languageCode));
 
         return new ProblemStatement.Builder().title(title).text(text).build();
     }
@@ -273,7 +276,7 @@ public final class ProblemServiceImpl implements ProblemService {
 
         for (Map.Entry<String, StatementLanguageStatus> entry : availableLanguages.entrySet()) {
             if (entry.getValue() == StatementLanguageStatus.ENABLED) {
-                String title = problemFileSystemProvider.readFromFile(getStatementTitleFilePath(userJid, problemJid, entry.getKey()));
+                String title = problemFs.readFromFile(getStatementTitleFilePath(userJid, problemJid, entry.getKey()));
                 titlesByLanguageBuilder.put(entry.getKey(), title);
             }
         }
@@ -284,45 +287,45 @@ public final class ProblemServiceImpl implements ProblemService {
     @Override
     public void updateStatement(String userJid, String problemJid, String languageCode, ProblemStatement statement) throws IOException {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
-        problemFileSystemProvider.writeToFile(getStatementTitleFilePath(userJid, problemModel.jid, languageCode), statement.getTitle());
-        problemFileSystemProvider.writeToFile(getStatementTextFilePath(userJid, problemModel.jid, languageCode), statement.getText());
+        problemFs.writeToFile(getStatementTitleFilePath(userJid, problemModel.jid, languageCode), statement.getTitle());
+        problemFs.writeToFile(getStatementTextFilePath(userJid, problemModel.jid, languageCode), statement.getText());
     }
 
     @Override
     public void uploadStatementMediaFile(String userJid, String problemJid, File mediaFile, String filename) throws IOException {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
-        List<String> mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
-        problemFileSystemProvider.uploadFile(mediaDirPath, mediaFile, filename);
+        Path mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
+        problemFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
     }
 
     @Override
     public void uploadStatementMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) throws IOException {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
-        List<String> mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
-        problemFileSystemProvider.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
+        Path mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
+        problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
     }
 
     @Override
     public List<FileInfo> getStatementMediaFiles(String userJid, String problemJid) {
-        List<String> mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
-        return problemFileSystemProvider.listFilesInDirectory(mediaDirPath);
+        Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
+        return problemFs.listFilesInDirectory(mediaDirPath);
     }
 
     @Override
     public String getStatementMediaFileURL(String userJid, String problemJid, String filename) {
-        List<String> mediaFilePath = appendPath(getStatementMediaDirPath(userJid, problemJid), filename);
-        return problemFileSystemProvider.getURL(mediaFilePath);
+        Path mediaFilePath = getStatementMediaDirPath(userJid, problemJid).resolve(filename);
+        return problemFs.getPublicFileUrl(mediaFilePath);
     }
 
     @Override
     public List<GitCommit> getVersions(String userJid, String problemJid) {
-        List<String> root = getRootDirPath(problemFileSystemProvider, userJid, problemJid);
+        Path root = getRootDirPath(problemFs, userJid, problemJid);
         return problemGitProvider.getLog(root);
     }
 
     @Override
     public void initRepository(String userJid, String problemJid) {
-        List<String> root = getRootDirPath(problemFileSystemProvider, null, problemJid);
+        Path root = getRootDirPath(problemFs, null, problemJid);
 
         problemGitProvider.init(root);
         problemGitProvider.addAll(root);
@@ -331,24 +334,24 @@ public final class ProblemServiceImpl implements ProblemService {
 
     @Override
     public boolean userCloneExists(String userJid, String problemJid) {
-        List<String> root = getCloneDirPath(userJid, problemJid);
+        Path root = getCloneDirPath(userJid, problemJid);
 
-        return problemFileSystemProvider.directoryExists(root);
+        return problemFs.directoryExists(root);
     }
 
     @Override
     public void createUserCloneIfNotExists(String userJid, String problemJid) {
-        List<String> origin = getOriginDirPath(problemJid);
-        List<String> root = getCloneDirPath(userJid, problemJid);
+        Path origin = getOriginDirPath(problemJid);
+        Path root = getCloneDirPath(userJid, problemJid);
 
-        if (!problemFileSystemProvider.directoryExists(root)) {
+        if (!problemFs.directoryExists(root)) {
             problemGitProvider.clone(origin, root);
         }
     }
 
     @Override
     public boolean commitThenMergeUserClone(String userJid, String problemJid, String title, String text, String userIpAddress) {
-        List<String> root = getCloneDirPath(userJid, problemJid);
+        Path root = getCloneDirPath(userJid, problemJid);
 
         problemGitProvider.addAll(root);
         problemGitProvider.commit(root, userJid, "no@email.com", title, text);
@@ -367,7 +370,7 @@ public final class ProblemServiceImpl implements ProblemService {
 
     @Override
     public boolean updateUserClone(String userJid, String problemJid) {
-        List<String> root = getCloneDirPath(userJid, problemJid);
+        Path root = getCloneDirPath(userJid, problemJid);
 
         problemGitProvider.addAll(root);
         problemGitProvider.commit(root, userJid, "no@email.com", "dummy", "dummy");
@@ -380,8 +383,8 @@ public final class ProblemServiceImpl implements ProblemService {
 
     @Override
     public boolean pushUserClone(String userJid, String problemJid, String userIpAddress) {
-        List<String> origin = getOriginDirPath(problemJid);
-        List<String> root = getRootDirPath(problemFileSystemProvider, userJid, problemJid);
+        Path origin = getOriginDirPath(problemJid);
+        Path root = getRootDirPath(problemFs, userJid, problemJid);
 
         if (problemGitProvider.push(root)) {
             problemGitProvider.resetHard(origin);
@@ -397,21 +400,21 @@ public final class ProblemServiceImpl implements ProblemService {
 
     @Override
     public boolean fetchUserClone(String userJid, String problemJid) {
-        List<String> root = getRootDirPath(problemFileSystemProvider, userJid, problemJid);
+        Path root = getRootDirPath(problemFs, userJid, problemJid);
 
         return problemGitProvider.fetch(root);
     }
 
     @Override
     public void discardUserClone(String userJid, String problemJid) throws IOException {
-        List<String> root = getRootDirPath(problemFileSystemProvider, userJid, problemJid);
+        Path root = getRootDirPath(problemFs, userJid, problemJid);
 
-        problemFileSystemProvider.removeFile(root);
+        problemFs.removeFile(root);
     }
 
     @Override
     public void restore(String problemJid, String hash, String userJid, String userIpAddress) {
-        List<String> root = getOriginDirPath(problemJid);
+        Path root = getOriginDirPath(problemJid);
 
         problemGitProvider.restore(root, hash);
 
@@ -421,50 +424,50 @@ public final class ProblemServiceImpl implements ProblemService {
     }
 
     private void initStatements(String problemJid, String initialLanguageCode) throws IOException {
-        List<String> statementsDirPath = getStatementsDirPath(null, problemJid);
-        problemFileSystemProvider.createDirectory(statementsDirPath);
+        Path statementsDirPath = getStatementsDirPath(null, problemJid);
+        problemFs.createDirectory(statementsDirPath);
 
-        List<String> statementDirPath = getStatementDirPath(null, problemJid, initialLanguageCode);
-        problemFileSystemProvider.createDirectory(statementDirPath);
+        Path statementDirPath = getStatementDirPath(null, problemJid, initialLanguageCode);
+        problemFs.createDirectory(statementDirPath);
 
-        List<String> mediaDirPath = getStatementMediaDirPath(null, problemJid);
-        problemFileSystemProvider.createDirectory(mediaDirPath);
-        problemFileSystemProvider.createFile(appendPath(mediaDirPath, ".gitkeep"));
+        Path mediaDirPath = getStatementMediaDirPath(null, problemJid);
+        problemFs.createDirectory(mediaDirPath);
+        problemFs.createFile(mediaDirPath.resolve(".gitkeep"));
 
-        problemFileSystemProvider.createFile(getStatementTitleFilePath(null, problemJid, initialLanguageCode));
-        problemFileSystemProvider.createFile(getStatementTextFilePath(null, problemJid, initialLanguageCode));
-        problemFileSystemProvider.writeToFile(getStatementDefaultLanguageFilePath(null, problemJid), initialLanguageCode);
+        problemFs.createFile(getStatementTitleFilePath(null, problemJid, initialLanguageCode));
+        problemFs.createFile(getStatementTextFilePath(null, problemJid, initialLanguageCode));
+        problemFs.writeToFile(getStatementDefaultLanguageFilePath(null, problemJid), initialLanguageCode);
 
         Map<String, StatementLanguageStatus> initialLanguage = ImmutableMap.of(initialLanguageCode, StatementLanguageStatus.ENABLED);
-        problemFileSystemProvider.writeToFile(getStatementAvailableLanguagesFilePath(null, problemJid), new Gson().toJson(initialLanguage));
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(null, problemJid), new Gson().toJson(initialLanguage));
     }
 
-    private List<String> getStatementsDirPath(String userJid, String problemJid) {
-        return appendPath(getRootDirPath(problemFileSystemProvider, userJid, problemJid), "statements");
+    private Path getStatementsDirPath(String userJid, String problemJid) {
+        return getRootDirPath(problemFs, userJid, problemJid).resolve("statements");
     }
 
-    private List<String> getStatementDirPath(String userJid, String problemJid, String languageCode) {
-        return appendPath(getStatementsDirPath(userJid, problemJid), languageCode);
+    private Path getStatementDirPath(String userJid, String problemJid, String languageCode) {
+        return getStatementsDirPath(userJid, problemJid).resolve(languageCode);
     }
 
-    private List<String> getStatementTitleFilePath(String userJid, String problemJid, String languageCode) {
-        return appendPath(getStatementDirPath(userJid, problemJid, languageCode), "title.txt");
+    private Path getStatementTitleFilePath(String userJid, String problemJid, String languageCode) {
+        return getStatementDirPath(userJid, problemJid, languageCode).resolve("title.txt");
     }
 
-    private List<String> getStatementTextFilePath(String userJid, String problemJid, String languageCode) {
-        return appendPath(getStatementDirPath(userJid, problemJid, languageCode), "text.html");
+    private Path getStatementTextFilePath(String userJid, String problemJid, String languageCode) {
+        return getStatementDirPath(userJid, problemJid, languageCode).resolve("text.html");
     }
 
-    private List<String> getStatementDefaultLanguageFilePath(String userJid, String problemJid) {
-        return appendPath(getStatementsDirPath(userJid, problemJid), "defaultLanguage.txt");
+    private Path getStatementDefaultLanguageFilePath(String userJid, String problemJid) {
+        return getStatementsDirPath(userJid, problemJid).resolve("defaultLanguage.txt");
     }
 
-    private List<String> getStatementAvailableLanguagesFilePath(String userJid, String problemJid) {
-        return appendPath(getStatementsDirPath(userJid, problemJid), "availableLanguages.txt");
+    private Path getStatementAvailableLanguagesFilePath(String userJid, String problemJid) {
+        return getStatementsDirPath(userJid, problemJid).resolve("availableLanguages.txt");
     }
 
-    private List<String> getStatementMediaDirPath(String userJid, String problemJid) {
-        return appendPath(getStatementsDirPath(userJid, problemJid), "resources");
+    private Path getStatementMediaDirPath(String userJid, String problemJid) {
+        return getStatementsDirPath(userJid, problemJid).resolve("resources");
     }
 
     private static ProblemType getProblemType(ProblemModel problemModel) {
@@ -495,31 +498,29 @@ public final class ProblemServiceImpl implements ProblemService {
         return new ProblemPartner(problemPartnerModel.id, problemPartnerModel.problemJid, problemPartnerModel.userJid, problemPartnerModel.baseConfig, problemPartnerModel.childConfig);
     }
 
-    private static List<String> getOriginDirPath(String problemJid) {
-        return Lists.newArrayList(SandalphonProperties.getInstance().getBaseProblemsDirKey(), problemJid);
+    private static Path getOriginDirPath(String problemJid) {
+        return Paths.get(SandalphonProperties.getInstance().getBaseProblemsDirKey(), problemJid);
     }
 
-    private static List<String> getClonesDirPath(String problemJid) {
-        return Lists.newArrayList(SandalphonProperties.getInstance().getBaseProblemClonesDirKey(), problemJid);
+    private static Path getClonesDirPath(String problemJid) {
+        return Paths.get(SandalphonProperties.getInstance().getBaseProblemClonesDirKey(), problemJid);
     }
 
-    private static List<String> getCloneDirPath(String userJid, String problemJid) {
-        return appendPath(getClonesDirPath(problemJid), userJid);
+    private static Path getCloneDirPath(String userJid, String problemJid) {
+        return getClonesDirPath(problemJid).resolve(userJid);
     }
 
-    private static List<String> getRootDirPath(FileSystemProvider fileSystemProvider, String userJid, String problemJid) {
-        List<String> origin =  getOriginDirPath(problemJid);
-        List<String> root = getCloneDirPath(userJid, problemJid);
+    private static Path getRootDirPath(FileSystem fs, String userJid, String problemJid) {
+        Path origin = getOriginDirPath(problemJid);
+        if (userJid == null) {
+            return origin;
+        }
 
-        if (userJid == null || !fileSystemProvider.directoryExists(root)) {
+        Path root = getCloneDirPath(userJid, problemJid);
+        if (!fs.directoryExists(root)) {
             return origin;
         } else {
             return root;
         }
-    }
-
-    private static List<String> appendPath(List<String> parentPath, String child) {
-        parentPath.add(child);
-        return parentPath;
     }
 }

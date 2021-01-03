@@ -2,12 +2,12 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.interactive.InteractiveGradingConfig;
 import org.apache.commons.io.FilenameUtils;
-import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWithAutoPopulation;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.interactiveGradingConfigView;
 import play.api.mvc.Call;

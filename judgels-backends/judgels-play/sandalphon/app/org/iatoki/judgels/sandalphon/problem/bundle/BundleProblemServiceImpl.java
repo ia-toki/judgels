@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
 import com.google.gson.Gson;
-import org.iatoki.judgels.FileSystemProvider;
+import judgels.fs.FileSystem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemsConfig;
@@ -13,18 +13,18 @@ import java.io.IOException;
 @Singleton
 public final class BundleProblemServiceImpl implements BundleProblemService {
 
-    private final FileSystemProvider problemFileSystemProvider;
+    private final FileSystem problemFs;
 
     @Inject
-    public BundleProblemServiceImpl(@ProblemFileSystemProvider FileSystemProvider problemFileSystemProvider) {
-        this.problemFileSystemProvider = problemFileSystemProvider;
+    public BundleProblemServiceImpl(@ProblemFileSystemProvider FileSystem problemFs) {
+        this.problemFs = problemFs;
     }
 
     @Override
     public void initBundleProblem(String problemJid) throws IOException {
-        problemFileSystemProvider.createDirectory(BundleProblemServiceImplUtils.getItemsDirPath(problemFileSystemProvider, problemJid, null));
+        problemFs.createDirectory(BundleProblemServiceImplUtils.getItemsDirPath(problemFs, problemJid, null));
 
         BundleItemsConfig config = BundleItemUtils.createDefaultItemConfig();
-        problemFileSystemProvider.writeToFile(BundleProblemServiceImplUtils.getItemsConfigFilePath(problemFileSystemProvider, problemJid, null), new Gson().toJson(config));
+        problemFs.writeToFile(BundleProblemServiceImplUtils.getItemsConfigFilePath(problemFs, problemJid, null), new Gson().toJson(config));
     }
 }

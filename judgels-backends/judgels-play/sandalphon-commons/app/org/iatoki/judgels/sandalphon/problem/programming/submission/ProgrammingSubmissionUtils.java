@@ -1,17 +1,17 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.nio.file.Paths;
+import judgels.fs.FileInfo;
+import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.FileSystemProvider;
 import play.mvc.Http;
 
 import java.io.File;
@@ -89,19 +89,19 @@ public final class ProgrammingSubmissionUtils {
         return new SubmissionSource.Builder().submissionFiles(submissionFiles.build()).build();
     }
 
-    public static SubmissionSource createSubmissionSourceFromPastSubmission(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid) {
+    public static SubmissionSource createSubmissionSourceFromPastSubmission(FileSystem localFs, FileSystem remoteFs, String submissionJid) {
         ImmutableMap.Builder<String, SourceFile> submissionFiles = ImmutableMap.builder();
 
-        FileSystemProvider fileSystemProvider;
+        FileSystem fileSystemProvider;
 
-        if (localFileSystemProvider.directoryExists(ImmutableList.of(submissionJid))) {
-            fileSystemProvider = localFileSystemProvider;
+        if (localFs.directoryExists(Paths.get(submissionJid))) {
+            fileSystemProvider = localFs;
         } else {
-            fileSystemProvider = remoteFileSystemProvider;
+            fileSystemProvider = remoteFs;
         }
 
-        for (FileInfo fieldKey : fileSystemProvider.listDirectoriesInDirectory(ImmutableList.of(submissionJid))) {
-            List<FileInfo> sourceFilesInDir = fileSystemProvider.listFilesInDirectory(ImmutableList.of(submissionJid, fieldKey.getName()));
+        for (FileInfo fieldKey : fileSystemProvider.listDirectoriesInDirectory(Paths.get(submissionJid))) {
+            List<FileInfo> sourceFilesInDir = fileSystemProvider.listFilesInDirectory(Paths.get(submissionJid, fieldKey.getName()));
 
             if (sourceFilesInDir.isEmpty()) {
                 throw new RuntimeException("Cannot find source files for key " + fieldKey.getName() + " for submission " + submissionJid);
@@ -109,35 +109,27 @@ public final class ProgrammingSubmissionUtils {
 
             FileInfo sourceFile = sourceFilesInDir.get(0);
 
-            try {
-                String name = sourceFile.getName();
-                byte[] content = fileSystemProvider.readByteArrayFromFile(ImmutableList.of(submissionJid, fieldKey.getName(), name));
-                submissionFiles.put(fieldKey.getName(), new SourceFile.Builder().name(name).content(content).build());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            String name = sourceFile.getName();
+            byte[] content = fileSystemProvider.readByteArrayFromFile(Paths.get(submissionJid, fieldKey.getName(), name));
+            submissionFiles.put(fieldKey.getName(), new SourceFile.Builder().name(name).content(content).build());
         }
 
         return new SubmissionSource.Builder().submissionFiles(submissionFiles.build()).build();
     }
 
-    public static void storeSubmissionFiles(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid, SubmissionSource submissionSource) {
-        List<FileSystemProvider> fileSystemProviders = Lists.newArrayList(localFileSystemProvider);
-        if (remoteFileSystemProvider != null) {
-            fileSystemProviders.add(remoteFileSystemProvider);
+    public static void storeSubmissionFiles(FileSystem localFs, FileSystem remoteFs, String submissionJid, SubmissionSource submissionSource) {
+        List<FileSystem> fileSystemProviders = Lists.newArrayList(localFs);
+        if (remoteFs != null) {
+            fileSystemProviders.add(remoteFs);
         }
 
-        for (FileSystemProvider fileSystemProvider : fileSystemProviders) {
-            try {
-                fileSystemProvider.createDirectory(ImmutableList.of(submissionJid));
+        for (FileSystem fileSystemProvider : fileSystemProviders) {
+            fileSystemProvider.createDirectory(Paths.get(submissionJid));
 
-                for (Map.Entry<String, SourceFile> entry : submissionSource.getSubmissionFiles().entrySet()) {
-                    String fieldKey = entry.getKey();
-                    SourceFile sourceFile = entry.getValue();
-                    fileSystemProvider.writeByteArrayToFile(ImmutableList.of(submissionJid, fieldKey, sourceFile.getName()), sourceFile.getContent());
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            for (Map.Entry<String, SourceFile> entry : submissionSource.getSubmissionFiles().entrySet()) {
+                String fieldKey = entry.getKey();
+                SourceFile sourceFile = entry.getValue();
+                fileSystemProvider.writeByteArrayToFile(Paths.get(submissionJid, fieldKey, sourceFile.getName()), sourceFile.getContent());
             }
         }
     }

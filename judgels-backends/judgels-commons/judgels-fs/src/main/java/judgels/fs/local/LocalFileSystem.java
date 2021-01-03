@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +37,39 @@ public final class LocalFileSystem implements FileSystem {
 
     public LocalFileSystem(Path baseDir) {
         this.baseDir = baseDir;
+    }
+
+    @Override
+    public void createDirectory(Path dirPath) {
+        try {
+            Files.createDirectories(baseDir.resolve(dirPath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean directoryExists(Path dirPath) {
+        return Files.isDirectory(baseDir.resolve(dirPath));
+    }
+
+    @Override
+    public void createFile(Path filePath) {
+        writeByteArrayToFile(filePath, new byte[0]);
+    }
+
+    @Override
+    public void removeFile(Path filePath) {
+        try {
+            MoreFiles.deleteRecursively(baseDir.resolve(filePath), RecursiveDeleteOption.ALLOW_INSECURE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public File getFile(Path filePath) {
+        return baseDir.resolve(filePath).toFile();
     }
 
     @Override
@@ -135,6 +169,7 @@ public final class LocalFileSystem implements FileSystem {
 
         List<FileInfo> fileInfos = Lists.newArrayList(Arrays.stream(files)
                 .filter(File::isFile)
+                .filter(file -> !IGNORABLE_FILES.contains(file.getName()))
                 .map(file -> new FileInfo.Builder()
                         .name(file.getName())
                         .size(file.length())

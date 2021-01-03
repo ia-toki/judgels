@@ -1,30 +1,29 @@
 package org.iatoki.judgels;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public interface GitProvider {
 
-    void init(List<String> rootDirPath);
+    void init(Path rootDirPath);
 
-    void clone(List<String> originDirPath, List<String> rootDirPath);
+    void clone(Path originDirPath, Path rootDirPath);
 
-    boolean fetch(List<String> rootDirPath);
+    boolean fetch(Path rootDirPath);
 
-    void addAll(List<String> rootDirPath);
+    void addAll(Path rootDirPath);
 
-    void commit(List<String> rootDirPath, String committerName, String committerEmail, String title, String description);
+    void commit(Path rootDirPath, String committerName, String committerEmail, String title, String description);
 
-    boolean rebase(List<String> rootDirPath);
+    boolean rebase(Path rootDirPath);
 
-    boolean push(List<String> rootDirPath);
+    boolean push(Path rootDirPath);
 
-    void resetToParent(List<String> rootDirPath);
+    void resetToParent(Path rootDirPath);
 
-    void resetHard(List<String> rootDirPath);
+    void resetHard(Path rootDirPath);
 
-    List<GitCommit> getLog(List<String> rootDirPath);
+    List<GitCommit> getLog(Path rootDirPath);
 
-    void restore(List<String> rootDirPath, String hash);
-
-    String getCommitDiff(List<String> rootDirPath, String commitHash);
+    void restore(Path rootDirPath, String hash);
 }

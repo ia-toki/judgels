@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
+import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
-import org.iatoki.judgels.FileInfo;
 
 import java.util.List;
 

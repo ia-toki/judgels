@@ -1,10 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
-import com.google.common.collect.Lists;
-import org.iatoki.judgels.FileSystemProvider;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import judgels.fs.FileSystem;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
-
-import java.util.List;
 
 public final class ProblemServiceImplUtils {
 
@@ -12,31 +11,29 @@ public final class ProblemServiceImplUtils {
         // prevent instantiation
     }
 
-    public static List<String> getOriginDirPath(String problemJid) {
-        return Lists.newArrayList(SandalphonProperties.getInstance().getBaseProblemsDirKey(), problemJid);
+    public static Path getOriginDirPath(String problemJid) {
+        return Paths.get(SandalphonProperties.getInstance().getBaseProblemsDirKey(), problemJid);
     }
 
-    public static List<String> getClonesDirPath(String problemJid) {
-        return Lists.newArrayList(SandalphonProperties.getInstance().getBaseProblemClonesDirKey(), problemJid);
+    public static Path getClonesDirPath(String problemJid) {
+        return Paths.get(SandalphonProperties.getInstance().getBaseProblemClonesDirKey(), problemJid);
     }
 
-    public static List<String> getCloneDirPath(String userJid, String problemJid) {
-        return appendPath(getClonesDirPath(problemJid), userJid);
+    public static Path getCloneDirPath(String userJid, String problemJid) {
+        return getClonesDirPath(problemJid).resolve(userJid);
     }
 
-    public static List<String> getRootDirPath(FileSystemProvider fileSystemProvider, String userJid, String problemJid) {
-        List<String> origin =  getOriginDirPath(problemJid);
-        List<String> root = getCloneDirPath(userJid, problemJid);
+    public static Path getRootDirPath(FileSystem fs, String userJid, String problemJid) {
+        Path origin = getOriginDirPath(problemJid);
+        if (userJid == null) {
+            return origin;
+        }
 
-        if (userJid == null || !fileSystemProvider.directoryExists(root)) {
+        Path root = getCloneDirPath(userJid, problemJid);
+        if (!fs.directoryExists(root)) {
             return origin;
         } else {
             return root;
         }
-    }
-
-    public static List<String> appendPath(List<String> parentPath, String child) {
-        parentPath.add(child);
-        return parentPath;
     }
 }

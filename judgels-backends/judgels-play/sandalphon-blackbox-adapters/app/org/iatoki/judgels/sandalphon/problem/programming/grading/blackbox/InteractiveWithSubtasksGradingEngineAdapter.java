@@ -2,11 +2,11 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
-import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWithTokilibFormat;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.TokilibFile;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.interactiveWithSubtasksGradingConfigView;

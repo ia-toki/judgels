@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.fs.FileSystem;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
-import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -29,13 +29,13 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
 
     private static final long PAGE_SIZE = 20;
 
-    private final FileSystemProvider bundleSubmissionFileSystemProvider;
+    private final FileSystem bundleSubmissionFs;
     private final BundleSubmissionService bundleSubmissionService;
     private final ProblemService problemService;
 
     @Inject
-    public BundleProblemSubmissionController(@SubmissionFileSystemProvider FileSystemProvider bundleSubmissionFileSystemProvider, BundleSubmissionService bundleSubmissionService, ProblemService problemService) {
-        this.bundleSubmissionFileSystemProvider = bundleSubmissionFileSystemProvider;
+    public BundleProblemSubmissionController(@SubmissionFileSystemProvider FileSystem bundleSubmissionFs, BundleSubmissionService bundleSubmissionService, ProblemService problemService) {
+        this.bundleSubmissionFs = bundleSubmissionFs;
         this.bundleSubmissionService = bundleSubmissionService;
         this.problemService = problemService;
     }
@@ -53,7 +53,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
 
         BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, ProblemControllerUtils.getCurrentStatementLanguage());
         String submissionJid = bundleSubmissionService.submit(problem.getJid(), null, bundleAnswer, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-        bundleSubmissionService.storeSubmissionFiles(bundleSubmissionFileSystemProvider, null, submissionJid, bundleAnswer);
+        bundleSubmissionService.storeSubmissionFiles(bundleSubmissionFs, null, submissionJid, bundleAnswer);
 
         return redirect(routes.BundleProblemSubmissionController.viewSubmissions(problem.getId()));
     }
@@ -92,7 +92,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
         BundleSubmission bundleSubmission = bundleSubmissionService.findBundleSubmissionById(submissionId);
         BundleAnswer bundleAnswer;
         try {
-            bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFileSystemProvider, null, bundleSubmission.getJid());
+            bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -117,7 +117,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
         BundleSubmission bundleSubmission = bundleSubmissionService.findBundleSubmissionById(submissionId);
         BundleAnswer bundleAnswer;
         try {
-            bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFileSystemProvider, null, bundleSubmission.getJid());
+            bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -149,7 +149,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
         for (BundleSubmission bundleSubmission : submissions) {
             BundleAnswer bundleAnswer;
             try {
-                bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFileSystemProvider, null, bundleSubmission.getJid());
+                bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

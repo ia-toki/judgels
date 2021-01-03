@@ -4,15 +4,15 @@ import com.google.inject.AbstractModule;
 import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import java.io.File;
+import java.nio.file.Paths;
 import java.time.Clock;
+import judgels.fs.FileSystem;
+import judgels.fs.local.LocalFileSystem;
 import judgels.persistence.ActorProvider;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.service.client.ClientChecker;
 import org.hibernate.SessionFactory;
-import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitProvider;
-import org.iatoki.judgels.LocalFileSystemProvider;
 import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.play.general.GeneralConfig;
 import org.iatoki.judgels.play.migration.DataMigrationInit;
@@ -30,7 +30,6 @@ import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionS
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionServiceImpl;
-import play.data.FormFactory;
 
 public final class SandalphonModule extends AbstractModule {
 
@@ -56,9 +55,9 @@ public final class SandalphonModule extends AbstractModule {
 
         bind(ClientChecker.class).toInstance(clientChecker(sandalphonConfig));
 
-        bind(FileSystemProvider.class).annotatedWith(ProblemFileSystemProvider.class).toInstance(problemFileSystemProvider(sandalphonConfig));
-        bind(FileSystemProvider.class).annotatedWith(SubmissionFileSystemProvider.class).toInstance(submissionFileSystemProvider(sandalphonConfig));
-        bind(FileSystemProvider.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider(sandalphonConfig));
+        bind(FileSystem.class).annotatedWith(ProblemFileSystemProvider.class).toInstance(problemFileSystemProvider(sandalphonConfig));
+        bind(FileSystem.class).annotatedWith(SubmissionFileSystemProvider.class).toInstance(submissionFileSystemProvider(sandalphonConfig));
+        bind(FileSystem.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider(sandalphonConfig));
         bind(GitProvider.class).annotatedWith(ProblemGitProvider.class).toInstance(problemGitProvider(sandalphonConfig));
         bind(GitProvider.class).annotatedWith(LessonGitProvider.class).toInstance(lessonGitProvider(sandalphonConfig));
 
@@ -71,16 +70,16 @@ public final class SandalphonModule extends AbstractModule {
         return new ClientChecker(config.getClients());
     }
 
-    private LocalFileSystemProvider problemFileSystemProvider(SandalphonConfiguration config) {
-        return new LocalFileSystemProvider(new File(config.getBaseDataDir()));
+    private LocalFileSystem problemFileSystemProvider(SandalphonConfiguration config) {
+        return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
     }
 
-    private FileSystemProvider submissionFileSystemProvider(SandalphonConfiguration config) {
-        return new LocalFileSystemProvider(new File(config.getBaseDataDir(), "submissions"));
+    private FileSystem submissionFileSystemProvider(SandalphonConfiguration config) {
+        return new LocalFileSystem(Paths.get(config.getBaseDataDir(), "submissions"));
     }
 
-    private LocalFileSystemProvider lessonFileSystemProvider(SandalphonConfiguration config) {
-        return new LocalFileSystemProvider(new File(config.getBaseDataDir()));
+    private LocalFileSystem lessonFileSystemProvider(SandalphonConfiguration config) {
+        return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
     }
 
     private GitProvider problemGitProvider(SandalphonConfiguration config) {

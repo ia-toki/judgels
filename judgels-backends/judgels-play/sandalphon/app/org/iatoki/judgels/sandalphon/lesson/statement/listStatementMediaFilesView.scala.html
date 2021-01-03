@@ -1,6 +1,6 @@
+@import judgels.fs.FileInfo
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.sandalphon.lesson.statement.routes
-@import org.iatoki.judgels.FileInfo
 @import org.iatoki.judgels.sandalphon.resource.UploadFileForm
 
 @(uploadFileForm: Form[UploadFileForm], lessonId: Long, mediaFiles: List[FileInfo], isAllowedToUploadMediaFiles: Boolean)
@@ -50,7 +50,7 @@
     @for(file <- mediaFiles) {
         <tr>
             <td>@file.getName</td>
-            <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(file.getLastModifiedTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(file.getLastModifiedTime.getTime)</time></td>
+            <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(file.getLastModifiedTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(file.getLastModifiedTime.toEpochMilli)</time></td>
             <td>@JudgelsPlayUtils.formatBytesCount(file.getSize)</td>
             <td class="text-center"><a href="@org.iatoki.judgels.sandalphon.controllers.api.internal.routes.InternalLessonStatementAPIController.downloadStatementMediaFile(lessonId, file.getName)"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
         </tr>

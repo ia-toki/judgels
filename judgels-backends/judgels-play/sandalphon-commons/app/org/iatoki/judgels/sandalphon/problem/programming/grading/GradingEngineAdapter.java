@@ -1,10 +1,10 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
+import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.submission.programming.Submission;
-import org.iatoki.judgels.FileInfo;
 import play.api.mvc.Call;
 import play.data.Form;
 import play.data.FormFactory;

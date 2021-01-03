@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.fs.FileSystem;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.engines.GradingEngineRegistry;
@@ -15,7 +16,6 @@ import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.submission.programming.Submission;
-import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -40,14 +40,14 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
 
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
-    private final FileSystemProvider programmingSubmissionFileSystemProvider;
+    private final FileSystem programmingSubmissionFs;
     private final ProgrammingSubmissionService programmingSubmissionService;
 
     @Inject
-    public ProgrammingProblemSubmissionController(ProblemService problemService, ProgrammingProblemService programmingProblemService, @SubmissionFileSystemProvider FileSystemProvider programmingSubmissionFileSystemProvider, ProgrammingSubmissionService programmingSubmissionService) {
+    public ProgrammingProblemSubmissionController(ProblemService problemService, ProgrammingProblemService programmingProblemService, @SubmissionFileSystemProvider FileSystem programmingSubmissionFs, ProgrammingSubmissionService programmingSubmissionService) {
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
-        this.programmingSubmissionFileSystemProvider = programmingSubmissionFileSystemProvider;
+        this.programmingSubmissionFs = programmingSubmissionFs;
         this.programmingSubmissionService = programmingSubmissionService;
     }
 
@@ -81,7 +81,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         try {
             SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromNewSubmission(body);
             String submissionJid = programmingSubmissionService.submit(problem.getJid(), null, engine, gradingLanguage, allowedLanguageNames, submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-            ProgrammingSubmissionUtils.storeSubmissionFiles(programmingSubmissionFileSystemProvider, null, submissionJid, submissionSource);
+            ProgrammingSubmissionUtils.storeSubmissionFiles(programmingSubmissionFs, null, submissionJid, submissionSource);
         } catch (ProgrammingSubmissionException e) {
             flash("submissionError", e.getMessage());
             return redirect(org.iatoki.judgels.sandalphon.problem.programming.statement.routes.ProgrammingProblemStatementController.viewStatement(problem.getId()));
@@ -130,7 +130,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
-        SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
+        SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFs, null, programmingSubmission.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getUserJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
@@ -150,7 +150,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         }
 
         Submission programmingSubmission = programmingSubmissionService.findProgrammingSubmissionById(submissionId);
-        SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
+        SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFs, null, programmingSubmission.getJid());
         programmingSubmissionService.regrade(programmingSubmission.getJid(), submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
         return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
@@ -177,7 +177,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         }
 
         for (Submission programmingSubmission : programmingSubmissions) {
-            SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
+            SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFs, null, programmingSubmission.getJid());
             programmingSubmissionService.regrade(programmingSubmission.getJid(), submissionSource, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
         }
 

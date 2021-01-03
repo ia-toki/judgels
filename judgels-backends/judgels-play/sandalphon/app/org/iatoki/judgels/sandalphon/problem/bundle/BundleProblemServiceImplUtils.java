@@ -1,9 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
-import org.iatoki.judgels.FileSystemProvider;
+import java.nio.file.Path;
+import judgels.fs.FileSystem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemServiceImplUtils;
-
-import java.util.List;
 
 public final class BundleProblemServiceImplUtils {
 
@@ -11,19 +10,19 @@ public final class BundleProblemServiceImplUtils {
         // prevent instantiation
     }
 
-    public static List<String> getItemsDirPath(FileSystemProvider fileSystemProvider, String problemJid, String userJid) {
-        return ProblemServiceImplUtils.appendPath(ProblemServiceImplUtils.getRootDirPath(fileSystemProvider, userJid, problemJid), "items");
+    public static Path getItemsDirPath(FileSystem fs, String problemJid, String userJid) {
+        return ProblemServiceImplUtils.getRootDirPath(fs, userJid, problemJid).resolve("items");
     }
 
-    public static List<String> getItemsConfigFilePath(FileSystemProvider fileSystemProvider, String problemJid, String userJid) {
-        return ProblemServiceImplUtils.appendPath(getItemsDirPath(fileSystemProvider, problemJid, userJid), "items.json");
+    public static Path getItemsConfigFilePath(FileSystem fs, String problemJid, String userJid) {
+        return getItemsDirPath(fs, problemJid, userJid).resolve("items.json");
     }
 
-    public static List<String> getItemDirPath(FileSystemProvider fileSystemProvider, String problemJid, String userJid, String itemJid) {
-        return ProblemServiceImplUtils.appendPath(getItemsDirPath(fileSystemProvider, problemJid, userJid), itemJid);
+    public static Path getItemDirPath(FileSystem fs, String problemJid, String userJid, String itemJid) {
+        return getItemsDirPath(fs, problemJid, userJid).resolve(itemJid);
     }
 
-    public static List<String> getItemConfigFilePath(FileSystemProvider fileSystemProvider, String problemJid, String userJid, String itemJid, String languageCode) {
-        return ProblemServiceImplUtils.appendPath(getItemDirPath(fileSystemProvider, problemJid, userJid, itemJid), languageCode + ".json");
+    public static Path getItemConfigFilePath(FileSystem fs, String problemJid, String userJid, String itemJid, String languageCode) {
+        return getItemDirPath(fs, problemJid, userJid, itemJid).resolve(languageCode + ".json");
     }
 }

@@ -1,10 +1,10 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
 import com.google.inject.ImplementedBy;
+import judgels.fs.FileInfo;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
-import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
