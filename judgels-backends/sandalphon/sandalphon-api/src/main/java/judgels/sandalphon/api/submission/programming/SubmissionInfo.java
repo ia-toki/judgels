@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSubmissionInfo.class)
 public interface SubmissionInfo {
-    long getSubmissionId();
+    long getId();
     Profile getProfile();
 
     class Builder extends ImmutableSubmissionInfo.Builder {}

@@ -218,7 +218,7 @@ export class ContestScoreboardPage extends Component {
       this.props.onGetSubmissionInfo(contestJid, contestantJid, problemJid),
       this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid),
     ]);
-    const dialogTitle = `Submission #${info.submissionId} (${info.profile.username})`;
+    const dialogTitle = `Submission #${info.id} (${info.profile.username})`;
     this.setState({ imageUrl, dialogTitle });
     this.toggleDialog();
   };

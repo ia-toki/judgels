@@ -43,6 +43,7 @@ public interface ContestSubmissionService {
             @QueryParam("contestJid") String contestJid,
             @QueryParam("userJid") String userJid,
             @QueryParam("problemJid") String problemJid);
+
     @GET
     @Path("/image")
     @Produces("image/png")

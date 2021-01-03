@@ -246,7 +246,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
         Profile profile = this.userClient.getProfile(userJid);
 
-        return new SubmissionInfo.Builder().submissionId(submission.getId()).profile(profile).build();
+        return new SubmissionInfo.Builder().id(submission.getId()).profile(profile).build();
     }
 
     @Override
