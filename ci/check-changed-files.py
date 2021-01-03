@@ -38,17 +38,13 @@ MODULES = OrderedDict([
     (':gabriel', {':gabriel:gabriel-app', ':gabriel:gabriel-dist', ':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
 
 
-    (':judgels-play:commons', set()),
-    (':judgels-play:play-commons', {':judgels-play:commons', ':judgels-commons:judgels-service-persistence'}),
-    (':judgels-play:jophiel-commons', {':judgels-play:commons', ':judgels-commons:judgels-persistence-core'}),
+    (':judgels-play:play-commons', {':judgels-commons:judgels-service-persistence'}),
+    (':judgels-play:jophiel-commons', {':judgels-commons:judgels-persistence-core'}),
 
     (':sandalphon:sandalphon-api', {':jophiel:jophiel-api', ':gabriel:gabriel-api'}),
     (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
     (':sandalphon:sandalphon-app', {':sandalphon:sandalphon-client', ':jophiel:jophiel-client'}),
-    (':sandalphon', {':sandalphon:sandalphon-app', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':judgels-play:sandalphon-commons', ':judgels-play:jophiel-commons', ':judgels-play:sandalphon-blackbox-adapters'}),
-
-    (':judgels-play:sandalphon-commons', {':judgels-play:play-commons', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':gabriel:gabriel-engines', ':sealtiel:sealtiel-api'}),
-    (':judgels-play:sandalphon-blackbox-adapters', {':judgels-play:sandalphon-commons'}),
+    (':sandalphon', {':sandalphon:sandalphon-app', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':judgels-play:jophiel-commons'}),
 
     (':uriel:uriel-api', {':sandalphon:sandalphon-api'}),
     (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),

@@ -22,10 +22,15 @@ runPlay {
 dependencies {
     webJar project(path: ':judgels-play:play-commons', configuration: 'webJar')
 
-    implementation project(':judgels-play:sandalphon-commons')
+    implementation project(':judgels-commons:judgels-fs')
+    implementation project(':judgels-commons:judgels-service-persistence')
+    implementation project(':judgels-play:play-commons')
     implementation project(':judgels-play:jophiel-commons')
-    implementation project(':judgels-play:sandalphon-blackbox-adapters')
     implementation project(':sandalphon:sandalphon-app')
+    implementation project(':sandalphon:sandalphon-api')
+    implementation project(':sandalphon:sandalphon-client')
+    implementation project(':gabriel:gabriel-engines')
+    implementation project(':sealtiel:sealtiel-api')
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
 }

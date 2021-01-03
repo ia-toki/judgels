@@ -1,4 +1,3 @@
-->          /                                                                       sandalphoncommons.Routes
 ->          /                                                                       jophielcommons.Routes
 
 GET         /                                                                       org.iatoki.judgels.sandalphon.ApplicationController.index()

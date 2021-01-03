@@ -10,11 +10,8 @@ include ':judgels-commons:judgels-service-core'
 include ':judgels-commons:judgels-service-jaxrs'
 include ':judgels-commons:judgels-service-persistence'
 
-include ':judgels-play:commons'
 include ':judgels-play:play-commons'
 include ':judgels-play:jophiel-commons'
-include ':judgels-play:sandalphon-commons'
-include ':judgels-play:sandalphon-blackbox-adapters'
 include ':judgels-play:sandalphon'
 
 include ':jophiel:jophiel-api'
