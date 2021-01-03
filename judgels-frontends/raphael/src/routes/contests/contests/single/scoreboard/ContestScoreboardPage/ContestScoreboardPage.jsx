@@ -39,6 +39,7 @@ export class ContestScoreboardPage extends Component {
       isForceRefreshButtonLoading: false,
       isDialogOpen: false,
       imageUrl: undefined,
+      dialogTitle: '',
     };
   }
 
@@ -66,7 +67,7 @@ export class ContestScoreboardPage extends Component {
           className="submission-image-dialog"
           isOpen={this.state.isDialogOpen}
           onClose={this.toggleDialog}
-          title={'Submission'}
+          title={this.state.dialogTitle}
           canOutsideClickClose={true}
           enforceFocus={true}
         >
@@ -213,8 +214,12 @@ export class ContestScoreboardPage extends Component {
   };
 
   onOpenSubmissionImage = async (contestJid, contestantJid, problemJid) => {
-    const imageUrl = await this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid);
-    this.setState({ imageUrl });
+    const [info, imageUrl] = await Promise.all([
+      this.props.onGetSubmissionInfo(contestJid, contestantJid, problemJid),
+      this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid),
+    ]);
+    const dialogTitle = `Submission #${info.submissionId} (${info.profile.username})`;
+    this.setState({ imageUrl, dialogTitle });
     this.toggleDialog();
   };
 
@@ -282,6 +287,7 @@ const mapDispatchToProps = {
   onGetScoreboard: contestScoreboardActions.getScoreboard,
   onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
   onGetSubmissionSourceImage: contestScoreboardActions.getSubmissionSourceImage,
+  onGetSubmissionInfo: contestScoreboardActions.getSubmissionInfo,
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 

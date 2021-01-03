@@ -12,6 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import judgels.sandalphon.api.submission.programming.SubmissionInfo;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.service.api.actor.AuthHeader;
 
@@ -35,6 +36,13 @@ public interface ContestSubmissionService {
             @PathParam("submissionId") long submissionId,
             @QueryParam("language") Optional<String> language);
 
+    @GET
+    @Path("/info")
+    @Produces(APPLICATION_JSON)
+    SubmissionInfo getSubmissionInfo(
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") String userJid,
+            @QueryParam("problemJid") String problemJid);
     @GET
     @Path("/image")
     @Produces("image/png")

@@ -39,6 +39,7 @@ import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
+import judgels.sandalphon.api.submission.programming.SubmissionInfo;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.sandalphon.problem.ProblemClient;
@@ -237,13 +238,25 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
+    public SubmissionInfo getSubmissionInfo(String contestJid, String userJid, String problemJid) {
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(scoreboardRoleChecker.canViewSubmissions(contest));
+
+        Submission submission = checkFound(submissionStore
+                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
+        Profile profile = this.userClient.getProfile(userJid);
+
+        return new SubmissionInfo.Builder().submissionId(submission.getId()).profile(profile).build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
     public Response getSubmissionSourceImage(String contestJid, String userJid, String problemJid) {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canViewSubmissions(contest));
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
-        String username = this.userClient.getProfile(userJid).getUsername();
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
 
         Map<String, SourceFile> submissionFiles = source.getSubmissionFiles();

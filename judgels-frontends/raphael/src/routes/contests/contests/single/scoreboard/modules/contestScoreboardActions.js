@@ -23,3 +23,9 @@ export function getSubmissionSourceImage(contestJid, userJid, problemJid) {
     return await contestSubmissionProgrammingAPI.getSubmissionSourceImage(contestJid, userJid, problemJid);
   };
 }
+
+export function getSubmissionInfo(contestJid, userJid, problemJid) {
+  return async () => {
+    return await contestSubmissionProgrammingAPI.getSubmissionInfo(contestJid, userJid, problemJid);
+  };
+}
