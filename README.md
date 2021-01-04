@@ -1,4 +1,4 @@
-# Judgels
+# Judgels 
 
 ![CI Status](https://github.com/ia-toki/judgels/workflows/ci/badge.svg)
 [![License](https://img.shields.io/github/license/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/blob/master/LICENSE.txt)
