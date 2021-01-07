@@ -10,6 +10,7 @@ import com.google.common.io.Files;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -70,7 +71,7 @@ public class ServiceUtils {
         int charWidth = 8;
         int charHeight = 17;
 
-        String[] textList = text.split("\n");
+        String[] textList = text.split("\\r?\\n");
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
         int longestText = Arrays.asList(textList).stream().map(String::length).max(Integer::compareTo).get();
         int width = charWidth * longestText + 2 * margin;
@@ -78,6 +79,7 @@ public class ServiceUtils {
 
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setFont(font);
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, img.getWidth(), img.getHeight());

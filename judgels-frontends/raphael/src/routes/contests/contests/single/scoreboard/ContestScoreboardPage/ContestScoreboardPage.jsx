@@ -1,7 +1,8 @@
-import { Button, Callout, Dialog, Intent, Switch } from '@blueprintjs/core';
+import { Button, Callout, Classes, Dialog, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import { push } from 'connected-react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
@@ -71,7 +72,14 @@ export class ContestScoreboardPage extends Component {
           canOutsideClickClose={true}
           enforceFocus={true}
         >
-          <img src={this.state.imageUrl} />
+          <div className={classNames(Classes.DIALOG_BODY, 'submission-image')}>
+            <img src={this.state.imageUrl} />
+          </div>
+          <div className={Classes.DIALOG_FOOTER}>
+            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+              <Button text="Cancel" onClick={this.toggleDialog} />
+            </div>
+          </div>
         </Dialog>
       </ContentCard>
     );
