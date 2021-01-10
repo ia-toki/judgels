@@ -1,11 +1,14 @@
 package judgels.uriel.api.contest.submission.programming;
 
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static java.time.temporal.ChronoUnit.HOURS;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
+import static judgels.persistence.TestClock.NOW;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_JID;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
@@ -34,8 +37,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.sandalphon.api.submission.programming.SubmissionInfo;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestService;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
@@ -50,6 +56,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
     private ContestProblemService problemService = createService(ContestProblemService.class);
     private ContestSubmissionService submissionService = createService(
             ContestSubmissionService.class);
+    private ContestService contestService = createService(ContestService.class);
     private WebTarget webTarget = createWebTarget();
 
     @Test
@@ -135,6 +142,35 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
         assertThatRemoteExceptionThrownBy(
                 () -> submissionService.getSubmissions(USER_HEADER, contest.getJid(), empty(), empty(), empty()))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
+        // as guest
+        assertThatRemoteExceptionThrownBy(
+                () -> submissionService.getSubmissionInfo(contest.getJid(), USER_A_JID, PROBLEM_1_JID))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
+        assertThatRemoteExceptionThrownBy(
+                () -> submissionService.getSubmissionSourceImage(contest.getJid(), USER_A_JID, PROBLEM_1_JID))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
+        contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+                .beginTime(NOW.minus(10, HOURS))
+                .build());
+
+        SubmissionInfo info = submissionService.getSubmissionInfo(contest.getJid(), USER_A_JID, PROBLEM_1_JID);
+        assertThat(info.getId()).isEqualTo(submission.getId());
+        assertThat(info.getProfile().getUsername()).isEqualTo(USER_A);
+
+        assertThatRemoteExceptionThrownBy(
+                () -> submissionService.getSubmissionInfo(contest.getJid(), USER_A_JID, PROBLEM_2_JID))
+                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
+
+        Response response2 = webTarget.path("/api/v2/contests/submissions/programming/image")
+                .queryParam("contestJid", contest.getJid())
+                .queryParam("userJid", USER_A_JID)
+                .queryParam("problemJid", PROBLEM_1_JID)
+                .request()
+                .get();
+        assertThat(response2.getHeaders().getFirst(CONTENT_TYPE)).isEqualTo("image/png");
     }
 
     private Response submit(String contestJid, String token, String problemJid) {

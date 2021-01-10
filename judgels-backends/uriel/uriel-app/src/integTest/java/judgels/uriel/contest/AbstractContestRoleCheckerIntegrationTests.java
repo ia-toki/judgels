@@ -46,6 +46,7 @@ public abstract class AbstractContestRoleCheckerIntegrationTests extends Abstrac
     protected static final String ANOTHER_CONTESTANT = "anotherContestantJid";
     protected static final String SUPERVISOR = "supervisorJid";
     protected static final String MANAGER = "managerJid";
+    protected static final String GUEST = "guest";
 
     protected Contest contestA;
     protected Contest contestAStarted;
@@ -92,6 +93,7 @@ public abstract class AbstractContestRoleCheckerIntegrationTests extends Abstrac
                 .put(ANOTHER_CONTESTANT, new UserRole.Builder().build())
                 .put(SUPERVISOR, new UserRole.Builder().build())
                 .put(MANAGER, new UserRole.Builder().build())
+                .put(GUEST, new UserRole.Builder().build())
                 .build());
     }
 

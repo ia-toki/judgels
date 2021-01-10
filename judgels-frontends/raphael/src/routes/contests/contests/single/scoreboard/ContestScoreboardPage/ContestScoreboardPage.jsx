@@ -1,7 +1,8 @@
-import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
+import { Button, Callout, Classes, Dialog, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import { push } from 'connected-react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
@@ -37,6 +38,9 @@ export class ContestScoreboardPage extends Component {
       showClosedProblems,
       lastRefreshScoreboardTime: 0,
       isForceRefreshButtonLoading: false,
+      isDialogOpen: false,
+      imageUrl: undefined,
+      dialogTitle: '',
     };
   }
 
@@ -60,9 +64,30 @@ export class ContestScoreboardPage extends Component {
           pageSize={ContestScoreboardPage.PAGE_SIZE}
           onChangePage={this.onChangePage}
         />
+        <Dialog
+          className="submission-image-dialog"
+          isOpen={this.state.isDialogOpen}
+          onClose={this.toggleDialog}
+          title={this.state.dialogTitle}
+          canOutsideClickClose={true}
+          enforceFocus={true}
+        >
+          <div className={classNames(Classes.DIALOG_BODY, 'submission-image')}>
+            <img src={this.state.imageUrl} />
+          </div>
+          <div className={Classes.DIALOG_FOOTER}>
+            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+              <Button text="Close" onClick={this.toggleDialog} />
+            </div>
+          </div>
+        </Dialog>
       </ContentCard>
     );
   }
+
+  toggleDialog = () => {
+    this.setState({ isDialogOpen: !this.state.isDialogOpen });
+  };
 
   onChangePage = async nextPage => {
     const scoreboard = await this.refreshScoreboard(nextPage, this.state.frozen, this.state.showClosedProblems);
@@ -196,6 +221,16 @@ export class ContestScoreboardPage extends Component {
     this.props.onAppendRoute(queries);
   };
 
+  onOpenSubmissionImage = async (contestJid, contestantJid, problemJid) => {
+    const [info, imageUrl] = await Promise.all([
+      this.props.onGetSubmissionInfo(contestJid, contestantJid, problemJid),
+      this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid),
+    ]);
+    const dialogTitle = `Submission #${info.id} (${info.profile.username})`;
+    this.setState({ imageUrl, dialogTitle });
+    this.toggleDialog();
+  };
+
   renderScoreboard = () => {
     const { response } = this.state;
     if (!response) {
@@ -209,18 +244,32 @@ export class ContestScoreboardPage extends Component {
       );
     }
 
-    const { data: scoreboard, profilesMap } = response[0];
+    const {
+      data: scoreboard,
+      profilesMap,
+      config: { canViewSubmissions },
+    } = response[0];
     if (this.props.contest.style === ContestStyle.ICPC) {
       return (
         <IcpcScoreboardTable
           userJid={this.props.userJid}
+          contestJid={this.props.contest.jid}
+          onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
+          canViewSubmissions={canViewSubmissions}
         />
       );
     } else if (this.props.contest.style === ContestStyle.IOI) {
       return (
-        <IoiScoreboardTable userJid={this.props.userJid} scoreboard={scoreboard.scoreboard} profilesMap={profilesMap} />
+        <IoiScoreboardTable
+          userJid={this.props.userJid}
+          contestJid={this.props.contest.jid}
+          onOpenSubmissionImage={this.onOpenSubmissionImage}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          canViewSubmissions={canViewSubmissions}
+        />
       );
     } else if (this.props.contest.style === ContestStyle.Bundle) {
       return (
@@ -248,6 +297,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onGetScoreboard: contestScoreboardActions.getScoreboard,
   onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
+  onGetSubmissionSourceImage: contestScoreboardActions.getSubmissionSourceImage,
+  onGetSubmissionInfo: contestScoreboardActions.getSubmissionInfo,
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
 

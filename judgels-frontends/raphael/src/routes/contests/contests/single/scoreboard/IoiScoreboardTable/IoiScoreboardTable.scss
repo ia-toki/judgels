@@ -4,4 +4,8 @@ table.ioi-scoreboard__content {
   td strong {
     font-size: $font-size !important;
   }
+
+  .clickable {
+    cursor: pointer;
+  }
 }

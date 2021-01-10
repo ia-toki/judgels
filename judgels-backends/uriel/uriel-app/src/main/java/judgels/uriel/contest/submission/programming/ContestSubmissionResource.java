@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static judgels.service.ServiceUtils.buildImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -11,6 +12,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
@@ -36,6 +39,7 @@ import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
+import judgels.sandalphon.api.submission.programming.SubmissionInfo;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.sandalphon.problem.ProblemClient;
@@ -58,6 +62,7 @@ import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
@@ -79,6 +84,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
+    private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
     private final ContestSupervisorStore supervisorStore;
@@ -99,6 +105,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
+            ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestSupervisorStore supervisorStore,
@@ -117,6 +124,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.submissionRoleChecker = submissionRoleChecker;
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.problemRoleChecker = problemRoleChecker;
+        this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
         this.supervisorStore = supervisorStore;
@@ -226,6 +234,44 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .problemName(SandalphonUtils.getProblemName(problem, language))
                 .containerName(contest.getName())
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public SubmissionInfo getSubmissionInfo(String contestJid, String userJid, String problemJid) {
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(scoreboardRoleChecker.canViewSubmissions(contest));
+
+        Submission submission = checkFound(submissionStore
+                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
+        Profile profile = this.userClient.getProfile(userJid);
+
+        return new SubmissionInfo.Builder().id(submission.getId()).profile(profile).build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Response getSubmissionSourceImage(String contestJid, String userJid, String problemJid) {
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(scoreboardRoleChecker.canViewSubmissions(contest));
+
+        Submission submission = checkFound(submissionStore
+                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
+        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+
+        Map<String, SourceFile> submissionFiles = source.getSubmissionFiles();
+        StringBuilder rawSource = new StringBuilder();
+        for (Map.Entry<String, SourceFile> entry : submissionFiles.entrySet()) {
+            if (submissionFiles.size() > 1) {
+                rawSource.append("------- ").append(entry.getKey()).append(" -------\n");
+            }
+            rawSource.append(new String(entry.getValue().getContent()));
+            if (submissionFiles.size() > 1) {
+                rawSource.append("\n");
+            }
+        }
+
+        return buildImageResponseFromText(rawSource.toString(), Date.from(submission.getTime()));
     }
 
     @POST
