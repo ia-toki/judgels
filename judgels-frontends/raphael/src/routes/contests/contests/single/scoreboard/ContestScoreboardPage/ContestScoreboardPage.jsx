@@ -77,7 +77,7 @@ export class ContestScoreboardPage extends Component {
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button text="Cancel" onClick={this.toggleDialog} />
+              <Button text="Close" onClick={this.toggleDialog} />
             </div>
           </div>
         </Dialog>
