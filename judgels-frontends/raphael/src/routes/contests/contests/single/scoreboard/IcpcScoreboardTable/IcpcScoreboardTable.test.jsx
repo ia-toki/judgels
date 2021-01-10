@@ -122,4 +122,64 @@ describe('IcpcScoreboardTable', () => {
       ['1/17', 'R 1/-', 'G 1/17', 'F ?/?', 'R 3/-'],
     ]);
   });
+
+  describe('shows submission as image', () => {
+    describe('when canViewSubmissions', () => {
+      const contestJid = 'contest-jid';
+      const onOpenSubmissionImage = jest.fn();
+
+      beforeEach(() => {
+        const props = { scoreboard, profilesMap, contestJid, onOpenSubmissionImage, canViewSubmissions: true };
+        wrapper = mount(
+          <MemoryRouter>
+            <IcpcScoreboardTable {...props} />
+          </MemoryRouter>
+        );
+      });
+
+      test('shows submission for attempted cell', () => {
+        wrapper
+          .find('tbody')
+          .childAt(0)
+          .childAt(3)
+          .simulate('click');
+
+        expect(onOpenSubmissionImage).toHaveBeenCalledWith(contestJid, 'JIDUSER2', 'JIDPROG1');
+      });
+
+      test('does not show submission for unattempted cell', () => {
+        wrapper
+          .find('tbody')
+          .childAt(0)
+          .childAt(6)
+          .simulate('click');
+
+        expect(onOpenSubmissionImage).not.toBeCalled();
+      });
+    });
+
+    describe('when not canViewSubmissions', () => {
+      const contestJid = 'contest-jid';
+      const onOpenSubmissionImage = jest.fn();
+
+      beforeEach(() => {
+        const props = { scoreboard, profilesMap, contestJid, onOpenSubmissionImage, canViewSubmissions: false };
+        wrapper = mount(
+          <MemoryRouter>
+            <IcpcScoreboardTable {...props} />
+          </MemoryRouter>
+        );
+      });
+
+      test('does not show submission', () => {
+        wrapper
+          .find('tbody')
+          .childAt(0)
+          .childAt(3)
+          .simulate('click');
+
+        expect(onOpenSubmissionImage).not.toBeCalled();
+      });
+    });
+  });
 });

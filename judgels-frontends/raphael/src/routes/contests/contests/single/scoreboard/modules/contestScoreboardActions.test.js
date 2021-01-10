@@ -49,4 +49,24 @@ describe('contestScoreboardActions', () => {
       await store.dispatch(contestScoreboardActions.refreshScoreboard(contestJid));
     });
   });
+
+  describe('getSubmissionInfo()', () => {
+    const userJid = 'user-jid';
+    const problemJid = 'problem-jid';
+    const responseBody = {
+      data: {},
+    };
+
+    it('calls API', async () => {
+      nockUriel()
+        .get(`/contests/submissions/programming/info`)
+        .query({ contestJid, userJid, problemJid })
+        .reply(200, responseBody);
+
+      const response = await store.dispatch(
+        contestScoreboardActions.getSubmissionInfo(contestJid, userJid, problemJid)
+      );
+      expect(response).toEqual(responseBody);
+    });
+  });
 });

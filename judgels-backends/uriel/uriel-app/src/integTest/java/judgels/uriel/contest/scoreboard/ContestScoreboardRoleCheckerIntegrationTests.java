@@ -1,11 +1,16 @@
 package judgels.uriel.contest.scoreboard;
 
+import static java.time.temporal.ChronoUnit.HOURS;
+import static judgels.persistence.TestClock.NOW;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SCOREBOARD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.AbstractContestRoleCheckerIntegrationTests;
@@ -176,5 +181,24 @@ class ContestScoreboardRoleCheckerIntegrationTests extends AbstractContestRoleCh
         assertThat(checker.canManage(MANAGER, contestB)).isTrue();
         assertThat(checker.canManage(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canManage(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void view_submissions() {
+        Contest contestAFinished;
+        contestAFinished = contestStore.createContest(
+                new ContestCreateData.Builder().slug("contest-a-finished").build());
+        contestAFinished = contestStore.updateContest(
+                contestAFinished.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
+
+        moduleStore.upsertRegistrationModule(contestAFinished.getJid());
+
+        assertThat(checker.canViewSubmissions(contestA)).isFalse();
+        assertThat(checker.canViewSubmissions(contestAStarted)).isFalse();
+        assertThat(checker.canViewSubmissions(contestAFinished)).isTrue();
+        assertThat(checker.canViewSubmissions(contestB)).isFalse();
+        assertThat(checker.canViewSubmissions(contestBStarted)).isFalse();
+        assertThat(checker.canViewSubmissions(contestC)).isFalse();
     }
 }

@@ -106,5 +106,8 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
 
         assertThat(store.getSubmissions(of(contestA.getJid()), of("userJid2"), of("problemJid1"), empty()).getPage())
                 .containsExactly(submission3);
+
+        assertThat(store.getLatestSubmission(of(contestA.getJid()), of("userJid1"), of("problemJid1")))
+                .isEqualTo(of(submission2));
     }
 }
