@@ -28,3 +28,9 @@ export function getSubmissions(username, page) {
     return await submissionProgrammingAPI.getSubmissions(token, undefined, username, undefined, undefined, page);
   };
 }
+
+export function getSubmissionSourceImage(submissionJid) {
+  return async () => {
+    return await submissionProgrammingAPI.getSubmissionSourceImage(submissionJid);
+  };
+}

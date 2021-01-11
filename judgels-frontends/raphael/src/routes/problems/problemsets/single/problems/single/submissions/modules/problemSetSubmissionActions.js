@@ -58,3 +58,9 @@ export function regradeSubmissions(problemSetJid, userJid, problemJid) {
     toastActions.showSuccessToast('Regrade in progress.');
   };
 }
+
+export function getSubmissionSourceImage(submissionJid) {
+  return async () => {
+    return await submissionProgrammingAPI.getSubmissionSourceImage(submissionJid);
+  };
+}

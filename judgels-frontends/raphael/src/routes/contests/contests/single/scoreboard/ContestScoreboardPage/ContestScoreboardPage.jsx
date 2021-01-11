@@ -1,8 +1,7 @@
-import { Button, Callout, Classes, Dialog, Intent, Switch } from '@blueprintjs/core';
+import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 import { push } from 'connected-react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
@@ -10,6 +9,7 @@ import { FormattedRelative } from '../../../../../../components/FormattedRelativ
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
@@ -64,23 +64,12 @@ export class ContestScoreboardPage extends Component {
           pageSize={ContestScoreboardPage.PAGE_SIZE}
           onChangePage={this.onChangePage}
         />
-        <Dialog
-          className="submission-image-dialog"
+        <SubmissionImageDialog
           isOpen={this.state.isDialogOpen}
           onClose={this.toggleDialog}
           title={this.state.dialogTitle}
-          canOutsideClickClose={true}
-          enforceFocus={true}
-        >
-          <div className={classNames(Classes.DIALOG_BODY, 'submission-image')}>
-            <img src={this.state.imageUrl} />
-          </div>
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button text="Close" onClick={this.toggleDialog} />
-            </div>
-          </div>
-        </Dialog>
+          imageUrl={this.state.imageUrl}
+        />
       </ContentCard>
     );
   }
