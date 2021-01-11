@@ -38,9 +38,9 @@ export class ContestScoreboardPage extends Component {
       showClosedProblems,
       lastRefreshScoreboardTime: 0,
       isForceRefreshButtonLoading: false,
-      isDialogOpen: false,
-      imageUrl: undefined,
-      dialogTitle: '',
+      isSubmissionImageDialogOpen: false,
+      submissionImageUrl: undefined,
+      submissionDialogTitle: '',
     };
   }
 
@@ -65,17 +65,17 @@ export class ContestScoreboardPage extends Component {
           onChangePage={this.onChangePage}
         />
         <SubmissionImageDialog
-          isOpen={this.state.isDialogOpen}
-          onClose={this.toggleDialog}
-          title={this.state.dialogTitle}
-          imageUrl={this.state.imageUrl}
+          isOpen={this.state.isSubmissionImageDialogOpen}
+          onClose={this.toggleSubmissionImageDialog}
+          title={this.state.submissionDialogTitle}
+          imageUrl={this.state.submissionImageUrl}
         />
       </ContentCard>
     );
   }
 
-  toggleDialog = () => {
-    this.setState({ isDialogOpen: !this.state.isDialogOpen });
+  toggleSubmissionImageDialog = () => {
+    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
   };
 
   onChangePage = async nextPage => {
@@ -211,13 +211,13 @@ export class ContestScoreboardPage extends Component {
   };
 
   onOpenSubmissionImage = async (contestJid, contestantJid, problemJid) => {
-    const [info, imageUrl] = await Promise.all([
+    const [info, submissionImageUrl] = await Promise.all([
       this.props.onGetSubmissionInfo(contestJid, contestantJid, problemJid),
       this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid),
     ]);
-    const dialogTitle = `Submission #${info.id} (${info.profile.username})`;
-    this.setState({ imageUrl, dialogTitle });
-    this.toggleDialog();
+    const submissionDialogTitle = `Submission #${info.id} (${info.profile.username})`;
+    this.setState({ submissionImageUrl, submissionDialogTitle });
+    this.toggleSubmissionImageDialog();
   };
 
   renderScoreboard = () => {

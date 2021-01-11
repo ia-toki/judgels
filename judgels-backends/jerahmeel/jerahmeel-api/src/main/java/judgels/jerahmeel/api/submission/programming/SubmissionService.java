@@ -38,6 +38,7 @@ public interface SubmissionService {
 
     @GET
     @Path("/{submissionJid}/image")
+    @Produces("image/png")
     Response getSubmissionSourceImage(@PathParam("submissionJid") String submissionJid);
 
     @POST

@@ -22,9 +22,9 @@ export class ChapterSubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
   state = {
-    isDialogOpen: false,
-    imageUrl: undefined,
-    dialogTitle: '',
+    isSubmissionImageDialogOpen: false,
+    submissionImageUrl: undefined,
+    submissionDialogTitle: '',
   };
 
   constructor(props) {
@@ -72,10 +72,10 @@ export class ChapterSubmissionsPage extends Component {
         {this.renderSubmissions()}
         {this.renderPagination()}
         <SubmissionImageDialog
-          isOpen={this.state.isDialogOpen}
-          onClose={this.toggleDialog}
-          title={this.state.dialogTitle}
-          imageUrl={this.state.imageUrl}
+          isOpen={this.state.isSubmissionImageDialogOpen}
+          onClose={this.toggleSubmissionImageDialog}
+          title={this.state.submissionDialogTitle}
+          imageUrl={this.state.submissionImageUrl}
         />
       </ContentCard>
     );
@@ -194,15 +194,15 @@ export class ChapterSubmissionsPage extends Component {
     }
   };
 
-  toggleDialog = () => {
-    this.setState({ isDialogOpen: !this.state.isDialogOpen });
+  toggleSubmissionImageDialog = () => {
+    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
   };
 
   onOpenSubmissionImage = async (submissionJid, submissionId, username) => {
-    const imageUrl = await this.props.onGetSubmissionSourceImage(submissionJid);
-    const dialogTitle = `Submission #${submissionId} (${username})`;
-    this.setState({ imageUrl, dialogTitle });
-    this.toggleDialog();
+    const submissionImageUrl = await this.props.onGetSubmissionSourceImage(submissionJid);
+    const submissionDialogTitle = `Submission #${submissionId} (${username})`;
+    this.setState({ submissionImageUrl, submissionDialogTitle });
+    this.toggleSubmissionImageDialog();
   };
 }
 

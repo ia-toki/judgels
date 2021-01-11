@@ -13,9 +13,9 @@ import * as profileActions from '../../modules/profileActions';
 class SubmissionHistoryPage extends Component {
   state = {
     response: undefined,
-    isDialogOpen: false,
-    imageUrl: undefined,
-    dialogTitle: '',
+    isSubmissionImageDialogOpen: false,
+    submissionImageUrl: undefined,
+    submissionDialogTitle: '',
   };
 
   render() {
@@ -24,10 +24,10 @@ class SubmissionHistoryPage extends Component {
         {this.renderSubmissions()}
         {this.renderPagination()}
         <SubmissionImageDialog
-          isOpen={this.state.isDialogOpen}
-          onClose={this.toggleDialog}
-          title={this.state.dialogTitle}
-          imageUrl={this.state.imageUrl}
+          isOpen={this.state.isSubmissionImageDialogOpen}
+          onClose={this.toggleSubmissionImageDialog}
+          title={this.state.submissionDialogTitle}
+          imageUrl={this.state.submissionImageUrl}
         />
       </Card>
     );
@@ -84,15 +84,15 @@ class SubmissionHistoryPage extends Component {
     return response.data;
   };
 
-  toggleDialog = () => {
-    this.setState({ isDialogOpen: !this.state.isDialogOpen });
+  toggleSubmissionImageDialog = () => {
+    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
   };
 
   onOpenSubmissionImage = async (submissionJid, submissionId) => {
-    const imageUrl = await this.props.onGetSubmissionSourceImage(submissionJid);
-    const dialogTitle = `Submission #${submissionId} (${this.props.username})`;
-    this.setState({ imageUrl, dialogTitle });
-    this.toggleDialog();
+    const submissionImageUrl = await this.props.onGetSubmissionSourceImage(submissionJid);
+    const submissionDialogTitle = `Submission #${submissionId} (${this.props.username})`;
+    this.setState({ submissionImageUrl, submissionDialogTitle });
+    this.toggleSubmissionImageDialog();
   };
 }
 
