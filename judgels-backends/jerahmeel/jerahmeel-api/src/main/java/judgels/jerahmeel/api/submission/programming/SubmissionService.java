@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.service.api.actor.AuthHeader;
 
@@ -34,6 +35,11 @@ public interface SubmissionService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionId") long submissionId,
             @QueryParam("language") Optional<String> language);
+
+    @GET
+    @Path("/{submissionJid}/image")
+    @Produces("image/png")
+    Response getSubmissionSourceImage(@PathParam("submissionJid") String submissionJid);
 
     @POST
     @Path("/{submissionJid}/regrade")

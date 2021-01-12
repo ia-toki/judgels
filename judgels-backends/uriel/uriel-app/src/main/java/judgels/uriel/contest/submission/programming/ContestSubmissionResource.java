@@ -30,7 +30,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
@@ -257,21 +256,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
-        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
 
-        Map<String, SourceFile> submissionFiles = source.getSubmissionFiles();
-        StringBuilder rawSource = new StringBuilder();
-        for (Map.Entry<String, SourceFile> entry : submissionFiles.entrySet()) {
-            if (submissionFiles.size() > 1) {
-                rawSource.append("------- ").append(entry.getKey()).append(" -------\n");
-            }
-            rawSource.append(new String(entry.getValue().getContent()));
-            if (submissionFiles.size() > 1) {
-                rawSource.append("\n");
-            }
-        }
-
-        return buildImageResponseFromText(rawSource.toString(), Date.from(submission.getTime()));
+        return buildImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
     @POST

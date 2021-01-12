@@ -29,4 +29,6 @@ export const submissionProgrammingAPI = {
     const params = stringify({ containerJid, username, problemJid, problemAlias });
     return post(`${baseSubmissionsURL}/regrade?${params}`, token);
   },
+
+  getSubmissionSourceImage: submissionJid => Promise.resolve(`${baseSubmissionsURL}/${submissionJid}/image`),
 };

@@ -19,6 +19,7 @@ export function SubmissionsTable({
   containerNamesMap,
   containerPathsMap,
   onRegrade,
+  onOpenSubmissionImage,
 }) {
   const renderHeader = () => {
     return (
@@ -80,10 +81,19 @@ export function SubmissionsTable({
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          {(canManage || userJid === submission.userJid) && (
+          {canManage || userJid === submission.userJid ? (
             <Link className="action" to={`/submissions/${submission.id}`}>
               <Icon icon="search" />
             </Link>
+          ) : (
+            <Icon
+              icon="search"
+              className="action"
+              color="#3b73b9"
+              onClick={() =>
+                onOpenSubmissionImage(submission.jid, submission.id, profilesMap[submission.userJid].username)
+              }
+            />
           )}
         </td>
       </tr>

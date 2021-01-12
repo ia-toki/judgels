@@ -11,6 +11,7 @@ import { RegradeAllButton } from '../../../../../../../../components/RegradeAllB
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { SubmissionFilterWidget } from '../../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { SubmissionImageDialog } from '../../../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
 import { selectMaybeUserJid, selectMaybeUsername } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
@@ -20,7 +21,11 @@ import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 export class ChapterSubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
-  state;
+  state = {
+    isSubmissionImageDialogOpen: false,
+    submissionImageUrl: undefined,
+    submissionDialogTitle: '',
+  };
 
   constructor(props) {
     super(props);
@@ -66,6 +71,12 @@ export class ChapterSubmissionsPage extends Component {
         <div className="clearfix" />
         {this.renderSubmissions()}
         {this.renderPagination()}
+        <SubmissionImageDialog
+          isOpen={this.state.isSubmissionImageDialogOpen}
+          onClose={this.toggleSubmissionImageDialog}
+          title={this.state.submissionDialogTitle}
+          imageUrl={this.state.submissionImageUrl}
+        />
       </ContentCard>
     );
   }
@@ -114,6 +125,7 @@ export class ChapterSubmissionsPage extends Component {
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
         onRegrade={this.onRegrade}
+        onOpenSubmissionImage={this.onOpenSubmissionImage}
       />
     );
   };
@@ -181,6 +193,17 @@ export class ChapterSubmissionsPage extends Component {
       await this.refreshSubmissions(problemAlias, queries.page);
     }
   };
+
+  toggleSubmissionImageDialog = () => {
+    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
+  };
+
+  onOpenSubmissionImage = async (submissionJid, submissionId, username) => {
+    const submissionImageUrl = await this.props.onGetSubmissionSourceImage(submissionJid);
+    const submissionDialogTitle = `Submission #${submissionId} (${username})`;
+    this.setState({ submissionImageUrl, submissionDialogTitle });
+    this.toggleSubmissionImageDialog();
+  };
 }
 
 const mapStateToProps = state => ({
@@ -195,6 +218,7 @@ const mapDispatchToProps = {
   onRegrade: chapterSubmissionActions.regradeSubmission,
   onRegradeAll: chapterSubmissionActions.regradeSubmissions,
   onAppendRoute: queries => push({ search: stringify(queries) }),
+  onGetSubmissionSourceImage: chapterSubmissionActions.getSubmissionSourceImage,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));

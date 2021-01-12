@@ -4,11 +4,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static judgels.service.ServiceUtils.buildImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
@@ -214,6 +217,15 @@ public class SubmissionResource implements SubmissionService {
                 .problemName(SandalphonUtils.getProblemName(problem, language))
                 .containerName(containerName)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Response getSubmissionSourceImage(String submissionJid) {
+        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
+
+        return buildImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
     @POST

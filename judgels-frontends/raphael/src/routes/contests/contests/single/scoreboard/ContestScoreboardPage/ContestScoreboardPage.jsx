@@ -1,8 +1,7 @@
-import { Button, Callout, Classes, Dialog, Intent, Switch } from '@blueprintjs/core';
+import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 import { push } from 'connected-react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
@@ -10,6 +9,7 @@ import { FormattedRelative } from '../../../../../../components/FormattedRelativ
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
@@ -38,9 +38,9 @@ export class ContestScoreboardPage extends Component {
       showClosedProblems,
       lastRefreshScoreboardTime: 0,
       isForceRefreshButtonLoading: false,
-      isDialogOpen: false,
-      imageUrl: undefined,
-      dialogTitle: '',
+      isSubmissionImageDialogOpen: false,
+      submissionImageUrl: undefined,
+      submissionDialogTitle: '',
     };
   }
 
@@ -64,29 +64,18 @@ export class ContestScoreboardPage extends Component {
           pageSize={ContestScoreboardPage.PAGE_SIZE}
           onChangePage={this.onChangePage}
         />
-        <Dialog
-          className="submission-image-dialog"
-          isOpen={this.state.isDialogOpen}
-          onClose={this.toggleDialog}
-          title={this.state.dialogTitle}
-          canOutsideClickClose={true}
-          enforceFocus={true}
-        >
-          <div className={classNames(Classes.DIALOG_BODY, 'submission-image')}>
-            <img src={this.state.imageUrl} />
-          </div>
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button text="Close" onClick={this.toggleDialog} />
-            </div>
-          </div>
-        </Dialog>
+        <SubmissionImageDialog
+          isOpen={this.state.isSubmissionImageDialogOpen}
+          onClose={this.toggleSubmissionImageDialog}
+          title={this.state.submissionDialogTitle}
+          imageUrl={this.state.submissionImageUrl}
+        />
       </ContentCard>
     );
   }
 
-  toggleDialog = () => {
-    this.setState({ isDialogOpen: !this.state.isDialogOpen });
+  toggleSubmissionImageDialog = () => {
+    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
   };
 
   onChangePage = async nextPage => {
@@ -222,13 +211,13 @@ export class ContestScoreboardPage extends Component {
   };
 
   onOpenSubmissionImage = async (contestJid, contestantJid, problemJid) => {
-    const [info, imageUrl] = await Promise.all([
+    const [info, submissionImageUrl] = await Promise.all([
       this.props.onGetSubmissionInfo(contestJid, contestantJid, problemJid),
       this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid),
     ]);
-    const dialogTitle = `Submission #${info.id} (${info.profile.username})`;
-    this.setState({ imageUrl, dialogTitle });
-    this.toggleDialog();
+    const submissionDialogTitle = `Submission #${info.id} (${info.profile.username})`;
+    this.setState({ submissionImageUrl, submissionDialogTitle });
+    this.toggleSubmissionImageDialog();
   };
 
   renderScoreboard = () => {

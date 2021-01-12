@@ -40,6 +40,8 @@ describe('ChapterSubmissionsPage', () => {
       })
     );
 
+    chapterSubmissionActions.getSubmissionSourceImage.mockReturnValue(() => Promise.resolve('image.url'));
+
     const store = createStore(
       combineReducers({
         session: sessionReducer,
@@ -155,8 +157,19 @@ describe('ChapterSubmissionsPage', () => {
           expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().trim()))).toEqual([
             [],
             ['20', 'username1', 'A', 'C++17', 'AC', '100', '1 day ago', 'search'],
-            ['10', 'username2', 'B', 'C++17', '', '', '2 days ago', ''],
+            ['10', 'username2', 'B', 'C++17', '', '', '2 days ago', 'search'],
           ]);
+        });
+
+        it('shows submission as image', () => {
+          wrapper
+            .find('tbody')
+            .childAt(1)
+            .childAt(7)
+            .childAt(0)
+            .simulate('click');
+
+          expect(chapterSubmissionActions.getSubmissionSourceImage).toHaveBeenCalledWith('submissionJid2');
         });
       });
 
