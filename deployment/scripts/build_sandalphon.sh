@@ -2,7 +2,7 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../../judgels-backends/judgels-play/sandalphon
+cd "$(dirname "$0")"/../../judgels-backends/sandalphon/sandalphon-app
 
 ../../gradlew stage
 rm -rf build/stage/main/conf

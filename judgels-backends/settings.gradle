@@ -10,10 +10,6 @@ include ':judgels-commons:judgels-service-core'
 include ':judgels-commons:judgels-service-jaxrs'
 include ':judgels-commons:judgels-service-persistence'
 
-include ':judgels-play:play-commons'
-include ':judgels-play:jophiel-commons'
-include ':judgels-play:sandalphon'
-
 include ':jophiel:jophiel-api'
 include ':jophiel:jophiel-app'
 include ':jophiel:jophiel-client'

@@ -1,0 +1,40 @@
+@import org.iatoki.judgels.play.IdentityUtils
+@import org.iatoki.judgels.play.general.GeneralConfig
+@import play.mvc.Http
+
+@(pageTitle: String, generalConfig: GeneralConfig)(content: Html)
+
+<!DOCTYPE html>
+
+<html lang="@Http.Context.current().lang().code()">
+    <head itemscope itemtype="http://schema.org/WebSite">
+        <meta charset="UTF-8">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        <meta property="og:site_name" content="@(generalConfig.getCopyright + ' ' + generalConfig.getTitle)">
+        <meta property="og:title" content="@if(!pageTitle.isEmpty) { @pageTitle } else { @generalConfig.getTitle }">
+        <meta property="og:locale" content="@Http.Context.current().lang().code()" />
+        <meta property="og:image" content="@(generalConfig.getCanonicalUrl + org.iatoki.judgels.play.routes.JudgelsController.coloredLogo())" />
+        <link rel="canonical" href="@generalConfig.getCanonicalUrl" itemprop="url">
+        <title itemprop='name'>@generalConfig.getTitle @if(!pageTitle.isEmpty) { - @pageTitle }</title>
+        <link rel="shortcut icon" type="image/ico" href='@org.iatoki.judgels.play.routes.JudgelsController.favicon()'>
+        <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("stylesheets/main.css")'>
+        <script type="text/javascript" src="@controllers.routes.Assets.at("lib/requirejs/require.js")"></script>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/settings.js")"></script>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/form.js")"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+        @content
+        </div>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/language.js")"></script>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/active.js")"></script>
+        <script type="application/ld+json">
+        {
+          "@@context": "http://schema.org",
+          "@@type": "Organization",
+          "url": "@generalConfig.getCanonicalUrl",
+          "logo": "@(generalConfig.getCanonicalUrl + org.iatoki.judgels.play.routes.JudgelsController.coloredLogo())"
+        }
+        </script>
+    </body>
+</html>
