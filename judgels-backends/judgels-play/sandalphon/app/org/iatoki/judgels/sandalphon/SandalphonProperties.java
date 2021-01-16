@@ -35,8 +35,6 @@ public final class SandalphonProperties {
                     .clientJid(config.getString("sealtiel.clientJid"))
                     .clientSecret(config.getString("sealtiel.clientSecret"))
                     .build());
-        } else {
-            sandalphonConfig.sealtielConfig(SealtielClientConfiguration.DEFAULT);
         }
 
         if (config.hasPath("gabriel.clientJid")) {
