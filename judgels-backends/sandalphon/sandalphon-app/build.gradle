@@ -1,4 +1,8 @@
-apply from: '../../gradle/java.gradle'
+plugins {
+    id 'idea'
+    id 'java-library'
+}
+
 apply from: '../gradle/play.gradle'
 apply plugin: 'org.gradle.playframework-less'
 apply plugin: 'org.gradle.playframework-webjars'
