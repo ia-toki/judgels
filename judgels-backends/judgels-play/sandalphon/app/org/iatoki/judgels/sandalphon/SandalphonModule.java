@@ -30,8 +30,6 @@ import org.hibernate.SessionFactory;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.play.general.GeneralConfig;
-import org.iatoki.judgels.play.migration.DataMigrationInit;
-import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
 import org.iatoki.judgels.play.model.LegacyActorProvider;
 import org.iatoki.judgels.play.model.LegacySessionFactory;
 import org.iatoki.judgels.sandalphon.lesson.LessonFileSystemProvider;
@@ -65,9 +63,6 @@ public final class SandalphonModule extends AbstractModule {
 
         bind(SandalphonThreadsScheduler.class).asEagerSingleton();
         bind(SandalphonSingletonsBuilder.class).asEagerSingleton();
-        bind(DataMigrationInit.class).asEagerSingleton();
-
-        bind(JudgelsDataMigrator.class).to(SandalphonDataMigrator.class);
 
         bind(BundleSubmissionService.class).to(BundleSubmissionServiceImpl.class);
         bind(BundleProblemGrader.class).to(BundleProblemGraderImpl.class);
