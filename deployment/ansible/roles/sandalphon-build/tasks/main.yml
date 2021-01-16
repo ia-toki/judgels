@@ -1,7 +1,7 @@
 - block:
   - name: Build sandalphon image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../../../judgels-backends/judgels-play/sandalphon"
+      path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-app"
       name: judgels/sandalphon
       force: yes
       push: yes
