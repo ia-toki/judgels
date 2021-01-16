@@ -1,64 +1,60 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import akka.actor.Scheduler;
-import com.palantir.conjure.java.api.errors.RemoteException;
+import java.time.Duration;
+import java.util.Optional;
 import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
-import play.db.jpa.JPAApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.concurrent.ExecutionContext;
-import scala.concurrent.duration.Duration;
-
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public final class GradingResponsePoller implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GradingResponsePoller.class);
 
-    private final Scheduler scheduler;
-    private final ExecutionContext executor;
-    private final JPAApi jpaApi;
-    private final ProgrammingSubmissionService submissionService;
+    private static final Duration POLLING_DELAY = Duration.ofSeconds(2);
+    private static final Duration SCHEDULE_DELAY = Duration.ofMillis(10);
+
     private final BasicAuthHeader sealtielClientAuthHeader;
     private final MessageService messageService;
-    private final long interval;
+    private final Scheduler scheduler;
+    private final ExecutionContext executor;
+    private final GradingResponseProcessor processor;
 
-    private boolean isConnected;
+    public GradingResponsePoller(
+            BasicAuthHeader sealtielClientAuthHeader,
+            MessageService messageService,
+            Scheduler scheduler,
+            ExecutionContext executor,
+            GradingResponseProcessor processor) {
 
-    public GradingResponsePoller(Scheduler scheduler, ExecutionContext executor, JPAApi jpaApi, ProgrammingSubmissionService submissionService, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, long interval) {
-        this.scheduler = scheduler;
-        this.executor = executor;
-        this.jpaApi = jpaApi;
-        this.submissionService = submissionService;
         this.sealtielClientAuthHeader = sealtielClientAuthHeader;
         this.messageService = messageService;
-        this.interval = interval;
-        this.isConnected = false;
+        this.scheduler = scheduler;
+        this.executor = executor;
+        this.processor = processor;
     }
 
     @Override
     public void run() {
-        long checkPoint = System.currentTimeMillis();
-        Optional<Message> message = Optional.empty();
-        do {
+        while (true) {
             try {
-                message = messageService.receiveMessage(sealtielClientAuthHeader);
-                if (message.isPresent()) {
-                    if (!isConnected) {
-                        System.out.println("Connected to Sealtiel!");
-                        isConnected = true;
+                Optional<Message> maybeMessage = messageService.receiveMessage(sealtielClientAuthHeader);
+                if (!maybeMessage.isPresent()) {
+                    try {
+                        Thread.sleep(POLLING_DELAY.toMillis());
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
+                    continue;
+                }
 
-                    MessageProcessor processor = new MessageProcessor(jpaApi, submissionService, sealtielClientAuthHeader, messageService, message.get());
-                    scheduler.scheduleOnce(Duration.create(10, TimeUnit.MILLISECONDS), processor, executor);
-                }
-            } catch (RemoteException e) {
-                if (isConnected) {
-                    System.out.println("Disconnected from Sealtiel!");
-                    System.out.println(e.getMessage());
-                    isConnected = false;
-                }
+                Message message = maybeMessage.get();
+                scheduler.scheduleOnce(SCHEDULE_DELAY, () -> processor.process(message), executor);
+            } catch (Throwable e) {
+                LOGGER.error("Failed to run grading response poller", e);
             }
-        } while ((System.currentTimeMillis() - checkPoint < interval) && (message != null));
+        }
     }
 }

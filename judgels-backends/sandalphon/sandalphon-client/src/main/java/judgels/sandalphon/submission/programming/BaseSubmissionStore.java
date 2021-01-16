@@ -65,6 +65,17 @@ public class BaseSubmissionStore<
     }
 
     @Override
+    public List<Submission> getSubmissionByJids(List<String> submissionJids) {
+        Set<String> submissionJidsSet = ImmutableSet.copyOf(submissionJids);
+        Map<String, SM> submissionModels = submissionDao.selectByJids(submissionJidsSet);
+        Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJidsSet);
+        return submissionJids.stream()
+                .filter(submissionModels::containsKey)
+                .map(jid -> submissionFromModels(submissionModels.get(jid), gradingModels.get(jid)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Submission> getSubmissionsForScoreboard(
             String containerJid,
             boolean withGradingDetails,
@@ -139,8 +150,12 @@ public class BaseSubmissionStore<
         Set<String> submissionJids = submissionModels.getPage().stream().map(m -> m.jid).collect(Collectors.toSet());
         Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJids);
 
-        return submissionModels.mapPage(p ->
-                Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))));
+        return new Page.Builder<Submission>()
+                .from(submissionModels.mapPage(p ->
+                        Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid)))))
+                .pageSize(options.getPageSize())
+                .pageIndex(options.getPage())
+                .build();
     }
 
     @Override
@@ -219,7 +234,7 @@ public class BaseSubmissionStore<
                 .jid(model.jid)
                 .userJid(model.createdBy)
                 .problemJid(model.problemJid)
-                .containerJid(model.containerJid)
+                .containerJid(Optional.ofNullable(model.containerJid).orElse(model.problemJid))
                 .gradingEngine(model.gradingEngine)
                 .gradingLanguage(model.gradingLanguage)
                 .time(model.createdAt)

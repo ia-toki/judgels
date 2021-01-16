@@ -1,12 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
-import judgels.persistence.hibernate.HibernateDaoData;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.sandalphon.hibernate.AbstractProgrammingGradingHibernateDao;
 
-@Singleton
-public final class ProgrammingGradingHibernateDao extends AbstractProgrammingGradingHibernateDao<ProgrammingGradingModel> implements ProgrammingGradingDao {
+public class ProgrammingGradingHibernateDao
+        extends AbstractProgrammingGradingHibernateDao<ProgrammingGradingModel>
+        implements ProgrammingGradingDao {
 
     @Inject
     public ProgrammingGradingHibernateDao(HibernateDaoData data) {
@@ -16,5 +16,10 @@ public final class ProgrammingGradingHibernateDao extends AbstractProgrammingGra
     @Override
     public ProgrammingGradingModel createGradingModel() {
         return new ProgrammingGradingModel();
+    }
+
+    @Override
+    public Class<ProgrammingGradingModel> getGradingModelClass() {
+        return ProgrammingGradingModel.class;
     }
 }

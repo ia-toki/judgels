@@ -1,12 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
-import judgels.persistence.hibernate.HibernateDaoData;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.sandalphon.hibernate.AbstractProgrammingSubmissionHibernateDao;
 
-@Singleton
-public final class ProgrammingSubmissionHibernateDao extends AbstractProgrammingSubmissionHibernateDao<ProgrammingSubmissionModel> implements ProgrammingSubmissionDao {
+public class ProgrammingSubmissionHibernateDao
+        extends AbstractProgrammingSubmissionHibernateDao<ProgrammingSubmissionModel>
+        implements ProgrammingSubmissionDao {
 
     @Inject
     public ProgrammingSubmissionHibernateDao(HibernateDaoData data) {
