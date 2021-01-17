@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { SubmissionImageDialog } from '../../../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
@@ -22,9 +21,6 @@ export class ProblemSubmissionsPage extends Component {
 
   state = {
     response: undefined,
-    isSubmissionImageDialogOpen: false,
-    submissionImageUrl: undefined,
-    submissionDialogTitle: '',
   };
 
   render() {
@@ -37,12 +33,6 @@ export class ProblemSubmissionsPage extends Component {
         <div className="clearfix" />
         {this.renderSubmissions()}
         {this.renderPagination()}
-        <SubmissionImageDialog
-          isOpen={this.state.isSubmissionImageDialogOpen}
-          onClose={this.toggleSubmissionImageDialog}
-          title={this.state.submissionDialogTitle}
-          imageUrl={this.state.submissionImageUrl}
-        />
       </ContentCard>
     );
   }
@@ -82,12 +72,10 @@ export class ProblemSubmissionsPage extends Component {
         problemSet={this.props.problemSet}
         problem={this.props.problem}
         submissions={submissions.page}
-        userJid={this.props.userJid}
         canManage={config.canManage}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
         onRegrade={this.onRegrade}
-        onOpenSubmissionImage={this.onOpenSubmissionImage}
       />
     );
   };
@@ -133,17 +121,6 @@ export class ProblemSubmissionsPage extends Component {
       await this.refreshSubmissions(queries.page);
     }
   };
-
-  toggleSubmissionImageDialog = () => {
-    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
-  };
-
-  onOpenSubmissionImage = async (submissionJid, submissionId, username) => {
-    const submissionImageUrl = await this.props.onGetSubmissionSourceImage(submissionJid);
-    const submissionDialogTitle = `Submission #${submissionId} (${username})`;
-    this.setState({ submissionImageUrl, submissionDialogTitle });
-    this.toggleSubmissionImageDialog();
-  };
 }
 
 const mapStateToProps = state => ({
@@ -158,7 +135,6 @@ const mapDispatchToProps = {
   onRegrade: problemSetSubmissionActions.regradeSubmission,
   onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
   onAppendRoute: queries => push({ search: stringify(queries) }),
-  onGetSubmissionSourceImage: problemSetSubmissionActions.getSubmissionSourceImage,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));

@@ -16,6 +16,7 @@ export class SubmissionPage extends Component {
     problemName: undefined,
     problemAlias: undefined,
     containerName: undefined,
+    sourceImageUrl: undefined,
   };
 
   async componentDidMount() {
@@ -23,6 +24,7 @@ export class SubmissionPage extends Component {
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
+    const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
     this.props.onPushBreadcrumb(this.props.match.url, 'Submission #' + data.submission.id);
     this.setState({
       submissionWithSource: data,
@@ -30,6 +32,7 @@ export class SubmissionPage extends Component {
       problemName,
       problemAlias,
       containerName,
+      sourceImageUrl,
     });
   }
 
@@ -48,7 +51,7 @@ export class SubmissionPage extends Component {
   }
 
   renderSubmission = () => {
-    const { submissionWithSource, profile, problemAlias, problemName, containerName } = this.state;
+    const { submissionWithSource, profile, problemAlias, problemName, containerName, sourceImageUrl } = this.state;
 
     if (!submissionWithSource) {
       return <LoadingState />;
@@ -58,6 +61,7 @@ export class SubmissionPage extends Component {
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
+        sourceImageUrl={sourceImageUrl}
         profile={profile}
         problemAlias={problemAlias}
         problemName={problemName}
@@ -74,6 +78,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onGetSubmissionWithSource: submissionActions.getSubmissionWithSource,
+  onGetSubmissionSourceImage: submissionActions.getSubmissionSourceImage,
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };

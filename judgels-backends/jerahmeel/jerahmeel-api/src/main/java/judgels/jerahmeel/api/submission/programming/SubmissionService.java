@@ -32,7 +32,7 @@ public interface SubmissionService {
     @Path("/id/{submissionId}")
     @Produces(APPLICATION_JSON)
     SubmissionWithSourceResponse getSubmissionWithSourceById(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("submissionId") long submissionId,
             @QueryParam("language") Optional<String> language);
 

@@ -177,13 +177,12 @@ public class SubmissionResource implements SubmissionService {
     @Override
     @UnitOfWork(readOnly = true)
     public SubmissionWithSourceResponse getSubmissionWithSourceById(
-            AuthHeader authHeader,
+            Optional<AuthHeader> authHeader,
             long submissionId,
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
-        checkAllowed(submissionRoleChecker.canView(actorJid, submission.getUserJid()));
 
         String containerName;
         String problemAlias;
@@ -204,11 +203,18 @@ public class SubmissionResource implements SubmissionService {
         String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(userClient.getProfile(userJid)));
 
-        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
-        SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
-                .submission(submission)
-                .source(source)
-                .build();
+        SubmissionWithSource submissionWithSource;
+        if (submissionRoleChecker.canViewSource(actorJid, submission.getUserJid())) {
+            SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
+            submissionWithSource = new SubmissionWithSource.Builder()
+                    .submission(submission)
+                    .source(source)
+                    .build();
+        } else {
+            submissionWithSource = new SubmissionWithSource.Builder()
+                    .submission(submission)
+                    .build();
+        }
 
         return new SubmissionWithSourceResponse.Builder()
                 .data(submissionWithSource)

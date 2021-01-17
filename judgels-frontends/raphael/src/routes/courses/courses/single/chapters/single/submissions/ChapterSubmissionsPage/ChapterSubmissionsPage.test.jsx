@@ -160,17 +160,6 @@ describe('ChapterSubmissionsPage', () => {
             ['10', 'username2', 'B', 'C++17', '', '', '2 days ago', 'search'],
           ]);
         });
-
-        it('shows submission as image', () => {
-          wrapper
-            .find('tbody')
-            .childAt(1)
-            .childAt(7)
-            .childAt(0)
-            .simulate('click');
-
-          expect(chapterSubmissionActions.getSubmissionSourceImage).toHaveBeenCalledWith('submissionJid2');
-        });
       });
 
       describe('when canManage', () => {

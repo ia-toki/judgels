@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { SubmissionImageDialog } from '../../../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
@@ -21,11 +20,7 @@ import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 export class ChapterSubmissionsPage extends Component {
   static PAGE_SIZE = 20;
 
-  state = {
-    isSubmissionImageDialogOpen: false,
-    submissionImageUrl: undefined,
-    submissionDialogTitle: '',
-  };
+  state;
 
   constructor(props) {
     super(props);
@@ -71,12 +66,6 @@ export class ChapterSubmissionsPage extends Component {
         <div className="clearfix" />
         {this.renderSubmissions()}
         {this.renderPagination()}
-        <SubmissionImageDialog
-          isOpen={this.state.isSubmissionImageDialogOpen}
-          onClose={this.toggleSubmissionImageDialog}
-          title={this.state.submissionDialogTitle}
-          imageUrl={this.state.submissionImageUrl}
-        />
       </ContentCard>
     );
   }
@@ -121,11 +110,9 @@ export class ChapterSubmissionsPage extends Component {
         chapter={this.props.chapter}
         submissions={submissions.page}
         canManage={config.canManage}
-        userJid={this.props.userJid}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
         onRegrade={this.onRegrade}
-        onOpenSubmissionImage={this.onOpenSubmissionImage}
       />
     );
   };
@@ -193,17 +180,6 @@ export class ChapterSubmissionsPage extends Component {
       await this.refreshSubmissions(problemAlias, queries.page);
     }
   };
-
-  toggleSubmissionImageDialog = () => {
-    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
-  };
-
-  onOpenSubmissionImage = async (submissionJid, submissionId, username) => {
-    const submissionImageUrl = await this.props.onGetSubmissionSourceImage(submissionJid);
-    const submissionDialogTitle = `Submission #${submissionId} (${username})`;
-    this.setState({ submissionImageUrl, submissionDialogTitle });
-    this.toggleSubmissionImageDialog();
-  };
 }
 
 const mapStateToProps = state => ({
@@ -218,7 +194,6 @@ const mapDispatchToProps = {
   onRegrade: chapterSubmissionActions.regradeSubmission,
   onRegradeAll: chapterSubmissionActions.regradeSubmissions,
   onAppendRoute: queries => push({ search: stringify(queries) }),
-  onGetSubmissionSourceImage: chapterSubmissionActions.getSubmissionSourceImage,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));

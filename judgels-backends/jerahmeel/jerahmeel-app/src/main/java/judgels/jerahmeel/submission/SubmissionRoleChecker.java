@@ -11,7 +11,7 @@ public class SubmissionRoleChecker {
         this.roleChecker = roleChecker;
     }
 
-    public boolean canView(String userJid, String submissionUserJid) {
+    public boolean canViewSource(String userJid, String submissionUserJid) {
         if (roleChecker.isAdmin(userJid)) {
             return true;
         }

@@ -13,6 +13,7 @@ import * as problemSetSubmissionActions from '../../modules/problemSetSubmission
 export class ProblemSubmissionPage extends Component {
   state = {
     submissionWithSource: undefined,
+    sourceImageUrl: undefined,
     profile: undefined,
     problemName: undefined,
     problemAlias: undefined,
@@ -24,9 +25,11 @@ export class ProblemSubmissionPage extends Component {
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
+    const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
     this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
     this.setState({
       submissionWithSource: data,
+      sourceImageUrl,
       profile,
       problemName,
       problemAlias,
@@ -49,7 +52,7 @@ export class ProblemSubmissionPage extends Component {
   }
 
   renderSubmission = () => {
-    const { submissionWithSource, profile, problemName, problemAlias, containerName } = this.state;
+    const { submissionWithSource, profile, problemName, problemAlias, containerName, sourceImageUrl } = this.state;
     const { problemSet } = this.props;
 
     if (!submissionWithSource) {
@@ -60,6 +63,7 @@ export class ProblemSubmissionPage extends Component {
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
+        sourceImageUrl={sourceImageUrl}
         profile={profile}
         problemName={problemName}
         problemAlias={problemAlias}
@@ -78,6 +82,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onGetSubmissionWithSource: problemSetSubmissionActions.getSubmissionWithSource,
+  onGetSubmissionSourceImage: problemSetSubmissionActions.getSubmissionSourceImage,
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };

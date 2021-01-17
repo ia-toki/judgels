@@ -1,6 +1,7 @@
 package judgels.sandalphon.api.submission.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
 import judgels.gabriel.api.SubmissionSource;
 import org.immutables.value.Value;
 
@@ -8,7 +9,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSubmissionWithSource.class)
 public interface SubmissionWithSource {
     Submission getSubmission();
-    SubmissionSource getSource();
+    Optional<SubmissionSource> getSource();
 
     class Builder extends ImmutableSubmissionWithSource.Builder {}
 }
