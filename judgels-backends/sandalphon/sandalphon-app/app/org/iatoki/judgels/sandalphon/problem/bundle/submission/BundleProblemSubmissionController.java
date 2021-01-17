@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
@@ -12,7 +14,6 @@ import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemController;
@@ -41,8 +42,8 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     }
 
     @Transactional
-    public Result postSubmit(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postSubmit(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem) && isClean) {
@@ -59,13 +60,13 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     }
 
     @Transactional(readOnly = true)
-    public Result viewSubmissions(long problemId) throws ProblemNotFoundException  {
+    public Result viewSubmissions(long problemId)  {
         return listSubmissions(problemId, 0, "id", "desc");
     }
 
     @Transactional(readOnly = true)
-    public Result listSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();
@@ -82,14 +83,14 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     }
 
     @Transactional(readOnly = true)
-    public Result viewSubmission(long problemId, long submissionId) throws ProblemNotFoundException, BundleSubmissionNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result viewSubmission(long problemId, long submissionId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();
         }
 
-        BundleSubmission bundleSubmission = bundleSubmissionService.findBundleSubmissionById(submissionId);
+        BundleSubmission bundleSubmission = checkFound(bundleSubmissionService.findBundleSubmissionById(submissionId));
         BundleAnswer bundleAnswer;
         try {
             bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
@@ -107,14 +108,14 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     }
 
     @Transactional
-    public Result regradeSubmission(long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException, BundleSubmissionNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result regradeSubmission(long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();
         }
 
-        BundleSubmission bundleSubmission = bundleSubmissionService.findBundleSubmissionById(submissionId);
+        BundleSubmission bundleSubmission = checkFound(bundleSubmissionService.findBundleSubmissionById(submissionId));
         BundleAnswer bundleAnswer;
         try {
             bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
@@ -127,8 +128,8 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     }
 
     @Transactional
-    public Result regradeSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result regradeSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();

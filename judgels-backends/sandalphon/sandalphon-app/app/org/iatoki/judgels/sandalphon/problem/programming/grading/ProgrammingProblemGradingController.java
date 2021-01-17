@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +14,6 @@ import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
@@ -46,8 +47,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editGradingEngine(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editGradingEngine(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -67,8 +68,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditGradingEngine(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postEditGradingEngine(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -106,8 +107,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editGradingConfig(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editGradingConfig(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -135,8 +136,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditGradingConfig(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postEditGradingConfig(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
         }
@@ -172,8 +173,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
     }
 
     @Transactional
-    public Result editGradingConfigByTokilibFormat(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editGradingConfigByTokilibFormat(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -213,8 +214,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
     }
 
     @Transactional
-    public Result editGradingConfigByAutoPopulation(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editGradingConfigByAutoPopulation(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -254,8 +255,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listGradingTestDataFiles(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listGradingTestDataFiles(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -269,8 +270,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadGradingTestDataFiles(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postUploadGradingTestDataFiles(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -318,8 +319,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listGradingHelperFiles(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listGradingHelperFiles(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -333,8 +334,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadGradingHelperFiles(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postUploadGradingHelperFiles(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -382,8 +383,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editLanguageRestriction(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editLanguageRestriction(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -407,8 +408,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditLanguageRestriction(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postEditLanguageRestriction(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();

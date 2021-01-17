@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.partner;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import javax.inject.Inject;
@@ -16,9 +18,7 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm;
 import org.iatoki.judgels.sandalphon.problem.programming.partner.html.addPartnerView;
@@ -45,8 +45,8 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result addPartner(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result addPartner(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();
@@ -61,8 +61,8 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
     @Transactional
     @RequireCSRFCheck
-    public Result postAddPartner(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postAddPartner(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();
@@ -117,14 +117,14 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editPartner(long problemId, long partnerId) throws ProblemNotFoundException, ProblemPartnerNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editPartner(long problemId, long partnerId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();
         }
 
-        ProblemPartner problemPartner = problemService.findProblemPartnerById(partnerId);
+        ProblemPartner problemPartner = checkFound(problemService.findProblemPartnerById(partnerId));
 
         ProblemPartnerConfig problemConfig = problemPartner.getBaseConfig();
         ProblemPartnerUpsertForm problemData = new ProblemPartnerUpsertForm();
@@ -153,14 +153,14 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditPartner(long problemId, long partnerId) throws ProblemNotFoundException, ProblemPartnerNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postEditPartner(long problemId, long partnerId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();
         }
 
-        ProblemPartner problemPartner = problemService.findProblemPartnerById(partnerId);
+        ProblemPartner problemPartner = checkFound(problemService.findProblemPartnerById(partnerId));
 
         Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest();
         Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).bindFromRequest();

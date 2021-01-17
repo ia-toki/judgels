@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
@@ -8,7 +10,6 @@ import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.partner.html.listPartnersView;
 import play.db.jpa.Transactional;
@@ -27,13 +28,13 @@ public class ProblemPartnerController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewPartners(long problemId) throws ProblemNotFoundException {
+    public Result viewPartners(long problemId) {
         return listPartners(problemId, 0, "id", "desc");
     }
 
     @Transactional(readOnly = true)
-    public Result listPartners(long problemId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listPartners(long problemId, long pageIndex, String orderBy, String orderDir) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();
@@ -51,8 +52,8 @@ public class ProblemPartnerController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result addPartner(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result addPartner(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();
@@ -69,8 +70,8 @@ public class ProblemPartnerController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result editPartner(long problemId, long partnerId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editPartner(long problemId, long partnerId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();

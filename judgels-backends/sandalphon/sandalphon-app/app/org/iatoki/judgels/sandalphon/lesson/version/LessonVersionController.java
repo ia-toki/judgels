@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.lesson.version;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
@@ -10,7 +12,6 @@ import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
-import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.lesson.version.html.listVersionsView;
 import org.iatoki.judgels.sandalphon.lesson.version.html.viewVersionLocalChangesView;
@@ -31,8 +32,8 @@ public final class LessonVersionController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result listVersionHistory(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result listVersionHistory(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToViewVersionHistory(lessonService, lesson)) {
             return notFound();
@@ -51,8 +52,8 @@ public final class LessonVersionController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result restoreVersionHistory(long lessonId, String hash) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result restoreVersionHistory(long lessonId, String hash) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         boolean isClean = !lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid());
 
         if (!isClean || !LessonControllerUtils.isAllowedToRestoreVersionHistory(lessonService, lesson)) {
@@ -66,8 +67,8 @@ public final class LessonVersionController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result viewVersionLocalChanges(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result viewVersionLocalChanges(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isPartnerOrAbove(lessonService, lesson)) {
             return notFound();
@@ -82,8 +83,8 @@ public final class LessonVersionController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCommitVersionLocalChanges(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result postCommitVersionLocalChanges(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isPartnerOrAbove(lessonService, lesson)) {
             return notFound();
@@ -115,8 +116,8 @@ public final class LessonVersionController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result editVersionLocalChanges(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result editVersionLocalChanges(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isPartnerOrAbove(lessonService, lesson)) {
             return notFound();
@@ -132,8 +133,8 @@ public final class LessonVersionController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result discardVersionLocalChanges(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result discardVersionLocalChanges(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isPartnerOrAbove(lessonService, lesson)) {
             return notFound();

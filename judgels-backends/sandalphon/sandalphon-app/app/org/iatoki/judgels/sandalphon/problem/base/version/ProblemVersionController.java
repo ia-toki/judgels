@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.base.version;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.IOException;
 import java.util.List;
 import javax.inject.Inject;
@@ -10,7 +12,6 @@ import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.version.html.listVersionsView;
 import org.iatoki.judgels.sandalphon.problem.base.version.html.viewVersionLocalChangesView;
@@ -31,8 +32,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result listVersionHistory(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listVersionHistory(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToViewVersionHistory(problemService, problem)) {
             return notFound();
@@ -51,8 +52,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result restoreVersionHistory(long problemId, String hash) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result restoreVersionHistory(long problemId, String hash) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
         boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
 
         if (!isClean || !ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem)) {
@@ -66,8 +67,8 @@ public final class ProblemVersionController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result viewVersionLocalChanges(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result viewVersionLocalChanges(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
             return notFound();
@@ -82,8 +83,8 @@ public final class ProblemVersionController extends AbstractProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCommitVersionLocalChanges(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postCommitVersionLocalChanges(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
             return notFound();
@@ -115,8 +116,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result editVersionLocalChanges(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editVersionLocalChanges(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
             return notFound();
@@ -132,8 +133,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result discardVersionLocalChanges(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result discardVersionLocalChanges(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
             return notFound();

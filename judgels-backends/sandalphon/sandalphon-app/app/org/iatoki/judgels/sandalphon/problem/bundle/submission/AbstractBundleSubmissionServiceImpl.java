@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.fs.FileSystem;
 import judgels.persistence.api.Page;
@@ -32,11 +33,11 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
     }
 
     @Override
-    public BundleSubmission findBundleSubmissionById(long submissionId) throws BundleSubmissionNotFoundException {
-        SM submissionModel = bundleSubmissionDao.findById(submissionId);
-        List<GM> gradingModels = bundleGradingDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.of(AbstractBundleGradingModel_.submissionJid, submissionModel.jid), 0, -1);
-
-        return BundleSubmissionServiceUtils.createSubmissionFromModels(submissionModel, gradingModels);
+    public Optional<BundleSubmission> findBundleSubmissionById(long submissionId) {
+        return bundleSubmissionDao.select(submissionId).map(sm -> {
+            List<GM> gradingModels = bundleGradingDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.of(AbstractBundleGradingModel_.submissionJid, sm.jid), 0, -1);
+            return BundleSubmissionServiceUtils.createSubmissionFromModels(sm, gradingModels);
+        });
     }
 
     @Override

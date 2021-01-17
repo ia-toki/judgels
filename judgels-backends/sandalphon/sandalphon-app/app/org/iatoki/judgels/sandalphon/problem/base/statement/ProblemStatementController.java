@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.base.statement;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +19,6 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.listStatementLanguagesView;
@@ -44,8 +45,8 @@ public class ProblemStatementController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewStatement(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result viewStatement(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (problem.getType().equals(ProblemType.PROGRAMMING)) {
             return redirect(org.iatoki.judgels.sandalphon.problem.programming.statement.routes.ProgrammingProblemStatementController.viewStatement(problem.getId()));
@@ -58,8 +59,8 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editStatement(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editStatement(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
         try {
             ProblemControllerUtils.establishStatementLanguage(problemService, problem);
         } catch (IOException e) {
@@ -102,8 +103,8 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditStatement(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postEditStatement(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
         try {
             ProblemControllerUtils.establishStatementLanguage(problemService, problem);
         } catch (IOException e) {
@@ -149,8 +150,8 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listStatementMediaFiles(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listStatementMediaFiles(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem);
@@ -161,8 +162,8 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadStatementMediaFiles(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postUploadStatementMediaFiles(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem)) {
             return notFound();
@@ -212,8 +213,8 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listStatementLanguages(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listStatementLanguages(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToManageStatementLanguages(problemService, problem)) {
             return notFound();
@@ -238,8 +239,8 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postAddStatementLanguage(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postAddStatementLanguage(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToManageStatementLanguages(problemService, problem)) {
             return notFound();
@@ -265,8 +266,8 @@ public class ProblemStatementController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result enableStatementLanguage(long problemId, String languageCode) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result enableStatementLanguage(long problemId, String languageCode) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToManageStatementLanguages(problemService, problem)) {
             return notFound();
@@ -289,8 +290,8 @@ public class ProblemStatementController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result disableStatementLanguage(long problemId, String languageCode) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result disableStatementLanguage(long problemId, String languageCode) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToManageStatementLanguages(problemService, problem)) {
             return notFound();
@@ -317,8 +318,8 @@ public class ProblemStatementController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result makeDefaultStatementLanguage(long problemId, String languageCode) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result makeDefaultStatementLanguage(long problemId, String languageCode) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToManageStatementLanguages(problemService, problem)) {
             return notFound();

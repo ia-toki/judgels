@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.lesson.statement;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +18,6 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
-import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.lessonStatementView;
@@ -49,8 +50,8 @@ public class LessonStatementController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewStatement(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result viewStatement(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         try {
             LessonControllerUtils.establishStatementLanguage(lessonService, lesson);
         } catch (IOException e) {
@@ -92,8 +93,8 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editStatement(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result editStatement(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         try {
             LessonControllerUtils.establishStatementLanguage(lessonService, lesson);
         } catch (IOException e) {
@@ -129,8 +130,8 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditStatement(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result postEditStatement(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         try {
             LessonControllerUtils.establishStatementLanguage(lessonService, lesson);
         } catch (IOException e) {
@@ -173,8 +174,8 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listStatementMediaFiles(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result listStatementMediaFiles(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
@@ -185,8 +186,8 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadStatementMediaFiles(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result postUploadStatementMediaFiles(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson)) {
             return notFound();
@@ -236,8 +237,8 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listStatementLanguages(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result listStatementLanguages(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
             return notFound();
@@ -262,8 +263,8 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postAddStatementLanguage(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result postAddStatementLanguage(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
             return notFound();
@@ -289,8 +290,8 @@ public class LessonStatementController extends AbstractLessonController {
     }
 
     @Transactional
-    public Result enableStatementLanguage(long lessonId, String languageCode) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result enableStatementLanguage(long lessonId, String languageCode) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
             return notFound();
@@ -313,8 +314,8 @@ public class LessonStatementController extends AbstractLessonController {
     }
 
     @Transactional
-    public Result disableStatementLanguage(long lessonId, String languageCode) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result disableStatementLanguage(long lessonId, String languageCode) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
             return notFound();
@@ -341,8 +342,8 @@ public class LessonStatementController extends AbstractLessonController {
     }
 
     @Transactional
-    public Result makeDefaultStatementLanguage(long lessonId, String languageCode) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result makeDefaultStatementLanguage(long lessonId, String languageCode) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
             return notFound();

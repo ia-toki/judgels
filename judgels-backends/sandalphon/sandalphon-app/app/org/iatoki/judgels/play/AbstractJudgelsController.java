@@ -2,7 +2,6 @@ package org.iatoki.judgels.play;
 
 import com.google.inject.Inject;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
-import org.iatoki.judgels.play.controllers.EntityNotFoundGuard;
 import org.iatoki.judgels.play.general.GeneralConfig;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.play.template.LazyHtml;
@@ -29,7 +28,6 @@ import play.mvc.Result;
 import play.mvc.Results;
 import play.twirl.api.Html;
 
-@EntityNotFoundGuard
 public abstract class AbstractJudgelsController extends Controller {
 
     @Inject

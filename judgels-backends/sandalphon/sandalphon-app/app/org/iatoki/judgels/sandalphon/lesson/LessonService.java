@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import judgels.fs.FileInfo;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
@@ -13,7 +14,6 @@ import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundException;
 
 @ImplementedBy(LessonServiceImpl.class)
 public interface LessonService {
@@ -24,7 +24,7 @@ public interface LessonService {
 
     boolean lessonExistsBySlug(String slug);
 
-    Lesson findLessonById(long lessonId) throws LessonNotFoundException;
+    Optional<Lesson> findLessonById(long lessonId);
 
     Lesson findLessonByJid(String lessonJid);
 
@@ -38,7 +38,7 @@ public interface LessonService {
 
     Page<LessonPartner> getPageOfLessonPartners(String lessonJid, long pageIndex, long pageSize, String orderBy, String orderDir);
 
-    LessonPartner findLessonPartnerById(long lessonPartnerId) throws LessonPartnerNotFoundException;
+    Optional<LessonPartner> findLessonPartnerById(long lessonPartnerId);
 
     LessonPartner findLessonPartnerByLessonJidAndPartnerJid(String lessonJid, String partnerJid);
 

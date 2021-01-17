@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Singleton;
 import judgels.fs.FileInfo;
@@ -33,7 +34,6 @@ import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel_;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
 
 @Singleton
 public final class ProblemServiceImpl implements ProblemService {
@@ -77,13 +77,8 @@ public final class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public Problem findProblemById(long problemId) throws ProblemNotFoundException {
-        ProblemModel problemModel = problemDao.findById(problemId);
-        if (problemModel == null) {
-            throw new ProblemNotFoundException("Problem not found.");
-        }
-
-        return createProblemFromModel(problemModel);
+    public Optional<Problem> findProblemById(long problemId) {
+        return problemDao.select(problemId).map(m -> createProblemFromModel(m));
     }
 
     @Override
@@ -158,13 +153,8 @@ public final class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public ProblemPartner findProblemPartnerById(long problemPartnerId) throws ProblemPartnerNotFoundException {
-        ProblemPartnerModel problemPartnerModel = problemPartnerDao.findById(problemPartnerId);
-        if (problemPartnerModel == null) {
-            throw new ProblemPartnerNotFoundException("Problem partner not found.");
-        }
-
-        return createProblemPartnerFromModel(problemPartnerModel);
+    public Optional<ProblemPartner> findProblemPartnerById(long problemPartnerId) {
+        return problemPartnerDao.select(problemPartnerId).map(m -> createProblemPartnerFromModel(m));
     }
 
     @Override
@@ -434,7 +424,7 @@ public final class ProblemServiceImpl implements ProblemService {
         problemDao.edit(problemModel, userJid, userIpAddress);
     }
 
-    private void initStatements(String problemJid, String initialLanguageCode) throws IOException {
+    private void initStatements(String problemJid, String initialLanguageCode) {
         Path statementsDirPath = getStatementsDirPath(null, problemJid);
         problemFs.createDirectory(statementsDirPath);
 

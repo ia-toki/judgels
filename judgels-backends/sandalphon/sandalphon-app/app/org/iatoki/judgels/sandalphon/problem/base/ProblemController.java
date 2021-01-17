@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
@@ -101,8 +103,8 @@ public final class ProblemController extends AbstractBaseProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewProblem(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result viewProblem(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
         if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem)) {
             return notFound();
         }
@@ -118,8 +120,8 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editProblem(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editProblem(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
             return redirect(routes.ProblemController.viewProblem(problem.getId()));
@@ -136,8 +138,8 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditProblem(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postEditProblem(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
             return notFound();

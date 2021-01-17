@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -114,8 +116,8 @@ public final class LessonController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewLesson(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result viewLesson(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(viewLessonView.render(lesson));
@@ -129,8 +131,8 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editLesson(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result editLesson(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
             return redirect(routes.LessonController.viewLesson(lesson.getId()));
@@ -147,8 +149,8 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditLesson(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result postEditLesson(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
             return notFound();

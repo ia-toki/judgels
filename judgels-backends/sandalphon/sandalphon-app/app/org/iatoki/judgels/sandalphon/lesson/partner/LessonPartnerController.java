@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.lesson.partner;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import javax.inject.Inject;
@@ -15,7 +17,6 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
-import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.addPartnerView;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.editPartnerView;
@@ -42,13 +43,13 @@ public class LessonPartnerController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewPartners(long lessonId) throws LessonNotFoundException {
+    public Result viewPartners(long lessonId) {
         return listPartners(lessonId, 0, "id", "desc");
     }
 
     @Transactional(readOnly = true)
-    public Result listPartners(long lessonId, long pageIndex, String orderBy, String orderDir) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result listPartners(long lessonId, long pageIndex, String orderBy, String orderDir) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
             return notFound();
@@ -68,8 +69,8 @@ public class LessonPartnerController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result addPartner(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result addPartner(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
             return notFound();
@@ -83,8 +84,8 @@ public class LessonPartnerController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postAddPartner(long lessonId) throws LessonNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result postAddPartner(long lessonId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
             return notFound();
@@ -132,14 +133,14 @@ public class LessonPartnerController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editPartner(long lessonId, long partnerId) throws LessonNotFoundException, LessonPartnerNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result editPartner(long lessonId, long partnerId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
             return notFound();
         }
 
-        LessonPartner lessonPartner = lessonService.findLessonPartnerById(partnerId);
+        LessonPartner lessonPartner = checkFound(lessonService.findLessonPartnerById(partnerId));
 
         LessonPartnerConfig lessonConfig = lessonPartner.getConfig();
         LessonPartnerUpsertForm lessonData = new LessonPartnerUpsertForm();
@@ -160,14 +161,14 @@ public class LessonPartnerController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditPartner(long lessonId, long partnerId) throws LessonNotFoundException, LessonPartnerNotFoundException {
-        Lesson lesson = lessonService.findLessonById(lessonId);
+    public Result postEditPartner(long lessonId, long partnerId) {
+        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
             return notFound();
         }
 
-        LessonPartner lessonPartner = lessonService.findLessonPartnerById(partnerId);
+        LessonPartner lessonPartner = checkFound(lessonService.findLessonPartnerById(partnerId));
 
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).bindFromRequest();
 

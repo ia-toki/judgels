@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +31,6 @@ import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
@@ -67,8 +68,8 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional
-    public Result postSubmit(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postSubmit(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem) && isClean) {
@@ -132,13 +133,13 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional(readOnly = true)
-    public Result viewSubmissions(long problemId) throws ProblemNotFoundException  {
+    public Result viewSubmissions(long problemId)  {
         return listSubmissions(problemId, 0, "id", "desc");
     }
 
     @Transactional(readOnly = true)
-    public Result listSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();
@@ -156,8 +157,8 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional(readOnly = true)
-    public Result viewSubmission(long problemId, long submissionId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result viewSubmission(long problemId, long submissionId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();
@@ -183,8 +184,8 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional
-    public Result regradeSubmission(long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result regradeSubmission(long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();
@@ -197,8 +198,8 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional
-    public Result regradeSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result regradeSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
             return notFound();

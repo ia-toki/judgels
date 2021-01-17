@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,7 +31,6 @@ import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerDao;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel_;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundException;
 
 @Singleton
 public final class LessonServiceImpl implements LessonService {
@@ -74,13 +74,8 @@ public final class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Lesson findLessonById(long lessonId) throws LessonNotFoundException {
-        LessonModel lessonModel = lessonDao.findById(lessonId);
-        if (lessonModel == null) {
-            throw new LessonNotFoundException("Lesson not found.");
-        }
-
-        return createLessonFromModel(lessonModel);
+    public Optional<Lesson> findLessonById(long lessonId) {
+        return lessonDao.select(lessonId).map(m -> createLessonFromModel(m));
     }
 
     @Override
@@ -143,13 +138,8 @@ public final class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonPartner findLessonPartnerById(long lessonPartnerId) throws LessonPartnerNotFoundException {
-        LessonPartnerModel lessonPartnerModel = lessonPartnerDao.findById(lessonPartnerId);
-        if (lessonPartnerModel == null) {
-            throw new LessonPartnerNotFoundException("Lesson partner not found.");
-        }
-
-        return createLessonPartnerFromModel(lessonPartnerModel);
+    public Optional<LessonPartner> findLessonPartnerById(long lessonPartnerId) {
+        return lessonPartnerDao.select(lessonPartnerId).map(m -> createLessonPartnerFromModel(m));
     }
 
     @Override

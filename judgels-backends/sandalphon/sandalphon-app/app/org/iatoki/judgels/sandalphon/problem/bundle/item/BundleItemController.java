@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import java.io.IOException;
 import java.util.Set;
 import javax.inject.Inject;
@@ -10,7 +12,6 @@ import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemController;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
@@ -37,13 +38,13 @@ public final class BundleItemController extends AbstractBundleProblemController 
     }
 
     @Transactional(readOnly = true)
-    public Result viewItems(long problemId) throws ProblemNotFoundException  {
+    public Result viewItems(long problemId)  {
         return listCreateItems(problemId, 0, "id", "desc", "");
     }
 
     @Transactional(readOnly = true)
-    public Result listCreateItems(long problemId, long pageIndex, String orderBy, String orderDir, String filterString) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result listCreateItems(long problemId, long pageIndex, String orderBy, String orderDir, String filterString) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
@@ -61,8 +62,8 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result createItem(long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result createItem(long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
@@ -100,8 +101,8 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCreateItem(long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postCreateItem(long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
@@ -164,8 +165,8 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editItem(long problemId, String itemJid) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result editItem(long problemId, String itemJid) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem)) {
             return notFound();
@@ -220,8 +221,8 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditItem(long problemId, String itemJid) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result postEditItem(long problemId, String itemJid) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem)) {
             return notFound();
@@ -276,8 +277,8 @@ public final class BundleItemController extends AbstractBundleProblemController 
     }
 
     @Transactional(readOnly = true)
-    public Result moveItemUp(long problemId, String itemJid) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result moveItemUp(long problemId, String itemJid) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
@@ -299,8 +300,8 @@ public final class BundleItemController extends AbstractBundleProblemController 
     }
 
     @Transactional(readOnly = true)
-    public Result moveItemDown(long problemId, String itemJid) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result moveItemDown(long problemId, String itemJid) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
@@ -322,8 +323,8 @@ public final class BundleItemController extends AbstractBundleProblemController 
     }
 
     @Transactional
-    public Result removeItem(long problemId, String itemJid) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result removeItem(long problemId, String itemJid) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();

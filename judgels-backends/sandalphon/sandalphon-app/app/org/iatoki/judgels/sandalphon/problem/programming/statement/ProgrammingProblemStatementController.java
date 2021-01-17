@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.statement;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.Set;
@@ -13,7 +15,6 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
@@ -38,8 +39,8 @@ public final class ProgrammingProblemStatementController extends AbstractProgram
     }
 
     @Transactional(readOnly = true)
-    public Result viewStatement(long problemId) throws ProblemNotFoundException {
-        Problem problem = problemService.findProblemById(problemId);
+    public Result viewStatement(long problemId) {
+        Problem problem = checkFound(problemService.findProblemById(problemId));
         try {
             ProblemControllerUtils.establishStatementLanguage(problemService, problem);
         } catch (IOException e) {

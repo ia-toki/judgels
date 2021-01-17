@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import judgels.fs.FileInfo;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
@@ -15,7 +16,6 @@ import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
 
 @ImplementedBy(ProblemServiceImpl.class)
 public interface ProblemService {
@@ -26,7 +26,7 @@ public interface ProblemService {
 
     boolean problemExistsBySlug(String slug);
 
-    Problem findProblemById(long problemId) throws ProblemNotFoundException;
+    Optional<Problem> findProblemById(long problemId);
 
     Problem findProblemByJid(String problemJid);
 
@@ -40,7 +40,7 @@ public interface ProblemService {
 
     Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, long pageSize, String orderBy, String orderDir);
 
-    ProblemPartner findProblemPartnerById(long problemPartnerId) throws ProblemPartnerNotFoundException;
+    Optional<ProblemPartner> findProblemPartnerById(long problemPartnerId);
 
     ProblemPartner findProblemPartnerByProblemJidAndPartnerJid(String problemJid, String partnerJid);
 
