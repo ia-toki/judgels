@@ -2,11 +2,11 @@ package org.iatoki.judgels.sandalphon.problem.bundle;
 
 import java.util.Set;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.bundle.partner.BundleProblemPartnerConfig;
 
 public final class BundleProblemControllerUtils {
 
@@ -32,12 +32,12 @@ public final class BundleProblemControllerUtils {
         template.addMainTab("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
-    public static BundleProblemPartnerConfig getPartnerConfig(ProblemService problemService, Problem problem) {
-        return problemService.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), IdentityUtils.getUserJid()).getChildConfig(BundleProblemPartnerConfig.class);
+    public static ProblemPartnerChildConfig getPartnerConfig(ProblemService problemService, Problem problem) {
+        return problemService.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), IdentityUtils.getUserJid()).getChildConfig();
     }
 
     public static boolean isAllowedToManageItems(ProblemService problemService, Problem problem) {
-        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToManageItems());
+        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToManageItems());
     }
 
     public static boolean isAllowedToUpdateItemInLanguage(ProblemService problemService, Problem problem) {
@@ -68,6 +68,6 @@ public final class BundleProblemControllerUtils {
     }
 
     public static boolean isAllowedToSubmit(ProblemService problemService, Problem problem) {
-        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToSubmit());
+        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToSubmit());
     }
 }

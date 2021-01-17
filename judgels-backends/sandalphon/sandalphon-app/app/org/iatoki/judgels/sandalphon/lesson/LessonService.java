@@ -9,10 +9,10 @@ import judgels.fs.FileInfo;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
+import judgels.sandalphon.api.lesson.partner.LessonPartner;
+import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundException;
 
 @ImplementedBy(LessonServiceImpl.class)

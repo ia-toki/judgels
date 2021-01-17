@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -20,12 +21,12 @@ import judgels.fs.FileSystem;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
+import judgels.sandalphon.api.lesson.partner.LessonPartner;
+import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerDao;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel_;
@@ -33,14 +34,15 @@ import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundExcepti
 
 @Singleton
 public final class LessonServiceImpl implements LessonService {
-
+    private final ObjectMapper mapper;
     private final LessonDao lessonDao;
     private final FileSystem lessonFs;
     private final GitProvider lessonGitProvider;
     private final LessonPartnerDao lessonPartnerDao;
 
     @Inject
-    public LessonServiceImpl(LessonDao lessonDao, @LessonFileSystemProvider FileSystem lessonFs, @LessonGitProvider GitProvider lessonGitProvider, LessonPartnerDao lessonPartnerDao) {
+    public LessonServiceImpl(ObjectMapper mapper, LessonDao lessonDao, @LessonFileSystemProvider FileSystem lessonFs, @LessonGitProvider GitProvider lessonGitProvider, LessonPartnerDao lessonPartnerDao) {
+        this.mapper = mapper;
         this.lessonDao = lessonDao;
         this.lessonFs = lessonFs;
         this.lessonGitProvider = lessonGitProvider;
@@ -129,7 +131,7 @@ public final class LessonServiceImpl implements LessonService {
     @Override
     public Page<LessonPartner> getPageOfLessonPartners(String lessonJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
         long totalRows = lessonPartnerDao.countByFiltersEq("", ImmutableMap.of(LessonPartnerModel_.lessonJid, lessonJid));
-        List<LessonPartnerModel> lessonPartnerModels = lessonPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(LessonPartnerModel_.lessonJid, lessonJid), pageIndex, pageIndex * pageSize);
+        List<LessonPartnerModel> lessonPartnerModels = lessonPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(LessonPartnerModel_.lessonJid, lessonJid), pageIndex * pageSize, pageSize);
         List<LessonPartner> lessonPartners = Lists.transform(lessonPartnerModels, m -> createLessonPartnerFromModel(m));
 
         return new Page.Builder<LessonPartner>()
@@ -496,7 +498,16 @@ public final class LessonServiceImpl implements LessonService {
                 .build();
     }
 
-    private static  LessonPartner createLessonPartnerFromModel(LessonPartnerModel lessonPartnerModel) {
-        return new LessonPartner(lessonPartnerModel.id, lessonPartnerModel.lessonJid, lessonPartnerModel.userJid, lessonPartnerModel.config);
+    private LessonPartner createLessonPartnerFromModel(LessonPartnerModel lessonPartnerModel) {
+        try {
+            return new LessonPartner.Builder()
+                    .id(lessonPartnerModel.id)
+                    .lessonJid(lessonPartnerModel.lessonJid)
+                    .userJid(lessonPartnerModel.userJid)
+                    .config(mapper.readValue(lessonPartnerModel.config, LessonPartnerConfig.class))
+                    .build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

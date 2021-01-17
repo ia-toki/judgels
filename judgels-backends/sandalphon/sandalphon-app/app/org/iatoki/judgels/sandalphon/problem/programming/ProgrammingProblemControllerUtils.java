@@ -1,11 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.programming.partner.ProgrammingProblemPartnerConfig;
 
 public final class ProgrammingProblemControllerUtils {
 
@@ -31,15 +31,15 @@ public final class ProgrammingProblemControllerUtils {
         template.addMainTab("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
-    public static ProgrammingProblemPartnerConfig getPartnerConfig(ProblemService problemService, Problem problem) {
-        return problemService.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), IdentityUtils.getUserJid()).getChildConfig(ProgrammingProblemPartnerConfig.class);
+    public static ProblemPartnerChildConfig getPartnerConfig(ProblemService problemService, Problem problem) {
+        return problemService.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), IdentityUtils.getUserJid()).getChildConfig();
     }
 
     public static boolean isAllowedToManageGrading(ProblemService problemService, Problem problem) {
-        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToManageGrading());
+        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToManageGrading());
     }
 
     public static boolean isAllowedToSubmit(ProblemService problemService, Problem problem) {
-        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToSubmit());
+        return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToSubmit());
     }
 }

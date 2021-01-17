@@ -1,9 +1,9 @@
 @import judgels.persistence.api.Page
+@import judgels.sandalphon.api.lesson.partner.LessonPartner
 @import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
-@import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner
 @import org.iatoki.judgels.sandalphon.lesson.partner.routes
 
 @(lessonId: Long, pageOfLessonPartners: Page[LessonPartner], orderBy: String, orderDir: String)
@@ -16,11 +16,11 @@
         "partnerJid" -> "Name"
     )
     <tbody>
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfLessonPartners.getPage.map(s => s.getPartnerJid).toSeq)) { displayNamesMap =>
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfLessonPartners.getPage.map(s => s.getUserJid).toSeq)) { displayNamesMap =>
         @for(partner <- pageOfLessonPartners.getPage) {
             <tr>
                 <td>@partner.getId</td>
-                <td>@displayNamesMap.get(partner.getPartnerJid)</td>
+                <td>@displayNamesMap.get(partner.getUserJid)</td>
                 <td class="text-center">
                     <a href="@routes.LessonPartnerController.editPartner(lessonId, partner.getId)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
                 </td>

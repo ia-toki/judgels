@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -70,11 +70,11 @@ public final class LessonControllerUtils {
     }
 
     public static boolean isAllowedToUpdateLesson(LessonService lessonService, Lesson lesson) {
-        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToUpdateLesson());
+        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToUpdateLesson());
     }
 
     public static boolean isAllowedToUploadStatementResources(LessonService lessonService, Lesson lesson) {
-        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToUploadStatementResources());
+        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToUploadStatementResources());
     }
 
     public static boolean isAllowedToViewStatement(LessonService lessonService, Lesson lesson) {
@@ -105,7 +105,7 @@ public final class LessonControllerUtils {
 
 
     public static boolean isAllowedToUpdateStatement(LessonService lessonService, Lesson lesson) {
-        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToUpdateStatement());
+        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToUpdateStatement());
     }
 
     public static boolean isAllowedToUpdateStatementInLanguage(LessonService lessonService, Lesson lesson) {
@@ -136,15 +136,15 @@ public final class LessonControllerUtils {
     }
 
     public static boolean isAllowedToManageStatementLanguages(LessonService lessonService, Lesson lesson) {
-        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToManageStatementLanguages());
+        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToManageStatementLanguages());
     }
 
     public static boolean isAllowedToViewVersionHistory(LessonService lessonService, Lesson lesson) {
-        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToViewVersionHistory());
+        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToViewVersionHistory());
     }
 
     public static boolean isAllowedToRestoreVersionHistory(LessonService lessonService, Lesson lesson) {
-        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToRestoreVersionHistory());
+        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToRestoreVersionHistory());
     }
 
     public static LessonPartnerConfig getPartnerConfig(LessonService lessonService, Lesson lesson) {

@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -21,14 +22,14 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.partner.ProblemPartner;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.play.jid.JidService;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerChildConfig;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel_;
@@ -36,14 +37,15 @@ import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFound
 
 @Singleton
 public final class ProblemServiceImpl implements ProblemService {
-
+    private final ObjectMapper mapper;
     private final ProblemDao problemDao;
     private final FileSystem problemFs;
     private final GitProvider problemGitProvider;
     private final ProblemPartnerDao problemPartnerDao;
 
     @Inject
-    public ProblemServiceImpl(ProblemDao problemDao, @ProblemFileSystemProvider FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
+    public ProblemServiceImpl(ObjectMapper mapper, ProblemDao problemDao, @ProblemFileSystemProvider FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
+        this.mapper = mapper;
         this.problemDao = problemDao;
         this.problemFs = problemFs;
         this.problemGitProvider = problemGitProvider;
@@ -110,8 +112,13 @@ public final class ProblemServiceImpl implements ProblemService {
         ProblemPartnerModel problemPartnerModel = new ProblemPartnerModel();
         problemPartnerModel.problemJid = problemModel.jid;
         problemPartnerModel.userJid = userJid;
-        problemPartnerModel.baseConfig = new Gson().toJson(baseConfig);
-        problemPartnerModel.childConfig = new Gson().toJson(childConfig);
+
+        try {
+            problemPartnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
+            problemPartnerModel.childConfig = mapper.writeValueAsString(childConfig);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         problemPartnerDao.persist(problemPartnerModel, createUserJid, createUserIpAddress);
 
@@ -121,8 +128,13 @@ public final class ProblemServiceImpl implements ProblemService {
     @Override
     public void updateProblemPartner(long problemPartnerId, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig, String userJid, String userIpAddress) {
         ProblemPartnerModel problemPartnerModel = problemPartnerDao.findById(problemPartnerId);
-        problemPartnerModel.baseConfig = new Gson().toJson(baseConfig);
-        problemPartnerModel.childConfig = new Gson().toJson(childConfig);
+
+        try {
+            problemPartnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
+            problemPartnerModel.childConfig = mapper.writeValueAsString(childConfig);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         problemPartnerDao.edit(problemPartnerModel, userJid, userIpAddress);
 
@@ -493,8 +505,18 @@ public final class ProblemServiceImpl implements ProblemService {
                 .build();
     }
 
-    private static ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel problemPartnerModel) {
-        return new ProblemPartner(problemPartnerModel.id, problemPartnerModel.problemJid, problemPartnerModel.userJid, problemPartnerModel.baseConfig, problemPartnerModel.childConfig);
+    private ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel problemPartnerModel) {
+        try {
+            return new ProblemPartner.Builder()
+                    .id(problemPartnerModel.id)
+                    .problemJid(problemPartnerModel.problemJid)
+                    .userJid(problemPartnerModel.userJid)
+                    .baseConfig(mapper.readValue(problemPartnerModel.baseConfig, ProblemPartnerConfig.class))
+                    .childConfig(mapper.readValue(problemPartnerModel.childConfig, ProblemPartnerChildConfig.class))
+                    .build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static Path getOriginDirPath(String problemJid) {

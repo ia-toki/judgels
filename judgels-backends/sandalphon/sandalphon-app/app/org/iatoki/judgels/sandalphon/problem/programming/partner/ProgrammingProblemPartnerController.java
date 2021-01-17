@@ -7,6 +7,9 @@ import javax.inject.Singleton;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.partner.ProblemPartner;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -15,9 +18,6 @@ import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfigBuilder;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm;
@@ -94,21 +94,20 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
             return showAddPartner(usernameForm.withError("username", "This user is already a partner."), problemForm, programmingForm, problem);
         }
 
-        ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
-                .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
-                .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
-                .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
-                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
-                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
-                .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
-                .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
-                .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
-                .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
+        ProblemPartnerConfig problemConfig = new ProblemPartnerConfig.Builder()
+                .isAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
+                .isAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
+                .isAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
+                .allowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
+                .allowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
+                .isAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
+                .isAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
+                .isAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
                 .build();
 
-        ProgrammingProblemPartnerConfig programmingConfig = new ProgrammingProblemPartnerConfigBuilder()
-                .setIsAllowedToSubmit(programmingData.isAllowedToSubmit)
-                .setIsAllowedToManageGrading(programmingData.isAllowedToManageGrading)
+        ProblemPartnerChildConfig programmingConfig = new ProblemPartnerChildConfig.Builder()
+                .isAllowedToSubmit(programmingData.isAllowedToSubmit)
+                .isAllowedToManageGrading(programmingData.isAllowedToManageGrading)
                 .build();
 
         problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, programmingConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
@@ -130,23 +129,22 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         ProblemPartnerConfig problemConfig = problemPartner.getBaseConfig();
         ProblemPartnerUpsertForm problemData = new ProblemPartnerUpsertForm();
 
-        problemData.isAllowedToUpdateProblem = problemConfig.isAllowedToUpdateProblem();
-        problemData.isAllowedToUpdateStatement = problemConfig.isAllowedToUpdateStatement();
-        problemData.isAllowedToUploadStatementResources = problemConfig.isAllowedToUploadStatementResources();
+        problemData.isAllowedToUpdateProblem = problemConfig.getIsAllowedToUpdateProblem();
+        problemData.isAllowedToUpdateStatement = problemConfig.getIsAllowedToUpdateStatement();
+        problemData.isAllowedToUploadStatementResources = problemConfig.getIsAllowedToUploadStatementResources();
         problemData.allowedStatementLanguagesToView = PartnerControllerUtils.combineByComma(problemConfig.getAllowedStatementLanguagesToView());
         problemData.allowedStatementLanguagesToUpdate = PartnerControllerUtils.combineByComma(problemConfig.getAllowedStatementLanguagesToUpdate());
-        problemData.isAllowedToManageStatementLanguages = problemConfig.isAllowedToManageStatementLanguages();
-        problemData.isAllowedToViewVersionHistory = problemConfig.isAllowedToViewVersionHistory();
-        problemData.isAllowedToRestoreVersionHistory = problemConfig.isAllowedToRestoreVersionHistory();
-        problemData.isAllowedToManageProblemClients = problemConfig.isAllowedToManageProblemClients();
+        problemData.isAllowedToManageStatementLanguages = problemConfig.getIsAllowedToManageStatementLanguages();
+        problemData.isAllowedToViewVersionHistory = problemConfig.getIsAllowedToViewVersionHistory();
+        problemData.isAllowedToRestoreVersionHistory = problemConfig.getIsAllowedToRestoreVersionHistory();
 
         Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).fill(problemData);
 
-        ProgrammingProblemPartnerConfig programmingConfig = problemPartner.getChildConfig(ProgrammingProblemPartnerConfig.class);
+        ProblemPartnerChildConfig programmingConfig = problemPartner.getChildConfig();
         ProgrammingPartnerUpsertForm programmingData = new ProgrammingPartnerUpsertForm();
 
-        programmingData.isAllowedToSubmit = programmingConfig.isAllowedToSubmit();
-        programmingData.isAllowedToManageGrading = programmingConfig.isAllowedToManageGrading();
+        programmingData.isAllowedToSubmit = programmingConfig.getIsAllowedToSubmit();
+        programmingData.isAllowedToManageGrading = programmingConfig.getIsAllowedToManageGrading();
 
         Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).fill(programmingData);
 
@@ -173,23 +171,22 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
         ProblemPartnerUpsertForm problemData = problemForm.get();
 
-        ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
-                .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
-                .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
-                .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
-                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
-                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
-                .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
-                .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
-                .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
-                .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
+        ProblemPartnerConfig problemConfig = new ProblemPartnerConfig.Builder()
+                .isAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
+                .isAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
+                .isAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
+                .allowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
+                .allowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
+                .isAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
+                .isAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
+                .isAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
                 .build();
 
         ProgrammingPartnerUpsertForm programmingData = programmingForm.get();
 
-        ProgrammingProblemPartnerConfig programmingConfig = new ProgrammingProblemPartnerConfigBuilder()
-                .setIsAllowedToSubmit(programmingData.isAllowedToSubmit)
-                .setIsAllowedToManageGrading(programmingData.isAllowedToManageGrading)
+        ProblemPartnerChildConfig programmingConfig = new ProblemPartnerChildConfig.Builder()
+                .isAllowedToSubmit(programmingData.isAllowedToSubmit)
+                .isAllowedToManageGrading(programmingData.isAllowedToManageGrading)
                 .build();
 
 
@@ -213,7 +210,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(problemForm, programmingForm, problem, problemPartner));
 
-        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid()));
+        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getUserJid()));
         template.markBreadcrumbLocation("Update partner", routes.ProgrammingProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
         template.setPageTitle("Problem - Update partner");
 

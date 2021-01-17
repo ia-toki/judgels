@@ -2,6 +2,7 @@ package org.iatoki.judgels.sandalphon.resource;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
+import java.util.Collections;
 import java.util.Set;
 
 public final class PartnerControllerUtils {
@@ -12,7 +13,7 @@ public final class PartnerControllerUtils {
 
     public static Set<String> splitByComma(String s) {
         if (s == null || s.isEmpty()) {
-            return null;
+            return Collections.emptySet();
         }
         return Sets.newHashSet(s.split(","));
     }

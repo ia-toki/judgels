@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.lesson.partner.LessonPartner;
+import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -112,16 +114,15 @@ public class LessonPartnerController extends AbstractLessonController {
             return showAddPartner(usernameForm.withError("username", "This user is already a partner."), lessonForm, lesson);
         }
 
-        LessonPartnerConfig partnerConfig = new LessonPartnerConfigBuilder()
-                .setIsAllowedToUpdateLesson(lessonData.isAllowedToUpdateLesson)
-                .setIsAllowedToUpdateStatement(lessonData.isAllowedToUpdateStatement)
-                .setIsAllowedToUploadStatementResources(lessonData.isAllowedToUploadStatementResources)
-                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToView))
-                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToUpdate))
-                .setIsAllowedToManageStatementLanguages(lessonData.isAllowedToManageStatementLanguages)
-                .setIsAllowedToViewVersionHistory(lessonData.isAllowedToViewVersionHistory)
-                .setIsAllowedToRestoreVersionHistory(lessonData.isAllowedToRestoreVersionHistory)
-                .setIsAllowedToManageLessonClients(lessonData.isAllowedToManageLessonClients)
+        LessonPartnerConfig partnerConfig = new LessonPartnerConfig.Builder()
+                .isAllowedToUpdateLesson(lessonData.isAllowedToUpdateLesson)
+                .isAllowedToUpdateStatement(lessonData.isAllowedToUpdateStatement)
+                .isAllowedToUploadStatementResources(lessonData.isAllowedToUploadStatementResources)
+                .allowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToView))
+                .allowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToUpdate))
+                .isAllowedToManageStatementLanguages(lessonData.isAllowedToManageStatementLanguages)
+                .isAllowedToViewVersionHistory(lessonData.isAllowedToViewVersionHistory)
+                .isAllowedToRestoreVersionHistory(lessonData.isAllowedToRestoreVersionHistory)
                 .build();
 
         lessonService.createLessonPartner(lesson.getJid(), userJid, partnerConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
@@ -143,15 +144,14 @@ public class LessonPartnerController extends AbstractLessonController {
         LessonPartnerConfig lessonConfig = lessonPartner.getConfig();
         LessonPartnerUpsertForm lessonData = new LessonPartnerUpsertForm();
 
-        lessonData.isAllowedToUpdateLesson = lessonConfig.isAllowedToUpdateLesson();
-        lessonData.isAllowedToUpdateStatement = lessonConfig.isAllowedToUpdateStatement();
-        lessonData.isAllowedToUploadStatementResources = lessonConfig.isAllowedToUploadStatementResources();
+        lessonData.isAllowedToUpdateLesson = lessonConfig.getIsAllowedToUpdateLesson();
+        lessonData.isAllowedToUpdateStatement = lessonConfig.getIsAllowedToUpdateStatement();
+        lessonData.isAllowedToUploadStatementResources = lessonConfig.getIsAllowedToUploadStatementResources();
         lessonData.allowedStatementLanguagesToView = PartnerControllerUtils.combineByComma(lessonConfig.getAllowedStatementLanguagesToView());
         lessonData.allowedStatementLanguagesToUpdate = PartnerControllerUtils.combineByComma(lessonConfig.getAllowedStatementLanguagesToUpdate());
-        lessonData.isAllowedToManageStatementLanguages = lessonConfig.isAllowedToManageStatementLanguages();
-        lessonData.isAllowedToViewVersionHistory = lessonConfig.isAllowedToViewVersionHistory();
-        lessonData.isAllowedToRestoreVersionHistory = lessonConfig.isAllowedToRestoreVersionHistory();
-        lessonData.isAllowedToManageLessonClients = lessonConfig.isAllowedToManageLessonClients();
+        lessonData.isAllowedToManageStatementLanguages = lessonConfig.getIsAllowedToManageStatementLanguages();
+        lessonData.isAllowedToViewVersionHistory = lessonConfig.getIsAllowedToViewVersionHistory();
+        lessonData.isAllowedToRestoreVersionHistory = lessonConfig.getIsAllowedToRestoreVersionHistory();
 
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).fill(lessonData);
 
@@ -177,16 +177,15 @@ public class LessonPartnerController extends AbstractLessonController {
 
         LessonPartnerUpsertForm lessonData = lessonForm.get();
 
-        LessonPartnerConfig lessonConfig = new LessonPartnerConfigBuilder()
-                .setIsAllowedToUpdateLesson(lessonData.isAllowedToUpdateLesson)
-                .setIsAllowedToUpdateStatement(lessonData.isAllowedToUpdateStatement)
-                .setIsAllowedToUploadStatementResources(lessonData.isAllowedToUploadStatementResources)
-                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToView))
-                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToUpdate))
-                .setIsAllowedToManageStatementLanguages(lessonData.isAllowedToManageStatementLanguages)
-                .setIsAllowedToViewVersionHistory(lessonData.isAllowedToViewVersionHistory)
-                .setIsAllowedToRestoreVersionHistory(lessonData.isAllowedToRestoreVersionHistory)
-                .setIsAllowedToManageLessonClients(lessonData.isAllowedToManageLessonClients)
+        LessonPartnerConfig lessonConfig = new LessonPartnerConfig.Builder()
+                .isAllowedToUpdateLesson(lessonData.isAllowedToUpdateLesson)
+                .isAllowedToUpdateStatement(lessonData.isAllowedToUpdateStatement)
+                .isAllowedToUploadStatementResources(lessonData.isAllowedToUploadStatementResources)
+                .allowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToView))
+                .allowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(lessonData.allowedStatementLanguagesToUpdate))
+                .isAllowedToManageStatementLanguages(lessonData.isAllowedToManageStatementLanguages)
+                .isAllowedToViewVersionHistory(lessonData.isAllowedToViewVersionHistory)
+                .isAllowedToRestoreVersionHistory(lessonData.isAllowedToRestoreVersionHistory)
                 .build();
 
         lessonService.updateLessonPartner(partnerId, lessonConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
@@ -209,7 +208,7 @@ public class LessonPartnerController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(lessonForm, lesson, lessonPartner));
 
-        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getPartnerJid()));
+        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getUserJid()));
         template.markBreadcrumbLocation("Update partner", routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
         template.setPageTitle("Lesson - Update partner");
 

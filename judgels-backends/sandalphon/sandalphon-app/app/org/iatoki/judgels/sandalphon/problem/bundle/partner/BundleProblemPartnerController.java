@@ -6,6 +6,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.partner.ProblemPartner;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -14,9 +17,6 @@ import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfigBuilder;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm;
@@ -91,19 +91,21 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
             return showAddPartner(usernameForm.withError("username", "This user is already a partner."), problemForm, bundleForm, problem);
         }
 
-        ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
-                .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
-                .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
-                .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
-                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
-                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
-                .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
-                .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
-                .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
-                .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
+        ProblemPartnerConfig problemConfig = new ProblemPartnerConfig.Builder()
+                .isAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
+                .isAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
+                .isAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
+                .allowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
+                .allowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
+                .isAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
+                .isAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
+                .isAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
                 .build();
 
-        BundleProblemPartnerConfig bundleConfig = new BundleProblemPartnerConfig(bundleData.isAllowedToSubmit, bundleData.isAllowedToManageItems);
+        ProblemPartnerChildConfig bundleConfig = new ProblemPartnerChildConfig.Builder()
+                .isAllowedToSubmit(bundleData.isAllowedToSubmit)
+                .isAllowedToManageItems(bundleData.isAllowedToManageItems)
+                .build();
 
         problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, bundleConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
@@ -124,22 +126,22 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         ProblemPartnerConfig problemConfig = problemPartner.getBaseConfig();
         ProblemPartnerUpsertForm problemData = new ProblemPartnerUpsertForm();
 
-        problemData.isAllowedToUpdateProblem = problemConfig.isAllowedToUpdateProblem();
-        problemData.isAllowedToUpdateStatement = problemConfig.isAllowedToUpdateStatement();
-        problemData.isAllowedToUploadStatementResources = problemConfig.isAllowedToUploadStatementResources();
+        problemData.isAllowedToUpdateProblem = problemConfig.getIsAllowedToUpdateProblem();
+        problemData.isAllowedToUpdateStatement = problemConfig.getIsAllowedToUpdateStatement();
+        problemData.isAllowedToUploadStatementResources = problemConfig.getIsAllowedToUploadStatementResources();
         problemData.allowedStatementLanguagesToView = PartnerControllerUtils.combineByComma(problemConfig.getAllowedStatementLanguagesToView());
         problemData.allowedStatementLanguagesToUpdate = PartnerControllerUtils.combineByComma(problemConfig.getAllowedStatementLanguagesToUpdate());
-        problemData.isAllowedToManageStatementLanguages = problemConfig.isAllowedToManageStatementLanguages();
-        problemData.isAllowedToViewVersionHistory = problemConfig.isAllowedToViewVersionHistory();
-        problemData.isAllowedToRestoreVersionHistory = problemConfig.isAllowedToRestoreVersionHistory();
-        problemData.isAllowedToManageProblemClients = problemConfig.isAllowedToManageProblemClients();
+        problemData.isAllowedToManageStatementLanguages = problemConfig.getIsAllowedToManageStatementLanguages();
+        problemData.isAllowedToViewVersionHistory = problemConfig.getIsAllowedToViewVersionHistory();
+        problemData.isAllowedToRestoreVersionHistory = problemConfig.getIsAllowedToRestoreVersionHistory();
 
         Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).fill(problemData);
 
-        BundleProblemPartnerConfig bundleConfig = problemPartner.getChildConfig(BundleProblemPartnerConfig.class);
+        ProblemPartnerChildConfig bundleConfig = problemPartner.getChildConfig();
         BundlePartnerUpsertForm bundleData = new BundlePartnerUpsertForm();
 
-        bundleData.isAllowedToManageItems = bundleConfig.isAllowedToManageItems();
+        bundleData.isAllowedToSubmit = bundleConfig.getIsAllowedToSubmit();
+        bundleData.isAllowedToManageItems = bundleConfig.getIsAllowedToManageItems();
 
         Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).fill(bundleData);
 
@@ -166,21 +168,23 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
         ProblemPartnerUpsertForm problemData = problemForm.get();
 
-        ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
-                .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
-                .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
-                .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
-                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
-                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
-                .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
-                .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
-                .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
-                .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
+        ProblemPartnerConfig problemConfig = new ProblemPartnerConfig.Builder()
+                .isAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
+                .isAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
+                .isAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
+                .allowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
+                .allowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
+                .isAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
+                .isAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
+                .isAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
                 .build();
 
         BundlePartnerUpsertForm bundleData = bundleForm.get();
 
-        BundleProblemPartnerConfig bundleConfig = new BundleProblemPartnerConfig(bundleData.isAllowedToSubmit, bundleData.isAllowedToManageItems);
+        ProblemPartnerChildConfig bundleConfig = new ProblemPartnerChildConfig.Builder()
+                .isAllowedToSubmit(bundleData.isAllowedToSubmit)
+                .isAllowedToManageItems(bundleData.isAllowedToManageItems)
+                .build();
 
         problemService.updateProblemPartner(partnerId, problemConfig, bundleConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
@@ -202,7 +206,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(problemForm, bundleForm, problem, problemPartner));
 
-        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid()));
+        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getUserJid()));
         template.markBreadcrumbLocation("Update partner", routes.BundleProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
         template.setPageTitle("Problem - Update partner");
 

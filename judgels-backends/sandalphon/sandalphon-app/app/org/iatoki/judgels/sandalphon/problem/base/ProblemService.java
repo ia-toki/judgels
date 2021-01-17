@@ -10,11 +10,11 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.partner.ProblemPartner;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerChildConfig;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
 
 @ImplementedBy(ProblemServiceImpl.class)

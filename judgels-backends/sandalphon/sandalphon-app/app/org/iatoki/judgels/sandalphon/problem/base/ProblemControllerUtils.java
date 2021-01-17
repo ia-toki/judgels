@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
 import play.mvc.Controller;
 
 public final class ProblemControllerUtils {
@@ -88,11 +88,11 @@ public final class ProblemControllerUtils {
     }
 
     public static boolean isAllowedToUpdateProblem(ProblemService problemService, Problem problem) {
-        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToUpdateProblem());
+        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToUpdateProblem());
     }
 
     public static boolean isAllowedToUploadStatementResources(ProblemService problemService, Problem problem) {
-        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToUploadStatementResources());
+        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToUploadStatementResources());
     }
 
     public static boolean isAllowedToViewStatement(ProblemService problemService, Problem problem) {
@@ -123,7 +123,7 @@ public final class ProblemControllerUtils {
 
 
     public static boolean isAllowedToUpdateStatement(ProblemService problemService, Problem problem) {
-        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToUpdateStatement());
+        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToUpdateStatement());
     }
 
     public static boolean isAllowedToUpdateStatementInLanguage(ProblemService problemService, Problem problem) {
@@ -154,15 +154,15 @@ public final class ProblemControllerUtils {
     }
 
     public static boolean isAllowedToManageStatementLanguages(ProblemService problemService, Problem problem) {
-        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToManageStatementLanguages());
+        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToManageStatementLanguages());
     }
 
     public static boolean isAllowedToViewVersionHistory(ProblemService problemService, Problem problem) {
-        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToViewVersionHistory());
+        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToViewVersionHistory());
     }
 
     public static boolean isAllowedToRestoreVersionHistory(ProblemService problemService, Problem problem) {
-        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToRestoreVersionHistory());
+        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToRestoreVersionHistory());
     }
 
     public static ProblemPartnerConfig getPartnerConfig(ProblemService problemService, Problem problem) {
