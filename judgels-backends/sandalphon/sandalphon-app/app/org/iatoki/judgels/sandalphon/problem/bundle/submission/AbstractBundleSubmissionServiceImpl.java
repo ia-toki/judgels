@@ -3,22 +3,21 @@ package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import java.nio.file.Paths;
-import judgels.fs.FileSystem;
-import judgels.persistence.api.Page;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingResult;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BaseBundleGradingDao;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.AbstractBundleGradingModel;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.AbstractBundleGradingModel_;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
-import play.data.DynamicForm;
-
-import javax.persistence.metamodel.SingularAttribute;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.metamodel.SingularAttribute;
+import judgels.fs.FileSystem;
+import judgels.persistence.api.Page;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.AbstractBundleGradingModel;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.AbstractBundleGradingModel_;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BaseBundleGradingDao;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingResult;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
+import play.data.DynamicForm;
 
 public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBundleSubmissionModel, GM extends AbstractBundleGradingModel> implements BundleSubmissionService {
 
@@ -63,7 +62,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
 
     @Override
     public List<BundleSubmission> getBundleSubmissionsWithGradingsByContainerJidAndProblemJidAndUserJid(String containerJid, String problemJid, String userJid) {
-        List<SM> submissionModels = bundleSubmissionDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.<SingularAttribute<? super SM, ? extends Object>, String>of(AbstractBundleSubmissionModel_.containerJid, containerJid, AbstractBundleSubmissionModel_.problemJid, problemJid, AbstractBundleSubmissionModel_.createdBy, userJid), 0, -1);
+        List<SM> submissionModels = bundleSubmissionDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.<SingularAttribute<? super SM, ?>, String>of(AbstractBundleSubmissionModel_.containerJid, containerJid, AbstractBundleSubmissionModel_.problemJid, problemJid, AbstractBundleSubmissionModel_.createdBy, userJid), 0, -1);
         Map<String, List<GM>> gradingModelsMap = bundleGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
 
         return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
@@ -71,7 +70,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
 
     @Override
     public List<BundleSubmission> getBundleSubmissionsByFilters(String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
-        ImmutableMap.Builder<SingularAttribute<? super SM, ? extends Object>, String> filterColumnsBuilder = ImmutableMap.builder();
+        ImmutableMap.Builder<SingularAttribute<? super SM, ?>, String> filterColumnsBuilder = ImmutableMap.builder();
         if (authorJid != null) {
             filterColumnsBuilder.put(AbstractBundleSubmissionModel_.createdBy, authorJid);
         }
@@ -82,7 +81,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
             filterColumnsBuilder.put(AbstractBundleSubmissionModel_.containerJid, containerJid);
         }
 
-        Map<SingularAttribute<? super SM, ? extends Object>, String> filterColumns = filterColumnsBuilder.build();
+        Map<SingularAttribute<? super SM, ?>, String> filterColumns = filterColumnsBuilder.build();
 
         List<SM> submissionModels = bundleSubmissionDao.findSortedByFiltersEq(orderBy, orderDir, "", filterColumns, 0, -1);
 
@@ -98,7 +97,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
 
     @Override
     public Page<BundleSubmission> getPageOfBundleSubmissions(long pageIndex, long pageSize, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
-        ImmutableMap.Builder<SingularAttribute<? super SM, ? extends Object>, String> filterColumnsBuilder = ImmutableMap.builder();
+        ImmutableMap.Builder<SingularAttribute<? super SM, ?>, String> filterColumnsBuilder = ImmutableMap.builder();
         if (authorJid != null) {
             filterColumnsBuilder.put(AbstractBundleSubmissionModel_.createdBy, authorJid);
         }
@@ -109,7 +108,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
             filterColumnsBuilder.put(AbstractBundleSubmissionModel_.containerJid, containerJid);
         }
 
-        Map<SingularAttribute<? super SM, ? extends Object>, String> filterColumns = filterColumnsBuilder.build();
+        Map<SingularAttribute<? super SM, ?>, String> filterColumns = filterColumnsBuilder.build();
 
         long totalRowsCount = bundleSubmissionDao.countByFiltersEq("", filterColumns);
         List<SM> submissionModels = bundleSubmissionDao.findSortedByFiltersEq(orderBy, orderDir, "", filterColumns, pageIndex * pageSize, pageSize);

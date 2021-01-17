@@ -1,14 +1,13 @@
 package org.iatoki.judgels.sandalphon.controllers.api.pub.v2;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class PublicProblemAPIControllerV2 extends AbstractJudgelsAPIController {

@@ -370,10 +370,10 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
         return renderTemplate(template, problemService, problem);
     }
-    
+
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
         template.markBreadcrumbLocation("Items", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
-        
+
         return super.renderTemplate(template, problemService, problem);
     }
 }

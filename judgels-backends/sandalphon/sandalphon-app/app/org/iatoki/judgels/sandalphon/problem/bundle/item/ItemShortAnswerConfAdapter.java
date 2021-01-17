@@ -1,15 +1,14 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
 import com.google.gson.Gson;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.itemShortAnswerConfView;
 import play.api.mvc.Call;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Http;
 import play.twirl.api.Html;
-
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public final class ItemShortAnswerConfAdapter implements BundleItemConfAdapter {
     @Override

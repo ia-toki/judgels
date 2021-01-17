@@ -1,10 +1,9 @@
 package org.iatoki.judgels.sandalphon;
 
-import org.iatoki.judgels.sandalphon.jid.JidCacheDao;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.iatoki.judgels.sandalphon.jid.JidCacheDao;
+import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 
 /**
  * @deprecated Temporary class. Will be restructured when new module system has been finalized.

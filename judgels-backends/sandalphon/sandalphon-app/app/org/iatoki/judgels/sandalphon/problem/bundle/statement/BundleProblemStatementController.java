@@ -75,7 +75,6 @@ public final class BundleProblemStatementController extends AbstractBundleProble
         try {
             bundleItemList = bundleItemService.getBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid());
         } catch (IOException e) {
-            e.printStackTrace();
             return notFound();
         }
 
@@ -89,7 +88,6 @@ public final class BundleProblemStatementController extends AbstractBundleProble
                     ProblemControllerUtils.setCurrentStatementLanguage(ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem));
                     htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), bundleItem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage())));
                 } catch (IOException e1) {
-                    e1.printStackTrace();
                     return notFound();
                 }
             }
@@ -102,7 +100,6 @@ public final class BundleProblemStatementController extends AbstractBundleProble
         try {
             allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToView(problemService, problem);
         } catch (IOException e) {
-            e.printStackTrace();
             return notFound();
         }
         appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));

@@ -161,7 +161,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
 
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
-    
+
         return super.renderTemplate(template, problemService, problem);
     }
 }

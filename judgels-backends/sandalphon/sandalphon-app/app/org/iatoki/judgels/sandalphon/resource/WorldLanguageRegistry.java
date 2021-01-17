@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.resource;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-
 import java.util.Map;
 
 public final class WorldLanguageRegistry {
@@ -11,6 +10,7 @@ public final class WorldLanguageRegistry {
 
     private Map<String, String> registry;
 
+    @SuppressWarnings("checkstyle:MethodLength")
     private WorldLanguageRegistry() {
         registry = Maps.newLinkedHashMap();
         registry.put("af-NA", "Afrikaans (af-NA)");

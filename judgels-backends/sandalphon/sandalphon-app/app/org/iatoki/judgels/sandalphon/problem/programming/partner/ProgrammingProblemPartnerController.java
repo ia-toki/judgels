@@ -95,21 +95,21 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         }
 
         ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
-              .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
-              .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
-              .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
-              .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
-              .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
-              .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
-              .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
-              .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
-              .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
-              .build();
+                .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
+                .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
+                .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
+                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
+                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
+                .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
+                .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
+                .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
+                .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
+                .build();
 
         ProgrammingProblemPartnerConfig programmingConfig = new ProgrammingProblemPartnerConfigBuilder()
-              .setIsAllowedToSubmit(programmingData.isAllowedToSubmit)
-              .setIsAllowedToManageGrading(programmingData.isAllowedToManageGrading)
-              .build();
+                .setIsAllowedToSubmit(programmingData.isAllowedToSubmit)
+                .setIsAllowedToManageGrading(programmingData.isAllowedToManageGrading)
+                .build();
 
         problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, programmingConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 

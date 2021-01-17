@@ -1,8 +1,7 @@
 package org.iatoki.judgels.play.model;
 
-import judgels.persistence.ActorProvider;
-
 import java.util.Optional;
+import judgels.persistence.ActorProvider;
 
 public class LegacyActorProvider implements ActorProvider {
     @Override

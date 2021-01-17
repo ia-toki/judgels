@@ -1,8 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
-import judgels.gabriel.engines.SingleSourceFileGradingConfig;
-
 import java.util.List;
+import judgels.gabriel.engines.SingleSourceFileGradingConfig;
 
 public abstract class SingleSourceFileBlackBoxGradingEngineAdapter extends AbstractBoxGradingEngineAdapter {
     protected final void fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileBlackBoxGradingConfigForm form, SingleSourceFileGradingConfig config) {

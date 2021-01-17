@@ -24,9 +24,6 @@ public final class EntityNotFoundGuardAction extends Action<EntityNotFoundGuard>
     }
 
     private CompletionStage<Result> showEntityNotFound(Throwable e) {
-        return CompletableFuture.supplyAsync(() -> {
-                return Results.notFound();
-            }
-        );
+        return CompletableFuture.supplyAsync(() -> Results.notFound());
     }
 }

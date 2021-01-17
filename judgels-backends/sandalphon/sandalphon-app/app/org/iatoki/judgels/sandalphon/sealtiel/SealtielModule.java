@@ -3,14 +3,13 @@ package org.iatoki.judgels.sandalphon.sealtiel;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.palantir.conjure.java.api.config.service.UserAgent;
+import javax.inject.Named;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.api.client.Client;
 import judgels.service.jaxrs.JaxRsClients;
-
-import javax.inject.Named;
 
 public final class SealtielModule extends AbstractModule {
     @Override

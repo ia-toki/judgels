@@ -2,6 +2,10 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestCase;
@@ -14,11 +18,6 @@ import play.api.mvc.Call;
 import play.data.Form;
 import play.data.FormFactory;
 import play.twirl.api.Html;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 public final class InteractiveWithSubtasksGradingEngineAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithTokilibFormat {
 

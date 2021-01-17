@@ -2,10 +2,9 @@ package org.iatoki.judgels.play.template;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.util.List;
 import play.api.mvc.Call;
 import play.twirl.api.Html;
-
-import java.util.List;
 
 public final class HtmlTemplate {
 

@@ -1,9 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import judgels.persistence.JudgelsDao;
-
 import java.time.Instant;
 import java.util.List;
+import judgels.persistence.JudgelsDao;
 
 public interface BaseBundleSubmissionDao<M extends AbstractBundleSubmissionModel> extends JudgelsDao<M> {
 

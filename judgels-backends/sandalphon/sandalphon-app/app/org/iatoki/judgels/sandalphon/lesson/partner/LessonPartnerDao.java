@@ -1,9 +1,8 @@
 package org.iatoki.judgels.sandalphon.lesson.partner;
 
 import com.google.inject.ImplementedBy;
-import judgels.persistence.Dao;
-
 import java.util.List;
+import judgels.persistence.Dao;
 
 @ImplementedBy(LessonPartnerHibernateDao.class)
 public interface LessonPartnerDao extends Dao<LessonPartnerModel> {

@@ -1,14 +1,13 @@
 package org.iatoki.judgels.sandalphon.lesson.partner;
 
-import judgels.persistence.hibernate.HibernateDao;
-import judgels.persistence.hibernate.HibernateDaoData;
-
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 @Singleton
 public final class LessonPartnerHibernateDao extends HibernateDao<LessonPartnerModel> implements LessonPartnerDao {
@@ -28,7 +27,7 @@ public final class LessonPartnerHibernateDao extends HibernateDao<LessonPartnerM
                 .select(cb.count(root))
                 .where(cb.and(cb.equal(root.get(LessonPartnerModel_.lessonJid), lessonJid), cb.equal(root.get(LessonPartnerModel_.userJid), partnerJid)));
 
-        return (currentSession().createQuery(query).getSingleResult() != 0);
+        return currentSession().createQuery(query).getSingleResult() != 0;
     }
 
     @Override

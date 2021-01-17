@@ -4,14 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
+import java.util.Set;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.itemMultipleChoiceConfView;
 import play.api.mvc.Call;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Http;
 import play.twirl.api.Html;
-
-import java.util.Set;
 
 public final class ItemMultipleChoiceConfAdapter implements BundleItemConfAdapter {
 

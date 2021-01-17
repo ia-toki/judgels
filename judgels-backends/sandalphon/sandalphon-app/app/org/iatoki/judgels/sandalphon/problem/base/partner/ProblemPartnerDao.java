@@ -1,9 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
 import com.google.inject.ImplementedBy;
-import judgels.persistence.Dao;
-
 import java.util.List;
+import judgels.persistence.Dao;
 
 @ImplementedBy(ProblemPartnerHibernateDao.class)
 public interface ProblemPartnerDao extends Dao<ProblemPartnerModel> {

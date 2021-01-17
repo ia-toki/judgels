@@ -21,14 +21,14 @@
 
               <div class="checkbox">
                   <label>
-                      <input type="checkbox" id="isAllowedAll" name="isAllowedAll" value="true" @if(languageRestrictionEditForm("isAllowedAll").getValue.isPresent && languageRestrictionEditForm("isAllowedAll").getValue.get.equals("true")){ checked="checked" }> Allow all
+                      <input type="checkbox" id="isAllowedAll" name="isAllowedAll" value="true" @if(languageRestrictionEditForm("isAllowedAll").value.isPresent && languageRestrictionEditForm("isAllowedAll").value.get.equals("true")){ checked="checked" }> Allow all
                   </label>
               </div>
 
               @for((k, v) <- GradingLanguageRegistry.getInstance().getVisibleNamesMap) {
                   <div class="checkbox">
                       <label>
-                          <input type="checkbox" class="allowedLanguageName" name="allowedLanguageNames[@k]" value="@k" @if(languageRestrictionEditForm("allowedLanguageNames[" + k + "]").getValue.isPresent && languageRestrictionEditForm("allowedLanguageNames[" + k + "]").getValue.get.equals(k)){ checked="checked" }> @v
+                          <input type="checkbox" class="allowedLanguageName" name="allowedLanguageNames[@k]" value="@k" @if(languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value.isPresent && languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value.get.equals(k)){ checked="checked" }> @v
                       </label>
                   </div>
               }

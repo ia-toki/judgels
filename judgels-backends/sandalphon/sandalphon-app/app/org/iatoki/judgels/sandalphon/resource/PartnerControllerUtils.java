@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.resource;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
-
 import java.util.Set;
 
 public final class PartnerControllerUtils {

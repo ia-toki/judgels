@@ -1,14 +1,13 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
-import judgels.persistence.hibernate.HibernateDao;
-import judgels.persistence.hibernate.HibernateDaoData;
-
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 @Singleton
 public final class ProblemPartnerHibernateDao extends HibernateDao<ProblemPartnerModel> implements ProblemPartnerDao {
@@ -28,7 +27,7 @@ public final class ProblemPartnerHibernateDao extends HibernateDao<ProblemPartne
                 .select(cb.count(root))
                 .where(cb.and(cb.equal(root.get(ProblemPartnerModel_.problemJid), problemJid), cb.equal(root.get(ProblemPartnerModel_.userJid), partnerJid)));
 
-        return (currentSession().createQuery(query).getSingleResult() != 0);
+        return currentSession().createQuery(query).getSingleResult() != 0;
     }
 
     @Override

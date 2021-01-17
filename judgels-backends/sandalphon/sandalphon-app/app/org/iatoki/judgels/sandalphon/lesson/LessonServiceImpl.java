@@ -5,9 +5,16 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.persistence.api.Page;
@@ -15,22 +22,14 @@ import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.GitProvider;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundException;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner;
+import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerDao;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel_;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerNotFoundException;
 
 @Singleton
 public final class LessonServiceImpl implements LessonService {

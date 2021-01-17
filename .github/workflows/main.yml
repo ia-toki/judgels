@@ -45,7 +45,7 @@ jobs:
 
       - name: Test Sandalphon
         if: steps.changed-files.outputs.sandalphon == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/sandalphon test
+        run: ./judgels-backends/gradlew -p judgels-backends/sandalphon check
 
       - name: Test Uriel
         if: steps.changed-files.outputs.uriel == '1'

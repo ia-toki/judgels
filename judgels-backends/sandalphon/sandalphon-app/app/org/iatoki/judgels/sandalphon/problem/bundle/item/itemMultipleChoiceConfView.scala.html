@@ -82,7 +82,7 @@
 
             @for(i <- itemMultipleChoiceConfForm("choiceAliases").indexes.indices) {
                 addNewChoice();
-                fillChoice(@i, '@itemMultipleChoiceConfForm("choiceAliases[" + i + "]").getValue.get', '@Html(itemMultipleChoiceConfForm("choiceContents[" + i + "]").getValue.get)', @if(itemMultipleChoiceConfForm("isCorrects[" + i + "]").getValue.isPresent && itemMultipleChoiceConfForm("isCorrects[" + i + "]").getValue.get) { true } else { false } );
+                fillChoice(@i, '@itemMultipleChoiceConfForm("choiceAliases[" + i + "]").value.get', '@Html(itemMultipleChoiceConfForm("choiceContents[" + i + "]").value.get)', @if(itemMultipleChoiceConfForm("isCorrects[" + i + "]").getValue.isPresent && itemMultipleChoiceConfForm("isCorrects[" + i + "]").value.get) { true } else { false } );
             }
 
         });

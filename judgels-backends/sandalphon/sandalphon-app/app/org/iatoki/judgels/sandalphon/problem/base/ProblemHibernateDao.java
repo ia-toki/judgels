@@ -1,16 +1,15 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
 import com.google.common.collect.ImmutableList;
-import judgels.persistence.hibernate.HibernateDaoData;
-import judgels.persistence.hibernate.JudgelsHibernateDao;
-
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
-import java.util.List;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 
 @Singleton
 public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel> implements ProblemDao {

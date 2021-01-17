@@ -1,12 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
-import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
-
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
 
-@Entity(name = "sandalphon_programming_grading")@Table(indexes = {
+@Entity(name = "sandalphon_programming_grading")
+@Table(indexes = {
         @Index(columnList = "submissionJid"),
         @Index(columnList = "verdictCode")})
 public final class ProgrammingGradingModel extends AbstractProgrammingGradingModel {

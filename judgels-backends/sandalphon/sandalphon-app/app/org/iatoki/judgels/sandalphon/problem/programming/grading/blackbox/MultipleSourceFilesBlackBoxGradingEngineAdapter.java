@@ -4,11 +4,10 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.List;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.MultipleSourceFilesGradingConfig;
-
-import java.util.List;
 
 public abstract class MultipleSourceFilesBlackBoxGradingEngineAdapter extends AbstractBoxGradingEngineAdapter {
     protected final void fillMultipleSourceFileBlackBoxGradingConfigFormPartsFromConfig(MultipleSourceFilesBlackBoxGradingConfigForm form, MultipleSourceFilesGradingConfig config) {

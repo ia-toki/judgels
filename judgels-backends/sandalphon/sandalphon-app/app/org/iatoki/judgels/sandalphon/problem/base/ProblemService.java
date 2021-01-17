@@ -1,6 +1,10 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
 import com.google.inject.ImplementedBy;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import judgels.fs.FileInfo;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
@@ -12,11 +16,6 @@ import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerChildConfig;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 @ImplementedBy(ProblemServiceImpl.class)
 public interface ProblemService {

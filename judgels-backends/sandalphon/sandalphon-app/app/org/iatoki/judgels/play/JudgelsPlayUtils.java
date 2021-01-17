@@ -1,13 +1,5 @@
 package org.iatoki.judgels.play;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.MessageDigestAlgorithms;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import play.mvc.Http;
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +12,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.MessageDigestAlgorithms;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import play.mvc.Http;
 
 public final class JudgelsPlayUtils {
 
@@ -117,20 +116,12 @@ public final class JudgelsPlayUtils {
         return displayName.substring(0, spacePos);
     }
 
-    public static String getOnlyRealName(String displayName) {
-        int spacePos = displayName.indexOf(' ');
-        if (spacePos == -1) {
-            return displayName;
-        }
-        return displayName.substring(spacePos + 2, displayName.length() - 1);
-    }
-
     public static boolean isSidebarShown(Http.Request request) {
-        return ((request.cookie("sidebar") == null) || (request.cookie("sidebar").value().equals("true")));
+        return (request.cookie("sidebar") == null) || (request.cookie("sidebar").value().equals("true"));
     }
 
     public static boolean isFullscreen(Http.Request request) {
-        return ((request.cookie("fullscreen") != null) && (request.cookie("fullscreen").value().equals("true")));
+        return (request.cookie("fullscreen") != null) && (request.cookie("fullscreen").value().equals("true"));
     }
 
     public static UsernamePasswordCredentials parseBasicAuthFromRequest(Http.Request request) {
@@ -143,7 +134,6 @@ public final class JudgelsPlayUtils {
     }
 
     public static String toSafeHtml(String html) {
-//        return Jsoup.clean(html, ControllerUtils.getCurrentUrl(Http.Context.current().request()), Whitelist.relaxed().addTags("iframe", "embed").addAttributes("img", "style").addAttributes("iframe", "src", "style", "frameborder", "class").addAttributes("embed", "src", "class", "height").addProtocols("iframe", "src", new String[]{"http", "https"}).addProtocols("embed", "src", new String[]{"http", "https"}).preserveRelativeLinks(true));
         return html;
     }
 

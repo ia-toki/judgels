@@ -1,10 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import judgels.persistence.hibernate.HibernateDaoData;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 @Singleton
 @Named("bundleSubmissionDao")

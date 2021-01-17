@@ -1,13 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import com.google.common.collect.Sets;
-import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.languages.GradingLanguageRegistry;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 
 public final class LanguageRestrictionAdapter {
 

@@ -1,9 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGrading;
-
 import java.util.Date;
 import java.util.List;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGrading;
 
 public final class BundleSubmission {
 

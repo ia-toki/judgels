@@ -25,10 +25,10 @@ import org.iatoki.judgels.sandalphon.lesson.statement.html.listStatementMediaFil
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
-import org.iatoki.judgels.sandalphon.resource.html.katexView;
 import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
 import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
 import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
+import org.iatoki.judgels.sandalphon.resource.html.katexView;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;

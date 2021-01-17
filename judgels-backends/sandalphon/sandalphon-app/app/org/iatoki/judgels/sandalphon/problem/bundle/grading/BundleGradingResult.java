@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.grading;
 
 import com.google.gson.Gson;
-
 import java.util.Map;
 
 public final class BundleGradingResult {

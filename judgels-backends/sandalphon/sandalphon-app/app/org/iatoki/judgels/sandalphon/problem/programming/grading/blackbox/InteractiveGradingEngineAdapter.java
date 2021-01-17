@@ -2,6 +2,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.util.List;
+import java.util.Optional;
 import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestCase;
@@ -14,9 +16,6 @@ import play.api.mvc.Call;
 import play.data.Form;
 import play.data.FormFactory;
 import play.twirl.api.Html;
-
-import java.util.List;
-import java.util.Optional;
 
 public final class InteractiveGradingEngineAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithAutoPopulation {
     @Override

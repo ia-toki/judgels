@@ -1,14 +1,13 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import judgels.persistence.JudgelsModel_;
-import judgels.persistence.hibernate.HibernateDaoData;
-import judgels.persistence.hibernate.JudgelsHibernateDao;
-
+import java.time.Instant;
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.Instant;
-import java.util.List;
+import judgels.persistence.JudgelsModel_;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 
 public abstract class AbstractBundleSubmissionHibernateDao<M extends AbstractBundleSubmissionModel> extends JudgelsHibernateDao<M> implements BaseBundleSubmissionDao<M> {
 

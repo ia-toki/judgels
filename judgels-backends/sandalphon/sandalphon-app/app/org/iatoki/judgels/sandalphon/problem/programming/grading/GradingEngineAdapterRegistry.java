@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import com.google.common.collect.Maps;
-
 import java.util.Map;
 import java.util.ServiceLoader;
 

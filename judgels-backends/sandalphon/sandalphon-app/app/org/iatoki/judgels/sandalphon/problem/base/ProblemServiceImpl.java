@@ -6,9 +6,15 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.inject.Singleton;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.persistence.api.Page;
@@ -27,13 +33,6 @@ import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel_;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
-
-import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Singleton
 public final class ProblemServiceImpl implements ProblemService {

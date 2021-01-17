@@ -1,14 +1,13 @@
 package org.iatoki.judgels.play.jid;
 
 import com.google.common.collect.ImmutableList;
-import judgels.persistence.hibernate.HibernateDao;
-import judgels.persistence.hibernate.HibernateDaoData;
-
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.Collection;
-import java.util.List;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 public abstract class AbstractJidCacheHibernateDao<M extends AbstractJidCacheModel> extends HibernateDao<M> implements BaseJidCacheDao<M> {
 

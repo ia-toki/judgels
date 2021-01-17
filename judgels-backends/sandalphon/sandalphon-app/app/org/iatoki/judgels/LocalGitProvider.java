@@ -1,7 +1,11 @@
 package org.iatoki.judgels;
 
 import com.google.common.collect.ImmutableList;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Date;
+import java.util.List;
 import judgels.fs.local.LocalFileSystem;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RebaseCommand;
@@ -18,11 +22,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RefSpec;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 
 public final class LocalGitProvider implements GitProvider {
 

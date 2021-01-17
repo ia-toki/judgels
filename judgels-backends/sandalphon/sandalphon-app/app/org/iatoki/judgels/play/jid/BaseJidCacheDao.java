@@ -1,9 +1,8 @@
 package org.iatoki.judgels.play.jid;
 
-import judgels.persistence.Dao;
-
 import java.util.Collection;
 import java.util.List;
+import judgels.persistence.Dao;
 
 public interface BaseJidCacheDao<M extends AbstractJidCacheModel> extends Dao<M> {
 

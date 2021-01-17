@@ -1,12 +1,11 @@
 package org.iatoki.judgels.sandalphon;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.play.IdentityUtils;
 import play.mvc.Http;
-
-import java.util.Arrays;
-import java.util.List;
 
 public final class SandalphonUtils {
 

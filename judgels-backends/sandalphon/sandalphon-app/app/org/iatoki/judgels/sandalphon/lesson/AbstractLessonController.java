@@ -14,7 +14,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
         appendTitle(template, lessonService, lesson);
 
         template.markBreadcrumbLocation("Lessons", routes.LessonController.index());
-        
+
         return super.renderTemplate(template);
     }
 
@@ -23,7 +23,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
             template.setWarning(versionLocalChangesWarningLayout.render(lesson.getId(), null));
         }
     }
-    
+
     private void appendTabs(HtmlTemplate template, Lesson lesson) {
         template.addMainTab("Statements", routes.LessonController.jumpToStatement(lesson.getId()));
 

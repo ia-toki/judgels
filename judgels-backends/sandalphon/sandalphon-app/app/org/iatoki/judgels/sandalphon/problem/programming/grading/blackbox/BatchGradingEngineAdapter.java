@@ -2,6 +2,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.util.List;
+import java.util.Optional;
 import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestCase;
@@ -14,9 +16,6 @@ import play.api.mvc.Call;
 import play.data.Form;
 import play.data.FormFactory;
 import play.twirl.api.Html;
-
-import java.util.List;
-import java.util.Optional;
 
 public final class BatchGradingEngineAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithAutoPopulation {
     @Override
@@ -73,7 +72,8 @@ public final class BatchGradingEngineAdapter extends SingleSourceFileWithoutSubt
         ImmutableList.Builder<TestCase> testCases = ImmutableList.builder();
         ImmutableList.Builder<TestCase> sampleTestCases = ImmutableList.builder();
 
-        for (int i = 0; i + 1 < testDataFiles.size(); i++) {
+        int i;
+        for (i = 0; i + 1 < testDataFiles.size(); i++) {
             String in = testDataFiles.get(i).getName();
             String out = testDataFiles.get(i + 1).getName();
             if (isTestCasePair(in, out)) {

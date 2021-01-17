@@ -1,8 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
-import play.data.validation.Constraints;
-
 import java.util.List;
+import play.data.validation.Constraints;
 
 public final class ItemMultipleChoiceConfForm {
 

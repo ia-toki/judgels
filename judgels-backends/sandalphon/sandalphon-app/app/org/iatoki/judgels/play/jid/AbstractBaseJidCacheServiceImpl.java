@@ -2,7 +2,6 @@ package org.iatoki.judgels.play.jid;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-
 import java.util.List;
 import java.util.Map;
 

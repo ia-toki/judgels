@@ -1,9 +1,8 @@
 package org.iatoki.judgels.play.template;
 
 import com.google.common.collect.Lists;
-import play.twirl.api.Html;
-
 import java.util.List;
+import play.twirl.api.Html;
 
 public final class LazyHtml {
 

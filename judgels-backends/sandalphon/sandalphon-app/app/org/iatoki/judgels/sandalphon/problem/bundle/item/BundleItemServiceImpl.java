@@ -2,19 +2,18 @@ package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
 import judgels.persistence.api.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemServiceImplUtils;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Singleton
 public final class BundleItemServiceImpl implements BundleItemService {
@@ -71,11 +70,11 @@ public final class BundleItemServiceImpl implements BundleItemService {
         List<BundleItem> bundleItems = bundleItemsConfig.itemList;
 
         List<BundleItem> filteredBundleItems = bundleItems.stream()
-              .filter(b -> (StringUtils.containsIgnoreCase(b.getMeta(), filterString)) || StringUtils.containsIgnoreCase(b.getJid(), filterString) || StringUtils.containsIgnoreCase(b.getType().name(), filterString))
-              .sorted(new BundleItemComparator(orderBy, orderDir))
-              .skip(pageIndex * pageSize)
-              .limit(pageSize)
-              .collect(Collectors.toList());
+                .filter(b -> (StringUtils.containsIgnoreCase(b.getMeta(), filterString)) || StringUtils.containsIgnoreCase(b.getJid(), filterString) || StringUtils.containsIgnoreCase(b.getType().name(), filterString))
+                .sorted(new BundleItemComparator(orderBy, orderDir))
+                .skip(pageIndex * pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
 
         long number = 1;
         for (BundleItem bundleItem : filteredBundleItems) {

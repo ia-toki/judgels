@@ -129,11 +129,12 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
                 .stream()
                 .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
 
+        String lang = language;
         if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
-            language = simplifyLanguageCode(lessonService.getDefaultLanguage(null, lessonJid));
+            lang = simplifyLanguageCode(lessonService.getDefaultLanguage(null, lessonJid));
         }
 
-        return simplifiedLanguages.get(language);
+        return simplifiedLanguages.get(lang);
     }
 
     private static String simplifyLanguageCode(String code) {

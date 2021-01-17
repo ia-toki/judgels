@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import java.util.Set;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -9,8 +10,6 @@ import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemContr
 import play.mvc.Call;
 import play.mvc.Controller;
 import play.mvc.Result;
-
-import java.util.Set;
 
 public abstract class AbstractProblemController extends AbstractBaseProblemController {
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {

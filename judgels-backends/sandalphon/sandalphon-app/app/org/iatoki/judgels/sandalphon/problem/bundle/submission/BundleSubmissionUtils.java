@@ -4,9 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleDetailResult;
-
 import java.util.Map;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleDetailResult;
 
 public final class BundleSubmissionUtils {
 

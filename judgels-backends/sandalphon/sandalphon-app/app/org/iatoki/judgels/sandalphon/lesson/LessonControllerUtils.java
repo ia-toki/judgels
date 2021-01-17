@@ -1,8 +1,13 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
-import judgels.sandalphon.api.lesson.Lesson;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
@@ -10,12 +15,6 @@ import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class LessonControllerUtils {
 

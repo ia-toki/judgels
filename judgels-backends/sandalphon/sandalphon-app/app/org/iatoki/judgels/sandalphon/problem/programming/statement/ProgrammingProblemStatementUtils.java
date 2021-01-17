@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.statement;
 
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Map;
 
 public final class ProgrammingProblemStatementUtils {

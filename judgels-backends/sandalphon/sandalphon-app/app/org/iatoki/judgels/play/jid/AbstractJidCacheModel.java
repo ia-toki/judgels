@@ -1,8 +1,7 @@
 package org.iatoki.judgels.play.jid;
 
-import judgels.persistence.Model;
-
 import javax.persistence.MappedSuperclass;
+import judgels.persistence.Model;
 
 @MappedSuperclass
 public abstract class AbstractJidCacheModel extends Model {

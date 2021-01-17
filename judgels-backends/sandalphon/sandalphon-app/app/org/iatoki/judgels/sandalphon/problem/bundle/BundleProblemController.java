@@ -46,7 +46,6 @@ public final class BundleProblemController extends AbstractBundleProblemControll
             problemService.updateStatement(null, problem.getJid(), languageCode, statement);
             bundleProblemService.initBundleProblem(problem.getJid());
         } catch (IOException e) {
-            e.printStackTrace();
             return internalServerError();
         }
 

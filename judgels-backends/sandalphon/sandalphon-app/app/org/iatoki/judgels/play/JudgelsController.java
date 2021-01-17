@@ -1,10 +1,9 @@
 package org.iatoki.judgels.play;
 
 import controllers.routes;
+import javax.inject.Singleton;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
-
-import javax.inject.Singleton;
 
 @Singleton
 public final class JudgelsController extends AbstractJudgelsController {

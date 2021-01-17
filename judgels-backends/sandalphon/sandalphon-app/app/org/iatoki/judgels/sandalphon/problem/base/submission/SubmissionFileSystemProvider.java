@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base.submission;
 
 import com.google.inject.BindingAnnotation;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

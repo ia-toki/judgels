@@ -4,7 +4,6 @@
 @import judgels.gabriel.api.SubmissionSource
 @import judgels.sandalphon.api.submission.programming.Submission
 @import org.iatoki.judgels.play.JudgelsPlayUtils
-@import org.apache.commons.io.IOUtils
 
 @(submission: Submission, details: GradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
 
@@ -226,7 +225,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">@key - @sourceFile.getName</div>
             <div class="panel-body">
-                <pre>@IOUtils.toString(sourceFile.getContent)</pre>
+                <pre>@{new String(sourceFile.getContent)}</pre>
                 @if(details != null && details.getCompilationOutputs.contains(key)) {
                     <p>Compilation Output:</p>
                     <pre>@details.getCompilationOutputs.get(key)</pre>

@@ -92,16 +92,16 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         }
 
         ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
-              .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
-              .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
-              .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
-              .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
-              .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
-              .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
-              .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
-              .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
-              .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
-              .build();
+                .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
+                .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
+                .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
+                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
+                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
+                .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
+                .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
+                .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
+                .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
+                .build();
 
         BundleProblemPartnerConfig bundleConfig = new BundleProblemPartnerConfig(bundleData.isAllowedToSubmit, bundleData.isAllowedToManageItems);
 
@@ -167,16 +167,16 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         ProblemPartnerUpsertForm problemData = problemForm.get();
 
         ProblemPartnerConfig problemConfig = new ProblemPartnerConfigBuilder()
-              .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
-              .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
-              .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
-              .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
-              .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
-              .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
-              .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
-              .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
-              .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
-              .build();
+                .setIsAllowedToUpdateProblem(problemData.isAllowedToUpdateProblem)
+                .setIsAllowedToUpdateStatement(problemData.isAllowedToUpdateStatement)
+                .setIsAllowedToUploadStatementResources(problemData.isAllowedToUploadStatementResources)
+                .setAllowedStatementLanguagesToView(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToView))
+                .setAllowedStatementLanguagesToUpdate(PartnerControllerUtils.splitByComma(problemData.allowedStatementLanguagesToUpdate))
+                .setIsAllowedToManageStatementLanguages(problemData.isAllowedToManageStatementLanguages)
+                .setIsAllowedToViewVersionHistory(problemData.isAllowedToViewVersionHistory)
+                .setIsAllowedToRestoreVersionHistory(problemData.isAllowedToRestoreVersionHistory)
+                .setIsAllowedToManageProblemClients(problemData.isAllowedToManageProblemClients)
+                .build();
 
         BundlePartnerUpsertForm bundleData = bundleForm.get();
 

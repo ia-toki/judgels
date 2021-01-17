@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Set;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.SubmissionSource;
@@ -15,9 +17,6 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAd
 import org.iatoki.judgels.sandalphon.problem.programming.statement.blackbox.html.blackBoxViewStatementView;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.blackbox.html.blackBoxViewSubmissionView;
 import play.twirl.api.Html;
-
-import java.util.List;
-import java.util.Set;
 
 public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAdapter {
     @Override

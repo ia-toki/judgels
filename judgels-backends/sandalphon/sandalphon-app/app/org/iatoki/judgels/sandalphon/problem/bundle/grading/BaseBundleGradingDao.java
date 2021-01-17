@@ -1,9 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.grading;
 
-import judgels.persistence.JudgelsDao;
-
 import java.util.List;
 import java.util.Map;
+import judgels.persistence.JudgelsDao;
 
 public interface BaseBundleGradingDao<M extends AbstractBundleGradingModel> extends JudgelsDao<M> {
 

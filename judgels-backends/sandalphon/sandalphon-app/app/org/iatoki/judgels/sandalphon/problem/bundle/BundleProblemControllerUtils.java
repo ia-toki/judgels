@@ -1,13 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
+import java.util.Set;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.bundle.partner.BundleProblemPartnerConfig;
-
-import java.util.Set;
 
 public final class BundleProblemControllerUtils {
 

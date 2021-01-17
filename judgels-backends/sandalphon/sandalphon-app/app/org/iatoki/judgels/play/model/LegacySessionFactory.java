@@ -1,6 +1,18 @@
 package org.iatoki.judgels.play.model;
 
+import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.Query;
+import javax.persistence.SynchronizationType;
+import javax.persistence.criteria.CriteriaBuilder;
 import org.hibernate.Cache;
 import org.hibernate.HibernateException;
 import org.hibernate.Metamodel;
@@ -15,19 +27,6 @@ import org.hibernate.engine.spi.FilterDefinition;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.stat.Statistics;
-
-import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceUnitUtil;
-import javax.persistence.Query;
-import javax.persistence.SynchronizationType;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.sql.Connection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import play.db.jpa.JPAApi;
 
 public class LegacySessionFactory implements SessionFactory {

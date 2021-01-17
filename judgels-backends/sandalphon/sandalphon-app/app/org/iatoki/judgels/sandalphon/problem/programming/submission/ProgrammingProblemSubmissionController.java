@@ -144,7 +144,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             return notFound();
         }
 
-        Page<Submission> pageOfProgrammingSubmissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of((int) pageIndex+1));
+        Page<Submission> pageOfProgrammingSubmissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of((int) pageIndex + 1));
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         HtmlTemplate template = getBaseHtmlTemplate();
@@ -156,7 +156,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional(readOnly = true)
-    public Result viewSubmission(long problemId, long submissionId) throws ProblemNotFoundException, ProgrammingSubmissionNotFoundException {
+    public Result viewSubmission(long problemId, long submissionId) throws ProblemNotFoundException {
         Problem problem = problemService.findProblemById(problemId);
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -183,7 +183,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional
-    public Result regradeSubmission(long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException, ProgrammingSubmissionNotFoundException {
+    public Result regradeSubmission(long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) throws ProblemNotFoundException {
         Problem problem = problemService.findProblemById(problemId);
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {

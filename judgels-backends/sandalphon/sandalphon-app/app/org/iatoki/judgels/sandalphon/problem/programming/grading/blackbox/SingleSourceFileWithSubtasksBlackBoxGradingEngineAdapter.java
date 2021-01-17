@@ -2,15 +2,14 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import judgels.gabriel.api.Subtask;
-import judgels.gabriel.api.TestCase;
-import judgels.gabriel.api.TestGroup;
-import judgels.gabriel.engines.SingleSourceFileWithSubtasksGradingConfig;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.Subtask;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.SingleSourceFileWithSubtasksGradingConfig;
 
 public abstract class SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter extends SingleSourceFileBlackBoxGradingEngineAdapter {
     protected final void fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithSubtasksGradingConfig config) {
