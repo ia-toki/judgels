@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.fs.FileSystem;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemsConfig;
 
@@ -15,7 +15,7 @@ public final class BundleProblemServiceImpl implements BundleProblemService {
     private final FileSystem problemFs;
 
     @Inject
-    public BundleProblemServiceImpl(@ProblemFileSystemProvider FileSystem problemFs) {
+    public BundleProblemServiceImpl(@ProblemFs FileSystem problemFs) {
         this.problemFs = problemFs;
     }
 

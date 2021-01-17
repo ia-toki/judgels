@@ -18,7 +18,7 @@ import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemServiceImplUtils;
 
 @Singleton
@@ -28,7 +28,7 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
     private final FileSystem problemFs;
 
     @Inject
-    public ProgrammingProblemServiceImpl(@ProblemFileSystemProvider FileSystem problemFs) {
+    public ProgrammingProblemServiceImpl(@ProblemFs FileSystem problemFs) {
         this.problemFs = problemFs;
     }
 

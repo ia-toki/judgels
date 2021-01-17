@@ -41,7 +41,7 @@ public final class LessonServiceImpl implements LessonService {
     private final LessonPartnerDao lessonPartnerDao;
 
     @Inject
-    public LessonServiceImpl(ObjectMapper mapper, LessonDao lessonDao, @LessonFileSystemProvider FileSystem lessonFs, @LessonGitProvider GitProvider lessonGitProvider, LessonPartnerDao lessonPartnerDao) {
+    public LessonServiceImpl(ObjectMapper mapper, LessonDao lessonDao, @LessonFs FileSystem lessonFs, @LessonGitProvider GitProvider lessonGitProvider, LessonPartnerDao lessonPartnerDao) {
         this.mapper = mapper;
         this.lessonDao = lessonDao;
         this.lessonFs = lessonFs;

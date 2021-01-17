@@ -14,7 +14,7 @@ import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemController;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
@@ -34,7 +34,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     private final ProblemService problemService;
 
     @Inject
-    public BundleProblemSubmissionController(@SubmissionFileSystemProvider FileSystem bundleSubmissionFs, BundleSubmissionService bundleSubmissionService, ProblemService problemService) {
+    public BundleProblemSubmissionController(@SubmissionFs FileSystem bundleSubmissionFs, BundleSubmissionService bundleSubmissionService, ProblemService problemService) {
         this.bundleSubmissionFs = bundleSubmissionFs;
         this.bundleSubmissionService = bundleSubmissionService;
         this.problemService = problemService;

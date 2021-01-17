@@ -32,11 +32,11 @@ import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.play.general.GeneralConfig;
 import org.iatoki.judgels.play.model.LegacyActorProvider;
 import org.iatoki.judgels.play.model.LegacySessionFactory;
-import org.iatoki.judgels.sandalphon.lesson.LessonFileSystemProvider;
+import org.iatoki.judgels.sandalphon.lesson.LessonFs;
 import org.iatoki.judgels.sandalphon.lesson.LessonGitProvider;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemGitProvider;
-import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemGraderImpl;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
@@ -58,22 +58,13 @@ public final class SandalphonModule extends AbstractModule {
         GeneralConfig generalConfig = new GeneralConfig(config, "Sandalphon", UserAgent.Agent.DEFAULT_VERSION);
         bind(GeneralConfig.class).toInstance(generalConfig);
 
-        SandalphonConfiguration sandalphonConfig = SandalphonProperties.build(config);
-        bind(SandalphonConfiguration.class).toInstance(sandalphonConfig);
+        bind(SandalphonConfiguration.class).toInstance(SandalphonProperties.build(config));
 
         bind(SandalphonThreadsScheduler.class).asEagerSingleton();
         bind(SandalphonSingletonsBuilder.class).asEagerSingleton();
 
         bind(BundleSubmissionService.class).to(BundleSubmissionServiceImpl.class);
         bind(BundleProblemGrader.class).to(BundleProblemGraderImpl.class);
-
-        bind(ClientChecker.class).toInstance(clientChecker(sandalphonConfig));
-
-        bind(FileSystem.class).annotatedWith(ProblemFileSystemProvider.class).toInstance(problemFileSystemProvider(sandalphonConfig));
-        bind(FileSystem.class).annotatedWith(SubmissionFileSystemProvider.class).toInstance(submissionFileSystemProvider(sandalphonConfig));
-        bind(FileSystem.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider(sandalphonConfig));
-        bind(GitProvider.class).annotatedWith(ProblemGitProvider.class).toInstance(problemGitProvider(sandalphonConfig));
-        bind(GitProvider.class).annotatedWith(LessonGitProvider.class).toInstance(lessonGitProvider(sandalphonConfig));
 
         Json.setObjectMapper(objectMapper());
 
@@ -124,7 +115,7 @@ public final class SandalphonModule extends AbstractModule {
 
     @Provides
     @Singleton
-    SubmissionSourceBuilder submissionSourceBuilder(@SubmissionFileSystemProvider FileSystem submissionFs) {
+    SubmissionSourceBuilder submissionSourceBuilder(@SubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 
@@ -161,28 +152,45 @@ public final class SandalphonModule extends AbstractModule {
                 messageService);
     }
 
-    private ClientChecker clientChecker(SandalphonConfiguration config) {
+    @Provides
+    @Singleton
+    ClientChecker clientChecker(SandalphonConfiguration config) {
         return new ClientChecker(config.getClients());
     }
 
-    private LocalFileSystem problemFileSystemProvider(SandalphonConfiguration config) {
+    @Provides
+    @Singleton
+    @ProblemFs
+    FileSystem problemFs(SandalphonConfiguration config) {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
     }
 
-    private FileSystem submissionFileSystemProvider(SandalphonConfiguration config) {
+    @Provides
+    @Singleton
+    @SubmissionFs
+    FileSystem submissionFileSystemProvider(SandalphonConfiguration config) {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir(), "submissions"));
     }
 
-    private LocalFileSystem lessonFileSystemProvider(SandalphonConfiguration config) {
+    @Provides
+    @Singleton
+    @LessonFs
+    FileSystem lessonFileSystemProvider(SandalphonConfiguration config) {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
     }
 
-    private GitProvider problemGitProvider(SandalphonConfiguration config) {
-        return new LocalGitProvider(problemFileSystemProvider(config));
+    @Provides
+    @Singleton
+    @ProblemGitProvider
+    GitProvider problemGitProvider(@ProblemFs FileSystem fs) {
+        return new LocalGitProvider((LocalFileSystem) fs);
     }
 
-    private GitProvider lessonGitProvider(SandalphonConfiguration config) {
-        return new LocalGitProvider(lessonFileSystemProvider(config));
+    @Provides
+    @Singleton
+    @LessonGitProvider
+    GitProvider lessonGitProvider(@LessonFs FileSystem fs) {
+        return new LocalGitProvider((LocalFileSystem) fs);
     }
 
     private ObjectMapper objectMapper() {

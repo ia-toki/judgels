@@ -12,7 +12,7 @@ import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
 import judgels.persistence.api.Page;
 import org.apache.commons.lang3.StringUtils;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemServiceImplUtils;
 
 @Singleton
@@ -21,7 +21,7 @@ public final class BundleItemServiceImpl implements BundleItemService {
     private final FileSystem problemFs;
 
     @Inject
-    public BundleItemServiceImpl(@ProblemFileSystemProvider FileSystem problemFs) {
+    public BundleItemServiceImpl(@ProblemFs FileSystem problemFs) {
         this.problemFs = problemFs;
     }
 

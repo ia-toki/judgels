@@ -44,7 +44,7 @@ public final class ProblemServiceImpl implements ProblemService {
     private final ProblemPartnerDao problemPartnerDao;
 
     @Inject
-    public ProblemServiceImpl(ObjectMapper mapper, ProblemDao problemDao, @ProblemFileSystemProvider FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
+    public ProblemServiceImpl(ObjectMapper mapper, ProblemDao problemDao, @ProblemFs FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
         this.mapper = mapper;
         this.problemDao = problemDao;
         this.problemFs = problemFs;
