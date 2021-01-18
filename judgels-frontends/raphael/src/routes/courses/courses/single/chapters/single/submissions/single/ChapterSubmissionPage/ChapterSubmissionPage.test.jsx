@@ -16,19 +16,22 @@ jest.mock('../../modules/chapterSubmissionActions');
 
 describe('ChapterSubmissionPage', () => {
   let wrapper;
+  let source = {};
 
-  beforeEach(async () => {
+  const render = async () => {
     chapterSubmissionActions.getSubmissionWithSource.mockReturnValue(() =>
       Promise.resolve({
         data: {
           submission: {
             id: 10,
+            jid: 'submissionJid',
             gradingEngine: OutputOnlyOverrides.KEY,
           },
-          source: {},
+          source,
         },
       })
     );
+    chapterSubmissionActions.getSubmissionSourceImage.mockReturnValue(() => Promise.resolve('image url'));
 
     const store = createStore(
       combineReducers({
@@ -62,9 +65,24 @@ describe('ChapterSubmissionPage', () => {
 
     await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
+  };
+
+  beforeEach(async () => {
+    await render();
   });
 
   test('page', () => {
     expect(wrapper.text()).toContain('Submission #10');
+  });
+
+  describe('when there is no source', () => {
+    beforeEach(async () => {
+      source = null;
+      await render();
+    });
+
+    test('get source image url', () => {
+      expect(chapterSubmissionActions.getSubmissionSourceImage).toHaveBeenCalledWith('submissionJid');
+    });
   });
 });

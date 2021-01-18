@@ -8,16 +8,7 @@ import { getGradingLanguageName } from '../../../../../../../../modules/api/gabr
 
 import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
-export function ProblemSubmissionsTable({
-  problemSet,
-  problem,
-  submissions,
-  userJid,
-  canManage,
-  profilesMap,
-  onRegrade,
-  onOpenSubmissionImage,
-}) {
+export function ProblemSubmissionsTable({ problemSet, problem, submissions, canManage, profilesMap, onRegrade }) {
   const renderHeader = () => {
     return (
       <thead>
@@ -59,20 +50,9 @@ export function ProblemSubmissionsTable({
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          {canManage || userJid === submission.userJid ? (
-            <Link className="action" to={`/problems/${problemSet.slug}/${problem.alias}/submissions/${submission.id}`}>
-              <Icon icon="search" />
-            </Link>
-          ) : (
-            <Icon
-              icon="search"
-              className="action"
-              color="#3b73b9"
-              onClick={() =>
-                onOpenSubmissionImage(submission.jid, submission.id, profilesMap[submission.userJid].username)
-              }
-            />
-          )}
+          <Link className="action" to={`/problems/${problemSet.slug}/${problem.alias}/submissions/${submission.id}`}>
+            <Icon icon="search" />
+          </Link>
         </td>
       </tr>
     ));

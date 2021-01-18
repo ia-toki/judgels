@@ -12,12 +12,10 @@ export function ChapterSubmissionsTable({
   course,
   chapter,
   submissions,
-  userJid,
   canManage,
   profilesMap,
   problemAliasesMap,
   onRegrade,
-  onOpenSubmissionImage,
 }) {
   const renderHeader = () => {
     return (
@@ -61,23 +59,12 @@ export function ChapterSubmissionsTable({
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          {canManage || userJid === submission.userJid ? (
-            <Link
-              className="action"
-              to={`/courses/${course.slug}/chapters/${chapter.alias}/submissions/${submission.id}`}
-            >
-              <Icon icon="search" />
-            </Link>
-          ) : (
-            <Icon
-              icon="search"
-              className="action"
-              color="#3b73b9"
-              onClick={() =>
-                onOpenSubmissionImage(submission.jid, submission.id, profilesMap[submission.userJid].username)
-              }
-            />
-          )}
+          <Link
+            className="action"
+            to={`/courses/${course.slug}/chapters/${chapter.alias}/submissions/${submission.id}`}
+          >
+            <Icon icon="search" />
+          </Link>
         </td>
       </tr>
     ));

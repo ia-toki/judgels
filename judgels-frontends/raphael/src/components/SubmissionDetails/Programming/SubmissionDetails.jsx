@@ -20,7 +20,8 @@ import './SubmissionDetails.css';
 
 export function SubmissionDetails({
   submission: { gradingEngine, gradingLanguage, time, latestGrading },
-  source: { submissionFiles },
+  source,
+  sourceImageUrl,
   profile,
   problemName,
   problemAlias,
@@ -276,7 +277,19 @@ export function SubmissionDetails({
       return null;
     }
 
+    if (!source) {
+      return (
+        <>
+          {renderSourceFilesHeading()}
+          <ContentCard>
+            <img src={sourceImageUrl} className="submission-image" />
+          </ContentCard>
+        </>
+      );
+    }
+
     const { details, verdict } = grading;
+    const { submissionFiles } = source;
 
     const sourceFiles = Object.keys(submissionFiles).map(key => (
       <ContentCard key={key}>

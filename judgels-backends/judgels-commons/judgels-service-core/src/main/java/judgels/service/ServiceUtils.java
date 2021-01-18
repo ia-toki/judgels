@@ -67,14 +67,14 @@ public class ServiceUtils {
 
     public static Response buildImageResponseFromText(String text, Date lastModifiedStream) {
         int fontSize = 14;
-        int margin = 30;
+        int margin = 20;
         int charWidth = 8;
         int charHeight = 17;
 
         String[] textList = text.split("\\r?\\n");
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
         int longestText = Arrays.asList(textList).stream().map(String::length).max(Integer::compareTo).get();
-        int width = Math.max(700, charWidth * longestText + 2 * margin);
+        int width = Math.max(650, charWidth * longestText + 2 * margin);
         int height = charHeight * textList.length + 2 * margin;
 
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -86,7 +86,7 @@ public class ServiceUtils {
         g2d.setColor(Color.BLACK);
         int nextLinePosition = margin;
         for (String s : textList) {
-            g2d.drawString(s, margin, nextLinePosition);
+            g2d.drawString(s, 0, nextLinePosition);
             nextLinePosition = nextLinePosition + charHeight;
         }
         g2d.dispose();
