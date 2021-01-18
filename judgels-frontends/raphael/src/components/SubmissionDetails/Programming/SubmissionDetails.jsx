@@ -281,9 +281,9 @@ export function SubmissionDetails({
       return (
         <>
           {renderSourceFilesHeading()}
-          <div className="submission-image">
-            <img src={sourceImageUrl} />
-          </div>
+          <ContentCard>
+            <img src={sourceImageUrl} className="submission-image" />
+          </ContentCard>
         </>
       );
     }
