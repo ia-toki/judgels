@@ -7,10 +7,8 @@ import static javax.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import io.dropwizard.util.Resources;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -68,12 +66,13 @@ public class ServiceUtils {
     }
 
     public static Response buildImageResponseFromText(String text, Date lastModifiedStream) {
-        float fontSize = 14f;
+        int fontSize = 14;
         int margin = 20;
         int charWidth = 8;
         int charHeight = 17;
 
         String[] textList = text.split("\\r?\\n");
+        Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
         int longestText = Arrays.asList(textList).stream().map(String::length).max(Integer::compareTo).get();
         int width = Math.max(650, charWidth * longestText + 2 * margin);
         int height = charHeight * textList.length + 2 * margin;
@@ -81,20 +80,10 @@ public class ServiceUtils {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setFont(font);
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
         g2d.setColor(Color.BLACK);
-
-        try {
-            URL url = Resources.getResource("fonts");
-            File resourceDir = new File(url.getPath());
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(resourceDir, "courier new.ttf"))
-                    .deriveFont(fontSize);
-            g2d.setFont(font);
-        } catch (IOException | FontFormatException e) {
-            // nothing
-        }
-
         int nextLinePosition = margin;
         for (String s : textList) {
             g2d.drawString(s, 0, nextLinePosition);
