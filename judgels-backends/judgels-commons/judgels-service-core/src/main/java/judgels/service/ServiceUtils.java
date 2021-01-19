@@ -86,7 +86,7 @@ public class ServiceUtils {
         g2d.setColor(Color.BLACK);
         int nextLinePosition = margin;
         for (String s : textList) {
-            g2d.drawString(s, 0, nextLinePosition);
+            g2d.drawString(s.replaceAll("\t", "    "), 0, nextLinePosition);
             nextLinePosition = nextLinePosition + charHeight;
         }
         g2d.dispose();
