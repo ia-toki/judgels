@@ -170,7 +170,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
                 .queryParam("problemJid", PROBLEM_1_JID)
                 .request()
                 .get();
-        assertThat(response2.getHeaders().getFirst(CONTENT_TYPE)).isEqualTo("image/png");
+        assertThat(response2.getHeaders().getFirst(CONTENT_TYPE)).isEqualTo("image/jpg");
     }
 
     private Response submit(String contestJid, String token, String problemJid) {
