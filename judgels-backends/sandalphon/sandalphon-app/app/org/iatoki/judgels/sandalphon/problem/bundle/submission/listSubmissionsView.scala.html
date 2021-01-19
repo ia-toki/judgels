@@ -1,13 +1,13 @@
 @import java.text.DecimalFormat
+@import judgels.jophiel.api.profile.Profile
 @import judgels.persistence.api.Page
-@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithSelectionFormView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.problem.bundle.submission.{BundleSubmission, routes}
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(pageOfBundleSubmissions: Page[BundleSubmission], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
+@(pageOfBundleSubmissions: Page[BundleSubmission], problemId: Long, profilesMap: Map[String, Profile], pageIndex: Long, orderBy: String, orderDir: String)
 
 <script type="text/javascript">
     require(["jquery"], function( __jquery__ ) {
@@ -39,13 +39,11 @@
         "createdAt" -> "Time"
     )
     <tbody>
-
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfBundleSubmissions.getPage.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
         @for(submission <- pageOfBundleSubmissions.getPage) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
                 <td>@submission.getId</td>
-                <td>@displayNamesMap.get(submission.getAuthorJid)</td>
+                <td>@profilesMap.get(submission.getAuthorJid).getUsername</td>
                 <td>@(new DecimalFormat("#.##").format(submission.getLatestScore))</td>
                 <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
                 <td class="text-center">
@@ -54,7 +52,6 @@
                 </td>
             </tr>
         }
-    }
     </tbody>
 }
 

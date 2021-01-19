@@ -11,6 +11,7 @@ import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
+import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.submission.programming.Submission;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapter;
@@ -31,12 +32,12 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
     }
 
     @Override
-    public Html renderViewSubmission(Submission submission, SubmissionSource submissionSource, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
+    public Html renderViewSubmission(Submission submission, SubmissionSource submissionSource, Profile profile, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
         GradingResultDetails details = null;
         if (submission.getLatestGrading().isPresent() && submission.getLatestGrading().get().getDetails().isPresent()) {
             details = submission.getLatestGrading().get().getDetails().get();
         }
-        return blackBoxViewSubmissionView.render(submission, details, submissionSource.getSubmissionFiles(), authorName, problemAlias, problemName, gradingLanguageName, contestName);
+        return blackBoxViewSubmissionView.render(submission, details, submissionSource.getSubmissionFiles(), profile, problemAlias, problemName, gradingLanguageName, contestName);
     }
 
     protected final void fillAbstractBlackBoxGradingFormPartsFromConfig(AbstractBlackBoxGradingConfigForm form, GradingConfig config) {

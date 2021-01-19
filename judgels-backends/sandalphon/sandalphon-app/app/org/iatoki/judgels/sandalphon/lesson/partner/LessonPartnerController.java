@@ -4,17 +4,19 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
@@ -35,11 +37,13 @@ public class LessonPartnerController extends AbstractLessonController {
 
     private final UserSearchService userSearchService;
     private final LessonService lessonService;
+    private final ProfileService profileService;
 
     @Inject
-    public LessonPartnerController(UserSearchService userSearchService, LessonService lessonService) {
+    public LessonPartnerController(UserSearchService userSearchService, LessonService lessonService, ProfileService profileService) {
         this.userSearchService = userSearchService;
         this.lessonService = lessonService;
+        this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
@@ -57,8 +61,11 @@ public class LessonPartnerController extends AbstractLessonController {
 
         Page<LessonPartner> pageOfLessonPartners = lessonService.getPageOfLessonPartners(lesson.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
+        Set<String> userJids = pageOfLessonPartners.getPage().stream().map(LessonPartner::getUserJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listPartnersView.render(lesson.getId(), pageOfLessonPartners, orderBy, orderDir));
+        template.setContent(listPartnersView.render(lesson.getId(), pageOfLessonPartners, profilesMap, orderBy, orderDir));
         template.setSecondaryTitle("Partners");
         template.addSecondaryButton("Add partner", routes.LessonPartnerController.addPartner(lesson.getId()));
         template.markBreadcrumbLocation("Partners", routes.LessonPartnerController.viewPartners(lesson.getId()));
@@ -108,8 +115,6 @@ public class LessonPartnerController extends AbstractLessonController {
         }
 
         String userJid = usernameToJidMap.get(username);
-
-        JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
         if (lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)) {
             return showAddPartner(usernameForm.withError("username", "This user is already a partner."), lessonForm, lesson);
@@ -206,10 +211,12 @@ public class LessonPartnerController extends AbstractLessonController {
     }
 
     private Result showEditPartner(Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson, LessonPartner lessonPartner) {
+        Profile profile = profileService.getProfile(lessonPartner.getUserJid());
+
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(lessonForm, lesson, lessonPartner));
 
-        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getUserJid()));
+        template.setSecondaryTitle("Update partner: " + profile.getUsername());
         template.markBreadcrumbLocation("Update partner", routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
         template.setPageTitle("Lesson - Update partner");
 

@@ -2,8 +2,13 @@ package org.iatoki.judgels.sandalphon.problem.base;
 
 import static judgels.service.ServiceUtils.checkFound;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -26,10 +31,12 @@ public final class ProblemController extends AbstractBaseProblemController {
     private static final long PAGE_SIZE = 20;
 
     private final ProblemService problemService;
+    private final ProfileService profileService;
 
     @Inject
-    public ProblemController(ProblemService problemService) {
+    public ProblemController(ProblemService problemService, ProfileService profileService) {
         this.problemService = problemService;
+        this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
@@ -43,8 +50,11 @@ public final class ProblemController extends AbstractBaseProblemController {
         boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
         Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), isAdmin);
 
+        Set<String> userJids = pageOfProblems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listProblemsView.render(pageOfProblems, sortBy, orderBy, filterString, isWriter));
+        template.setContent(listProblemsView.render(pageOfProblems, profilesMap, sortBy, orderBy, filterString, isWriter));
         if (isWriter) {
             template.addMainButton("Create", routes.ProblemController.createProblem());
         }
@@ -109,8 +119,10 @@ public final class ProblemController extends AbstractBaseProblemController {
             return notFound();
         }
 
+        Profile profile = profileService.getProfile(problem.getAuthorJid());
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(viewProblemView.render(problem));
+        template.setContent(viewProblemView.render(problem, profile));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
         template.markBreadcrumbLocation("View problem", routes.ProblemController.viewProblem(problem.getId()));

@@ -2,10 +2,11 @@
 @import judgels.gabriel.api.OutputOnlyOverrides
 @import judgels.gabriel.api.SourceFile
 @import judgels.gabriel.api.SubmissionSource
+@import judgels.jophiel.api.profile.Profile
 @import judgels.sandalphon.api.submission.programming.Submission
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(submission: Submission, details: GradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
+@(submission: Submission, details: GradingResultDetails, sourceFiles: Map[String, SourceFile], profile: Profile, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
 
 <h3>Submission #@submission.getId</h3>
 
@@ -21,7 +22,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Author</td><td>@authorName</td>
+                    <td>Author</td><td>@profile.getUsername</td>
                 </tr>
                 <tr>
                     <td>Problem</td><td>@if(problemAlias != null) { @problemAlias - } @problemName</td>

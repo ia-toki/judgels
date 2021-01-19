@@ -1,10 +1,10 @@
 @import java.text.DecimalFormat
-
+@import judgels.jophiel.api.profile.Profile
 @import org.iatoki.judgels.sandalphon.problem.bundle.grading.{BundleAnswer, BundleDetailResult}
 @import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(bundleSubmission: BundleSubmission, bundleGradingResult: Map[String, BundleDetailResult], bundleAnswer: BundleAnswer, authorName: String, problemAlias: String, problemName: String, contestName: String)
+@(bundleSubmission: BundleSubmission, bundleGradingResult: Map[String, BundleDetailResult], bundleAnswer: BundleAnswer, profile: Profile, problemAlias: String, problemName: String, contestName: String)
 
 <h3>Submission #@bundleSubmission.getId</h3>
 
@@ -20,7 +20,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Author</td><td>@authorName</td>
+                    <td>Author</td><td>@profile.getUsername</td>
                 </tr>
                 <tr>
                     <td>Problem</td><td>@if(problemAlias != null) { @problemAlias - } @problemName</td>

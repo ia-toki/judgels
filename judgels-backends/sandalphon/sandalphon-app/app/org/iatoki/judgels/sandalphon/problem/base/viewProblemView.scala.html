@@ -1,8 +1,8 @@
+@import judgels.jophiel.api.profile.Profile
 @import judgels.sandalphon.api.problem.Problem
-@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(problem: Problem)
+@(problem: Problem, profile: Profile)
 
 <table class="table">
     <tbody>
@@ -16,7 +16,7 @@
             <td>Slug</td><td>@problem.getSlug</td>
         </tr>
         <tr>
-            <td>Author</td><td>@JidCacheServiceImpl.getInstance().getDisplayName(problem.getAuthorJid)</td>
+            <td>Author</td><td>@profile.getUsername</td>
         </tr>
         <tr>
             <td>Additional note</td><td>@Html(JudgelsPlayUtils.escapeHtmlString(problem.getAdditionalNote))</td>

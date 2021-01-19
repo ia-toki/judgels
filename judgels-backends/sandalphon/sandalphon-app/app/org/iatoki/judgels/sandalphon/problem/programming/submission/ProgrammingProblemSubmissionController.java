@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
@@ -16,6 +18,8 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -30,7 +34,6 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
@@ -46,6 +49,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
 
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
+    private final ProfileService profileService;
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionClient submissionClient;
@@ -55,12 +59,14 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     public ProgrammingProblemSubmissionController(
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService,
+            ProfileService profileService,
             SubmissionStore submissionStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionClient submissionClient,
             SubmissionRegrader submissionRegrader) {
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
+        this.profileService = profileService;
         this.submissionStore = submissionStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionClient = submissionClient;
@@ -148,8 +154,11 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         Page<Submission> pageOfProgrammingSubmissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of((int) pageIndex + 1));
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
+        Set<String> userJids = pageOfProgrammingSubmissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, pageIndex, orderBy, orderDir));
+        template.setContent(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, profilesMap, pageIndex, orderBy, orderDir));
         template.markBreadcrumbLocation("Submissions", routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
@@ -174,8 +183,10 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         }
         SubmissionSource submissionSource = submissionSourceBuilder.fromPastSubmission(programmingSubmission.getJid());
 
+        Profile profile = profileService.getProfile(programmingSubmission.getUserJid());
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getUserJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, profile, null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
 
         template.markBreadcrumbLocation("View submission", routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
         template.setPageTitle("Problem - View submission");

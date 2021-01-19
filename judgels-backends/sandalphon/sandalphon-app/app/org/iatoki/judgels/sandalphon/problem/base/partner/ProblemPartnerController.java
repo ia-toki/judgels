@@ -2,8 +2,13 @@ package org.iatoki.judgels.sandalphon.problem.base.partner;
 
 import static judgels.service.ServiceUtils.checkFound;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
@@ -21,10 +26,12 @@ public class ProblemPartnerController extends AbstractProblemController {
     private static final long PAGE_SIZE = 20;
 
     private final ProblemService problemService;
+    private final ProfileService profileService;
 
     @Inject
-    public ProblemPartnerController(ProblemService problemService) {
+    public ProblemPartnerController(ProblemService problemService, ProfileService profileService) {
         this.problemService = problemService;
+        this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
@@ -42,8 +49,11 @@ public class ProblemPartnerController extends AbstractProblemController {
 
         Page<ProblemPartner> pageOfProblemPartners = problemService.getPageOfProblemPartners(problem.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
+        Set<String> userJids = pageOfProblemPartners.getPage().stream().map(ProblemPartner::getUserJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listPartnersView.render(problem.getId(), pageOfProblemPartners, orderBy, orderDir));
+        template.setContent(listPartnersView.render(problem.getId(), pageOfProblemPartners, profilesMap, orderBy, orderDir));
         template.setSecondaryTitle("Partners");
         template.addSecondaryButton("Add partner", routes.ProblemPartnerController.addPartner(problem.getId()));
         template.setPageTitle("Problem - Partners");

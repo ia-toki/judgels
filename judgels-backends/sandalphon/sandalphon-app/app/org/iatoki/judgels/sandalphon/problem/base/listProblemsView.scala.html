@@ -1,6 +1,6 @@
+@import judgels.jophiel.api.profile.Profile
 @import judgels.persistence.api.Page
 @import judgels.sandalphon.api.problem.Problem
-@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.search.html.searchView
@@ -8,7 +8,7 @@
 @import org.iatoki.judgels.sandalphon.problem.base.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(pageOfProblems: Page[Problem], orderBy: String, orderDir: String, filterString: String, isWriter: Boolean)
+@(pageOfProblems: Page[Problem], profilesMap: Map[String, Profile], orderBy: String, orderDir: String, filterString: String, isWriter: Boolean)
 
 @searchView(pageOfProblems.getPageIndex, orderBy, orderDir, filterString, routes.ProblemController.listProblems)
 
@@ -22,12 +22,11 @@
         "updatedAt" -> "Last update time"
     )
     <tbody>
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProblems.getPage.map(s => s.getAuthorJid).toSeq)) { displayNamesMap =>
         @for(problem <- pageOfProblems.getPage) {
             <tr>
                 <td>@problem.getId</td>
                 <td>@problem.getSlug</td>
-                <td>@JudgelsPlayUtils.getOnlyUsername(displayNamesMap.get(problem.getAuthorJid))</td>
+                <td>@profilesMap.get(problem.getAuthorJid).getUsername</td>
                 <td class="table-col-updated-at"><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(problem.getLastUpdateTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(problem.getLastUpdateTime.toEpochMilli)</time></td>
                 <td class="text-center">
                     @if(isWriter) {
@@ -38,7 +37,6 @@
                 </td>
             </tr>
         }
-    }
     </tbody>
 }
 

@@ -85,37 +85,6 @@ public final class JudgelsPlayUtils {
         return StringEscapeUtils.escapeHtml4(string).replaceAll("\r\n", "<br />").replaceAll("\n", "<br />");
     }
 
-    public static String getUserDisplayName(String username) {
-        return username;
-    }
-
-    public static String getUserDisplayName(String username, String name) {
-        return username + " (" + name + ")";
-    }
-
-    public static void updateUserJidCache(org.iatoki.judgels.play.jid.BaseJidCacheService<?> jidCacheService) {
-        if (IdentityUtils.getUserJid() != null) {
-            jidCacheService.putDisplayName(IdentityUtils.getUserJid(), JudgelsPlayUtils.getUserDisplayName(IdentityUtils.getUsername()), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-        }
-    }
-
-    public static String prettifyUserDisplayName(String displayName) {
-        String[] parts = displayName.split("\\(|\\)");
-        if (parts.length == 1) {
-            return "<span class=\"username\">" + parts[0] + "</span>";
-        } else {
-            return "<span class=\"username\">" + parts[0] + "</span>" + " <span class=\"user-real-name\">(" + parts[1] + ")</span>";
-        }
-    }
-
-    public static String getOnlyUsername(String displayName) {
-        int spacePos = displayName.indexOf(' ');
-        if (spacePos == -1) {
-            return displayName;
-        }
-        return displayName.substring(0, spacePos);
-    }
-
     public static boolean isSidebarShown(Http.Request request) {
         return (request.cookie("sidebar") == null) || (request.cookie("sidebar").value().equals("true"));
     }

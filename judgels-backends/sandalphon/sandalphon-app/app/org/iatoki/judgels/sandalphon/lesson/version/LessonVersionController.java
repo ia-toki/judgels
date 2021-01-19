@@ -4,8 +4,13 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.IdentityUtils;
@@ -25,10 +30,12 @@ import play.mvc.Result;
 @Singleton
 public final class LessonVersionController extends AbstractLessonController {
     private final LessonService lessonService;
+    private final ProfileService profileService;
 
     @Inject
-    public LessonVersionController(LessonService lessonService) {
+    public LessonVersionController(LessonService lessonService, ProfileService profileService) {
         this.lessonService = lessonService;
+        this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
@@ -40,11 +47,15 @@ public final class LessonVersionController extends AbstractLessonController {
         }
 
         List<GitCommit> versions = lessonService.getVersions(IdentityUtils.getUserJid(), lesson.getJid());
+
+        Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         boolean isClean = !lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && LessonControllerUtils.isAllowedToRestoreVersionHistory(lessonService, lesson);
 
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listVersionsView.render(versions, lesson.getId(), isAllowedToRestoreVersionHistory));
+        template.setContent(listVersionsView.render(versions, lesson.getId(), profilesMap, isAllowedToRestoreVersionHistory));
         template.markBreadcrumbLocation("History", routes.LessonVersionController.listVersionHistory(lesson.getId()));
         template.setPageTitle("Lesson - Versions - History");
 

@@ -6,15 +6,15 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -33,11 +33,13 @@ import play.mvc.Result;
 public final class BundleProblemPartnerController extends AbstractProblemController {
     private final UserSearchService userSearchService;
     private final ProblemService problemService;
+    private final ProfileService profileService;
 
     @Inject
-    public BundleProblemPartnerController(UserSearchService userSearchService, ProblemService problemService) {
+    public BundleProblemPartnerController(UserSearchService userSearchService, ProblemService problemService, ProfileService profileService) {
         this.userSearchService = userSearchService;
         this.problemService = problemService;
+        this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
@@ -84,9 +86,6 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         }
 
         String userJid = usernameToJidMap.get(username);
-
-        JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
         if (problemService.isUserPartnerForProblem(problem.getJid(), userJid)) {
             return showAddPartner(usernameForm.withError("username", "This user is already a partner."), problemForm, bundleForm, problem);
         }
@@ -203,10 +202,12 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
     }
 
     private Result showEditPartner(Form<ProblemPartnerUpsertForm> problemForm, Form<BundlePartnerUpsertForm> bundleForm, Problem problem, ProblemPartner problemPartner) {
+        Profile profile = profileService.getProfile(problemPartner.getUserJid());
+
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(problemForm, bundleForm, problem, problemPartner));
 
-        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getUserJid()));
+        template.setSecondaryTitle("Update partner: " + profile.getUsername());
         template.markBreadcrumbLocation("Update partner", routes.BundleProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
         template.setPageTitle("Problem - Update partner");
 

@@ -4,8 +4,13 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.IdentityUtils;
@@ -25,10 +30,12 @@ import play.mvc.Result;
 @Singleton
 public final class ProblemVersionController extends AbstractProblemController {
     private final ProblemService problemService;
+    private final ProfileService profileService;
 
     @Inject
-    public ProblemVersionController(ProblemService problemService) {
+    public ProblemVersionController(ProblemService problemService, ProfileService profileService) {
         this.problemService = problemService;
+        this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
@@ -40,11 +47,15 @@ public final class ProblemVersionController extends AbstractProblemController {
         }
 
         List<GitCommit> versions = problemService.getVersions(IdentityUtils.getUserJid(), problem.getJid());
+
+        Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem);
 
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listVersionsView.render(versions, problem.getId(), isAllowedToRestoreVersionHistory));
+        template.setContent(listVersionsView.render(versions, problem.getId(), profilesMap, isAllowedToRestoreVersionHistory));
         template.markBreadcrumbLocation("History", routes.ProblemVersionController.listVersionHistory(problem.getId()));
         template.setPageTitle("Problem - Versions - History");
 

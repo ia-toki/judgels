@@ -3,8 +3,13 @@ package org.iatoki.judgels.sandalphon.lesson;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
@@ -29,10 +34,12 @@ public final class LessonController extends AbstractLessonController {
     private static final long PAGE_SIZE = 20;
 
     private final LessonService lessonService;
+    private final ProfileService profileService;
 
     @Inject
-    public LessonController(LessonService lessonService) {
+    public LessonController(LessonService lessonService, ProfileService profileService) {
         this.lessonService = lessonService;
+        this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
@@ -46,8 +53,11 @@ public final class LessonController extends AbstractLessonController {
         boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
         Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), isAdmin);
 
+        Set<String> userJids = pageOfLessons.getPage().stream().map(Lesson::getAuthorJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listLessonsView.render(pageOfLessons, sortBy, orderBy, filterString, isWriter));
+        template.setContent(listLessonsView.render(pageOfLessons, profilesMap, sortBy, orderBy, filterString, isWriter));
         template.setMainTitle("Lessons");
         if (isWriter) {
             template.addMainButton("Create", routes.LessonController.createLesson());
@@ -119,8 +129,10 @@ public final class LessonController extends AbstractLessonController {
     public Result viewLesson(long lessonId) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
+        Profile profile = profileService.getProfile(lesson.getAuthorJid());
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(viewLessonView.render(lesson));
+        template.setContent(viewLessonView.render(lesson, profile));
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
         template.addMainButton("Enter lesson", routes.LessonController.enterLesson(lesson.getId()));
         template.markBreadcrumbLocation("View lesson", routes.LessonController.viewLesson(lesson.getId()));

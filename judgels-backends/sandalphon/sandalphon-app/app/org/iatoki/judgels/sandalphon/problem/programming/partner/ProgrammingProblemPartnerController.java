@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.sandalphon.api.problem.Problem;
@@ -13,9 +14,7 @@ import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -87,9 +86,6 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         }
 
         String userJid = usernameToJidMap.get(username);
-
-        JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-
         if (problemService.isUserPartnerForProblem(problem.getJid(), userJid)) {
             return showAddPartner(usernameForm.withError("username", "This user is already a partner."), problemForm, programmingForm, problem);
         }
@@ -207,10 +203,12 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
     }
 
     private Result showEditPartner(Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem, ProblemPartner problemPartner) {
+        Profile profile = profileService.getProfile(problemPartner.getUserJid());
+
         HtmlTemplate template = getBaseHtmlTemplate();
         template.setContent(editPartnerView.render(problemForm, programmingForm, problem, problemPartner));
 
-        template.setSecondaryTitle("Update partner: " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getUserJid()));
+        template.setSecondaryTitle("Update partner: " + profile.getUsername());
         template.markBreadcrumbLocation("Update partner", routes.ProgrammingProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
         template.setPageTitle("Problem - Update partner");
 

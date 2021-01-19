@@ -1,13 +1,13 @@
+@import judgels.jophiel.api.profile.Profile
 @import judgels.persistence.api.Page
 @import judgels.sandalphon.api.submission.programming.Submission
-@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithSelectionFormView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.problem.programming.submission.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(pageOfProgrammingSubmissions: Page[Submission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
+@(pageOfProgrammingSubmissions: Page[Submission], gradingLanguageToNameMap: Map[String, String], problemId: Long, profilesMap: Map[String, Profile], pageIndex: Long, orderBy: String, orderDir: String)
 
 <script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
 
@@ -41,13 +41,11 @@
         "createdAt" -> "Time"
     )
     <tbody>
-
-    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(pageOfProgrammingSubmissions.getPage.map(s => s.getUserJid).toSeq)) { displayNamesMap =>
         @for(submission <- pageOfProgrammingSubmissions.getPage) {
             <tr>
                 <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
                 <td>@submission.getId</td>
-                <td>@displayNamesMap.get(submission.getUserJid)</td>
+                <td>@profilesMap.get(submission.getUserJid).getUsername</td>
                 <td>@gradingLanguageToNameMap.get(submission.getGradingLanguage)</td>
                 <td>@submission.getLatestGrading.get.getVerdict.getName</td>
                 <td>@submission.getLatestGrading.get.getScore</td>
@@ -58,7 +56,6 @@
                 </td>
             </tr>
         }
-    }
     </tbody>
 }
 

@@ -4,15 +4,19 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.fs.FileSystem;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
@@ -33,12 +37,14 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
     private final FileSystem bundleSubmissionFs;
     private final BundleSubmissionService bundleSubmissionService;
     private final ProblemService problemService;
+    private final ProfileService profileService;
 
     @Inject
-    public BundleProblemSubmissionController(@SubmissionFs FileSystem bundleSubmissionFs, BundleSubmissionService bundleSubmissionService, ProblemService problemService) {
+    public BundleProblemSubmissionController(@SubmissionFs FileSystem bundleSubmissionFs, BundleSubmissionService bundleSubmissionService, ProblemService problemService, ProfileService profileService) {
         this.bundleSubmissionFs = bundleSubmissionFs;
         this.bundleSubmissionService = bundleSubmissionService;
         this.problemService = problemService;
+        this.profileService = profileService;
     }
 
     @Transactional
@@ -74,8 +80,11 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
 
         Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
 
+        Set<String> userJids = pageOfBundleSubmissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(listSubmissionsView.render(pageOfBundleSubmissions, problemId, pageIndex, orderBy, orderDir));
+        template.setContent(listSubmissionsView.render(pageOfBundleSubmissions, problemId, profilesMap, pageIndex, orderBy, orderDir));
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
@@ -98,8 +107,10 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
             throw new RuntimeException(e);
         }
 
+        Profile profile = profileService.getProfile(bundleSubmission.getAuthorJid());
+
         HtmlTemplate template = getBaseHtmlTemplate();
-        template.setContent(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), null, problem.getSlug(), null));
+        template.setContent(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, profile, null, problem.getSlug(), null));
 
         template.markBreadcrumbLocation("View submission", org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
         template.setPageTitle("Problem - View submission");
