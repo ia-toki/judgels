@@ -77,7 +77,7 @@ public class ServiceUtils {
         int width = Math.max(650, charWidth * longestText + 2 * margin);
         int height = charHeight * textList.length + 2 * margin;
 
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = img.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setFont(font);
@@ -95,7 +95,7 @@ public class ServiceUtils {
         response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
         response.header(LAST_MODIFIED, lastModifiedStream);
 
-        return buildImageResponse(response, img, "png");
+        return buildImageResponse(response, img, "jpg");
     }
 
     public static Response buildImageResponse(String imageUrl, Optional<String> ifModifiedSince) {
