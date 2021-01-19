@@ -1,7 +1,7 @@
 FROM openjdk:8u181-jre-alpine3.8
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels
-RUN apk add --no-cache bash procps
+RUN apk add --no-cache bash procps ttf-dejavu
 
 USER judgels
 
