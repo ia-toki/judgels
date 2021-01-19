@@ -6,7 +6,14 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './GcjScoreboardTable.css';
 
-export function GcjScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap }) {
+export function GcjScoreboardTable({
+  userJid,
+  contestJid,
+  scoreboard: { state, content },
+  profilesMap,
+  onOpenSubmissionImage,
+  canViewSubmissions,
+}) {
   const renderData = () => {
     let rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
@@ -25,7 +32,14 @@ export function GcjScoreboardTable({ userJid, scoreboard: { state, content }, pr
       </td>,
     ];
     const problemCells = entry.attemptsList.map((item, i) =>
-      renderProblemCell(i, entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
+      renderProblemCell(
+        i,
+        entry.attemptsList[i],
+        entry.penaltyList[i],
+        entry.problemStateList[i],
+        entry.contestantJid,
+        state.problemJids[i]
+      )
     );
     cells = [...cells, ...problemCells];
     return (
@@ -35,18 +49,27 @@ export function GcjScoreboardTable({ userJid, scoreboard: { state, content }, pr
     );
   };
 
-  const renderProblemCell = (idx, attempts, penalty, state) => {
+  const renderProblemCell = (idx, attempts, penalty, state, contestantJid, problemJid) => {
     let className = {};
+    let attempted = true;
     if (state === GcjScoreboardProblemState.Accepted) {
       className = 'accepted';
     } else if (state === GcjScoreboardProblemState.NotAccepted && attempts > 0) {
       className = 'not-accepted';
     } else if (state === GcjScoreboardProblemState.Frozen) {
       className = 'frozen';
+    } else {
+      attempted = false;
     }
 
+    const clickable = canViewSubmissions && attempted;
+
     return (
-      <td key={idx} className={classNames(className)}>
+      <td
+        key={idx}
+        className={classNames(className, clickable ? 'clickable' : {})}
+        onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
+      >
         <strong>{renderAttempts(attempts, state)}</strong>
         <br />
         <small>{renderPenalty(penalty, state)}</small>

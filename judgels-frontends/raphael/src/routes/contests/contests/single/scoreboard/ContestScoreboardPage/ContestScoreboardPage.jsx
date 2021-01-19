@@ -270,7 +270,14 @@ export class ContestScoreboardPage extends Component {
       );
     } else if (this.props.contest.style === ContestStyle.GCJ) {
       return (
-        <GcjScoreboardTable userJid={this.props.userJid} scoreboard={scoreboard.scoreboard} profilesMap={profilesMap} />
+        <GcjScoreboardTable
+          userJid={this.props.userJid}
+          contestJid={this.props.contest.jid}
+          onOpenSubmissionImage={this.onOpenSubmissionImage}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          canViewSubmissions={canViewSubmissions}
+        />
       );
     } else {
       return <Fragment />;
