@@ -23,7 +23,6 @@ import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Http;
-import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.Results;
 import play.twirl.api.Html;
@@ -109,7 +108,7 @@ public abstract class AbstractJudgelsController extends Controller {
         if (template.isSingleColumn()) {
             content.appendLayout(c -> singleColumnLayout.render(c));
         } else {
-            content.appendLayout(c -> twoColumnLayout.render(template.getSidebarMenus(), template.getUpperSidebarWidgets(), template.getLowerSidebarWidgets(), isSidebarOnTheLeft(), isSidebarVisible(), c));
+            content.appendLayout(c -> twoColumnLayout.render(template.getSidebarMenus(), template.getUpperSidebarWidgets(), template.getLowerSidebarWidgets(), c));
         }
 
         content.appendLayout(c -> breadcrumbsLayout.render(template.getBreadcrumbLinks(), c));
@@ -118,13 +117,5 @@ public abstract class AbstractJudgelsController extends Controller {
         content.appendLayout(c -> scriptsLayout.render(template.getAdditionalScripts(), c));
 
         return lazyOk(content);
-    }
-
-    private boolean isSidebarOnTheLeft() {
-        return !Context.current().args.containsKey("sidebar.isAfter");
-    }
-
-    private boolean isSidebarVisible() {
-        return request().cookie("sidebar") == null || request().cookie("sidebar").value().equals("true");
     }
 }
