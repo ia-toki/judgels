@@ -6,27 +6,36 @@ import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import play.db.jpa.Transactional;
+import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemController extends AbstractBundleProblemController {
+    private final ActorChecker actorChecker;
     private final BundleProblemService bundleProblemService;
     private final ProblemService problemService;
 
     @Inject
-    public BundleProblemController(BundleProblemService bundleProblemService, ProblemService problemService) {
+    public BundleProblemController(
+            ActorChecker actorChecker,
+            BundleProblemService bundleProblemService,
+            ProblemService problemService) {
+
+        this.actorChecker = actorChecker;
         this.bundleProblemService = bundleProblemService;
         this.problemService = problemService;
     }
 
     @Transactional
-    public Result createBundleProblem() {
+    public Result createBundleProblem(Http.Request req) {
+        String actorJid = actorChecker.check(req);
+
         if (!ProblemControllerUtils.wasProblemJustCreated()) {
             return badRequest();
         }
@@ -37,7 +46,7 @@ public final class BundleProblemController extends AbstractBundleProblemControll
 
         Problem problem;
         try {
-            problem = problemService.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+            problem = problemService.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode);
             ProblemStatement statement = new ProblemStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(languageCode))
                     .text(BundleProblemStatementUtils.getDefaultStatement(languageCode))
@@ -49,7 +58,7 @@ public final class BundleProblemController extends AbstractBundleProblemControll
             return internalServerError();
         }
 
-        problemService.initRepository(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.initRepository(actorJid, problem.getJid());
 
         ProblemControllerUtils.setCurrentStatementLanguage(ProblemControllerUtils.getJustCreatedProblemInitLanguageCode());
         ProblemControllerUtils.removeJustCreatedProblem();

@@ -13,7 +13,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -27,16 +27,24 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemPartnerController extends AbstractProblemController {
+    private final ActorChecker actorChecker;
     private final UserSearchService userSearchService;
     private final ProblemService problemService;
     private final ProfileService profileService;
 
     @Inject
-    public BundleProblemPartnerController(UserSearchService userSearchService, ProblemService problemService, ProfileService profileService) {
+    public BundleProblemPartnerController(
+            ActorChecker actorChecker,
+            UserSearchService userSearchService,
+            ProblemService problemService,
+            ProfileService profileService) {
+
+        this.actorChecker = actorChecker;
         this.userSearchService = userSearchService;
         this.problemService = problemService;
         this.profileService = profileService;
@@ -44,7 +52,9 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result addPartner(long problemId) {
+    public Result addPartner(Http.Request req, long problemId) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -60,16 +70,18 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
     @Transactional
     @RequireCSRFCheck
-    public Result postAddPartner(long problemId) {
+    public Result postAddPartner(Http.Request req, long problemId) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
             return notFound();
         }
 
-        Form<ProblemPartnerUsernameForm> usernameForm = formFactory.form(ProblemPartnerUsernameForm.class).bindFromRequest();
-        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest();
-        Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).bindFromRequest();
+        Form<ProblemPartnerUsernameForm> usernameForm = formFactory.form(ProblemPartnerUsernameForm.class).bindFromRequest(req);
+        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest(req);
+        Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).bindFromRequest(req);
 
         if (formHasErrors(usernameForm) || formHasErrors(problemForm) || formHasErrors(bundleForm)) {
             return showAddPartner(usernameForm, problemForm, bundleForm, problem);
@@ -106,14 +118,16 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
                 .isAllowedToManageItems(bundleData.isAllowedToManageItems)
                 .build();
 
-        problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, bundleConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, bundleConfig);
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.viewPartners(problem.getId()));
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editPartner(long problemId, long partnerId) {
+    public Result editPartner(Http.Request req, long problemId, long partnerId) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -149,7 +163,9 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditPartner(long problemId, long partnerId) {
+    public Result postEditPartner(Http.Request req, long problemId, long partnerId) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -185,7 +201,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
                 .isAllowedToManageItems(bundleData.isAllowedToManageItems)
                 .build();
 
-        problemService.updateProblemPartner(partnerId, problemConfig, bundleConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        problemService.updateProblemPartner(partnerId, problemConfig, bundleConfig);
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
     }

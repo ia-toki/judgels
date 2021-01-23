@@ -13,7 +13,7 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.html.createLessonView;
@@ -26,32 +26,36 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
 public final class LessonController extends AbstractLessonController {
-
     private static final long PAGE_SIZE = 20;
 
+    private final ActorChecker actorChecker;
     private final LessonService lessonService;
     private final ProfileService profileService;
 
     @Inject
-    public LessonController(LessonService lessonService, ProfileService profileService) {
+    public LessonController(ActorChecker actorChecker, LessonService lessonService, ProfileService profileService) {
+        this.actorChecker = actorChecker;
         this.lessonService = lessonService;
         this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
-    public Result index() {
-        return listLessons(0, "updatedAt", "desc", "");
+    public Result index(Http.Request req) {
+        return listLessons(req, 0, "updatedAt", "desc", "");
     }
 
     @Transactional(readOnly = true)
-    public Result listLessons(long pageIndex, String sortBy, String orderBy, String filterString) {
+    public Result listLessons(Http.Request req, long pageIndex, String sortBy, String orderBy, String filterString) {
+        String actorJid = actorChecker.check(req);
+
         boolean isAdmin = SandalphonControllerUtils.getInstance().isAdmin();
         boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
-        Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), isAdmin);
+        Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
 
         Set<String> userJids = pageOfLessons.getPage().stream().map(Lesson::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -70,7 +74,9 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result createLesson() {
+    public Result createLesson(Http.Request req) {
+        actorChecker.check(req);
+
         Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class);
 
         return showCreateLesson(lessonCreateForm);
@@ -78,8 +84,10 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCreateLesson() {
-        Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class).bindFromRequest();
+    public Result postCreateLesson(Http.Request req) {
+        String actorJid = actorChecker.check(req);
+
+        Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class).bindFromRequest(req);
 
         if (formHasErrors(lessonCreateForm)) {
             return showCreateLesson(lessonCreateForm);
@@ -93,7 +101,7 @@ public final class LessonController extends AbstractLessonController {
 
         Lesson lesson;
         try {
-            lesson = lessonService.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+            lesson = lessonService.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode);
             lessonService.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode))
                     .text(LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode))
@@ -102,7 +110,7 @@ public final class LessonController extends AbstractLessonController {
             throw new RuntimeException(e);
         }
 
-        lessonService.initRepository(IdentityUtils.getUserJid(), lesson.getJid());
+        lessonService.initRepository(actorJid, lesson.getJid());
 
         LessonControllerUtils.setCurrentStatementLanguage(lessonCreateData.initLanguageCode);
 
@@ -126,7 +134,9 @@ public final class LessonController extends AbstractLessonController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewLesson(long lessonId) {
+    public Result viewLesson(Http.Request req, long lessonId) {
+        actorChecker.check(req);
+
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         Profile profile = profileService.getProfile(lesson.getAuthorJid());
@@ -143,7 +153,9 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editLesson(long lessonId) {
+    public Result editLesson(Http.Request req, long lessonId) {
+        actorChecker.check(req);
+
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
@@ -161,14 +173,16 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditLesson(long lessonId) {
+    public Result postEditLesson(Http.Request req, long lessonId) {
+        actorChecker.check(req);
+
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
             return notFound();
         }
 
-        Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).bindFromRequest();
+        Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).bindFromRequest(req);
 
         if (formHasErrors(lessonEditForm)) {
             return showEditLesson(lessonEditForm, lesson);
@@ -179,17 +193,17 @@ public final class LessonController extends AbstractLessonController {
         }
 
         LessonEditForm lessonEditData = lessonEditForm.get();
-        lessonService.updateLesson(lesson.getJid(), lessonEditData.slug, lessonEditData.additionalNote, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        lessonService.updateLesson(lesson.getJid(), lessonEditData.slug, lessonEditData.additionalNote);
 
         return redirect(routes.LessonController.viewLesson(lesson.getId()));
     }
 
     @RequireCSRFCheck
-    public Result switchLanguage(long lessonId) {
-        String languageCode = formFactory.form().bindFromRequest().get("langCode");
+    public Result switchLanguage(Http.Request req, long lessonId) {
+        String languageCode = formFactory.form().bindFromRequest(req).get("langCode");
         LessonControllerUtils.setCurrentStatementLanguage(languageCode);
 
-        return redirect(request().getHeaders().get("Referer").orElse(""));
+        return redirect(req.getHeaders().get("Referer").orElse(""));
     }
 
     private Result showCreateLesson(Form<LessonCreateForm> lessonCreateForm) {

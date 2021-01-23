@@ -12,7 +12,7 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
@@ -35,19 +35,26 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemGradingController extends AbstractProgrammingProblemController {
-
+    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
-    public ProgrammingProblemGradingController(ProblemService problemService, ProgrammingProblemService programmingProblemService) {
+    public ProgrammingProblemGradingController(
+            ActorChecker actorChecker,
+            ProblemService problemService,
+            ProgrammingProblemService programmingProblemService) {
+
+        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editGradingEngine(long problemId) {
+    public Result editGradingEngine(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
@@ -56,7 +63,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         GradingEngineEditForm gradingEngineEditData = new GradingEngineEditForm();
         try  {
-            gradingEngineEditData.gradingEngineName = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            gradingEngineEditData.gradingEngineName = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             gradingEngineEditData.gradingEngineName = GradingEngineRegistry.getInstance().getDefault();
         }
@@ -68,25 +75,27 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditGradingEngine(long problemId) {
+    public Result postEditGradingEngine(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
         }
 
-        Form<GradingEngineEditForm> gradingEngineEditForm = formFactory.form(GradingEngineEditForm.class).bindFromRequest(request());
+        Form<GradingEngineEditForm> gradingEngineEditForm = formFactory.form(GradingEngineEditForm.class).bindFromRequest(req);
 
         if (formHasErrors(gradingEngineEditForm)) {
             return showEditGradingEngine(gradingEngineEditForm, problem);
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         String gradingEngine = gradingEngineEditForm.get().gradingEngineName;
         String originalGradingEngine;
         try {
-            originalGradingEngine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            originalGradingEngine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             originalGradingEngine = GradingEngineRegistry.getInstance().getDefault();
         }
@@ -94,10 +103,10 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         try {
             if (!gradingEngine.equals(originalGradingEngine)) {
                 GradingConfig config = GradingEngineRegistry.getInstance().get(gradingEngine).createDefaultConfig();
-                programmingProblemService.updateGradingConfig(IdentityUtils.getUserJid(), problem.getJid(), config);
+                programmingProblemService.updateGradingConfig(actorJid, problem.getJid(), config);
             }
 
-            programmingProblemService.updateGradingEngine(IdentityUtils.getUserJid(), problem.getJid(), gradingEngine);
+            programmingProblemService.updateGradingEngine(actorJid, problem.getJid(), gradingEngine);
         } catch (IOException e) {
             return showEditGradingEngine(gradingEngineEditForm.withGlobalError("Error updating grading engine."), problem);
         }
@@ -107,7 +116,9 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editGradingConfig(long problemId) {
+    public Result editGradingConfig(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
@@ -116,18 +127,18 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         String engine;
         try {
-            engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            engine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
         GradingConfig config;
         try {
-            config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
+            config = programmingProblemService.getGradingConfig(actorJid, problem.getJid());
         } catch (IOException e) {
             config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
-        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
-        List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(IdentityUtils.getUserJid(), problem.getJid());
+        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
+        List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
         Form<?> gradingEngineConfForm = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).createFormFromConfig(formFactory, config);
 
@@ -136,7 +147,9 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditGradingConfig(long problemId) {
+    public Result postEditGradingConfig(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
@@ -144,27 +157,27 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         String engine;
         try {
-            engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            engine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
-        Form<?> gradingEngineConfForm = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).createEmptyForm(formFactory).bindFromRequest(request());
+        Form<?> gradingEngineConfForm = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).createEmptyForm(formFactory).bindFromRequest(req);
 
         if (formHasErrors(gradingEngineConfForm)) {
-            List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
-            List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(IdentityUtils.getUserJid(), problem.getJid());
+            List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
+            List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
             return showEditGradingConfig(gradingEngineConfForm, problem, engine, testDataFiles, helperFiles);
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
             GradingConfig config = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).createConfigFromForm(gradingEngineConfForm);
-            programmingProblemService.updateGradingConfig(IdentityUtils.getUserJid(), problem.getJid(), config);
+            programmingProblemService.updateGradingConfig(actorJid, problem.getJid(), config);
         } catch (IOException e) {
-            List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
-            List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(IdentityUtils.getUserJid(), problem.getJid());
+            List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
+            List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
             return showEditGradingConfig(gradingEngineConfForm.withGlobalError("Error updating grading config."), problem, engine, testDataFiles, helperFiles);
         }
@@ -173,18 +186,20 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
     }
 
     @Transactional
-    public Result editGradingConfigByTokilibFormat(long problemId) {
+    public Result editGradingConfigByTokilibFormat(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         String engine;
         try {
-            engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            engine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
@@ -195,17 +210,17 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
             return forbidden();
         }
 
-        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
+        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
         GradingConfig config;
         try {
-            config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
+            config = programmingProblemService.getGradingConfig(actorJid, problem.getJid());
         } catch (IOException e) {
             config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
 
         try {
             GradingConfig newConfig = ((ConfigurableWithTokilibFormat) adapter).updateConfigWithTokilibFormat(config, testDataFiles);
-            programmingProblemService.updateGradingConfig(IdentityUtils.getUserJid(), problem.getJid(), newConfig);
+            programmingProblemService.updateGradingConfig(actorJid, problem.getJid(), newConfig);
         } catch (IOException e) {
             throw new IllegalStateException("Can't update grading config using tokilib format", e);
         }
@@ -214,22 +229,24 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
     }
 
     @Transactional
-    public Result editGradingConfigByAutoPopulation(long problemId) {
+    public Result editGradingConfigByAutoPopulation(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         String engine;
         try {
-            engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            engine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
-        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
+        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
         GradingEngineAdapter adapter = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine);
 
         if (!(adapter instanceof ConfigurableWithAutoPopulation)) {
@@ -238,14 +255,14 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         GradingConfig config;
         try {
-            config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
+            config = programmingProblemService.getGradingConfig(actorJid, problem.getJid());
         } catch (IOException e) {
             config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
         GradingConfig newConfig = ((ConfigurableWithAutoPopulation) adapter).updateConfigWithAutoPopulation(config, testDataFiles);
 
         try {
-            programmingProblemService.updateGradingConfig(IdentityUtils.getUserJid(), problem.getJid(), newConfig);
+            programmingProblemService.updateGradingConfig(actorJid, problem.getJid(), newConfig);
         } catch (IOException e) {
             throw new IllegalStateException("Can't update grading config using auto population", e);
         }
@@ -255,7 +272,9 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listGradingTestDataFiles(long problemId) {
+    public Result listGradingTestDataFiles(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
@@ -263,14 +282,16 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         }
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
-        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
+        List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
 
         return showListGradingTestDataFiles(uploadFileForm, problem, testDataFiles);
     }
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadGradingTestDataFiles(long problemId) {
+    public Result postUploadGradingTestDataFiles(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
@@ -282,14 +303,14 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         file = body.getFile("file");
         if (file != null) {
-            problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+            problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File testDataFile = file.getFile();
             try {
-                programmingProblemService.uploadGradingTestDataFile(IdentityUtils.getUserJid(), problem.getJid(), testDataFile, file.getFilename());
+                programmingProblemService.uploadGradingTestDataFile(actorJid, problem.getJid(), testDataFile, file.getFilename());
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
+                List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
 
                 return showListGradingTestDataFiles(form.withGlobalError("Error uploading test data files."), problem, testDataFiles);
             }
@@ -299,14 +320,14 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         file = body.getFile("fileZipped");
         if (file != null) {
-            problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+            problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File testDataFile = file.getFile();
             try {
-                programmingProblemService.uploadGradingTestDataFileZipped(IdentityUtils.getUserJid(), problem.getJid(), testDataFile);
+                programmingProblemService.uploadGradingTestDataFileZipped(actorJid, problem.getJid(), testDataFile);
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
+                List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
 
                 return showListGradingTestDataFiles(form.withGlobalError("Error uploading test data files."), problem, testDataFiles);
             }
@@ -319,7 +340,9 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result listGradingHelperFiles(long problemId) {
+    public Result listGradingHelperFiles(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
@@ -327,33 +350,35 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         }
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
-        List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(IdentityUtils.getUserJid(), problem.getJid());
+        List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
         return showListGradingHelperFiles(uploadFileForm, problem, helperFiles);
     }
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadGradingHelperFiles(long problemId) {
+    public Result postUploadGradingHelperFiles(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
         }
 
-        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+        Http.MultipartFormData<File> body = req.body().asMultipartFormData();
         Http.MultipartFormData.FilePart<File> file;
 
         file = body.getFile("file");
         if (file != null) {
-            problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+            problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File helperFile = file.getFile();
             try {
-                programmingProblemService.uploadGradingHelperFile(IdentityUtils.getUserJid(), problem.getJid(), helperFile, file.getFilename());
+                programmingProblemService.uploadGradingHelperFile(actorJid, problem.getJid(), helperFile, file.getFilename());
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(IdentityUtils.getUserJid(), problem.getJid());
+                List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
                 return showListGradingHelperFiles(form.withGlobalError("Error uploading helper files."), problem, helperFiles);
             }
@@ -363,14 +388,14 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         file = body.getFile("fileZipped");
         if (file != null) {
-            problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+            problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File helperFile = file.getFile();
             try {
-                programmingProblemService.uploadGradingHelperFileZipped(IdentityUtils.getUserJid(), problem.getJid(), helperFile);
+                programmingProblemService.uploadGradingHelperFileZipped(actorJid, problem.getJid(), helperFile);
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(IdentityUtils.getUserJid(), problem.getJid());
+                List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
                 return showListGradingHelperFiles(form.withGlobalError("Error uploading helper files."), problem, helperFiles);
             }
@@ -383,7 +408,9 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editLanguageRestriction(long problemId) {
+    public Result editLanguageRestriction(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
@@ -392,7 +419,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         LanguageRestriction languageRestriction;
         try {
-            languageRestriction = programmingProblemService.getLanguageRestriction(IdentityUtils.getUserJid(), problem.getJid());
+            languageRestriction = programmingProblemService.getLanguageRestriction(actorJid, problem.getJid());
         } catch (IOException e) {
             languageRestriction = LanguageRestriction.noRestriction();
         }
@@ -408,26 +435,28 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditLanguageRestriction(long problemId) {
+    public Result postEditLanguageRestriction(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
             return notFound();
         }
 
-        Form<LanguageRestrictionEditForm> languageRestrictionEditForm = formFactory.form(LanguageRestrictionEditForm.class).bindFromRequest(request());
+        Form<LanguageRestrictionEditForm> languageRestrictionEditForm = formFactory.form(LanguageRestrictionEditForm.class).bindFromRequest(req);
 
         if (formHasErrors(languageRestrictionEditForm)) {
             return showEditLanguageRestriction(languageRestrictionEditForm, problem);
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         LanguageRestrictionEditForm data = languageRestrictionEditForm.get();
         LanguageRestriction languageRestriction = LanguageRestrictionAdapter.createLanguageRestrictionFromForm(data.allowedLanguageNames, data.isAllowedAll);
 
         try {
-            programmingProblemService.updateLanguageRestriction(IdentityUtils.getUserJid(), problem.getJid(), languageRestriction);
+            programmingProblemService.updateLanguageRestriction(actorJid, problem.getJid(), languageRestriction);
         } catch (IOException e) {
             return showEditLanguageRestriction(languageRestrictionEditForm.withGlobalError("Error updating language restriction.").withGlobalError("Error updating language restriction"), problem);
         }

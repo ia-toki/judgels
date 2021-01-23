@@ -6,36 +6,42 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.jophiel.controllers.Secured;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import play.db.jpa.Transactional;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 
 @Singleton
 @Security.Authenticated(Secured.class)
 public final class InternalLessonStatementAPIController extends AbstractJudgelsAPIController {
-
+    private final ActorChecker actorChecker;
     private final LessonService lessonService;
 
     @Inject
-    public InternalLessonStatementAPIController(LessonService lessonService) {
+    public InternalLessonStatementAPIController(ActorChecker actorChecker, LessonService lessonService) {
+        this.actorChecker = actorChecker;
         this.lessonService = lessonService;
     }
 
     @Transactional(readOnly = true)
-    public Result renderMediaById(long lessonId, String mediaFilename) {
+    public Result renderMediaById(Http.Request req, long lessonId, String mediaFilename) {
+        String actorJid = actorChecker.check(req);
+
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-        String mediaUrl = lessonService.getStatementMediaFileURL(IdentityUtils.getUserJid(), lesson.getJid(), mediaFilename);
+        String mediaUrl = lessonService.getStatementMediaFileURL(actorJid, lesson.getJid(), mediaFilename);
 
         return okAsImage(mediaUrl);
     }
 
     @Transactional(readOnly = true)
-    public Result downloadStatementMediaFile(long id, String filename) {
+    public Result downloadStatementMediaFile(Http.Request req, long id, String filename) {
+        String actorJid = actorChecker.check(req);
+
         Lesson lesson = checkFound(lessonService.findLessonById(id));
-        String mediaUrl = lessonService.getStatementMediaFileURL(IdentityUtils.getUserJid(), lesson.getJid(), filename);
+        String mediaUrl = lessonService.getStatementMediaFileURL(actorJid, lesson.getJid(), filename);
 
         return okAsDownload(mediaUrl);
     }

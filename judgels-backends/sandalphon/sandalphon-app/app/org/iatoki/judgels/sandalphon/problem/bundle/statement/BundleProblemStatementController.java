@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -23,23 +23,31 @@ import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemService;
 import org.iatoki.judgels.sandalphon.problem.bundle.statement.html.bundleStatementView;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import play.db.jpa.Transactional;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
 
 @Singleton
 public final class BundleProblemStatementController extends AbstractBundleProblemController {
-
+    private final ActorChecker actorChecker;
     private final BundleItemService bundleItemService;
     private final ProblemService problemService;
 
     @Inject
-    public BundleProblemStatementController(BundleItemService bundleItemService, ProblemService problemService) {
+    public BundleProblemStatementController(
+            ActorChecker actorChecker,
+            BundleItemService bundleItemService,
+            ProblemService problemService) {
+
+        this.actorChecker = actorChecker;
         this.bundleItemService = bundleItemService;
         this.problemService = problemService;
     }
 
     @Transactional(readOnly = true)
-    public Result viewStatement(long problemId) {
+    public Result viewStatement(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
         try {
             ProblemControllerUtils.establishStatementLanguage(problemService, problem);
@@ -53,7 +61,7 @@ public final class BundleProblemStatementController extends AbstractBundleProble
 
         ProblemStatement statement;
         try {
-            statement = problemService.getStatement(IdentityUtils.getUserJid(), problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
+            statement = problemService.getStatement(actorJid, problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
         } catch (IOException e) {
             statement = new ProblemStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
@@ -62,7 +70,7 @@ public final class BundleProblemStatementController extends AbstractBundleProble
         }
 
         boolean isAllowedToSubmitByPartner = ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem);
-        boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
+        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
 
         String reasonNotAllowedToSubmit = null;
 
@@ -74,7 +82,7 @@ public final class BundleProblemStatementController extends AbstractBundleProble
 
         List<BundleItem> bundleItemList;
         try {
-            bundleItemList = bundleItemService.getBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid());
+            bundleItemList = bundleItemService.getBundleItemsInProblemWithClone(problem.getJid(), actorJid);
         } catch (IOException e) {
             return notFound();
         }
@@ -83,11 +91,11 @@ public final class BundleProblemStatementController extends AbstractBundleProble
         for (BundleItem bundleItem : bundleItemList) {
             BundleItemAdapter adapter = BundleItemAdapters.fromItemType(bundleItem.getType());
             try {
-                htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), bundleItem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage())));
+                htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage())));
             } catch (IOException e) {
                 try {
                     ProblemControllerUtils.setCurrentStatementLanguage(ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem));
-                    htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), bundleItem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage())));
+                    htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage())));
                 } catch (IOException e1) {
                     return notFound();
                 }

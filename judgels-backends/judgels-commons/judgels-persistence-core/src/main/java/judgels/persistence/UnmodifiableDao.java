@@ -16,6 +16,7 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     M persist(M model);
     List<M> insertAll(List<M> models);
 
+    M find(long id);
     Optional<M> select(long id);
     Optional<M> selectByFilter(FilterOptions<M> filterOptions);
     Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value);
@@ -47,7 +48,6 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
 
     void setModelMetadataFromDump(M model, UnmodifiableDump dump);
 
-    @Deprecated M findById(long id);
     @Deprecated List<M> getAll();
 
     @Deprecated

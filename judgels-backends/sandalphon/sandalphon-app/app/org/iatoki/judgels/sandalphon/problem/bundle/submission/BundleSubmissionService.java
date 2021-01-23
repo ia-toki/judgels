@@ -27,9 +27,9 @@ public interface BundleSubmissionService {
 
     Page<BundleSubmission> getPageOfBundleSubmissions(long pageIndex, long pageSize, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid);
 
-    String submit(String problemJid, String containerJid, BundleAnswer answer, String userJid, String userIpAddress);
+    String submit(String problemJid, String containerJid, BundleAnswer answer);
 
-    void regrade(String submissionJid, BundleAnswer answer, String userJid, String userIpAddress);
+    void regrade(String submissionJid, BundleAnswer answer);
 
     void afterGrade(String gradingJid, BundleAnswer answer);
 

@@ -13,7 +13,7 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -25,33 +25,42 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
 public final class ProblemVersionController extends AbstractProblemController {
+    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProfileService profileService;
 
     @Inject
-    public ProblemVersionController(ProblemService problemService, ProfileService profileService) {
+    public ProblemVersionController(
+            ActorChecker actorChecker,
+            ProblemService problemService,
+            ProfileService profileService) {
+
+        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
-    public Result listVersionHistory(long problemId) {
+    public Result listVersionHistory(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToViewVersionHistory(problemService, problem)) {
             return notFound();
         }
 
-        List<GitCommit> versions = problemService.getVersions(IdentityUtils.getUserJid(), problem.getJid());
+        List<GitCommit> versions = problemService.getVersions(actorJid, problem.getJid());
 
         Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
-        boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
+        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem);
 
         HtmlTemplate template = getBaseHtmlTemplate();
@@ -63,29 +72,33 @@ public final class ProblemVersionController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result restoreVersionHistory(long problemId, String hash) {
+    public Result restoreVersionHistory(Http.Request req, long problemId, String hash) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
+        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
 
         if (!isClean || !ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem)) {
             return notFound();
         }
 
-        problemService.restore(problem.getJid(), hash, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        problemService.restore(problem.getJid(), hash);
 
         return redirect(routes.ProblemVersionController.listVersionHistory(problem.getId()));
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result viewVersionLocalChanges(long problemId) {
+    public Result viewVersionLocalChanges(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
             return notFound();
         }
 
-        boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
+        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
 
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
 
@@ -94,7 +107,9 @@ public final class ProblemVersionController extends AbstractProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCommitVersionLocalChanges(long problemId) {
+    public Result postCommitVersionLocalChanges(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
@@ -103,21 +118,21 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
         if (formHasErrors(versionCommitForm)) {
-            boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
+            boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
             return showViewVersionLocalChanges(versionCommitForm, problem, isClean);
         }
 
         VersionCommitForm versionCommitData = versionCommitForm.get();
 
-        if (problemService.fetchUserClone(IdentityUtils.getUserJid(), problem.getJid())) {
+        if (problemService.fetchUserClone(actorJid, problem.getJid())) {
             flash("localChangesError", "Your working copy has diverged from the master copy. Please update your working copy.");
-        } else if (!problemService.commitThenMergeUserClone(IdentityUtils.getUserJid(), problem.getJid(), versionCommitData.title, versionCommitData.description, IdentityUtils.getIpAddress())) {
+        } else if (!problemService.commitThenMergeUserClone(actorJid, problem.getJid(), versionCommitData.title, versionCommitData.description)) {
             flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
-        } else if (!problemService.pushUserClone(IdentityUtils.getUserJid(), problem.getJid(), IdentityUtils.getIpAddress())) {
+        } else if (!problemService.pushUserClone(actorJid, problem.getJid())) {
             flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         } else {
             try {
-                problemService.discardUserClone(IdentityUtils.getUserJid(), problem.getJid());
+                problemService.discardUserClone(actorJid, problem.getJid());
             } catch (IOException e) {
                 // do nothing
             }
@@ -127,16 +142,18 @@ public final class ProblemVersionController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result editVersionLocalChanges(long problemId) {
+    public Result editVersionLocalChanges(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
             return notFound();
         }
 
-        problemService.fetchUserClone(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.fetchUserClone(actorJid, problem.getJid());
 
-        if (!problemService.updateUserClone(IdentityUtils.getUserJid(), problem.getJid())) {
+        if (!problemService.updateUserClone(actorJid, problem.getJid())) {
             flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         }
 
@@ -144,7 +161,9 @@ public final class ProblemVersionController extends AbstractProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result discardVersionLocalChanges(long problemId) {
+    public Result discardVersionLocalChanges(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
@@ -152,7 +171,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         }
 
         try {
-            problemService.discardUserClone(IdentityUtils.getUserJid(), problem.getJid());
+            problemService.discardUserClone(actorJid, problem.getJid());
 
             return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
         } catch (IOException e) {

@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -17,22 +17,31 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemController extends AbstractProgrammingProblemController {
+    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
-    public ProgrammingProblemController(ProblemService problemService, ProgrammingProblemService programmingProblemService) {
+    public ProgrammingProblemController(
+            ActorChecker actorChecker,
+            ProblemService problemService,
+            ProgrammingProblemService programmingProblemService) {
+
+        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result createProgrammingProblem() {
+    public Result createProgrammingProblem(Http.Request req) {
+        actorChecker.check(req);
+
         if (!ProblemControllerUtils.wasProblemJustCreated()) {
             return badRequest();
         }
@@ -44,12 +53,14 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCreateProgrammingProblem() {
+    public Result postCreateProgrammingProblem(Http.Request req) {
+        String actorJid = actorChecker.check(req);
+
         if (!ProblemControllerUtils.wasProblemJustCreated()) {
             return badRequest();
         }
 
-        Form<ProgrammingProblemCreateForm> programmingProblemCreateForm = formFactory.form(ProgrammingProblemCreateForm.class).bindFromRequest();
+        Form<ProgrammingProblemCreateForm> programmingProblemCreateForm = formFactory.form(ProgrammingProblemCreateForm.class).bindFromRequest(req);
 
         if (formHasErrors(programmingProblemCreateForm)) {
             return showCreateProgrammingProblem(programmingProblemCreateForm);
@@ -63,7 +74,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
 
         Problem problem;
         try {
-            problem = problemService.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+            problem = problemService.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode);
             ProblemStatement statement = new ProblemStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(languageCode))
                     .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
@@ -74,7 +85,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
             return showCreateProgrammingProblem(programmingProblemCreateForm.withGlobalError("Error creating programming problem."));
         }
 
-        problemService.initRepository(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.initRepository(actorJid, problem.getJid());
 
         ProblemControllerUtils.setCurrentStatementLanguage(ProblemControllerUtils.getJustCreatedProblemInitLanguageCode());
         ProblemControllerUtils.removeJustCreatedProblem();

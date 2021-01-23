@@ -29,7 +29,7 @@ import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.stat.Statistics;
 import play.db.jpa.JPAApi;
 
-public class LegacySessionFactory implements SessionFactory {
+public class PlaySessionFactory implements SessionFactory {
     @Inject
     private JPAApi jpaApi;
 

@@ -20,7 +20,7 @@ import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 @ImplementedBy(ProblemServiceImpl.class)
 public interface ProblemService {
 
-    Problem createProblem(ProblemType type, String slug, String additionalNote, String initialLanguageCode, String userJid, String userIpAddress) throws IOException;
+    Problem createProblem(ProblemType type, String slug, String additionalNote, String initialLanguageCode) throws IOException;
 
     boolean problemExistsByJid(String problemJid);
 
@@ -34,9 +34,9 @@ public interface ProblemService {
 
     boolean isUserPartnerForProblem(String problemJid, String userJid);
 
-    void createProblemPartner(String problemJid, String userJid, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig, String createUserJid, String createUserIpAddress);
+    void createProblemPartner(String problemJid, String userJid, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig);
 
-    void updateProblemPartner(long problemPartnerId, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig, String userJid, String userIpAddress);
+    void updateProblemPartner(long problemPartnerId, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig);
 
     Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, long pageSize, String orderBy, String orderDir);
 
@@ -44,7 +44,7 @@ public interface ProblemService {
 
     ProblemPartner findProblemPartnerByProblemJidAndPartnerJid(String problemJid, String partnerJid);
 
-    void updateProblem(String problemJid, String slug, String additionalNote, String userJid, String userIpAddress);
+    void updateProblem(String problemJid, String slug, String additionalNote);
 
     Page<Problem> getPageOfProblems(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin);
 
@@ -82,15 +82,15 @@ public interface ProblemService {
 
     void createUserCloneIfNotExists(String userJid, String problemJid);
 
-    boolean commitThenMergeUserClone(String userJid, String problemJid, String title, String text, String userIpAddress);
+    boolean commitThenMergeUserClone(String userJid, String problemJid, String title, String text);
 
     boolean updateUserClone(String userJid, String problemJid);
 
-    boolean pushUserClone(String userJid, String problemJid, String userIpAddress);
+    boolean pushUserClone(String userJid, String problemJid);
 
     boolean fetchUserClone(String userJid, String problemJid);
 
     void discardUserClone(String userJid, String problemJid) throws IOException;
 
-    void restore(String problemJid, String hash, String userJid, String userIpAddress);
+    void restore(String problemJid, String hash);
 }

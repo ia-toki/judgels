@@ -12,7 +12,7 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -24,22 +24,30 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAd
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.resource.html.katexView;
 import play.db.jpa.Transactional;
+import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemStatementController extends AbstractProgrammingProblemController {
-
+    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
-    public ProgrammingProblemStatementController(ProblemService problemService, ProgrammingProblemService programmingProblemService) {
+    public ProgrammingProblemStatementController(
+            ActorChecker actorChecker,
+            ProblemService problemService,
+            ProgrammingProblemService programmingProblemService) {
+
+        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
 
     @Transactional(readOnly = true)
-    public Result viewStatement(long problemId) {
+    public Result viewStatement(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
         try {
             ProblemControllerUtils.establishStatementLanguage(problemService, problem);
@@ -53,7 +61,7 @@ public final class ProgrammingProblemStatementController extends AbstractProgram
 
         ProblemStatement statement;
         try {
-            statement = problemService.getStatement(IdentityUtils.getUserJid(), problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
+            statement = problemService.getStatement(actorJid, problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
         } catch (IOException e) {
             statement = new ProblemStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
@@ -63,27 +71,27 @@ public final class ProgrammingProblemStatementController extends AbstractProgram
 
         String engine;
         try {
-            engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            engine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
 
         GradingConfig config;
         try {
-            config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
+            config = programmingProblemService.getGradingConfig(actorJid, problem.getJid());
         } catch (IOException e) {
             config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
         LanguageRestriction languageRestriction;
         try {
-            languageRestriction = programmingProblemService.getLanguageRestriction(IdentityUtils.getUserJid(), problem.getJid());
+            languageRestriction = programmingProblemService.getLanguageRestriction(actorJid, problem.getJid());
         } catch (IOException e) {
             languageRestriction = LanguageRestriction.noRestriction();
         }
         Set<String> allowedLanguageNames = LanguageRestrictionAdapter.getFinalAllowedLanguageNames(ImmutableList.of(languageRestriction));
 
         boolean isAllowedToSubmitByPartner = ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem);
-        boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
+        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
 
         String reasonNotAllowedToSubmit = null;
 

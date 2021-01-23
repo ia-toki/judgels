@@ -87,20 +87,6 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     }
 
     @Override
-    public void persist(M model, int childIndex, String actor, String ipAddress) {
-        model.jid = JidGenerator.newChildJid(getEntityClass(), childIndex);
-        model.createdBy = actor;
-        model.createdAt = clock.instant();
-        model.createdIp = ipAddress;
-
-        model.updatedBy = model.createdBy;
-        model.updatedAt = model.createdAt;
-        model.updatedIp = model.createdIp;
-
-        persist(model);
-    }
-
-    @Override
     public void persist(M model, String user, Instant time, String ipAddress) {
         model.jid = JidGenerator.newJid(getEntityClass());
         model.createdBy = user;

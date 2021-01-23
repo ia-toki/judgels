@@ -21,12 +21,4 @@ public final class IdentityUtils {
 
         return username;
     }
-
-    public static String getUserRealName() {
-        return Http.Context.current().session().get("name");
-    }
-
-    public static String getIpAddress() {
-        return Http.Context.current().request().remoteAddress();
-    }
 }

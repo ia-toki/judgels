@@ -71,6 +71,11 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public M find(long id) {
+        return select(id).orElse(null);
+    }
+
+    @Override
     public Optional<M> select(long id) {
         return Optional.ofNullable(get(id));
     }
@@ -200,11 +205,6 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
                     String.format("Unknown mode: %s", dump.getMode())
             );
         }
-    }
-
-    @Override
-    public M findById(long id) {
-        return select(id).orElse(null);
     }
 
     @Override

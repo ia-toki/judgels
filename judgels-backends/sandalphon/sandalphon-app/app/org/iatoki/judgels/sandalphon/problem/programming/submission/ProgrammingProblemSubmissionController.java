@@ -31,7 +31,7 @@ import judgels.sandalphon.submission.programming.SubmissionStore;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -46,7 +46,7 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemSubmissionController extends AbstractProgrammingProblemController {
-
+    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
     private final ProfileService profileService;
@@ -57,6 +57,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
 
     @Inject
     public ProgrammingProblemSubmissionController(
+            ActorChecker actorChecker,
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService,
             ProfileService profileService,
@@ -64,6 +65,8 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionClient submissionClient,
             SubmissionRegrader submissionRegrader) {
+
+        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
         this.profileService = profileService;
@@ -74,10 +77,12 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional
-    public Result postSubmit(long problemId) {
+    public Result postSubmit(Http.Request req, long problemId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
-        boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
+        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem) && isClean) {
             return notFound();
         }
@@ -139,12 +144,14 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional(readOnly = true)
-    public Result viewSubmissions(long problemId)  {
-        return listSubmissions(problemId, 0, "id", "desc");
+    public Result viewSubmissions(Http.Request req, long problemId)  {
+        return listSubmissions(req, problemId, 0, "id", "desc");
     }
 
     @Transactional(readOnly = true)
-    public Result listSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) {
+    public Result listSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -166,7 +173,9 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional(readOnly = true)
-    public Result viewSubmission(long problemId, long submissionId) {
+    public Result viewSubmission(Http.Request req, long problemId, long submissionId) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -177,7 +186,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
 
         String engine;
         try {
-            engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
+            engine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
@@ -195,7 +204,9 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional
-    public Result regradeSubmission(long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
+    public Result regradeSubmission(Http.Request req, long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -209,7 +220,9 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
     }
 
     @Transactional
-    public Result regradeSubmissions(long problemId, long pageIndex, String orderBy, String orderDir) {
+    public Result regradeSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {

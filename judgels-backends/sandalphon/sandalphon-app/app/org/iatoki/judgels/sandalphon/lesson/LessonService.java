@@ -18,7 +18,7 @@ import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 @ImplementedBy(LessonServiceImpl.class)
 public interface LessonService {
 
-    Lesson createLesson(String slug, String additionalNote, String initialLanguageCode, String userJid, String userIpAddress) throws IOException;
+    Lesson createLesson(String slug, String additionalNote, String initialLanguageCode) throws IOException;
 
     boolean lessonExistsByJid(String lessonJid);
 
@@ -32,9 +32,9 @@ public interface LessonService {
 
     boolean isUserPartnerForLesson(String lessonJid, String userJid);
 
-    void createLessonPartner(String lessonJid, String userJid, LessonPartnerConfig config, String createUserJid, String createUserIpAddress);
+    void createLessonPartner(String lessonJid, String userJid, LessonPartnerConfig config);
 
-    void updateLessonPartner(long lessonPartnerId, LessonPartnerConfig config, String userJid, String userIpAddress);
+    void updateLessonPartner(long lessonPartnerId, LessonPartnerConfig config);
 
     Page<LessonPartner> getPageOfLessonPartners(String lessonJid, long pageIndex, long pageSize, String orderBy, String orderDir);
 
@@ -42,7 +42,7 @@ public interface LessonService {
 
     LessonPartner findLessonPartnerByLessonJidAndPartnerJid(String lessonJid, String partnerJid);
 
-    void updateLesson(String lessonJid, String slug, String additionalNote, String userJid, String userIpAddress);
+    void updateLesson(String lessonJid, String slug, String additionalNote);
 
     Page<Lesson> getPageOfLessons(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin);
 
@@ -80,15 +80,15 @@ public interface LessonService {
 
     void createUserCloneIfNotExists(String userJid, String lessonJid);
 
-    boolean commitThenMergeUserClone(String userJid, String lessonJid, String title, String description, String userIpAddress);
+    boolean commitThenMergeUserClone(String userJid, String lessonJid, String title, String description);
 
     boolean updateUserClone(String userJid, String lessonJid);
 
-    boolean pushUserClone(String userJid, String lessonJid, String userIpAddress);
+    boolean pushUserClone(String userJid, String lessonJid);
 
     boolean fetchUserClone(String userJid, String lessonJid);
 
     void discardUserClone(String userJid, String lessonJid) throws IOException;
 
-    void restore(String lessonJid, String hash, String userJid, String userIpAddress);
+    void restore(String lessonJid, String hash);
 }

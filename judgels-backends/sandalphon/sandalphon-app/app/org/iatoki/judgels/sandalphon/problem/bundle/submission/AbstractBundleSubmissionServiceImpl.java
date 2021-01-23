@@ -126,24 +126,24 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
     }
 
     @Override
-    public final String submit(String problemJid, String containerJid, BundleAnswer answer, String userJid, String userIpAddress) {
+    public final String submit(String problemJid, String containerJid, BundleAnswer answer) {
         SM submissionModel = bundleSubmissionDao.createSubmissionModel();
 
         submissionModel.problemJid = problemJid;
         submissionModel.containerJid = containerJid;
 
-        bundleSubmissionDao.persist(submissionModel, userJid, userIpAddress);
+        bundleSubmissionDao.update(submissionModel);
 
-        grade(submissionModel, answer, userJid, userIpAddress);
+        grade(submissionModel, answer);
 
         return submissionModel.jid;
     }
 
     @Override
-    public final void regrade(String submissionJid, BundleAnswer answer, String userJid, String userIpAddress) {
+    public final void regrade(String submissionJid, BundleAnswer answer) {
         SM submissionModel = bundleSubmissionDao.findByJid(submissionJid);
 
-        grade(submissionModel, answer, userJid, userIpAddress);
+        grade(submissionModel, answer);
     }
 
     @Override
@@ -183,7 +183,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
         return new Gson().fromJson(fileSystemProvider.readFromFile(Paths.get(submissionJid, "answer.json")), BundleAnswer.class);
     }
 
-    private void grade(SM submissionModel, BundleAnswer answer, String userJid, String userIpAddress) {
+    private void grade(SM submissionModel, BundleAnswer answer) {
         try {
             BundleGradingResult bundleGradingResult = bundleProblemGrader.gradeBundleProblem(submissionModel.problemJid, answer);
 
@@ -194,7 +194,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
                 gradingModel.score = (int) bundleGradingResult.getScore();
                 gradingModel.details = bundleGradingResult.getDetailsAsJson();
 
-                bundleGradingDao.persist(gradingModel, userJid, userIpAddress);
+                bundleGradingDao.insert(gradingModel);
 
                 afterGrade(gradingModel.jid, answer);
             }

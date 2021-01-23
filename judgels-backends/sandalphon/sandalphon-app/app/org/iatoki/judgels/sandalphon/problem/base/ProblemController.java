@@ -12,7 +12,7 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
@@ -23,6 +23,7 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
@@ -30,25 +31,29 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     private static final long PAGE_SIZE = 20;
 
+    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProfileService profileService;
 
     @Inject
-    public ProblemController(ProblemService problemService, ProfileService profileService) {
+    public ProblemController(ActorChecker actorChecker, ProblemService problemService, ProfileService profileService) {
+        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
-    public Result index() {
-        return listProblems(0, "updatedAt", "desc", "");
+    public Result index(Http.Request req) {
+        return listProblems(req, 0, "updatedAt", "desc", "");
     }
 
     @Transactional(readOnly = true)
-    public Result listProblems(long pageIndex, String sortBy, String orderBy, String filterString) {
+    public Result listProblems(Http.Request req, long pageIndex, String sortBy, String orderBy, String filterString) {
+        String actorJid = actorChecker.check(req);
+
         boolean isAdmin = SandalphonControllerUtils.getInstance().isAdmin();
         boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
-        Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), isAdmin);
+        Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
 
         Set<String> userJids = pageOfProblems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -65,7 +70,9 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result createProblem() {
+    public Result createProblem(Http.Request req) {
+        actorChecker.check(req);
+
         Form<ProblemCreateForm> problemCreateForm = formFactory.form(ProblemCreateForm.class);
 
         return showCreateProblem(problemCreateForm);
@@ -73,8 +80,10 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCreateProblem() {
-        Form<ProblemCreateForm> problemCreateForm = formFactory.form(ProblemCreateForm.class).bindFromRequest();
+    public Result postCreateProblem(Http.Request req) {
+        actorChecker.check(req);
+
+        Form<ProblemCreateForm> problemCreateForm = formFactory.form(ProblemCreateForm.class).bindFromRequest(req);
 
         if (formHasErrors(problemCreateForm)) {
             return showCreateProblem(problemCreateForm);
@@ -113,7 +122,9 @@ public final class ProblemController extends AbstractBaseProblemController {
     }
 
     @Transactional(readOnly = true)
-    public Result viewProblem(long problemId) {
+    public Result viewProblem(Http.Request req, long problemId) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
         if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem)) {
             return notFound();
@@ -132,7 +143,7 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editProblem(long problemId) {
+    public Result editProblem(Http.Request req, long problemId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
@@ -150,14 +161,16 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditProblem(long problemId) {
+    public Result postEditProblem(Http.Request req, long problemId) {
+        actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
             return notFound();
         }
 
-        Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).bindFromRequest();
+        Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).bindFromRequest(req);
 
         if (formHasErrors(problemEditForm)) {
             return showEditProblem(problemEditForm, problem);
@@ -168,17 +181,17 @@ public final class ProblemController extends AbstractBaseProblemController {
         }
 
         ProblemEditForm problemEditData = problemEditForm.get();
-        problemService.updateProblem(problem.getJid(), problemEditData.slug, problemEditData.additionalNote, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        problemService.updateProblem(problem.getJid(), problemEditData.slug, problemEditData.additionalNote);
 
         return redirect(routes.ProblemController.viewProblem(problem.getId()));
     }
 
     @RequireCSRFCheck
-    public Result switchLanguage(long problemId) {
-        String languageCode = formFactory.form().bindFromRequest().get("langCode");
+    public Result switchLanguage(Http.Request req, long problemId) {
+        String languageCode = formFactory.form().bindFromRequest(req).get("langCode");
         ProblemControllerUtils.setCurrentStatementLanguage(languageCode);
 
-        return redirect(request().getHeaders().get("Referer").orElse(""));
+        return redirect(req.getHeaders().get("Referer").orElse(""));
     }
 
     private Result showCreateProblem(Form<ProblemCreateForm> problemCreateForm) {

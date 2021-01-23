@@ -9,6 +9,7 @@ import java.util.Set;
 import judgels.persistence.api.dump.JudgelsDump;
 
 public interface JudgelsDao<M extends JudgelsModel> extends Dao<M> {
+    M findByJid(String jid);
     Optional<M> selectByJid(String jid);
     Map<String, M> selectByJids(Set<String> jids);
     M insertWithJid(String jid, M model);
@@ -17,8 +18,6 @@ public interface JudgelsDao<M extends JudgelsModel> extends Dao<M> {
 
     void setModelMetadataFromDump(M model, JudgelsDump dump);
 
-    @Deprecated void persist(M model, int childIndex, String actor, String ipAddress);
     @Deprecated void persist(M model, String user, Instant time, String ipAddress);
-    @Deprecated M findByJid(String jid);
     @Deprecated List<M> getByJids(Collection<String> jids);
 }

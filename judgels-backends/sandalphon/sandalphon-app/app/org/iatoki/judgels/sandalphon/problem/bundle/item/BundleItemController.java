@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import org.apache.commons.lang3.EnumUtils;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -20,6 +20,7 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
 
@@ -28,22 +29,30 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     private static final long PAGE_SIZE = 1000;
 
+    private final ActorChecker actorChecker;
     private final BundleItemService bundleItemService;
     private final ProblemService problemService;
 
     @Inject
-    public BundleItemController(BundleItemService bundleItemService, ProblemService problemService) {
+    public BundleItemController(
+            ActorChecker actorChecker,
+            BundleItemService bundleItemService,
+            ProblemService problemService) {
+
+        this.actorChecker = actorChecker;
         this.bundleItemService = bundleItemService;
         this.problemService = problemService;
     }
 
     @Transactional(readOnly = true)
-    public Result viewItems(long problemId)  {
-        return listCreateItems(problemId, 0, "id", "desc", "");
+    public Result viewItems(Http.Request req, long problemId)  {
+        return listCreateItems(req, problemId, 0, "id", "desc", "");
     }
 
     @Transactional(readOnly = true)
-    public Result listCreateItems(long problemId, long pageIndex, String orderBy, String orderDir, String filterString) {
+    public Result listCreateItems(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir, String filterString) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
@@ -51,7 +60,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
         }
 
         try {
-            Page<BundleItem> pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
+            Page<BundleItem> pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
             Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
 
             return showListCreateItems(problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
@@ -62,7 +71,9 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result createItem(long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
+    public Result createItem(Http.Request req, long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
@@ -74,7 +85,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
             Page<BundleItem> pageOfBundleItems;
             try {
-                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
+                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -88,7 +99,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
             Page<BundleItem> pageOfBundleItems;
             try {
-                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
+                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -101,7 +112,9 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional
     @RequireCSRFCheck
-    public Result postCreateItem(long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
+    public Result postCreateItem(Http.Request req, long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
@@ -113,7 +126,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
             Page<BundleItem> pageOfBundleItems;
             try {
-                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
+                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -133,7 +146,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
             Page<BundleItem> pageOfBundleItems;
             try {
-                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
+                pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -141,21 +154,21 @@ public final class BundleItemController extends AbstractBundleProblemController 
             return showListCreateItems(problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         }
 
-        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, request());
+        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, req);
         if (formHasErrors(bundleItemConfForm)) {
             return showCreateItem(problem, itemType, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), "Create"), page, orderBy, orderDir, filterString);
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
-            if (bundleItemService.bundleItemExistsInProblemWithCloneByMeta(problem.getJid(), IdentityUtils.getUserJid(), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm))) {
-                Page<BundleItem> items = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
+            if (bundleItemService.bundleItemExistsInProblemWithCloneByMeta(problem.getJid(), actorJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm))) {
+                Page<BundleItem> items = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
                 return showListCreateItems(problem, items, orderBy, orderDir, filterString, bundleItemConfForm.withGlobalError("Duplicate meta on item."));
             }
 
-            bundleItemService.createBundleItem(problem.getJid(), IdentityUtils.getUserJid(), BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem));
+            bundleItemService.createBundleItem(problem.getJid(), actorJid, BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem));
 
             return redirect(routes.BundleItemController.viewItems(problem.getId()));
         } catch (IOException e) {
@@ -165,7 +178,9 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional(readOnly = true)
     @AddCSRFToken
-    public Result editItem(long problemId, String itemJid) {
+    public Result editItem(Http.Request req, long problemId, String itemJid) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem)) {
@@ -173,7 +188,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
         }
 
         try {
-            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid)) {
+            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
                 return notFound();
             }
         } catch (IOException e) {
@@ -188,7 +203,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
         BundleItem bundleItem;
         try {
-            bundleItem = bundleItemService.findInProblemWithCloneByItemJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid);
+            bundleItem = bundleItemService.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -207,10 +222,10 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
         Form bundleItemConfForm;
         try {
-            bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid, ProblemControllerUtils.getCurrentStatementLanguage()), bundleItem.getMeta());
+            bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, ProblemControllerUtils.getCurrentStatementLanguage()), bundleItem.getMeta());
         } catch (IOException e) {
             try {
-                bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid, ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem)), bundleItem.getMeta());
+                bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem)), bundleItem.getMeta());
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
@@ -221,7 +236,9 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
     @Transactional
     @RequireCSRFCheck
-    public Result postEditItem(long problemId, String itemJid) {
+    public Result postEditItem(Http.Request req, long problemId, String itemJid) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem)) {
@@ -229,7 +246,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
         }
 
         try {
-            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid)) {
+            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
                 return notFound();
             }
         } catch (IOException e) {
@@ -238,7 +255,7 @@ public final class BundleItemController extends AbstractBundleProblemController 
 
         BundleItem bundleItem;
         try {
-            bundleItem = bundleItemService.findInProblemWithCloneByItemJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid);
+            bundleItem = bundleItemService.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -261,14 +278,14 @@ public final class BundleItemController extends AbstractBundleProblemController 
             return notFound();
         }
 
-        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, request());
+        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, req);
         if (formHasErrors(bundleItemConfForm)) {
             return showEditItem(problem, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
         try {
-            bundleItemService.updateBundleItem(problem.getJid(), IdentityUtils.getUserJid(), itemJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), ProblemControllerUtils.getCurrentStatementLanguage());
+            bundleItemService.updateBundleItem(problem.getJid(), actorJid, itemJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), ProblemControllerUtils.getCurrentStatementLanguage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -277,21 +294,23 @@ public final class BundleItemController extends AbstractBundleProblemController 
     }
 
     @Transactional(readOnly = true)
-    public Result moveItemUp(long problemId, String itemJid) {
+    public Result moveItemUp(Http.Request req, long problemId, String itemJid) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
-            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid)) {
+            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
                 return notFound();
             }
 
-            bundleItemService.moveBundleItemUp(problem.getJid(), IdentityUtils.getUserJid(), itemJid);
+            bundleItemService.moveBundleItemUp(problem.getJid(), actorJid, itemJid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -300,21 +319,23 @@ public final class BundleItemController extends AbstractBundleProblemController 
     }
 
     @Transactional(readOnly = true)
-    public Result moveItemDown(long problemId, String itemJid) {
+    public Result moveItemDown(Http.Request req, long problemId, String itemJid) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
-            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid)) {
+            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
                 return notFound();
             }
 
-            bundleItemService.moveBundleItemDown(problem.getJid(), IdentityUtils.getUserJid(), itemJid);
+            bundleItemService.moveBundleItemDown(problem.getJid(), actorJid, itemJid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -323,20 +344,22 @@ public final class BundleItemController extends AbstractBundleProblemController 
     }
 
     @Transactional
-    public Result removeItem(long problemId, String itemJid) {
+    public Result removeItem(Http.Request req, long problemId, String itemJid) {
+        String actorJid = actorChecker.check(req);
+
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
             return notFound();
         }
 
-        problemService.createUserCloneIfNotExists(IdentityUtils.getUserJid(), problem.getJid());
+        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
-            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), itemJid)) {
+            if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
                 return notFound();
             }
-            bundleItemService.removeBundleItem(problem.getJid(), IdentityUtils.getUserJid(), itemJid);
+            bundleItemService.removeBundleItem(problem.getJid(), actorJid, itemJid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

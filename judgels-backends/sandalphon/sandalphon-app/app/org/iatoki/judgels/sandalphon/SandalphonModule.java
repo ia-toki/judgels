@@ -23,6 +23,7 @@ import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.sealtiel.api.message.MessageService;
+import judgels.service.actor.JudgelsActorProvider;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.client.ClientChecker;
 import judgels.service.jaxrs.JudgelsObjectMappers;
@@ -30,8 +31,7 @@ import org.hibernate.SessionFactory;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.play.general.GeneralConfig;
-import org.iatoki.judgels.play.model.LegacyActorProvider;
-import org.iatoki.judgels.play.model.LegacySessionFactory;
+import org.iatoki.judgels.play.model.PlaySessionFactory;
 import org.iatoki.judgels.sandalphon.lesson.LessonFs;
 import org.iatoki.judgels.sandalphon.lesson.LessonGitProvider;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
@@ -68,8 +68,8 @@ public final class SandalphonModule extends AbstractModule {
 
         Json.setObjectMapper(objectMapper());
 
-        bind(SessionFactory.class).to(LegacySessionFactory.class);
-        bind(ActorProvider.class).to(LegacyActorProvider.class);
+        bind(SessionFactory.class).to(PlaySessionFactory.class);
+        bind(ActorProvider.class).to(JudgelsActorProvider.class);
         bind(Clock.class).toInstance(Clock.systemUTC());
     }
 
