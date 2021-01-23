@@ -11,42 +11,11 @@ import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import play.mvc.Controller;
 
 public final class ProblemControllerUtils {
 
     private ProblemControllerUtils() {
         // prevent instantiation
-    }
-
-    public static void setJustCreatedProblem(String slug, String additionalNote, String initLanguageCode) {
-        Controller.session("problemSlug", slug);
-        Controller.session("problemAdditionalNote", additionalNote);
-        Controller.session("initLanguageCode", initLanguageCode);
-    }
-
-    public static void removeJustCreatedProblem() {
-        Controller.session().remove("problemSlug");
-        Controller.session().remove("problemAdditionalNote");
-        Controller.session().remove("initLanguageCode");
-    }
-
-    public static String getJustCreatedProblemSlug() {
-        return Controller.session("problemSlug");
-    }
-
-    public static String getJustCreatedProblemAdditionalNote() {
-        return Controller.session("problemAdditionalNote");
-    }
-
-    public static String getJustCreatedProblemInitLanguageCode() {
-        return Controller.session("initLanguageCode");
-    }
-
-    public static boolean wasProblemJustCreated() {
-        return getJustCreatedProblemSlug() != null
-                && getJustCreatedProblemAdditionalNote() != null
-                && getJustCreatedProblemInitLanguageCode() != null;
     }
 
     public static boolean isAuthor(Problem problem) {

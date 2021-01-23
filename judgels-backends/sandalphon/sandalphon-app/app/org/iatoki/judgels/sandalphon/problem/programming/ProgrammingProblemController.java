@@ -10,7 +10,6 @@ import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.html.createProgrammingProblemView;
@@ -45,7 +44,7 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
     public Result createProgrammingProblem(Http.Request req) {
         actorChecker.check(req);
 
-        if (!ProblemControllerUtils.wasProblemJustCreated()) {
+        if (!SandalphonSessionUtils.wasProblemJustCreated(req)) {
             return badRequest();
         }
 
@@ -59,7 +58,7 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
     public Result postCreateProgrammingProblem(Http.Request req) {
         String actorJid = actorChecker.check(req);
 
-        if (!ProblemControllerUtils.wasProblemJustCreated()) {
+        if (!SandalphonSessionUtils.wasProblemJustCreated(req)) {
             return badRequest();
         }
 
@@ -69,9 +68,9 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
             return showCreateProgrammingProblem(req, programmingProblemCreateForm);
         }
 
-        String slug = ProblemControllerUtils.getJustCreatedProblemSlug();
-        String additionalNote = ProblemControllerUtils.getJustCreatedProblemAdditionalNote();
-        String languageCode = ProblemControllerUtils.getJustCreatedProblemInitLanguageCode();
+        String slug = SandalphonSessionUtils.getJustCreatedProblemSlug(req);
+        String additionalNote = SandalphonSessionUtils.getJustCreatedProblemAdditionalNote(req);
+        String languageCode = SandalphonSessionUtils.getJustCreatedProblemInitLanguage(req);
 
         ProgrammingProblemCreateForm programmingProblemCreateData = programmingProblemCreateForm.get();
 
@@ -90,10 +89,9 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
 
         problemService.initRepository(actorJid, problem.getJid());
 
-        ProblemControllerUtils.removeJustCreatedProblem();
-
         return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(SandalphonSessionUtils.getJustCreatedProblemInitLanguage(req)))
+                .removingFromSession(req, SandalphonSessionUtils.removeJustCreatedProblem());
     }
 
     public Result jumpToGrading(long id) {
@@ -106,7 +104,7 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
 
     private Result showCreateProgrammingProblem(Http.Request req, Form<ProgrammingProblemCreateForm> programmingProblemCreateForm) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(createProgrammingProblemView.render(programmingProblemCreateForm, ProblemControllerUtils.getJustCreatedProblemSlug(), ProblemControllerUtils.getJustCreatedProblemAdditionalNote(), ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
+        template.setContent(createProgrammingProblemView.render(programmingProblemCreateForm, SandalphonSessionUtils.getJustCreatedProblemSlug(req), SandalphonSessionUtils.getJustCreatedProblemAdditionalNote(req), SandalphonSessionUtils.getJustCreatedProblemInitLanguage(req)));
         template.setMainTitle("Create programming problem");
         template.markBreadcrumbLocation("Problems", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());
         template.setPageTitle("Programming Problem - Create");

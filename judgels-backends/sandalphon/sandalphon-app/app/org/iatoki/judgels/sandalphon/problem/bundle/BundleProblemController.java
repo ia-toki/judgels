@@ -9,7 +9,6 @@ import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
@@ -39,13 +38,13 @@ public final class BundleProblemController extends AbstractProblemController {
     public Result createBundleProblem(Http.Request req) {
         String actorJid = actorChecker.check(req);
 
-        if (!ProblemControllerUtils.wasProblemJustCreated()) {
+        if (!SandalphonSessionUtils.wasProblemJustCreated(req)) {
             return badRequest();
         }
 
-        String slug = ProblemControllerUtils.getJustCreatedProblemSlug();
-        String additionalNote = ProblemControllerUtils.getJustCreatedProblemAdditionalNote();
-        String languageCode = ProblemControllerUtils.getJustCreatedProblemInitLanguageCode();
+        String slug = SandalphonSessionUtils.getJustCreatedProblemSlug(req);
+        String additionalNote = SandalphonSessionUtils.getJustCreatedProblemAdditionalNote(req);
+        String languageCode = SandalphonSessionUtils.getJustCreatedProblemInitLanguage(req);
 
         Problem problem;
         try {
@@ -63,10 +62,9 @@ public final class BundleProblemController extends AbstractProblemController {
 
         problemService.initRepository(actorJid, problem.getJid());
 
-        ProblemControllerUtils.removeJustCreatedProblem();
-
         return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(SandalphonSessionUtils.getJustCreatedProblemInitLanguage(req)))
+                .removingFromSession(req, SandalphonSessionUtils.removeJustCreatedProblem());
     }
 
     public Result jumpToItems(long problemId) {

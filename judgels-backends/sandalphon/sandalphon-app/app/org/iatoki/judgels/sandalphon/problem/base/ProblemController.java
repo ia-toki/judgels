@@ -96,12 +96,14 @@ public final class ProblemController extends AbstractBaseProblemController {
         }
 
         ProblemCreateForm problemCreateData = problemCreateForm.get();
-        ProblemControllerUtils.setJustCreatedProblem(problemCreateData.slug, problemCreateData.additionalNote, problemCreateData.initLanguageCode);
+        Map<String, String> justCreatedProblem = SandalphonSessionUtils.newJustCreatedProblem(problemCreateData.slug, problemCreateData.additionalNote, problemCreateData.initLanguageCode);
 
         if (problemCreateData.type.equals(ProblemType.PROGRAMMING.name())) {
-            return redirect(org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.createProgrammingProblem());
+            return redirect(org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.createProgrammingProblem())
+                    .addingToSession(req, justCreatedProblem);
         } else if (problemCreateData.type.equals(ProblemType.BUNDLE.name())) {
-            return redirect(org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.createBundleProblem());
+            return redirect(org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.createBundleProblem())
+                    .addingToSession(req, justCreatedProblem);
         }
 
         return internalServerError();
