@@ -78,7 +78,7 @@ public class LessonStatementController extends AbstractLessonController {
                     .build();
         }
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(lessonStatementView.render(statement));
         template.addAdditionalScript(katexView.render());
 
@@ -133,7 +133,7 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        return showEditStatement(updateStatementForm, lesson, allowedLanguages);
+        return showEditStatement(req, updateStatementForm, lesson, allowedLanguages);
     }
 
     @Transactional
@@ -156,7 +156,7 @@ public class LessonStatementController extends AbstractLessonController {
         if (formHasErrors(updateStatementForm)) {
             try {
                 Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-                return showEditStatement(updateStatementForm, lesson, allowedLanguages);
+                return showEditStatement(req, updateStatementForm, lesson, allowedLanguages);
             } catch (IOException e) {
                 return notFound();
             }
@@ -173,7 +173,7 @@ public class LessonStatementController extends AbstractLessonController {
         } catch (IOException e) {
             try {
                 Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-                return showEditStatement(updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
+                return showEditStatement(req, updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
             } catch (IOException e2) {
                 return notFound();
             }
@@ -193,7 +193,7 @@ public class LessonStatementController extends AbstractLessonController {
         boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
         List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(actorJid, lesson.getJid());
 
-        return showListStatementMediaFiles(uploadFileForm, lesson, mediaFiles, isAllowedToUploadMediaFiles);
+        return showListStatementMediaFiles(req, uploadFileForm, lesson, mediaFiles, isAllowedToUploadMediaFiles);
     }
 
     @Transactional
@@ -222,7 +222,7 @@ public class LessonStatementController extends AbstractLessonController {
                 boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
                 List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(actorJid, lesson.getJid());
 
-                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
@@ -240,7 +240,7 @@ public class LessonStatementController extends AbstractLessonController {
                 boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
                 List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(actorJid, lesson.getJid());
 
-                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
@@ -269,7 +269,7 @@ public class LessonStatementController extends AbstractLessonController {
             throw new IllegalStateException(e);
         }
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, lesson.getId()));
         template.markBreadcrumbLocation("Statement languages", routes.LessonStatementController.listStatementLanguages(lesson.getId()));
         template.setPageTitle("Lesson - Statement languages");
@@ -389,8 +389,8 @@ public class LessonStatementController extends AbstractLessonController {
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }
 
-    private Result showEditStatement(Form<UpdateStatementForm> updateStatementForm, Lesson lesson, Set<String> allowedLanguages) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showEditStatement(Http.Request req, Form<UpdateStatementForm> updateStatementForm, Lesson lesson, Set<String> allowedLanguages) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editStatementView.render(updateStatementForm, lesson.getId()));
         appendStatementLanguageSelection(template, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
         template.markBreadcrumbLocation("Update statement", routes.LessonStatementController.editStatement(lesson.getId()));
@@ -400,8 +400,8 @@ public class LessonStatementController extends AbstractLessonController {
         return renderTemplate(template, lessonService, lesson);
     }
 
-    private Result showListStatementMediaFiles(Form<UploadFileForm> uploadFileForm, Lesson lesson, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showListStatementMediaFiles(Http.Request req, Form<UploadFileForm> uploadFileForm, Lesson lesson, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementMediaFilesView.render(uploadFileForm, lesson.getId(), mediaFiles, isAllowedToUploadMediaFiles));
         template.markBreadcrumbLocation("Media files", routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
         template.setPageTitle("Lesson - Statement - Media files");

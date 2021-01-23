@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
 import judgels.sandalphon.api.lesson.Lesson;
-import org.iatoki.judgels.play.IdentityUtils;
+import org.iatoki.judgels.jophiel.JophielSessionUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
 import org.iatoki.judgels.sandalphon.lesson.version.html.versionLocalChangesWarningLayout;
@@ -19,7 +19,8 @@ public class AbstractLessonController extends AbstractSandalphonController {
     }
 
     protected void appendVersionLocalChangesWarning(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
-        if (lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid())) {
+        String userJid = JophielSessionUtils.getUserJid(template.getRequest());
+        if (lessonService.userCloneExists(userJid, lesson.getJid())) {
             template.setWarning(versionLocalChangesWarningLayout.render(lesson.getId(), null));
         }
     }

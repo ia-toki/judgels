@@ -34,8 +34,8 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
@@ -45,7 +45,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class ProgrammingProblemSubmissionController extends AbstractProgrammingProblemController {
+public final class ProgrammingProblemSubmissionController extends AbstractProblemController {
     private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
@@ -164,7 +164,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
         Set<String> userJids = pageOfProgrammingSubmissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, profilesMap, pageIndex, orderBy, orderDir));
         template.markBreadcrumbLocation("Submissions", routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
@@ -194,7 +194,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProgra
 
         Profile profile = profileService.getProfile(programmingSubmission.getUserJid());
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, profile, null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
 
         template.markBreadcrumbLocation("View submission", routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));

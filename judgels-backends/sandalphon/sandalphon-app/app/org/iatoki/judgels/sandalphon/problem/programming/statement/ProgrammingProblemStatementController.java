@@ -14,10 +14,10 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
-import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
@@ -28,7 +28,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class ProgrammingProblemStatementController extends AbstractProgrammingProblemController {
+public final class ProgrammingProblemStatementController extends AbstractProblemController {
     private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
@@ -101,7 +101,7 @@ public final class ProgrammingProblemStatementController extends AbstractProgram
             reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
         }
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
         template.addAdditionalScript(katexView.render());
 

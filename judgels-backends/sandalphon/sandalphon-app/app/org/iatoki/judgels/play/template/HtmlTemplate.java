@@ -4,10 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.List;
 import play.api.mvc.Call;
+import play.mvc.Http;
 import play.twirl.api.Html;
 
 public final class HtmlTemplate {
-
+    private Http.Request req;
     private LazyHtml content;
     private String pageTitle;
     private String mainTitle;
@@ -29,7 +30,8 @@ public final class HtmlTemplate {
     private boolean singleColumn;
     private boolean reverseBreadcrumbs;
 
-    public HtmlTemplate() {
+    public HtmlTemplate(Http.Request req) {
+        this.req = req;
         this.breadcrumbLocations = Lists.newArrayList();
         this.sidebarMenus = Lists.newArrayList();
         this.categoryTabs = Lists.newArrayList();
@@ -43,6 +45,10 @@ public final class HtmlTemplate {
         this.additionalScripts = Lists.newArrayList();
         this.singleColumn = false;
         this.reverseBreadcrumbs = false;
+    }
+
+    public Http.Request getRequest() {
+        return req;
     }
 
     public void setContent(Html content) {

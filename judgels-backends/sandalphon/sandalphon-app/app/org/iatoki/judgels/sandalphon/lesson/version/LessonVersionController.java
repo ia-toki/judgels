@@ -63,7 +63,7 @@ public final class LessonVersionController extends AbstractLessonController {
         boolean isClean = !lessonService.userCloneExists(actorJid, lesson.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && LessonControllerUtils.isAllowedToRestoreVersionHistory(lessonService, lesson);
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listVersionsView.render(versions, lesson.getId(), profilesMap, isAllowedToRestoreVersionHistory));
         template.markBreadcrumbLocation("History", routes.LessonVersionController.listVersionHistory(lesson.getId()));
         template.setPageTitle("Lesson - Versions - History");
@@ -102,7 +102,7 @@ public final class LessonVersionController extends AbstractLessonController {
 
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
 
-        return showViewVersionLocalChanges(versionCommitForm, lesson, isClean);
+        return showViewVersionLocalChanges(req, versionCommitForm, lesson, isClean);
     }
 
     @Transactional
@@ -119,7 +119,7 @@ public final class LessonVersionController extends AbstractLessonController {
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
         if (formHasErrors(versionCommitForm)) {
             boolean isClean = !lessonService.userCloneExists(actorJid, lesson.getJid());
-            return showViewVersionLocalChanges(versionCommitForm, lesson, isClean);
+            return showViewVersionLocalChanges(req, versionCommitForm, lesson, isClean);
         }
 
         VersionCommitForm versionCommitData = versionCommitForm.get();
@@ -179,8 +179,8 @@ public final class LessonVersionController extends AbstractLessonController {
         }
     }
 
-    private Result showViewVersionLocalChanges(Form<VersionCommitForm> versionCommitForm, Lesson lesson, boolean isClean) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showViewVersionLocalChanges(Http.Request req, Form<VersionCommitForm> versionCommitForm, Lesson lesson, boolean isClean) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(viewVersionLocalChangesView.render(versionCommitForm, lesson, isClean));
         template.markBreadcrumbLocation("Local changes", routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
         template.setPageTitle("Lesson - Versions - Local changes");

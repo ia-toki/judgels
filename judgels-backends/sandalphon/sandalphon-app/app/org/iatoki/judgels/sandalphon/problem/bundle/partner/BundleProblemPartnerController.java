@@ -65,7 +65,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class);
         Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class);
 
-        return showAddPartner(usernameForm, problemForm, bundleForm, problem);
+        return showAddPartner(req, usernameForm, problemForm, bundleForm, problem);
     }
 
     @Transactional
@@ -84,7 +84,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).bindFromRequest(req);
 
         if (formHasErrors(usernameForm) || formHasErrors(problemForm) || formHasErrors(bundleForm)) {
-            return showAddPartner(usernameForm, problemForm, bundleForm, problem);
+            return showAddPartner(req, usernameForm, problemForm, bundleForm, problem);
         }
 
         String username = usernameForm.get().username;
@@ -94,12 +94,12 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
 
         if (!usernameToJidMap.containsKey(username)) {
-            return showAddPartner(usernameForm.withError("username", "Username not found."), problemForm, bundleForm, problem);
+            return showAddPartner(req, usernameForm.withError("username", "Username not found."), problemForm, bundleForm, problem);
         }
 
         String userJid = usernameToJidMap.get(username);
         if (problemService.isUserPartnerForProblem(problem.getJid(), userJid)) {
-            return showAddPartner(usernameForm.withError("username", "This user is already a partner."), problemForm, bundleForm, problem);
+            return showAddPartner(req, usernameForm.withError("username", "This user is already a partner."), problemForm, bundleForm, problem);
         }
 
         ProblemPartnerConfig problemConfig = new ProblemPartnerConfig.Builder()
@@ -158,7 +158,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
         Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).fill(bundleData);
 
-        return showEditPartner(problemForm, bundleForm, problem, problemPartner);
+        return showEditPartner(req, problemForm, bundleForm, problem, problemPartner);
     }
 
     @Transactional
@@ -178,7 +178,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).bindFromRequest();
 
         if (formHasErrors(problemForm) || formHasErrors(bundleForm)) {
-            return showEditPartner(problemForm, bundleForm, problem, problemPartner);
+            return showEditPartner(req, problemForm, bundleForm, problem, problemPartner);
         }
 
         ProblemPartnerUpsertForm problemData = problemForm.get();
@@ -206,8 +206,8 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
     }
 
-    private Result showAddPartner(Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<BundlePartnerUpsertForm> bundleForm, Problem problem) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showAddPartner(Http.Request req, Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<BundlePartnerUpsertForm> bundleForm, Problem problem) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(addPartnerView.render(usernameForm, problemForm, bundleForm, problem, getUserAutocompleteAPIEndpoint()));
 
         template.setSecondaryTitle("Add partner");
@@ -217,10 +217,10 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
         return renderPartnerTemplate(template, problemService, problem);
     }
 
-    private Result showEditPartner(Form<ProblemPartnerUpsertForm> problemForm, Form<BundlePartnerUpsertForm> bundleForm, Problem problem, ProblemPartner problemPartner) {
+    private Result showEditPartner(Http.Request req, Form<ProblemPartnerUpsertForm> problemForm, Form<BundlePartnerUpsertForm> bundleForm, Problem problem, ProblemPartner problemPartner) {
         Profile profile = profileService.getProfile(problemPartner.getUserJid());
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editPartnerView.render(problemForm, bundleForm, problem, problemPartner));
 
         template.setSecondaryTitle("Update partner: " + profile.getUsername());

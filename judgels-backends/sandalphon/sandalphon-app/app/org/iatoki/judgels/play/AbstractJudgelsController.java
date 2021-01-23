@@ -64,8 +64,8 @@ public abstract class AbstractJudgelsController extends Controller {
         return "http" + (request.secure() ? "s" : "") + "://" + request.host() + request.uri();
     }
 
-    protected HtmlTemplate getBaseHtmlTemplate() {
-        return new HtmlTemplate();
+    protected HtmlTemplate getBaseHtmlTemplate(Http.Request req) {
+        return new HtmlTemplate(req);
     }
 
     protected Result renderTemplate(HtmlTemplate template) {

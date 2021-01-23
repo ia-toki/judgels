@@ -9,8 +9,8 @@ GET        /coloredLogo             @org.iatoki.judgels.play.JudgelsController.c
 GET        /checkHealth             @org.iatoki.judgels.play.JudgelsController.checkHealth()
 
 
-GET        /login                            @org.iatoki.judgels.jophiel.JophielClientController.login()
-POST       /login                            @org.iatoki.judgels.jophiel.JophielClientController.postLogin()
+GET        /login                            @org.iatoki.judgels.jophiel.JophielClientController.login(req: Request)
+POST       /login                            @org.iatoki.judgels.jophiel.JophielClientController.postLogin(req: Request)
 GET        /logout                           @org.iatoki.judgels.jophiel.JophielClientController.logout(returnUri: String ?= "")
 
 

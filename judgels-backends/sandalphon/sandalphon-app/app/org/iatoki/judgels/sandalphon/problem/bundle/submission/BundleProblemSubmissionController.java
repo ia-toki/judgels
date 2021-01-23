@@ -17,10 +17,10 @@ import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
-import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemController;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.bundleSubmissionView;
@@ -31,7 +31,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class BundleProblemSubmissionController extends AbstractBundleProblemController {
+public final class BundleProblemSubmissionController extends AbstractProblemController {
 
     private static final long PAGE_SIZE = 20;
 
@@ -96,7 +96,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
         Set<String> userJids = pageOfBundleSubmissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listSubmissionsView.render(pageOfBundleSubmissions, problemId, profilesMap, pageIndex, orderBy, orderDir));
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
@@ -124,7 +124,7 @@ public final class BundleProblemSubmissionController extends AbstractBundleProbl
 
         Profile profile = profileService.getProfile(bundleSubmission.getAuthorJid());
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, profile, null, problem.getSlug(), null));
 
         template.markBreadcrumbLocation("View submission", org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));

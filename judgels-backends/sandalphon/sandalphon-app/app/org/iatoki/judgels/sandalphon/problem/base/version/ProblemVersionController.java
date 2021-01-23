@@ -63,7 +63,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem);
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listVersionsView.render(versions, problem.getId(), profilesMap, isAllowedToRestoreVersionHistory));
         template.markBreadcrumbLocation("History", routes.ProblemVersionController.listVersionHistory(problem.getId()));
         template.setPageTitle("Problem - Versions - History");
@@ -102,7 +102,7 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
 
-        return showViewVersionLocalChanges(versionCommitForm, problem, isClean);
+        return showViewVersionLocalChanges(req, versionCommitForm, problem, isClean);
     }
 
     @Transactional
@@ -119,7 +119,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
         if (formHasErrors(versionCommitForm)) {
             boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
-            return showViewVersionLocalChanges(versionCommitForm, problem, isClean);
+            return showViewVersionLocalChanges(req, versionCommitForm, problem, isClean);
         }
 
         VersionCommitForm versionCommitData = versionCommitForm.get();
@@ -179,8 +179,8 @@ public final class ProblemVersionController extends AbstractProblemController {
         }
     }
 
-    private Result showViewVersionLocalChanges(Form<VersionCommitForm> versionCommitForm, Problem problem, boolean isClean) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showViewVersionLocalChanges(Http.Request req, Form<VersionCommitForm> versionCommitForm, Problem problem, boolean isClean) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(viewVersionLocalChangesView.render(versionCommitForm, problem, isClean));
         template.markBreadcrumbLocation("Local changes", routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
         template.setPageTitle("Problem - Versions - Local changes");

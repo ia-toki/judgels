@@ -15,10 +15,4 @@ public final class IdentityUtils {
     public static String getUserJid() {
         return Http.Context.current().session().get("userJid");
     }
-
-    public static String getUsername() {
-        String username = Http.Context.current().session().get("username");
-
-        return username;
-    }
 }

@@ -8,6 +8,7 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
@@ -21,7 +22,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class ProgrammingProblemController extends AbstractProgrammingProblemController {
+public final class ProgrammingProblemController extends AbstractProblemController {
     private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
@@ -48,7 +49,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
 
         Form<ProgrammingProblemCreateForm> form = formFactory.form(ProgrammingProblemCreateForm.class);
 
-        return showCreateProgrammingProblem(form);
+        return showCreateProgrammingProblem(req, form);
     }
 
     @Transactional
@@ -63,7 +64,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
         Form<ProgrammingProblemCreateForm> programmingProblemCreateForm = formFactory.form(ProgrammingProblemCreateForm.class).bindFromRequest(req);
 
         if (formHasErrors(programmingProblemCreateForm)) {
-            return showCreateProgrammingProblem(programmingProblemCreateForm);
+            return showCreateProgrammingProblem(req, programmingProblemCreateForm);
         }
 
         String slug = ProblemControllerUtils.getJustCreatedProblemSlug();
@@ -82,7 +83,7 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
             problemService.updateStatement(null, problem.getJid(), languageCode, statement);
             programmingProblemService.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
         } catch (IOException e) {
-            return showCreateProgrammingProblem(programmingProblemCreateForm.withGlobalError("Error creating programming problem."));
+            return showCreateProgrammingProblem(req, programmingProblemCreateForm.withGlobalError("Error creating programming problem."));
         }
 
         problemService.initRepository(actorJid, problem.getJid());
@@ -101,8 +102,8 @@ public final class ProgrammingProblemController extends AbstractProgrammingProbl
         return redirect(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmissions(id));
     }
 
-    private Result showCreateProgrammingProblem(Form<ProgrammingProblemCreateForm> programmingProblemCreateForm) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showCreateProgrammingProblem(Http.Request req, Form<ProgrammingProblemCreateForm> programmingProblemCreateForm) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(createProgrammingProblemView.render(programmingProblemCreateForm, ProblemControllerUtils.getJustCreatedProblemSlug(), ProblemControllerUtils.getJustCreatedProblemAdditionalNote(), ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
         template.setMainTitle("Create programming problem");
         template.markBreadcrumbLocation("Problems", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());

@@ -62,7 +62,7 @@ public class ProblemPartnerController extends AbstractProblemController {
         Set<String> userJids = pageOfProblemPartners.getPage().stream().map(ProblemPartner::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listPartnersView.render(problem.getId(), pageOfProblemPartners, profilesMap, orderBy, orderDir));
         template.setSecondaryTitle("Partners");
         template.addSecondaryButton("Add partner", routes.ProblemPartnerController.addPartner(problem.getId()));

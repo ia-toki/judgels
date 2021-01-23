@@ -1,5 +1,6 @@
 package org.iatoki.judgels.jophiel;
 
+import com.google.common.collect.ImmutableMap;
 import com.palantir.conjure.java.api.errors.RemoteException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,17 +28,17 @@ public final class JophielClientController extends AbstractJophielClientControll
     }
 
     @AddCSRFToken
-    public Result login() {
+    public Result login(Http.Request req) {
         Form<LoginForm> form = formFactory.form(LoginForm.class);
-        return showLogin(form);
+        return showLogin(req, form);
     }
 
     @RequireCSRFCheck
     @Transactional
-    public Result postLogin() {
-        Form<LoginForm> form = formFactory.form(LoginForm.class).bindFromRequest();
+    public Result postLogin(Http.Request req) {
+        Form<LoginForm> form = formFactory.form(LoginForm.class).bindFromRequest(req);
         if (form.hasErrors()) {
-            return showLogin(form);
+            return showLogin(req, form);
         }
 
         LoginForm data = form.get();
@@ -51,26 +52,27 @@ public final class JophielClientController extends AbstractJophielClientControll
             } else if (e.getStatus() == 403) {
                 form = form.withGlobalError("Username or password incorrect.");
             }
-            return showLogin(form);
+            return showLogin(req, form);
         }
 
-        session("version", JophielSessionUtils.getSessionVersion());
-        session("token", session.getToken());
-        session("userJid", session.getUserJid());
-        session("username", session.getUsername());
-        session("role", session.getRole());
-        session("avatar", getUserAvatarUrl(session.getUserJid()));
-
-        return redirect(getServiceLoginUrl(session.getAuthCode(), getRootUrl(Http.Context.current().request())));
+        return redirect(getServiceLoginUrl(session.getAuthCode(), getRootUrl(req)))
+                .withSession(new ImmutableMap.Builder<String, String>()
+                        .put("version", JophielSessionUtils.getSessionVersion())
+                        .put("token", session.getToken())
+                        .put("userJid", session.getUserJid())
+                        .put("username", session.getUsername())
+                        .put("role", session.getRole())
+                        .put("avatar", getUserAvatarUrl(session.getUserJid()))
+                        .build());
     }
 
     public Result logout(String returnUri) {
-        session().clear();
-        return redirect(getServiceLogoutUrl(returnUri));
+        return redirect(getServiceLogoutUrl(returnUri))
+                .withNewSession();
     }
 
-    private Result showLogin(Form<LoginForm> form) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showLogin(Http.Request req, Form<LoginForm> form) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
 
         template.setSingleColumn();
         template.setContent(loginView.render(form));

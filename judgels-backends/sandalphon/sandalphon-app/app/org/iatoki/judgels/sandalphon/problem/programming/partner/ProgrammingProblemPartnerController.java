@@ -65,7 +65,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class);
         Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class);
 
-        return showAddPartner(usernameForm, problemForm, programmingForm, problem);
+        return showAddPartner(req, usernameForm, problemForm, programmingForm, problem);
     }
 
     @Transactional
@@ -84,7 +84,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).bindFromRequest(req);
 
         if (formHasErrors(usernameForm) || formHasErrors(problemForm) || formHasErrors(programmingForm)) {
-            return showAddPartner(usernameForm, problemForm, programmingForm, problem);
+            return showAddPartner(req, usernameForm, problemForm, programmingForm, problem);
         }
 
         String username = usernameForm.get().username;
@@ -94,12 +94,12 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
 
         if (!usernameToJidMap.containsKey(username)) {
-            return showAddPartner(usernameForm.withError("username", "Username not found."), problemForm, programmingForm, problem);
+            return showAddPartner(req, usernameForm.withError("username", "Username not found."), problemForm, programmingForm, problem);
         }
 
         String userJid = usernameToJidMap.get(username);
         if (problemService.isUserPartnerForProblem(problem.getJid(), userJid)) {
-            return showAddPartner(usernameForm.withError("username", "This user is already a partner."), problemForm, programmingForm, problem);
+            return showAddPartner(req, usernameForm.withError("username", "This user is already a partner."), problemForm, programmingForm, problem);
         }
 
         ProblemPartnerConfig problemConfig = new ProblemPartnerConfig.Builder()
@@ -158,7 +158,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
         Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).fill(programmingData);
 
-        return showEditPartner(problemForm, programmingForm, problem, problemPartner);
+        return showEditPartner(req, problemForm, programmingForm, problem, problemPartner);
     }
 
     @Transactional
@@ -178,7 +178,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         Form<ProgrammingPartnerUpsertForm> programmingForm = formFactory.form(ProgrammingPartnerUpsertForm.class).bindFromRequest(req);
 
         if (formHasErrors(problemForm) || formHasErrors(programmingForm)) {
-            return showEditPartner(problemForm, programmingForm, problem, problemPartner);
+            return showEditPartner(req, problemForm, programmingForm, problem, problemPartner);
         }
 
         ProblemPartnerUpsertForm problemData = problemForm.get();
@@ -207,8 +207,8 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
     }
 
-    private Result showAddPartner(Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showAddPartner(Http.Request req, Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(addPartnerView.render(usernameForm, problemForm, programmingForm, problem, getUserAutocompleteAPIEndpoint()));
 
         template.setSecondaryTitle("Add partner");
@@ -218,10 +218,10 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         return renderPartnerTemplate(template, problemService, problem);
     }
 
-    private Result showEditPartner(Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem, ProblemPartner problemPartner) {
+    private Result showEditPartner(Http.Request req, Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem, ProblemPartner problemPartner) {
         Profile profile = profileService.getProfile(problemPartner.getUserJid());
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editPartnerView.render(problemForm, programmingForm, problem, problemPartner));
 
         template.setSecondaryTitle("Update partner: " + profile.getUsername());

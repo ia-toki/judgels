@@ -74,7 +74,7 @@ public class LessonPartnerController extends AbstractLessonController {
         Set<String> userJids = pageOfLessonPartners.getPage().stream().map(LessonPartner::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listPartnersView.render(lesson.getId(), pageOfLessonPartners, profilesMap, orderBy, orderDir));
         template.setSecondaryTitle("Partners");
         template.addSecondaryButton("Add partner", routes.LessonPartnerController.addPartner(lesson.getId()));
@@ -98,7 +98,7 @@ public class LessonPartnerController extends AbstractLessonController {
         Form<LessonPartnerUsernameForm> usernameForm = formFactory.form(LessonPartnerUsernameForm.class);
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class);
 
-        return showAddPartner(usernameForm, lessonForm, lesson);
+        return showAddPartner(req, usernameForm, lessonForm, lesson);
     }
 
     @Transactional
@@ -116,7 +116,7 @@ public class LessonPartnerController extends AbstractLessonController {
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).bindFromRequest(req);
 
         if (formHasErrors(usernameForm) || formHasErrors(lessonForm)) {
-            return showAddPartner(usernameForm, lessonForm, lesson);
+            return showAddPartner(req, usernameForm, lessonForm, lesson);
         }
 
         String username = usernameForm.get().username;
@@ -125,13 +125,13 @@ public class LessonPartnerController extends AbstractLessonController {
         Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
 
         if (!usernameToJidMap.containsKey(username)) {
-            return showAddPartner(usernameForm.withError("username", "Username not found"), lessonForm, lesson);
+            return showAddPartner(req, usernameForm.withError("username", "Username not found"), lessonForm, lesson);
         }
 
         String userJid = usernameToJidMap.get(username);
 
         if (lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)) {
-            return showAddPartner(usernameForm.withError("username", "This user is already a partner."), lessonForm, lesson);
+            return showAddPartner(req, usernameForm.withError("username", "This user is already a partner."), lessonForm, lesson);
         }
 
         LessonPartnerConfig partnerConfig = new LessonPartnerConfig.Builder()
@@ -177,7 +177,7 @@ public class LessonPartnerController extends AbstractLessonController {
 
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).fill(lessonData);
 
-        return showEditPartner(lessonForm, lesson, lessonPartner);
+        return showEditPartner(req, lessonForm, lesson, lessonPartner);
     }
 
     @Transactional
@@ -196,7 +196,7 @@ public class LessonPartnerController extends AbstractLessonController {
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).bindFromRequest(req);
 
         if (formHasErrors(lessonForm)) {
-            return showEditPartner(lessonForm, lesson, lessonPartner);
+            return showEditPartner(req, lessonForm, lesson, lessonPartner);
         }
 
         LessonPartnerUpsertForm lessonData = lessonForm.get();
@@ -217,8 +217,8 @@ public class LessonPartnerController extends AbstractLessonController {
         return redirect(routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
     }
 
-    private Result showAddPartner(Form<LessonPartnerUsernameForm> usernameForm, Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showAddPartner(Http.Request req, Form<LessonPartnerUsernameForm> usernameForm, Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(addPartnerView.render(usernameForm, lessonForm, lesson, getUserAutocompleteAPIEndpoint()));
 
         template.setSecondaryTitle("Add partner");
@@ -228,10 +228,10 @@ public class LessonPartnerController extends AbstractLessonController {
         return renderTemplate(template, lessonService, lesson);
     }
 
-    private Result showEditPartner(Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson, LessonPartner lessonPartner) {
+    private Result showEditPartner(Http.Request req, Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson, LessonPartner lessonPartner) {
         Profile profile = profileService.getProfile(lessonPartner.getUserJid());
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editPartnerView.render(lessonForm, lesson, lessonPartner));
 
         template.setSecondaryTitle("Update partner: " + profile.getUsername());

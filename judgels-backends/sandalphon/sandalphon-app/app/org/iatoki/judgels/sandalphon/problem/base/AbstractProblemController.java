@@ -8,7 +8,7 @@ import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLangua
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import play.mvc.Call;
-import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 
 public abstract class AbstractProblemController extends AbstractBaseProblemController {
@@ -56,7 +56,8 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
     }
 
     protected void appendStatementLanguageSelection(HtmlTemplate template, String currentLanguage, Set<String> allowedLanguages, Call target) {
-        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(Controller.request(), Controller.request().secure()), allowedLanguages, currentLanguage, c));
+        Http.Request req = template.getRequest();
+        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), allowedLanguages, currentLanguage, c));
     }
 
     protected Result renderPartnerTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {

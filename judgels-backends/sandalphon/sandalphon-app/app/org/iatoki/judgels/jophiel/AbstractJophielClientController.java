@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import judgels.jophiel.api.JophielClientConfiguration;
 import org.iatoki.judgels.jophiel.logincheck.html.isLoggedOut;
 import org.iatoki.judgels.play.AbstractJudgelsController;
-import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -17,8 +16,10 @@ public class AbstractJophielClientController extends AbstractJudgelsController {
 
     @Override
     protected Result renderTemplate(HtmlTemplate template) {
-        if (IdentityUtils.getUserJid() != null) {
-            template.addAdditionalScript(isLoggedOut.render(getUserIsLoggedInAPIEndpoint(), org.iatoki.judgels.jophiel.routes.JophielClientController.logout(getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "javascripts/isLoggedOut.js", IdentityUtils.getUserJid()));
+        Http.Request req = template.getRequest();
+        String userJid = JophielSessionUtils.getUserJid(req);
+        if (userJid != null) {
+            template.addAdditionalScript(isLoggedOut.render(getUserIsLoggedInAPIEndpoint(), org.iatoki.judgels.jophiel.routes.JophielClientController.logout(getCurrentUrl(req)).absoluteURL(req, req.secure()), "javascripts/isLoggedOut.js", userJid));
         }
         return super.renderTemplate(template);
     }

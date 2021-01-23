@@ -7,6 +7,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.actor.ActorChecker;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
@@ -16,7 +17,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class BundleProblemController extends AbstractBundleProblemController {
+public final class BundleProblemController extends AbstractProblemController {
     private final ActorChecker actorChecker;
     private final BundleProblemService bundleProblemService;
     private final ProblemService problemService;

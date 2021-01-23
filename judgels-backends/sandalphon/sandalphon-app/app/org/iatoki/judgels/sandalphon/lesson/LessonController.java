@@ -60,7 +60,7 @@ public final class LessonController extends AbstractLessonController {
         Set<String> userJids = pageOfLessons.getPage().stream().map(Lesson::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listLessonsView.render(pageOfLessons, profilesMap, sortBy, orderBy, filterString, isWriter));
         template.setMainTitle("Lessons");
         if (isWriter) {
@@ -79,7 +79,7 @@ public final class LessonController extends AbstractLessonController {
 
         Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class);
 
-        return showCreateLesson(lessonCreateForm);
+        return showCreateLesson(req, lessonCreateForm);
     }
 
     @Transactional
@@ -90,11 +90,11 @@ public final class LessonController extends AbstractLessonController {
         Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class).bindFromRequest(req);
 
         if (formHasErrors(lessonCreateForm)) {
-            return showCreateLesson(lessonCreateForm);
+            return showCreateLesson(req, lessonCreateForm);
         }
 
         if (lessonService.lessonExistsBySlug(lessonCreateForm.get().slug)) {
-            return showCreateLesson(lessonCreateForm.withError("slug", "Slug already exists"));
+            return showCreateLesson(req, lessonCreateForm.withError("slug", "Slug already exists"));
         }
 
         LessonCreateForm lessonCreateData = lessonCreateForm.get();
@@ -141,7 +141,7 @@ public final class LessonController extends AbstractLessonController {
 
         Profile profile = profileService.getProfile(lesson.getAuthorJid());
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(viewLessonView.render(lesson, profile));
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
         template.addMainButton("Enter lesson", routes.LessonController.enterLesson(lesson.getId()));
@@ -168,7 +168,7 @@ public final class LessonController extends AbstractLessonController {
 
         Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).fill(lessonEditData);
 
-        return showEditLesson(lessonEditForm, lesson);
+        return showEditLesson(req, lessonEditForm, lesson);
     }
 
     @Transactional
@@ -185,11 +185,11 @@ public final class LessonController extends AbstractLessonController {
         Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).bindFromRequest(req);
 
         if (formHasErrors(lessonEditForm)) {
-            return showEditLesson(lessonEditForm, lesson);
+            return showEditLesson(req, lessonEditForm, lesson);
         }
 
         if (!lesson.getSlug().equals(lessonEditForm.get().slug) && lessonService.lessonExistsBySlug(lessonEditForm.get().slug)) {
-            return showEditLesson(lessonEditForm.withError("slug", "Slug already exists"), lesson);
+            return showEditLesson(req, lessonEditForm.withError("slug", "Slug already exists"), lesson);
         }
 
         LessonEditForm lessonEditData = lessonEditForm.get();
@@ -206,8 +206,8 @@ public final class LessonController extends AbstractLessonController {
         return redirect(req.getHeaders().get("Referer").orElse(""));
     }
 
-    private Result showCreateLesson(Form<LessonCreateForm> lessonCreateForm) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showCreateLesson(Http.Request req, Form<LessonCreateForm> lessonCreateForm) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(createLessonView.render(lessonCreateForm));
         template.setMainTitle("Create lesson");
         template.markBreadcrumbLocation("Create lesson", routes.LessonController.createLesson());
@@ -216,8 +216,8 @@ public final class LessonController extends AbstractLessonController {
         return renderTemplate(template);
     }
 
-    private Result showEditLesson(Form<LessonEditForm> lessonEditForm, Lesson lesson) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showEditLesson(Http.Request req, Form<LessonEditForm> lessonEditForm, Lesson lesson) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editLessonView.render(lessonEditForm, lesson));
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
         template.addMainButton("Enter lesson", routes.LessonController.enterLesson(lesson.getId()));

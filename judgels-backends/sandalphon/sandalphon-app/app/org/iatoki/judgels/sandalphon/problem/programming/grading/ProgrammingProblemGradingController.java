@@ -14,8 +14,8 @@ import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.html.autoPopulationLayout;
@@ -34,7 +34,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class ProgrammingProblemGradingController extends AbstractProgrammingProblemController {
+public final class ProgrammingProblemGradingController extends AbstractProblemController {
     private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
@@ -70,7 +70,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         Form<GradingEngineEditForm> gradingEngineEditForm = formFactory.form(GradingEngineEditForm.class).fill(gradingEngineEditData);
 
-        return showEditGradingEngine(gradingEngineEditForm, problem);
+        return showEditGradingEngine(req, gradingEngineEditForm, problem);
     }
 
     @Transactional
@@ -87,7 +87,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         Form<GradingEngineEditForm> gradingEngineEditForm = formFactory.form(GradingEngineEditForm.class).bindFromRequest(req);
 
         if (formHasErrors(gradingEngineEditForm)) {
-            return showEditGradingEngine(gradingEngineEditForm, problem);
+            return showEditGradingEngine(req, gradingEngineEditForm, problem);
         }
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
@@ -108,7 +108,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
             programmingProblemService.updateGradingEngine(actorJid, problem.getJid(), gradingEngine);
         } catch (IOException e) {
-            return showEditGradingEngine(gradingEngineEditForm.withGlobalError("Error updating grading engine."), problem);
+            return showEditGradingEngine(req, gradingEngineEditForm.withGlobalError("Error updating grading engine."), problem);
         }
 
         return redirect(routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId()));
@@ -142,7 +142,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         Form<?> gradingEngineConfForm = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).createFormFromConfig(formFactory, config);
 
-        return showEditGradingConfig(gradingEngineConfForm, problem, engine, testDataFiles, helperFiles);
+        return showEditGradingConfig(req, gradingEngineConfForm, problem, engine, testDataFiles, helperFiles);
     }
 
     @Transactional
@@ -167,7 +167,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
             List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
             List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
-            return showEditGradingConfig(gradingEngineConfForm, problem, engine, testDataFiles, helperFiles);
+            return showEditGradingConfig(req, gradingEngineConfForm, problem, engine, testDataFiles, helperFiles);
         }
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
@@ -179,7 +179,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
             List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
             List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
-            return showEditGradingConfig(gradingEngineConfForm.withGlobalError("Error updating grading config."), problem, engine, testDataFiles, helperFiles);
+            return showEditGradingConfig(req, gradingEngineConfForm.withGlobalError("Error updating grading config."), problem, engine, testDataFiles, helperFiles);
         }
 
         return redirect(routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId()));
@@ -284,7 +284,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
 
-        return showListGradingTestDataFiles(uploadFileForm, problem, testDataFiles);
+        return showListGradingTestDataFiles(req, uploadFileForm, problem, testDataFiles);
     }
 
     @Transactional
@@ -312,7 +312,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
 
-                return showListGradingTestDataFiles(form.withGlobalError("Error uploading test data files."), problem, testDataFiles);
+                return showListGradingTestDataFiles(req, form.withGlobalError("Error uploading test data files."), problem, testDataFiles);
             }
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
@@ -329,7 +329,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
 
-                return showListGradingTestDataFiles(form.withGlobalError("Error uploading test data files."), problem, testDataFiles);
+                return showListGradingTestDataFiles(req, form.withGlobalError("Error uploading test data files."), problem, testDataFiles);
             }
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
@@ -352,7 +352,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
-        return showListGradingHelperFiles(uploadFileForm, problem, helperFiles);
+        return showListGradingHelperFiles(req, uploadFileForm, problem, helperFiles);
     }
 
     @Transactional
@@ -380,7 +380,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
-                return showListGradingHelperFiles(form.withGlobalError("Error uploading helper files."), problem, helperFiles);
+                return showListGradingHelperFiles(req, form.withGlobalError("Error uploading helper files."), problem, helperFiles);
             }
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
@@ -397,7 +397,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
 
-                return showListGradingHelperFiles(form.withGlobalError("Error uploading helper files."), problem, helperFiles);
+                return showListGradingHelperFiles(req, form.withGlobalError("Error uploading helper files."), problem, helperFiles);
             }
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
@@ -430,7 +430,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
 
         Form<LanguageRestrictionEditForm> languageRestrictionEditForm = formFactory.form(LanguageRestrictionEditForm.class).fill(languageRestrictionEditData);
 
-        return showEditLanguageRestriction(languageRestrictionEditForm, problem);
+        return showEditLanguageRestriction(req, languageRestrictionEditForm, problem);
     }
 
     @Transactional
@@ -447,7 +447,7 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         Form<LanguageRestrictionEditForm> languageRestrictionEditForm = formFactory.form(LanguageRestrictionEditForm.class).bindFromRequest(req);
 
         if (formHasErrors(languageRestrictionEditForm)) {
-            return showEditLanguageRestriction(languageRestrictionEditForm, problem);
+            return showEditLanguageRestriction(req, languageRestrictionEditForm, problem);
         }
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
@@ -458,14 +458,14 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         try {
             programmingProblemService.updateLanguageRestriction(actorJid, problem.getJid(), languageRestriction);
         } catch (IOException e) {
-            return showEditLanguageRestriction(languageRestrictionEditForm.withGlobalError("Error updating language restriction.").withGlobalError("Error updating language restriction"), problem);
+            return showEditLanguageRestriction(req, languageRestrictionEditForm.withGlobalError("Error updating language restriction.").withGlobalError("Error updating language restriction"), problem);
         }
 
         return redirect(routes.ProgrammingProblemGradingController.editLanguageRestriction(problem.getId()));
     }
 
-    private Result showEditGradingEngine(Form<GradingEngineEditForm> gradingEngineEditForm, Problem problem) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showEditGradingEngine(Http.Request req, Form<GradingEngineEditForm> gradingEngineEditForm, Problem problem) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editGradingEngineView.render(gradingEngineEditForm, problem));
         template.markBreadcrumbLocation("Update engine", routes.ProgrammingProblemGradingController.editGradingEngine(problem.getId()));
         template.setPageTitle("Problem - Update grading engine");
@@ -473,10 +473,10 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         return renderTemplate(template, problemService, problem);
     }
 
-    private Result showEditGradingConfig(Form<?> gradingConfForm, Problem problem, String gradingEngine, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
+    private Result showEditGradingConfig(Http.Request req, Form<?> gradingConfForm, Problem problem, String gradingEngine, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         GradingEngineAdapter adapter = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(gradingEngine);
         Call postUpdateGradingConfigCall = routes.ProgrammingProblemGradingController.postEditGradingConfig(problem.getId());
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(adapter.renderUpdateGradingConfig(gradingConfForm, postUpdateGradingConfigCall, testDataFiles, helperFiles));
 
         if (adapter instanceof ConfigurableWithTokilibFormat) {
@@ -493,8 +493,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         return renderTemplate(template, problemService, problem);
     }
 
-    private Result showListGradingTestDataFiles(Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> testDataFiles) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showListGradingTestDataFiles(Http.Request req, Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> testDataFiles) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listGradingTestDataFilesView.render(uploadFileForm, problem.getId(), testDataFiles));
         template.markBreadcrumbLocation("Test data files", routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
         template.setPageTitle("Problem - Grading test data files");
@@ -502,8 +502,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         return renderTemplate(template, problemService, problem);
     }
 
-    private Result showListGradingHelperFiles(Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> helperFiles) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showListGradingHelperFiles(Http.Request req, Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> helperFiles) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listGradingHelperFilesView.render(uploadFileForm, problem.getId(), helperFiles));
         template.markBreadcrumbLocation("Helper files", routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
         template.setPageTitle("Problem - Grading Helper Files");
@@ -511,8 +511,8 @@ public final class ProgrammingProblemGradingController extends AbstractProgrammi
         return renderTemplate(template, problemService, problem);
     }
 
-    private Result showEditLanguageRestriction(Form<LanguageRestrictionEditForm> languageRestrictionEditForm, Problem problem) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showEditLanguageRestriction(Http.Request req, Form<LanguageRestrictionEditForm> languageRestrictionEditForm, Problem problem) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editLanguageRestrictionView.render(languageRestrictionEditForm, problem));
         template.markBreadcrumbLocation("Update language restriction", routes.ProgrammingProblemGradingController.editLanguageRestriction(problem.getId()));
         template.setPageTitle("Problem - Update Language Restriction");

@@ -101,7 +101,7 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        return showEditStatement(updateStatementForm, problem, allowedLanguages);
+        return showEditStatement(req, updateStatementForm, problem, allowedLanguages);
     }
 
     @Transactional
@@ -124,7 +124,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (formHasErrors(updateStatementForm)) {
             try {
                 Set<String> allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
-                return showEditStatement(updateStatementForm, problem, allowedLanguages);
+                return showEditStatement(req, updateStatementForm, problem, allowedLanguages);
             } catch (IOException e) {
                 return notFound();
             }
@@ -143,7 +143,7 @@ public class ProblemStatementController extends AbstractProblemController {
         } catch (IOException e) {
             try {
                 Set<String> allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
-                return showEditStatement(updateStatementForm.withGlobalError("Error updating statement."), problem, allowedLanguages);
+                return showEditStatement(req, updateStatementForm.withGlobalError("Error updating statement."), problem, allowedLanguages);
             } catch (IOException e2) {
                 return notFound();
             }
@@ -164,7 +164,7 @@ public class ProblemStatementController extends AbstractProblemController {
         boolean isAllowedToUploadMediaFiles = ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem);
         List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(actorJid, problem.getJid());
 
-        return showListStatementMediaFiles(uploadFileForm, problem, mediaFiles, isAllowedToUploadMediaFiles);
+        return showListStatementMediaFiles(req, uploadFileForm, problem, mediaFiles, isAllowedToUploadMediaFiles);
     }
 
     @Transactional
@@ -193,7 +193,7 @@ public class ProblemStatementController extends AbstractProblemController {
                 boolean isAllowedToUploadMediaFiles = ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem);
                 List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(actorJid, problem.getJid());
 
-                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
@@ -211,7 +211,7 @@ public class ProblemStatementController extends AbstractProblemController {
                 boolean isAllowedToUploadMediaFiles = ProblemControllerUtils.isAllowedToUploadStatementResources(problemService, problem);
                 List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(actorJid, problem.getJid());
 
-                return showListStatementMediaFiles(form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
+                return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
             }
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
@@ -240,7 +240,7 @@ public class ProblemStatementController extends AbstractProblemController {
             throw new IllegalStateException(e);
         }
 
-        HtmlTemplate template = getBaseHtmlTemplate();
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
         template.markBreadcrumbLocation("Statement languages", routes.ProblemStatementController.listStatementLanguages(problem.getId()));
         template.setPageTitle("Problem - Statement languages");
@@ -360,8 +360,8 @@ public class ProblemStatementController extends AbstractProblemController {
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
 
-    private Result showEditStatement(Form<UpdateStatementForm> updateStatementForm, Problem problem, Set<String> allowedLanguages) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showEditStatement(Http.Request req, Form<UpdateStatementForm> updateStatementForm, Problem problem, Set<String> allowedLanguages) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editStatementView.render(updateStatementForm, problem.getId()));
         appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
         template.markBreadcrumbLocation("Update statement", routes.ProblemStatementController.editStatement(problem.getId()));
@@ -370,8 +370,8 @@ public class ProblemStatementController extends AbstractProblemController {
         return renderStatementTemplate(template, problemService, problem);
     }
 
-    private Result showListStatementMediaFiles(Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
-        HtmlTemplate template = getBaseHtmlTemplate();
+    private Result showListStatementMediaFiles(Http.Request req, Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
+        HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementMediaFilesView.render(uploadFileForm, problem.getId(), mediaFiles, isAllowedToUploadMediaFiles));
         template.markBreadcrumbLocation("Media files", routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
         template.setPageTitle("Problem - Statement - Media files");
