@@ -2,8 +2,6 @@ package judgels.persistence.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import java.time.Clock;
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +19,8 @@ import judgels.persistence.api.dump.DumpImportMode;
 import judgels.persistence.api.dump.JudgelsDump;
 
 public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends HibernateDao<M> implements JudgelsDao<M> {
-    private final Clock clock;
-
     public JudgelsHibernateDao(HibernateDaoData data) {
         super(data);
-
-        this.clock = data.getClock();
     }
 
     @Override
@@ -70,34 +64,6 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     public M updateByJid(String jid, M model) {
         model.jid = jid;
         return super.update(model);
-    }
-
-    @Override
-    public void persist(M model, String actor, String ipAddress) {
-        model.jid = JidGenerator.newJid(getEntityClass());
-        model.createdBy = actor;
-        model.createdAt = clock.instant();
-        model.createdIp = ipAddress;
-
-        model.updatedBy = model.createdBy;
-        model.updatedAt = model.createdAt;
-        model.updatedIp = model.createdIp;
-
-        persist(model);
-    }
-
-    @Override
-    public void persist(M model, String user, Instant time, String ipAddress) {
-        model.jid = JidGenerator.newJid(getEntityClass());
-        model.createdBy = user;
-        model.createdAt = time;
-        model.createdIp = ipAddress;
-
-        model.updatedBy = model.createdBy;
-        model.updatedAt = model.createdAt;
-        model.updatedIp = model.createdIp;
-
-        persist(model);
     }
 
     @Override

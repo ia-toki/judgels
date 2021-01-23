@@ -3,7 +3,6 @@ package judgels.persistence.hibernate;
 import com.google.common.collect.Lists;
 import java.time.Clock;
 import java.util.List;
-import javax.persistence.criteria.CriteriaQuery;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.Dao;
 import judgels.persistence.Model;
@@ -48,33 +47,6 @@ public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernat
     }
 
     @Override
-    public void persist(M model, String user, String ipAddress) {
-        model.createdBy = user;
-        model.createdAt = clock.instant();
-        model.createdIp = ipAddress;
-
-        model.updatedBy = model.createdBy;
-        model.updatedAt = model.createdAt;
-        model.updatedIp = model.createdIp;
-
-        persist(model);
-    }
-
-    @Override
-    public M edit(M model, String user, String ipAddress) {
-        model.updatedBy = user;
-        model.updatedAt = clock.instant();
-        model.updatedIp = ipAddress;
-
-        return persist(model);
-    }
-
-    @Override
-    public void remove(M model) {
-        delete(model);
-    }
-
-    @Override
     public void setModelMetadataFromDump(M model, Dump dump) {
         super.setModelMetadataFromDump(model, dump);
 
@@ -93,17 +65,5 @@ public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernat
                     String.format("Unknown mode: %s", dump.getMode())
             );
         }
-    }
-
-    @Deprecated
-    protected final M getFirstResultAndDeleteTheRest(CriteriaQuery<M> query) {
-        List<M> resultList = currentSession().createQuery(query).getResultList();
-        M result = resultList.get(0);
-
-        for (int i = 1; i < resultList.size(); ++i) {
-            remove(resultList.get(i));
-        }
-
-        return result;
     }
 }
