@@ -15,6 +15,7 @@ import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
@@ -23,7 +24,6 @@ import org.iatoki.judgels.sandalphon.lesson.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.lessonStatementView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.listStatementLanguagesView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.listStatementMediaFilesView;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
@@ -45,10 +45,8 @@ public class LessonStatementController extends AbstractLessonController {
     private final LessonService lessonService;
 
     @Inject
-    public LessonStatementController(
-            ActorChecker actorChecker,
-            LessonService lessonService) {
-
+    public LessonStatementController(ActorChecker actorChecker, LessonService lessonService) {
+        super(lessonService);
         this.actorChecker = actorChecker;
         this.lessonService = lessonService;
     }
@@ -58,23 +56,19 @@ public class LessonStatementController extends AbstractLessonController {
         String actorJid = actorChecker.check(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-        try {
-            LessonControllerUtils.establishStatementLanguage(lessonService, lesson);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, lesson);
 
-        if (!LessonControllerUtils.isAllowedToViewStatement(lessonService, lesson)) {
+        if (!LessonControllerUtils.isAllowedToViewStatement(lessonService, lesson, language)) {
             return notFound();
         }
 
         LessonStatement statement;
         try {
-            statement = lessonService.getStatement(actorJid, lesson.getJid(), LessonControllerUtils.getCurrentStatementLanguage());
+            statement = lessonService.getStatement(actorJid, lesson.getJid(), language);
         } catch (IOException e) {
             statement = new LessonStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(LessonControllerUtils.getCurrentStatementLanguage()))
-                    .text(LessonStatementUtils.getDefaultText(LessonControllerUtils.getCurrentStatementLanguage()))
+                    .title(ProblemStatementUtils.getDefaultTitle(language))
+                    .text(LessonStatementUtils.getDefaultText(language))
                     .build();
         }
 
@@ -90,11 +84,12 @@ public class LessonStatementController extends AbstractLessonController {
         }
 
 
-        appendStatementLanguageSelection(template, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
+        appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
         template.markBreadcrumbLocation("View statement", routes.LessonStatementController.viewStatement(lessonId));
         template.setPageTitle("Lesson - View statement");
 
-        return renderTemplate(template, lessonService, lesson);
+        return renderTemplate(template, lessonService, lesson)
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
@@ -103,19 +98,15 @@ public class LessonStatementController extends AbstractLessonController {
         String actorJid = actorChecker.check(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-        try {
-            LessonControllerUtils.establishStatementLanguage(lessonService, lesson);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, lesson);
 
-        if (!LessonControllerUtils.isAllowedToUpdateStatementInLanguage(lessonService, lesson)) {
+        if (!LessonControllerUtils.isAllowedToUpdateStatementInLanguage(lessonService, lesson, language)) {
             return notFound();
         }
 
         LessonStatement statement;
         try {
-            statement = lessonService.getStatement(actorJid, lesson.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
+            statement = lessonService.getStatement(actorJid, lesson.getJid(), language);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -133,7 +124,8 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        return showEditStatement(req, updateStatementForm, lesson, allowedLanguages);
+        return showEditStatement(req, language, updateStatementForm, lesson, allowedLanguages)
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional
@@ -142,13 +134,9 @@ public class LessonStatementController extends AbstractLessonController {
         String actorJid = actorChecker.check(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-        try {
-            LessonControllerUtils.establishStatementLanguage(lessonService, lesson);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, lesson);
 
-        if (!LessonControllerUtils.isAllowedToUpdateStatementInLanguage(lessonService, lesson)) {
+        if (!LessonControllerUtils.isAllowedToUpdateStatementInLanguage(lessonService, lesson, language)) {
             return notFound();
         }
 
@@ -156,7 +144,7 @@ public class LessonStatementController extends AbstractLessonController {
         if (formHasErrors(updateStatementForm)) {
             try {
                 Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-                return showEditStatement(req, updateStatementForm, lesson, allowedLanguages);
+                return showEditStatement(req, language, updateStatementForm, lesson, allowedLanguages);
             } catch (IOException e) {
                 return notFound();
             }
@@ -166,20 +154,21 @@ public class LessonStatementController extends AbstractLessonController {
 
         try {
             UpdateStatementForm updateStatementData = updateStatementForm.get();
-            lessonService.updateStatement(actorJid, lesson.getJid(), LessonControllerUtils.getCurrentStatementLanguage(), new LessonStatement.Builder()
+            lessonService.updateStatement(actorJid, lesson.getJid(), language, new LessonStatement.Builder()
                     .title(updateStatementData.title)
                     .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                     .build());
         } catch (IOException e) {
             try {
                 Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-                return showEditStatement(req, updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
+                return showEditStatement(req, language, updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
             } catch (IOException e2) {
                 return notFound();
             }
         }
 
-        return redirect(routes.LessonStatementController.editStatement(lesson.getId()));
+        return redirect(routes.LessonStatementController.editStatement(lesson.getId()))
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
@@ -260,14 +249,8 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        Map<String, StatementLanguageStatus> availableLanguages;
-        String defaultLanguage;
-        try {
-            availableLanguages = lessonService.getAvailableLanguages(actorJid, lesson.getJid());
-            defaultLanguage = lessonService.getDefaultLanguage(actorJid, lesson.getJid());
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        Map<String, StatementLanguageStatus> availableLanguages = lessonService.getAvailableLanguages(actorJid, lesson.getJid());
+        String defaultLanguage = lessonService.getDefaultLanguage(actorJid, lesson.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, lesson.getId()));
@@ -338,6 +321,7 @@ public class LessonStatementController extends AbstractLessonController {
         String actorJid = actorChecker.check(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        String language = getStatementLanguage(req, lesson);
 
         if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
             return notFound();
@@ -353,14 +337,15 @@ public class LessonStatementController extends AbstractLessonController {
 
             lessonService.disableLanguage(actorJid, lesson.getJid(), languageCode);
 
-            if (LessonControllerUtils.getCurrentStatementLanguage().equals(languageCode)) {
-                LessonControllerUtils.setCurrentStatementLanguage(lessonService.getDefaultLanguage(actorJid, lesson.getJid()));
+            if (language.equals(languageCode)) {
+                language = lessonService.getDefaultLanguage(actorJid, lesson.getJid());
             }
         } catch (IOException e) {
             throw new IllegalStateException("Statement language probably hasn't been added.", e);
         }
 
-        return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
+        return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()))
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional
@@ -389,10 +374,10 @@ public class LessonStatementController extends AbstractLessonController {
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }
 
-    private Result showEditStatement(Http.Request req, Form<UpdateStatementForm> updateStatementForm, Lesson lesson, Set<String> allowedLanguages) {
+    private Result showEditStatement(Http.Request req, String language, Form<UpdateStatementForm> updateStatementForm, Lesson lesson, Set<String> allowedLanguages) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editStatementView.render(updateStatementForm, lesson.getId()));
-        appendStatementLanguageSelection(template, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
+        appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
         template.markBreadcrumbLocation("Update statement", routes.LessonStatementController.editStatement(lesson.getId()));
 
         template.setPageTitle("Lesson - Update statement");

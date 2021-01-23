@@ -7,6 +7,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.actor.ActorChecker;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -28,6 +29,7 @@ public final class BundleProblemController extends AbstractProblemController {
             BundleProblemService bundleProblemService,
             ProblemService problemService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.bundleProblemService = bundleProblemService;
         this.problemService = problemService;
@@ -61,10 +63,10 @@ public final class BundleProblemController extends AbstractProblemController {
 
         problemService.initRepository(actorJid, problem.getJid());
 
-        ProblemControllerUtils.setCurrentStatementLanguage(ProblemControllerUtils.getJustCreatedProblemInitLanguageCode());
         ProblemControllerUtils.removeJustCreatedProblem();
 
-        return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()));
+        return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()))
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
     }
 
     public Result jumpToItems(long problemId) {

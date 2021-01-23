@@ -44,6 +44,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
             ProfileService profileService,
             ProblemService problemService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.userSearchService = userSearchService;
         this.profileService = profileService;

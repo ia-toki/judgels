@@ -48,7 +48,7 @@ public interface ProblemService {
 
     Page<Problem> getPageOfProblems(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin);
 
-    Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String problemJid) throws IOException;
+    Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String problemJid);
 
     void addLanguage(String userJid, String problemJid, String languageCode) throws IOException;
 
@@ -58,7 +58,7 @@ public interface ProblemService {
 
     void makeDefaultLanguage(String userJid, String problemJid, String languageCode) throws IOException;
 
-    String getDefaultLanguage(String userJid, String problemJid) throws IOException;
+    String getDefaultLanguage(String userJid, String problemJid);
 
     ProblemStatement getStatement(String userJid, String problemJid, String languageCode) throws IOException;
 

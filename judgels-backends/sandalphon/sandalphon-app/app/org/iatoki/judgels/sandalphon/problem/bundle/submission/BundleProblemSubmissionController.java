@@ -17,8 +17,8 @@ import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
@@ -49,6 +49,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
             ProblemService problemService,
             ProfileService profileService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.bundleSubmissionFs = bundleSubmissionFs;
         this.bundleSubmissionService = bundleSubmissionService;
@@ -69,7 +70,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
         DynamicForm dForm = formFactory.form().bindFromRequest(req);
 
-        BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, ProblemControllerUtils.getCurrentStatementLanguage());
+        BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, SandalphonSessionUtils.getCurrentStatementLanguage(req));
         String submissionJid = bundleSubmissionService.submit(problem.getJid(), null, bundleAnswer);
         bundleSubmissionService.storeSubmissionFiles(bundleSubmissionFs, null, submissionJid, bundleAnswer);
 

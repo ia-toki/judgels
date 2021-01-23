@@ -11,6 +11,7 @@ import judgels.sandalphon.api.problem.Problem;
 import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -39,6 +40,7 @@ public final class BundleItemController extends AbstractProblemController {
             BundleItemService bundleItemService,
             ProblemService problemService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.bundleItemService = bundleItemService;
         this.problemService = problemService;
@@ -134,11 +136,7 @@ public final class BundleItemController extends AbstractProblemController {
             return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         }
 
-        try {
-            ProblemControllerUtils.establishStatementLanguage(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, problem);
 
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(BundleItemType.valueOf(itemType));
         if (bundleItemConfAdapter == null) {
@@ -168,9 +166,10 @@ public final class BundleItemController extends AbstractProblemController {
                 return showListCreateItems(req, problem, items, orderBy, orderDir, filterString, bundleItemConfForm.withGlobalError("Duplicate meta on item."));
             }
 
-            bundleItemService.createBundleItem(problem.getJid(), actorJid, BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem));
+            bundleItemService.createBundleItem(problem.getJid(), actorJid, BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), problemService.getDefaultLanguage(actorJid, problem.getJid()));
 
-            return redirect(routes.BundleItemController.viewItems(problem.getId()));
+            return redirect(routes.BundleItemController.viewItems(problem.getId()))
+                    .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -182,8 +181,9 @@ public final class BundleItemController extends AbstractProblemController {
         String actorJid = actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
+        String language = getStatementLanguage(req, problem);
 
-        if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem)) {
+        if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem, language)) {
             return notFound();
         }
 
@@ -193,12 +193,6 @@ public final class BundleItemController extends AbstractProblemController {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-
-        try {
-            ProblemControllerUtils.establishStatementLanguage(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
         }
 
         BundleItem bundleItem;
@@ -222,16 +216,17 @@ public final class BundleItemController extends AbstractProblemController {
 
         Form bundleItemConfForm;
         try {
-            bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, ProblemControllerUtils.getCurrentStatementLanguage()), bundleItem.getMeta());
+            bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, language), bundleItem.getMeta());
         } catch (IOException e) {
             try {
-                bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem)), bundleItem.getMeta());
+                bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, problemService.getDefaultLanguage(actorJid, problem.getJid())), bundleItem.getMeta());
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
         }
 
-        return showEditItem(req, problem, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
+        return showEditItem(req, problem, language, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages)
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional
@@ -240,8 +235,9 @@ public final class BundleItemController extends AbstractProblemController {
         String actorJid = actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
+        String language = getStatementLanguage(req, problem);
 
-        if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem)) {
+        if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem, language)) {
             return notFound();
         }
 
@@ -260,12 +256,6 @@ public final class BundleItemController extends AbstractProblemController {
             throw new RuntimeException(e);
         }
 
-        try {
-            ProblemControllerUtils.establishStatementLanguage(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
-        }
-
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(bundleItem.getType());
         Set<String> allowedLanguages;
         try {
@@ -280,17 +270,18 @@ public final class BundleItemController extends AbstractProblemController {
 
         Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, req);
         if (formHasErrors(bundleItemConfForm)) {
-            return showEditItem(req, problem, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
+            return showEditItem(req, problem, language, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
         }
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
         try {
-            bundleItemService.updateBundleItem(problem.getJid(), actorJid, itemJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), ProblemControllerUtils.getCurrentStatementLanguage());
+            bundleItemService.updateBundleItem(problem.getJid(), actorJid, itemJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), language);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return redirect(routes.BundleItemController.viewItems(problem.getId()));
+        return redirect(routes.BundleItemController.viewItems(problem.getId()))
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
@@ -385,10 +376,10 @@ public final class BundleItemController extends AbstractProblemController {
         return renderTemplate(template, problemService, problem);
     }
 
-    private Result showEditItem(Http.Request req, Problem problem, BundleItem bundleItem, Html html, Set<String> allowedLanguages) {
+    private Result showEditItem(Http.Request req, Problem problem, String language, BundleItem bundleItem, Html html, Set<String> allowedLanguages) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(html);
-        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
         template.markBreadcrumbLocation("Update item", routes.BundleItemController.editItem(problem.getId(), bundleItem.getJid()));
         template.setPageTitle("Problem - Bundle - Item - Update");
 

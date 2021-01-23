@@ -46,7 +46,7 @@ public interface LessonService {
 
     Page<Lesson> getPageOfLessons(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin);
 
-    Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String lessonJid) throws IOException;
+    Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String lessonJid);
 
     void addLanguage(String userJid, String lessonJid, String languageCode) throws IOException;
 
@@ -56,7 +56,7 @@ public interface LessonService {
 
     void makeDefaultLanguage(String userJid, String lessonJid, String languageCode) throws IOException;
 
-    String getDefaultLanguage(String userJid, String lessonJid) throws IOException;
+    String getDefaultLanguage(String userJid, String lessonJid);
 
     LessonStatement getStatement(String userJid, String lessonJid, String languageCode) throws IOException;
 

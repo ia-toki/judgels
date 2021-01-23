@@ -12,7 +12,6 @@ import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 
@@ -20,28 +19,6 @@ public final class LessonControllerUtils {
 
     private LessonControllerUtils() {
         // prevent instantiation
-    }
-
-    public static void establishStatementLanguage(LessonService lessonService, Lesson lesson) throws IOException {
-        String currentLanguage = getCurrentStatementLanguage();
-        Map<String, StatementLanguageStatus> availableLanguages = lessonService.getAvailableLanguages(IdentityUtils.getUserJid(), lesson.getJid());
-
-        if (currentLanguage == null || !availableLanguages.containsKey(currentLanguage) || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            String languageCode = lessonService.getDefaultLanguage(IdentityUtils.getUserJid(), lesson.getJid());
-            setCurrentStatementLanguage(languageCode);
-        }
-    }
-
-    public static String getDefaultStatementLanguage(LessonService lessonService, Lesson lesson) throws IOException {
-        return lessonService.getDefaultLanguage(IdentityUtils.getUserJid(), lesson.getJid());
-    }
-
-    public static void setCurrentStatementLanguage(String languageCode) {
-        Controller.session("currentStatementLanguage", languageCode);
-    }
-
-    public static String getCurrentStatementLanguage() {
-        return Controller.session("currentStatementLanguage");
     }
 
     public static Result downloadFile(File file) {
@@ -77,7 +54,7 @@ public final class LessonControllerUtils {
         return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToUploadStatementResources());
     }
 
-    public static boolean isAllowedToViewStatement(LessonService lessonService, Lesson lesson) {
+    public static boolean isAllowedToViewStatement(LessonService lessonService, Lesson lesson, String language) {
         if (isAuthorOrAbove(lesson)) {
             return true;
         }
@@ -86,21 +63,10 @@ public final class LessonControllerUtils {
             return false;
         }
 
-        String language = getCurrentStatementLanguage();
+        String defaultLanguage = lessonService.getDefaultLanguage(IdentityUtils.getUserJid(), lesson.getJid());
+        Set<String> allowedLanguages = getPartnerConfig(lessonService, lesson).getAllowedStatementLanguagesToView();
 
-        try {
-            String defaultLanguage = lessonService.getDefaultLanguage(IdentityUtils.getUserJid(), lesson.getJid());
-            Set<String> allowedLanguages = getPartnerConfig(lessonService, lesson).getAllowedStatementLanguagesToView();
-
-            if (allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage)) {
-                return true;
-            }
-
-            setCurrentStatementLanguage(defaultLanguage);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        return allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage);
     }
 
 
@@ -108,7 +74,7 @@ public final class LessonControllerUtils {
         return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).getIsAllowedToUpdateStatement());
     }
 
-    public static boolean isAllowedToUpdateStatementInLanguage(LessonService lessonService, Lesson lesson) {
+    public static boolean isAllowedToUpdateStatementInLanguage(LessonService lessonService, Lesson lesson, String language) {
         if (!isAllowedToUpdateStatement(lessonService, lesson)) {
             return false;
         }
@@ -121,18 +87,9 @@ public final class LessonControllerUtils {
             return false;
         }
 
-        String language = getCurrentStatementLanguage();
-
         Set<String> allowedLanguages = getPartnerConfig(lessonService, lesson).getAllowedStatementLanguagesToUpdate();
 
-        if (allowedLanguages == null || allowedLanguages.contains(language)) {
-            return true;
-        }
-
-        String firstLanguage = allowedLanguages.iterator().next();
-
-        setCurrentStatementLanguage(firstLanguage);
-        return true;
+        return allowedLanguages == null || allowedLanguages.contains(language);
     }
 
     public static boolean isAllowedToManageStatementLanguages(LessonService lessonService, Lesson lesson) {

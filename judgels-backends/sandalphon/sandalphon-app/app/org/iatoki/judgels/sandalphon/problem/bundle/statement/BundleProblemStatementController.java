@@ -12,6 +12,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -39,6 +40,7 @@ public final class BundleProblemStatementController extends AbstractProblemContr
             BundleItemService bundleItemService,
             ProblemService problemService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.bundleItemService = bundleItemService;
         this.problemService = problemService;
@@ -49,23 +51,19 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         String actorJid = actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        try {
-            ProblemControllerUtils.establishStatementLanguage(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, problem);
 
-        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem)) {
+        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem, language)) {
             return notFound();
         }
 
         ProblemStatement statement;
         try {
-            statement = problemService.getStatement(actorJid, problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
+            statement = problemService.getStatement(actorJid, problem.getJid(), language);
         } catch (IOException e) {
             statement = new ProblemStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
-                    .text(BundleProblemStatementUtils.getDefaultStatement(ProblemControllerUtils.getCurrentStatementLanguage()))
+                    .title(ProblemStatementUtils.getDefaultTitle(language))
+                    .text(BundleProblemStatementUtils.getDefaultStatement(language))
                     .build();
         }
 
@@ -91,11 +89,11 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         for (BundleItem bundleItem : bundleItemList) {
             BundleItemAdapter adapter = BundleItemAdapters.fromItemType(bundleItem.getType());
             try {
-                htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage())));
+                htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), language)));
             } catch (IOException e) {
                 try {
-                    ProblemControllerUtils.setCurrentStatementLanguage(ProblemControllerUtils.getDefaultStatementLanguage(problemService, problem));
-                    htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage())));
+                    language = problemService.getDefaultLanguage(actorJid, problem.getJid());
+                    htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), language)));
                 } catch (IOException e1) {
                     return notFound();
                 }
@@ -111,11 +109,12 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         } catch (IOException e) {
             return notFound();
         }
-        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
 
         template.markBreadcrumbLocation("View statement", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
         template.setPageTitle("Problem - View statement");
 
-        return renderStatementTemplate(template, problemService, problem);
+        return renderStatementTemplate(template, problemService, problem)
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 }

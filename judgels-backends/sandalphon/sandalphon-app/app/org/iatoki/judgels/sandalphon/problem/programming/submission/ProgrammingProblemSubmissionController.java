@@ -66,6 +66,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
             SubmissionClient submissionClient,
             SubmissionRegrader submissionRegrader) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;

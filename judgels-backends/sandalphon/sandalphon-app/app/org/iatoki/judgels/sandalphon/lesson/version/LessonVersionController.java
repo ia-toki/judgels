@@ -40,6 +40,7 @@ public final class LessonVersionController extends AbstractLessonController {
             LessonService lessonService,
             ProfileService profileService) {
 
+        super(lessonService);
         this.actorChecker = actorChecker;
         this.lessonService = lessonService;
         this.profileService = profileService;

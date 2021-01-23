@@ -15,6 +15,7 @@ import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.editProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.listProblemsView;
@@ -37,6 +38,7 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Inject
     public ProblemController(ActorChecker actorChecker, ProblemService problemService, ProfileService profileService) {
+        super(problemService);
         this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.profileService = profileService;
@@ -126,7 +128,8 @@ public final class ProblemController extends AbstractBaseProblemController {
         actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem)) {
+        String language = getStatementLanguage(req, problem);
+        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem, language)) {
             return notFound();
         }
 
@@ -190,10 +193,10 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @RequireCSRFCheck
     public Result switchLanguage(Http.Request req, long problemId) {
-        String languageCode = formFactory.form().bindFromRequest(req).get("langCode");
-        ProblemControllerUtils.setCurrentStatementLanguage(languageCode);
+        String language = formFactory.form().bindFromRequest(req).get("langCode");
 
-        return redirect(req.getHeaders().get("Referer").orElse(""));
+        return redirect(req.getHeaders().get("Referer").orElse(""))
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     private Result showCreateProblem(Http.Request req, Form<ProblemCreateForm> problemCreateForm) {

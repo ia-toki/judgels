@@ -48,6 +48,7 @@ public class LessonPartnerController extends AbstractLessonController {
             LessonService lessonService,
             ProfileService profileService) {
 
+        super(lessonService);
         this.actorChecker = actorChecker;
         this.userSearchService = userSearchService;
         this.lessonService = lessonService;

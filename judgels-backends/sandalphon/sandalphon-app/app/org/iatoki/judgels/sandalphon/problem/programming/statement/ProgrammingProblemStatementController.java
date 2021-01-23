@@ -14,6 +14,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -39,6 +40,7 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
@@ -49,23 +51,19 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
         String actorJid = actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        try {
-            ProblemControllerUtils.establishStatementLanguage(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, problem);
 
-        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem)) {
+        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem, language)) {
             return notFound();
         }
 
         ProblemStatement statement;
         try {
-            statement = problemService.getStatement(actorJid, problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
+            statement = problemService.getStatement(actorJid, problem.getJid(), language);
         } catch (IOException e) {
             statement = new ProblemStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
-                    .text(ProgrammingProblemStatementUtils.getDefaultText(ProblemControllerUtils.getCurrentStatementLanguage()))
+                    .title(ProblemStatementUtils.getDefaultTitle(language))
+                    .text(ProgrammingProblemStatementUtils.getDefaultText(language))
                     .build();
         }
 
@@ -112,10 +110,11 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
             return notFound();
         }
 
-        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
         template.markBreadcrumbLocation("View statement", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
         template.setPageTitle("Problem - View statement");
 
-        return renderStatementTemplate(template, problemService, problem);
+        return renderStatementTemplate(template, problemService, problem)
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 }

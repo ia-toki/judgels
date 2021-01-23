@@ -40,6 +40,7 @@ public final class ProblemVersionController extends AbstractProblemController {
             ProblemService problemService,
             ProfileService profileService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.profileService = profileService;

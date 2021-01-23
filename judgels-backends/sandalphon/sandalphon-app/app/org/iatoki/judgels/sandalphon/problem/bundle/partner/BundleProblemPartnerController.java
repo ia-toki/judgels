@@ -44,6 +44,7 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
             ProblemService problemService,
             ProfileService profileService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.userSearchService = userSearchService;
         this.problemService = problemService;

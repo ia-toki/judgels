@@ -16,6 +16,7 @@ import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -41,6 +42,8 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Inject
     public ProblemStatementController(ActorChecker actorChecker, ProblemService problemService) {
+        super(problemService);
+
         this.actorChecker = actorChecker;
         this.problemService = problemService;
     }
@@ -64,24 +67,20 @@ public class ProblemStatementController extends AbstractProblemController {
         String actorJid = actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        try {
-            ProblemControllerUtils.establishStatementLanguage(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, problem);
 
-        if (!ProblemControllerUtils.isAllowedToUpdateStatementInLanguage(problemService, problem)) {
+        if (!ProblemControllerUtils.isAllowedToUpdateStatementInLanguage(problemService, problem, language)) {
             return notFound();
         }
 
         ProblemStatement statement;
         try {
-            statement = problemService.getStatement(actorJid, problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
+            statement = problemService.getStatement(actorJid, problem.getJid(), language);
         } catch (IOException e) {
             if (ProblemType.PROGRAMMING.equals(problem.getType())) {
                 statement = new ProblemStatement.Builder()
-                        .title(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
-                        .text(ProgrammingProblemStatementUtils.getDefaultText(ProblemControllerUtils.getCurrentStatementLanguage()))
+                        .title(ProblemStatementUtils.getDefaultTitle(language))
+                        .text(ProgrammingProblemStatementUtils.getDefaultText(language))
                         .build();
             } else {
                 throw new IllegalStateException("Problem besides programming has not been defined");
@@ -101,7 +100,8 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        return showEditStatement(req, updateStatementForm, problem, allowedLanguages);
+        return showEditStatement(req, language, updateStatementForm, problem, allowedLanguages)
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional
@@ -110,13 +110,9 @@ public class ProblemStatementController extends AbstractProblemController {
         String actorJid = actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        try {
-            ProblemControllerUtils.establishStatementLanguage(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
-        }
+        String language = getStatementLanguage(req, problem);
 
-        if (!ProblemControllerUtils.isAllowedToUpdateStatementInLanguage(problemService, problem)) {
+        if (!ProblemControllerUtils.isAllowedToUpdateStatementInLanguage(problemService, problem, language)) {
             return notFound();
         }
 
@@ -124,7 +120,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (formHasErrors(updateStatementForm)) {
             try {
                 Set<String> allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
-                return showEditStatement(req, updateStatementForm, problem, allowedLanguages);
+                return showEditStatement(req, language, updateStatementForm, problem, allowedLanguages);
             } catch (IOException e) {
                 return notFound();
             }
@@ -139,17 +135,18 @@ public class ProblemStatementController extends AbstractProblemController {
                     .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                     .build();
 
-            problemService.updateStatement(actorJid, problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage(), statement);
+            problemService.updateStatement(actorJid, problem.getJid(), language, statement);
         } catch (IOException e) {
             try {
                 Set<String> allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
-                return showEditStatement(req, updateStatementForm.withGlobalError("Error updating statement."), problem, allowedLanguages);
+                return showEditStatement(req, language, updateStatementForm.withGlobalError("Error updating statement."), problem, allowedLanguages);
             } catch (IOException e2) {
                 return notFound();
             }
         }
 
-        return redirect(routes.ProblemStatementController.editStatement(problem.getId()));
+        return redirect(routes.ProblemStatementController.editStatement(problem.getId()))
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
 
@@ -231,14 +228,8 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        Map<String, StatementLanguageStatus> availableLanguages;
-        String defaultLanguage;
-        try {
-            availableLanguages = problemService.getAvailableLanguages(actorJid, problem.getJid());
-            defaultLanguage = problemService.getDefaultLanguage(actorJid, problem.getJid());
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        Map<String, StatementLanguageStatus> availableLanguages = problemService.getAvailableLanguages(actorJid, problem.getJid());
+        String defaultLanguage = problemService.getDefaultLanguage(actorJid, problem.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
@@ -309,6 +300,7 @@ public class ProblemStatementController extends AbstractProblemController {
         String actorJid = actorChecker.check(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
+        String language = getStatementLanguage(req, problem);
 
         if (!ProblemControllerUtils.isAllowedToManageStatementLanguages(problemService, problem)) {
             return notFound();
@@ -324,14 +316,15 @@ public class ProblemStatementController extends AbstractProblemController {
 
             problemService.disableLanguage(actorJid, problem.getJid(), languageCode);
 
-            if (ProblemControllerUtils.getCurrentStatementLanguage().equals(languageCode)) {
-                ProblemControllerUtils.setCurrentStatementLanguage(problemService.getDefaultLanguage(actorJid, problem.getJid()));
+            if (SandalphonSessionUtils.getCurrentStatementLanguage(req).equals(languageCode)) {
+                language = problemService.getDefaultLanguage(actorJid, problem.getJid());
             }
         } catch (IOException e) {
             throw new IllegalStateException("Statement language probably hasn't been added.", e);
         }
 
-        return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
+        return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()))
+                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
@@ -360,10 +353,10 @@ public class ProblemStatementController extends AbstractProblemController {
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
 
-    private Result showEditStatement(Http.Request req, Form<UpdateStatementForm> updateStatementForm, Problem problem, Set<String> allowedLanguages) {
+    private Result showEditStatement(Http.Request req, String language, Form<UpdateStatementForm> updateStatementForm, Problem problem, Set<String> allowedLanguages) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editStatementView.render(updateStatementForm, problem.getId()));
-        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
         template.markBreadcrumbLocation("Update statement", routes.ProblemStatementController.editStatement(problem.getId()));
         template.setPageTitle("Problem - Update statement");
 

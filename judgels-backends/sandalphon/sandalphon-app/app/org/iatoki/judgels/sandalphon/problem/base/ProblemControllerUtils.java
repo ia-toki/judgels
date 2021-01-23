@@ -19,28 +19,6 @@ public final class ProblemControllerUtils {
         // prevent instantiation
     }
 
-    public static void establishStatementLanguage(ProblemService problemService, Problem problem) throws IOException {
-        String currentLanguage = getCurrentStatementLanguage();
-        Map<String, StatementLanguageStatus> availableLanguages = problemService.getAvailableLanguages(IdentityUtils.getUserJid(), problem.getJid());
-
-        if (currentLanguage == null || !availableLanguages.containsKey(currentLanguage) || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            String languageCode = problemService.getDefaultLanguage(IdentityUtils.getUserJid(), problem.getJid());
-            setCurrentStatementLanguage(languageCode);
-        }
-    }
-
-    public static String getDefaultStatementLanguage(ProblemService problemService, Problem problem) throws IOException {
-        return problemService.getDefaultLanguage(IdentityUtils.getUserJid(), problem.getJid());
-    }
-
-    public static void setCurrentStatementLanguage(String languageCode) {
-        Controller.session("currentStatementLanguage", languageCode);
-    }
-
-    public static String getCurrentStatementLanguage() {
-        return Controller.session("currentStatementLanguage");
-    }
-
     public static void setJustCreatedProblem(String slug, String additionalNote, String initLanguageCode) {
         Controller.session("problemSlug", slug);
         Controller.session("problemAdditionalNote", additionalNote);
@@ -95,7 +73,7 @@ public final class ProblemControllerUtils {
         return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToUploadStatementResources());
     }
 
-    public static boolean isAllowedToViewStatement(ProblemService problemService, Problem problem) {
+    public static boolean isAllowedToViewStatement(ProblemService problemService, Problem problem, String language) {
         if (isAuthorOrAbove(problem)) {
             return true;
         }
@@ -104,21 +82,10 @@ public final class ProblemControllerUtils {
             return false;
         }
 
-        String language = getCurrentStatementLanguage();
+        String defaultLanguage = problemService.getDefaultLanguage(IdentityUtils.getUserJid(), problem.getJid());
+        Set<String> allowedLanguages = getPartnerConfig(problemService, problem).getAllowedStatementLanguagesToView();
 
-        try {
-            String defaultLanguage = problemService.getDefaultLanguage(IdentityUtils.getUserJid(), problem.getJid());
-            Set<String> allowedLanguages = getPartnerConfig(problemService, problem).getAllowedStatementLanguagesToView();
-
-            if (allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage)) {
-                return true;
-            }
-
-            setCurrentStatementLanguage(defaultLanguage);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        return allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage);
     }
 
 
@@ -126,7 +93,7 @@ public final class ProblemControllerUtils {
         return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToUpdateStatement());
     }
 
-    public static boolean isAllowedToUpdateStatementInLanguage(ProblemService problemService, Problem problem) {
+    public static boolean isAllowedToUpdateStatementInLanguage(ProblemService problemService, Problem problem, String language) {
         if (!isAllowedToUpdateStatement(problemService, problem)) {
             return false;
         }
@@ -139,18 +106,9 @@ public final class ProblemControllerUtils {
             return false;
         }
 
-        String language = getCurrentStatementLanguage();
-
         Set<String> allowedLanguages = getPartnerConfig(problemService, problem).getAllowedStatementLanguagesToUpdate();
 
-        if (allowedLanguages == null || allowedLanguages.contains(language)) {
-            return true;
-        }
-
-        String firstLanguage = allowedLanguages.iterator().next();
-
-        setCurrentStatementLanguage(firstLanguage);
-        return true;
+        return allowedLanguages == null || allowedLanguages.contains(language);
     }
 
     public static boolean isAllowedToManageStatementLanguages(ProblemService problemService, Problem problem) {

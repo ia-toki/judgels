@@ -40,7 +40,7 @@ public final class BundleProblemControllerUtils {
         return ProblemControllerUtils.isAuthorOrAbove(problem) || (ProblemControllerUtils.isPartner(problemService, problem) && getPartnerConfig(problemService, problem).getIsAllowedToManageItems());
     }
 
-    public static boolean isAllowedToUpdateItemInLanguage(ProblemService problemService, Problem problem) {
+    public static boolean isAllowedToUpdateItemInLanguage(ProblemService problemService, Problem problem, String language) {
         if (!isAllowedToManageItems(problemService, problem)) {
             return false;
         }
@@ -53,18 +53,9 @@ public final class BundleProblemControllerUtils {
             return false;
         }
 
-        String language = ProblemControllerUtils.getCurrentStatementLanguage();
-
         Set<String> allowedLanguages = ProblemControllerUtils.getPartnerConfig(problemService, problem).getAllowedStatementLanguagesToUpdate();
 
-        if ((allowedLanguages == null) || allowedLanguages.contains(language)) {
-            return true;
-        }
-
-        String firstLanguage = allowedLanguages.iterator().next();
-
-        ProblemControllerUtils.setCurrentStatementLanguage(firstLanguage);
-        return true;
+        return allowedLanguages == null || allowedLanguages.contains(language);
     }
 
     public static boolean isAllowedToSubmit(ProblemService problemService, Problem problem) {

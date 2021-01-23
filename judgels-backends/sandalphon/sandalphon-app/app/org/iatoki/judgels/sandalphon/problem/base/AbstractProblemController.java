@@ -12,6 +12,10 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 public abstract class AbstractProblemController extends AbstractBaseProblemController {
+    protected AbstractProblemController(ProblemService problemService) {
+        super(problemService);
+    }
+
     protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
         appendTabs(template, problemService, problem);
         appendVersionLocalChangesWarning(template, problemService, problem);

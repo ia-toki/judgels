@@ -1,13 +1,37 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import java.util.Map;
 import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.jophiel.JophielSessionUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
+import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
+import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.version.html.versionLocalChangesWarningLayout;
+import play.mvc.Http;
 import play.mvc.Result;
 
 public class AbstractLessonController extends AbstractSandalphonController {
+    private final LessonService lessonService;
+
+    protected AbstractLessonController(LessonService lessonService) {
+        this.lessonService = lessonService;
+    }
+
+    protected String getStatementLanguage(Http.Request req, Lesson lesson) {
+        String userJid = JophielSessionUtils.getUserJid(req);
+        String currentLanguage = SandalphonSessionUtils.getCurrentStatementLanguage(req);
+        Map<String, StatementLanguageStatus>
+                availableLanguages = lessonService.getAvailableLanguages(userJid, lesson.getJid());
+
+        if (currentLanguage == null
+                || !availableLanguages.containsKey(currentLanguage)
+                || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
+            return lessonService.getDefaultLanguage(userJid, lesson.getJid());
+        }
+        return currentLanguage;
+    }
+
     protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
         appendTabs(template, lesson);
         appendVersionLocalChangesWarning(template, lessonService, lesson);

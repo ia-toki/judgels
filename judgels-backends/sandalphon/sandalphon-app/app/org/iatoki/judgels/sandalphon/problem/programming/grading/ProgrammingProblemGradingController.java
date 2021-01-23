@@ -45,6 +45,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService) {
 
+        super(problemService);
         this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
