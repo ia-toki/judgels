@@ -28,14 +28,14 @@ import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.client.ClientChecker;
 import judgels.service.jaxrs.JudgelsObjectMappers;
 import org.hibernate.SessionFactory;
-import org.iatoki.judgels.GitProvider;
-import org.iatoki.judgels.LocalGitProvider;
+import org.iatoki.judgels.Git;
+import org.iatoki.judgels.LocalGit;
 import org.iatoki.judgels.play.general.GeneralConfig;
 import org.iatoki.judgels.play.model.PlaySessionFactory;
 import org.iatoki.judgels.sandalphon.lesson.LessonFs;
-import org.iatoki.judgels.sandalphon.lesson.LessonGitProvider;
+import org.iatoki.judgels.sandalphon.lesson.LessonGit;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemGitProvider;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemGit;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponsePoller;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponseProcessor;
@@ -160,29 +160,29 @@ public final class SandalphonModule extends AbstractModule {
     @Provides
     @Singleton
     @SubmissionFs
-    FileSystem submissionFileSystemProvider(SandalphonConfiguration config) {
+    FileSystem submissionFs(SandalphonConfiguration config) {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir(), "submissions"));
     }
 
     @Provides
     @Singleton
     @LessonFs
-    FileSystem lessonFileSystemProvider(SandalphonConfiguration config) {
+    FileSystem lessonFs(SandalphonConfiguration config) {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
     }
 
     @Provides
     @Singleton
-    @ProblemGitProvider
-    GitProvider problemGitProvider(@ProblemFs FileSystem fs) {
-        return new LocalGitProvider((LocalFileSystem) fs);
+    @ProblemGit
+    Git problemGit(@ProblemFs FileSystem fs) {
+        return new LocalGit((LocalFileSystem) fs);
     }
 
     @Provides
     @Singleton
-    @LessonGitProvider
-    GitProvider lessonGitProvider(@LessonFs FileSystem fs) {
-        return new LocalGitProvider((LocalFileSystem) fs);
+    @LessonGit
+    Git lessonGit(@LessonFs FileSystem fs) {
+        return new LocalGit((LocalFileSystem) fs);
     }
 
     private ObjectMapper objectMapper() {

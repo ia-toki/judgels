@@ -27,7 +27,7 @@ import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.GitProvider;
+import org.iatoki.judgels.Git;
 import org.iatoki.judgels.play.jid.JidService;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
@@ -39,15 +39,15 @@ public class ProblemStore {
     private final ObjectMapper mapper;
     private final ProblemDao problemDao;
     private final FileSystem problemFs;
-    private final GitProvider problemGitProvider;
+    private final Git problemGit;
     private final ProblemPartnerDao problemPartnerDao;
 
     @Inject
-    public ProblemStore(ObjectMapper mapper, ProblemDao problemDao, @ProblemFs FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
+    public ProblemStore(ObjectMapper mapper, ProblemDao problemDao, @ProblemFs FileSystem problemFs, @ProblemGit Git problemGit, ProblemPartnerDao problemPartnerDao) {
         this.mapper = mapper;
         this.problemDao = problemDao;
         this.problemFs = problemFs;
-        this.problemGitProvider = problemGitProvider;
+        this.problemGit = problemGit;
         this.problemPartnerDao = problemPartnerDao;
     }
 
@@ -292,15 +292,15 @@ public class ProblemStore {
 
     public List<GitCommit> getVersions(String userJid, String problemJid) {
         Path root = getRootDirPath(problemFs, userJid, problemJid);
-        return problemGitProvider.getLog(root);
+        return problemGit.getLog(root);
     }
 
     public void initRepository(String userJid, String problemJid) {
         Path root = getRootDirPath(problemFs, null, problemJid);
 
-        problemGitProvider.init(root);
-        problemGitProvider.addAll(root);
-        problemGitProvider.commit(root, userJid, "no@email.com", "Initial commit", "");
+        problemGit.init(root);
+        problemGit.addAll(root);
+        problemGit.commit(root, userJid, "no@email.com", "Initial commit", "");
     }
 
     public boolean userCloneExists(String userJid, String problemJid) {
@@ -314,19 +314,19 @@ public class ProblemStore {
         Path root = getCloneDirPath(userJid, problemJid);
 
         if (!problemFs.directoryExists(root)) {
-            problemGitProvider.clone(origin, root);
+            problemGit.clone(origin, root);
         }
     }
 
     public boolean commitThenMergeUserClone(String userJid, String problemJid, String title, String text) {
         Path root = getCloneDirPath(userJid, problemJid);
 
-        problemGitProvider.addAll(root);
-        problemGitProvider.commit(root, userJid, "no@email.com", title, text);
-        boolean success = problemGitProvider.rebase(root);
+        problemGit.addAll(root);
+        problemGit.commit(root, userJid, "no@email.com", title, text);
+        boolean success = problemGit.rebase(root);
 
         if (!success) {
-            problemGitProvider.resetToParent(root);
+            problemGit.resetToParent(root);
         } else {
             ProblemModel problemModel = problemDao.findByJid(problemJid);
 
@@ -339,11 +339,11 @@ public class ProblemStore {
     public boolean updateUserClone(String userJid, String problemJid) {
         Path root = getCloneDirPath(userJid, problemJid);
 
-        problemGitProvider.addAll(root);
-        problemGitProvider.commit(root, userJid, "no@email.com", "dummy", "dummy");
-        boolean success = problemGitProvider.rebase(root);
+        problemGit.addAll(root);
+        problemGit.commit(root, userJid, "no@email.com", "dummy", "dummy");
+        boolean success = problemGit.rebase(root);
 
-        problemGitProvider.resetToParent(root);
+        problemGit.resetToParent(root);
 
         return success;
     }
@@ -352,8 +352,8 @@ public class ProblemStore {
         Path origin = getOriginDirPath(problemJid);
         Path root = getRootDirPath(problemFs, userJid, problemJid);
 
-        if (problemGitProvider.push(root)) {
-            problemGitProvider.resetHard(origin);
+        if (problemGit.push(root)) {
+            problemGit.resetHard(origin);
 
             ProblemModel problemModel = problemDao.findByJid(problemJid);
 
@@ -367,7 +367,7 @@ public class ProblemStore {
     public boolean fetchUserClone(String userJid, String problemJid) {
         Path root = getRootDirPath(problemFs, userJid, problemJid);
 
-        return problemGitProvider.fetch(root);
+        return problemGit.fetch(root);
     }
 
     public void discardUserClone(String userJid, String problemJid) throws IOException {
@@ -379,7 +379,7 @@ public class ProblemStore {
     public void restore(String problemJid, String hash) {
         Path root = getOriginDirPath(problemJid);
 
-        problemGitProvider.restore(root, hash);
+        problemGit.restore(root, hash);
 
         ProblemModel problemModel = problemDao.findByJid(problemJid);
 

@@ -24,7 +24,7 @@ import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.GitProvider;
+import org.iatoki.judgels.Git;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerDao;
@@ -35,15 +35,15 @@ public final class LessonStore {
     private final ObjectMapper mapper;
     private final LessonDao lessonDao;
     private final FileSystem lessonFs;
-    private final GitProvider lessonGitProvider;
+    private final Git lessonGit;
     private final LessonPartnerDao lessonPartnerDao;
 
     @Inject
-    public LessonStore(ObjectMapper mapper, LessonDao lessonDao, @LessonFs FileSystem lessonFs, @LessonGitProvider GitProvider lessonGitProvider, LessonPartnerDao lessonPartnerDao) {
+    public LessonStore(ObjectMapper mapper, LessonDao lessonDao, @LessonFs FileSystem lessonFs, @LessonGit Git lessonGit, LessonPartnerDao lessonPartnerDao) {
         this.mapper = mapper;
         this.lessonDao = lessonDao;
         this.lessonFs = lessonFs;
-        this.lessonGitProvider = lessonGitProvider;
+        this.lessonGit = lessonGit;
         this.lessonPartnerDao = lessonPartnerDao;
     }
 
@@ -274,15 +274,15 @@ public final class LessonStore {
 
     public List<GitCommit> getVersions(String userJid, String lessonJid) {
         Path root = getRootDirPath(lessonFs, userJid, lessonJid);
-        return lessonGitProvider.getLog(root);
+        return lessonGit.getLog(root);
     }
 
     public void initRepository(String userJid, String lessonJid) {
         Path root = getRootDirPath(lessonFs, null, lessonJid);
 
-        lessonGitProvider.init(root);
-        lessonGitProvider.addAll(root);
-        lessonGitProvider.commit(root, userJid, "no@email.com", "Initial commit", "");
+        lessonGit.init(root);
+        lessonGit.addAll(root);
+        lessonGit.commit(root, userJid, "no@email.com", "Initial commit", "");
     }
 
     public boolean userCloneExists(String userJid, String lessonJid) {
@@ -296,19 +296,19 @@ public final class LessonStore {
         Path root = getCloneDirPath(userJid, lessonJid);
 
         if (!lessonFs.directoryExists(root)) {
-            lessonGitProvider.clone(origin, root);
+            lessonGit.clone(origin, root);
         }
     }
 
     public boolean commitThenMergeUserClone(String userJid, String lessonJid, String title, String description) {
         Path root = getCloneDirPath(userJid, lessonJid);
 
-        lessonGitProvider.addAll(root);
-        lessonGitProvider.commit(root, userJid, "no@email.com", title, description);
-        boolean success = lessonGitProvider.rebase(root);
+        lessonGit.addAll(root);
+        lessonGit.commit(root, userJid, "no@email.com", title, description);
+        boolean success = lessonGit.rebase(root);
 
         if (!success) {
-            lessonGitProvider.resetToParent(root);
+            lessonGit.resetToParent(root);
         } else {
             LessonModel lessonModel = lessonDao.findByJid(lessonJid);
             lessonDao.update(lessonModel);
@@ -320,11 +320,11 @@ public final class LessonStore {
     public boolean updateUserClone(String userJid, String lessonJid) {
         Path root = getCloneDirPath(userJid, lessonJid);
 
-        lessonGitProvider.addAll(root);
-        lessonGitProvider.commit(root, userJid, "no@email.com", "dummy", "dummy");
-        boolean success = lessonGitProvider.rebase(root);
+        lessonGit.addAll(root);
+        lessonGit.commit(root, userJid, "no@email.com", "dummy", "dummy");
+        boolean success = lessonGit.rebase(root);
 
-        lessonGitProvider.resetToParent(root);
+        lessonGit.resetToParent(root);
 
         return success;
     }
@@ -333,8 +333,8 @@ public final class LessonStore {
         Path origin = getOriginDirPath(lessonJid);
         Path root = getRootDirPath(lessonFs, userJid, lessonJid);
 
-        if (lessonGitProvider.push(root)) {
-            lessonGitProvider.resetHard(origin);
+        if (lessonGit.push(root)) {
+            lessonGit.resetHard(origin);
 
             LessonModel lessonModel = lessonDao.findByJid(lessonJid);
             lessonDao.update(lessonModel);
@@ -347,7 +347,7 @@ public final class LessonStore {
     public boolean fetchUserClone(String userJid, String lessonJid) {
         Path root = getRootDirPath(lessonFs, userJid, lessonJid);
 
-        return lessonGitProvider.fetch(root);
+        return lessonGit.fetch(root);
     }
 
     public void discardUserClone(String userJid, String lessonJid) throws IOException {
@@ -359,7 +359,7 @@ public final class LessonStore {
     public void restore(String lessonJid, String hash) {
         Path root = getOriginDirPath(lessonJid);
 
-        lessonGitProvider.restore(root, hash);
+        lessonGit.restore(root, hash);
 
         LessonModel lessonModel = lessonDao.findByJid(lessonJid);
         lessonDao.update(lessonModel);

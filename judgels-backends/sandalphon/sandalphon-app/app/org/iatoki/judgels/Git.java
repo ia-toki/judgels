@@ -3,7 +3,7 @@ package org.iatoki.judgels;
 import java.nio.file.Path;
 import java.util.List;
 
-public interface GitProvider {
+public interface Git {
 
     void init(Path rootDirPath);
 
