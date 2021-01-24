@@ -14,10 +14,18 @@ public class AbstractJophielClientController extends AbstractJudgelsController {
     @Inject
     private JophielClientConfiguration jophielClientConfig;
 
+    protected String getUserJid(Http.Request req) {
+        return JophielSessionUtils.getUserJid(req);
+    }
+
+    protected String getUsername(Http.Request req) {
+        return JophielSessionUtils.getUsername(req);
+    }
+
     @Override
     protected Result renderTemplate(HtmlTemplate template) {
         Http.Request req = template.getRequest();
-        String userJid = JophielSessionUtils.getUserJid(req);
+        String userJid = getUserJid(req);
         if (userJid != null) {
             template.addAdditionalScript(isLoggedOut.render(getUserIsLoggedInAPIEndpoint(), org.iatoki.judgels.jophiel.routes.JophielClientController.logout(getCurrentUrl(req)).absoluteURL(req, req.secure()), "javascripts/isLoggedOut.js", userJid));
         }

@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.problem.base;
 
 import java.util.Map;
 import judgels.sandalphon.api.problem.Problem;
-import org.iatoki.judgels.jophiel.JophielSessionUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
@@ -19,7 +18,7 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
     }
 
     protected String getStatementLanguage(Http.Request req, Problem problem) {
-        String userJid = JophielSessionUtils.getUserJid(req);
+        String userJid = getUserJid(req);
         String currentLanguage = SandalphonSessionUtils.getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus>
                 availableLanguages = problemService.getAvailableLanguages(userJid, problem.getJid());
@@ -39,7 +38,7 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
     }
 
     protected void appendVersionLocalChangesWarning(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        String userJid = JophielSessionUtils.getUserJid(template.getRequest());
+        String userJid = getUserJid(template.getRequest());
         if (problemService.userCloneExists(userJid, problem.getJid())) {
             template.setWarning(versionLocalChangesWarningLayout.render(problem.getId(), null));
         }

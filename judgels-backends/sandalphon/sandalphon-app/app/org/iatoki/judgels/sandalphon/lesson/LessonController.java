@@ -13,7 +13,6 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
@@ -34,14 +33,12 @@ import play.mvc.Result;
 public final class LessonController extends AbstractLessonController {
     private static final long PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
     private final LessonService lessonService;
     private final ProfileService profileService;
 
     @Inject
-    public LessonController(ActorChecker actorChecker, LessonService lessonService, ProfileService profileService) {
+    public LessonController(LessonService lessonService, ProfileService profileService) {
         super(lessonService);
-        this.actorChecker = actorChecker;
         this.lessonService = lessonService;
         this.profileService = profileService;
     }
@@ -53,7 +50,7 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result listLessons(Http.Request req, long pageIndex, String sortBy, String orderBy, String filterString) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         boolean isAdmin = SandalphonControllerUtils.getInstance().isAdmin();
         boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
@@ -77,8 +74,6 @@ public final class LessonController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result createLesson(Http.Request req) {
-        actorChecker.check(req);
-
         Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class);
 
         return showCreateLesson(req, lessonCreateForm);
@@ -87,7 +82,7 @@ public final class LessonController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postCreateLesson(Http.Request req) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Form<LessonCreateForm> lessonCreateForm = formFactory.form(LessonCreateForm.class).bindFromRequest(req);
 
@@ -136,8 +131,6 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result viewLesson(Http.Request req, long lessonId) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         Profile profile = profileService.getProfile(lesson.getAuthorJid());
@@ -155,8 +148,6 @@ public final class LessonController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editLesson(Http.Request req, long lessonId) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
@@ -175,8 +166,6 @@ public final class LessonController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditLesson(Http.Request req, long lessonId) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {

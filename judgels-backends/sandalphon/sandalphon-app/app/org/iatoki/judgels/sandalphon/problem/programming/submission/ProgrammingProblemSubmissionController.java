@@ -31,7 +31,6 @@ import judgels.sandalphon.submission.programming.SubmissionStore;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
@@ -46,7 +45,6 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemSubmissionController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
     private final ProfileService profileService;
@@ -57,7 +55,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
     @Inject
     public ProgrammingProblemSubmissionController(
-            ActorChecker actorChecker,
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService,
             ProfileService profileService,
@@ -67,7 +64,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
             SubmissionRegrader submissionRegrader) {
 
         super(problemService);
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
         this.profileService = profileService;
@@ -79,7 +75,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
     @Transactional
     public Result postSubmit(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -151,8 +147,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
     @Transactional(readOnly = true)
     public Result listSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -175,7 +169,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
     @Transactional(readOnly = true)
     public Result viewSubmission(Http.Request req, long problemId, long submissionId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -206,8 +200,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
     @Transactional
     public Result regradeSubmission(Http.Request req, long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -222,8 +214,6 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
     @Transactional
     public Result regradeSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {

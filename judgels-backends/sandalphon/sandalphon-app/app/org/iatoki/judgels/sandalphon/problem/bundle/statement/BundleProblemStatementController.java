@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
@@ -30,25 +29,20 @@ import play.twirl.api.Html;
 
 @Singleton
 public final class BundleProblemStatementController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final BundleItemService bundleItemService;
     private final ProblemService problemService;
 
     @Inject
-    public BundleProblemStatementController(
-            ActorChecker actorChecker,
-            BundleItemService bundleItemService,
-            ProblemService problemService) {
+    public BundleProblemStatementController(BundleItemService bundleItemService, ProblemService problemService) {
 
         super(problemService);
-        this.actorChecker = actorChecker;
         this.bundleItemService = bundleItemService;
         this.problemService = problemService;
     }
 
     @Transactional(readOnly = true)
     public Result viewStatement(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);

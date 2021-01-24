@@ -14,7 +14,6 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
@@ -37,14 +36,11 @@ import play.mvc.Result;
 
 @Singleton
 public class ProblemStatementController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
 
     @Inject
-    public ProblemStatementController(ActorChecker actorChecker, ProblemService problemService) {
+    public ProblemStatementController(ProblemService problemService) {
         super(problemService);
-
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
     }
 
@@ -64,7 +60,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editStatement(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
@@ -107,7 +103,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditStatement(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
@@ -153,7 +149,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result listStatementMediaFiles(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -167,7 +163,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postUploadStatementMediaFiles(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -220,7 +216,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result listStatementLanguages(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -242,7 +238,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postAddStatementLanguage(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -271,7 +267,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result enableStatementLanguage(Http.Request req, long problemId, String languageCode) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -297,7 +293,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result disableStatementLanguage(Http.Request req, long problemId, String languageCode) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
@@ -329,7 +325,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result makeDefaultStatementLanguage(Http.Request req, long problemId, String languageCode) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 

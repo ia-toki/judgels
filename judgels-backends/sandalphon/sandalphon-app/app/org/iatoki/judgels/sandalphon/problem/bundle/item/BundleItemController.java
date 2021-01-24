@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import org.apache.commons.lang3.EnumUtils;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
@@ -30,18 +29,12 @@ public final class BundleItemController extends AbstractProblemController {
 
     private static final long PAGE_SIZE = 1000;
 
-    private final ActorChecker actorChecker;
     private final BundleItemService bundleItemService;
     private final ProblemService problemService;
 
     @Inject
-    public BundleItemController(
-            ActorChecker actorChecker,
-            BundleItemService bundleItemService,
-            ProblemService problemService) {
-
+    public BundleItemController(BundleItemService bundleItemService, ProblemService problemService) {
         super(problemService);
-        this.actorChecker = actorChecker;
         this.bundleItemService = bundleItemService;
         this.problemService = problemService;
     }
@@ -53,7 +46,7 @@ public final class BundleItemController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result listCreateItems(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir, String filterString) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -74,7 +67,7 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result createItem(Http.Request req, long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -115,7 +108,7 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postCreateItem(Http.Request req, long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -178,7 +171,7 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editItem(Http.Request req, long problemId, String itemJid) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
@@ -232,7 +225,7 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditItem(Http.Request req, long problemId, String itemJid) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
@@ -286,7 +279,7 @@ public final class BundleItemController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result moveItemUp(Http.Request req, long problemId, String itemJid) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -311,7 +304,7 @@ public final class BundleItemController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result moveItemDown(Http.Request req, long problemId, String itemJid) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -336,7 +329,7 @@ public final class BundleItemController extends AbstractProblemController {
 
     @Transactional
     public Result removeItem(Http.Request req, long problemId, String itemJid) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 

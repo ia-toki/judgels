@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
@@ -23,18 +22,15 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
     public ProgrammingProblemController(
-            ActorChecker actorChecker,
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService) {
 
         super(problemService);
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
@@ -42,8 +38,6 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result createProgrammingProblem(Http.Request req) {
-        actorChecker.check(req);
-
         if (!SandalphonSessionUtils.wasProblemJustCreated(req)) {
             return badRequest();
         }
@@ -56,7 +50,7 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
     @Transactional
     @RequireCSRFCheck
     public Result postCreateProgrammingProblem(Http.Request req) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         if (!SandalphonSessionUtils.wasProblemJustCreated(req)) {
             return badRequest();

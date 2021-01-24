@@ -10,6 +10,7 @@ import judgels.jophiel.api.play.PlaySessionService;
 import judgels.jophiel.api.session.Credentials;
 import org.iatoki.judgels.jophiel.account.LoginForm;
 import org.iatoki.judgels.jophiel.account.html.loginView;
+import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -21,10 +22,12 @@ import play.mvc.Result;
 @Singleton
 public final class JophielClientController extends AbstractJophielClientController {
     private final PlaySessionService sessionService;
+    private final ActorChecker actorChecker;
 
     @Inject
-    public JophielClientController(PlaySessionService sessionService) {
+    public JophielClientController(PlaySessionService sessionService, ActorChecker actorChecker) {
         this.sessionService = sessionService;
+        this.actorChecker = actorChecker;
     }
 
     @AddCSRFToken
@@ -67,6 +70,7 @@ public final class JophielClientController extends AbstractJophielClientControll
     }
 
     public Result logout(String returnUri) {
+        actorChecker.clear();
         return redirect(getServiceLogoutUrl(returnUri))
                 .withNewSession();
     }

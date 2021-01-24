@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.lesson;
 
 import java.util.Map;
 import judgels.sandalphon.api.lesson.Lesson;
-import org.iatoki.judgels.jophiel.JophielSessionUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
@@ -19,7 +18,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
     }
 
     protected String getStatementLanguage(Http.Request req, Lesson lesson) {
-        String userJid = JophielSessionUtils.getUserJid(req);
+        String userJid = getUserJid(req);
         String currentLanguage = SandalphonSessionUtils.getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus>
                 availableLanguages = lessonService.getAvailableLanguages(userJid, lesson.getJid());
@@ -43,7 +42,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
     }
 
     protected void appendVersionLocalChangesWarning(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
-        String userJid = JophielSessionUtils.getUserJid(template.getRequest());
+        String userJid = getUserJid(template.getRequest());
         if (lessonService.userCloneExists(userJid, lesson.getJid())) {
             template.setWarning(versionLocalChangesWarningLayout.render(lesson.getId(), null));
         }

@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon;
 
 import org.iatoki.judgels.jophiel.AbstractJophielClientController;
-import org.iatoki.judgels.jophiel.JophielSessionUtils;
 import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.jophiel.logincheck.html.isLoggedOut;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -14,8 +13,8 @@ import play.mvc.Security;
 public abstract class AbstractSandalphonController extends AbstractJophielClientController {
     protected Result renderTemplate(HtmlTemplate template) {
         Http.Request req = template.getRequest();
-        String userJid = JophielSessionUtils.getUserJid(req);
-        String username = JophielSessionUtils.getUsername(req);
+        String userJid = getUserJid(req);
+        String username = getUsername(req);
 
         template.addSidebarMenu("Problems", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());
         template.addSidebarMenu("Lessons", org.iatoki.judgels.sandalphon.lesson.routes.LessonController.index());

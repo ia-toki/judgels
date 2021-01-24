@@ -15,7 +15,6 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
@@ -36,20 +35,17 @@ public class LessonPartnerController extends AbstractLessonController {
 
     private static final long PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
     private final UserSearchService userSearchService;
     private final LessonService lessonService;
     private final ProfileService profileService;
 
     @Inject
     public LessonPartnerController(
-            ActorChecker actorChecker,
             UserSearchService userSearchService,
             LessonService lessonService,
             ProfileService profileService) {
 
         super(lessonService);
-        this.actorChecker = actorChecker;
         this.userSearchService = userSearchService;
         this.lessonService = lessonService;
         this.profileService = profileService;
@@ -62,8 +58,6 @@ public class LessonPartnerController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result listPartners(Http.Request req, long lessonId, long pageIndex, String orderBy, String orderDir) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
@@ -88,8 +82,6 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result addPartner(Http.Request req, long lessonId) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
@@ -105,8 +97,6 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postAddPartner(Http.Request req, long lessonId) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
@@ -154,8 +144,6 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editPartner(Http.Request req, long lessonId, long partnerId) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
@@ -184,8 +172,6 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditPartner(Http.Request req, long lessonId, long partnerId) {
-        actorChecker.check(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {

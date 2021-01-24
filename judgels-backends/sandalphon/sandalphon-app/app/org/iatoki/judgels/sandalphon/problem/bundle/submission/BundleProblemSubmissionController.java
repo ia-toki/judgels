@@ -14,7 +14,6 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
@@ -35,7 +34,6 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     private static final long PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
     private final FileSystem bundleSubmissionFs;
     private final BundleSubmissionService bundleSubmissionService;
     private final ProblemService problemService;
@@ -43,14 +41,12 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Inject
     public BundleProblemSubmissionController(
-            ActorChecker actorChecker,
             @SubmissionFs FileSystem bundleSubmissionFs,
             BundleSubmissionService bundleSubmissionService,
             ProblemService problemService,
             ProfileService profileService) {
 
         super(problemService);
-        this.actorChecker = actorChecker;
         this.bundleSubmissionFs = bundleSubmissionFs;
         this.bundleSubmissionService = bundleSubmissionService;
         this.problemService = problemService;
@@ -59,7 +55,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional
     public Result postSubmit(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -84,8 +80,6 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional(readOnly = true)
     public Result listSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        String actorJid = actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -107,8 +101,6 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional(readOnly = true)
     public Result viewSubmission(Http.Request req, long problemId, long submissionId) {
-        String actorJid = actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -136,8 +128,6 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional
     public Result regradeSubmission(Http.Request req, long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
@@ -158,8 +148,6 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional
     public Result regradeSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {

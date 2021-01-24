@@ -13,7 +13,6 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
@@ -30,25 +29,22 @@ import play.mvc.Result;
 
 @Singleton
 public final class LessonVersionController extends AbstractLessonController {
-    private final ActorChecker actorChecker;
     private final LessonService lessonService;
     private final ProfileService profileService;
 
     @Inject
     public LessonVersionController(
-            ActorChecker actorChecker,
             LessonService lessonService,
             ProfileService profileService) {
 
         super(lessonService);
-        this.actorChecker = actorChecker;
         this.lessonService = lessonService;
         this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
     public Result listVersionHistory(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -74,7 +70,7 @@ public final class LessonVersionController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result restoreVersionHistory(Http.Request req, long lessonId, String hash) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         boolean isClean = !lessonService.userCloneExists(actorJid, lesson.getJid());
@@ -91,7 +87,7 @@ public final class LessonVersionController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result viewVersionLocalChanges(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -109,7 +105,7 @@ public final class LessonVersionController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postCommitVersionLocalChanges(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -144,7 +140,7 @@ public final class LessonVersionController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result editVersionLocalChanges(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -163,7 +159,7 @@ public final class LessonVersionController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result discardVersionLocalChanges(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 

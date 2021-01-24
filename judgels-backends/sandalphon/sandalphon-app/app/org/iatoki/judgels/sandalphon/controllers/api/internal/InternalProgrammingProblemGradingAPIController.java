@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.jophiel.controllers.Secured;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
@@ -20,24 +19,21 @@ import play.mvc.Security;
 @Singleton
 @Security.Authenticated(Secured.class)
 public final class InternalProgrammingProblemGradingAPIController extends AbstractJudgelsAPIController {
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
     public InternalProgrammingProblemGradingAPIController(
-            ActorChecker actorChecker,
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService) {
 
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
 
     @Transactional(readOnly = true)
     public Result downloadGradingTestDataFile(Http.Request req, long problemId, String filename) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = req.attrs().get(Security.USERNAME);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -52,7 +48,7 @@ public final class InternalProgrammingProblemGradingAPIController extends Abstra
 
     @Transactional(readOnly = true)
     public Result downloadGradingHelperFile(Http.Request req, long problemId, String filename) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = req.attrs().get(Security.USERNAME);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 

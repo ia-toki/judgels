@@ -13,7 +13,6 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -32,20 +31,17 @@ import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemPartnerController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final UserSearchService userSearchService;
     private final ProblemService problemService;
     private final ProfileService profileService;
 
     @Inject
     public BundleProblemPartnerController(
-            ActorChecker actorChecker,
             UserSearchService userSearchService,
             ProblemService problemService,
             ProfileService profileService) {
 
         super(problemService);
-        this.actorChecker = actorChecker;
         this.userSearchService = userSearchService;
         this.problemService = problemService;
         this.profileService = profileService;
@@ -54,8 +50,6 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result addPartner(Http.Request req, long problemId) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -72,8 +66,6 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
     @Transactional
     @RequireCSRFCheck
     public Result postAddPartner(Http.Request req, long problemId) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -127,8 +119,6 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editPartner(Http.Request req, long problemId, long partnerId) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -165,8 +155,6 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
     @Transactional
     @RequireCSRFCheck
     public Result postEditPartner(Http.Request req, long problemId, long partnerId) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {

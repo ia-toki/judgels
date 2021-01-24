@@ -13,7 +13,6 @@ import judgels.fs.FileInfo;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
@@ -41,19 +40,17 @@ import play.mvc.Result;
 
 @Singleton
 public class LessonStatementController extends AbstractLessonController {
-    private final ActorChecker actorChecker;
     private final LessonService lessonService;
 
     @Inject
-    public LessonStatementController(ActorChecker actorChecker, LessonService lessonService) {
+    public LessonStatementController(LessonService lessonService) {
         super(lessonService);
-        this.actorChecker = actorChecker;
         this.lessonService = lessonService;
     }
 
     @Transactional(readOnly = true)
     public Result viewStatement(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
@@ -95,7 +92,7 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editStatement(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
@@ -131,7 +128,7 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditStatement(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
@@ -174,7 +171,7 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result listStatementMediaFiles(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -188,7 +185,7 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postUploadStatementMediaFiles(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -241,7 +238,7 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result listStatementLanguages(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -263,7 +260,7 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postAddStatementLanguage(Http.Request req, long lessonId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -292,7 +289,7 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional
     public Result enableStatementLanguage(Http.Request req, long lessonId, String languageCode) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
@@ -318,7 +315,7 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional
     public Result disableStatementLanguage(Http.Request req, long lessonId, String languageCode) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
@@ -350,7 +347,7 @@ public class LessonStatementController extends AbstractLessonController {
 
     @Transactional
     public Result makeDefaultStatementLanguage(Http.Request req, long lessonId, String languageCode) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 

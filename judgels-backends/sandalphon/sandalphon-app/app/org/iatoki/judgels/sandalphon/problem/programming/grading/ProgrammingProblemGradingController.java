@@ -12,7 +12,6 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -35,18 +34,15 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemGradingController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
     public ProgrammingProblemGradingController(
-            ActorChecker actorChecker,
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService) {
 
         super(problemService);
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
@@ -54,7 +50,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editGradingEngine(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -77,7 +73,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional
     @RequireCSRFCheck
     public Result postEditGradingEngine(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -118,7 +114,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editGradingConfig(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -149,7 +145,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional
     @RequireCSRFCheck
     public Result postEditGradingConfig(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
@@ -188,7 +184,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
 
     @Transactional
     public Result editGradingConfigByTokilibFormat(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -231,7 +227,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
 
     @Transactional
     public Result editGradingConfigByAutoPopulation(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -274,7 +270,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result listGradingTestDataFiles(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -291,7 +287,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional
     @RequireCSRFCheck
     public Result postUploadGradingTestDataFiles(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -342,7 +338,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result listGradingHelperFiles(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -359,7 +355,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional
     @RequireCSRFCheck
     public Result postUploadGradingHelperFiles(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -410,7 +406,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editLanguageRestriction(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -437,7 +433,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional
     @RequireCSRFCheck
     public Result postEditLanguageRestriction(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 

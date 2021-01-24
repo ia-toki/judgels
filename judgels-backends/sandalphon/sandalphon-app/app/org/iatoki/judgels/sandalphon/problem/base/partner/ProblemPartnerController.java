@@ -12,7 +12,6 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -27,18 +26,12 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     private static final long PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProfileService profileService;
 
     @Inject
-    public ProblemPartnerController(
-            ActorChecker actorChecker,
-            ProblemService problemService,
-            ProfileService profileService) {
-
+    public ProblemPartnerController(ProblemService problemService, ProfileService profileService) {
         super(problemService);
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.profileService = profileService;
     }
@@ -50,8 +43,6 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result listPartners(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -74,8 +65,6 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result addPartner(Http.Request req, long problemId) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
@@ -94,8 +83,6 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result editPartner(Http.Request req, long problemId, long partnerId) {
-        actorChecker.check(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {

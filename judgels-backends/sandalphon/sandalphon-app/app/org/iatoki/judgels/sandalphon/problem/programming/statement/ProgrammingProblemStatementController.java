@@ -12,7 +12,6 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
@@ -30,25 +29,22 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemStatementController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
     public ProgrammingProblemStatementController(
-            ActorChecker actorChecker,
             ProblemService problemService,
             ProgrammingProblemService programmingProblemService) {
 
         super(problemService);
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
 
     @Transactional(readOnly = true)
     public Result viewStatement(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);

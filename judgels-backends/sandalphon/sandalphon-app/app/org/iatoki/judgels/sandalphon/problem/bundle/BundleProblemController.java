@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -18,25 +17,19 @@ import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final BundleProblemService bundleProblemService;
     private final ProblemService problemService;
 
     @Inject
-    public BundleProblemController(
-            ActorChecker actorChecker,
-            BundleProblemService bundleProblemService,
-            ProblemService problemService) {
-
+    public BundleProblemController(BundleProblemService bundleProblemService, ProblemService problemService) {
         super(problemService);
-        this.actorChecker = actorChecker;
         this.bundleProblemService = bundleProblemService;
         this.problemService = problemService;
     }
 
     @Transactional
     public Result createBundleProblem(Http.Request req) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         if (!SandalphonSessionUtils.wasProblemJustCreated(req)) {
             return badRequest();

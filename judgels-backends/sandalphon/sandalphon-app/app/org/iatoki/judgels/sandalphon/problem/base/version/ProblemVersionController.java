@@ -13,7 +13,6 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.play.actor.ActorChecker;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -30,25 +29,19 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProblemVersionController extends AbstractProblemController {
-    private final ActorChecker actorChecker;
     private final ProblemService problemService;
     private final ProfileService profileService;
 
     @Inject
-    public ProblemVersionController(
-            ActorChecker actorChecker,
-            ProblemService problemService,
-            ProfileService profileService) {
-
+    public ProblemVersionController(ProblemService problemService, ProfileService profileService) {
         super(problemService);
-        this.actorChecker = actorChecker;
         this.problemService = problemService;
         this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
     public Result listVersionHistory(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -74,7 +67,7 @@ public final class ProblemVersionController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result restoreVersionHistory(Http.Request req, long problemId, String hash) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
         boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
@@ -91,7 +84,7 @@ public final class ProblemVersionController extends AbstractProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result viewVersionLocalChanges(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -109,7 +102,7 @@ public final class ProblemVersionController extends AbstractProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postCommitVersionLocalChanges(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -144,7 +137,7 @@ public final class ProblemVersionController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result editVersionLocalChanges(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
@@ -163,7 +156,7 @@ public final class ProblemVersionController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result discardVersionLocalChanges(Http.Request req, long problemId) {
-        String actorJid = actorChecker.check(req);
+        String actorJid = getUserJid(req);
 
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
