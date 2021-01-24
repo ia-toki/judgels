@@ -16,12 +16,12 @@ import play.mvc.Http;
 
 public class LessonRoleChecker {
     private final RoleChecker roleChecker;
-    private final LessonService lessonService;
+    private final LessonStore lessonStore;
 
     @Inject
-    public LessonRoleChecker(RoleChecker roleChecker, LessonService lessonService) {
+    public LessonRoleChecker(RoleChecker roleChecker, LessonStore lessonStore) {
         this.roleChecker = roleChecker;
-        this.lessonService = lessonService;
+        this.lessonStore = lessonStore;
     }
 
     public boolean isAuthor(Http.Request req, Lesson lesson) {
@@ -33,7 +33,7 @@ public class LessonRoleChecker {
     }
 
     public boolean isPartner(Http.Request req, Lesson lesson) {
-        return lessonService.isUserPartnerForLesson(lesson.getJid(), getUserJid(req));
+        return lessonStore.isUserPartnerForLesson(lesson.getJid(), getUserJid(req));
     }
 
     public boolean isPartnerOrAbove(Http.Request req, Lesson lesson) {
@@ -58,7 +58,7 @@ public class LessonRoleChecker {
             return false;
         }
 
-        String defaultLanguage = lessonService.getDefaultLanguage(getUserJid(req), lesson.getJid());
+        String defaultLanguage = lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid());
         Set<String> allowedLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToView();
 
         return allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage);
@@ -102,7 +102,7 @@ public class LessonRoleChecker {
 
     public Set<String> getAllowedLanguagesToView(Http.Request req, Lesson lesson) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                lessonService.getAvailableLanguages(getUserJid(req), lesson.getJid());
+                lessonStore.getAvailableLanguages(getUserJid(req), lesson.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -114,7 +114,7 @@ public class LessonRoleChecker {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToView();
             if (allowedPartnerLanguages != null) {
                 allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(lessonService.getDefaultLanguage(getUserJid(req), lesson.getJid()));
+                allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
             }
         }
 
@@ -123,7 +123,7 @@ public class LessonRoleChecker {
 
     public Set<String> getAllowedLanguagesToUpdate(Http.Request req, Lesson lesson) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                lessonService.getAvailableLanguages(getUserJid(req), lesson.getJid());
+                lessonStore.getAvailableLanguages(getUserJid(req), lesson.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -135,7 +135,7 @@ public class LessonRoleChecker {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToUpdate();
             if (allowedPartnerLanguages != null) {
                 allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(lessonService.getDefaultLanguage(getUserJid(req), lesson.getJid()));
+                allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
             }
         }
 
@@ -143,6 +143,6 @@ public class LessonRoleChecker {
     }
 
     private LessonPartnerConfig getPartnerConfig(Http.Request req, Lesson lesson) {
-        return lessonService.findLessonPartnerByLessonJidAndPartnerJid(lesson.getJid(), getUserJid(req)).getConfig();
+        return lessonStore.findLessonPartnerByLessonJidAndPartnerJid(lesson.getJid(), getUserJid(req)).getConfig();
     }
 }

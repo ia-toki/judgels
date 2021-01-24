@@ -9,8 +9,8 @@ import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
+import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import play.db.jpa.Transactional;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -19,28 +19,28 @@ import play.mvc.Security;
 @Singleton
 @Security.Authenticated(Secured.class)
 public final class InternalProgrammingProblemGradingAPIController extends AbstractJudgelsAPIController {
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
-    private final ProgrammingProblemService programmingProblemService;
+    private final ProgrammingProblemStore programmingProblemStore;
 
     @Inject
     public InternalProgrammingProblemGradingAPIController(
-            ProblemService problemService,
+            ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
-            ProgrammingProblemService programmingProblemService) {
+            ProgrammingProblemStore programmingProblemStore) {
 
-        this.problemService = problemService;
+        this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
-        this.programmingProblemService = programmingProblemService;
+        this.programmingProblemStore = programmingProblemStore;
     }
 
     @Transactional(readOnly = true)
     public Result downloadGradingTestDataFile(Http.Request req, long problemId, String filename) {
         String actorJid = req.attrs().get(Security.USERNAME);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
-        String testDataUrl = programmingProblemService.getGradingTestDataFileURL(actorJid, problem.getJid(), filename);
+        String testDataUrl = programmingProblemStore.getGradingTestDataFileURL(actorJid, problem.getJid(), filename);
 
         return okAsDownload(testDataUrl);
     }
@@ -48,10 +48,10 @@ public final class InternalProgrammingProblemGradingAPIController extends Abstra
     @Transactional(readOnly = true)
     public Result downloadGradingHelperFile(Http.Request req, long problemId, String filename) {
         String actorJid = req.attrs().get(Security.USERNAME);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
-        String helper = programmingProblemService.getGradingHelperFileURL(actorJid, problem.getJid(), filename);
+        String helper = programmingProblemStore.getGradingHelperFileURL(actorJid, problem.getJid(), filename);
 
         return okAsDownload(helper);
     }

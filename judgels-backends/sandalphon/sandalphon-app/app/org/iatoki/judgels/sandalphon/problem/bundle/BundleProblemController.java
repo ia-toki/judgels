@@ -8,7 +8,7 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import play.db.jpa.Transactional;
@@ -17,18 +17,18 @@ import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemController extends AbstractProblemController {
-    private final ProblemService problemService;
-    private final BundleProblemService bundleProblemService;
+    private final ProblemStore problemStore;
+    private final BundleProblemStore bundleProblemStore;
 
     @Inject
     public BundleProblemController(
-            ProblemService problemService,
+            ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
-            BundleProblemService bundleProblemService) {
+            BundleProblemStore bundleProblemStore) {
 
-        super(problemService, problemRoleChecker);
-        this.bundleProblemService = bundleProblemService;
-        this.problemService = problemService;
+        super(problemStore, problemRoleChecker);
+        this.bundleProblemStore = bundleProblemStore;
+        this.problemStore = problemStore;
     }
 
     @Transactional
@@ -45,19 +45,19 @@ public final class BundleProblemController extends AbstractProblemController {
 
         Problem problem;
         try {
-            problem = problemService.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode);
+            problem = problemStore.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode);
             ProblemStatement statement = new ProblemStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(languageCode))
                     .text(BundleProblemStatementUtils.getDefaultStatement(languageCode))
                     .build();
 
-            problemService.updateStatement(null, problem.getJid(), languageCode, statement);
-            bundleProblemService.initBundleProblem(problem.getJid());
+            problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
+            bundleProblemStore.initBundleProblem(problem.getJid());
         } catch (IOException e) {
             return internalServerError();
         }
 
-        problemService.initRepository(actorJid, problem.getJid());
+        problemStore.initRepository(actorJid, problem.getJid());
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(getJustCreatedProblemInitLanguage(req)))

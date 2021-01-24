@@ -12,8 +12,8 @@ import play.mvc.Result;
 public abstract class AbstractProblemController extends AbstractBaseProblemController {
     private final ProblemRoleChecker problemRoleChecker;
 
-    protected AbstractProblemController(ProblemService problemService, ProblemRoleChecker problemRoleChecker) {
-        super(problemService);
+    protected AbstractProblemController(ProblemStore problemStore, ProblemRoleChecker problemRoleChecker) {
+        super(problemStore);
         this.problemRoleChecker = problemRoleChecker;
     }
 

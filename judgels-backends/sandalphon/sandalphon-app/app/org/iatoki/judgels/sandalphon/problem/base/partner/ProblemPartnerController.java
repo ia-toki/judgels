@@ -16,7 +16,7 @@ import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
-import org.iatoki.judgels .sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.partner.html.listPartnersView;
 import play.db.jpa.Transactional;
 import play.mvc.Http;
@@ -26,18 +26,18 @@ import play.mvc.Result;
 public class ProblemPartnerController extends AbstractProblemController {
     private static final long PAGE_SIZE = 20;
 
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
 
     @Inject
     public ProblemPartnerController(
-            ProblemService problemService,
+            ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
             ProfileService profileService) {
 
-        super(problemService, problemRoleChecker);
-        this.problemService = problemService;
+        super(problemStore, problemRoleChecker);
+        this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.profileService = profileService;
     }
@@ -49,10 +49,10 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result listPartners(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
-        Page<ProblemPartner> pageOfProblemPartners = problemService.getPageOfProblemPartners(problem.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
+        Page<ProblemPartner> pageOfProblemPartners = problemStore.getPageOfProblemPartners(problem.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
         Set<String> userJids = pageOfProblemPartners.getPage().stream().map(ProblemPartner::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -68,7 +68,7 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result addPartner(Http.Request req, long problemId) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         switch (problem.getType()) {
@@ -83,7 +83,7 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result editPartner(Http.Request req, long problemId, long partnerId) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         switch (problem.getType()) {

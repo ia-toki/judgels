@@ -30,20 +30,20 @@ import play.mvc.Result;
 public final class ProblemController extends AbstractBaseProblemController {
     private static final long PAGE_SIZE = 20;
 
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
     private final RoleChecker roleChecker;
     private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
 
     @Inject
     public ProblemController(
-            ProblemService problemService,
+            ProblemStore problemStore,
             RoleChecker roleChecker,
             ProblemRoleChecker problemRoleChecker,
             ProfileService profileService) {
 
-        super(problemService);
-        this.problemService = problemService;
+        super(problemStore);
+        this.problemStore = problemStore;
         this.roleChecker = roleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.profileService = profileService;
@@ -60,7 +60,7 @@ public final class ProblemController extends AbstractBaseProblemController {
         boolean isAdmin = roleChecker.isAdmin(req);
         boolean isWriter = roleChecker.isWriter(req);
 
-        Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
+        Page<Problem> pageOfProblems = problemStore.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
 
         Set<String> userJids = pageOfProblems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -92,7 +92,7 @@ public final class ProblemController extends AbstractBaseProblemController {
             return showCreateProblem(req, problemCreateForm);
         }
 
-        if (problemService.problemExistsBySlug(problemCreateForm.get().slug)) {
+        if (problemStore.problemExistsBySlug(problemCreateForm.get().slug)) {
             return showCreateProblem(req, problemCreateForm.withError("slug", "Slug already exists"));
         }
 
@@ -128,7 +128,7 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional(readOnly = true)
     public Result viewProblem(Http.Request req, long problemId) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
@@ -146,7 +146,7 @@ public final class ProblemController extends AbstractBaseProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editProblem(Http.Request req, long problemId) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatement(req, problem));
 
         ProblemEditForm problemEditData = new ProblemEditForm();
@@ -161,7 +161,7 @@ public final class ProblemController extends AbstractBaseProblemController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditProblem(Http.Request req, long problemId) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatement(req, problem));
 
         Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).bindFromRequest(req);
@@ -170,12 +170,12 @@ public final class ProblemController extends AbstractBaseProblemController {
             return showEditProblem(req, problemEditForm, problem);
         }
 
-        if (!problem.getSlug().equals(problemEditForm.get().slug) && problemService.problemExistsBySlug(problemEditForm.get().slug)) {
+        if (!problem.getSlug().equals(problemEditForm.get().slug) && problemStore.problemExistsBySlug(problemEditForm.get().slug)) {
             return showEditProblem(req, problemEditForm.withError("slug", "Slug already exists"), problem);
         }
 
         ProblemEditForm problemEditData = problemEditForm.get();
-        problemService.updateProblem(problem.getJid(), problemEditData.slug, problemEditData.additionalNote);
+        problemStore.updateProblem(problem.getJid(), problemEditData.slug, problemEditData.additionalNote);
 
         return redirect(routes.ProblemController.viewProblem(problem.getId()));
     }

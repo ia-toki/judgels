@@ -17,7 +17,7 @@ import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonRoleChecker;
-import org.iatoki.judgels.sandalphon.lesson.LessonService;
+import org.iatoki.judgels.sandalphon.lesson.LessonStore;
 import org.iatoki.judgels.sandalphon.lesson.version.html.listVersionsView;
 import org.iatoki.judgels.sandalphon.lesson.version.html.viewVersionLocalChangesView;
 import org.iatoki.judgels.sandalphon.resource.VersionCommitForm;
@@ -30,18 +30,18 @@ import play.mvc.Result;
 
 @Singleton
 public final class LessonVersionController extends AbstractLessonController {
-    private final LessonService lessonService;
+    private final LessonStore lessonStore;
     private final LessonRoleChecker lessonRoleChecker;
     private final ProfileService profileService;
 
     @Inject
     public LessonVersionController(
-            LessonService lessonService,
+            LessonStore lessonStore,
             LessonRoleChecker lessonRoleChecker,
             ProfileService profileService) {
 
-        super(lessonService, lessonRoleChecker);
-        this.lessonService = lessonService;
+        super(lessonStore, lessonRoleChecker);
+        this.lessonStore = lessonStore;
         this.lessonRoleChecker = lessonRoleChecker;
         this.profileService = profileService;
     }
@@ -49,15 +49,15 @@ public final class LessonVersionController extends AbstractLessonController {
     @Transactional(readOnly = true)
     public Result listVersionHistory(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAllowedToViewVersionHistory(req, lesson));
 
-        List<GitCommit> versions = lessonService.getVersions(actorJid, lesson.getJid());
+        List<GitCommit> versions = lessonStore.getVersions(actorJid, lesson.getJid());
 
         Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
-        boolean isClean = !lessonService.userCloneExists(actorJid, lesson.getJid());
+        boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && lessonRoleChecker.isAllowedToRestoreVersionHistory(req, lesson);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
@@ -71,11 +71,11 @@ public final class LessonVersionController extends AbstractLessonController {
     @Transactional(readOnly = true)
     public Result restoreVersionHistory(Http.Request req, long lessonId, String hash) {
         String actorJid = getUserJid(req);
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-        boolean isClean = !lessonService.userCloneExists(actorJid, lesson.getJid());
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
         checkAllowed(lessonRoleChecker.isAllowedToRestoreVersionHistory(req, lesson) && isClean);
 
-        lessonService.restore(lesson.getJid(), hash);
+        lessonStore.restore(lesson.getJid(), hash);
 
         return redirect(routes.LessonVersionController.listVersionHistory(lesson.getId()));
     }
@@ -84,10 +84,10 @@ public final class LessonVersionController extends AbstractLessonController {
     @AddCSRFToken
     public Result viewVersionLocalChanges(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
-        boolean isClean = !lessonService.userCloneExists(actorJid, lesson.getJid());
+        boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
 
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
 
@@ -98,26 +98,26 @@ public final class LessonVersionController extends AbstractLessonController {
     @RequireCSRFCheck
     public Result postCommitVersionLocalChanges(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
         if (formHasErrors(versionCommitForm)) {
-            boolean isClean = !lessonService.userCloneExists(actorJid, lesson.getJid());
+            boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
             return showViewVersionLocalChanges(req, versionCommitForm, lesson, isClean);
         }
 
         VersionCommitForm versionCommitData = versionCommitForm.get();
 
-        if (lessonService.fetchUserClone(actorJid, lesson.getJid())) {
+        if (lessonStore.fetchUserClone(actorJid, lesson.getJid())) {
             flash("localChangesError", "Your working copy has diverged from the master copy. Please update your working copy.");
-        } else if (!lessonService.commitThenMergeUserClone(actorJid, lesson.getJid(), versionCommitData.title, versionCommitData.description)) {
+        } else if (!lessonStore.commitThenMergeUserClone(actorJid, lesson.getJid(), versionCommitData.title, versionCommitData.description)) {
             flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
-        } else if (!lessonService.pushUserClone(actorJid, lesson.getJid())) {
+        } else if (!lessonStore.pushUserClone(actorJid, lesson.getJid())) {
             flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         } else {
             try {
-                lessonService.discardUserClone(actorJid, lesson.getJid());
+                lessonStore.discardUserClone(actorJid, lesson.getJid());
             } catch (IOException e) {
                 // do nothing
             }
@@ -129,12 +129,12 @@ public final class LessonVersionController extends AbstractLessonController {
     @Transactional(readOnly = true)
     public Result editVersionLocalChanges(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
-        lessonService.fetchUserClone(actorJid, lesson.getJid());
+        lessonStore.fetchUserClone(actorJid, lesson.getJid());
 
-        if (!lessonService.updateUserClone(actorJid, lesson.getJid())) {
+        if (!lessonStore.updateUserClone(actorJid, lesson.getJid())) {
             flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         }
 
@@ -144,11 +144,11 @@ public final class LessonVersionController extends AbstractLessonController {
     @Transactional(readOnly = true)
     public Result discardVersionLocalChanges(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
         try {
-            lessonService.discardUserClone(actorJid, lesson.getJid());
+            lessonStore.discardUserClone(actorJid, lesson.getJid());
 
             return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
         } catch (IOException e) {

@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,19 +19,18 @@ import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingResult;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
 import play.data.DynamicForm;
 
-public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBundleSubmissionModel, GM extends AbstractBundleGradingModel> implements BundleSubmissionService {
+public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSubmissionModel, GM extends AbstractBundleGradingModel> {
 
     private final BaseBundleSubmissionDao<SM> bundleSubmissionDao;
     private final BaseBundleGradingDao<GM> bundleGradingDao;
     private final BundleProblemGrader bundleProblemGrader;
 
-    protected AbstractBundleSubmissionServiceImpl(BaseBundleSubmissionDao<SM> bundleSubmissionDao, BaseBundleGradingDao<GM> bundleGradingDao, BundleProblemGrader bundleProblemGrader) {
+    protected AbstractBundleSubmissionStore(BaseBundleSubmissionDao<SM> bundleSubmissionDao, BaseBundleGradingDao<GM> bundleGradingDao, BundleProblemGrader bundleProblemGrader) {
         this.bundleSubmissionDao = bundleSubmissionDao;
         this.bundleGradingDao = bundleGradingDao;
         this.bundleProblemGrader = bundleProblemGrader;
     }
 
-    @Override
     public Optional<BundleSubmission> findBundleSubmissionById(long submissionId) {
         return bundleSubmissionDao.select(submissionId).map(sm -> {
             List<GM> gradingModels = bundleGradingDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.of(AbstractBundleGradingModel_.submissionJid, sm.jid), 0, -1);
@@ -40,20 +38,6 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
         });
     }
 
-    @Override
-    public BundleSubmission findBundleSubmissionByJid(String submissionJid) {
-        SM submissionModel = bundleSubmissionDao.findByJid(submissionJid);
-        List<GM> gradingModels = bundleGradingDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.of(AbstractBundleGradingModel_.submissionJid, submissionModel.jid), 0, -1);
-
-        return BundleSubmissionServiceUtils.createSubmissionFromModels(submissionModel, gradingModels);
-    }
-
-    @Override
-    public List<Instant> getAllBundleSubmissionsSubmitTime() {
-        return bundleSubmissionDao.getAllSubmissionsSubmitTime();
-    }
-
-    @Override
     public List<BundleSubmission> getAllBundleSubmissions() {
         List<SM> submissionModels = bundleSubmissionDao.getAll();
         Map<String, List<GM>> gradingModelsMap = bundleGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
@@ -61,15 +45,6 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
         return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
     }
 
-    @Override
-    public List<BundleSubmission> getBundleSubmissionsWithGradingsByContainerJidAndProblemJidAndUserJid(String containerJid, String problemJid, String userJid) {
-        List<SM> submissionModels = bundleSubmissionDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.<SingularAttribute<? super SM, ?>, String>of(AbstractBundleSubmissionModel_.containerJid, containerJid, AbstractBundleSubmissionModel_.problemJid, problemJid, AbstractBundleSubmissionModel_.createdBy, userJid), 0, -1);
-        Map<String, List<GM>> gradingModelsMap = bundleGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
-
-        return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
-    }
-
-    @Override
     public List<BundleSubmission> getBundleSubmissionsByFilters(String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
         ImmutableMap.Builder<SingularAttribute<? super SM, ?>, String> filterColumnsBuilder = ImmutableMap.builder();
         if (authorJid != null) {
@@ -89,14 +64,12 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
         return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModel(m));
     }
 
-    @Override
     public List<BundleSubmission> getBundleSubmissionsByJids(List<String> submissionJids) {
         List<SM> submissionModels = bundleSubmissionDao.getByJids(submissionJids);
 
         return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModel(m));
     }
 
-    @Override
     public Page<BundleSubmission> getPageOfBundleSubmissions(long pageIndex, long pageSize, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
         ImmutableMap.Builder<SingularAttribute<? super SM, ?>, String> filterColumnsBuilder = ImmutableMap.builder();
         if (authorJid != null) {
@@ -125,7 +98,6 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
                 .build();
     }
 
-    @Override
     public final String submit(String problemJid, String containerJid, BundleAnswer answer) {
         SM submissionModel = bundleSubmissionDao.createSubmissionModel();
 
@@ -139,19 +111,16 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
         return submissionModel.jid;
     }
 
-    @Override
     public final void regrade(String submissionJid, BundleAnswer answer) {
         SM submissionModel = bundleSubmissionDao.findByJid(submissionJid);
 
         grade(submissionModel, answer);
     }
 
-    @Override
     public void afterGrade(String gradingJid, BundleAnswer answer) {
         // To be overridden if needed
     }
 
-    @Override
     public void storeSubmissionFiles(FileSystem localFs, FileSystem remoteFs, String submissionJid, BundleAnswer answer) {
         List<FileSystem> fileSystemProviders = Lists.newArrayList(localFs);
         if (remoteFs != null) {
@@ -165,12 +134,10 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
         }
     }
 
-    @Override
     public BundleAnswer createBundleAnswerFromNewSubmission(DynamicForm data, String languageCode) {
         return new BundleAnswer(data.rawData(), languageCode);
     }
 
-    @Override
     public BundleAnswer createBundleAnswerFromPastSubmission(FileSystem localFs, FileSystem remoteFs, String submissionJid) throws IOException {
         FileSystem fileSystemProvider;
 

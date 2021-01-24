@@ -37,10 +37,6 @@ import org.iatoki.judgels.sandalphon.lesson.LessonGitProvider;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemGitProvider;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
-import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemGraderImpl;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
-import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
-import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponsePoller;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponseProcessor;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.ProgrammingGradingDao;
@@ -61,9 +57,6 @@ public final class SandalphonModule extends AbstractModule {
         bind(SandalphonConfiguration.class).toInstance(SandalphonProperties.build(config));
 
         bind(SandalphonThreadsScheduler.class).asEagerSingleton();
-
-        bind(BundleSubmissionService.class).to(BundleSubmissionServiceImpl.class);
-        bind(BundleProblemGrader.class).to(BundleProblemGraderImpl.class);
 
         Json.setObjectMapper(objectMapper());
 

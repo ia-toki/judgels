@@ -10,11 +10,11 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 public class AbstractLessonController extends AbstractSandalphonController {
-    private final LessonService lessonService;
+    private final LessonStore lessonStore;
     private final LessonRoleChecker lessonRoleChecker;
 
-    protected AbstractLessonController(LessonService lessonService, LessonRoleChecker lessonRoleChecker) {
-        this.lessonService = lessonService;
+    protected AbstractLessonController(LessonStore lessonStore, LessonRoleChecker lessonRoleChecker) {
+        this.lessonStore = lessonStore;
         this.lessonRoleChecker = lessonRoleChecker;
     }
 
@@ -22,12 +22,12 @@ public class AbstractLessonController extends AbstractSandalphonController {
         String userJid = getUserJid(req);
         String currentLanguage = getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus> availableLanguages =
-                lessonService.getAvailableLanguages(userJid, lesson.getJid());
+                lessonStore.getAvailableLanguages(userJid, lesson.getJid());
 
         if (currentLanguage == null
                 || !availableLanguages.containsKey(currentLanguage)
                 || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            return lessonService.getDefaultLanguage(userJid, lesson.getJid());
+            return lessonStore.getDefaultLanguage(userJid, lesson.getJid());
         }
         return currentLanguage;
     }
@@ -44,7 +44,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
 
     protected void appendVersionLocalChangesWarning(HtmlTemplate template, Lesson lesson) {
         String userJid = getUserJid(template.getRequest());
-        if (lessonService.userCloneExists(userJid, lesson.getJid())) {
+        if (lessonStore.userCloneExists(userJid, lesson.getJid())) {
             template.setWarning(versionLocalChangesWarningLayout.render(lesson.getId(), null));
         }
     }

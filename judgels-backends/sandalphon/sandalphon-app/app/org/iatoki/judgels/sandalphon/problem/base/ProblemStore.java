@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.inject.Singleton;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
@@ -36,8 +35,7 @@ import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel_;
 
-@Singleton
-public final class ProblemServiceImpl implements ProblemService {
+public class ProblemStore {
     private final ObjectMapper mapper;
     private final ProblemDao problemDao;
     private final FileSystem problemFs;
@@ -45,7 +43,7 @@ public final class ProblemServiceImpl implements ProblemService {
     private final ProblemPartnerDao problemPartnerDao;
 
     @Inject
-    public ProblemServiceImpl(ObjectMapper mapper, ProblemDao problemDao, @ProblemFs FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
+    public ProblemStore(ObjectMapper mapper, ProblemDao problemDao, @ProblemFs FileSystem problemFs, @ProblemGitProvider GitProvider problemGitProvider, ProblemPartnerDao problemPartnerDao) {
         this.mapper = mapper;
         this.problemDao = problemDao;
         this.problemFs = problemFs;
@@ -53,7 +51,6 @@ public final class ProblemServiceImpl implements ProblemService {
         this.problemPartnerDao = problemPartnerDao;
     }
 
-    @Override
     public Problem createProblem(ProblemType type, String slug, String additionalNote, String initialLanguageCode) {
         ProblemModel problemModel = new ProblemModel();
         problemModel.slug = slug;
@@ -67,41 +64,34 @@ public final class ProblemServiceImpl implements ProblemService {
         return createProblemFromModel(problemModel);
     }
 
-    @Override
     public boolean problemExistsByJid(String problemJid) {
         return problemDao.existsByJid(problemJid);
     }
 
-    @Override
     public boolean problemExistsBySlug(String slug) {
         return problemDao.existsBySlug(slug);
     }
 
-    @Override
     public Optional<Problem> findProblemById(long problemId) {
         return problemDao.select(problemId).map(m -> createProblemFromModel(m));
     }
 
-    @Override
     public Problem findProblemByJid(String problemJid) {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
 
         return createProblemFromModel(problemModel);
     }
 
-    @Override
     public Problem findProblemBySlug(String slug) {
         ProblemModel problemModel = problemDao.findBySlug(slug);
 
         return createProblemFromModel(problemModel);
     }
 
-    @Override
     public boolean isUserPartnerForProblem(String problemJid, String userJid) {
         return problemPartnerDao.existsByProblemJidAndPartnerJid(problemJid, userJid);
     }
 
-    @Override
     public void createProblemPartner(String problemJid, String userJid, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig) {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
 
@@ -121,7 +111,6 @@ public final class ProblemServiceImpl implements ProblemService {
         problemDao.update(problemModel);
     }
 
-    @Override
     public void updateProblemPartner(long problemPartnerId, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig) {
         ProblemPartnerModel problemPartnerModel = problemPartnerDao.find(problemPartnerId);
 
@@ -139,7 +128,6 @@ public final class ProblemServiceImpl implements ProblemService {
         problemDao.update(problemModel);
     }
 
-    @Override
     public Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
         long totalRows = problemPartnerDao.countByFiltersEq("", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid));
         List<ProblemPartnerModel> problemPartnerModels = problemPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid), pageIndex * pageSize, pageSize);
@@ -153,19 +141,16 @@ public final class ProblemServiceImpl implements ProblemService {
                 .build();
     }
 
-    @Override
     public Optional<ProblemPartner> findProblemPartnerById(long problemPartnerId) {
         return problemPartnerDao.select(problemPartnerId).map(m -> createProblemPartnerFromModel(m));
     }
 
-    @Override
     public ProblemPartner findProblemPartnerByProblemJidAndPartnerJid(String problemJid, String partnerJid) {
         ProblemPartnerModel problemPartnerModel = problemPartnerDao.findByProblemJidAndPartnerJid(problemJid, partnerJid);
 
         return createProblemPartnerFromModel(problemPartnerModel);
     }
 
-    @Override
     public void updateProblem(String problemJid, String slug, String additionalNote) {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
         problemModel.slug = slug;
@@ -174,7 +159,6 @@ public final class ProblemServiceImpl implements ProblemService {
         problemDao.update(problemModel);
     }
 
-    @Override
     public Page<Problem> getPageOfProblems(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
         if (isAdmin) {
             long totalRows = problemDao.countByFilters(filterString);
@@ -211,7 +195,6 @@ public final class ProblemServiceImpl implements ProblemService {
 
     }
 
-    @Override
     public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String problemJid) {
         String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
 
@@ -219,7 +202,6 @@ public final class ProblemServiceImpl implements ProblemService {
         }.getType());
     }
 
-    @Override
     public void addLanguage(String userJid, String problemJid, String languageCode) throws IOException {
         String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
         Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
@@ -232,8 +214,7 @@ public final class ProblemServiceImpl implements ProblemService {
         problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
     }
 
-    @Override
-    public void enableLanguage(String userJid, String problemJid, String languageCode) {
+    public void enableLanguage(String userJid, String problemJid, String languageCode) throws IOException {
         String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
         Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
 
@@ -242,8 +223,7 @@ public final class ProblemServiceImpl implements ProblemService {
         problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
     }
 
-    @Override
-    public void disableLanguage(String userJid, String problemJid, String languageCode) {
+    public void disableLanguage(String userJid, String problemJid, String languageCode) throws IOException {
         String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
         Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
 
@@ -252,25 +232,21 @@ public final class ProblemServiceImpl implements ProblemService {
         problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
     }
 
-    @Override
-    public void makeDefaultLanguage(String userJid, String problemJid, String languageCode) {
+    public void makeDefaultLanguage(String userJid, String problemJid, String languageCode) throws IOException {
         problemFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, problemJid), languageCode);
     }
 
-    @Override
     public String getDefaultLanguage(String userJid, String problemJid) {
         return problemFs.readFromFile(getStatementDefaultLanguageFilePath(userJid, problemJid));
     }
 
-    @Override
-    public ProblemStatement getStatement(String userJid, String problemJid, String languageCode) {
+    public ProblemStatement getStatement(String userJid, String problemJid, String languageCode) throws IOException {
         String title = problemFs.readFromFile(getStatementTitleFilePath(userJid, problemJid, languageCode));
         String text = problemFs.readFromFile(getStatementTextFilePath(userJid, problemJid, languageCode));
 
         return new ProblemStatement.Builder().title(title).text(text).build();
     }
 
-    @Override
     public Map<String, String> getTitlesByLanguage(String userJid, String problemJid) {
         Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
 
@@ -286,46 +262,39 @@ public final class ProblemServiceImpl implements ProblemService {
         return titlesByLanguageBuilder.build();
     }
 
-    @Override
-    public void updateStatement(String userJid, String problemJid, String languageCode, ProblemStatement statement) {
+    public void updateStatement(String userJid, String problemJid, String languageCode, ProblemStatement statement) throws IOException {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
         problemFs.writeToFile(getStatementTitleFilePath(userJid, problemModel.jid, languageCode), statement.getTitle());
         problemFs.writeToFile(getStatementTextFilePath(userJid, problemModel.jid, languageCode), statement.getText());
     }
 
-    @Override
     public void uploadStatementMediaFile(String userJid, String problemJid, File mediaFile, String filename) throws IOException {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
         Path mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
         problemFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
     }
 
-    @Override
-    public void uploadStatementMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) {
+    public void uploadStatementMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) throws IOException {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
         Path mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
         problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
     }
 
-    @Override
     public List<FileInfo> getStatementMediaFiles(String userJid, String problemJid) {
         Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
         return problemFs.listFilesInDirectory(mediaDirPath);
     }
 
-    @Override
     public String getStatementMediaFileURL(String userJid, String problemJid, String filename) {
         Path mediaFilePath = getStatementMediaDirPath(userJid, problemJid).resolve(filename);
         return problemFs.getPublicFileUrl(mediaFilePath);
     }
 
-    @Override
     public List<GitCommit> getVersions(String userJid, String problemJid) {
         Path root = getRootDirPath(problemFs, userJid, problemJid);
         return problemGitProvider.getLog(root);
     }
 
-    @Override
     public void initRepository(String userJid, String problemJid) {
         Path root = getRootDirPath(problemFs, null, problemJid);
 
@@ -334,14 +303,12 @@ public final class ProblemServiceImpl implements ProblemService {
         problemGitProvider.commit(root, userJid, "no@email.com", "Initial commit", "");
     }
 
-    @Override
     public boolean userCloneExists(String userJid, String problemJid) {
         Path root = getCloneDirPath(userJid, problemJid);
 
         return problemFs.directoryExists(root);
     }
 
-    @Override
     public void createUserCloneIfNotExists(String userJid, String problemJid) {
         Path origin = getOriginDirPath(problemJid);
         Path root = getCloneDirPath(userJid, problemJid);
@@ -351,7 +318,6 @@ public final class ProblemServiceImpl implements ProblemService {
         }
     }
 
-    @Override
     public boolean commitThenMergeUserClone(String userJid, String problemJid, String title, String text) {
         Path root = getCloneDirPath(userJid, problemJid);
 
@@ -370,7 +336,6 @@ public final class ProblemServiceImpl implements ProblemService {
         return success;
     }
 
-    @Override
     public boolean updateUserClone(String userJid, String problemJid) {
         Path root = getCloneDirPath(userJid, problemJid);
 
@@ -383,7 +348,6 @@ public final class ProblemServiceImpl implements ProblemService {
         return success;
     }
 
-    @Override
     public boolean pushUserClone(String userJid, String problemJid) {
         Path origin = getOriginDirPath(problemJid);
         Path root = getRootDirPath(problemFs, userJid, problemJid);
@@ -400,21 +364,18 @@ public final class ProblemServiceImpl implements ProblemService {
         return false;
     }
 
-    @Override
     public boolean fetchUserClone(String userJid, String problemJid) {
         Path root = getRootDirPath(problemFs, userJid, problemJid);
 
         return problemGitProvider.fetch(root);
     }
 
-    @Override
-    public void discardUserClone(String userJid, String problemJid) {
+    public void discardUserClone(String userJid, String problemJid) throws IOException {
         Path root = getRootDirPath(problemFs, userJid, problemJid);
 
         problemFs.removeFile(root);
     }
 
-    @Override
     public void restore(String problemJid, String hash) {
         Path root = getOriginDirPath(problemJid);
 

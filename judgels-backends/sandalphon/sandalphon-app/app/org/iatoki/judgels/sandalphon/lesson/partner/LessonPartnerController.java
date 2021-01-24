@@ -19,7 +19,7 @@ import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonRoleChecker;
-import org.iatoki.judgels.sandalphon.lesson.LessonService;
+import org.iatoki.judgels.sandalphon.lesson.LessonStore;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.addPartnerView;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.editPartnerView;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.listPartnersView;
@@ -35,20 +35,20 @@ import play.mvc.Result;
 public class LessonPartnerController extends AbstractLessonController {
     private static final long PAGE_SIZE = 20;
 
-    private final LessonService lessonService;
+    private final LessonStore lessonStore;
     private final LessonRoleChecker lessonRoleChecker;
     private final UserSearchService userSearchService;
     private final ProfileService profileService;
 
     @Inject
     public LessonPartnerController(
-            LessonService lessonService,
+            LessonStore lessonStore,
             LessonRoleChecker lessonRoleChecker,
             UserSearchService userSearchService,
             ProfileService profileService) {
 
-        super(lessonService, lessonRoleChecker);
-        this.lessonService = lessonService;
+        super(lessonStore, lessonRoleChecker);
+        this.lessonStore = lessonStore;
         this.lessonRoleChecker = lessonRoleChecker;
         this.userSearchService = userSearchService;
         this.profileService = profileService;
@@ -61,10 +61,10 @@ public class LessonPartnerController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result listPartners(Http.Request req, long lessonId, long pageIndex, String orderBy, String orderDir) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
-        Page<LessonPartner> pageOfLessonPartners = lessonService.getPageOfLessonPartners(lesson.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
+        Page<LessonPartner> pageOfLessonPartners = lessonStore.getPageOfLessonPartners(lesson.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
         Set<String> userJids = pageOfLessonPartners.getPage().stream().map(LessonPartner::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -82,7 +82,7 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result addPartner(Http.Request req, long lessonId) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
         Form<LessonPartnerUsernameForm> usernameForm = formFactory.form(LessonPartnerUsernameForm.class);
@@ -94,7 +94,7 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postAddPartner(Http.Request req, long lessonId) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
         Form<LessonPartnerUsernameForm> usernameForm = formFactory.form(LessonPartnerUsernameForm.class).bindFromRequest(req);
@@ -115,7 +115,7 @@ public class LessonPartnerController extends AbstractLessonController {
 
         String userJid = usernameToJidMap.get(username);
 
-        if (lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)) {
+        if (lessonStore.isUserPartnerForLesson(lesson.getJid(), userJid)) {
             return showAddPartner(req, usernameForm.withError("username", "This user is already a partner."), lessonForm, lesson);
         }
 
@@ -130,7 +130,7 @@ public class LessonPartnerController extends AbstractLessonController {
                 .isAllowedToRestoreVersionHistory(lessonData.isAllowedToRestoreVersionHistory)
                 .build();
 
-        lessonService.createLessonPartner(lesson.getJid(), userJid, partnerConfig);
+        lessonStore.createLessonPartner(lesson.getJid(), userJid, partnerConfig);
 
         return redirect(routes.LessonPartnerController.viewPartners(lesson.getId()));
     }
@@ -138,10 +138,10 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editPartner(Http.Request req, long lessonId, long partnerId) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
-        LessonPartner lessonPartner = checkFound(lessonService.findLessonPartnerById(partnerId));
+        LessonPartner lessonPartner = checkFound(lessonStore.findLessonPartnerById(partnerId));
 
         LessonPartnerConfig lessonConfig = lessonPartner.getConfig();
         LessonPartnerUpsertForm lessonData = new LessonPartnerUpsertForm();
@@ -163,10 +163,10 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditPartner(Http.Request req, long lessonId, long partnerId) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
-        LessonPartner lessonPartner = checkFound(lessonService.findLessonPartnerById(partnerId));
+        LessonPartner lessonPartner = checkFound(lessonStore.findLessonPartnerById(partnerId));
 
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).bindFromRequest(req);
 
@@ -187,7 +187,7 @@ public class LessonPartnerController extends AbstractLessonController {
                 .isAllowedToRestoreVersionHistory(lessonData.isAllowedToRestoreVersionHistory)
                 .build();
 
-        lessonService.updateLessonPartner(partnerId, lessonConfig);
+        lessonStore.updateLessonPartner(partnerId, lessonConfig);
 
         return redirect(routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
     }

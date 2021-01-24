@@ -34,20 +34,20 @@ public final class LessonController extends AbstractLessonController {
     private static final long PAGE_SIZE = 20;
 
     private final RoleChecker roleChecker;
-    private final LessonService lessonService;
+    private final LessonStore lessonStore;
     private final LessonRoleChecker lessonRoleChecker;
     private final ProfileService profileService;
 
     @Inject
     public LessonController(
             RoleChecker roleChecker,
-            LessonService lessonService,
+            LessonStore lessonStore,
             LessonRoleChecker lessonRoleChecker,
             ProfileService profileService) {
 
-        super(lessonService, lessonRoleChecker);
+        super(lessonStore, lessonRoleChecker);
         this.roleChecker = roleChecker;
-        this.lessonService = lessonService;
+        this.lessonStore = lessonStore;
         this.lessonRoleChecker = lessonRoleChecker;
         this.profileService = profileService;
     }
@@ -63,7 +63,7 @@ public final class LessonController extends AbstractLessonController {
 
         boolean isAdmin = roleChecker.isAdmin(req);
         boolean isWriter = roleChecker.isWriter(req);
-        Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
+        Page<Lesson> pageOfLessons = lessonStore.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
 
         Set<String> userJids = pageOfLessons.getPage().stream().map(Lesson::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -99,7 +99,7 @@ public final class LessonController extends AbstractLessonController {
             return showCreateLesson(req, lessonCreateForm);
         }
 
-        if (lessonService.lessonExistsBySlug(lessonCreateForm.get().slug)) {
+        if (lessonStore.lessonExistsBySlug(lessonCreateForm.get().slug)) {
             return showCreateLesson(req, lessonCreateForm.withError("slug", "Slug already exists"));
         }
 
@@ -107,8 +107,8 @@ public final class LessonController extends AbstractLessonController {
 
         Lesson lesson;
         try {
-            lesson = lessonService.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode);
-            lessonService.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
+            lesson = lessonStore.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode);
+            lessonStore.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode))
                     .text(LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode))
                     .build());
@@ -116,7 +116,7 @@ public final class LessonController extends AbstractLessonController {
             throw new RuntimeException(e);
         }
 
-        lessonService.initRepository(actorJid, lesson.getJid());
+        lessonStore.initRepository(actorJid, lesson.getJid());
 
         return redirect(routes.LessonController.index())
                 .addingToSession(req, newCurrentStatementLanguage(lessonCreateData.initLanguageCode));
@@ -140,7 +140,7 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result viewLesson(Http.Request req, long lessonId) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
 
         Profile profile = profileService.getProfile(lesson.getAuthorJid());
 
@@ -157,7 +157,7 @@ public final class LessonController extends AbstractLessonController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editLesson(Http.Request req, long lessonId) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAllowedToUpdateLesson(req, lesson));
 
         LessonEditForm lessonEditData = new LessonEditForm();
@@ -172,7 +172,7 @@ public final class LessonController extends AbstractLessonController {
     @Transactional
     @RequireCSRFCheck
     public Result postEditLesson(Http.Request req, long lessonId) {
-        Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAllowedToUpdateLesson(req, lesson));
 
         Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).bindFromRequest(req);
@@ -181,12 +181,12 @@ public final class LessonController extends AbstractLessonController {
             return showEditLesson(req, lessonEditForm, lesson);
         }
 
-        if (!lesson.getSlug().equals(lessonEditForm.get().slug) && lessonService.lessonExistsBySlug(lessonEditForm.get().slug)) {
+        if (!lesson.getSlug().equals(lessonEditForm.get().slug) && lessonStore.lessonExistsBySlug(lessonEditForm.get().slug)) {
             return showEditLesson(req, lessonEditForm.withError("slug", "Slug already exists"), lesson);
         }
 
         LessonEditForm lessonEditData = lessonEditForm.get();
-        lessonService.updateLesson(lesson.getJid(), lessonEditData.slug, lessonEditData.additionalNote);
+        lessonStore.updateLesson(lesson.getJid(), lessonEditData.slug, lessonEditData.additionalNote);
 
         return redirect(routes.LessonController.viewLesson(lesson.getId()));
     }

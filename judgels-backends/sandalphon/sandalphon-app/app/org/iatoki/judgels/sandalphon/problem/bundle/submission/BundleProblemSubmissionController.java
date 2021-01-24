@@ -19,7 +19,7 @@ import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.bundleSubmissionView;
@@ -33,25 +33,25 @@ import play.mvc.Result;
 public final class BundleProblemSubmissionController extends AbstractProblemController {
     private static final long PAGE_SIZE = 20;
 
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final FileSystem bundleSubmissionFs;
-    private final BundleSubmissionService bundleSubmissionService;
+    private final BundleSubmissionStore bundleSubmissionStore;
     private final ProfileService profileService;
 
     @Inject
     public BundleProblemSubmissionController(
-            ProblemService problemService,
+            ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
             @SubmissionFs FileSystem bundleSubmissionFs,
-            BundleSubmissionService bundleSubmissionService,
+            BundleSubmissionStore bundleSubmissionStore,
             ProfileService profileService) {
 
-        super(problemService, problemRoleChecker);
-        this.problemService = problemService;
+        super(problemStore, problemRoleChecker);
+        this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleSubmissionFs = bundleSubmissionFs;
-        this.bundleSubmissionService = bundleSubmissionService;
+        this.bundleSubmissionStore = bundleSubmissionStore;
         this.profileService = profileService;
     }
 
@@ -59,16 +59,16 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
     public Result postSubmit(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
 
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
 
-        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
+        boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem) && isClean);
 
         DynamicForm dForm = formFactory.form().bindFromRequest(req);
 
-        BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, getCurrentStatementLanguage(req));
-        String submissionJid = bundleSubmissionService.submit(problem.getJid(), null, bundleAnswer);
-        bundleSubmissionService.storeSubmissionFiles(bundleSubmissionFs, null, submissionJid, bundleAnswer);
+        BundleAnswer bundleAnswer = bundleSubmissionStore.createBundleAnswerFromNewSubmission(dForm, getCurrentStatementLanguage(req));
+        String submissionJid = bundleSubmissionStore.submit(problem.getJid(), null, bundleAnswer);
+        bundleSubmissionStore.storeSubmissionFiles(bundleSubmissionFs, null, submissionJid, bundleAnswer);
 
         return redirect(routes.BundleProblemSubmissionController.viewSubmissions(problem.getId()));
     }
@@ -80,10 +80,10 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional(readOnly = true)
     public Result listSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
+        Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionStore.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
 
         Set<String> userJids = pageOfBundleSubmissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -98,13 +98,13 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional(readOnly = true)
     public Result viewSubmission(Http.Request req, long problemId, long submissionId) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        BundleSubmission bundleSubmission = checkFound(bundleSubmissionService.findBundleSubmissionById(submissionId));
+        BundleSubmission bundleSubmission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
         BundleAnswer bundleAnswer;
         try {
-            bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
+            bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -122,24 +122,24 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional
     public Result regradeSubmission(Http.Request req, long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        BundleSubmission bundleSubmission = checkFound(bundleSubmissionService.findBundleSubmissionById(submissionId));
+        BundleSubmission bundleSubmission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
         BundleAnswer bundleAnswer;
         try {
-            bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
+            bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        bundleSubmissionService.regrade(bundleSubmission.getJid(), bundleAnswer);
+        bundleSubmissionStore.regrade(bundleSubmission.getJid(), bundleAnswer);
 
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
 
     @Transactional
     public Result regradeSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest(req).get();
@@ -147,9 +147,9 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         List<BundleSubmission> submissions;
 
         if (data.selectAll) {
-            submissions = bundleSubmissionService.getBundleSubmissionsByFilters(orderBy, orderDir, null, problem.getJid(), null);
+            submissions = bundleSubmissionStore.getBundleSubmissionsByFilters(orderBy, orderDir, null, problem.getJid(), null);
         } else if (data.selectJids != null) {
-            submissions = bundleSubmissionService.getBundleSubmissionsByJids(data.selectJids);
+            submissions = bundleSubmissionStore.getBundleSubmissionsByJids(data.selectJids);
         } else {
             return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
         }
@@ -157,11 +157,11 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         for (BundleSubmission bundleSubmission : submissions) {
             BundleAnswer bundleAnswer;
             try {
-                bundleAnswer = bundleSubmissionService.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
+                bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            bundleSubmissionService.regrade(bundleSubmission.getJid(), bundleAnswer);
+            bundleSubmissionStore.regrade(bundleSubmission.getJid(), bundleAnswer);
         }
 
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));

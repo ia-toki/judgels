@@ -19,7 +19,7 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.listStatementLanguagesView;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.listStatementMediaFilesView;
@@ -36,19 +36,19 @@ import play.mvc.Result;
 
 @Singleton
 public class ProblemStatementController extends AbstractProblemController {
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
 
     @Inject
-    public ProblemStatementController(ProblemService problemService, ProblemRoleChecker problemRoleChecker) {
-        super(problemService, problemRoleChecker);
-        this.problemService = problemService;
+    public ProblemStatementController(ProblemStore problemStore, ProblemRoleChecker problemRoleChecker) {
+        super(problemStore, problemRoleChecker);
+        this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
     }
 
     @Transactional(readOnly = true)
     public Result viewStatement(long problemId) {
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
 
         if (problem.getType().equals(ProblemType.PROGRAMMING)) {
             return redirect(org.iatoki.judgels.sandalphon.problem.programming.statement.routes.ProgrammingProblemStatementController.viewStatement(problem.getId()));
@@ -63,13 +63,13 @@ public class ProblemStatementController extends AbstractProblemController {
     @AddCSRFToken
     public Result editStatement(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatementInLanguage(req, problem, language));
 
         ProblemStatement statement;
         try {
-            statement = problemService.getStatement(actorJid, problem.getJid(), language);
+            statement = problemStore.getStatement(actorJid, problem.getJid(), language);
         } catch (IOException e) {
             if (ProblemType.PROGRAMMING.equals(problem.getType())) {
                 statement = new ProblemStatement.Builder()
@@ -97,7 +97,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @RequireCSRFCheck
     public Result postEditStatement(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatementInLanguage(req, problem, language));
 
@@ -107,7 +107,7 @@ public class ProblemStatementController extends AbstractProblemController {
             return showEditStatement(req, language, updateStatementForm, problem, allowedLanguages);
         }
 
-        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
+        problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
             UpdateStatementForm updateStatementData = updateStatementForm.get();
@@ -116,7 +116,7 @@ public class ProblemStatementController extends AbstractProblemController {
                     .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                     .build();
 
-            problemService.updateStatement(actorJid, problem.getJid(), language, statement);
+            problemStore.updateStatement(actorJid, problem.getJid(), language, statement);
         } catch (IOException e) {
             Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
             return showEditStatement(req, language, updateStatementForm.withGlobalError("Error updating statement."), problem, allowedLanguages);
@@ -131,11 +131,11 @@ public class ProblemStatementController extends AbstractProblemController {
     @AddCSRFToken
     public Result listStatementMediaFiles(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = problemRoleChecker.isAllowedToUploadStatementResources(req, problem);
-        List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(actorJid, problem.getJid());
+        List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actorJid, problem.getJid());
 
         return showListStatementMediaFiles(req, uploadFileForm, problem, mediaFiles, isAllowedToUploadMediaFiles);
     }
@@ -144,7 +144,7 @@ public class ProblemStatementController extends AbstractProblemController {
     @RequireCSRFCheck
     public Result postUploadStatementMediaFiles(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUploadStatementResources(req, problem));
 
         Http.MultipartFormData<File> body = req.body().asMultipartFormData();
@@ -153,14 +153,14 @@ public class ProblemStatementController extends AbstractProblemController {
         file = body.getFile("file");
         if (file != null) {
             File mediaFile = file.getFile();
-            problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
+            problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             try {
-                problemService.uploadStatementMediaFile(actorJid, problem.getJid(), mediaFile, file.getFilename());
+                problemStore.uploadStatementMediaFile(actorJid, problem.getJid(), mediaFile, file.getFilename());
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = problemRoleChecker.isAllowedToUploadStatementResources(req, problem);
-                List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(actorJid, problem.getJid());
+                List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actorJid, problem.getJid());
 
                 return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
             }
@@ -171,14 +171,14 @@ public class ProblemStatementController extends AbstractProblemController {
         file = body.getFile("fileZipped");
         if (file != null) {
             File mediaFile = file.getFile();
-            problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
+            problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             try {
-                problemService.uploadStatementMediaFileZipped(actorJid, problem.getJid(), mediaFile);
+                problemStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), mediaFile);
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = problemRoleChecker.isAllowedToUploadStatementResources(req, problem);
-                List<FileInfo> mediaFiles = problemService.getStatementMediaFiles(actorJid, problem.getJid());
+                List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actorJid, problem.getJid());
 
                 return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
             }
@@ -193,11 +193,11 @@ public class ProblemStatementController extends AbstractProblemController {
     @AddCSRFToken
     public Result listStatementLanguages(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
-        Map<String, StatementLanguageStatus> availableLanguages = problemService.getAvailableLanguages(actorJid, problem.getJid());
-        String defaultLanguage = problemService.getDefaultLanguage(actorJid, problem.getJid());
+        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getAvailableLanguages(actorJid, problem.getJid());
+        String defaultLanguage = problemStore.getDefaultLanguage(actorJid, problem.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
@@ -211,10 +211,10 @@ public class ProblemStatementController extends AbstractProblemController {
     @RequireCSRFCheck
     public Result postAddStatementLanguage(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
-        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
+        problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         String languageCode;
         try {
@@ -224,7 +224,7 @@ public class ProblemStatementController extends AbstractProblemController {
                 throw new IllegalStateException("Languages is not from list.");
             }
 
-            problemService.addLanguage(actorJid, problem.getJid(), languageCode);
+            problemStore.addLanguage(actorJid, problem.getJid(), languageCode);
         } catch (IOException e) {
             // TODO should use form so it can be rejected
             throw new IllegalStateException(e);
@@ -236,10 +236,10 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result enableStatementLanguage(Http.Request req, long problemId, String languageCode) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
-        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
+        problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
             // TODO should check if language has been enabled
@@ -247,7 +247,7 @@ public class ProblemStatementController extends AbstractProblemController {
                 return notFound();
             }
 
-            problemService.enableLanguage(actorJid, problem.getJid(), languageCode);
+            problemStore.enableLanguage(actorJid, problem.getJid(), languageCode);
         } catch (IOException e) {
             throw new IllegalStateException("Statement language probably hasn't been added.", e);
         }
@@ -258,11 +258,11 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result disableStatementLanguage(Http.Request req, long problemId, String languageCode) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
-        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
+        problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
             // TODO should check if language has been enabled
@@ -270,10 +270,10 @@ public class ProblemStatementController extends AbstractProblemController {
                 return notFound();
             }
 
-            problemService.disableLanguage(actorJid, problem.getJid(), languageCode);
+            problemStore.disableLanguage(actorJid, problem.getJid(), languageCode);
 
             if (getCurrentStatementLanguage(req).equals(languageCode)) {
-                language = problemService.getDefaultLanguage(actorJid, problem.getJid());
+                language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
             }
         } catch (IOException e) {
             throw new IllegalStateException("Statement language probably hasn't been added.", e);
@@ -286,10 +286,10 @@ public class ProblemStatementController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result makeDefaultStatementLanguage(Http.Request req, long problemId, String languageCode) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
-        problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
+        problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
         try {
             // TODO should check if language has been enabled
@@ -297,7 +297,7 @@ public class ProblemStatementController extends AbstractProblemController {
                 return notFound();
             }
 
-            problemService.makeDefaultLanguage(actorJid, problem.getJid(), languageCode);
+            problemStore.makeDefaultLanguage(actorJid, problem.getJid(), languageCode);
         } catch (IOException e) {
             throw new IllegalStateException("Statement language probably hasn't been added.", e);
         }

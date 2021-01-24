@@ -11,10 +11,10 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 public abstract class AbstractBaseProblemController extends AbstractSandalphonController {
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
 
-    protected AbstractBaseProblemController(ProblemService problemService) {
-        this.problemService = problemService;
+    protected AbstractBaseProblemController(ProblemStore problemStore) {
+        this.problemStore = problemStore;
     }
 
     protected String getJustCreatedProblemSlug(Http.Request req) {
@@ -50,12 +50,12 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
         String userJid = getUserJid(req);
         String currentLanguage = getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus>
-                availableLanguages = problemService.getAvailableLanguages(userJid, problem.getJid());
+                availableLanguages = problemStore.getAvailableLanguages(userJid, problem.getJid());
 
         if (currentLanguage == null
                 || !availableLanguages.containsKey(currentLanguage)
                 || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            return problemService.getDefaultLanguage(userJid, problem.getJid());
+            return problemStore.getDefaultLanguage(userJid, problem.getJid());
         }
         return currentLanguage;
     }
@@ -68,7 +68,7 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
 
     protected void appendVersionLocalChangesWarning(HtmlTemplate template, Problem problem) {
         String userJid = getUserJid(template.getRequest());
-        if (problemService.userCloneExists(userJid, problem.getJid())) {
+        if (problemStore.userCloneExists(userJid, problem.getJid())) {
             template.setWarning(versionLocalChangesWarningLayout.render(problem.getId(), null));
         }
     }

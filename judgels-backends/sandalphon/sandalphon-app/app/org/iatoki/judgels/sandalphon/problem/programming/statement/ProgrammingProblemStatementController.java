@@ -16,9 +16,9 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
+import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.resource.html.katexView;
@@ -28,32 +28,32 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemStatementController extends AbstractProblemController {
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
-    private final ProgrammingProblemService programmingProblemService;
+    private final ProgrammingProblemStore programmingProblemStore;
 
     @Inject
     public ProgrammingProblemStatementController(
-            ProblemService problemService,
+            ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
-            ProgrammingProblemService programmingProblemService) {
+            ProgrammingProblemStore programmingProblemStore) {
 
-        super(problemService, problemRoleChecker);
-        this.problemService = problemService;
+        super(problemStore, problemRoleChecker);
+        this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
-        this.programmingProblemService = programmingProblemService;
+        this.programmingProblemStore = programmingProblemStore;
     }
 
     @Transactional(readOnly = true)
     public Result viewStatement(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-        Problem problem = checkFound(problemService.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
         ProblemStatement statement;
         try {
-            statement = problemService.getStatement(actorJid, problem.getJid(), language);
+            statement = problemStore.getStatement(actorJid, problem.getJid(), language);
         } catch (IOException e) {
             statement = new ProblemStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(language))
@@ -63,27 +63,27 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
 
         String engine;
         try {
-            engine = programmingProblemService.getGradingEngine(actorJid, problem.getJid());
+            engine = programmingProblemStore.getGradingEngine(actorJid, problem.getJid());
         } catch (IOException e) {
             engine = GradingEngineRegistry.getInstance().getDefault();
         }
 
         GradingConfig config;
         try {
-            config = programmingProblemService.getGradingConfig(actorJid, problem.getJid());
+            config = programmingProblemStore.getGradingConfig(actorJid, problem.getJid());
         } catch (IOException e) {
             config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
         LanguageRestriction languageRestriction;
         try {
-            languageRestriction = programmingProblemService.getLanguageRestriction(actorJid, problem.getJid());
+            languageRestriction = programmingProblemStore.getLanguageRestriction(actorJid, problem.getJid());
         } catch (IOException e) {
             languageRestriction = LanguageRestriction.noRestriction();
         }
         Set<String> allowedLanguageNames = LanguageRestrictionAdapter.getFinalAllowedLanguageNames(ImmutableList.of(languageRestriction));
 
         boolean isAllowedToSubmitByPartner = problemRoleChecker.isAllowedToSubmit(req, problem);
-        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
+        boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
 
         String reasonNotAllowedToSubmit = null;
 

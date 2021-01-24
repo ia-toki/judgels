@@ -17,12 +17,12 @@ import play.mvc.Http;
 
 public class ProblemRoleChecker {
     private final RoleChecker roleChecker;
-    private final ProblemService problemService;
+    private final ProblemStore problemStore;
 
     @Inject
-    public ProblemRoleChecker(RoleChecker roleChecker, ProblemService problemService) {
+    public ProblemRoleChecker(RoleChecker roleChecker, ProblemStore problemStore) {
         this.roleChecker = roleChecker;
-        this.problemService = problemService;
+        this.problemStore = problemStore;
     }
 
     public boolean isAuthor(Http.Request req, Problem problem) {
@@ -34,7 +34,7 @@ public class ProblemRoleChecker {
     }
 
     public boolean isPartner(Http.Request req, Problem problem) {
-        return problemService.isUserPartnerForProblem(problem.getJid(), getUserJid(req));
+        return problemStore.isUserPartnerForProblem(problem.getJid(), getUserJid(req));
     }
 
     public boolean isPartnerOrAbove(Http.Request req, Problem problem) {
@@ -59,7 +59,7 @@ public class ProblemRoleChecker {
             return false;
         }
 
-        String defaultLanguage = problemService.getDefaultLanguage(getUserJid(req), problem.getJid());
+        String defaultLanguage = problemStore.getDefaultLanguage(getUserJid(req), problem.getJid());
         Set<String> allowedLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
 
         return allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage);
@@ -134,7 +134,7 @@ public class ProblemRoleChecker {
 
     public Set<String> getAllowedLanguagesToView(Http.Request req, Problem problem) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                problemService.getAvailableLanguages(getUserJid(req), problem.getJid());
+                problemStore.getAvailableLanguages(getUserJid(req), problem.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -146,7 +146,7 @@ public class ProblemRoleChecker {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
             if (allowedPartnerLanguages != null) {
                 allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(problemService.getDefaultLanguage(getUserJid(req), problem.getJid()));
+                allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
             }
         }
 
@@ -155,7 +155,7 @@ public class ProblemRoleChecker {
 
     public Set<String> getAllowedLanguagesToUpdate(Http.Request req, Problem problem) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                problemService.getAvailableLanguages(getUserJid(req), problem.getJid());
+                problemStore.getAvailableLanguages(getUserJid(req), problem.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -167,7 +167,7 @@ public class ProblemRoleChecker {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
             if (allowedPartnerLanguages != null) {
                 allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(problemService.getDefaultLanguage(getUserJid(req), problem.getJid()));
+                allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
             }
         }
 
@@ -175,12 +175,12 @@ public class ProblemRoleChecker {
     }
 
     private ProblemPartnerConfig getPartnerConfig(Http.Request req, Problem problem) {
-        return problemService.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), getUserJid(req))
+        return problemStore.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), getUserJid(req))
                 .getBaseConfig();
     }
 
     private ProblemPartnerChildConfig getPartnerChildConfig(Http.Request req, Problem problem) {
-        return problemService.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), getUserJid(req))
+        return problemStore.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), getUserJid(req))
                 .getChildConfig();
     }
 }

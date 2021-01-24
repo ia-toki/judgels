@@ -14,7 +14,7 @@ import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.LessonService;
+import org.iatoki.judgels.sandalphon.lesson.LessonStore;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -23,20 +23,20 @@ import play.mvc.Results;
 public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIController {
     private final ClientChecker clientChecker;
     private final ClientUserService userService;
-    private final LessonService lessonService;
+    private final LessonStore lessonStore;
 
     @Inject
-    public ClientLessonAPIControllerV2(ClientChecker clientChecker, ClientUserService userService, LessonService lessonService) {
+    public ClientLessonAPIControllerV2(ClientChecker clientChecker, ClientUserService userService, LessonStore lessonStore) {
         this.clientChecker = clientChecker;
         this.userService = userService;
-        this.lessonService = lessonService;
+        this.lessonStore = lessonStore;
     }
 
     @Transactional(readOnly = true)
     public Result getLesson(String lessonJid) throws IOException {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        if (!lessonService.lessonExistsByJid(lessonJid)) {
+        if (!lessonStore.lessonExistsByJid(lessonJid)) {
             return Results.notFound();
         }
 
@@ -48,13 +48,13 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     public Result getLessonStatement(String lessonJid) throws IOException {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        if (!lessonService.lessonExistsByJid(lessonJid)) {
+        if (!lessonStore.lessonExistsByJid(lessonJid)) {
             return Results.notFound();
         }
 
         String language = sanitizeLanguageCode(lessonJid, formFactory.form().bindFromRequest().get("language"));
 
-        LessonStatement statement = lessonService.getStatement(null, lessonJid, language);
+        LessonStatement statement = lessonStore.getStatement(null, lessonJid, language);
 
         judgels.sandalphon.api.lesson.LessonStatement result = new judgels.sandalphon.api.lesson.LessonStatement.Builder()
                 .title(statement.getTitle())
@@ -74,7 +74,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
 
         for (JsonNode lessonJidNode : lessonJids) {
             String lessonJid = lessonJidNode.asText();
-            if (lessonService.lessonExistsByJid(lessonJid)) {
+            if (lessonStore.lessonExistsByJid(lessonJid)) {
                 result.put(lessonJid, getLessonInfo(lessonJid));
             }
         }
@@ -92,10 +92,10 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
         JsonNode slugs = request().body().asJson();
         for (JsonNode slugNode : slugs) {
             String slug = slugNode.asText();
-            if (!lessonService.lessonExistsBySlug(slug)) {
+            if (!lessonStore.lessonExistsBySlug(slug)) {
                 continue;
             }
-            Lesson lesson = lessonService.findLessonBySlug(slug);
+            Lesson lesson = lessonStore.findLessonBySlug(slug);
             if (isPartnerOrAbove(userJid, lesson)) {
                 result.put(slug, lesson.getJid());
             }
@@ -105,12 +105,12 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     }
 
     private LessonInfo getLessonInfo(String lessonJid) throws IOException {
-        Lesson lesson = lessonService.findLessonByJid(lessonJid);
+        Lesson lesson = lessonStore.findLessonByJid(lessonJid);
 
         LessonInfo.Builder res = new LessonInfo.Builder();
         res.slug(lesson.getSlug());
-        res.defaultLanguage(simplifyLanguageCode(lessonService.getDefaultLanguage(null, lessonJid)));
-        res.titlesByLanguage(lessonService.getTitlesByLanguage(null, lessonJid).entrySet()
+        res.defaultLanguage(simplifyLanguageCode(lessonStore.getDefaultLanguage(null, lessonJid)));
+        res.titlesByLanguage(lessonStore.getTitlesByLanguage(null, lessonJid).entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
         return res.build();
@@ -118,20 +118,20 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
 
     private boolean isPartnerOrAbove(String userJid, Lesson lesson) {
         return lesson.getAuthorJid().equals(userJid)
-            || lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)
+            || lessonStore.isUserPartnerForLesson(lesson.getJid(), userJid)
             || userService.getUserRole(userJid).getSandalphon().orElse("").equals("ADMIN");
     }
 
 
     private String sanitizeLanguageCode(String lessonJid, String language) throws IOException {
-        Map<String, StatementLanguageStatus> availableLanguages = lessonService.getAvailableLanguages(null, lessonJid);
+        Map<String, StatementLanguageStatus> availableLanguages = lessonStore.getAvailableLanguages(null, lessonJid);
         Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
 
         String lang = language;
         if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
-            lang = simplifyLanguageCode(lessonService.getDefaultLanguage(null, lessonJid));
+            lang = simplifyLanguageCode(lessonStore.getDefaultLanguage(null, lessonJid));
         }
 
         return simplifiedLanguages.get(lang);

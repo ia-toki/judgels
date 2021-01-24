@@ -9,7 +9,7 @@ import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.html.createProgrammingProblemView;
 import org.iatoki.judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
@@ -22,18 +22,18 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemController extends AbstractProblemController {
-    private final ProblemService problemService;
-    private final ProgrammingProblemService programmingProblemService;
+    private final ProblemStore problemStore;
+    private final ProgrammingProblemStore programmingProblemStore;
 
     @Inject
     public ProgrammingProblemController(
-            ProblemService problemService,
+            ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
-            ProgrammingProblemService programmingProblemService) {
+            ProgrammingProblemStore programmingProblemStore) {
 
-        super(problemService, problemRoleChecker);
-        this.problemService = problemService;
-        this.programmingProblemService = programmingProblemService;
+        super(problemStore, problemRoleChecker);
+        this.problemStore = problemStore;
+        this.programmingProblemStore = programmingProblemStore;
     }
 
     @Transactional(readOnly = true)
@@ -71,18 +71,18 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
 
         Problem problem;
         try {
-            problem = problemService.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode);
+            problem = problemStore.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode);
             ProblemStatement statement = new ProblemStatement.Builder()
                     .title(ProblemStatementUtils.getDefaultTitle(languageCode))
                     .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
                     .build();
-            problemService.updateStatement(null, problem.getJid(), languageCode, statement);
-            programmingProblemService.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
+            problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
+            programmingProblemStore.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
         } catch (IOException e) {
             return showCreateProgrammingProblem(req, programmingProblemCreateForm.withGlobalError("Error creating programming problem."));
         }
 
-        problemService.initRepository(actorJid, problem.getJid());
+        problemStore.initRepository(actorJid, problem.getJid());
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(getJustCreatedProblemInitLanguage(req)))
