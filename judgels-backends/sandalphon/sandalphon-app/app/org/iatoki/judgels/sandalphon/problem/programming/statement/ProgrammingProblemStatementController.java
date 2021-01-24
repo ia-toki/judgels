@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.statement;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
@@ -14,10 +15,9 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
@@ -29,28 +29,27 @@ import play.mvc.Result;
 @Singleton
 public final class ProgrammingProblemStatementController extends AbstractProblemController {
     private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
     public ProgrammingProblemStatementController(
             ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemService programmingProblemService) {
 
-        super(problemService);
+        super(problemService, problemRoleChecker);
         this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
         this.programmingProblemService = programmingProblemService;
     }
 
     @Transactional(readOnly = true)
     public Result viewStatement(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
-
-        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem, language)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
         ProblemStatement statement;
         try {
@@ -83,7 +82,7 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
         }
         Set<String> allowedLanguageNames = LanguageRestrictionAdapter.getFinalAllowedLanguageNames(ImmutableList.of(languageRestriction));
 
-        boolean isAllowedToSubmitByPartner = ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem);
+        boolean isAllowedToSubmitByPartner = problemRoleChecker.isAllowedToSubmit(req, problem);
         boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
 
         String reasonNotAllowedToSubmit = null;
@@ -98,18 +97,13 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
         template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
         template.addAdditionalScript(katexView.render());
 
-        Set<String> allowedLanguages;
-        try {
-            allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToView(problemService, problem);
-        } catch (IOException e) {
-            return notFound();
-        }
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToView(req, problem);
 
         appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
         template.markBreadcrumbLocation("View statement", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
         template.setPageTitle("Problem - View statement");
 
-        return renderStatementTemplate(template, problemService, problem)
+        return renderStatementTemplate(template, problem)
                 .addingToSession(req, newCurrentStatementLanguage(language));
     }
 }

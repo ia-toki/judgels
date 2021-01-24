@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.File;
@@ -34,8 +35,8 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.html.listSubmissionsView;
@@ -46,6 +47,7 @@ import play.mvc.Result;
 @Singleton
 public final class ProgrammingProblemSubmissionController extends AbstractProblemController {
     private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
     private final ProgrammingProblemService programmingProblemService;
     private final ProfileService profileService;
     private final SubmissionStore submissionStore;
@@ -56,6 +58,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
     @Inject
     public ProgrammingProblemSubmissionController(
             ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemService programmingProblemService,
             ProfileService profileService,
             SubmissionStore submissionStore,
@@ -63,8 +66,9 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
             SubmissionClient submissionClient,
             SubmissionRegrader submissionRegrader) {
 
-        super(problemService);
+        super(problemService, problemRoleChecker);
         this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
         this.programmingProblemService = programmingProblemService;
         this.profileService = profileService;
         this.submissionStore = submissionStore;
@@ -76,13 +80,10 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
     @Transactional
     public Result postSubmit(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
-        if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem) && isClean) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem) && isClean);
 
         String gradingEngine;
         try {
@@ -148,10 +149,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
     @Transactional(readOnly = true)
     public Result listSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         Page<Submission> pageOfProgrammingSubmissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of((int) pageIndex + 1));
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
@@ -164,18 +162,14 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         template.markBreadcrumbLocation("Submissions", routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     @Transactional(readOnly = true)
     public Result viewSubmission(Http.Request req, long problemId, long submissionId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         Submission programmingSubmission = submissionStore.getSubmissionById(submissionId).get();
 
@@ -195,16 +189,13 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         template.markBreadcrumbLocation("View submission", routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
         template.setPageTitle("Problem - View submission");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     @Transactional
     public Result regradeSubmission(Http.Request req, long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         Submission programmingSubmission = submissionStore.getSubmissionById(submissionId).get();
         submissionRegrader.regradeSubmission(programmingSubmission);
@@ -215,10 +206,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
     @Transactional
     public Result regradeSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest().get();
 
@@ -236,9 +224,9 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
 
-    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+    protected Result renderTemplate(HtmlTemplate template, Problem problem) {
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToSubmissions(problem.getId()));
 
-        return super.renderTemplate(template, problemService, problem);
+        return super.renderTemplate(template, problem);
     }
 }

@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.lesson.partner;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
@@ -17,7 +18,7 @@ import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
-import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
+import org.iatoki.judgels.sandalphon.lesson.LessonRoleChecker;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.addPartnerView;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.editPartnerView;
@@ -32,22 +33,24 @@ import play.mvc.Result;
 
 @Singleton
 public class LessonPartnerController extends AbstractLessonController {
-
     private static final long PAGE_SIZE = 20;
 
-    private final UserSearchService userSearchService;
     private final LessonService lessonService;
+    private final LessonRoleChecker lessonRoleChecker;
+    private final UserSearchService userSearchService;
     private final ProfileService profileService;
 
     @Inject
     public LessonPartnerController(
-            UserSearchService userSearchService,
             LessonService lessonService,
+            LessonRoleChecker lessonRoleChecker,
+            UserSearchService userSearchService,
             ProfileService profileService) {
 
-        super(lessonService);
-        this.userSearchService = userSearchService;
+        super(lessonService, lessonRoleChecker);
         this.lessonService = lessonService;
+        this.lessonRoleChecker = lessonRoleChecker;
+        this.userSearchService = userSearchService;
         this.profileService = profileService;
     }
 
@@ -59,10 +62,7 @@ public class LessonPartnerController extends AbstractLessonController {
     @Transactional(readOnly = true)
     public Result listPartners(Http.Request req, long lessonId, long pageIndex, String orderBy, String orderDir) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
         Page<LessonPartner> pageOfLessonPartners = lessonService.getPageOfLessonPartners(lesson.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
@@ -76,17 +76,14 @@ public class LessonPartnerController extends AbstractLessonController {
         template.markBreadcrumbLocation("Partners", routes.LessonPartnerController.viewPartners(lesson.getId()));
         template.setPageTitle("Lesson - Partners");
 
-        return renderTemplate(template, lessonService, lesson);
+        return renderTemplate(template, lesson);
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result addPartner(Http.Request req, long lessonId) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
         Form<LessonPartnerUsernameForm> usernameForm = formFactory.form(LessonPartnerUsernameForm.class);
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class);
@@ -98,10 +95,7 @@ public class LessonPartnerController extends AbstractLessonController {
     @RequireCSRFCheck
     public Result postAddPartner(Http.Request req, long lessonId) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
         Form<LessonPartnerUsernameForm> usernameForm = formFactory.form(LessonPartnerUsernameForm.class).bindFromRequest(req);
         Form<LessonPartnerUpsertForm> lessonForm = formFactory.form(LessonPartnerUpsertForm.class).bindFromRequest(req);
@@ -145,10 +139,7 @@ public class LessonPartnerController extends AbstractLessonController {
     @AddCSRFToken
     public Result editPartner(Http.Request req, long lessonId, long partnerId) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
         LessonPartner lessonPartner = checkFound(lessonService.findLessonPartnerById(partnerId));
 
@@ -173,10 +164,7 @@ public class LessonPartnerController extends AbstractLessonController {
     @RequireCSRFCheck
     public Result postEditPartner(Http.Request req, long lessonId, long partnerId) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAuthorOrAbove(lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
         LessonPartner lessonPartner = checkFound(lessonService.findLessonPartnerById(partnerId));
 
@@ -212,7 +200,7 @@ public class LessonPartnerController extends AbstractLessonController {
         template.markBreadcrumbLocation("Add partner", routes.LessonPartnerController.addPartner(lesson.getId()));
         template.setPageTitle("Lesson - Add partner");
 
-        return renderTemplate(template, lessonService, lesson);
+        return renderTemplate(template, lesson);
     }
 
     private Result showEditPartner(Http.Request req, Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson, LessonPartner lessonPartner) {
@@ -225,12 +213,12 @@ public class LessonPartnerController extends AbstractLessonController {
         template.markBreadcrumbLocation("Update partner", routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
         template.setPageTitle("Lesson - Update partner");
 
-        return renderTemplate(template, lessonService, lesson);
+        return renderTemplate(template, lesson);
     }
 
-    protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+    protected Result renderTemplate(HtmlTemplate template, Lesson lesson) {
         template.markBreadcrumbLocation("Partners", org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToPartners(lesson.getId()));
 
-        return super.renderTemplate(template, lessonService, lesson);
+        return super.renderTemplate(template, lesson);
     }
 }

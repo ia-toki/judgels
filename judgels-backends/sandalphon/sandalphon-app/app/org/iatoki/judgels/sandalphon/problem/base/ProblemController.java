@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.util.Map;
@@ -13,11 +14,11 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.editProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.listProblemsView;
 import org.iatoki.judgels.sandalphon.problem.base.html.viewProblemView;
+import org.iatoki.judgels.sandalphon.role.RoleChecker;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -27,16 +28,24 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProblemController extends AbstractBaseProblemController {
-
     private static final long PAGE_SIZE = 20;
 
     private final ProblemService problemService;
+    private final RoleChecker roleChecker;
+    private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
 
     @Inject
-    public ProblemController(ProblemService problemService, ProfileService profileService) {
+    public ProblemController(
+            ProblemService problemService,
+            RoleChecker roleChecker,
+            ProblemRoleChecker problemRoleChecker,
+            ProfileService profileService) {
+
         super(problemService);
         this.problemService = problemService;
+        this.roleChecker = roleChecker;
+        this.problemRoleChecker = problemRoleChecker;
         this.profileService = profileService;
     }
 
@@ -48,9 +57,9 @@ public final class ProblemController extends AbstractBaseProblemController {
     @Transactional(readOnly = true)
     public Result listProblems(Http.Request req, long pageIndex, String sortBy, String orderBy, String filterString) {
         String actorJid = getUserJid(req);
+        boolean isAdmin = roleChecker.isAdmin(req);
+        boolean isWriter = roleChecker.isWriter(req);
 
-        boolean isAdmin = SandalphonControllerUtils.getInstance().isAdmin();
-        boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
         Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
 
         Set<String> userJids = pageOfProblems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
@@ -121,9 +130,7 @@ public final class ProblemController extends AbstractBaseProblemController {
     public Result viewProblem(Http.Request req, long problemId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
-        if (!ProblemControllerUtils.isAllowedToViewStatement(problemService, problem, language)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
         Profile profile = profileService.getProfile(problem.getAuthorJid());
 
@@ -133,17 +140,14 @@ public final class ProblemController extends AbstractBaseProblemController {
         template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
         template.markBreadcrumbLocation("View problem", routes.ProblemController.viewProblem(problem.getId()));
         template.setPageTitle("Problem - View");
-        return renderProblemTemplate(template, problemService, problem);
+        return renderProblemTemplate(template, problem);
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editProblem(Http.Request req, long problemId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
-            return redirect(routes.ProblemController.viewProblem(problem.getId()));
-        }
+        checkAllowed(problemRoleChecker.isAllowedToUpdateStatement(req, problem));
 
         ProblemEditForm problemEditData = new ProblemEditForm();
         problemEditData.slug = problem.getSlug();
@@ -158,10 +162,7 @@ public final class ProblemController extends AbstractBaseProblemController {
     @RequireCSRFCheck
     public Result postEditProblem(Http.Request req, long problemId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToUpdateStatement(req, problem));
 
         Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).bindFromRequest(req);
 
@@ -203,15 +204,15 @@ public final class ProblemController extends AbstractBaseProblemController {
         template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
         template.markBreadcrumbLocation("Update problem", routes.ProblemController.editProblem(problem.getId()));
         template.setPageTitle("Problem - Update");
-        return renderProblemTemplate(template, problemService, problem);
+        return renderProblemTemplate(template, problem);
     }
 
-    private Result renderProblemTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        appendVersionLocalChangesWarning(template, problemService, problem);
+    private Result renderProblemTemplate(HtmlTemplate template, Problem problem) {
+        appendVersionLocalChangesWarning(template, problem);
         template.markBreadcrumbLocation(problem.getSlug(), routes.ProblemController.enterProblem(problem.getId()));
 
         template.addSecondaryTab("View", routes.ProblemController.viewProblem(problem.getId()));
-        if (ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
+        if (problemRoleChecker.isAllowedToUpdateProblem(template.getRequest(), problem)) {
             template.addSecondaryTab("Update", routes.ProblemController.editProblem(problem.getId()));
         }
 

@@ -7,6 +7,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
@@ -16,12 +17,16 @@ import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemController extends AbstractProblemController {
-    private final BundleProblemService bundleProblemService;
     private final ProblemService problemService;
+    private final BundleProblemService bundleProblemService;
 
     @Inject
-    public BundleProblemController(BundleProblemService bundleProblemService, ProblemService problemService) {
-        super(problemService);
+    public BundleProblemController(
+            ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
+            BundleProblemService bundleProblemService) {
+
+        super(problemService, problemRoleChecker);
         this.bundleProblemService = bundleProblemService;
         this.problemService = problemService;
     }

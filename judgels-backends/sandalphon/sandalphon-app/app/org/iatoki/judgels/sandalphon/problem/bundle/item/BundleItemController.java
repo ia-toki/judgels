@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
@@ -11,9 +12,8 @@ import judgels.sandalphon.api.problem.Problem;
 import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.listCreateItemsView;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -25,17 +25,22 @@ import play.twirl.api.Html;
 
 @Singleton
 public final class BundleItemController extends AbstractProblemController {
-
     private static final long PAGE_SIZE = 1000;
 
-    private final BundleItemService bundleItemService;
     private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
+    private final BundleItemService bundleItemService;
 
     @Inject
-    public BundleItemController(BundleItemService bundleItemService, ProblemService problemService) {
-        super(problemService);
-        this.bundleItemService = bundleItemService;
+    public BundleItemController(
+            ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
+            BundleItemService bundleItemService) {
+
+        super(problemService, problemRoleChecker);
         this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
+        this.bundleItemService = bundleItemService;
     }
 
     @Transactional(readOnly = true)
@@ -46,12 +51,8 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result listCreateItems(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir, String filterString) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         try {
             Page<BundleItem> pageOfBundleItems = bundleItemService.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
@@ -67,12 +68,8 @@ public final class BundleItemController extends AbstractProblemController {
     @AddCSRFToken
     public Result createItem(Http.Request req, long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
             Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
@@ -108,12 +105,8 @@ public final class BundleItemController extends AbstractProblemController {
     @RequireCSRFCheck
     public Result postCreateItem(Http.Request req, long problemId, String itemType, long page, String orderBy, String orderDir, String filterString) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
             Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
@@ -171,13 +164,9 @@ public final class BundleItemController extends AbstractProblemController {
     @AddCSRFToken
     public Result editItem(Http.Request req, long problemId, String itemJid) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
-
-        if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem, language)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToUpdateItemInLanguage(req, problem, language));
 
         try {
             if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
@@ -195,12 +184,7 @@ public final class BundleItemController extends AbstractProblemController {
         }
 
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(bundleItem.getType());
-        Set<String> allowedLanguages;
-        try {
-            allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
 
         if (bundleItemConfAdapter == null) {
             return notFound();
@@ -225,13 +209,9 @@ public final class BundleItemController extends AbstractProblemController {
     @RequireCSRFCheck
     public Result postEditItem(Http.Request req, long problemId, String itemJid) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
         String language = getStatementLanguage(req, problem);
-
-        if (!BundleProblemControllerUtils.isAllowedToUpdateItemInLanguage(problemService, problem, language)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToUpdateItemInLanguage(req, problem, language));
 
         try {
             if (!bundleItemService.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
@@ -249,12 +229,7 @@ public final class BundleItemController extends AbstractProblemController {
         }
 
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(bundleItem.getType());
-        Set<String> allowedLanguages;
-        try {
-            allowedLanguages = ProblemControllerUtils.getAllowedLanguagesToUpdate(problemService, problem);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
 
         if (bundleItemConfAdapter == null) {
             return notFound();
@@ -279,12 +254,8 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result moveItemUp(Http.Request req, long problemId, String itemJid) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
@@ -304,12 +275,8 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result moveItemDown(Http.Request req, long problemId, String itemJid) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
@@ -329,12 +296,8 @@ public final class BundleItemController extends AbstractProblemController {
     @Transactional
     public Result removeItem(Http.Request req, long problemId, String itemJid) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
@@ -356,7 +319,7 @@ public final class BundleItemController extends AbstractProblemController {
 
         template.setPageTitle("Problem - Bundle - Items");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     private Result showCreateItem(Http.Request req, Problem problem, String itemType, Html html, long page, String orderBy, String orderDir, String filterString) {
@@ -365,7 +328,7 @@ public final class BundleItemController extends AbstractProblemController {
         template.markBreadcrumbLocation("Create item", routes.BundleItemController.createItem(problem.getId(), itemType, page, orderBy, orderDir, filterString));
         template.setPageTitle("Problem - Bundle - Items - Create");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     private Result showEditItem(Http.Request req, Problem problem, String language, BundleItem bundleItem, Html html, Set<String> allowedLanguages) {
@@ -375,12 +338,12 @@ public final class BundleItemController extends AbstractProblemController {
         template.markBreadcrumbLocation("Update item", routes.BundleItemController.editItem(problem.getId(), bundleItem.getJid()));
         template.setPageTitle("Problem - Bundle - Item - Update");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
-    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+    protected Result renderTemplate(HtmlTemplate template, Problem problem) {
         template.markBreadcrumbLocation("Items", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
 
-        return super.renderTemplate(template, problemService, problem);
+        return super.renderTemplate(template, problem);
     }
 }

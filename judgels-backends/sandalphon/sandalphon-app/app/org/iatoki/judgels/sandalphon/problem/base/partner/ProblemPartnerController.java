@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.util.Map;
@@ -14,7 +15,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels .sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.partner.html.listPartnersView;
 import play.db.jpa.Transactional;
@@ -23,16 +24,21 @@ import play.mvc.Result;
 
 @Singleton
 public class ProblemPartnerController extends AbstractProblemController {
-
     private static final long PAGE_SIZE = 20;
 
     private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
 
     @Inject
-    public ProblemPartnerController(ProblemService problemService, ProfileService profileService) {
-        super(problemService);
+    public ProblemPartnerController(
+            ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
+            ProfileService profileService) {
+
+        super(problemService, problemRoleChecker);
         this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
         this.profileService = profileService;
     }
 
@@ -44,10 +50,7 @@ public class ProblemPartnerController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result listPartners(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         Page<ProblemPartner> pageOfProblemPartners = problemService.getPageOfProblemPartners(problem.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
@@ -60,16 +63,13 @@ public class ProblemPartnerController extends AbstractProblemController {
         template.addSecondaryButton("Add partner", routes.ProblemPartnerController.addPartner(problem.getId()));
         template.setPageTitle("Problem - Partners");
 
-        return renderPartnerTemplate(template, problemService, problem);
+        return renderPartnerTemplate(template, problem);
     }
 
     @Transactional(readOnly = true)
     public Result addPartner(Http.Request req, long problemId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         switch (problem.getType()) {
             case PROGRAMMING:
@@ -84,10 +84,7 @@ public class ProblemPartnerController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result editPartner(Http.Request req, long problemId, long partnerId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         switch (problem.getType()) {
             case PROGRAMMING:

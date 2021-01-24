@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
@@ -14,13 +15,13 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.html.createLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.editLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.listLessonsView;
 import org.iatoki.judgels.sandalphon.lesson.html.viewLessonView;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
+import org.iatoki.judgels.sandalphon.role.RoleChecker;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -32,13 +33,22 @@ import play.mvc.Result;
 public final class LessonController extends AbstractLessonController {
     private static final long PAGE_SIZE = 20;
 
+    private final RoleChecker roleChecker;
     private final LessonService lessonService;
+    private final LessonRoleChecker lessonRoleChecker;
     private final ProfileService profileService;
 
     @Inject
-    public LessonController(LessonService lessonService, ProfileService profileService) {
-        super(lessonService);
+    public LessonController(
+            RoleChecker roleChecker,
+            LessonService lessonService,
+            LessonRoleChecker lessonRoleChecker,
+            ProfileService profileService) {
+
+        super(lessonService, lessonRoleChecker);
+        this.roleChecker = roleChecker;
         this.lessonService = lessonService;
+        this.lessonRoleChecker = lessonRoleChecker;
         this.profileService = profileService;
     }
 
@@ -51,8 +61,8 @@ public final class LessonController extends AbstractLessonController {
     public Result listLessons(Http.Request req, long pageIndex, String sortBy, String orderBy, String filterString) {
         String actorJid = getUserJid(req);
 
-        boolean isAdmin = SandalphonControllerUtils.getInstance().isAdmin();
-        boolean isWriter = SandalphonControllerUtils.getInstance().isWriter();
+        boolean isAdmin = roleChecker.isAdmin(req);
+        boolean isWriter = roleChecker.isWriter(req);
         Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
 
         Set<String> userJids = pageOfLessons.getPage().stream().map(Lesson::getAuthorJid).collect(Collectors.toSet());
@@ -141,17 +151,14 @@ public final class LessonController extends AbstractLessonController {
         template.markBreadcrumbLocation("View lesson", routes.LessonController.viewLesson(lesson.getId()));
         template.setPageTitle("Lesson - View");
 
-        return renderLessonTemplate(template, lessonService, lesson);
+        return renderLessonTemplate(template, lesson);
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result editLesson(Http.Request req, long lessonId) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
-            return redirect(routes.LessonController.viewLesson(lesson.getId()));
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToUpdateLesson(req, lesson));
 
         LessonEditForm lessonEditData = new LessonEditForm();
         lessonEditData.slug = lesson.getSlug();
@@ -166,10 +173,7 @@ public final class LessonController extends AbstractLessonController {
     @RequireCSRFCheck
     public Result postEditLesson(Http.Request req, long lessonId) {
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToUpdateLesson(req, lesson));
 
         Form<LessonEditForm> lessonEditForm = formFactory.form(LessonEditForm.class).bindFromRequest(req);
 
@@ -213,14 +217,14 @@ public final class LessonController extends AbstractLessonController {
         template.markBreadcrumbLocation("Update lesson", routes.LessonController.editLesson(lesson.getId()));
         template.setPageTitle("Lesson - Update");
 
-        return renderLessonTemplate(template, lessonService, lesson);
+        return renderLessonTemplate(template, lesson);
     }
 
-    protected Result renderLessonTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
-        appendVersionLocalChangesWarning(template, lessonService, lesson);
+    protected Result renderLessonTemplate(HtmlTemplate template, Lesson lesson) {
+        appendVersionLocalChangesWarning(template, lesson);
         template.addSecondaryTab("View", routes.LessonController.viewLesson(lesson.getId()));
 
-        if (LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
+        if (lessonRoleChecker.isAllowedToUpdateLesson(template.getRequest(), lesson)) {
             template.addSecondaryTab("Update", routes.LessonController.editLesson(lesson.getId()));
         }
 

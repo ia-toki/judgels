@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
@@ -17,9 +18,9 @@ import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
-import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.bundleSubmissionView;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.listSubmissionsView;
@@ -30,25 +31,27 @@ import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemSubmissionController extends AbstractProblemController {
-
     private static final long PAGE_SIZE = 20;
 
+    private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
     private final FileSystem bundleSubmissionFs;
     private final BundleSubmissionService bundleSubmissionService;
-    private final ProblemService problemService;
     private final ProfileService profileService;
 
     @Inject
     public BundleProblemSubmissionController(
+            ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
             @SubmissionFs FileSystem bundleSubmissionFs,
             BundleSubmissionService bundleSubmissionService,
-            ProblemService problemService,
             ProfileService profileService) {
 
-        super(problemService);
+        super(problemService, problemRoleChecker);
+        this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
         this.bundleSubmissionFs = bundleSubmissionFs;
         this.bundleSubmissionService = bundleSubmissionService;
-        this.problemService = problemService;
         this.profileService = profileService;
     }
 
@@ -59,9 +62,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         Problem problem = checkFound(problemService.findProblemById(problemId));
 
         boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
-        if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem) && isClean) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem) && isClean);
 
         DynamicForm dForm = formFactory.form().bindFromRequest(req);
 
@@ -80,10 +81,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
     @Transactional(readOnly = true)
     public Result listSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
 
@@ -95,16 +93,13 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     @Transactional(readOnly = true)
     public Result viewSubmission(Http.Request req, long problemId, long submissionId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         BundleSubmission bundleSubmission = checkFound(bundleSubmissionService.findBundleSubmissionById(submissionId));
         BundleAnswer bundleAnswer;
@@ -122,16 +117,13 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         template.markBreadcrumbLocation("View submission", org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
         template.setPageTitle("Problem - View submission");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     @Transactional
     public Result regradeSubmission(Http.Request req, long problemId, long submissionId, long pageIndex, String orderBy, String orderDir) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         BundleSubmission bundleSubmission = checkFound(bundleSubmissionService.findBundleSubmissionById(submissionId));
         BundleAnswer bundleAnswer;
@@ -148,10 +140,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
     @Transactional
     public Result regradeSubmissions(Http.Request req, long problemId, long pageIndex, String orderBy, String orderDir) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest(req).get();
 
@@ -178,9 +167,9 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
 
-    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+    protected Result renderTemplate(HtmlTemplate template, Problem problem) {
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
 
-        return super.renderTemplate(template, problemService, problem);
+        return super.renderTemplate(template, problem);
     }
 }

@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.File;
@@ -14,8 +15,8 @@ import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.html.autoPopulationLayout;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.html.editGradingEngineView;
@@ -35,15 +36,18 @@ import play.mvc.Result;
 @Singleton
 public final class ProgrammingProblemGradingController extends AbstractProblemController {
     private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
     public ProgrammingProblemGradingController(
             ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemService programmingProblemService) {
 
-        super(problemService);
+        super(problemService, problemRoleChecker);
         this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
         this.programmingProblemService = programmingProblemService;
     }
 
@@ -51,12 +55,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @AddCSRFToken
     public Result editGradingEngine(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         GradingEngineEditForm gradingEngineEditData = new GradingEngineEditForm();
         try  {
@@ -74,12 +74,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @RequireCSRFCheck
     public Result postEditGradingEngine(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         Form<GradingEngineEditForm> gradingEngineEditForm = formFactory.form(GradingEngineEditForm.class).bindFromRequest(req);
 
@@ -115,12 +111,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @AddCSRFToken
     public Result editGradingConfig(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         String engine;
         try {
@@ -146,11 +138,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @RequireCSRFCheck
     public Result postEditGradingConfig(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         String engine;
         try {
@@ -185,12 +174,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional
     public Result editGradingConfigByTokilibFormat(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
@@ -228,12 +213,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @Transactional
     public Result editGradingConfigByAutoPopulation(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         problemService.createUserCloneIfNotExists(actorJid, problem.getJid());
 
@@ -271,12 +252,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @AddCSRFToken
     public Result listGradingTestDataFiles(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(actorJid, problem.getJid());
@@ -288,12 +265,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @RequireCSRFCheck
     public Result postUploadGradingTestDataFiles(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         Http.MultipartFormData<File> body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart<File> file;
@@ -339,12 +312,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @AddCSRFToken
     public Result listGradingHelperFiles(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(actorJid, problem.getJid());
@@ -356,12 +325,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @RequireCSRFCheck
     public Result postUploadGradingHelperFiles(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         Http.MultipartFormData<File> body = req.body().asMultipartFormData();
         Http.MultipartFormData.FilePart<File> file;
@@ -407,12 +372,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @AddCSRFToken
     public Result editLanguageRestriction(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         LanguageRestriction languageRestriction;
         try {
@@ -434,12 +395,8 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
     @RequireCSRFCheck
     public Result postEditLanguageRestriction(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
         Form<LanguageRestrictionEditForm> languageRestrictionEditForm = formFactory.form(LanguageRestrictionEditForm.class).bindFromRequest(req);
 
@@ -467,7 +424,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         template.markBreadcrumbLocation("Update engine", routes.ProgrammingProblemGradingController.editGradingEngine(problem.getId()));
         template.setPageTitle("Problem - Update grading engine");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     private Result showEditGradingConfig(Http.Request req, Form<?> gradingConfForm, Problem problem, String gradingEngine, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
@@ -487,7 +444,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         template.markBreadcrumbLocation("Update config", routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId()));
         template.setPageTitle("Problem - Update grading config");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     private Result showListGradingTestDataFiles(Http.Request req, Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> testDataFiles) {
@@ -496,7 +453,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         template.markBreadcrumbLocation("Test data files", routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
         template.setPageTitle("Problem - Grading test data files");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     private Result showListGradingHelperFiles(Http.Request req, Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> helperFiles) {
@@ -505,7 +462,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         template.markBreadcrumbLocation("Helper files", routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
         template.setPageTitle("Problem - Grading Helper Files");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     private Result showEditLanguageRestriction(Http.Request req, Form<LanguageRestrictionEditForm> languageRestrictionEditForm, Problem problem) {
@@ -514,10 +471,10 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         template.markBreadcrumbLocation("Update language restriction", routes.ProgrammingProblemGradingController.editLanguageRestriction(problem.getId()));
         template.setPageTitle("Problem - Update Language Restriction");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
-    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+    protected Result renderTemplate(HtmlTemplate template, Problem problem) {
         template.addSecondaryTab("Engine", routes.ProgrammingProblemGradingController.editGradingEngine(problem.getId()));
         template.addSecondaryTab("Config", routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId()));
         template.addSecondaryTab("Test data", routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
@@ -526,6 +483,6 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
 
         template.markBreadcrumbLocation("Grading", org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToGrading(problem.getId()));
 
-        return super.renderTemplate(template, problemService, problem);
+        return super.renderTemplate(template, problem);
     }
 }

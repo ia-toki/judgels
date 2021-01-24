@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.lesson.statement;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
-import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
+import org.iatoki.judgels.sandalphon.lesson.LessonRoleChecker;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.lessonStatementView;
@@ -33,30 +34,27 @@ import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Call;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
 public class LessonStatementController extends AbstractLessonController {
     private final LessonService lessonService;
+    private final LessonRoleChecker lessonRoleChecker;
 
     @Inject
-    public LessonStatementController(LessonService lessonService) {
-        super(lessonService);
+    public LessonStatementController(LessonService lessonService, LessonRoleChecker lessonRoleChecker) {
+        super(lessonService, lessonRoleChecker);
         this.lessonService = lessonService;
+        this.lessonRoleChecker = lessonRoleChecker;
     }
 
     @Transactional(readOnly = true)
     public Result viewStatement(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
-
-        if (!LessonControllerUtils.isAllowedToViewStatement(lessonService, lesson, language)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToViewStatement(req, lesson, language));
 
         LessonStatement statement;
         try {
@@ -72,19 +70,13 @@ public class LessonStatementController extends AbstractLessonController {
         template.setContent(lessonStatementView.render(statement));
         template.addAdditionalScript(katexView.render());
 
-        Set<String> allowedLanguages;
-        try {
-            allowedLanguages = LessonControllerUtils.getAllowedLanguagesToView(lessonService, lesson);
-        } catch (IOException e) {
-            return notFound();
-        }
-
+        Set<String> allowedLanguages = lessonRoleChecker.getAllowedLanguagesToView(req, lesson);
 
         appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
         template.markBreadcrumbLocation("View statement", routes.LessonStatementController.viewStatement(lessonId));
         template.setPageTitle("Lesson - View statement");
 
-        return renderTemplate(template, lessonService, lesson)
+        return renderTemplate(template, lesson)
                 .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
@@ -92,13 +84,9 @@ public class LessonStatementController extends AbstractLessonController {
     @AddCSRFToken
     public Result editStatement(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
-
-        if (!LessonControllerUtils.isAllowedToUpdateStatementInLanguage(lessonService, lesson, language)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToUpdateStatementInLanguage(req, lesson, language));
 
         LessonStatement statement;
         try {
@@ -113,12 +101,7 @@ public class LessonStatementController extends AbstractLessonController {
 
         Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).fill(updateStatementData);
 
-        Set<String> allowedLanguages;
-        try {
-            allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-        } catch (IOException e) {
-            return notFound();
-        }
+        Set<String> allowedLanguages = lessonRoleChecker.getAllowedLanguagesToUpdate(req, lesson);
 
         return showEditStatement(req, language, updateStatementForm, lesson, allowedLanguages)
                 .addingToSession(req, newCurrentStatementLanguage(language));
@@ -128,22 +111,14 @@ public class LessonStatementController extends AbstractLessonController {
     @RequireCSRFCheck
     public Result postEditStatement(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
-
-        if (!LessonControllerUtils.isAllowedToUpdateStatementInLanguage(lessonService, lesson, language)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToUpdateStatementInLanguage(req, lesson, language));
 
         Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).bindFromRequest(req);
         if (formHasErrors(updateStatementForm)) {
-            try {
-                Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-                return showEditStatement(req, language, updateStatementForm, lesson, allowedLanguages);
-            } catch (IOException e) {
-                return notFound();
-            }
+            Set<String> allowedLanguages = lessonRoleChecker.getAllowedLanguagesToUpdate(req, lesson);
+            return showEditStatement(req, language, updateStatementForm, lesson, allowedLanguages);
         }
 
         lessonService.createUserCloneIfNotExists(actorJid, lesson.getJid());
@@ -155,12 +130,8 @@ public class LessonStatementController extends AbstractLessonController {
                     .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                     .build());
         } catch (IOException e) {
-            try {
-                Set<String> allowedLanguages = LessonControllerUtils.getAllowedLanguagesToUpdate(lessonService, lesson);
-                return showEditStatement(req, language, updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
-            } catch (IOException e2) {
-                return notFound();
-            }
+            Set<String> allowedLanguages = lessonRoleChecker.getAllowedLanguagesToUpdate(req, lesson);
+            return showEditStatement(req, language, updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
         }
 
         return redirect(routes.LessonStatementController.editStatement(lesson.getId()))
@@ -171,11 +142,10 @@ public class LessonStatementController extends AbstractLessonController {
     @AddCSRFToken
     public Result listStatementMediaFiles(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
-        boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
+        boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);
         List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(actorJid, lesson.getJid());
 
         return showListStatementMediaFiles(req, uploadFileForm, lesson, mediaFiles, isAllowedToUploadMediaFiles);
@@ -185,12 +155,8 @@ public class LessonStatementController extends AbstractLessonController {
     @RequireCSRFCheck
     public Result postUploadStatementMediaFiles(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson));
 
         Http.MultipartFormData<File> body = req.body().asMultipartFormData();
         Http.MultipartFormData.FilePart<File> file;
@@ -204,7 +170,7 @@ public class LessonStatementController extends AbstractLessonController {
                 lessonService.uploadStatementMediaFile(actorJid, lesson.getJid(), mediaFile, file.getFilename());
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
+                boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);
                 List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(actorJid, lesson.getJid());
 
                 return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
@@ -222,7 +188,7 @@ public class LessonStatementController extends AbstractLessonController {
                 lessonService.uploadStatementMediaFileZipped(actorJid, lesson.getJid(), mediaFile);
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                boolean isAllowedToUploadMediaFiles = LessonControllerUtils.isAllowedToUploadStatementResources(lessonService, lesson);
+                boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);
                 List<FileInfo> mediaFiles = lessonService.getStatementMediaFiles(actorJid, lesson.getJid());
 
                 return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
@@ -238,12 +204,8 @@ public class LessonStatementController extends AbstractLessonController {
     @AddCSRFToken
     public Result listStatementLanguages(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToManageStatementLanguages(req, lesson));
 
         Map<String, StatementLanguageStatus> availableLanguages = lessonService.getAvailableLanguages(actorJid, lesson.getJid());
         String defaultLanguage = lessonService.getDefaultLanguage(actorJid, lesson.getJid());
@@ -253,19 +215,15 @@ public class LessonStatementController extends AbstractLessonController {
         template.markBreadcrumbLocation("Statement languages", routes.LessonStatementController.listStatementLanguages(lesson.getId()));
         template.setPageTitle("Lesson - Statement languages");
 
-        return renderTemplate(template, lessonService, lesson);
+        return renderTemplate(template, lesson);
     }
 
     @Transactional
     @RequireCSRFCheck
     public Result postAddStatementLanguage(Http.Request req, long lessonId) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToManageStatementLanguages(req, lesson));
 
         lessonService.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
@@ -289,12 +247,8 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional
     public Result enableStatementLanguage(Http.Request req, long lessonId, String languageCode) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToManageStatementLanguages(req, lesson));
 
         lessonService.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
@@ -315,13 +269,9 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional
     public Result disableStatementLanguage(Http.Request req, long lessonId, String languageCode) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
         String language = getStatementLanguage(req, lesson);
-
-        if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToManageStatementLanguages(req, lesson));
 
         lessonService.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
@@ -347,12 +297,8 @@ public class LessonStatementController extends AbstractLessonController {
     @Transactional
     public Result makeDefaultStatementLanguage(Http.Request req, long lessonId, String languageCode) {
         String actorJid = getUserJid(req);
-
         Lesson lesson = checkFound(lessonService.findLessonById(lessonId));
-
-        if (!LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
-            return notFound();
-        }
+        checkAllowed(lessonRoleChecker.isAllowedToManageStatementLanguages(req, lesson));
 
         lessonService.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
@@ -378,7 +324,7 @@ public class LessonStatementController extends AbstractLessonController {
 
         template.setPageTitle("Lesson - Update statement");
 
-        return renderTemplate(template, lessonService, lesson);
+        return renderTemplate(template, lesson);
     }
 
     private Result showListStatementMediaFiles(Http.Request req, Form<UploadFileForm> uploadFileForm, Lesson lesson, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
@@ -387,28 +333,29 @@ public class LessonStatementController extends AbstractLessonController {
         template.markBreadcrumbLocation("Media files", routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
         template.setPageTitle("Lesson - Statement - Media files");
 
-        return renderTemplate(template, lessonService, lesson);
+        return renderTemplate(template, lesson);
     }
 
-    protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+    protected Result renderTemplate(HtmlTemplate template, Lesson lesson) {
         template.addSecondaryTab("View", routes.LessonStatementController.viewStatement(lesson.getId()));
 
-        if (LessonControllerUtils.isAllowedToUpdateStatement(lessonService, lesson)) {
+        if (lessonRoleChecker.isAllowedToUpdateStatement(template.getRequest(), lesson)) {
             template.addSecondaryTab("Update", routes.LessonStatementController.editStatement(lesson.getId()));
         }
 
         template.addSecondaryTab("Media", routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
 
-        if (LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
+        if (lessonRoleChecker.isAllowedToManageStatementLanguages(template.getRequest(), lesson)) {
             template.addSecondaryTab("Languages", routes.LessonStatementController.listStatementLanguages(lesson.getId()));
         }
 
         template.markBreadcrumbLocation("Statements", org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToStatement(lesson.getId()));
 
-        return super.renderTemplate(template, lessonService, lesson);
+        return super.renderTemplate(template, lesson);
     }
 
     private void appendStatementLanguageSelection(HtmlTemplate template, String currentLanguage, Set<String> allowedLanguages, Call target) {
-        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(Controller.request(), Controller.request().secure()), allowedLanguages, currentLanguage, c));
+        Http.Request req = template.getRequest();
+        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), allowedLanguages, currentLanguage, c));
     }
 }

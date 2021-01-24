@@ -61,7 +61,6 @@ public final class SandalphonModule extends AbstractModule {
         bind(SandalphonConfiguration.class).toInstance(SandalphonProperties.build(config));
 
         bind(SandalphonThreadsScheduler.class).asEagerSingleton();
-        bind(SandalphonSingletonsBuilder.class).asEagerSingleton();
 
         bind(BundleSubmissionService.class).to(BundleSubmissionServiceImpl.class);
         bind(BundleProblemGrader.class).to(BundleProblemGraderImpl.class);

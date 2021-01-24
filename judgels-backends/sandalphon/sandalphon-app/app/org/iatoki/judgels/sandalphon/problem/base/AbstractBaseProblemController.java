@@ -66,7 +66,7 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
         return super.renderTemplate(template);
     }
 
-    protected void appendVersionLocalChangesWarning(HtmlTemplate template, ProblemService problemService, Problem problem) {
+    protected void appendVersionLocalChangesWarning(HtmlTemplate template, Problem problem) {
         String userJid = getUserJid(template.getRequest());
         if (problemService.userCloneExists(userJid, problem.getJid())) {
             template.setWarning(versionLocalChangesWarningLayout.render(problem.getId(), null));

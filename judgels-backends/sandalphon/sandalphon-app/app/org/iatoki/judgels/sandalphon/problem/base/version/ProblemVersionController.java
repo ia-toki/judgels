@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base.version;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.version.html.listVersionsView;
 import org.iatoki.judgels.sandalphon.problem.base.version.html.viewVersionLocalChangesView;
@@ -30,24 +31,26 @@ import play.mvc.Result;
 @Singleton
 public final class ProblemVersionController extends AbstractProblemController {
     private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
 
     @Inject
-    public ProblemVersionController(ProblemService problemService, ProfileService profileService) {
-        super(problemService);
+    public ProblemVersionController(
+            ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
+            ProfileService profileService) {
+
+        super(problemService, problemRoleChecker);
         this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
         this.profileService = profileService;
     }
 
     @Transactional(readOnly = true)
     public Result listVersionHistory(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAllowedToViewVersionHistory(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAllowedToViewVersionHistory(req, problem));
 
         List<GitCommit> versions = problemService.getVersions(actorJid, problem.getJid());
 
@@ -55,26 +58,23 @@ public final class ProblemVersionController extends AbstractProblemController {
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
-        boolean isAllowedToRestoreVersionHistory = isClean && ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem);
+        boolean isAllowedToRestoreVersionHistory = isClean && problemRoleChecker.isAllowedToRestoreVersionHistory(req, problem);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listVersionsView.render(versions, problem.getId(), profilesMap, isAllowedToRestoreVersionHistory));
         template.markBreadcrumbLocation("History", routes.ProblemVersionController.listVersionHistory(problem.getId()));
         template.setPageTitle("Problem - Versions - History");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
     @Transactional(readOnly = true)
     public Result restoreVersionHistory(Http.Request req, long problemId, String hash) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
 
-        if (!isClean || !ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem)) {
-            return notFound();
-        }
+        boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
+        checkAllowed(problemRoleChecker.isAllowedToRestoreVersionHistory(req, problem) && isClean);
 
         problemService.restore(problem.getJid(), hash);
 
@@ -85,12 +85,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     @AddCSRFToken
     public Result viewVersionLocalChanges(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
         boolean isClean = !problemService.userCloneExists(actorJid, problem.getJid());
 
@@ -103,12 +99,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     @RequireCSRFCheck
     public Result postCommitVersionLocalChanges(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
         Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
         if (formHasErrors(versionCommitForm)) {
@@ -138,12 +130,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result editVersionLocalChanges(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
         problemService.fetchUserClone(actorJid, problem.getJid());
 
@@ -157,12 +145,8 @@ public final class ProblemVersionController extends AbstractProblemController {
     @Transactional(readOnly = true)
     public Result discardVersionLocalChanges(Http.Request req, long problemId) {
         String actorJid = getUserJid(req);
-
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isPartnerOrAbove(problemService, problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
         try {
             problemService.discardUserClone(actorJid, problem.getJid());
@@ -179,18 +163,18 @@ public final class ProblemVersionController extends AbstractProblemController {
         template.markBreadcrumbLocation("Local changes", routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
         template.setPageTitle("Problem - Versions - Local changes");
 
-        return renderTemplate(template, problemService, problem);
+        return renderTemplate(template, problem);
     }
 
-    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+    protected Result renderTemplate(HtmlTemplate template, Problem problem) {
         template.addSecondaryTab("Local changes", routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
 
-        if (ProblemControllerUtils.isAllowedToViewVersionHistory(problemService, problem)) {
+        if (problemRoleChecker.isAllowedToViewVersionHistory(template.getRequest(), problem)) {
             template.addSecondaryTab("History", routes.ProblemVersionController.listVersionHistory(problem.getId()));
         }
 
         template.markBreadcrumbLocation("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
 
-        return super.renderTemplate(template, problemService, problem);
+        return super.renderTemplate(template, problem);
     }
 }

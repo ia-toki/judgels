@@ -1,5 +1,6 @@
 package org.iatoki.judgels.jophiel;
 
+import java.util.Arrays;
 import play.mvc.Http;
 
 public final class JophielSessionUtils {
@@ -15,6 +16,10 @@ public final class JophielSessionUtils {
 
     public static String getSessionVersion() {
         return "4";
+    }
+
+    public static boolean hasRole(Http.Request req, String role) {
+        return Arrays.asList(req.session().getOptional("role").orElse("").split(",")).contains(role);
     }
 
     public static boolean isSessionValid(Http.Request req) {

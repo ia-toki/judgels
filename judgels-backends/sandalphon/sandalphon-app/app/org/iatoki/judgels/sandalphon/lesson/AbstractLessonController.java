@@ -11,16 +11,18 @@ import play.mvc.Result;
 
 public class AbstractLessonController extends AbstractSandalphonController {
     private final LessonService lessonService;
+    private final LessonRoleChecker lessonRoleChecker;
 
-    protected AbstractLessonController(LessonService lessonService) {
+    protected AbstractLessonController(LessonService lessonService, LessonRoleChecker lessonRoleChecker) {
         this.lessonService = lessonService;
+        this.lessonRoleChecker = lessonRoleChecker;
     }
 
     protected String getStatementLanguage(Http.Request req, Lesson lesson) {
         String userJid = getUserJid(req);
         String currentLanguage = getCurrentStatementLanguage(req);
-        Map<String, StatementLanguageStatus>
-                availableLanguages = lessonService.getAvailableLanguages(userJid, lesson.getJid());
+        Map<String, StatementLanguageStatus> availableLanguages =
+                lessonService.getAvailableLanguages(userJid, lesson.getJid());
 
         if (currentLanguage == null
                 || !availableLanguages.containsKey(currentLanguage)
@@ -30,17 +32,17 @@ public class AbstractLessonController extends AbstractSandalphonController {
         return currentLanguage;
     }
 
-    protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+    protected Result renderTemplate(HtmlTemplate template, Lesson lesson) {
         appendTabs(template, lesson);
-        appendVersionLocalChangesWarning(template, lessonService, lesson);
-        appendTitle(template, lessonService, lesson);
+        appendVersionLocalChangesWarning(template, lesson);
+        appendTitle(template, lesson);
 
         template.markBreadcrumbLocation("Lessons", routes.LessonController.index());
 
         return super.renderTemplate(template);
     }
 
-    protected void appendVersionLocalChangesWarning(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+    protected void appendVersionLocalChangesWarning(HtmlTemplate template, Lesson lesson) {
         String userJid = getUserJid(template.getRequest());
         if (lessonService.userCloneExists(userJid, lesson.getJid())) {
             template.setWarning(versionLocalChangesWarningLayout.render(lesson.getId(), null));
@@ -50,17 +52,17 @@ public class AbstractLessonController extends AbstractSandalphonController {
     private void appendTabs(HtmlTemplate template, Lesson lesson) {
         template.addMainTab("Statements", routes.LessonController.jumpToStatement(lesson.getId()));
 
-        if (LessonControllerUtils.isAuthorOrAbove(lesson)) {
+        if (lessonRoleChecker.isAuthorOrAbove(template.getRequest(), lesson)) {
             template.addMainTab("Partners", routes.LessonController.jumpToPartners(lesson.getId()));
         }
 
         template.addMainTab("Versions", routes.LessonController.jumpToVersions(lesson.getId()));
     }
 
-    private void appendTitle(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+    private void appendTitle(HtmlTemplate template, Lesson lesson) {
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
 
-        if (LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
+        if (lessonRoleChecker.isAllowedToUpdateLesson(template.getRequest(), lesson)) {
             template.addMainButton("Update lesson", routes.LessonController.editLesson(lesson.getId()));
         } else {
             template.addMainButton("View lesson", routes.LessonController.viewLesson(lesson.getId()));

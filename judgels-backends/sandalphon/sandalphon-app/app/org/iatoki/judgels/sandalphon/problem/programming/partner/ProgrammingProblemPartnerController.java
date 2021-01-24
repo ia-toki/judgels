@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.partner;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
@@ -15,7 +16,7 @@ import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm;
@@ -31,30 +32,30 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProgrammingProblemPartnerController extends AbstractProblemController {
+    private final ProblemService problemService;
+    private final ProblemRoleChecker problemRoleChecker;
     private final UserSearchService userSearchService;
     private final ProfileService profileService;
-    private final ProblemService problemService;
 
     @Inject
     public ProgrammingProblemPartnerController(
+            ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
             UserSearchService userSearchService,
-            ProfileService profileService,
-            ProblemService problemService) {
+            ProfileService profileService) {
 
-        super(problemService);
+        super(problemService, problemRoleChecker);
+        this.problemService = problemService;
+        this.problemRoleChecker = problemRoleChecker;
         this.userSearchService = userSearchService;
         this.profileService = profileService;
-        this.problemService = problemService;
     }
 
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result addPartner(Http.Request req, long problemId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         Form<ProblemPartnerUsernameForm> usernameForm = formFactory.form(ProblemPartnerUsernameForm.class);
         Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class);
@@ -67,10 +68,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
     @RequireCSRFCheck
     public Result postAddPartner(Http.Request req, long problemId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         Form<ProblemPartnerUsernameForm> usernameForm = formFactory.form(ProblemPartnerUsernameForm.class).bindFromRequest(req);
         Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest(req);
@@ -120,10 +118,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
     @AddCSRFToken
     public Result editPartner(Http.Request req, long problemId, long partnerId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         ProblemPartner problemPartner = checkFound(problemService.findProblemPartnerById(partnerId));
 
@@ -156,10 +151,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
     @RequireCSRFCheck
     public Result postEditPartner(Http.Request req, long problemId, long partnerId) {
         Problem problem = checkFound(problemService.findProblemById(problemId));
-
-        if (!ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            return notFound();
-        }
+        checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
         ProblemPartner problemPartner = checkFound(problemService.findProblemPartnerById(partnerId));
 
@@ -204,7 +196,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         template.markBreadcrumbLocation("Add partner", routes.ProgrammingProblemPartnerController.addPartner(problem.getId()));
         template.setPageTitle("Problem - Add partner");
 
-        return renderPartnerTemplate(template, problemService, problem);
+        return renderPartnerTemplate(template, problem);
     }
 
     private Result showEditPartner(Http.Request req, Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem, ProblemPartner problemPartner) {
@@ -217,6 +209,6 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
         template.markBreadcrumbLocation("Update partner", routes.ProgrammingProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
         template.setPageTitle("Problem - Update partner");
 
-        return renderPartnerTemplate(template, problemService, problem);
+        return renderPartnerTemplate(template, problem);
     }
 }

@@ -8,6 +8,7 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
+import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.html.createProgrammingProblemView;
@@ -27,9 +28,10 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
     @Inject
     public ProgrammingProblemController(
             ProblemService problemService,
+            ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemService programmingProblemService) {
 
-        super(problemService);
+        super(problemService, problemRoleChecker);
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
