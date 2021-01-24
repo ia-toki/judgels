@@ -11,7 +11,6 @@ import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -109,6 +108,6 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         template.setPageTitle("Problem - View statement");
 
         return renderStatementTemplate(template, problemService, problem)
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 }

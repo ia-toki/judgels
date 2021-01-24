@@ -15,7 +15,6 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -97,7 +96,7 @@ public class ProblemStatementController extends AbstractProblemController {
         }
 
         return showEditStatement(req, language, updateStatementForm, problem, allowedLanguages)
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional
@@ -142,7 +141,7 @@ public class ProblemStatementController extends AbstractProblemController {
         }
 
         return redirect(routes.ProblemStatementController.editStatement(problem.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
 
@@ -312,7 +311,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
             problemService.disableLanguage(actorJid, problem.getJid(), languageCode);
 
-            if (SandalphonSessionUtils.getCurrentStatementLanguage(req).equals(languageCode)) {
+            if (getCurrentStatementLanguage(req).equals(languageCode)) {
                 language = problemService.getDefaultLanguage(actorJid, problem.getJid());
             }
         } catch (IOException e) {
@@ -320,7 +319,7 @@ public class ProblemStatementController extends AbstractProblemController {
         }
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)

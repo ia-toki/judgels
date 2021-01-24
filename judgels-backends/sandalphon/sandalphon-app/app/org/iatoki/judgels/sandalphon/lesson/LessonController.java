@@ -15,7 +15,6 @@ import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.lesson.html.createLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.editLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.listLessonsView;
@@ -110,7 +109,7 @@ public final class LessonController extends AbstractLessonController {
         lessonService.initRepository(actorJid, lesson.getJid());
 
         return redirect(routes.LessonController.index())
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(lessonCreateData.initLanguageCode));
+                .addingToSession(req, newCurrentStatementLanguage(lessonCreateData.initLanguageCode));
     }
 
     public Result enterLesson(long lessonId) {
@@ -193,7 +192,7 @@ public final class LessonController extends AbstractLessonController {
         String language = formFactory.form().bindFromRequest(req).get("langCode");
 
         return redirect(req.getHeaders().get("Referer").orElse(""))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     private Result showCreateLesson(Http.Request req, Form<LessonCreateForm> lessonCreateForm) {

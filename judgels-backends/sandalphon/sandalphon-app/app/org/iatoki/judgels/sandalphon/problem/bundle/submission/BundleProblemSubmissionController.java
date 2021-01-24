@@ -16,7 +16,6 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
@@ -66,7 +65,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
         DynamicForm dForm = formFactory.form().bindFromRequest(req);
 
-        BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, SandalphonSessionUtils.getCurrentStatementLanguage(req));
+        BundleAnswer bundleAnswer = bundleSubmissionService.createBundleAnswerFromNewSubmission(dForm, getCurrentStatementLanguage(req));
         String submissionJid = bundleSubmissionService.submit(problem.getJid(), null, bundleAnswer);
         bundleSubmissionService.storeSubmissionFiles(bundleSubmissionFs, null, submissionJid, bundleAnswer);
 

@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
@@ -31,13 +30,13 @@ public final class BundleProblemController extends AbstractProblemController {
     public Result createBundleProblem(Http.Request req) {
         String actorJid = getUserJid(req);
 
-        if (!SandalphonSessionUtils.wasProblemJustCreated(req)) {
+        if (!wasProblemJustCreated(req)) {
             return badRequest();
         }
 
-        String slug = SandalphonSessionUtils.getJustCreatedProblemSlug(req);
-        String additionalNote = SandalphonSessionUtils.getJustCreatedProblemAdditionalNote(req);
-        String languageCode = SandalphonSessionUtils.getJustCreatedProblemInitLanguage(req);
+        String slug = getJustCreatedProblemSlug(req);
+        String additionalNote = getJustCreatedProblemAdditionalNote(req);
+        String languageCode = getJustCreatedProblemInitLanguage(req);
 
         Problem problem;
         try {
@@ -56,8 +55,8 @@ public final class BundleProblemController extends AbstractProblemController {
         problemService.initRepository(actorJid, problem.getJid());
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(SandalphonSessionUtils.getJustCreatedProblemInitLanguage(req)))
-                .removingFromSession(req, SandalphonSessionUtils.removeJustCreatedProblem());
+                .addingToSession(req, newCurrentStatementLanguage(getJustCreatedProblemInitLanguage(req)))
+                .removingFromSession(req, removeJustCreatedProblem());
     }
 
     public Result jumpToItems(long problemId) {

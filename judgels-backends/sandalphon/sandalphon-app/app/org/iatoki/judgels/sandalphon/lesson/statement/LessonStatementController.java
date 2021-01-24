@@ -14,7 +14,6 @@ import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
@@ -86,7 +85,7 @@ public class LessonStatementController extends AbstractLessonController {
         template.setPageTitle("Lesson - View statement");
 
         return renderTemplate(template, lessonService, lesson)
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
@@ -122,7 +121,7 @@ public class LessonStatementController extends AbstractLessonController {
         }
 
         return showEditStatement(req, language, updateStatementForm, lesson, allowedLanguages)
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional
@@ -165,7 +164,7 @@ public class LessonStatementController extends AbstractLessonController {
         }
 
         return redirect(routes.LessonStatementController.editStatement(lesson.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
@@ -342,7 +341,7 @@ public class LessonStatementController extends AbstractLessonController {
         }
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional

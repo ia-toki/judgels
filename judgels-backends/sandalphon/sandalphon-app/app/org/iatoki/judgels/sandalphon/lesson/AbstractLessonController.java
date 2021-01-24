@@ -4,7 +4,6 @@ import java.util.Map;
 import judgels.sandalphon.api.lesson.Lesson;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.version.html.versionLocalChangesWarningLayout;
 import play.mvc.Http;
@@ -19,7 +18,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
 
     protected String getStatementLanguage(Http.Request req, Lesson lesson) {
         String userJid = getUserJid(req);
-        String currentLanguage = SandalphonSessionUtils.getCurrentStatementLanguage(req);
+        String currentLanguage = getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus>
                 availableLanguages = lessonService.getAvailableLanguages(userJid, lesson.getJid());
 

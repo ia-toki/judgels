@@ -14,7 +14,6 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.editProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.listProblemsView;
@@ -89,7 +88,7 @@ public final class ProblemController extends AbstractBaseProblemController {
         }
 
         ProblemCreateForm problemCreateData = problemCreateForm.get();
-        Map<String, String> justCreatedProblem = SandalphonSessionUtils.newJustCreatedProblem(problemCreateData.slug, problemCreateData.additionalNote, problemCreateData.initLanguageCode);
+        Map<String, String> justCreatedProblem = newJustCreatedProblem(problemCreateData.slug, problemCreateData.additionalNote, problemCreateData.initLanguageCode);
 
         if (problemCreateData.type.equals(ProblemType.PROGRAMMING.name())) {
             return redirect(org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.createProgrammingProblem())
@@ -185,7 +184,7 @@ public final class ProblemController extends AbstractBaseProblemController {
         String language = formFactory.form().bindFromRequest(req).get("langCode");
 
         return redirect(req.getHeaders().get("Referer").orElse(""))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     private Result showCreateProblem(Http.Request req, Form<ProblemCreateForm> problemCreateForm) {

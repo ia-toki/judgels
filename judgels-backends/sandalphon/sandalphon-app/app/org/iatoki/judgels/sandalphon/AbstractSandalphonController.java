@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import org.iatoki.judgels.jophiel.AbstractJophielClientController;
 import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.jophiel.logincheck.html.isLoggedOut;
@@ -11,6 +13,14 @@ import play.mvc.Security;
 
 @Security.Authenticated(Secured.class)
 public abstract class AbstractSandalphonController extends AbstractJophielClientController {
+    protected String getCurrentStatementLanguage(Http.Request req) {
+        return req.session().getOptional("currentStatementLanguage").orElse(null);
+    }
+
+    protected Map<String, String> newCurrentStatementLanguage(String value) {
+        return ImmutableMap.of("currentStatementLanguage", value);
+    }
+
     protected Result renderTemplate(HtmlTemplate template) {
         Http.Request req = template.getRequest();
         String userJid = getUserJid(req);

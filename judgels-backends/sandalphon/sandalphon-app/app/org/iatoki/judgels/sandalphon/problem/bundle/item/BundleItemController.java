@@ -10,7 +10,6 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.sandalphon.SandalphonSessionUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -162,7 +161,7 @@ public final class BundleItemController extends AbstractProblemController {
             bundleItemService.createBundleItem(problem.getJid(), actorJid, BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), problemService.getDefaultLanguage(actorJid, problem.getJid()));
 
             return redirect(routes.BundleItemController.viewItems(problem.getId()))
-                    .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                    .addingToSession(req, newCurrentStatementLanguage(language));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -219,7 +218,7 @@ public final class BundleItemController extends AbstractProblemController {
         }
 
         return showEditItem(req, problem, language, bundleItem, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages)
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional
@@ -274,7 +273,7 @@ public final class BundleItemController extends AbstractProblemController {
         }
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()))
-                .addingToSession(req, SandalphonSessionUtils.newCurrentStatementLanguage(language));
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
