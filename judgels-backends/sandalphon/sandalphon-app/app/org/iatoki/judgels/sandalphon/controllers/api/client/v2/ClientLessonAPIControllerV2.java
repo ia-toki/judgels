@@ -1,7 +1,6 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,6 +15,7 @@ import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.LessonStore;
 import play.db.jpa.Transactional;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
 
@@ -33,7 +33,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     }
 
     @Transactional(readOnly = true)
-    public Result getLesson(String lessonJid) throws IOException {
+    public Result getLesson(String lessonJid) {
         authenticateAsJudgelsAppClient(clientChecker);
 
         if (!lessonStore.lessonExistsByJid(lessonJid)) {
@@ -45,14 +45,14 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
 
 
     @Transactional(readOnly = true)
-    public Result getLessonStatement(String lessonJid) throws IOException {
+    public Result getLessonStatement(Http.Request req, String lessonJid) {
         authenticateAsJudgelsAppClient(clientChecker);
 
         if (!lessonStore.lessonExistsByJid(lessonJid)) {
             return Results.notFound();
         }
 
-        String language = sanitizeLanguageCode(lessonJid, formFactory.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(lessonJid, req.getQueryString("language"));
 
         LessonStatement statement = lessonStore.getStatement(null, lessonJid, language);
 
@@ -65,10 +65,10 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     }
 
     @Transactional(readOnly = true)
-    public Result findLessonsByJids() throws IOException {
+    public Result findLessonsByJids(Http.Request req) {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        JsonNode lessonJids = request().body().asJson();
+        JsonNode lessonJids = req.body().asJson();
 
         Map<String, LessonInfo> result = new HashMap<>();
 
@@ -82,14 +82,14 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     }
 
     @Transactional(readOnly = true)
-    public Result translateAllowedSlugToJids() {
+    public Result translateAllowedSlugToJids(Http.Request req) {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        String userJid = formFactory.form().bindFromRequest().get("userJid");
+        String userJid = req.getQueryString("userJid");
 
         Map<String, String> result = new HashMap<>();
 
-        JsonNode slugs = request().body().asJson();
+        JsonNode slugs = req.body().asJson();
         for (JsonNode slugNode : slugs) {
             String slug = slugNode.asText();
             if (!lessonStore.lessonExistsBySlug(slug)) {
@@ -104,7 +104,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
         return okAsJson(result);
     }
 
-    private LessonInfo getLessonInfo(String lessonJid) throws IOException {
+    private LessonInfo getLessonInfo(String lessonJid) {
         Lesson lesson = lessonStore.findLessonByJid(lessonJid);
 
         LessonInfo.Builder res = new LessonInfo.Builder();
@@ -123,7 +123,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     }
 
 
-    private String sanitizeLanguageCode(String lessonJid, String language) throws IOException {
+    private String sanitizeLanguageCode(String lessonJid, String language) {
         Map<String, StatementLanguageStatus> availableLanguages = lessonStore.getAvailableLanguages(null, lessonJid);
         Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()

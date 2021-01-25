@@ -32,6 +32,7 @@ import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemStore;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import play.db.jpa.Transactional;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
 
@@ -63,7 +64,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
-    public Result getProblem(String problemJid) throws IOException {
+    public Result getProblem(String problemJid) {
         authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemStore.problemExistsByJid(problemJid)) {
@@ -85,7 +86,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
-    public Result getProgrammingProblemWorksheet(String problemJid) throws IOException {
+    public Result getProgrammingProblemWorksheet(Http.Request req, String problemJid) {
         authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemStore.problemExistsByJid(problemJid)) {
@@ -105,7 +106,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
         GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
 
-        String language = sanitizeLanguageCode(problemJid, formFactory.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(problemJid, req.getQueryString("language"));
 
         ProblemStatement statement = problemStore.getStatement(null, problemJid, language);
         result.statement(statement);
@@ -120,7 +121,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
-    public Result getBundleProblemWorksheet(String problemJid) throws IOException {
+    public Result getBundleProblemWorksheet(Http.Request req, String problemJid) throws IOException {
         authenticateAsJudgelsAppClient(clientChecker);
         if (!problemStore.problemExistsByJid(problemJid)) {
             return Results.notFound();
@@ -131,7 +132,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return Results.notFound();
         }
 
-        String language = sanitizeLanguageCode(problemJid, formFactory.form().bindFromRequest().get("language"));
+        String language = sanitizeLanguageCode(problemJid, req.getQueryString("language"));
 
         ProblemStatement statement = problemStore.getStatement(null, problemJid, language);
 
@@ -164,10 +165,10 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
-    public Result findProblemsByJids() throws IOException {
+    public Result findProblemsByJids(Http.Request req) {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        JsonNode problemJids = request().body().asJson();
+        JsonNode problemJids = req.body().asJson();
 
         Map<String, ProblemInfo> result = new HashMap<>();
 
@@ -181,14 +182,14 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
-    public Result translateAllowedSlugToJids() {
+    public Result translateAllowedSlugToJids(Http.Request req) {
         authenticateAsJudgelsAppClient(clientChecker);
 
-        String userJid = formFactory.form().bindFromRequest().get("userJid");
+        String userJid = req.getQueryString("userJid");
 
         Map<String, String> result = new HashMap<>();
 
-        JsonNode slugs = request().body().asJson();
+        JsonNode slugs = req.body().asJson();
         for (JsonNode slugNode : slugs) {
             String slug = slugNode.asText();
             if (!problemStore.problemExistsBySlug(slug)) {
@@ -203,7 +204,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return okAsJson(result);
     }
 
-    private ProblemInfo getProblemInfo(String problemJid) throws IOException {
+    private ProblemInfo getProblemInfo(String problemJid) {
         Problem problem = problemStore.findProblemByJid(problemJid);
 
         ProblemInfo.Builder res = new ProblemInfo.Builder();
@@ -237,7 +238,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return submissionConfig.build();
     }
 
-    private String sanitizeLanguageCode(String problemJid, String language) throws IOException {
+    private String sanitizeLanguageCode(String problemJid, String language) {
         Map<String, StatementLanguageStatus> availableLanguages = problemStore.getAvailableLanguages(null, problemJid);
         Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()

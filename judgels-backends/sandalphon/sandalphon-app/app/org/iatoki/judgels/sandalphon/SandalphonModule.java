@@ -2,8 +2,6 @@ package org.iatoki.judgels.sandalphon;
 
 import akka.actor.ActorSystem;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.palantir.conjure.java.api.config.service.UserAgent;
@@ -26,7 +24,6 @@ import judgels.sealtiel.api.message.MessageService;
 import judgels.service.actor.JudgelsActorProvider;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.client.ClientChecker;
-import judgels.service.jaxrs.JudgelsObjectMappers;
 import org.hibernate.SessionFactory;
 import org.iatoki.judgels.Git;
 import org.iatoki.judgels.LocalGit;
@@ -43,7 +40,6 @@ import org.iatoki.judgels.sandalphon.problem.programming.grading.ProgrammingGrad
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionDao;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.SubmissionRegrader;
 import play.db.jpa.JPAApi;
-import play.libs.Json;
 
 public final class SandalphonModule extends AbstractModule {
 
@@ -58,7 +54,7 @@ public final class SandalphonModule extends AbstractModule {
 
         bind(SandalphonThreadsScheduler.class).asEagerSingleton();
 
-        Json.setObjectMapper(objectMapper());
+        bind(ObjectMapper.class).toProvider(PlayObjectMapper.class).asEagerSingleton();
 
         bind(SessionFactory.class).to(PlaySessionFactory.class);
         bind(ActorProvider.class).to(JudgelsActorProvider.class);
@@ -183,10 +179,5 @@ public final class SandalphonModule extends AbstractModule {
     @LessonGit
     Git lessonGit(@LessonFs FileSystem fs) {
         return new LocalGit((LocalFileSystem) fs);
-    }
-
-    private ObjectMapper objectMapper() {
-        return JudgelsObjectMappers.configure(
-                new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule()));
     }
 }
