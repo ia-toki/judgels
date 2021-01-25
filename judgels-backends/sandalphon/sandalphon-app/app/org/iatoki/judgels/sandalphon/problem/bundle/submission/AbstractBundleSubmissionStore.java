@@ -1,10 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,17 +17,24 @@ import org.iatoki.judgels.sandalphon.problem.bundle.grading.AbstractBundleGradin
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.AbstractBundleGradingModel_;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BaseBundleGradingDao;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGrading;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingResult;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
 import play.data.DynamicForm;
 
 public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSubmissionModel, GM extends AbstractBundleGradingModel> {
-
+    private final ObjectMapper mapper;
     private final BaseBundleSubmissionDao<SM> bundleSubmissionDao;
     private final BaseBundleGradingDao<GM> bundleGradingDao;
     private final BundleProblemGrader bundleProblemGrader;
 
-    protected AbstractBundleSubmissionStore(BaseBundleSubmissionDao<SM> bundleSubmissionDao, BaseBundleGradingDao<GM> bundleGradingDao, BundleProblemGrader bundleProblemGrader) {
+    protected AbstractBundleSubmissionStore(
+            ObjectMapper mapper,
+            BaseBundleSubmissionDao<SM> bundleSubmissionDao,
+            BaseBundleGradingDao<GM> bundleGradingDao,
+            BundleProblemGrader bundleProblemGrader) {
+
+        this.mapper = mapper;
         this.bundleSubmissionDao = bundleSubmissionDao;
         this.bundleGradingDao = bundleGradingDao;
         this.bundleProblemGrader = bundleProblemGrader;
@@ -34,7 +43,7 @@ public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSub
     public Optional<BundleSubmission> findBundleSubmissionById(long submissionId) {
         return bundleSubmissionDao.select(submissionId).map(sm -> {
             List<GM> gradingModels = bundleGradingDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.of(AbstractBundleGradingModel_.submissionJid, sm.jid), 0, -1);
-            return BundleSubmissionServiceUtils.createSubmissionFromModels(sm, gradingModels);
+            return createSubmissionFromModels(sm, gradingModels);
         });
     }
 
@@ -42,7 +51,7 @@ public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSub
         List<SM> submissionModels = bundleSubmissionDao.getAll();
         Map<String, List<GM>> gradingModelsMap = bundleGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
 
-        return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
+        return Lists.transform(submissionModels, m -> createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
     }
 
     public List<BundleSubmission> getBundleSubmissionsByFilters(String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
@@ -61,13 +70,13 @@ public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSub
 
         List<SM> submissionModels = bundleSubmissionDao.findSortedByFiltersEq(orderBy, orderDir, "", filterColumns, 0, -1);
 
-        return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModel(m));
+        return Lists.transform(submissionModels, m -> createSubmissionFromModel(m));
     }
 
     public List<BundleSubmission> getBundleSubmissionsByJids(List<String> submissionJids) {
         List<SM> submissionModels = bundleSubmissionDao.getByJids(submissionJids);
 
-        return Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModel(m));
+        return Lists.transform(submissionModels, m -> createSubmissionFromModel(m));
     }
 
     public Page<BundleSubmission> getPageOfBundleSubmissions(long pageIndex, long pageSize, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
@@ -88,7 +97,7 @@ public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSub
         List<SM> submissionModels = bundleSubmissionDao.findSortedByFiltersEq(orderBy, orderDir, "", filterColumns, pageIndex * pageSize, pageSize);
         Map<String, List<GM>> gradingModelsMap = bundleGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
 
-        List<BundleSubmission> submissions = Lists.transform(submissionModels, m -> BundleSubmissionServiceUtils.createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
+        List<BundleSubmission> submissions = Lists.transform(submissionModels, m -> createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
 
         return new Page.Builder<BundleSubmission>()
                 .page(submissions)
@@ -130,7 +139,7 @@ public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSub
         for (FileSystem fileSystemProvider : fileSystemProviders) {
             fileSystemProvider.createDirectory(Paths.get(submissionJid));
 
-            fileSystemProvider.writeToFile(Paths.get(submissionJid, "answer.json"), new Gson().toJson(answer));
+            fileSystemProvider.writeToFile(Paths.get(submissionJid, "answer.json"), writeObj(answer));
         }
     }
 
@@ -138,7 +147,7 @@ public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSub
         return new BundleAnswer(data.rawData(), languageCode);
     }
 
-    public BundleAnswer createBundleAnswerFromPastSubmission(FileSystem localFs, FileSystem remoteFs, String submissionJid) throws IOException {
+    public BundleAnswer createBundleAnswerFromPastSubmission(FileSystem localFs, FileSystem remoteFs, String submissionJid) {
         FileSystem fileSystemProvider;
 
         if (localFs.directoryExists(Paths.get(submissionJid))) {
@@ -147,24 +156,46 @@ public abstract class AbstractBundleSubmissionStore<SM extends AbstractBundleSub
             fileSystemProvider = remoteFs;
         }
 
-        return new Gson().fromJson(fileSystemProvider.readFromFile(Paths.get(submissionJid, "answer.json")), BundleAnswer.class);
+        try {
+            return mapper.readValue(fileSystemProvider.readFromFile(Paths.get(submissionJid, "answer.json")), BundleAnswer.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void grade(SM submissionModel, BundleAnswer answer) {
+        BundleGradingResult bundleGradingResult = bundleProblemGrader.gradeBundleProblem(submissionModel.problemJid, answer);
+
+        if (bundleGradingResult != null) {
+            GM gradingModel = bundleGradingDao.createGradingModel();
+
+            gradingModel.submissionJid = submissionModel.jid;
+            gradingModel.score = (int) bundleGradingResult.getScore();
+            gradingModel.details = writeObj(bundleGradingResult.getDetails());
+
+            bundleGradingDao.insert(gradingModel);
+
+            afterGrade(gradingModel.jid, answer);
+        }
+    }
+
+    private BundleSubmission createSubmissionFromModel(AbstractBundleSubmissionModel submissionModel) {
+        return createSubmissionFromModels(submissionModel, ImmutableList.of());
+    }
+
+    private BundleSubmission createSubmissionFromModels(AbstractBundleSubmissionModel submissionModel, List<? extends AbstractBundleGradingModel> gradingModels) {
+        return new BundleSubmission(submissionModel.id, submissionModel.jid, submissionModel.problemJid, submissionModel.containerJid, submissionModel.createdBy, new Date(submissionModel.createdAt.toEpochMilli()), submissionModel.createdIp,
+                Lists.transform(gradingModels, m -> createGradingFromModel(m))
+        );
+    }
+
+    private BundleGrading createGradingFromModel(AbstractBundleGradingModel gradingModel) {
+        return new BundleGrading(gradingModel.id, gradingModel.jid, gradingModel.score, gradingModel.details);
+    }
+
+    private String writeObj(Object obj) {
         try {
-            BundleGradingResult bundleGradingResult = bundleProblemGrader.gradeBundleProblem(submissionModel.problemJid, answer);
-
-            if (bundleGradingResult != null) {
-                GM gradingModel = bundleGradingDao.createGradingModel();
-
-                gradingModel.submissionJid = submissionModel.jid;
-                gradingModel.score = (int) bundleGradingResult.getScore();
-                gradingModel.details = bundleGradingResult.getDetailsAsJson();
-
-                bundleGradingDao.insert(gradingModel);
-
-                afterGrade(gradingModel.jid, answer);
-            }
+            return mapper.writeValueAsString(obj);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

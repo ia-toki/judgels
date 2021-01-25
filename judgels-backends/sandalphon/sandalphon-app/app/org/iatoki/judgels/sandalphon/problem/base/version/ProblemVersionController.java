@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.problem.base.version;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -117,11 +116,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         } else if (!problemStore.pushUserClone(actorJid, problem.getJid())) {
             flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
         } else {
-            try {
-                problemStore.discardUserClone(actorJid, problem.getJid());
-            } catch (IOException e) {
-                // do nothing
-            }
+            problemStore.discardUserClone(actorJid, problem.getJid());
         }
 
         return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
@@ -148,13 +143,9 @@ public final class ProblemVersionController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
-        try {
-            problemStore.discardUserClone(actorJid, problem.getJid());
+        problemStore.discardUserClone(actorJid, problem.getJid());
 
-            return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
-        } catch (IOException e) {
-            return notFound();
-        }
+        return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
     }
 
     private Result showViewVersionLocalChanges(Http.Request req, Form<VersionCommitForm> versionCommitForm, Problem problem, boolean isClean) {

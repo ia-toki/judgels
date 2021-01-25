@@ -23,7 +23,6 @@ import org.iatoki.judgels.sandalphon.lesson.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.lessonStatementView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.listStatementLanguagesView;
 import org.iatoki.judgels.sandalphon.lesson.statement.html.listStatementMediaFilesView;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
 import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
@@ -56,15 +55,7 @@ public class LessonStatementController extends AbstractLessonController {
         String language = getStatementLanguage(req, lesson);
         checkAllowed(lessonRoleChecker.isAllowedToViewStatement(req, lesson, language));
 
-        LessonStatement statement;
-        try {
-            statement = lessonStore.getStatement(actorJid, lesson.getJid(), language);
-        } catch (IOException e) {
-            statement = new LessonStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(language))
-                    .text(LessonStatementUtils.getDefaultText(language))
-                    .build();
-        }
+        LessonStatement statement = lessonStore.getStatement(actorJid, lesson.getJid(), language);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(lessonStatementView.render(statement));
@@ -88,12 +79,7 @@ public class LessonStatementController extends AbstractLessonController {
         String language = getStatementLanguage(req, lesson);
         checkAllowed(lessonRoleChecker.isAllowedToUpdateStatementInLanguage(req, lesson, language));
 
-        LessonStatement statement;
-        try {
-            statement = lessonStore.getStatement(actorJid, lesson.getJid(), language);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        LessonStatement statement = lessonStore.getStatement(actorJid, lesson.getJid(), language);
 
         UpdateStatementForm updateStatementData = new UpdateStatementForm();
         updateStatementData.title = statement.getTitle();
@@ -227,19 +213,13 @@ public class LessonStatementController extends AbstractLessonController {
 
         lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
-        String languageCode;
-        try {
-            languageCode = formFactory.form().bindFromRequest(req).get("langCode");
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                // TODO should use form so it can be rejected
-                throw new IllegalStateException("Languages is not from list.");
-            }
-
-            lessonStore.addLanguage(actorJid, lesson.getJid(), languageCode);
-        } catch (IOException e) {
+        String languageCode = formFactory.form().bindFromRequest(req).get("langCode");
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
             // TODO should use form so it can be rejected
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Languages is not from list.");
         }
+
+        lessonStore.addLanguage(actorJid, lesson.getJid(), languageCode);
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }
@@ -252,16 +232,12 @@ public class LessonStatementController extends AbstractLessonController {
 
         lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
-        try {
-            // TODO should check if language has been enabled
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                return notFound();
-            }
-
-            lessonStore.enableLanguage(actorJid, lesson.getJid(), languageCode);
-        } catch (IOException e) {
-            throw new IllegalStateException("Statement language probably hasn't been added.", e);
+        // TODO should check if language has been enabled
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
+            return notFound();
         }
+
+        lessonStore.enableLanguage(actorJid, lesson.getJid(), languageCode);
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }
@@ -275,19 +251,15 @@ public class LessonStatementController extends AbstractLessonController {
 
         lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
-        try {
-            // TODO should check if language has been enabled
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                return notFound();
-            }
+        // TODO should check if language has been enabled
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
+            return notFound();
+        }
 
-            lessonStore.disableLanguage(actorJid, lesson.getJid(), languageCode);
+        lessonStore.disableLanguage(actorJid, lesson.getJid(), languageCode);
 
-            if (language.equals(languageCode)) {
-                language = lessonStore.getDefaultLanguage(actorJid, lesson.getJid());
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Statement language probably hasn't been added.", e);
+        if (language.equals(languageCode)) {
+            language = lessonStore.getDefaultLanguage(actorJid, lesson.getJid());
         }
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()))
@@ -302,16 +274,12 @@ public class LessonStatementController extends AbstractLessonController {
 
         lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
-        try {
-            // TODO should check if language has been enabled
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                return notFound();
-            }
-
-            lessonStore.makeDefaultLanguage(actorJid, lesson.getJid(), languageCode);
-        } catch (IOException e) {
-            throw new IllegalStateException("Statement language probably hasn't been added.", e);
+        // TODO should check if language has been enabled
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
+            return notFound();
         }
+
+        lessonStore.makeDefaultLanguage(actorJid, lesson.getJid(), languageCode);
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }

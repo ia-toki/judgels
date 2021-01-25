@@ -4,20 +4,17 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
-import java.io.IOException;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
@@ -51,35 +48,11 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
-        ProblemStatement statement;
-        try {
-            statement = problemStore.getStatement(actorJid, problem.getJid(), language);
-        } catch (IOException e) {
-            statement = new ProblemStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(language))
-                    .text(ProgrammingProblemStatementUtils.getDefaultText(language))
-                    .build();
-        }
+        ProblemStatement statement = problemStore.getStatement(actorJid, problem.getJid(), language);
 
-        String engine;
-        try {
-            engine = programmingProblemStore.getGradingEngine(actorJid, problem.getJid());
-        } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefault();
-        }
-
-        GradingConfig config;
-        try {
-            config = programmingProblemStore.getGradingConfig(actorJid, problem.getJid());
-        } catch (IOException e) {
-            config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
-        }
-        LanguageRestriction languageRestriction;
-        try {
-            languageRestriction = programmingProblemStore.getLanguageRestriction(actorJid, problem.getJid());
-        } catch (IOException e) {
-            languageRestriction = LanguageRestriction.noRestriction();
-        }
+        String engine = programmingProblemStore.getGradingEngine(actorJid, problem.getJid());
+        GradingConfig config = programmingProblemStore.getGradingConfig(actorJid, problem.getJid());
+        LanguageRestriction languageRestriction = programmingProblemStore.getLanguageRestriction(actorJid, problem.getJid());
         Set<String> allowedLanguageNames = LanguageRestrictionAdapter.getFinalAllowedLanguageNames(ImmutableList.of(languageRestriction));
 
         boolean isAllowedToSubmitByPartner = problemRoleChecker.isAllowedToSubmit(req, problem);

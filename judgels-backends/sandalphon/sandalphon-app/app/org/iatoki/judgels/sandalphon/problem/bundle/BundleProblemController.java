@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
-import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
@@ -43,19 +42,14 @@ public final class BundleProblemController extends AbstractProblemController {
         String additionalNote = getJustCreatedProblemAdditionalNote(req);
         String languageCode = getJustCreatedProblemInitLanguage(req);
 
-        Problem problem;
-        try {
-            problem = problemStore.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode);
-            ProblemStatement statement = new ProblemStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(languageCode))
-                    .text(BundleProblemStatementUtils.getDefaultStatement(languageCode))
-                    .build();
+        Problem problem = problemStore.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode);
+        ProblemStatement statement = new ProblemStatement.Builder()
+                .title(ProblemStatementUtils.getDefaultTitle(languageCode))
+                .text(BundleProblemStatementUtils.getDefaultStatement(languageCode))
+                .build();
 
-            problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
-            bundleProblemStore.initBundleProblem(problem.getJid());
-        } catch (IOException e) {
-            return internalServerError();
-        }
+        problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
+        bundleProblemStore.initBundleProblem(problem.getJid());
 
         problemStore.initRepository(actorJid, problem.getJid());
 

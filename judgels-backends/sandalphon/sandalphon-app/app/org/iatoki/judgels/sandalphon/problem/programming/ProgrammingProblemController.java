@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
-import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
@@ -69,18 +68,13 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
 
         ProgrammingProblemCreateForm programmingProblemCreateData = programmingProblemCreateForm.get();
 
-        Problem problem;
-        try {
-            problem = problemStore.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode);
-            ProblemStatement statement = new ProblemStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(languageCode))
-                    .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
-                    .build();
-            problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
-            programmingProblemStore.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
-        } catch (IOException e) {
-            return showCreateProgrammingProblem(req, programmingProblemCreateForm.withGlobalError("Error creating programming problem."));
-        }
+        Problem problem = problemStore.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode);
+        ProblemStatement statement = new ProblemStatement.Builder()
+                .title(ProblemStatementUtils.getDefaultTitle(languageCode))
+                .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
+                .build();
+        problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
+        programmingProblemStore.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
 
         problemStore.initRepository(actorJid, problem.getJid());
 

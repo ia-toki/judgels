@@ -1,6 +1,5 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.grading;
 
-import com.google.gson.Gson;
 import java.util.Map;
 
 public final class BundleGradingResult {
@@ -19,9 +18,5 @@ public final class BundleGradingResult {
 
     public Map<String, BundleDetailResult> getDetails() {
         return details;
-    }
-
-    public String getDetailsAsJson() {
-        return new Gson().toJson(details);
     }
 }

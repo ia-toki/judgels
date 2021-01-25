@@ -4,7 +4,6 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +22,6 @@ import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.editStatementView;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.listStatementLanguagesView;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.listStatementMediaFilesView;
-import org.iatoki.judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm;
 import org.iatoki.judgels.sandalphon.resource.UploadFileForm;
 import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
@@ -67,19 +65,7 @@ public class ProblemStatementController extends AbstractProblemController {
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatementInLanguage(req, problem, language));
 
-        ProblemStatement statement;
-        try {
-            statement = problemStore.getStatement(actorJid, problem.getJid(), language);
-        } catch (IOException e) {
-            if (ProblemType.PROGRAMMING.equals(problem.getType())) {
-                statement = new ProblemStatement.Builder()
-                        .title(ProblemStatementUtils.getDefaultTitle(language))
-                        .text(ProgrammingProblemStatementUtils.getDefaultText(language))
-                        .build();
-            } else {
-                throw new IllegalStateException("Problem besides programming has not been defined");
-            }
-        }
+        ProblemStatement statement = problemStore.getStatement(actorJid, problem.getJid(), language);
 
         UpdateStatementForm updateStatementData = new UpdateStatementForm();
         updateStatementData.title = statement.getTitle();
@@ -109,18 +95,13 @@ public class ProblemStatementController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            UpdateStatementForm updateStatementData = updateStatementForm.get();
-            ProblemStatement statement = new ProblemStatement.Builder()
-                    .title(updateStatementData.title)
-                    .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
-                    .build();
+        UpdateStatementForm updateStatementData = updateStatementForm.get();
+        ProblemStatement statement = new ProblemStatement.Builder()
+                .title(updateStatementData.title)
+                .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
+                .build();
 
-            problemStore.updateStatement(actorJid, problem.getJid(), language, statement);
-        } catch (IOException e) {
-            Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
-            return showEditStatement(req, language, updateStatementForm.withGlobalError("Error updating statement."), problem, allowedLanguages);
-        }
+        problemStore.updateStatement(actorJid, problem.getJid(), language, statement);
 
         return redirect(routes.ProblemStatementController.editStatement(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));
@@ -154,16 +135,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-
-            try {
-                problemStore.uploadStatementMediaFile(actorJid, problem.getJid(), mediaFile, file.getFilename());
-            } catch (IOException e) {
-                Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                boolean isAllowedToUploadMediaFiles = problemRoleChecker.isAllowedToUploadStatementResources(req, problem);
-                List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actorJid, problem.getJid());
-
-                return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
-            }
+            problemStore.uploadStatementMediaFile(actorJid, problem.getJid(), mediaFile, file.getFilename());
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
         }
@@ -172,16 +144,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-
-            try {
-                problemStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), mediaFile);
-            } catch (IOException e) {
-                Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
-                boolean isAllowedToUploadMediaFiles = problemRoleChecker.isAllowedToUploadStatementResources(req, problem);
-                List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actorJid, problem.getJid());
-
-                return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), problem, mediaFiles, isAllowedToUploadMediaFiles);
-            }
+            problemStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), mediaFile);
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
         }
@@ -216,19 +179,13 @@ public class ProblemStatementController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        String languageCode;
-        try {
-            languageCode = formFactory.form().bindFromRequest(req).get("langCode");
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                // TODO should use form so it can be rejected
-                throw new IllegalStateException("Languages is not from list.");
-            }
-
-            problemStore.addLanguage(actorJid, problem.getJid(), languageCode);
-        } catch (IOException e) {
+        String languageCode = formFactory.form().bindFromRequest(req).get("langCode");
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
             // TODO should use form so it can be rejected
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Languages is not from list.");
         }
+
+        problemStore.addLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
@@ -241,16 +198,12 @@ public class ProblemStatementController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            // TODO should check if language has been enabled
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                return notFound();
-            }
-
-            problemStore.enableLanguage(actorJid, problem.getJid(), languageCode);
-        } catch (IOException e) {
-            throw new IllegalStateException("Statement language probably hasn't been added.", e);
+        // TODO should check if language has been enabled
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
+            return notFound();
         }
+
+        problemStore.enableLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
@@ -264,19 +217,15 @@ public class ProblemStatementController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            // TODO should check if language has been enabled
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                return notFound();
-            }
+        // TODO should check if language has been enabled
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
+            return notFound();
+        }
 
-            problemStore.disableLanguage(actorJid, problem.getJid(), languageCode);
+        problemStore.disableLanguage(actorJid, problem.getJid(), languageCode);
 
-            if (getCurrentStatementLanguage(req).equals(languageCode)) {
-                language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Statement language probably hasn't been added.", e);
+        if (getCurrentStatementLanguage(req).equals(languageCode)) {
+            language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
         }
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()))
@@ -291,16 +240,12 @@ public class ProblemStatementController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            // TODO should check if language has been enabled
-            if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
-                return notFound();
-            }
-
-            problemStore.makeDefaultLanguage(actorJid, problem.getJid(), languageCode);
-        } catch (IOException e) {
-            throw new IllegalStateException("Statement language probably hasn't been added.", e);
+        // TODO should check if language has been enabled
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(languageCode)) {
+            return notFound();
         }
+
+        problemStore.makeDefaultLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }

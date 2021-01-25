@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemInfo;
@@ -104,7 +103,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         ProblemSubmissionConfig submissionConfig = getSubmissionConfig(problemJid);
         result.submissionConfig(submissionConfig);
 
-        GradingConfig config = getBlackBoxGradingConfig(problemJid, submissionConfig.getGradingEngine());
+        GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
 
         String language = sanitizeLanguageCode(problemJid, formFactory.form().bindFromRequest().get("language"));
 
@@ -223,42 +222,16 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             || userService.getUserRole(userJid).getSandalphon().orElse("").equals("ADMIN");
     }
 
-    private String getGradingEngine(String problemJid) {
-        try {
-            return programmingProblemStore.getGradingEngine(null, problemJid);
-        } catch (IOException e) {
-            return GradingEngineRegistry.getInstance().getDefault();
-        }
-    }
-
-    private LanguageRestriction getLanguageRestriction(String problemJid) {
-        try {
-            return programmingProblemStore.getLanguageRestriction(null, problemJid);
-        } catch (IOException e) {
-            return LanguageRestriction.noRestriction();
-        }
-    }
-
-    private GradingConfig getBlackBoxGradingConfig(String problemJid, String gradingEngine) {
-        try {
-            return programmingProblemStore.getGradingConfig(null, problemJid);
-        } catch (IOException e) {
-            return GradingEngineRegistry.getInstance()
-                    .get(gradingEngine)
-                    .createDefaultConfig();
-        }
-    }
-
     private ProblemSubmissionConfig getSubmissionConfig(String problemJid) {
         ProblemSubmissionConfig.Builder submissionConfig = new ProblemSubmissionConfig.Builder();
 
-        String gradingEngine = getGradingEngine(problemJid);
+        String gradingEngine = programmingProblemStore.getGradingEngine(null, problemJid);
         submissionConfig.gradingEngine(gradingEngine);
 
-        LanguageRestriction languageRestriction = getLanguageRestriction(problemJid);
+        LanguageRestriction languageRestriction = programmingProblemStore.getLanguageRestriction(null, problemJid);
         submissionConfig.gradingLanguageRestriction(languageRestriction);
 
-        GradingConfig config = getBlackBoxGradingConfig(problemJid, gradingEngine);
+        GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
         submissionConfig.sourceKeys(config.getSourceFileFields());
 
         return submissionConfig.build();

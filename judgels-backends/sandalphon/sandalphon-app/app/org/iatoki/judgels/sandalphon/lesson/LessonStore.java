@@ -1,11 +1,10 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,8 +22,8 @@ import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
-import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.Git;
+import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerDao;
@@ -39,7 +38,13 @@ public final class LessonStore {
     private final LessonPartnerDao lessonPartnerDao;
 
     @Inject
-    public LessonStore(ObjectMapper mapper, LessonDao lessonDao, @LessonFs FileSystem lessonFs, @LessonGit Git lessonGit, LessonPartnerDao lessonPartnerDao) {
+    public LessonStore(
+            ObjectMapper mapper,
+            LessonDao lessonDao,
+            @LessonFs FileSystem lessonFs,
+            @LessonGit Git lessonGit,
+            LessonPartnerDao lessonPartnerDao) {
+
         this.mapper = mapper;
         this.lessonDao = lessonDao;
         this.lessonFs = lessonFs;
@@ -48,16 +53,16 @@ public final class LessonStore {
     }
 
     public Lesson createLesson(String slug, String additionalNote, String initialLanguageCode) {
-        LessonModel lessonModel = new LessonModel();
-        lessonModel.slug = slug;
-        lessonModel.additionalNote = additionalNote;
+        LessonModel model = new LessonModel();
+        model.slug = slug;
+        model.additionalNote = additionalNote;
 
-        lessonDao.insert(lessonModel);
+        lessonDao.insert(model);
 
-        initStatements(lessonModel.jid, initialLanguageCode);
-        lessonFs.createDirectory(getClonesDirPath(lessonModel.jid));
+        initStatements(model.jid, initialLanguageCode);
+        lessonFs.createDirectory(getClonesDirPath(model.jid));
 
-        return createLessonFromModel(lessonModel);
+        return createLessonFromModel(model);
     }
 
     public boolean lessonExistsByJid(String lessonJid) {
@@ -73,15 +78,13 @@ public final class LessonStore {
     }
 
     public Lesson findLessonByJid(String lessonJid) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-
-        return createLessonFromModel(lessonModel);
+        LessonModel model = lessonDao.findByJid(lessonJid);
+        return createLessonFromModel(model);
     }
 
     public Lesson findLessonBySlug(String slug) {
-        LessonModel lessonModel = lessonDao.findBySlug(slug);
-
-        return createLessonFromModel(lessonModel);
+        LessonModel model = lessonDao.findBySlug(slug);
+        return createLessonFromModel(model);
     }
 
     public boolean isUserPartnerForLesson(String lessonJid, String userJid) {
@@ -89,27 +92,25 @@ public final class LessonStore {
     }
 
     public void createLessonPartner(String lessonJid, String userJid, LessonPartnerConfig config) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
+        LessonModel model = lessonDao.findByJid(lessonJid);
 
-        LessonPartnerModel lessonPartnerModel = new LessonPartnerModel();
-        lessonPartnerModel.lessonJid = lessonModel.jid;
-        lessonPartnerModel.userJid = userJid;
-        lessonPartnerModel.config = new Gson().toJson(config);
+        LessonPartnerModel partnerModel = new LessonPartnerModel();
+        partnerModel.lessonJid = model.jid;
+        partnerModel.userJid = userJid;
+        partnerModel.config = writeObj(config);
 
-        lessonPartnerDao.insert(lessonPartnerModel);
-
-        lessonDao.update(lessonModel);
+        lessonPartnerDao.insert(partnerModel);
+        lessonDao.update(model);
     }
 
     public void updateLessonPartner(long lessonPartnerId, LessonPartnerConfig config) {
-        LessonPartnerModel lessonPartnerModel = lessonPartnerDao.find(lessonPartnerId);
-        lessonPartnerModel.config = new Gson().toJson(config);
+        LessonPartnerModel partnerModel = lessonPartnerDao.find(lessonPartnerId);
+        partnerModel.config = writeObj(config);
 
-        lessonPartnerDao.update(lessonPartnerModel);
+        lessonPartnerDao.update(partnerModel);
 
-        LessonModel lessonModel = lessonDao.findByJid(lessonPartnerModel.lessonJid);
-
-        lessonDao.update(lessonModel);
+        LessonModel model = lessonDao.findByJid(partnerModel.lessonJid);
+        lessonDao.update(model);
     }
 
     public Page<LessonPartner> getPageOfLessonPartners(String lessonJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
@@ -180,49 +181,45 @@ public final class LessonStore {
     }
 
     public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String lessonJid) {
-        String langs = lessonFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid));
-        return new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
+        String languages = lessonFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid));
+        try {
+            return mapper.readValue(languages, new TypeReference<Map<String, StatementLanguageStatus>>() {});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void addLanguage(String userJid, String lessonJid, String languageCode) throws IOException {
-        String langs = lessonFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid));
-        Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
+    public void addLanguage(String userJid, String lessonJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
+        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
 
-        availableLanguages.put(languageCode, StatementLanguageStatus.ENABLED);
-
-        LessonStatement defaultLanguageStatement = getStatement(userJid, lessonJid, getDefaultLanguage(userJid, lessonJid));
-        lessonFs.writeToFile(getStatementTitleFilePath(userJid, lessonJid, languageCode), defaultLanguageStatement.getTitle());
-        lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonJid, languageCode), defaultLanguageStatement.getText());
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), new Gson().toJson(availableLanguages));
+        LessonStatement statement = getStatement(userJid, lessonJid, getDefaultLanguage(userJid, lessonJid));
+        lessonFs.writeToFile(getStatementTitleFilePath(userJid, lessonJid, language), statement.getTitle());
+        lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonJid, language), statement.getText());
+        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), writeObj(availableLanguages));
     }
 
-    public void enableLanguage(String userJid, String lessonJid, String languageCode) throws IOException {
-        String langs = lessonFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid));
-        Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
-
-        availableLanguages.put(languageCode, StatementLanguageStatus.ENABLED);
-
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), new Gson().toJson(availableLanguages));
+    public void enableLanguage(String userJid, String lessonJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
+        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
+        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), writeObj(availableLanguages));
     }
 
-    public void disableLanguage(String userJid, String lessonJid, String languageCode) throws IOException {
-        String langs = lessonFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid));
-        Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
-
-        availableLanguages.put(languageCode, StatementLanguageStatus.DISABLED);
-
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), new Gson().toJson(availableLanguages));
+    public void disableLanguage(String userJid, String lessonJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
+        availableLanguages.put(language, StatementLanguageStatus.DISABLED);
+        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), writeObj(availableLanguages));
     }
 
-    public void makeDefaultLanguage(String userJid, String lessonJid, String languageCode) throws IOException {
-        lessonFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, lessonJid), languageCode);
+    public void makeDefaultLanguage(String userJid, String lessonJid, String language) {
+        lessonFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, lessonJid), language);
     }
 
     public String getDefaultLanguage(String userJid, String lessonJid) {
         return lessonFs.readFromFile(getStatementDefaultLanguageFilePath(userJid, lessonJid));
     }
 
-    public LessonStatement getStatement(String userJid, String lessonJid, String languageCode) throws IOException {
+    public LessonStatement getStatement(String userJid, String lessonJid, String languageCode) {
         String title = lessonFs.readFromFile(getStatementTitleFilePath(userJid, lessonJid, languageCode));
         String text = lessonFs.readFromFile(getStatementTextFilePath(userJid, lessonJid, languageCode));
 
@@ -381,7 +378,7 @@ public final class LessonStore {
         lessonFs.writeToFile(getStatementDefaultLanguageFilePath(null, lessonJid), initialLanguageCode);
 
         Map<String, StatementLanguageStatus> initialLanguage = ImmutableMap.of(initialLanguageCode, StatementLanguageStatus.ENABLED);
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(null, lessonJid), new Gson().toJson(initialLanguage));
+        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(null, lessonJid), writeObj(initialLanguage));
     }
 
     private Path getStatementsDirPath(String userJid, String lessonJid) {
@@ -457,6 +454,14 @@ public final class LessonStore {
                     .userJid(lessonPartnerModel.userJid)
                     .config(mapper.readValue(lessonPartnerModel.config, LessonPartnerConfig.class))
                     .build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String writeObj(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

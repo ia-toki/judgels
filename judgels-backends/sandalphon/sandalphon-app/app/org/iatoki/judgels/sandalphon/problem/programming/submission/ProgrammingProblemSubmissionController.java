@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
@@ -85,32 +84,14 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem) && isClean);
 
-        String gradingEngine;
-        try {
-            gradingEngine = programmingProblemStore.getGradingEngine(null, problem.getJid());
-        } catch (IOException e) {
-            gradingEngine = GradingEngineRegistry.getInstance().getDefault();
-        }
+        String gradingEngine = programmingProblemStore.getGradingEngine(null, problem.getJid());
+        GradingConfig gradingConfig = programmingProblemStore.getGradingConfig(null, problem.getJid());
 
-        GradingConfig gradingConfig;
-        try {
-            gradingConfig = programmingProblemStore.getGradingConfig(null, problem.getJid());
-        } catch (IOException e) {
-            gradingConfig = GradingEngineRegistry.getInstance()
-                    .get(gradingEngine)
-                    .createDefaultConfig();
-        }
-
-        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
+        Http.MultipartFormData<File> body = req.body().asMultipartFormData();
 
         String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
 
-        LanguageRestriction languageRestriction;
-        try {
-            languageRestriction = programmingProblemStore.getLanguageRestriction(null, problem.getJid());
-        } catch (IOException e) {
-            languageRestriction = LanguageRestriction.noRestriction();
-        }
+        LanguageRestriction languageRestriction = programmingProblemStore.getLanguageRestriction(null, problem.getJid());
 
         FormDataMultiPart parts = new FormDataMultiPart();
         try {
@@ -173,12 +154,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
         Submission programmingSubmission = submissionStore.getSubmissionById(submissionId).get();
 
-        String engine;
-        try {
-            engine = programmingProblemStore.getGradingEngine(actorJid, problem.getJid());
-        } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefault();
-        }
+        String engine = programmingProblemStore.getGradingEngine(actorJid, problem.getJid());
         SubmissionSource submissionSource = submissionSourceBuilder.fromPastSubmission(programmingSubmission.getJid());
 
         Profile profile = profileService.getProfile(programmingSubmission.getUserJid());

@@ -1,17 +1,15 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,16 +24,15 @@ import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.Git;
+import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.jid.JidService;
-import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel_;
 
-public class ProblemStore {
+public class ProblemStore extends AbstractProblemStore {
     private final ObjectMapper mapper;
     private final ProblemDao problemDao;
     private final FileSystem problemFs;
@@ -43,7 +40,14 @@ public class ProblemStore {
     private final ProblemPartnerDao problemPartnerDao;
 
     @Inject
-    public ProblemStore(ObjectMapper mapper, ProblemDao problemDao, @ProblemFs FileSystem problemFs, @ProblemGit Git problemGit, ProblemPartnerDao problemPartnerDao) {
+    public ProblemStore(
+            ObjectMapper mapper,
+            ProblemDao problemDao,
+            @ProblemFs FileSystem problemFs,
+            @ProblemGit Git problemGit,
+            ProblemPartnerDao problemPartnerDao) {
+
+        super(mapper, problemFs);
         this.mapper = mapper;
         this.problemDao = problemDao;
         this.problemFs = problemFs;
@@ -52,16 +56,16 @@ public class ProblemStore {
     }
 
     public Problem createProblem(ProblemType type, String slug, String additionalNote, String initialLanguageCode) {
-        ProblemModel problemModel = new ProblemModel();
-        problemModel.slug = slug;
-        problemModel.additionalNote = additionalNote;
+        ProblemModel model = new ProblemModel();
+        model.slug = slug;
+        model.additionalNote = additionalNote;
 
-        problemDao.insertWithJid(JidGenerator.newChildJid(ProblemModel.class, type.ordinal()), problemModel);
+        problemDao.insertWithJid(JidGenerator.newChildJid(ProblemModel.class, type.ordinal()), model);
 
-        initStatements(problemModel.jid, initialLanguageCode);
-        problemFs.createDirectory(getClonesDirPath(problemModel.jid));
+        initStatements(model.jid, initialLanguageCode);
+        problemFs.createDirectory(getClonesDirPath(model.jid));
 
-        return createProblemFromModel(problemModel);
+        return createProblemFromModel(model);
     }
 
     public boolean problemExistsByJid(String problemJid) {
@@ -77,15 +81,13 @@ public class ProblemStore {
     }
 
     public Problem findProblemByJid(String problemJid) {
-        ProblemModel problemModel = problemDao.findByJid(problemJid);
-
-        return createProblemFromModel(problemModel);
+        ProblemModel model = problemDao.findByJid(problemJid);
+        return createProblemFromModel(model);
     }
 
     public Problem findProblemBySlug(String slug) {
-        ProblemModel problemModel = problemDao.findBySlug(slug);
-
-        return createProblemFromModel(problemModel);
+        ProblemModel model = problemDao.findBySlug(slug);
+        return createProblemFromModel(model);
     }
 
     public boolean isUserPartnerForProblem(String problemJid, String userJid) {
@@ -93,48 +95,46 @@ public class ProblemStore {
     }
 
     public void createProblemPartner(String problemJid, String userJid, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig) {
-        ProblemModel problemModel = problemDao.findByJid(problemJid);
+        ProblemModel model = problemDao.findByJid(problemJid);
 
-        ProblemPartnerModel problemPartnerModel = new ProblemPartnerModel();
-        problemPartnerModel.problemJid = problemModel.jid;
-        problemPartnerModel.userJid = userJid;
+        ProblemPartnerModel partnerModel = new ProblemPartnerModel();
+        partnerModel.problemJid = model.jid;
+        partnerModel.userJid = userJid;
 
         try {
-            problemPartnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
-            problemPartnerModel.childConfig = mapper.writeValueAsString(childConfig);
+            partnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
+            partnerModel.childConfig = mapper.writeValueAsString(childConfig);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        problemPartnerDao.insert(problemPartnerModel);
-
-        problemDao.update(problemModel);
+        problemPartnerDao.insert(partnerModel);
+        problemDao.update(model);
     }
 
     public void updateProblemPartner(long problemPartnerId, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig) {
-        ProblemPartnerModel problemPartnerModel = problemPartnerDao.find(problemPartnerId);
+        ProblemPartnerModel partnerModel = problemPartnerDao.find(problemPartnerId);
 
         try {
-            problemPartnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
-            problemPartnerModel.childConfig = mapper.writeValueAsString(childConfig);
+            partnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
+            partnerModel.childConfig = mapper.writeValueAsString(childConfig);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        problemPartnerDao.update(problemPartnerModel);
+        problemPartnerDao.update(partnerModel);
 
-        ProblemModel problemModel = problemDao.findByJid(problemPartnerModel.problemJid);
-
-        problemDao.update(problemModel);
+        ProblemModel model = problemDao.findByJid(partnerModel.problemJid);
+        problemDao.update(model);
     }
 
     public Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
         long totalRows = problemPartnerDao.countByFiltersEq("", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid));
-        List<ProblemPartnerModel> problemPartnerModels = problemPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid), pageIndex * pageSize, pageSize);
-        List<ProblemPartner> problemPartners = Lists.transform(problemPartnerModels, m -> createProblemPartnerFromModel(m));
+        List<ProblemPartnerModel> models = problemPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid), pageIndex * pageSize, pageSize);
+        List<ProblemPartner> partners = Lists.transform(models, m -> createProblemPartnerFromModel(m));
 
         return new Page.Builder<ProblemPartner>()
-                .page(problemPartners)
+                .page(partners)
                 .totalCount(totalRows)
                 .pageIndex(pageIndex)
                 .pageSize(pageSize)
@@ -146,25 +146,24 @@ public class ProblemStore {
     }
 
     public ProblemPartner findProblemPartnerByProblemJidAndPartnerJid(String problemJid, String partnerJid) {
-        ProblemPartnerModel problemPartnerModel = problemPartnerDao.findByProblemJidAndPartnerJid(problemJid, partnerJid);
-
-        return createProblemPartnerFromModel(problemPartnerModel);
+        ProblemPartnerModel model = problemPartnerDao.findByProblemJidAndPartnerJid(problemJid, partnerJid);
+        return createProblemPartnerFromModel(model);
     }
 
     public void updateProblem(String problemJid, String slug, String additionalNote) {
-        ProblemModel problemModel = problemDao.findByJid(problemJid);
-        problemModel.slug = slug;
-        problemModel.additionalNote = additionalNote;
+        ProblemModel model = problemDao.findByJid(problemJid);
+        model.slug = slug;
+        model.additionalNote = additionalNote;
 
-        problemDao.update(problemModel);
+        problemDao.update(model);
     }
 
     public Page<Problem> getPageOfProblems(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
         if (isAdmin) {
             long totalRows = problemDao.countByFilters(filterString);
-            List<ProblemModel> problemModels = problemDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
+            List<ProblemModel> models = problemDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
 
-            List<Problem> problems = Lists.transform(problemModels, m -> createProblemFromModel(m));
+            List<Problem> problems = Lists.transform(models, m -> createProblemFromModel(m));
             return new Page.Builder<Problem>()
                     .page(problems)
                     .totalCount(totalRows)
@@ -182,9 +181,9 @@ public class ProblemStore {
             Set<String> allowedProblemJids = allowedProblemJidsBuilder.build();
 
             long totalRows = problemDao.countByFiltersIn(filterString, ImmutableMap.of(ProblemModel_.jid, allowedProblemJids));
-            List<ProblemModel> problemModels = problemDao.findSortedByFiltersIn(orderBy, orderDir, filterString, ImmutableMap.of(ProblemModel_.jid, allowedProblemJids), pageIndex * pageSize, pageSize);
+            List<ProblemModel> models = problemDao.findSortedByFiltersIn(orderBy, orderDir, filterString, ImmutableMap.of(ProblemModel_.jid, allowedProblemJids), pageIndex * pageSize, pageSize);
 
-            List<Problem> problems = Lists.transform(problemModels, m -> createProblemFromModel(m));
+            List<Problem> problems = Lists.transform(models, m -> createProblemFromModel(m));
             return new Page.Builder<Problem>()
                     .page(problems)
                     .totalCount(totalRows)
@@ -192,57 +191,50 @@ public class ProblemStore {
                     .pageSize(pageSize)
                     .build();
         }
-
     }
 
     public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String problemJid) {
-        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
-
-        return new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() {
-        }.getType());
+        String languages = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
+        try {
+            return mapper.readValue(languages, new TypeReference<Map<String, StatementLanguageStatus>>() {});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void addLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
-        Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
+    public void addLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
+        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
 
-        availableLanguages.put(languageCode, StatementLanguageStatus.ENABLED);
-
-        ProblemStatement defaultLanguageStatement = getStatement(userJid, problemJid, getDefaultLanguage(userJid, problemJid));
-        problemFs.writeToFile(getStatementTitleFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getTitle());
-        problemFs.writeToFile(getStatementTextFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getText());
-        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
+        ProblemStatement statement = getStatement(userJid, problemJid, getDefaultLanguage(userJid, problemJid));
+        problemFs.writeToFile(getStatementTitleFilePath(userJid, problemJid, language), statement.getTitle());
+        problemFs.writeToFile(getStatementTextFilePath(userJid, problemJid, language), statement.getText());
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
     }
 
-    public void enableLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
-        Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
-
-        availableLanguages.put(languageCode, StatementLanguageStatus.ENABLED);
-
-        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
+    public void enableLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
+        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
     }
 
-    public void disableLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        String langs = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
-        Map<String, StatementLanguageStatus> availableLanguages = new Gson().fromJson(langs, new TypeToken<Map<String, StatementLanguageStatus>>() { }.getType());
-
-        availableLanguages.put(languageCode, StatementLanguageStatus.DISABLED);
-
-        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
+    public void disableLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
+        availableLanguages.put(language, StatementLanguageStatus.DISABLED);
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
     }
 
-    public void makeDefaultLanguage(String userJid, String problemJid, String languageCode) throws IOException {
-        problemFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, problemJid), languageCode);
+    public void makeDefaultLanguage(String userJid, String problemJid, String language) {
+        problemFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, problemJid), language);
     }
 
     public String getDefaultLanguage(String userJid, String problemJid) {
         return problemFs.readFromFile(getStatementDefaultLanguageFilePath(userJid, problemJid));
     }
 
-    public ProblemStatement getStatement(String userJid, String problemJid, String languageCode) throws IOException {
-        String title = problemFs.readFromFile(getStatementTitleFilePath(userJid, problemJid, languageCode));
-        String text = problemFs.readFromFile(getStatementTextFilePath(userJid, problemJid, languageCode));
+    public ProblemStatement getStatement(String userJid, String problemJid, String language) {
+        String title = problemFs.readFromFile(getStatementTitleFilePath(userJid, problemJid, language));
+        String text = problemFs.readFromFile(getStatementTextFilePath(userJid, problemJid, language));
 
         return new ProblemStatement.Builder().title(title).text(text).build();
     }
@@ -262,21 +254,22 @@ public class ProblemStore {
         return titlesByLanguageBuilder.build();
     }
 
-    public void updateStatement(String userJid, String problemJid, String languageCode, ProblemStatement statement) throws IOException {
-        ProblemModel problemModel = problemDao.findByJid(problemJid);
-        problemFs.writeToFile(getStatementTitleFilePath(userJid, problemModel.jid, languageCode), statement.getTitle());
-        problemFs.writeToFile(getStatementTextFilePath(userJid, problemModel.jid, languageCode), statement.getText());
+    public void updateStatement(String userJid, String problemJid, String language, ProblemStatement statement) {
+        problemFs.writeToFile(getStatementTitleFilePath(userJid, problemJid, language), statement.getTitle());
+        problemFs.writeToFile(getStatementTextFilePath(userJid, problemJid, language), statement.getText());
     }
 
-    public void uploadStatementMediaFile(String userJid, String problemJid, File mediaFile, String filename) throws IOException {
-        ProblemModel problemModel = problemDao.findByJid(problemJid);
-        Path mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
-        problemFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
+    public void uploadStatementMediaFile(String userJid, String problemJid, File mediaFile, String filename) {
+        Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
+        try {
+            problemFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void uploadStatementMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) throws IOException {
-        ProblemModel problemModel = problemDao.findByJid(problemJid);
-        Path mediaDirPath = getStatementMediaDirPath(userJid, problemModel.jid);
+    public void uploadStatementMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) {
+        Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
         problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
     }
 
@@ -291,12 +284,12 @@ public class ProblemStore {
     }
 
     public List<GitCommit> getVersions(String userJid, String problemJid) {
-        Path root = getRootDirPath(problemFs, userJid, problemJid);
+        Path root = getRootDirPath(userJid, problemJid);
         return problemGit.getLog(root);
     }
 
     public void initRepository(String userJid, String problemJid) {
-        Path root = getRootDirPath(problemFs, null, problemJid);
+        Path root = getRootDirPath(null, problemJid);
 
         problemGit.init(root);
         problemGit.addAll(root);
@@ -328,9 +321,8 @@ public class ProblemStore {
         if (!success) {
             problemGit.resetToParent(root);
         } else {
-            ProblemModel problemModel = problemDao.findByJid(problemJid);
-
-            problemDao.update(problemModel);
+            ProblemModel model = problemDao.findByJid(problemJid);
+            problemDao.update(model);
         }
 
         return success;
@@ -350,14 +342,13 @@ public class ProblemStore {
 
     public boolean pushUserClone(String userJid, String problemJid) {
         Path origin = getOriginDirPath(problemJid);
-        Path root = getRootDirPath(problemFs, userJid, problemJid);
+        Path root = getRootDirPath(userJid, problemJid);
 
         if (problemGit.push(root)) {
             problemGit.resetHard(origin);
 
-            ProblemModel problemModel = problemDao.findByJid(problemJid);
-
-            problemDao.update(problemModel);
+            ProblemModel model = problemDao.findByJid(problemJid);
+            problemDao.update(model);
 
             return true;
         }
@@ -365,13 +356,13 @@ public class ProblemStore {
     }
 
     public boolean fetchUserClone(String userJid, String problemJid) {
-        Path root = getRootDirPath(problemFs, userJid, problemJid);
+        Path root = getRootDirPath(userJid, problemJid);
 
         return problemGit.fetch(root);
     }
 
-    public void discardUserClone(String userJid, String problemJid) throws IOException {
-        Path root = getRootDirPath(problemFs, userJid, problemJid);
+    public void discardUserClone(String userJid, String problemJid) {
+        Path root = getRootDirPath(userJid, problemJid);
 
         problemFs.removeFile(root);
     }
@@ -381,9 +372,8 @@ public class ProblemStore {
 
         problemGit.restore(root, hash);
 
-        ProblemModel problemModel = problemDao.findByJid(problemJid);
-
-        problemDao.update(problemModel);
+        ProblemModel model = problemDao.findByJid(problemJid);
+        problemDao.update(model);
     }
 
     private void initStatements(String problemJid, String initialLanguageCode) {
@@ -402,23 +392,23 @@ public class ProblemStore {
         problemFs.writeToFile(getStatementDefaultLanguageFilePath(null, problemJid), initialLanguageCode);
 
         Map<String, StatementLanguageStatus> initialLanguage = ImmutableMap.of(initialLanguageCode, StatementLanguageStatus.ENABLED);
-        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(null, problemJid), new Gson().toJson(initialLanguage));
+        problemFs.writeToFile(getStatementAvailableLanguagesFilePath(null, problemJid), writeObj(initialLanguage));
     }
 
     private Path getStatementsDirPath(String userJid, String problemJid) {
-        return getRootDirPath(problemFs, userJid, problemJid).resolve("statements");
+        return getRootDirPath(userJid, problemJid).resolve("statements");
     }
 
-    private Path getStatementDirPath(String userJid, String problemJid, String languageCode) {
-        return getStatementsDirPath(userJid, problemJid).resolve(languageCode);
+    private Path getStatementDirPath(String userJid, String problemJid, String language) {
+        return getStatementsDirPath(userJid, problemJid).resolve(language);
     }
 
-    private Path getStatementTitleFilePath(String userJid, String problemJid, String languageCode) {
-        return getStatementDirPath(userJid, problemJid, languageCode).resolve("title.txt");
+    private Path getStatementTitleFilePath(String userJid, String problemJid, String language) {
+        return getStatementDirPath(userJid, problemJid, language).resolve("title.txt");
     }
 
-    private Path getStatementTextFilePath(String userJid, String problemJid, String languageCode) {
-        return getStatementDirPath(userJid, problemJid, languageCode).resolve("text.html");
+    private Path getStatementTextFilePath(String userJid, String problemJid, String language) {
+        return getStatementDirPath(userJid, problemJid, language).resolve("text.html");
     }
 
     private Path getStatementDefaultLanguageFilePath(String userJid, String problemJid) {
@@ -433,8 +423,8 @@ public class ProblemStore {
         return getStatementsDirPath(userJid, problemJid).resolve("resources");
     }
 
-    private static ProblemType getProblemType(ProblemModel problemModel) {
-        String prefix = JidService.getInstance().parsePrefix(problemModel.jid);
+    private static ProblemType getProblemType(ProblemModel model) {
+        String prefix = JidService.getInstance().parsePrefix(model.jid);
 
         if (prefix.equals("PROG")) {
             return ProblemType.PROGRAMMING;
@@ -445,55 +435,29 @@ public class ProblemStore {
         }
     }
 
-    private static Problem createProblemFromModel(ProblemModel problemModel) {
+    private static Problem createProblemFromModel(ProblemModel model) {
         return new Problem.Builder()
-                .id(problemModel.id)
-                .jid(problemModel.jid)
-                .slug(problemModel.slug)
-                .additionalNote(problemModel.additionalNote)
-                .authorJid(problemModel.createdBy)
-                .lastUpdateTime(problemModel.updatedAt)
-                .type(getProblemType(problemModel))
+                .id(model.id)
+                .jid(model.jid)
+                .slug(model.slug)
+                .additionalNote(model.additionalNote)
+                .authorJid(model.createdBy)
+                .lastUpdateTime(model.updatedAt)
+                .type(getProblemType(model))
                 .build();
     }
 
-    private ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel problemPartnerModel) {
+    private ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel model) {
         try {
             return new ProblemPartner.Builder()
-                    .id(problemPartnerModel.id)
-                    .problemJid(problemPartnerModel.problemJid)
-                    .userJid(problemPartnerModel.userJid)
-                    .baseConfig(mapper.readValue(problemPartnerModel.baseConfig, ProblemPartnerConfig.class))
-                    .childConfig(mapper.readValue(problemPartnerModel.childConfig, ProblemPartnerChildConfig.class))
+                    .id(model.id)
+                    .problemJid(model.problemJid)
+                    .userJid(model.userJid)
+                    .baseConfig(mapper.readValue(model.baseConfig, ProblemPartnerConfig.class))
+                    .childConfig(mapper.readValue(model.childConfig, ProblemPartnerChildConfig.class))
                     .build();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static Path getOriginDirPath(String problemJid) {
-        return Paths.get(SandalphonProperties.getInstance().getBaseProblemsDirKey(), problemJid);
-    }
-
-    private static Path getClonesDirPath(String problemJid) {
-        return Paths.get(SandalphonProperties.getInstance().getBaseProblemClonesDirKey(), problemJid);
-    }
-
-    private static Path getCloneDirPath(String userJid, String problemJid) {
-        return getClonesDirPath(problemJid).resolve(userJid);
-    }
-
-    private static Path getRootDirPath(FileSystem fs, String userJid, String problemJid) {
-        Path origin = getOriginDirPath(problemJid);
-        if (userJid == null) {
-            return origin;
-        }
-
-        Path root = getCloneDirPath(userJid, problemJid);
-        if (!fs.directoryExists(root)) {
-            return origin;
-        } else {
-            return root;
         }
     }
 }

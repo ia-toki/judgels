@@ -15,7 +15,6 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapter;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapters;
@@ -51,15 +50,7 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
-        ProblemStatement statement;
-        try {
-            statement = problemStore.getStatement(actorJid, problem.getJid(), language);
-        } catch (IOException e) {
-            statement = new ProblemStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(language))
-                    .text(BundleProblemStatementUtils.getDefaultStatement(language))
-                    .build();
-        }
+        ProblemStatement statement = problemStore.getStatement(actorJid, problem.getJid(), language);
 
         boolean isAllowedToSubmitByPartner = problemRoleChecker.isAllowedToSubmit(req, problem);
         boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
@@ -72,24 +63,22 @@ public final class BundleProblemStatementController extends AbstractProblemContr
             reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
         }
 
-        List<BundleItem> bundleItemList;
-        try {
-            bundleItemList = bundleItemStore.getBundleItemsInProblemWithClone(problem.getJid(), actorJid);
-        } catch (IOException e) {
-            return notFound();
-        }
+        List<BundleItem> bundleItemList = bundleItemStore.getBundleItemsInProblemWithClone(problem.getJid(), actorJid);
 
         ImmutableList.Builder<Html> htmlBuilder = ImmutableList.builder();
         for (BundleItem bundleItem : bundleItemList) {
             BundleItemAdapter adapter = BundleItemAdapters.fromItemType(bundleItem.getType());
             try {
                 htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), language)));
-            } catch (IOException e) {
-                try {
+            } catch (RuntimeException e) {
+                if (e.getCause() instanceof IOException) {
                     language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
-                    htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), language)));
-                } catch (IOException e1) {
-                    return notFound();
+                    htmlBuilder.add(adapter.renderViewHtml(
+                            bundleItem,
+                            bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(),
+                                    actorJid,
+                                    bundleItem.getJid(),
+                                    language)));
                 }
             }
         }

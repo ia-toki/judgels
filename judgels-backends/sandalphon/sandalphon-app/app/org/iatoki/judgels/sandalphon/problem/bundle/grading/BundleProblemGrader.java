@@ -24,7 +24,7 @@ public final class BundleProblemGrader {
         this.problemStore = problemStore;
     }
 
-    public BundleGradingResult gradeBundleProblem(String problemJid, BundleAnswer answer) throws IOException {
+    public BundleGradingResult gradeBundleProblem(String problemJid, BundleAnswer answer) {
         List<BundleItem> bundleItems = bundleItemStore.getBundleItemsInProblemWithClone(problemJid, null);
         ImmutableMap.Builder<String, BundleDetailResult> detailResultBuilder = ImmutableMap.builder();
 
@@ -33,9 +33,14 @@ public final class BundleProblemGrader {
             String conf = "";
             try {
                 conf = bundleItemStore.getItemConfInProblemWithCloneByJid(problemJid, null, bundleItem.getJid(), answer.getLanguageCode());
-            } catch (IOException e) {
-                conf = bundleItemStore.getItemConfInProblemWithCloneByJid(problemJid, null, bundleItem.getJid(), problemStore
-                        .getDefaultLanguage(null, problemJid));
+            } catch (RuntimeException e) {
+                if (e.getCause() instanceof IOException) {
+                    conf = bundleItemStore.getItemConfInProblemWithCloneByJid(problemJid,
+                            null,
+                            bundleItem.getJid(),
+                            problemStore
+                                    .getDefaultLanguage(null, problemJid));
+                }
             }
 
             BundleItemConfAdapter confAdapter = BundleItemConfAdapters.fromItemType(bundleItem.getType());

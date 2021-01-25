@@ -54,14 +54,10 @@ public final class BundleItemController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
-        try {
-            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
-            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
+        Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
+        Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
 
-            return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
     }
 
     @Transactional(readOnly = true)
@@ -74,12 +70,7 @@ public final class BundleItemController extends AbstractProblemController {
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
             Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
 
-            Page<BundleItem> pageOfBundleItems;
-            try {
-                pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
             return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm.withGlobalError("Item undefined."));
         }
@@ -88,12 +79,7 @@ public final class BundleItemController extends AbstractProblemController {
         if (adapter == null) {
             Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
-            Page<BundleItem> pageOfBundleItems;
-            try {
-                pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
             return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         }
@@ -111,12 +97,7 @@ public final class BundleItemController extends AbstractProblemController {
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
             Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
-            Page<BundleItem> pageOfBundleItems;
-            try {
-                pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
             return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         }
@@ -127,12 +108,7 @@ public final class BundleItemController extends AbstractProblemController {
         if (bundleItemConfAdapter == null) {
             Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined");
 
-            Page<BundleItem> pageOfBundleItems;
-            try {
-                pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
             return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
         }
@@ -144,21 +120,17 @@ public final class BundleItemController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            if (bundleItemStore.bundleItemExistsInProblemWithCloneByMeta(problem.getJid(), actorJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm))) {
-                Page<BundleItem> items = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
+        if (bundleItemStore.bundleItemExistsInProblemWithCloneByMeta(problem.getJid(), actorJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm))) {
+            Page<BundleItem> items = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-                return showListCreateItems(req, problem, items, orderBy, orderDir, filterString, bundleItemConfForm.withGlobalError("Duplicate meta on item."));
-            }
-
-            bundleItemStore.createBundleItem(problem.getJid(), actorJid, BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), problemStore
-                    .getDefaultLanguage(actorJid, problem.getJid()));
-
-            return redirect(routes.BundleItemController.viewItems(problem.getId()))
-                    .addingToSession(req, newCurrentStatementLanguage(language));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return showListCreateItems(req, problem, items, orderBy, orderDir, filterString, bundleItemConfForm.withGlobalError("Duplicate meta on item."));
         }
+
+        bundleItemStore.createBundleItem(problem.getJid(), actorJid, BundleItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), problemStore
+                .getDefaultLanguage(actorJid, problem.getJid()));
+
+        return redirect(routes.BundleItemController.viewItems(problem.getId()))
+                .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
     @Transactional(readOnly = true)
@@ -169,20 +141,11 @@ public final class BundleItemController extends AbstractProblemController {
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToUpdateItemInLanguage(req, problem, language));
 
-        try {
-            if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
-                return notFound();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
+            return notFound();
         }
 
-        BundleItem bundleItem;
-        try {
-            bundleItem = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BundleItem bundleItem = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(bundleItem.getType());
         Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
@@ -194,12 +157,12 @@ public final class BundleItemController extends AbstractProblemController {
         Form bundleItemConfForm;
         try {
             bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, language), bundleItem.getMeta());
-        } catch (IOException e) {
-            try {
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof IOException) {
                 bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, problemStore
                         .getDefaultLanguage(actorJid, problem.getJid())), bundleItem.getMeta());
-            } catch (IOException e1) {
-                throw new RuntimeException(e1);
+            } else {
+                throw e;
             }
         }
 
@@ -215,20 +178,11 @@ public final class BundleItemController extends AbstractProblemController {
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToUpdateItemInLanguage(req, problem, language));
 
-        try {
-            if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
-                return notFound();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
+            return notFound();
         }
 
-        BundleItem bundleItem;
-        try {
-            bundleItem = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BundleItem bundleItem = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(bundleItem.getType());
         Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
@@ -243,11 +197,7 @@ public final class BundleItemController extends AbstractProblemController {
         }
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-        try {
-            bundleItemStore.updateBundleItem(problem.getJid(), actorJid, itemJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), language);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        bundleItemStore.updateBundleItem(problem.getJid(), actorJid, itemJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), language);
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));
@@ -261,15 +211,11 @@ public final class BundleItemController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
-                return notFound();
-            }
-
-            bundleItemStore.moveBundleItemUp(problem.getJid(), actorJid, itemJid);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
+            return notFound();
         }
+
+        bundleItemStore.moveBundleItemUp(problem.getJid(), actorJid, itemJid);
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()));
     }
@@ -282,15 +228,11 @@ public final class BundleItemController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
-                return notFound();
-            }
-
-            bundleItemStore.moveBundleItemDown(problem.getJid(), actorJid, itemJid);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
+            return notFound();
         }
+
+        bundleItemStore.moveBundleItemDown(problem.getJid(), actorJid, itemJid);
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()));
     }
@@ -303,14 +245,10 @@ public final class BundleItemController extends AbstractProblemController {
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        try {
-            if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
-                return notFound();
-            }
-            bundleItemStore.removeBundleItem(problem.getJid(), actorJid, itemJid);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (!bundleItemStore.bundleItemExistsInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid)) {
+            return notFound();
         }
+        bundleItemStore.removeBundleItem(problem.getJid(), actorJid, itemJid);
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()));
     }

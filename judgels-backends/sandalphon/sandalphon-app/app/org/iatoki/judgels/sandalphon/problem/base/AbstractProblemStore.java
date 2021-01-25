@@ -1,29 +1,34 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import judgels.fs.FileSystem;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 
-public final class ProblemServiceImplUtils {
+public abstract class AbstractProblemStore {
+    private final ObjectMapper mapper;
+    private final FileSystem fs;
 
-    private ProblemServiceImplUtils() {
-        // prevent instantiation
+    protected AbstractProblemStore(ObjectMapper mapper, FileSystem fs) {
+        this.mapper = mapper;
+        this.fs = fs;
     }
 
-    public static Path getOriginDirPath(String problemJid) {
+    protected Path getOriginDirPath(String problemJid) {
         return Paths.get(SandalphonProperties.getInstance().getBaseProblemsDirKey(), problemJid);
     }
 
-    public static Path getClonesDirPath(String problemJid) {
+    protected Path getClonesDirPath(String problemJid) {
         return Paths.get(SandalphonProperties.getInstance().getBaseProblemClonesDirKey(), problemJid);
     }
 
-    public static Path getCloneDirPath(String userJid, String problemJid) {
+    protected Path getCloneDirPath(String userJid, String problemJid) {
         return getClonesDirPath(problemJid).resolve(userJid);
     }
 
-    public static Path getRootDirPath(FileSystem fs, String userJid, String problemJid) {
+    protected Path getRootDirPath(String userJid, String problemJid) {
         Path origin = getOriginDirPath(problemJid);
         if (userJid == null) {
             return origin;
@@ -34,6 +39,14 @@ public final class ProblemServiceImplUtils {
             return origin;
         } else {
             return root;
+        }
+    }
+
+    protected String writeObj(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

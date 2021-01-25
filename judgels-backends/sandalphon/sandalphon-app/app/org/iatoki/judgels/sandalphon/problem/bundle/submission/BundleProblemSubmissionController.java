@@ -3,6 +3,10 @@ package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +26,7 @@ import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
+import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleDetailResult;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.bundleSubmissionView;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.listSubmissionsView;
 import play.data.DynamicForm;
@@ -33,6 +38,7 @@ import play.mvc.Result;
 public final class BundleProblemSubmissionController extends AbstractProblemController {
     private static final long PAGE_SIZE = 20;
 
+    private final ObjectMapper mapper;
     private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final FileSystem bundleSubmissionFs;
@@ -41,6 +47,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Inject
     public BundleProblemSubmissionController(
+            ObjectMapper mapper,
             ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
             @SubmissionFs FileSystem bundleSubmissionFs,
@@ -48,6 +55,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
             ProfileService profileService) {
 
         super(problemStore, problemRoleChecker);
+        this.mapper = mapper;
         this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleSubmissionFs = bundleSubmissionFs;
@@ -102,17 +110,12 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         BundleSubmission bundleSubmission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
-        BundleAnswer bundleAnswer;
-        try {
-            bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BundleAnswer bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
 
         Profile profile = profileService.getProfile(bundleSubmission.getAuthorJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, profile, null, problem.getSlug(), null));
+        template.setContent(bundleSubmissionView.render(bundleSubmission, parseGradingResult(bundleSubmission), bundleAnswer, profile, null, problem.getSlug(), null));
 
         template.markBreadcrumbLocation("View submission", org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
         template.setPageTitle("Problem - View submission");
@@ -126,12 +129,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         BundleSubmission bundleSubmission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
-        BundleAnswer bundleAnswer;
-        try {
-            bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BundleAnswer bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
         bundleSubmissionStore.regrade(bundleSubmission.getJid(), bundleAnswer);
 
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
@@ -155,12 +153,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         }
 
         for (BundleSubmission bundleSubmission : submissions) {
-            BundleAnswer bundleAnswer;
-            try {
-                bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            BundleAnswer bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
             bundleSubmissionStore.regrade(bundleSubmission.getJid(), bundleAnswer);
         }
 
@@ -171,5 +164,27 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
 
         return super.renderTemplate(template, problem);
+    }
+
+    protected Map<String, BundleDetailResult> parseGradingResult(BundleSubmission submission) {
+        Map<String, BundleDetailResult> gradingResult;
+        try {
+            gradingResult = mapper.readValue(submission.getLatestDetails(), new TypeReference<Map<String, BundleDetailResult>>() {});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Map<Long, String> numberToJidMap = Maps.newTreeMap();
+        for (Map.Entry<String, BundleDetailResult> entry : gradingResult.entrySet()) {
+            numberToJidMap.put(entry.getValue().getNumber(), entry.getKey());
+        }
+
+        ImmutableMap.Builder<String, BundleDetailResult> sortedGradingResult = ImmutableMap.builder();
+        for (Map.Entry<Long, String> entry : numberToJidMap.entrySet()) {
+            String currentJid = numberToJidMap.get(entry.getKey());
+            sortedGradingResult.put(currentJid, gradingResult.get(currentJid));
+        }
+
+        return sortedGradingResult.build();
     }
 }
