@@ -113,6 +113,4 @@ INSERT INTO `uriel_contest_style` (`contestJid`, `config`, `createdAt`, `created
 ('JIDCONT89YMatMq7GqaPQCyyUHU', '{\"usingLastAffectingPenalty\":false,\"languageRestriction\":{\"allowedLanguageNames\":[]}}', '2018-08-05 18:11:40.037', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 18:11:40.037', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
 ('JIDCONTLaAppdjyu94dGgzpnKqY', '{\"languageRestriction\":{\"allowedLanguageNames\":[]},\"wrongSubmissionPenalty\":20}', '2020-01-18 19:20:22.068', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:20:22.068', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+COMMIT;
