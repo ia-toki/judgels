@@ -54,10 +54,10 @@ public final class BundleItemController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
-        Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
-        Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
+        Page<BundleItem> bundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
+        Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class);
 
-        return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
+        return showListCreateItems(req, problem, bundleItems, orderBy, orderDir, filterString, form);
     }
 
     @Transactional(readOnly = true)
@@ -68,20 +68,20 @@ public final class BundleItemController extends AbstractProblemController {
         checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
-            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class);
+            Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class);
 
-            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
+            Page<BundleItem> bundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-            return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm.withGlobalError("Item undefined."));
+            return showListCreateItems(req, problem, bundleItems, orderBy, orderDir, filterString, form.withGlobalError("Item undefined."));
         }
 
         BundleItemConfAdapter adapter = BundleItemConfAdapters.fromItemType(BundleItemType.valueOf(itemType));
         if (adapter == null) {
-            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
+            Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
-            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
+            Page<BundleItem> bundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-            return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
+            return showListCreateItems(req, problem, bundleItems, orderBy, orderDir, filterString, form);
         }
 
         return showCreateItem(req, problem, itemType, adapter.getConfHtml(adapter.generateForm(formFactory), routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), "Create"), page, orderBy, orderDir, filterString);
@@ -95,22 +95,22 @@ public final class BundleItemController extends AbstractProblemController {
         checkAllowed(problemRoleChecker.isAllowedToManageItems(req, problem));
 
         if (!EnumUtils.isValidEnum(BundleItemType.class, itemType)) {
-            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
+            Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
-            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
+            Page<BundleItem> bundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-            return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
+            return showListCreateItems(req, problem, bundleItems, orderBy, orderDir, filterString, form);
         }
 
         String language = getStatementLanguage(req, problem);
 
         BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(BundleItemType.valueOf(itemType));
         if (bundleItemConfAdapter == null) {
-            Form<ItemCreateForm> itemCreateForm = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined");
+            Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined");
 
-            Page<BundleItem> pageOfBundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
+            Page<BundleItem> bundleItems = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-            return showListCreateItems(req, problem, pageOfBundleItems, orderBy, orderDir, filterString, itemCreateForm);
+            return showListCreateItems(req, problem, bundleItems, orderBy, orderDir, filterString, form);
         }
 
         Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, req);
@@ -253,9 +253,9 @@ public final class BundleItemController extends AbstractProblemController {
         return redirect(routes.BundleItemController.viewItems(problem.getId()));
     }
 
-    private Result showListCreateItems(Http.Request req, Problem problem, Page<BundleItem> pageOfBundleItems, String orderBy, String orderDir, String filterString, Form<ItemCreateForm> itemCreateForm) {
+    private Result showListCreateItems(Http.Request req, Problem problem, Page<BundleItem> bundleItems, String orderBy, String orderDir, String filterString, Form<ItemCreateForm> form) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(listCreateItemsView.render(pageOfBundleItems, problem.getId(), pageOfBundleItems.getPageIndex(), orderBy, orderDir, filterString, itemCreateForm));
+        template.setContent(listCreateItemsView.render(bundleItems, problem.getId(), bundleItems.getPageIndex(), orderBy, orderDir, filterString, form));
 
         template.setPageTitle("Problem - Bundle - Items");
 

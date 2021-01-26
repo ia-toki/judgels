@@ -91,13 +91,13 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionStore.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
+        Page<BundleSubmission> submissions = bundleSubmissionStore.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
 
-        Set<String> userJids = pageOfBundleSubmissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(Collectors.toSet());
+        Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(listSubmissionsView.render(pageOfBundleSubmissions, problemId, profilesMap, pageIndex, orderBy, orderDir));
+        template.setContent(listSubmissionsView.render(submissions, problemId, profilesMap, pageIndex, orderBy, orderDir));
         template.markBreadcrumbLocation("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
@@ -109,13 +109,13 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        BundleSubmission bundleSubmission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
-        BundleAnswer bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
+        BundleSubmission submission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
+        BundleAnswer answer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, submission.getJid());
 
-        Profile profile = profileService.getProfile(bundleSubmission.getAuthorJid());
+        Profile profile = profileService.getProfile(submission.getAuthorJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(bundleSubmissionView.render(bundleSubmission, parseGradingResult(bundleSubmission), bundleAnswer, profile, null, problem.getSlug(), null));
+        template.setContent(bundleSubmissionView.render(submission, parseGradingResult(submission), answer, profile, null, problem.getSlug(), null));
 
         template.markBreadcrumbLocation("View submission", org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
         template.setPageTitle("Problem - View submission");
@@ -128,9 +128,9 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        BundleSubmission bundleSubmission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
-        BundleAnswer bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
-        bundleSubmissionStore.regrade(bundleSubmission.getJid(), bundleAnswer);
+        BundleSubmission submission = checkFound(bundleSubmissionStore.findBundleSubmissionById(submissionId));
+        BundleAnswer answer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, submission.getJid());
+        bundleSubmissionStore.regrade(submission.getJid(), answer);
 
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
@@ -152,9 +152,9 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
             return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
         }
 
-        for (BundleSubmission bundleSubmission : submissions) {
-            BundleAnswer bundleAnswer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, bundleSubmission.getJid());
-            bundleSubmissionStore.regrade(bundleSubmission.getJid(), bundleAnswer);
+        for (BundleSubmission submission : submissions) {
+            BundleAnswer answer = bundleSubmissionStore.createBundleAnswerFromPastSubmission(bundleSubmissionFs, null, submission.getJid());
+            bundleSubmissionStore.regrade(submission.getJid(), answer);
         }
 
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));

@@ -132,14 +132,14 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        Page<Submission> pageOfProgrammingSubmissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of((int) pageIndex + 1));
+        Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of((int) pageIndex + 1));
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
-        Set<String> userJids = pageOfProgrammingSubmissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
+        Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, profilesMap, pageIndex, orderBy, orderDir));
+        template.setContent(listSubmissionsView.render(submissions, gradingLanguageToNameMap, problemId, profilesMap, pageIndex, orderBy, orderDir));
         template.markBreadcrumbLocation("Submissions", routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId));
         template.setPageTitle("Problem - Submissions");
 
@@ -152,15 +152,15 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        Submission programmingSubmission = submissionStore.getSubmissionById(submissionId).get();
+        Submission submission = submissionStore.getSubmissionById(submissionId).get();
 
         String engine = programmingProblemStore.getGradingEngine(actorJid, problem.getJid());
-        SubmissionSource submissionSource = submissionSourceBuilder.fromPastSubmission(programmingSubmission.getJid());
+        SubmissionSource submissionSource = submissionSourceBuilder.fromPastSubmission(submission.getJid());
 
-        Profile profile = profileService.getProfile(programmingSubmission.getUserJid());
+        Profile profile = profileService.getProfile(submission.getUserJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, profile, null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(submission, submissionSource, profile, null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(submission.getGradingLanguage()).getName(), null));
 
         template.markBreadcrumbLocation("View submission", routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
         template.setPageTitle("Problem - View submission");
@@ -173,8 +173,8 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        Submission programmingSubmission = submissionStore.getSubmissionById(submissionId).get();
-        submissionRegrader.regradeSubmission(programmingSubmission);
+        Submission submission = submissionStore.getSubmissionById(submissionId).get();
+        submissionRegrader.regradeSubmission(submission);
 
         return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
@@ -186,16 +186,16 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
         ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest().get();
 
-        List<Submission> programmingSubmissions;
+        List<Submission> submissions;
 
         if (data.selectAll) {
-            programmingSubmissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.empty()).getPage();
+            submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.empty()).getPage();
         } else if (data.selectJids != null) {
-            programmingSubmissions = submissionStore.getSubmissionByJids(data.selectJids);
+            submissions = submissionStore.getSubmissionByJids(data.selectJids);
         } else {
             return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
         }
-        submissionRegrader.regradeSubmissions(programmingSubmissions);
+        submissionRegrader.regradeSubmissions(submissions);
 
         return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }

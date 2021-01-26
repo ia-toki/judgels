@@ -60,13 +60,13 @@ public final class ProblemController extends AbstractBaseProblemController {
         boolean isAdmin = roleChecker.isAdmin(req);
         boolean isWriter = roleChecker.isWriter(req);
 
-        Page<Problem> pageOfProblems = problemStore.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
+        Page<Problem> problems = problemStore.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
 
-        Set<String> userJids = pageOfProblems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
+        Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(listProblemsView.render(pageOfProblems, profilesMap, sortBy, orderBy, filterString, isWriter));
+        template.setContent(listProblemsView.render(problems, profilesMap, sortBy, orderBy, filterString, isWriter));
         if (isWriter) {
             template.addMainButton("Create", routes.ProblemController.createProblem());
         }
@@ -78,31 +78,31 @@ public final class ProblemController extends AbstractBaseProblemController {
     @Transactional(readOnly = true)
     @AddCSRFToken
     public Result createProblem(Http.Request req) {
-        Form<ProblemCreateForm> problemCreateForm = formFactory.form(ProblemCreateForm.class);
+        Form<ProblemCreateForm> form = formFactory.form(ProblemCreateForm.class);
 
-        return showCreateProblem(req, problemCreateForm);
+        return showCreateProblem(req, form);
     }
 
     @Transactional
     @RequireCSRFCheck
     public Result postCreateProblem(Http.Request req) {
-        Form<ProblemCreateForm> problemCreateForm = formFactory.form(ProblemCreateForm.class).bindFromRequest(req);
+        Form<ProblemCreateForm> form = formFactory.form(ProblemCreateForm.class).bindFromRequest(req);
 
-        if (formHasErrors(problemCreateForm)) {
-            return showCreateProblem(req, problemCreateForm);
+        if (formHasErrors(form)) {
+            return showCreateProblem(req, form);
         }
 
-        if (problemStore.problemExistsBySlug(problemCreateForm.get().slug)) {
-            return showCreateProblem(req, problemCreateForm.withError("slug", "Slug already exists"));
+        if (problemStore.problemExistsBySlug(form.get().slug)) {
+            return showCreateProblem(req, form.withError("slug", "Slug already exists"));
         }
 
-        ProblemCreateForm problemCreateData = problemCreateForm.get();
-        Map<String, String> justCreatedProblem = newJustCreatedProblem(problemCreateData.slug, problemCreateData.additionalNote, problemCreateData.initLanguageCode);
+        ProblemCreateForm data = form.get();
+        Map<String, String> justCreatedProblem = newJustCreatedProblem(data.slug, data.additionalNote, data.initLanguageCode);
 
-        if (problemCreateData.type.equals(ProblemType.PROGRAMMING.name())) {
+        if (data.type.equals(ProblemType.PROGRAMMING.name())) {
             return redirect(org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.createProgrammingProblem())
                     .addingToSession(req, justCreatedProblem);
-        } else if (problemCreateData.type.equals(ProblemType.BUNDLE.name())) {
+        } else if (data.type.equals(ProblemType.BUNDLE.name())) {
             return redirect(org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.createBundleProblem())
                     .addingToSession(req, justCreatedProblem);
         }
@@ -149,13 +149,13 @@ public final class ProblemController extends AbstractBaseProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatement(req, problem));
 
-        ProblemEditForm problemEditData = new ProblemEditForm();
-        problemEditData.slug = problem.getSlug();
-        problemEditData.additionalNote = problem.getAdditionalNote();
+        ProblemEditForm data = new ProblemEditForm();
+        data.slug = problem.getSlug();
+        data.additionalNote = problem.getAdditionalNote();
 
-        Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).fill(problemEditData);
+        Form<ProblemEditForm> form = formFactory.form(ProblemEditForm.class).fill(data);
 
-        return showEditProblem(req, problemEditForm, problem);
+        return showEditProblem(req, form, problem);
     }
 
     @Transactional
@@ -164,18 +164,18 @@ public final class ProblemController extends AbstractBaseProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatement(req, problem));
 
-        Form<ProblemEditForm> problemEditForm = formFactory.form(ProblemEditForm.class).bindFromRequest(req);
+        Form<ProblemEditForm> form = formFactory.form(ProblemEditForm.class).bindFromRequest(req);
 
-        if (formHasErrors(problemEditForm)) {
-            return showEditProblem(req, problemEditForm, problem);
+        if (formHasErrors(form)) {
+            return showEditProblem(req, form, problem);
         }
 
-        if (!problem.getSlug().equals(problemEditForm.get().slug) && problemStore.problemExistsBySlug(problemEditForm.get().slug)) {
-            return showEditProblem(req, problemEditForm.withError("slug", "Slug already exists"), problem);
+        if (!problem.getSlug().equals(form.get().slug) && problemStore.problemExistsBySlug(form.get().slug)) {
+            return showEditProblem(req, form.withError("slug", "Slug already exists"), problem);
         }
 
-        ProblemEditForm problemEditData = problemEditForm.get();
-        problemStore.updateProblem(problem.getJid(), problemEditData.slug, problemEditData.additionalNote);
+        ProblemEditForm data = form.get();
+        problemStore.updateProblem(problem.getJid(), data.slug, data.additionalNote);
 
         return redirect(routes.ProblemController.viewProblem(problem.getId()));
     }
@@ -188,18 +188,18 @@ public final class ProblemController extends AbstractBaseProblemController {
                 .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
-    private Result showCreateProblem(Http.Request req, Form<ProblemCreateForm> problemCreateForm) {
+    private Result showCreateProblem(Http.Request req, Form<ProblemCreateForm> form) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(createProblemView.render(problemCreateForm));
+        template.setContent(createProblemView.render(form));
         template.setMainTitle("Create problem");
         template.markBreadcrumbLocation("Create problem", routes.ProblemController.createProblem());
         template.setPageTitle("Problem - Create");
         return renderTemplate(template);
     }
 
-    private Result showEditProblem(Http.Request req, Form<ProblemEditForm> problemEditForm, Problem problem) {
+    private Result showEditProblem(Http.Request req, Form<ProblemEditForm> form, Problem problem) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(editProblemView.render(problemEditForm, problem));
+        template.setContent(editProblemView.render(form, problem));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
         template.markBreadcrumbLocation("Update problem", routes.ProblemController.editProblem(problem.getId()));

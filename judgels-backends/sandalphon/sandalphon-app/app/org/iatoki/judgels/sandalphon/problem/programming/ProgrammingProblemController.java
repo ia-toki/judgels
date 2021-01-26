@@ -56,17 +56,17 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
             return badRequest();
         }
 
-        Form<ProgrammingProblemCreateForm> programmingProblemCreateForm = formFactory.form(ProgrammingProblemCreateForm.class).bindFromRequest(req);
+        Form<ProgrammingProblemCreateForm> form = formFactory.form(ProgrammingProblemCreateForm.class).bindFromRequest(req);
 
-        if (formHasErrors(programmingProblemCreateForm)) {
-            return showCreateProgrammingProblem(req, programmingProblemCreateForm);
+        if (formHasErrors(form)) {
+            return showCreateProgrammingProblem(req, form);
         }
 
         String slug = getJustCreatedProblemSlug(req);
         String additionalNote = getJustCreatedProblemAdditionalNote(req);
         String languageCode = getJustCreatedProblemInitLanguage(req);
 
-        ProgrammingProblemCreateForm programmingProblemCreateData = programmingProblemCreateForm.get();
+        ProgrammingProblemCreateForm data = form.get();
 
         Problem problem = problemStore.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode);
         ProblemStatement statement = new ProblemStatement.Builder()
@@ -74,7 +74,7 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
                 .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
                 .build();
         problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
-        programmingProblemStore.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
+        programmingProblemStore.initProgrammingProblem(problem.getJid(), data.gradingEngineName);
 
         problemStore.initRepository(actorJid, problem.getJid());
 
@@ -91,9 +91,9 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
         return redirect(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmissions(id));
     }
 
-    private Result showCreateProgrammingProblem(Http.Request req, Form<ProgrammingProblemCreateForm> programmingProblemCreateForm) {
+    private Result showCreateProgrammingProblem(Http.Request req, Form<ProgrammingProblemCreateForm> form) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(createProgrammingProblemView.render(programmingProblemCreateForm, getJustCreatedProblemSlug(req), getJustCreatedProblemAdditionalNote(req), getJustCreatedProblemInitLanguage(req)));
+        template.setContent(createProgrammingProblemView.render(form, getJustCreatedProblemSlug(req), getJustCreatedProblemAdditionalNote(req), getJustCreatedProblemInitLanguage(req)));
         template.setMainTitle("Create programming problem");
         template.markBreadcrumbLocation("Problems", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());
         template.setPageTitle("Programming Problem - Create");
