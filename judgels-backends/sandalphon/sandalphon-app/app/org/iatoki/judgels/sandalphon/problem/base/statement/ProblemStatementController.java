@@ -29,6 +29,7 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.libs.Files.TemporaryFile;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -128,12 +129,12 @@ public class ProblemStatementController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUploadStatementResources(req, problem));
 
-        Http.MultipartFormData<File> body = req.body().asMultipartFormData();
-        Http.MultipartFormData.FilePart<File> file;
+        Http.MultipartFormData<TemporaryFile> body = req.body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<TemporaryFile> file;
 
         file = body.getFile("file");
         if (file != null) {
-            File mediaFile = file.getFile();
+            File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
             problemStore.uploadStatementMediaFile(actorJid, problem.getJid(), mediaFile, file.getFilename());
 
@@ -142,7 +143,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
         file = body.getFile("fileZipped");
         if (file != null) {
-            File mediaFile = file.getFile();
+            File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
             problemStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), mediaFile);
 

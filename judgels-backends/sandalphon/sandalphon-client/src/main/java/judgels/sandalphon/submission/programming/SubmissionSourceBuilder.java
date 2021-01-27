@@ -38,7 +38,11 @@ public class SubmissionSourceBuilder {
 
             byte[] content;
             try {
-                content = ByteStreams.toByteArray(((BodyPartEntity) value.getEntity()).getInputStream());
+                if (value.getEntity() instanceof byte[]) {
+                    content = (byte[]) value.getEntity();
+                } else {
+                    content = ByteStreams.toByteArray(((BodyPartEntity) value.getEntity()).getInputStream());
+                }
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }

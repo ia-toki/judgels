@@ -29,6 +29,7 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.libs.Files.TemporaryFile;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -204,14 +205,14 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
-        Http.MultipartFormData<File> body = request().body().asMultipartFormData();
-        Http.MultipartFormData.FilePart<File> file;
+        Http.MultipartFormData<TemporaryFile> body = req.body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<TemporaryFile> file;
 
         file = body.getFile("file");
         if (file != null) {
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-            File testDataFile = file.getFile();
+            File testDataFile = file.getRef().path().toFile();
             programmingProblemStore.uploadGradingTestDataFile(actorJid, problem.getJid(), testDataFile, file.getFilename());
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
@@ -221,7 +222,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         if (file != null) {
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-            File testDataFile = file.getFile();
+            File testDataFile = file.getRef().path().toFile();
             programmingProblemStore.uploadGradingTestDataFileZipped(actorJid, problem.getJid(), testDataFile);
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
@@ -250,14 +251,14 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
 
-        Http.MultipartFormData<File> body = req.body().asMultipartFormData();
-        Http.MultipartFormData.FilePart<File> file;
+        Http.MultipartFormData<TemporaryFile> body = req.body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<TemporaryFile> file;
 
         file = body.getFile("file");
         if (file != null) {
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-            File helperFile = file.getFile();
+            File helperFile = file.getRef().path().toFile();
             programmingProblemStore.uploadGradingHelperFile(actorJid, problem.getJid(), helperFile, file.getFilename());
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
@@ -267,7 +268,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
         if (file != null) {
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-            File helperFile = file.getFile();
+            File helperFile = file.getRef().path().toFile();
             programmingProblemStore.uploadGradingHelperFileZipped(actorJid, problem.getJid(), helperFile);
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));

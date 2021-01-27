@@ -84,7 +84,7 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         }
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(bundleStatementView.render(org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, htmlBuilder.build(), reasonNotAllowedToSubmit));
+        template.setContent(bundleStatementView.render(org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.postSubmit(problemId).absoluteURL(req, req.secure()), statement, htmlBuilder.build(), reasonNotAllowedToSubmit));
 
         Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToView(req, problem);
         appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));

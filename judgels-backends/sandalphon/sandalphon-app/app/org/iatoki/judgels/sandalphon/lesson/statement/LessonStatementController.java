@@ -32,6 +32,7 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.libs.Files.TemporaryFile;
 import play.mvc.Call;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -144,12 +145,12 @@ public class LessonStatementController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson));
 
-        Http.MultipartFormData<File> body = req.body().asMultipartFormData();
-        Http.MultipartFormData.FilePart<File> file;
+        Http.MultipartFormData<TemporaryFile> body = req.body().asMultipartFormData();
+        Http.MultipartFormData.FilePart<TemporaryFile> file;
 
         file = body.getFile("file");
         if (file != null) {
-            File mediaFile = file.getFile();
+            File mediaFile = file.getRef().path().toFile();
             lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
             try {
@@ -167,7 +168,7 @@ public class LessonStatementController extends AbstractLessonController {
 
         file = body.getFile("fileZipped");
         if (file != null) {
-            File mediaFile = file.getFile();
+            File mediaFile = file.getRef().path().toFile();
             lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
             try {

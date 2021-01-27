@@ -16,7 +16,7 @@ public class SubmissionUtils {
     public static void checkAllSourceFilesPresent(SubmissionSource source, ProblemSubmissionConfig config) {
         Set<String> missingSourceFiles =
                 Sets.difference(config.getSourceKeys().keySet(), source.getSubmissionFiles().keySet());
-        checkArgument(missingSourceFiles.isEmpty(), "Missing source files: {}", missingSourceFiles);
+        checkArgument(missingSourceFiles.isEmpty(), "Missing source files: %s", missingSourceFiles);
     }
 
     public static void checkGradingLanguageAllowed(

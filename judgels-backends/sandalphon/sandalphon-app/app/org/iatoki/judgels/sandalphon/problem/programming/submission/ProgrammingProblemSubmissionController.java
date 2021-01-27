@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.problem.programming.submission;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
@@ -40,6 +39,7 @@ import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.html.listSubmissionsView;
 import play.db.jpa.Transactional;
+import play.libs.Files.TemporaryFile;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -87,7 +87,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         String gradingEngine = programmingProblemStore.getGradingEngine(null, problem.getJid());
         GradingConfig gradingConfig = programmingProblemStore.getGradingConfig(null, problem.getJid());
 
-        Http.MultipartFormData<File> body = req.body().asMultipartFormData();
+        Http.MultipartFormData<TemporaryFile> body = req.body().asMultipartFormData();
 
         String gradingLanguage = body.asFormUrlEncoded().get("language")[0];
 
@@ -95,10 +95,10 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
 
         FormDataMultiPart parts = new FormDataMultiPart();
         try {
-            for (Http.MultipartFormData.FilePart<File> part : body.getFiles()) {
+            for (Http.MultipartFormData.FilePart<TemporaryFile> part : body.getFiles()) {
                 parts.getBodyParts().add(new FormDataBodyPart(
                         FormDataContentDisposition.name(part.getKey()).fileName(part.getFilename()).build(),
-                        Files.readAllBytes(part.getRef().toPath()),
+                        Files.readAllBytes(part.getRef().path()),
                         MediaType.MULTIPART_FORM_DATA_TYPE));
             }
         } catch (IOException e) {
