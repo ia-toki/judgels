@@ -19,4 +19,8 @@ play {
         javaVersion = JavaVersion.VERSION_1_8
     }
     injectedRoutesGenerator = true
+    if (System.getProperty('debug', 'false') == 'true') {
+        def runPlayTask = tasks.findByName('runPlay')
+        runPlayTask.forkOptions.jvmArgs = ['-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=4002']
+    }
 }
