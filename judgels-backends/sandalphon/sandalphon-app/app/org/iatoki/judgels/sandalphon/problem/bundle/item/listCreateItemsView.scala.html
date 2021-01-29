@@ -37,7 +37,7 @@
         @for((item, index) <- pageOfBundleItems.getPage.zipWithIndex) {
             <tr>
                 <td>@index</td>
-                <td>@item.getNumber</td>
+                <td>@item.getNumber.orElse(null)</td>
                 <td>@item.getJid</td>
                 <td>@item.getType</td>
                 <td>@item.getMeta</td>
