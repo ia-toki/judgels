@@ -11,11 +11,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
-import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapter;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapters;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemStore;
@@ -63,22 +63,24 @@ public final class BundleProblemStatementController extends AbstractProblemContr
             reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
         }
 
-        List<BundleItem> bundleItemList = bundleItemStore.getBundleItemsInProblemWithClone(problem.getJid(), actorJid);
+        List<BundleItem> items = bundleItemStore.getBundleItemsInProblemWithClone(problem.getJid(), actorJid);
 
         ImmutableList.Builder<Html> htmlBuilder = ImmutableList.builder();
-        for (BundleItem bundleItem : bundleItemList) {
-            BundleItemAdapter adapter = BundleItemAdapters.fromItemType(bundleItem.getType());
+        for (BundleItem item : items) {
+            BundleItemAdapter adapter = BundleItemAdapters.fromItemType(item.getType());
             try {
-                htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, bundleItem.getJid(), language)));
+                htmlBuilder.add(adapter.renderViewHtml(item, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, item.getJid(), language)));
             } catch (RuntimeException e) {
                 if (e.getCause() instanceof IOException) {
                     language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
                     htmlBuilder.add(adapter.renderViewHtml(
-                            bundleItem,
+                            item,
                             bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(),
                                     actorJid,
-                                    bundleItem.getJid(),
+                                    item.getJid(),
                                     language)));
+                } else {
+                    throw e;
                 }
             }
         }

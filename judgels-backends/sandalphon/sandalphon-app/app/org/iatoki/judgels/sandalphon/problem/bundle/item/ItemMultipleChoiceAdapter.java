@@ -1,14 +1,15 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
 import com.google.gson.Gson;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.itemMultipleChoiceView;
 import play.twirl.api.Html;
 
 public final class ItemMultipleChoiceAdapter implements BundleItemAdapter, BundleItemHasScore {
 
     @Override
-    public Html renderViewHtml(BundleItem bundleItem, String conf) {
-        return itemMultipleChoiceView.render(bundleItem, new Gson().fromJson(conf, ItemMultipleChoiceConf.class));
+    public Html renderViewHtml(BundleItem item, String conf) {
+        return itemMultipleChoiceView.render(item, new Gson().fromJson(conf, ItemMultipleChoiceConf.class));
     }
 
     @Override

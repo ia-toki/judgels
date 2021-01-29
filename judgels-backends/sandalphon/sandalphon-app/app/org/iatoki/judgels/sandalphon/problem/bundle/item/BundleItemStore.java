@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -10,6 +11,9 @@ import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
+import judgels.sandalphon.api.problem.bundle.BundleItemsConfig;
+import judgels.sandalphon.api.problem.bundle.ItemType;
 import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
 import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemStore;
@@ -31,8 +35,8 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
 
     public boolean bundleItemExistsInProblemWithCloneByMeta(String problemJid, String userJid, String meta) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        for (BundleItem bundleItem : config.itemList) {
-            if (bundleItem.getMeta().equals(meta)) {
+        for (BundleItem item : config.getItemList()) {
+            if (item.getMeta().equals(meta)) {
                 return true;
             }
         }
@@ -41,7 +45,7 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
 
     public BundleItem findInProblemWithCloneByItemJid(String problemJid, String userJid, String itemJid) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        for (BundleItem bundleItem : config.itemList) {
+        for (BundleItem bundleItem : config.getItemList()) {
             if (bundleItem.getJid().equals(itemJid)) {
                 return bundleItem;
             }
@@ -55,25 +59,29 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
 
     public Page<BundleItem> getPageOfBundleItemsInProblemWithClone(String problemJid, String userJid, long pageIndex, long pageSize, String orderBy, String orderDir, String filterString) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        List<BundleItem> bundleItems = config.itemList;
+        List<BundleItem> items = config.getItemList();
 
-        List<BundleItem> filteredBundleItems = bundleItems.stream()
+        List<BundleItem> filteredItems = items.stream()
                 .filter(b -> (StringUtils.containsIgnoreCase(b.getMeta(), filterString)) || StringUtils.containsIgnoreCase(b.getJid(), filterString) || StringUtils.containsIgnoreCase(b.getType().name(), filterString))
                 .sorted(new BundleItemComparator(orderBy, orderDir))
                 .skip(pageIndex * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
 
-        long number = 1;
-        for (BundleItem bundleItem : filteredBundleItems) {
-            if (BundleItemAdapters.fromItemType(bundleItem.getType()) instanceof BundleItemHasScore) {
-                bundleItem.setNumber(number++);
+        ImmutableList.Builder<BundleItem> numberedItems = ImmutableList.builder();
+
+        int number = 1;
+        for (BundleItem item : filteredItems) {
+            BundleItem.Builder numberedItem = new BundleItem.Builder().from(item);
+            if (BundleItemAdapters.fromItemType(item.getType()) instanceof BundleItemHasScore) {
+                numberedItem.number(number++);
             }
+            numberedItems.add(numberedItem.build());
         }
 
         return new Page.Builder<BundleItem>()
-                .page(filteredBundleItems)
-                .totalCount(bundleItems.size())
+                .page(numberedItems.build())
+                .totalCount(items.size())
                 .pageIndex(pageIndex)
                 .pageSize(pageSize)
                 .build();
@@ -81,27 +89,36 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
 
     public List<BundleItem> getBundleItemsInProblemWithClone(String problemJid, String userJid) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        List<BundleItem> bundleItems = config.itemList.stream().collect(Collectors.toList());
+        List<BundleItem> items = config.getItemList();
 
-        long number = 1;
-        for (int i = 0; i < bundleItems.size(); i++) {
-            if (BundleItemAdapters.fromItemType(bundleItems.get(i).getType()) instanceof BundleItemHasScore) {
-                bundleItems.get(i).setNumber(number++);
+        ImmutableList.Builder<BundleItem> numberedItems = ImmutableList.builder();
+
+        int number = 1;
+        for (BundleItem item : items) {
+            BundleItem.Builder numberedItem = new BundleItem.Builder().from(item);
+            if (BundleItemAdapters.fromItemType(item.getType()) instanceof BundleItemHasScore) {
+                numberedItem.number(number++);
             }
+            numberedItems.add(numberedItem.build());
         }
 
-        return bundleItems;
+        return numberedItems.build();
     }
 
-    public void createBundleItem(String problemJid, String userJid, BundleItemType itemType, String meta, String conf, String language) {
+    public void createBundleItem(String problemJid, String userJid, ItemType itemType, String meta, String conf, String language) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        List<BundleItem> bundleItems = Lists.newArrayList(config.itemList);
+
+        ImmutableList.Builder<BundleItem> items = ImmutableList.builder();
+        items.addAll(config.getItemList());
 
         String itemJid = JidGenerator.generateJid("ITEM");
-        BundleItem bundleItem = new BundleItem(itemJid, itemType, meta);
-        bundleItems.add(bundleItem);
+        items.add(new BundleItem.Builder()
+                .jid(itemJid)
+                .type(itemType)
+                .meta(meta)
+                .build());
 
-        config.itemList = bundleItems;
+        config = new BundleItemsConfig.Builder().itemList(items.build()).build();
         problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(config));
 
         problemFs.createDirectory(getItemDirPath(problemJid, userJid, itemJid));
@@ -110,20 +127,21 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
 
     public void updateBundleItem(String problemJid, String userJid, String itemJid, String meta, String conf, String language) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        List<BundleItem> bundleItems = Lists.newArrayList(config.itemList);
 
-        int i = 0;
-        if (bundleItems.size() > 0) {
-            do {
-                if (bundleItems.get(i).getJid().equals(itemJid)) {
-                    BundleItem current = bundleItems.get(i);
-                    bundleItems.set(i, new BundleItem(current.getJid(), current.getType(), meta));
-                }
-                ++i;
-            } while ((i < bundleItems.size()) && !bundleItems.get(i - 1).getJid().equals(itemJid));
+        ImmutableList.Builder<BundleItem> items = ImmutableList.builder();
+        for (BundleItem item : config.getItemList()) {
+            if (item.getJid().equals(itemJid)) {
+                items.add(new BundleItem.Builder()
+                        .jid(itemJid)
+                        .type(item.getType())
+                        .meta(meta)
+                        .build());
+            } else {
+                items.add(item);
+            }
         }
 
-        config.itemList = bundleItems;
+        config = new BundleItemsConfig.Builder().itemList(items.build()).build();
         problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(config));
 
         problemFs.writeToFile(getItemConfigFilePath(problemJid, userJid, itemJid, language), conf);
@@ -131,66 +149,53 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
 
     public void moveBundleItemUp(String problemJid, String userJid, String itemJid) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        List<BundleItem> bundleItems = Lists.newArrayList(config.itemList);
 
-        int i = 1;
-        if (bundleItems.size() > 0) {
-            do {
-                if (bundleItems.get(i).getJid().equals(itemJid)) {
-                    BundleItem current = bundleItems.get(i);
-                    BundleItem previous = bundleItems.get(i - 1);
-                    bundleItems.set(i, new BundleItem(previous.getJid(), previous.getType(), previous.getMeta()));
-                    bundleItems.set(i - 1, new BundleItem(current.getJid(), current.getType(), current.getMeta()));
-                }
-                ++i;
-            } while ((i < bundleItems.size()) && !bundleItems.get(i - 1).getJid().equals(itemJid));
+        List<BundleItem> items = Lists.newArrayList(config.getItemList());
+        for (int i = 1; i < items.size(); i++) {
+            if (items.get(i).getJid().equals(itemJid)) {
+                BundleItem current = items.get(i);
+                BundleItem previous = items.get(i - 1);
+
+                items.set(i, previous);
+                items.set(i - 1, current);
+                break;
+            }
         }
 
-        config.itemList = bundleItems;
+        config = new BundleItemsConfig.Builder().itemList(items).build();
         problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(config));
     }
 
     public void moveBundleItemDown(String problemJid, String userJid, String itemJid) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        List<BundleItem> bundleItems = Lists.newArrayList(config.itemList);
 
-        int i = 0;
-        if (bundleItems.size() > 0) {
-            do {
-                if (bundleItems.get(i).getJid().equals(itemJid)) {
-                    BundleItem current = bundleItems.get(i);
-                    BundleItem next = bundleItems.get(i + 1);
-                    bundleItems.set(i, new BundleItem(next.getJid(), next.getType(), next.getMeta()));
-                    bundleItems.set(i + 1, new BundleItem(current.getJid(), current.getType(), current.getMeta()));
-                }
-                ++i;
-            } while ((i < bundleItems.size() - 1) && !bundleItems.get(i - 1).getJid().equals(itemJid));
+        List<BundleItem> items = Lists.newArrayList(config.getItemList());
+        for (int i = 0; i + 1 < items.size(); i++) {
+            if (items.get(i).getJid().equals(itemJid)) {
+                BundleItem current = items.get(i);
+                BundleItem next = items.get(i + 1);
+
+                items.set(i, next);
+                items.set(i + 1, current);
+                break;
+            }
         }
 
-        config.itemList = bundleItems;
+        config = new BundleItemsConfig.Builder().itemList(items).build();
         problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(config));
     }
 
     public void removeBundleItem(String problemJid, String userJid, String itemJid) {
         BundleItemsConfig config = getItemsConfig(problemJid, userJid);
-        List<BundleItem> bundleItems = Lists.newArrayList(config.itemList);
 
-        int toBeRemovedIndex = -1;
-        int i = 0;
-        if (bundleItems.size() > 0) {
-            do {
-                if (bundleItems.get(i).getJid().equals(itemJid)) {
-                    toBeRemovedIndex = i;
-                }
-                ++i;
-            } while ((i < bundleItems.size()) && !bundleItems.get(i - 1).getJid().equals(itemJid));
-
-            if (toBeRemovedIndex != -1) {
-                bundleItems.remove(toBeRemovedIndex);
+        ImmutableList.Builder<BundleItem> items = ImmutableList.builder();
+        for (BundleItem item : config.getItemList()) {
+            if (!item.getJid().equals(itemJid)) {
+                items.add(item);
             }
         }
 
-        config.itemList = bundleItems;
+        config = new BundleItemsConfig.Builder().itemList(items.build()).build();
         problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(config));
     }
 

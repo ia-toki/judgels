@@ -1,12 +1,13 @@
 @import judgels.persistence.api.Page
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemType
+@import judgels.sandalphon.api.problem.bundle.BundleItem
+@import judgels.sandalphon.api.problem.bundle.ItemType
 @import org.iatoki.judgels.play.template.search.html.searchView
 @import org.iatoki.judgels.play.template.pagination.html.tableView
 @import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
 @import org.iatoki.judgels.play.template.pagination.html.paginationView
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.routes
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemCreateForm
 
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.{ItemCreateForm, BundleItem, BundleItemType}
 @(pageOfBundleItems: Page[BundleItem], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String, filterString: String, itemCreateForm: Form[ItemCreateForm])
 
 @listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.BundleItemController.listCreateItems(problemId, newPageIndex, newOrderBy, newOrderDir, filterString)}
@@ -15,7 +16,7 @@
 
 @b3.form(routes.BundleItemController.createItem(problemId, null, pageOfBundleItems.getPageIndex, orderBy, orderDir, filterString)) {
 
-    @b3.select(itemCreateForm("itemType"), BundleItemType.values.map(e => (e.name() -> e.name())).toSeq, '_label -> "Type", 'class -> "form-control selectpicker")
+    @b3.select(itemCreateForm("itemType"), ItemType.values.map(e => (e.name() -> e.name())).toSeq, '_label -> "Type", 'class -> "form-control selectpicker")
 
     @b3.submit('class -> "btn btn-primary") { Create }
 }

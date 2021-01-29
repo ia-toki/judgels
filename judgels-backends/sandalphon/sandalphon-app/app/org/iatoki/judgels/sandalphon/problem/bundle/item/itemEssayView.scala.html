@@ -1,13 +1,13 @@
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem
+@import judgels.sandalphon.api.problem.bundle.BundleItem
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemEssayConf
 
-@(bundleItem: BundleItem, itemEssayConf: ItemEssayConf)
+@(item: BundleItem, itemEssayConf: ItemEssayConf)
 
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="clearfix">
             <div class="table-cell">
-                @(bundleItem.getNumber).&nbsp;
+                @(item.getNumber).&nbsp;
             </div>
             <div class="table-cell">
                 <div class="content-text">
@@ -21,7 +21,7 @@
             cols="80"
             wrap="off"
             style="font-family: Consolas, Monaco, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;"
-            name="@bundleItem.getJid"
+            name="@item.getJid"
             onkeydown="
                 // Code to disable tab navigation in the textarea and enter 2 spaces instead
                 if (event.keyCode === 9) {

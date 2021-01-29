@@ -1,13 +1,13 @@
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem
+@import judgels.sandalphon.api.problem.bundle.BundleItem
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemMultipleChoiceConf
 
-@(bundleItem: BundleItem, itemMultipleChoiceConf: ItemMultipleChoiceConf)
+@(item: BundleItem, itemMultipleChoiceConf: ItemMultipleChoiceConf)
 
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="clearfix">
             <div class="table-cell">
-                @(bundleItem.getNumber).&nbsp;
+                @(item.getNumber).&nbsp;
             </div>
             <div class="table-cell">
                 <div class="content-text">
@@ -20,7 +20,7 @@
             <div class="radio" style="margin-top: -5px">
                 <label>
                     <div class="pull-left">
-                        <input type="radio" name="@bundleItem.getJid" value="@choice.getAlias">
+                        <input type="radio" name="@item.getJid" value="@choice.getAlias">
                     </div>
                     <div class="pull-left" style="margin-right: 5px;">
                         <span class="badge">@choice.getAlias</span>

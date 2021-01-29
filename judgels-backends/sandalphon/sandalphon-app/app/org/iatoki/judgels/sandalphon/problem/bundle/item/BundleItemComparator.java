@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
 import java.util.Comparator;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
 
 public final class BundleItemComparator implements Comparator<BundleItem> {
 

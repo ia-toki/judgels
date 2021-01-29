@@ -1,13 +1,13 @@
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem
+@import judgels.sandalphon.api.problem.bundle.BundleItem
 @import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemShortAnswerConf
 
-@(bundleItem: BundleItem, itemShortAnswerConf: ItemShortAnswerConf)
+@(item: BundleItem, itemShortAnswerConf: ItemShortAnswerConf)
 
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="clearfix">
             <div class="table-cell">
-                @(bundleItem.getNumber).&nbsp;
+                @(item.getNumber).&nbsp;
             </div>
             <div class="table-cell">
                 <div class="content-text">
@@ -16,6 +16,6 @@
             </div>
         </div>
         <hr />
-        <input type="text" name="@bundleItem.getJid">
+        <input type="text" name="@item.getJid">
     </div>
 </div>

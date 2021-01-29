@@ -1,12 +1,14 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
+import judgels.sandalphon.api.problem.bundle.ItemType;
+
 public final class BundleItemConfAdapters {
 
     private BundleItemConfAdapters() {
         // prevent instantiation
     }
 
-    public static BundleItemConfAdapter fromItemType(BundleItemType itemType) {
+    public static BundleItemConfAdapter fromItemType(ItemType itemType) {
         BundleItemConfAdapter itemConfAdapter = null;
 
         switch (itemType) {

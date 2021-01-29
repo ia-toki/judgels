@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,8 +18,8 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.Item;
-import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
@@ -28,7 +27,6 @@ import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
-import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemStore;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import play.db.jpa.Transactional;
@@ -141,17 +139,13 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         for (BundleItem item : items) {
             String itemConfigString = bundleItemStore.getItemConfInProblemWithCloneByJid(
                     problemJid, null, item.getJid(), language);
-            ItemType type = ItemType.valueOf(item.getType().name());
-            Optional<Integer> number = item.getNumber() == null
-                    ? Optional.empty()
-                    : Optional.of(item.getNumber().intValue());
 
             Item itemWithConfig = new Item.Builder()
                     .jid(item.getJid())
-                    .type(type)
-                    .number(number)
+                    .type(item.getType())
+                    .number(item.getNumber())
                     .meta(item.getMeta())
-                    .config(itemProcessorRegistry.get(type).parseItemConfigFromString(MAPPER, itemConfigString))
+                    .config(itemProcessorRegistry.get(item.getType()).parseItemConfigFromString(MAPPER, itemConfigString))
                     .build();
             itemsWithConfig.add(itemWithConfig);
         }
