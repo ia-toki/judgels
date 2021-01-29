@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.controllers.api.internal;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
@@ -25,10 +26,12 @@ public final class InternalProgrammingProblemGradingAPIController extends Abstra
 
     @Inject
     public InternalProgrammingProblemGradingAPIController(
+            ObjectMapper mapper,
             ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemStore programmingProblemStore) {
 
+        super(mapper);
         this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.programmingProblemStore = programmingProblemStore;

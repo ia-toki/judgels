@@ -2,6 +2,7 @@ package org.iatoki.judgels.sandalphon.controllers.api.internal;
 
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
@@ -19,7 +20,8 @@ public final class InternalProblemStatementAPIController extends AbstractJudgels
     private final ProblemStore problemStore;
 
     @Inject
-    public InternalProblemStatementAPIController(ProblemStore problemStore) {
+    public InternalProblemStatementAPIController(ObjectMapper mapper, ProblemStore problemStore) {
+        super(mapper);
         this.problemStore = problemStore;
     }
 
@@ -30,7 +32,7 @@ public final class InternalProblemStatementAPIController extends AbstractJudgels
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         String mediaUrl = problemStore.getStatementMediaFileURL(actorJid, problem.getJid(), mediaFilename);
 
-        return okAsImage(mediaUrl);
+        return okAsImage(req, mediaUrl);
     }
 
     @Transactional(readOnly = true)

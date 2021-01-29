@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,64 +11,57 @@ import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.sandalphon.api.lesson.LessonStatement;
-import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.LessonStore;
 import play.db.jpa.Transactional;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.Results;
+import play.mvc.Security;
 
 @Singleton
+@Security.Authenticated(ClientSecured.class)
 public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIController {
-    private final ClientChecker clientChecker;
     private final ClientUserService userService;
     private final LessonStore lessonStore;
 
     @Inject
-    public ClientLessonAPIControllerV2(ClientChecker clientChecker, ClientUserService userService, LessonStore lessonStore) {
-        this.clientChecker = clientChecker;
+    public ClientLessonAPIControllerV2(
+            ObjectMapper mapper,
+            ClientUserService userService,
+            LessonStore lessonStore) {
+
+        super(mapper);
         this.userService = userService;
         this.lessonStore = lessonStore;
     }
 
     @Transactional(readOnly = true)
-    public Result getLesson(String lessonJid) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
+    public Result getLesson(Http.Request req, String lessonJid) {
         if (!lessonStore.lessonExistsByJid(lessonJid)) {
-            return Results.notFound();
+            return notFound();
         }
 
-        return okAsJson(getLessonInfo(lessonJid));
+        return okAsJson(req, getLessonInfo(lessonJid));
     }
-
 
     @Transactional(readOnly = true)
     public Result getLessonStatement(Http.Request req, String lessonJid) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
         if (!lessonStore.lessonExistsByJid(lessonJid)) {
-            return Results.notFound();
+            return notFound();
         }
 
         String language = sanitizeLanguageCode(lessonJid, req.getQueryString("language"));
-
         LessonStatement statement = lessonStore.getStatement(null, lessonJid, language);
 
-        judgels.sandalphon.api.lesson.LessonStatement result = new judgels.sandalphon.api.lesson.LessonStatement.Builder()
+        return okAsJson(req, new judgels.sandalphon.api.lesson.LessonStatement.Builder()
                 .title(statement.getTitle())
                 .text(statement.getText())
-                .build();
-
-        return okAsJson(result);
+                .build());
     }
 
     @Transactional(readOnly = true)
     public Result findLessonsByJids(Http.Request req) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
         JsonNode lessonJids = req.body().asJson();
 
         Map<String, LessonInfo> result = new HashMap<>();
@@ -78,13 +72,11 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
                 result.put(lessonJid, getLessonInfo(lessonJid));
             }
         }
-        return okAsJson(result);
+        return okAsJson(req, result);
     }
 
     @Transactional(readOnly = true)
     public Result translateAllowedSlugToJids(Http.Request req) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
         String userJid = req.getQueryString("userJid");
 
         Map<String, String> result = new HashMap<>();
@@ -101,19 +93,19 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
             }
         }
 
-        return okAsJson(result);
+        return okAsJson(req, result);
     }
 
     private LessonInfo getLessonInfo(String lessonJid) {
         Lesson lesson = lessonStore.findLessonByJid(lessonJid);
 
-        LessonInfo.Builder res = new LessonInfo.Builder();
-        res.slug(lesson.getSlug());
-        res.defaultLanguage(simplifyLanguageCode(lessonStore.getDefaultLanguage(null, lessonJid)));
-        res.titlesByLanguage(lessonStore.getTitlesByLanguage(null, lessonJid).entrySet()
-                .stream()
-                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
-        return res.build();
+        return new LessonInfo.Builder()
+                .slug(lesson.getSlug())
+                .defaultLanguage(simplifyLanguageCode(lessonStore.getDefaultLanguage(null, lessonJid)))
+                .titlesByLanguage(lessonStore.getTitlesByLanguage(null, lessonJid).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
+                .build();
     }
 
     private boolean isPartnerOrAbove(String userJid, Lesson lesson) {

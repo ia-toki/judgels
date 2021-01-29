@@ -1,7 +1,7 @@
 package org.iatoki.judgels.play.controllers.apis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -13,37 +13,38 @@ import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
-import judgels.service.api.client.BasicAuthHeader;
-import judgels.service.client.ClientChecker;
 import org.apache.commons.io.FilenameUtils;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.Results;
 
 public abstract class AbstractJudgelsAPIController extends Controller {
     @Inject
     protected FormFactory formFactory;
 
-    protected static void authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
-        Optional<String> authHeaderString = request().getHeaders().get("Authorization");
-        BasicAuthHeader authHeader = authHeaderString.isPresent() ? BasicAuthHeader.valueOf(authHeaderString.get()) : null;
-        clientChecker.check(authHeader);
+    private final ObjectMapper mapper;
+
+    protected AbstractJudgelsAPIController(ObjectMapper mapper) {
+        this.mapper = mapper;
     }
 
-    protected Result okAsJson(Object responseBody) {
+    protected Result okAsJson(Http.Request req, Object responseBody) {
         String finalResponseBody;
         if (responseBody instanceof JsonObject) {
             finalResponseBody = responseBody.toString();
         } else {
-            finalResponseBody = new Gson().toJson(responseBody);
+            try {
+                finalResponseBody = mapper.writeValueAsString(responseBody);
+            } catch (IOException e) {
+                return internalServerError(e.getMessage());
+            }
         }
 
-        DynamicForm dForm = formFactory.form().bindFromRequest();
+        DynamicForm dForm = formFactory.form().bindFromRequest(req);
         String callback = dForm.get("callback");
 
         if (callback != null) {
@@ -55,26 +56,22 @@ public abstract class AbstractJudgelsAPIController extends Controller {
         }
     }
 
-    protected static Result okAsImage(String imageUrl) {
+    protected static Result okAsImage(Http.Request req, String imageUrl) {
         try {
             new URL(imageUrl);
             return temporaryRedirect(imageUrl);
         } catch (MalformedURLException e) {
             File imageFile = new File(imageUrl);
             if (!imageFile.exists()) {
-                return Results.notFound();
+                return notFound();
             }
 
-            response().setHeader("Cache-Control", "no-transform,public,max-age=300,s-maxage=900");
-
             SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-            response().setHeader("Last-Modified", sdf.format(new Date(imageFile.lastModified())));
-
             boolean modified = true;
 
-            if (request().getHeaders().get("If-Modified-Since").isPresent()) {
+            if (req.getHeaders().get("If-Modified-Since").isPresent()) {
                 try {
-                    Date lastUpdate = sdf.parse(request().getHeaders().get("If-Modified-Since").get());
+                    Date lastUpdate = sdf.parse(req.getHeaders().get("If-Modified-Since").get());
                     if (imageFile.lastModified() <= lastUpdate.getTime()) {
                         modified = false;
                     }
@@ -92,15 +89,19 @@ public abstract class AbstractJudgelsAPIController extends Controller {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(Files.toByteArray(imageFile));
 
+                String contentType;
                 if (in == null) {
-                    return ok(baos.toByteArray()).as(URLConnection.guessContentTypeFromName(imageFile.getName()));
+                    contentType = URLConnection.guessContentTypeFromName(imageFile.getName());
+                } else {
+                    contentType = "image/" + FilenameUtils.getExtension(imageFile.getAbsolutePath());
                 }
 
-                String type = FilenameUtils.getExtension(imageFile.getAbsolutePath());
-
-                return ok(baos.toByteArray()).as("image/" + type);
+                return ok(baos.toByteArray())
+                        .as(contentType)
+                        .withHeader("Cache-Control", "no-transform,public,max-age=300,s-maxage=900")
+                        .withHeader("Last-Modified", sdf.format(new Date(imageFile.lastModified())));
             } catch (IOException e2) {
-                return Results.internalServerError(e2.getMessage());
+                return internalServerError(e2.getMessage());
             }
         }
     }
@@ -112,12 +113,12 @@ public abstract class AbstractJudgelsAPIController extends Controller {
         } catch (MalformedURLException e) {
             File resource = new File(resourceUrl);
             if (!resource.exists()) {
-                return Results.notFound();
+                return notFound();
             }
 
-            response().setHeader("Content-disposition", "attachment; filename=" + resource.getName());
-
-            return ok(resource).as("application/x-download");
+            return ok(resource)
+                    .as("application/x-download")
+                    .withHeader("Content-disposition", "attachment; filename=" + resource.getName());
         }
     }
 }

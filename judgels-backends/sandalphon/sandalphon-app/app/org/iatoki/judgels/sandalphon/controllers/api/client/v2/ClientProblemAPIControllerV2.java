@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,18 +11,15 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
-import judgels.gabriel.api.LanguageRestriction;
 import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
-import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
@@ -33,12 +29,12 @@ import play.db.jpa.Transactional;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
+import play.mvc.Security;
 
 @Singleton
+@Security.Authenticated(ClientSecured.class)
 public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIController {
-    private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
-
-    private final ClientChecker clientChecker;
+    private final ObjectMapper mapper;
     private final ClientUserService userService;
     private final ProblemStore problemStore;
     private final ProgrammingProblemStore programmingProblemStore;
@@ -47,13 +43,15 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
     @Inject
     public ClientProblemAPIControllerV2(
-            ClientChecker clientChecker,
+            ObjectMapper mapper,
             ClientUserService userService,
             ProblemStore problemStore,
             ProgrammingProblemStore programmingProblemStore,
             BundleItemStore bundleItemStore,
             ItemProcessorRegistry itemProcessorRegistry) {
-        this.clientChecker = clientChecker;
+
+        super(mapper);
+        this.mapper = mapper;
         this.userService = userService;
         this.problemStore = problemStore;
         this.programmingProblemStore = programmingProblemStore;
@@ -62,77 +60,59 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
-    public Result getProblem(String problemJid) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
+    public Result getProblem(Http.Request req, String problemJid) {
         if (!problemStore.problemExistsByJid(problemJid)) {
             return Results.notFound();
         }
 
-        return okAsJson(getProblemInfo(problemJid));
+        return okAsJson(req, getProblemInfo(problemJid));
     }
 
     @Transactional(readOnly = true)
-    public Result getProblemSubmissionConfig(String problemJid) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
+    public Result getProblemSubmissionConfig(Http.Request req, String problemJid) {
         if (!problemStore.problemExistsByJid(problemJid)) {
             return Results.notFound();
         }
 
-        return okAsJson(getSubmissionConfig(problemJid));
+        return okAsJson(req, getSubmissionConfig(problemJid));
     }
 
     @Transactional(readOnly = true)
     public Result getProgrammingProblemWorksheet(Http.Request req, String problemJid) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
         if (!problemStore.problemExistsByJid(problemJid)) {
             return Results.notFound();
         }
 
         Problem problem = problemStore.findProblemByJid(problemJid);
         if (ProblemType.valueOf(problem.getType().name()) != ProblemType.PROGRAMMING) {
-            return Results.notFound();
+            return notFound();
         }
 
-        judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder result =
-                new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder();
-
-        ProblemSubmissionConfig submissionConfig = getSubmissionConfig(problemJid);
-        result.submissionConfig(submissionConfig);
-
         GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
-
         String language = sanitizeLanguageCode(problemJid, req.getQueryString("language"));
 
-        ProblemStatement statement = problemStore.getStatement(null, problemJid, language);
-        result.statement(statement);
-
-        ProblemLimits limits = new ProblemLimits.Builder()
-                .timeLimit(config.getTimeLimit())
-                .memoryLimit(config.getMemoryLimit())
-                .build();
-        result.limits(limits);
-
-        return okAsJson(result.build());
+        return okAsJson(req, new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
+                .statement(problemStore.getStatement(null, problemJid, language))
+                .limits(new ProblemLimits.Builder()
+                        .timeLimit(config.getTimeLimit())
+                        .memoryLimit(config.getMemoryLimit())
+                        .build())
+                .submissionConfig(getSubmissionConfig(problemJid))
+                .build());
     }
 
     @Transactional(readOnly = true)
     public Result getBundleProblemWorksheet(Http.Request req, String problemJid) throws IOException {
-        authenticateAsJudgelsAppClient(clientChecker);
         if (!problemStore.problemExistsByJid(problemJid)) {
-            return Results.notFound();
+            return notFound();
         }
 
         Problem problem = problemStore.findProblemByJid(problemJid);
         if (ProblemType.valueOf(problem.getType().name()) != ProblemType.BUNDLE) {
-            return Results.notFound();
+            return notFound();
         }
 
         String language = sanitizeLanguageCode(problemJid, req.getQueryString("language"));
-
-        ProblemStatement statement = problemStore.getStatement(null, problemJid, language);
 
         List<BundleItem> items = bundleItemStore.getBundleItemsInProblemWithClone(problemJid, null);
         List<Item> itemsWithConfig = new ArrayList<>();
@@ -145,23 +125,19 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
                     .type(item.getType())
                     .number(item.getNumber())
                     .meta(item.getMeta())
-                    .config(itemProcessorRegistry.get(item.getType()).parseItemConfigFromString(MAPPER, itemConfigString))
+                    .config(itemProcessorRegistry.get(item.getType()).parseItemConfigFromString(mapper, itemConfigString))
                     .build();
             itemsWithConfig.add(itemWithConfig);
         }
 
-        return okAsJson(
-                new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                        .statement(statement)
+        return okAsJson(req, new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
+                        .statement(problemStore.getStatement(null, problemJid, language))
                         .items(itemsWithConfig)
-                        .build()
-        );
+                        .build());
     }
 
     @Transactional(readOnly = true)
     public Result findProblemsByJids(Http.Request req) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
         JsonNode problemJids = req.body().asJson();
 
         Map<String, ProblemInfo> result = new HashMap<>();
@@ -172,13 +148,11 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
                 result.put(problemJid, getProblemInfo(problemJid));
             }
         }
-        return okAsJson(result);
+        return okAsJson(req, result);
     }
 
     @Transactional(readOnly = true)
     public Result translateAllowedSlugToJids(Http.Request req) {
-        authenticateAsJudgelsAppClient(clientChecker);
-
         String userJid = req.getQueryString("userJid");
 
         Map<String, String> result = new HashMap<>();
@@ -195,20 +169,20 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             }
         }
 
-        return okAsJson(result);
+        return okAsJson(req, result);
     }
 
     private ProblemInfo getProblemInfo(String problemJid) {
         Problem problem = problemStore.findProblemByJid(problemJid);
 
-        ProblemInfo.Builder res = new ProblemInfo.Builder();
-        res.slug(problem.getSlug());
-        res.type(ProblemType.valueOf(problem.getType().name()));
-        res.defaultLanguage(simplifyLanguageCode(problemStore.getDefaultLanguage(null, problemJid)));
-        res.titlesByLanguage(problemStore.getTitlesByLanguage(null, problemJid).entrySet()
-                .stream()
-                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
-        return res.build();
+        return new ProblemInfo.Builder()
+                .slug(problem.getSlug())
+                .type(ProblemType.valueOf(problem.getType().name()))
+                .defaultLanguage(simplifyLanguageCode(problemStore.getDefaultLanguage(null, problemJid)))
+                .titlesByLanguage(problemStore.getTitlesByLanguage(null, problemJid).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
+                .build();
     }
 
     private boolean isPartnerOrAbove(String userJid, Problem problem) {
@@ -218,18 +192,11 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     private ProblemSubmissionConfig getSubmissionConfig(String problemJid) {
-        ProblemSubmissionConfig.Builder submissionConfig = new ProblemSubmissionConfig.Builder();
-
-        String gradingEngine = programmingProblemStore.getGradingEngine(null, problemJid);
-        submissionConfig.gradingEngine(gradingEngine);
-
-        LanguageRestriction languageRestriction = programmingProblemStore.getLanguageRestriction(null, problemJid);
-        submissionConfig.gradingLanguageRestriction(languageRestriction);
-
-        GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
-        submissionConfig.sourceKeys(config.getSourceFileFields());
-
-        return submissionConfig.build();
+        return new ProblemSubmissionConfig.Builder()
+                .gradingEngine(programmingProblemStore.getGradingEngine(null, problemJid))
+                .gradingLanguageRestriction(programmingProblemStore.getLanguageRestriction(null, problemJid))
+                .sourceKeys(programmingProblemStore.getGradingConfig(null, problemJid).getSourceFileFields())
+                .build();
     }
 
     private String sanitizeLanguageCode(String problemJid, String language) {

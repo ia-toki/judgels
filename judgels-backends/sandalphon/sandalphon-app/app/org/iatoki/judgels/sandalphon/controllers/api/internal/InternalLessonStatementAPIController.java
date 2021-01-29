@@ -2,6 +2,7 @@ package org.iatoki.judgels.sandalphon.controllers.api.internal;
 
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.lesson.Lesson;
@@ -19,7 +20,8 @@ public final class InternalLessonStatementAPIController extends AbstractJudgelsA
     private final LessonStore lessonStore;
 
     @Inject
-    public InternalLessonStatementAPIController(LessonStore lessonStore) {
+    public InternalLessonStatementAPIController(ObjectMapper mapper, LessonStore lessonStore) {
+        super(mapper);
         this.lessonStore = lessonStore;
     }
 
@@ -30,7 +32,7 @@ public final class InternalLessonStatementAPIController extends AbstractJudgelsA
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         String mediaUrl = lessonStore.getStatementMediaFileURL(actorJid, lesson.getJid(), mediaFilename);
 
-        return okAsImage(mediaUrl);
+        return okAsImage(req, mediaUrl);
     }
 
     @Transactional(readOnly = true)
