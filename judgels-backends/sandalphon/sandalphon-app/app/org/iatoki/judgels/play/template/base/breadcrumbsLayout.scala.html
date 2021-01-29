@@ -1,25 +1,6 @@
-@import play.mvc.Http.Context
-@import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.play.template.InternalLink
 
 @(locations: List[InternalLink])(content: Html)
 
-@if(Context.current().args.getOrDefault("breadcrumbs.isBefore", java.lang.Boolean.valueOf(true)) == true) {
-    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-        <div class="hidden">
-        }
-    @breadcrumbsView(locations)
-    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-    </div>
-    }
-    @content
-} else {
-    @content
-    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-        <div class="hidden">
-        }
-    @breadcrumbsView(locations)
-    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-    </div>
-    }
-}
+@breadcrumbsView(locations)
+@content

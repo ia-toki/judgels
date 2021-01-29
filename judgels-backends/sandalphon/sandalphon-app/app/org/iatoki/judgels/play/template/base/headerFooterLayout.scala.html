@@ -4,14 +4,6 @@
 
 @(generalConfig: GeneralConfig)(content: Html)
 
-@if(!JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-    @headerView(generalConfig)
-}
-
 <main class="container">
 @content
 </main>
-
-@if(!JudgelsPlayUtils.isFullscreen(Context.current().request())) {
-    @footerView(generalConfig)
-}
