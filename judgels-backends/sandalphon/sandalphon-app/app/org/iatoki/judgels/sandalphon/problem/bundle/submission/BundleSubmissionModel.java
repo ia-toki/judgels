@@ -1,8 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 @Entity(name = "sandalphon_bundle_submission")
 @Table(indexes = {
@@ -10,6 +13,10 @@ import javax.persistence.Table;
         @Index(columnList = "problemJid,createdBy"),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")})
-public final class BundleSubmissionModel extends AbstractBundleSubmissionModel {
+@JidPrefix("SUBM")
+public class BundleSubmissionModel extends JudgelsModel {
+    @Column(nullable = false)
+    public String problemJid;
 
+    public String containerJid;
 }
