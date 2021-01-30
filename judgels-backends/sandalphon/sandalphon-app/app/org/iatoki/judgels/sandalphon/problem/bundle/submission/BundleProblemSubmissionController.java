@@ -3,11 +3,9 @@ package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,14 +17,15 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.submission.bundle.BundleAnswer;
+import judgels.sandalphon.api.submission.bundle.BundleSubmission;
+import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleDetailResult;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.bundleSubmissionView;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.listSubmissionsView;
 import play.data.DynamicForm;
@@ -166,25 +165,20 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         return super.renderTemplate(template, problem);
     }
 
-    protected Map<String, BundleDetailResult> parseGradingResult(BundleSubmission submission) {
-        Map<String, BundleDetailResult> gradingResult;
-        try {
-            gradingResult = mapper.readValue(submission.getLatestDetails(), new TypeReference<Map<String, BundleDetailResult>>() {});
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    protected Map<String, ItemGradingResult> parseGradingResult(BundleSubmission submission) {
+        Map<String, ItemGradingResult> details = submission.getLatestGrading().getDetails();
 
-        Map<Long, String> numberToJidMap = Maps.newTreeMap();
-        for (Map.Entry<String, BundleDetailResult> entry : gradingResult.entrySet()) {
+        Map<Integer, String> numberToJidMap = Maps.newTreeMap();
+        for (Map.Entry<String, ItemGradingResult> entry : details.entrySet()) {
             numberToJidMap.put(entry.getValue().getNumber(), entry.getKey());
         }
 
-        ImmutableMap.Builder<String, BundleDetailResult> sortedGradingResult = ImmutableMap.builder();
-        for (Map.Entry<Long, String> entry : numberToJidMap.entrySet()) {
+        ImmutableMap.Builder<String, ItemGradingResult> sortedDetails = ImmutableMap.builder();
+        for (Map.Entry<Integer, String> entry : numberToJidMap.entrySet()) {
             String currentJid = numberToJidMap.get(entry.getKey());
-            sortedGradingResult.put(currentJid, gradingResult.get(currentJid));
+            sortedDetails.put(currentJid, details.get(currentJid));
         }
 
-        return sortedGradingResult.build();
+        return sortedDetails.build();
     }
 }

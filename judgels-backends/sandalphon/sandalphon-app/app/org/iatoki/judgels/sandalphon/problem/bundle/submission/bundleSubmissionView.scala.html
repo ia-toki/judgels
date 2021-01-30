@@ -1,10 +1,11 @@
 @import java.text.DecimalFormat
 @import judgels.jophiel.api.profile.Profile
-@import org.iatoki.judgels.sandalphon.problem.bundle.grading.{BundleAnswer, BundleDetailResult}
-@import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission
+@import judgels.sandalphon.api.submission.bundle.BundleAnswer
+@import judgels.sandalphon.api.submission.bundle.BundleSubmission
+@import judgels.sandalphon.api.submission.bundle.ItemGradingResult
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(bundleSubmission: BundleSubmission, bundleGradingResult: Map[String, BundleDetailResult], bundleAnswer: BundleAnswer, profile: Profile, problemAlias: String, problemName: String, contestName: String)
+@(bundleSubmission: BundleSubmission, bundleGradingResult: Map[String, ItemGradingResult], bundleAnswer: BundleAnswer, profile: Profile, problemAlias: String, problemName: String, contestName: String)
 
 <h3>Submission #@bundleSubmission.getId</h3>
 
@@ -31,16 +32,16 @@
                     </tr>
                 }
                 <tr>
-                    <td>Score</td><td>@(new DecimalFormat("#.##").format(bundleSubmission.getLatestScore))</td>
+                    <td>Score</td><td>@(new DecimalFormat("#.##").format(bundleSubmission.getLatestGrading.getScore))</td>
                 </tr>
                 <tr>
-                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(bundleSubmission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(bundleSubmission.getTime.getTime)</time></td>
+                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(bundleSubmission.getTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(bundleSubmission.getTime.toEpochMilli)</time></td>
                 </tr>
                 <tr>
                     <td>JID</td><td>@bundleSubmission.getJid</td>
                 </tr>
                 <tr>
-                    <td>Grading JID</td><td>@bundleSubmission.getLatestGradingJid</td>
+                    <td>Grading JID</td><td>@bundleSubmission.getLatestGrading.getJid</td>
                 </tr>
             </tbody>
         </table>
