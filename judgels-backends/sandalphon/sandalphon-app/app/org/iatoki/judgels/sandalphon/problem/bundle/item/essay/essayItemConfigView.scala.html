@@ -1,12 +1,12 @@
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemStatementConfForm
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.essay.EssayItemConfigForm
 @import play.api.mvc.Call
 @import org.iatoki.judgels.play.template.html.formErrorView
 
-@(itemStatementConfForm: Form[ItemStatementConfForm], target: Call, submitLabel: String)
+@(confForm: Form[EssayItemConfigForm], target: Call, submitLabel: String)
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
 
-@formErrorView(itemStatementConfForm)
+@formErrorView(confForm)
 
 <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
 
@@ -14,8 +14,9 @@
 
     @helper.CSRF.formField
 
-    @b3.text(itemStatementConfForm("meta"), '_label -> "Meta")
-    @b3.textarea(itemStatementConfForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
+    @b3.text(confForm("meta"), '_label -> "Meta")
+    @b3.textarea(confForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
+    @b3.text(confForm("score"), '_label -> "Score")
 
     @b3.submit('class -> "btn btn-primary") { @submitLabel }
 }

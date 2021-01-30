@@ -2,7 +2,6 @@ package org.iatoki.judgels.play.controllers.apis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
-import com.google.gson.JsonObject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,14 +33,10 @@ public abstract class AbstractJudgelsAPIController extends Controller {
 
     protected Result okAsJson(Http.Request req, Object responseBody) {
         String finalResponseBody;
-        if (responseBody instanceof JsonObject) {
-            finalResponseBody = responseBody.toString();
-        } else {
-            try {
-                finalResponseBody = mapper.writeValueAsString(responseBody);
-            } catch (IOException e) {
-                return internalServerError(e.getMessage());
-            }
+        try {
+            finalResponseBody = mapper.writeValueAsString(responseBody);
+        } catch (IOException e) {
+            return internalServerError(e.getMessage());
         }
 
         DynamicForm dForm = formFactory.form().bindFromRequest(req);

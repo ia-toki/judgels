@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.problem.bundle.item;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Set;
 import javax.inject.Inject;
@@ -29,17 +30,20 @@ import play.twirl.api.Html;
 public final class BundleItemController extends AbstractProblemController {
     private static final long PAGE_SIZE = 1000;
 
+    private final ObjectMapper mapper;
     private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final BundleItemStore bundleItemStore;
 
     @Inject
     public BundleItemController(
+            ObjectMapper mapper,
             ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
             BundleItemStore bundleItemStore) {
 
         super(problemStore, problemRoleChecker);
+        this.mapper = mapper;
         this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleItemStore = bundleItemStore;
@@ -77,7 +81,7 @@ public final class BundleItemController extends AbstractProblemController {
             return showListCreateItems(req, problem, items, orderBy, orderDir, filterString, form.withGlobalError("Item undefined."));
         }
 
-        BundleItemConfAdapter adapter = BundleItemConfAdapters.fromItemType(ItemType.valueOf(itemType));
+        ItemConfigAdapter adapter = BundleItemConfAdapters.fromItemType(ItemType.valueOf(itemType), mapper);
         if (adapter == null) {
             Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
@@ -106,8 +110,8 @@ public final class BundleItemController extends AbstractProblemController {
 
         String language = getStatementLanguage(req, problem);
 
-        BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(ItemType.valueOf(itemType));
-        if (bundleItemConfAdapter == null) {
+        ItemConfigAdapter itemConfigAdapter = BundleItemConfAdapters.fromItemType(ItemType.valueOf(itemType), mapper);
+        if (itemConfigAdapter == null) {
             Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined");
 
             Page<BundleItem> items = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
@@ -115,20 +119,21 @@ public final class BundleItemController extends AbstractProblemController {
             return showListCreateItems(req, problem, items, orderBy, orderDir, filterString, form);
         }
 
-        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, req);
+        Form bundleItemConfForm = itemConfigAdapter.bindFormFromRequest(formFactory, req);
         if (formHasErrors(bundleItemConfForm)) {
-            return showCreateItem(req, problem, itemType, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), "Create"), page, orderBy, orderDir, filterString);
+            return showCreateItem(req, problem, itemType, itemConfigAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postCreateItem(problem.getId(), itemType, page, orderBy, orderDir, filterString), "Create"), page, orderBy, orderDir, filterString);
         }
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
-        if (bundleItemStore.bundleItemExistsInProblemWithCloneByMeta(problem.getJid(), actorJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm))) {
+        if (bundleItemStore.bundleItemExistsInProblemWithCloneByMeta(problem.getJid(), actorJid, itemConfigAdapter.getMetaFromForm(bundleItemConfForm))) {
             Page<BundleItem> items = bundleItemStore.getPageOfBundleItemsInProblemWithClone(problem.getJid(), actorJid, page, PAGE_SIZE, orderBy, orderDir, filterString);
 
             return showListCreateItems(req, problem, items, orderBy, orderDir, filterString, bundleItemConfForm.withGlobalError("Duplicate meta on item."));
         }
 
-        bundleItemStore.createBundleItem(problem.getJid(), actorJid, ItemType.valueOf(itemType), bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), problemStore
+        bundleItemStore.createBundleItem(problem.getJid(), actorJid, ItemType.valueOf(itemType), itemConfigAdapter.getMetaFromForm(bundleItemConfForm), itemConfigAdapter
+                .processRequestForm(bundleItemConfForm), problemStore
                 .getDefaultLanguage(actorJid, problem.getJid()));
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()))
@@ -149,26 +154,26 @@ public final class BundleItemController extends AbstractProblemController {
 
         BundleItem item = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
-        BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(item.getType());
+        ItemConfigAdapter itemConfigAdapter = BundleItemConfAdapters.fromItemType(item.getType(), mapper);
         Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
 
-        if (bundleItemConfAdapter == null) {
+        if (itemConfigAdapter == null) {
             return notFound();
         }
 
         Form bundleItemConfForm;
         try {
-            bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, language), item.getMeta());
+            bundleItemConfForm = itemConfigAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, language), item.getMeta());
         } catch (RuntimeException e) {
             if (e.getCause() instanceof IOException) {
-                bundleItemConfForm = bundleItemConfAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, problemStore
+                bundleItemConfForm = itemConfigAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, problemStore
                         .getDefaultLanguage(actorJid, problem.getJid())), item.getMeta());
             } else {
                 throw e;
             }
         }
 
-        return showEditItem(req, problem, language, item, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages)
+        return showEditItem(req, problem, language, item, itemConfigAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages)
                 .addingToSession(req, newCurrentStatementLanguage(language));
     }
 
@@ -186,20 +191,21 @@ public final class BundleItemController extends AbstractProblemController {
 
         BundleItem item = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
-        BundleItemConfAdapter bundleItemConfAdapter = BundleItemConfAdapters.fromItemType(item.getType());
+        ItemConfigAdapter itemConfigAdapter = BundleItemConfAdapters.fromItemType(item.getType(), mapper);
         Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
 
-        if (bundleItemConfAdapter == null) {
+        if (itemConfigAdapter == null) {
             return notFound();
         }
 
-        Form bundleItemConfForm = bundleItemConfAdapter.bindFormFromRequest(formFactory, req);
+        Form bundleItemConfForm = itemConfigAdapter.bindFormFromRequest(formFactory, req);
         if (formHasErrors(bundleItemConfForm)) {
-            return showEditItem(req, problem, language, item, bundleItemConfAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
+            return showEditItem(req, problem, language, item, itemConfigAdapter.getConfHtml(bundleItemConfForm, routes.BundleItemController.postEditItem(problem.getId(), itemJid), "Update"), allowedLanguages);
         }
 
         problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-        bundleItemStore.updateBundleItem(problem.getJid(), actorJid, itemJid, bundleItemConfAdapter.getMetaFromForm(bundleItemConfForm), bundleItemConfAdapter.processRequestForm(bundleItemConfForm), language);
+        bundleItemStore.updateBundleItem(problem.getJid(), actorJid, itemJid, itemConfigAdapter.getMetaFromForm(bundleItemConfForm), itemConfigAdapter
+                .processRequestForm(bundleItemConfForm), language);
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));

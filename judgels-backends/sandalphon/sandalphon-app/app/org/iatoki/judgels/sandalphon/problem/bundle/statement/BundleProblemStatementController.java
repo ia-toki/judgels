@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.problem.bundle.statement;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.List;
@@ -27,17 +28,20 @@ import play.twirl.api.Html;
 
 @Singleton
 public final class BundleProblemStatementController extends AbstractProblemController {
+    private final ObjectMapper mapper;
     private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final BundleItemStore bundleItemStore;
 
     @Inject
     public BundleProblemStatementController(
+            ObjectMapper mapper,
             ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
             BundleItemStore bundleItemStore) {
 
         super(problemStore, problemRoleChecker);
+        this.mapper = mapper;
         this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleItemStore = bundleItemStore;
@@ -67,15 +71,22 @@ public final class BundleProblemStatementController extends AbstractProblemContr
 
         ImmutableList.Builder<Html> htmlBuilder = ImmutableList.builder();
         for (BundleItem item : items) {
-            BundleItemAdapter adapter = BundleItemAdapters.fromItemType(item.getType());
+            BundleItemAdapter adapter = BundleItemAdapters.fromItemType(item.getType(), mapper);
             try {
-                htmlBuilder.add(adapter.renderViewHtml(item, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, item.getJid(), language)));
+                htmlBuilder.add(adapter.renderViewHtml(
+                        item,
+                        bundleItemStore.getItemConfInProblemWithCloneByJid(
+                                problem.getJid(),
+                                actorJid,
+                                item.getJid(),
+                                language)));
             } catch (RuntimeException e) {
                 if (e.getCause() instanceof IOException) {
                     language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
                     htmlBuilder.add(adapter.renderViewHtml(
                             item,
-                            bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(),
+                            bundleItemStore.getItemConfInProblemWithCloneByJid(
+                                    problem.getJid(),
                                     actorJid,
                                     item.getJid(),
                                     language)));

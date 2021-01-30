@@ -1,12 +1,12 @@
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemMultipleChoiceConfForm
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.multiplechoice.MultipleChoiceItemConfigForm
 @import play.api.mvc.Call
 @import org.iatoki.judgels.play.template.html.formErrorView
 
-@(itemMultipleChoiceConfForm: Form[ItemMultipleChoiceConfForm], target: Call, submitLabel: String)
+@(confForm: Form[MultipleChoiceItemConfigForm], target: Call, submitLabel: String)
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
 
-@formErrorView(itemMultipleChoiceConfForm)
+@formErrorView(confForm)
 
 <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
 
@@ -80,9 +80,9 @@
                 }
             }
 
-            @for(i <- itemMultipleChoiceConfForm("choiceAliases").indexes.indices) {
+            @for(i <- confForm("choiceAliases").indexes.indices) {
                 addNewChoice();
-                fillChoice(@i, '@itemMultipleChoiceConfForm("choiceAliases[" + i + "]").value.get', '@Html(itemMultipleChoiceConfForm("choiceContents[" + i + "]").value.get)', @if(itemMultipleChoiceConfForm("isCorrects[" + i + "]").getValue.isPresent && itemMultipleChoiceConfForm("isCorrects[" + i + "]").value.get) { true } else { false } );
+                fillChoice(@i, '@confForm("choiceAliases[" + i + "]").value.get', '@Html(confForm("choiceContents[" + i + "]").value.get)', @if(confForm("isCorrects[" + i + "]").getValue.isPresent && confForm("isCorrects[" + i + "]").value.get) { true } else { false } );
             }
 
         });
@@ -94,10 +94,10 @@
 
     @helper.CSRF.formField
 
-    @b3.text(itemMultipleChoiceConfForm("meta"), '_label -> "Meta")
-    @b3.textarea(itemMultipleChoiceConfForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
-    @b3.text(itemMultipleChoiceConfForm("score"), '_label -> "Score")
-    @b3.text(itemMultipleChoiceConfForm("penalty"), '_label -> "Penalty")
+    @b3.text(confForm("meta"), '_label -> "Meta")
+    @b3.textarea(confForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
+    @b3.text(confForm("score"), '_label -> "Score")
+    @b3.text(confForm("penalty"), '_label -> "Penalty")
 
     <div class="row">
         <div class="col-md-2">

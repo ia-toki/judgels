@@ -1,7 +1,7 @@
 @import judgels.sandalphon.api.problem.bundle.BundleItem
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemEssayConf
+@import judgels.sandalphon.api.problem.bundle.EssayItemConfig
 
-@(item: BundleItem, itemEssayConf: ItemEssayConf)
+@(item: BundleItem, conf: EssayItemConfig)
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -11,7 +11,7 @@
             </div>
             <div class="table-cell">
                 <div class="content-text">
-                @Html(itemEssayConf.statement)
+                @Html(conf.getStatement)
                 </div>
             </div>
         </div>

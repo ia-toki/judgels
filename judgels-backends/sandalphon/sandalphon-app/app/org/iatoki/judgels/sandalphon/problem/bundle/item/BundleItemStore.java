@@ -73,7 +73,7 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
         int number = 1;
         for (BundleItem item : filteredItems) {
             BundleItem.Builder numberedItem = new BundleItem.Builder().from(item);
-            if (BundleItemAdapters.fromItemType(item.getType()) instanceof BundleItemHasScore) {
+            if (BundleItemAdapters.fromItemType(item.getType(), mapper) instanceof BundleItemHasScore) {
                 numberedItem.number(number++);
             }
             numberedItems.add(numberedItem.build());
@@ -96,7 +96,7 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
         int number = 1;
         for (BundleItem item : items) {
             BundleItem.Builder numberedItem = new BundleItem.Builder().from(item);
-            if (BundleItemAdapters.fromItemType(item.getType()) instanceof BundleItemHasScore) {
+            if (BundleItemAdapters.fromItemType(item.getType(), mapper) instanceof BundleItemHasScore) {
                 numberedItem.number(number++);
             }
             numberedItems.add(numberedItem.build());

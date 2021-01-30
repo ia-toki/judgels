@@ -1,32 +1,27 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import judgels.sandalphon.api.problem.bundle.ItemType;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.essay.EssayItemConfigAdapter;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.multiplechoice.MultipleChoiceItemConfigAdapter;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.shortanswer.ShortAnswerItemConfigAdapter;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.statement.StatementItemConfigAdapter;
 
 public final class BundleItemConfAdapters {
+    private BundleItemConfAdapters() {}
 
-    private BundleItemConfAdapters() {
-        // prevent instantiation
-    }
-
-    public static BundleItemConfAdapter fromItemType(ItemType itemType) {
-        BundleItemConfAdapter itemConfAdapter = null;
-
+    public static ItemConfigAdapter fromItemType(ItemType itemType, ObjectMapper mapper) {
         switch (itemType) {
             case STATEMENT:
-                itemConfAdapter = new ItemStatementConfAdapter();
-                break;
+                return new StatementItemConfigAdapter(mapper);
             case MULTIPLE_CHOICE:
-                itemConfAdapter = new ItemMultipleChoiceConfAdapter();
-                break;
+                return new MultipleChoiceItemConfigAdapter(mapper);
             case SHORT_ANSWER:
-                itemConfAdapter = new ItemShortAnswerConfAdapter();
-                break;
+                return new ShortAnswerItemConfigAdapter(mapper);
             case ESSAY:
-                itemConfAdapter = new ItemEssayConfAdapter();
-                break;
-            default: break;
+                return new EssayItemConfigAdapter(mapper);
         }
 
-        return itemConfAdapter;
+        return null;
     }
 }

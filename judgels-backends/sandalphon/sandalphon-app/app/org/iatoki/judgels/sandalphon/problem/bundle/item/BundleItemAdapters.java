@@ -1,29 +1,27 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import judgels.sandalphon.api.problem.bundle.ItemType;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.essay.EssayItemAdapter;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.multiplechoice.MultipleChoiceItemAdapter;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.shortanswer.ShortAnswerItemAdapter;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.statement.StatementItemAdapter;
 
 public final class BundleItemAdapters {
     private BundleItemAdapters() {}
 
-    public static BundleItemAdapter fromItemType(ItemType itemType) {
-        BundleItemAdapter itemAdapter = null;
-
+    public static BundleItemAdapter fromItemType(ItemType itemType, ObjectMapper mapper) {
         switch (itemType) {
             case STATEMENT:
-                itemAdapter = new ItemStatementAdapter();
-                break;
+                return new StatementItemAdapter(mapper);
             case MULTIPLE_CHOICE:
-                itemAdapter = new ItemMultipleChoiceAdapter();
-                break;
+                return new MultipleChoiceItemAdapter(mapper);
             case SHORT_ANSWER:
-                itemAdapter = new ItemShortAnswerAdapter();
-                break;
+                return new ShortAnswerItemAdapter(mapper);
             case ESSAY:
-                itemAdapter = new ItemEssayAdapter();
-                break;
-            default: break;
+                return new EssayItemAdapter(mapper);
         }
 
-        return itemAdapter;
+        return null;
     }
 }

@@ -1,8 +1,8 @@
-package org.iatoki.judgels.sandalphon.problem.bundle.item;
+package org.iatoki.judgels.sandalphon.problem.bundle.item.shortanswer;
 
 import play.data.validation.Constraints;
 
-public final class ItemShortAnswerConfForm {
+public final class ShortAnswerItemConfigForm {
     @Constraints.Required
     public String meta;
 
@@ -20,7 +20,7 @@ public final class ItemShortAnswerConfForm {
 
     public String gradingRegex;
 
-    public ItemShortAnswerConfForm() {
+    public ShortAnswerItemConfigForm() {
         score = 1.0;
         penalty = 0.0;
     }

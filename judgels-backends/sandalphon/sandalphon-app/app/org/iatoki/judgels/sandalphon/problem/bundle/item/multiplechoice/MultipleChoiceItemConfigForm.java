@@ -1,9 +1,9 @@
-package org.iatoki.judgels.sandalphon.problem.bundle.item;
+package org.iatoki.judgels.sandalphon.problem.bundle.item.multiplechoice;
 
 import java.util.List;
 import play.data.validation.Constraints;
 
-public final class ItemMultipleChoiceConfForm {
+public final class MultipleChoiceItemConfigForm {
 
     @Constraints.Required
     public String meta;
@@ -23,7 +23,7 @@ public final class ItemMultipleChoiceConfForm {
 
     public List<Boolean> isCorrects;
 
-    public ItemMultipleChoiceConfForm() {
+    public MultipleChoiceItemConfigForm() {
         score = 1.0;
         penalty = 0.0;
     }

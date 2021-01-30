@@ -1,7 +1,7 @@
 @import judgels.sandalphon.api.problem.bundle.BundleItem
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemShortAnswerConf
+@import judgels.sandalphon.api.problem.bundle.ShortAnswerItemConfig
 
-@(item: BundleItem, itemShortAnswerConf: ItemShortAnswerConf)
+@(item: BundleItem, conf: ShortAnswerItemConfig)
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -11,7 +11,7 @@
             </div>
             <div class="table-cell">
                 <div class="content-text">
-                @Html(itemShortAnswerConf.statement)
+                @Html(conf.getStatement)
                 </div>
             </div>
         </div>

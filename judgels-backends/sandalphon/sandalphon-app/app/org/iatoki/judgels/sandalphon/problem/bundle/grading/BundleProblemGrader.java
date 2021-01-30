@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.grading;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.List;
@@ -11,18 +12,17 @@ import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapter;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapters;
-import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemConfAdapter;
-import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemConfAdapters;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemHasScore;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemStore;
 
 public final class BundleProblemGrader {
-
+    private final ObjectMapper mapper;
     private final BundleItemStore bundleItemStore;
     private final ProblemStore problemStore;
 
     @Inject
-    public BundleProblemGrader(BundleItemStore bundleItemStore, ProblemStore problemStore) {
+    public BundleProblemGrader(ObjectMapper mapper, BundleItemStore bundleItemStore, ProblemStore problemStore) {
+        this.mapper = mapper;
         this.bundleItemStore = bundleItemStore;
         this.problemStore = problemStore;
     }
@@ -48,10 +48,9 @@ public final class BundleProblemGrader {
                 }
             }
 
-            BundleItemConfAdapter confAdapter = BundleItemConfAdapters.fromItemType(item.getType());
-            BundleItemAdapter adapter = BundleItemAdapters.fromItemType(item.getType());
-            if ((adapter instanceof BundleItemHasScore) && answer.getAnswers().containsKey(item.getJid())) {
-                double score = ((BundleItemHasScore) adapter).calculateScore(confAdapter.parseConfString(conf), answer.getAnswers().get(item.getJid()));
+            BundleItemAdapter adapter = BundleItemAdapters.fromItemType(item.getType(), mapper);
+            if (adapter instanceof BundleItemHasScore && answer.getAnswers().containsKey(item.getJid())) {
+                double score = ((BundleItemHasScore) adapter).calculateScore(conf, answer.getAnswers().get(item.getJid()));
                 details.put(item.getJid(), new ItemGradingResult.Builder()
                         .number(item.getNumber().orElse(0))
                         .score(score)

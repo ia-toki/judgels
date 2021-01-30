@@ -1,0 +1,12 @@
+@import judgels.sandalphon.api.problem.bundle.BundleItem
+@import judgels.sandalphon.api.problem.bundle.StatementItemConfig
+
+@(item: BundleItem, conf: StatementItemConfig)
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="content-text">
+            @Html(conf.getStatement)
+        </div>
+    </div>
+</div>

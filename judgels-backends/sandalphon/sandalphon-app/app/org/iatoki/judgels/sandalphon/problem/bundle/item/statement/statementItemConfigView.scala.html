@@ -1,0 +1,21 @@
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.statement.StatementItemConfigForm
+@import play.api.mvc.Call
+@import org.iatoki.judgels.play.template.html.formErrorView
+
+@(confForm: Form[StatementItemConfigForm], target: Call, submitLabel: String)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(confForm)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
+
+@b3.form(target) {
+
+    @helper.CSRF.formField
+
+    @b3.text(confForm("meta"), '_label -> "Meta")
+    @b3.textarea(confForm("statement"), '_label -> "Statement", 'class -> "ckeditor")
+
+    @b3.submit('class -> "btn btn-primary") { @submitLabel }
+}

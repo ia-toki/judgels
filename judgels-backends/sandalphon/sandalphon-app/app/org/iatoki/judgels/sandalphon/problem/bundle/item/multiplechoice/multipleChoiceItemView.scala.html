@@ -1,7 +1,7 @@
 @import judgels.sandalphon.api.problem.bundle.BundleItem
-@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemMultipleChoiceConf
+@import judgels.sandalphon.api.problem.bundle.MultipleChoiceItemConfig
 
-@(item: BundleItem, itemMultipleChoiceConf: ItemMultipleChoiceConf)
+@(item: BundleItem, conf: MultipleChoiceItemConfig)
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -11,12 +11,12 @@
             </div>
             <div class="table-cell">
                 <div class="content-text">
-                    @Html(itemMultipleChoiceConf.statement)
+                    @Html(conf.getStatement)
                 </div>
             </div>
         </div>
         <hr />
-        @for(choice <- itemMultipleChoiceConf.choices) {
+        @for(choice <- conf.getChoices) {
             <div class="radio" style="margin-top: -5px">
                 <label>
                     <div class="pull-left">
