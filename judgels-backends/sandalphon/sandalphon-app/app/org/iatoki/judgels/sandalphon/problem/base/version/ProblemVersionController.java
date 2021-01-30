@@ -101,7 +101,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
-        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
+        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest(req);
         if (formHasErrors(versionCommitForm)) {
             boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
             return showViewVersionLocalChanges(req, versionCommitForm, problem, isClean);

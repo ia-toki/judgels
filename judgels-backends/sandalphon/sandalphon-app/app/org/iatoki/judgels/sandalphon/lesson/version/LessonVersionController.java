@@ -101,7 +101,7 @@ public final class LessonVersionController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
-        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest();
+        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest(req);
         if (formHasErrors(versionCommitForm)) {
             boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
             return showViewVersionLocalChanges(req, versionCommitForm, lesson, isClean);

@@ -35,7 +35,7 @@ public abstract class AbstractSandalphonController extends AbstractJophielClient
                 org.iatoki.judgels.jophiel.routes.JophielClientController.logout(routes.ApplicationController.index().absoluteURL(req, req.secure())).absoluteURL(req, req.secure())
         ));
         if (userJid != null) {
-            template.addAdditionalScript(isLoggedOut.render(getUserIsLoggedInAPIEndpoint(), org.iatoki.judgels.jophiel.routes.JophielClientController.logout(getCurrentUrl(Http.Context.current().request())).absoluteURL(req, req.secure()), "javascripts/isLoggedOut.js", userJid));
+            template.addAdditionalScript(isLoggedOut.render(getUserIsLoggedInAPIEndpoint(), org.iatoki.judgels.jophiel.routes.JophielClientController.logout(getCurrentUrl(req)).absoluteURL(req, req.secure()), "javascripts/isLoggedOut.js", userJid));
         }
 
         return super.renderTemplate(template);

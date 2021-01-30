@@ -7,8 +7,8 @@ import org.iatoki.judgels.sandalphon.problem.bundle.item.multiplechoice.Multiple
 import org.iatoki.judgels.sandalphon.problem.bundle.item.shortanswer.ShortAnswerItemConfigAdapter;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.statement.StatementItemConfigAdapter;
 
-public final class BundleItemConfAdapters {
-    private BundleItemConfAdapters() {}
+public final class ItemConfigAdapters {
+    private ItemConfigAdapters() {}
 
     public static ItemConfigAdapter fromItemType(ItemType itemType, ObjectMapper mapper) {
         switch (itemType) {

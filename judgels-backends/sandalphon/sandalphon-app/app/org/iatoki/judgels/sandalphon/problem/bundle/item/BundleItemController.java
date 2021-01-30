@@ -81,7 +81,7 @@ public final class BundleItemController extends AbstractProblemController {
             return showListCreateItems(req, problem, items, orderBy, orderDir, filterString, form.withGlobalError("Item undefined."));
         }
 
-        ItemConfigAdapter adapter = BundleItemConfAdapters.fromItemType(ItemType.valueOf(itemType), mapper);
+        ItemConfigAdapter adapter = ItemConfigAdapters.fromItemType(ItemType.valueOf(itemType), mapper);
         if (adapter == null) {
             Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined.");
 
@@ -110,7 +110,7 @@ public final class BundleItemController extends AbstractProblemController {
 
         String language = getStatementLanguage(req, problem);
 
-        ItemConfigAdapter itemConfigAdapter = BundleItemConfAdapters.fromItemType(ItemType.valueOf(itemType), mapper);
+        ItemConfigAdapter itemConfigAdapter = ItemConfigAdapters.fromItemType(ItemType.valueOf(itemType), mapper);
         if (itemConfigAdapter == null) {
             Form<ItemCreateForm> form = formFactory.form(ItemCreateForm.class).withGlobalError("Item undefined");
 
@@ -154,7 +154,7 @@ public final class BundleItemController extends AbstractProblemController {
 
         BundleItem item = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
-        ItemConfigAdapter itemConfigAdapter = BundleItemConfAdapters.fromItemType(item.getType(), mapper);
+        ItemConfigAdapter itemConfigAdapter = ItemConfigAdapters.fromItemType(item.getType(), mapper);
         Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
 
         if (itemConfigAdapter == null) {
@@ -191,7 +191,7 @@ public final class BundleItemController extends AbstractProblemController {
 
         BundleItem item = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
-        ItemConfigAdapter itemConfigAdapter = BundleItemConfAdapters.fromItemType(item.getType(), mapper);
+        ItemConfigAdapter itemConfigAdapter = ItemConfigAdapters.fromItemType(item.getType(), mapper);
         Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
 
         if (itemConfigAdapter == null) {

@@ -155,8 +155,8 @@ public final class BundleProblemPartnerController extends AbstractProblemControl
 
         ProblemPartner problemPartner = checkFound(problemStore.findProblemPartnerById(partnerId));
 
-        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest();
-        Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).bindFromRequest();
+        Form<ProblemPartnerUpsertForm> problemForm = formFactory.form(ProblemPartnerUpsertForm.class).bindFromRequest(req);
+        Form<BundlePartnerUpsertForm> bundleForm = formFactory.form(BundlePartnerUpsertForm.class).bindFromRequest(req);
 
         if (formHasErrors(problemForm) || formHasErrors(bundleForm)) {
             return showEditPartner(req, problemForm, bundleForm, problem, problemPartner);

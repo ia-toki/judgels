@@ -184,7 +184,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest().get();
+        ListTableSelectionForm data = formFactory.form(ListTableSelectionForm.class).bindFromRequest(req).get();
 
         List<Submission> submissions;
 
