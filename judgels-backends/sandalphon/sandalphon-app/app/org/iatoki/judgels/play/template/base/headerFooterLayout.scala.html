@@ -4,6 +4,10 @@
 
 @(generalConfig: GeneralConfig)(content: Html)
 
+@headerView(generalConfig)
+
 <main class="container">
 @content
 </main>
+
+@footerView(generalConfig)
