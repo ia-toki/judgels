@@ -29,7 +29,6 @@ import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import org.iatoki.judgels.Git;
 import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.play.jid.JidService;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel;
@@ -445,14 +444,12 @@ public class ProblemStore extends AbstractProblemStore {
     }
 
     private static ProblemType getProblemType(ProblemModel model) {
-        String prefix = JidService.getInstance().parsePrefix(model.jid);
-
-        if (prefix.equals("PROG")) {
+        if (model.jid.startsWith("JIDPROG")) {
             return ProblemType.PROGRAMMING;
-        } else if (prefix.equals("BUND")) {
+        } else if (model.jid.startsWith("JIDBUND")) {
             return ProblemType.BUNDLE;
         } else {
-            throw new IllegalStateException("Unknown problem type: " + prefix);
+            throw new IllegalStateException("Unknown problem type: " + model.jid);
         }
     }
 
