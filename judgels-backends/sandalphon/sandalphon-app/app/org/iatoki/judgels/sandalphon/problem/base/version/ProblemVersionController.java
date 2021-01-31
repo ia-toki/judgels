@@ -89,9 +89,9 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
 
-        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
+        Form<VersionCommitForm> form = formFactory.form(VersionCommitForm.class);
 
-        return showViewVersionLocalChanges(req, versionCommitForm, problem, isClean);
+        return showViewVersionLocalChanges(req, form, problem, isClean);
     }
 
     @Transactional
@@ -101,25 +101,27 @@ public final class ProblemVersionController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
-        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest(req);
-        if (formHasErrors(versionCommitForm)) {
+        Form<VersionCommitForm> form = formFactory.form(VersionCommitForm.class).bindFromRequest(req);
+        if (formHasErrors(form)) {
             boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
-            return showViewVersionLocalChanges(req, versionCommitForm, problem, isClean);
+            return showViewVersionLocalChanges(req, form, problem, isClean);
         }
 
-        VersionCommitForm versionCommitData = versionCommitForm.get();
+        VersionCommitForm data = form.get();
+        String localChangesErrorFlash = null;
 
         if (problemStore.fetchUserClone(actorJid, problem.getJid())) {
-            flash("localChangesError", "Your working copy has diverged from the master copy. Please update your working copy.");
-        } else if (!problemStore.commitThenMergeUserClone(actorJid, problem.getJid(), versionCommitData.title, versionCommitData.description)) {
-            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
+            localChangesErrorFlash = "Your working copy has diverged from the master copy. Please update your working copy.";
+        } else if (!problemStore.commitThenMergeUserClone(actorJid, problem.getJid(), data.title, data.description)) {
+            localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         } else if (!problemStore.pushUserClone(actorJid, problem.getJid())) {
-            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
+            localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         } else {
             problemStore.discardUserClone(actorJid, problem.getJid());
         }
 
-        return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
+        return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()))
+                .flashing("localChangesError", localChangesErrorFlash);
     }
 
     @Transactional(readOnly = true)
@@ -130,11 +132,13 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         problemStore.fetchUserClone(actorJid, problem.getJid());
 
+        String localChangesErrorFlash = null;
         if (!problemStore.updateUserClone(actorJid, problem.getJid())) {
-            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
+            localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }
 
-        return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
+        return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()))
+                .flashing("localChangesError", localChangesErrorFlash);
     }
 
     @Transactional(readOnly = true)
@@ -148,9 +152,9 @@ public final class ProblemVersionController extends AbstractProblemController {
         return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
     }
 
-    private Result showViewVersionLocalChanges(Http.Request req, Form<VersionCommitForm> versionCommitForm, Problem problem, boolean isClean) {
+    private Result showViewVersionLocalChanges(Http.Request req, Form<VersionCommitForm> form, Problem problem, boolean isClean) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(viewVersionLocalChangesView.render(versionCommitForm, problem, isClean));
+        template.setContent(viewVersionLocalChangesView.render(form, problem, isClean, req.flash().getOptional("localChangesError").orElse(null)));
         template.markBreadcrumbLocation("Local changes", routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
         template.setPageTitle("Problem - Versions - Local changes");
 

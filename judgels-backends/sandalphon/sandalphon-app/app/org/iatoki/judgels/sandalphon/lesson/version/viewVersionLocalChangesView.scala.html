@@ -1,9 +1,8 @@
 @import judgels.sandalphon.api.lesson.Lesson;
-@import play.mvc.Controller
 @import org.iatoki.judgels.sandalphon.lesson.version.routes
 @import org.iatoki.judgels.sandalphon.resource.VersionCommitForm
 
-@(versionCommitForm: Form[VersionCommitForm], lesson: Lesson, isClean: Boolean)
+@(form: Form[VersionCommitForm], lesson: Lesson, isClean: Boolean, localChangesError: String)
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
@@ -12,14 +11,14 @@
 @if(isClean) {
     No local changes.
 }else {
-    @if(Controller.flash("localChangesError") != null) {
-        <p>@Controller.flash("localChangesError")</p>
+    @if(localChangesError != null) {
+        <p>@localChangesError</p>
     } else {
         @b3.form(routes.LessonVersionController.postCommitVersionLocalChanges(lesson.getId())) {
             @helper.CSRF.formField
 
-            @b3.text(versionCommitForm("title"), '_label -> "Title")
-            @b3.textarea(versionCommitForm("description"), '_label -> "Description")
+            @b3.text(form("title"), '_label -> "Title")
+            @b3.textarea(form("description"), '_label -> "Description")
 
             @b3.submit('class -> "btn btn-primary") {
                 Commit

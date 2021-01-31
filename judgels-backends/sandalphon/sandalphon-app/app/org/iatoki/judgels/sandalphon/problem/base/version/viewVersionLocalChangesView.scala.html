@@ -1,9 +1,8 @@
 @import judgels.sandalphon.api.problem.Problem
 @import org.iatoki.judgels.sandalphon.resource.VersionCommitForm
-@import play.mvc.Controller
 @import org.iatoki.judgels.sandalphon.problem.base.version.routes
 
-@(form: Form[VersionCommitForm], problem: Problem, isClean: Boolean)
+@(form: Form[VersionCommitForm], problem: Problem, isClean: Boolean, localChangesError: String)
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
@@ -12,8 +11,8 @@
 @if(isClean) {
     No local changes.
 }else {
-    @if(Controller.flash("localChangesError") != null) {
-        <p>@Controller.flash("localChangesError")</p>
+    @if(localChangesError != null) {
+        <p>@localChangesError</p>
     } else {
         @b3.form(routes.ProblemVersionController.postCommitVersionLocalChanges(problem.getId())) {
             @helper.CSRF.formField

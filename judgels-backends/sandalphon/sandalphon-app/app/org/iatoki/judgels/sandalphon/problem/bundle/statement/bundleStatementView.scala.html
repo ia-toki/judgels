@@ -2,10 +2,6 @@
 
 @(postSubmitUri: String, statement: ProblemStatement, itemsHtml: List[Html], reasonNotAllowedToSubmit: String)
 
-@if(play.mvc.Controller.flash("submissionError") != null) {
-    <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
-}
-
 @if(reasonNotAllowedToSubmit != null) {
     <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
 }

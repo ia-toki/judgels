@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.lesson.version;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,9 +88,9 @@ public final class LessonVersionController extends AbstractLessonController {
 
         boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
 
-        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class);
+        Form<VersionCommitForm> form = formFactory.form(VersionCommitForm.class);
 
-        return showViewVersionLocalChanges(req, versionCommitForm, lesson, isClean);
+        return showViewVersionLocalChanges(req, form, lesson, isClean);
     }
 
     @Transactional
@@ -101,29 +100,27 @@ public final class LessonVersionController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
-        Form<VersionCommitForm> versionCommitForm = formFactory.form(VersionCommitForm.class).bindFromRequest(req);
-        if (formHasErrors(versionCommitForm)) {
+        Form<VersionCommitForm> form = formFactory.form(VersionCommitForm.class).bindFromRequest(req);
+        if (formHasErrors(form)) {
             boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
-            return showViewVersionLocalChanges(req, versionCommitForm, lesson, isClean);
+            return showViewVersionLocalChanges(req, form, lesson, isClean);
         }
 
-        VersionCommitForm versionCommitData = versionCommitForm.get();
+        VersionCommitForm data = form.get();
+        String localChangesErrorFlash = null;
 
         if (lessonStore.fetchUserClone(actorJid, lesson.getJid())) {
-            flash("localChangesError", "Your working copy has diverged from the master copy. Please update your working copy.");
-        } else if (!lessonStore.commitThenMergeUserClone(actorJid, lesson.getJid(), versionCommitData.title, versionCommitData.description)) {
-            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
+            localChangesErrorFlash = "Your working copy has diverged from the master copy. Please update your working copy.";
+        } else if (!lessonStore.commitThenMergeUserClone(actorJid, lesson.getJid(), data.title, data.description)) {
+            localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         } else if (!lessonStore.pushUserClone(actorJid, lesson.getJid())) {
-            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
+            localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         } else {
-            try {
-                lessonStore.discardUserClone(actorJid, lesson.getJid());
-            } catch (IOException e) {
-                // do nothing
-            }
+            lessonStore.discardUserClone(actorJid, lesson.getJid());
         }
 
-        return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
+        return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()))
+                .flashing("localChangesError", localChangesErrorFlash);
     }
 
     @Transactional(readOnly = true)
@@ -134,11 +131,13 @@ public final class LessonVersionController extends AbstractLessonController {
 
         lessonStore.fetchUserClone(actorJid, lesson.getJid());
 
+        String localChangesErrorFlash = null;
         if (!lessonStore.updateUserClone(actorJid, lesson.getJid())) {
-            flash("localChangesError", "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.");
+            localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }
 
-        return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
+        return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()))
+                .flashing("localChangesError", localChangesErrorFlash);
     }
 
     @Transactional(readOnly = true)
@@ -147,18 +146,14 @@ public final class LessonVersionController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
-        try {
-            lessonStore.discardUserClone(actorJid, lesson.getJid());
+        lessonStore.discardUserClone(actorJid, lesson.getJid());
 
-            return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
-        } catch (IOException e) {
-            return notFound();
-        }
+        return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
     }
 
-    private Result showViewVersionLocalChanges(Http.Request req, Form<VersionCommitForm> versionCommitForm, Lesson lesson, boolean isClean) {
+    private Result showViewVersionLocalChanges(Http.Request req, Form<VersionCommitForm> form, Lesson lesson, boolean isClean) {
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(viewVersionLocalChangesView.render(versionCommitForm, lesson, isClean));
+        template.setContent(viewVersionLocalChangesView.render(form, lesson, isClean, req.flash().getOptional("localChangesError").orElse(null)));
         template.markBreadcrumbLocation("Local changes", routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
         template.setPageTitle("Lesson - Versions - Local changes");
 

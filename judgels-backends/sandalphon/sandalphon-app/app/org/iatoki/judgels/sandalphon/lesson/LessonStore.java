@@ -367,7 +367,7 @@ public final class LessonStore {
         return lessonGit.fetch(root);
     }
 
-    public void discardUserClone(String userJid, String lessonJid) throws IOException {
+    public void discardUserClone(String userJid, String lessonJid) {
         Path root = getRootDirPath(lessonFs, userJid, lessonJid);
 
         lessonFs.removeFile(root);
