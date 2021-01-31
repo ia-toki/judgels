@@ -33,8 +33,6 @@ import play.mvc.Result;
 
 @Singleton
 public class LessonPartnerController extends AbstractLessonController {
-    private static final long PAGE_SIZE = 20;
-
     private final LessonStore lessonStore;
     private final LessonRoleChecker lessonRoleChecker;
     private final UserSearchService userSearchService;
@@ -64,7 +62,7 @@ public class LessonPartnerController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAuthorOrAbove(req, lesson));
 
-        Page<LessonPartner> pageOfLessonPartners = lessonStore.getPageOfLessonPartners(lesson.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
+        Page<LessonPartner> pageOfLessonPartners = lessonStore.getPageOfLessonPartners(lesson.getJid(), pageIndex, orderBy, orderDir);
 
         Set<String> userJids = pageOfLessonPartners.getPage().stream().map(LessonPartner::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);

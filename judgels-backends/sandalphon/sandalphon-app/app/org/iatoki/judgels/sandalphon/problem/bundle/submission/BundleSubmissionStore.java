@@ -90,7 +90,7 @@ public class BundleSubmissionStore {
                 .collect(Collectors.toList());
     }
 
-    public Page<BundleSubmission> getPageOfBundleSubmissions(long pageIndex, long pageSize, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
+    public Page<BundleSubmission> getPageOfBundleSubmissions(long pageIndex, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
         FilterOptions.Builder<BundleSubmissionModel> filterOptions = new FilterOptions.Builder<>();
         if (authorJid != null) {
             filterOptions.putColumnsEq(BundleSubmissionModel_.createdBy, authorJid);
@@ -103,8 +103,8 @@ public class BundleSubmissionStore {
         }
 
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
                 .page((int) pageIndex)
-                .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))
                 .build();
@@ -118,8 +118,8 @@ public class BundleSubmissionStore {
         return new Page.Builder<BundleSubmission>()
                 .page(submissions)
                 .totalCount(totalCount)
-                .pageIndex(pageIndex)
-                .pageSize(pageSize)
+                .pageIndex(selectionOptions.getPage())
+                .pageSize(selectionOptions.getPageSize())
                 .build();
     }
 

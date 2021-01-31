@@ -131,13 +131,13 @@ public class ProblemStore extends AbstractProblemStore {
         problemDao.update(model);
     }
 
-    public Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
+    public Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, String orderBy, String orderDir) {
         FilterOptions<ProblemPartnerModel> filterOptions = new FilterOptions.Builder<ProblemPartnerModel>()
                 .putColumnsEq(ProblemPartnerModel_.problemJid, problemJid)
                 .build();
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
                 .page((int) pageIndex)
-                .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))
                 .build();
@@ -149,8 +149,8 @@ public class ProblemStore extends AbstractProblemStore {
         return new Page.Builder<ProblemPartner>()
                 .page(partners)
                 .totalCount(totalCount)
-                .pageIndex(pageIndex)
-                .pageSize(pageSize)
+                .pageIndex(selectionOptions.getPage())
+                .pageSize(selectionOptions.getPageSize())
                 .build();
     }
 
@@ -171,11 +171,11 @@ public class ProblemStore extends AbstractProblemStore {
         problemDao.update(model);
     }
 
-    public Page<Problem> getPageOfProblems(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
+    public Page<Problem> getPageOfProblems(long pageIndex, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
         FilterOptions<ProblemModel> filterOptions;
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
                 .page((int) pageIndex)
-                .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))
                 .build();
@@ -209,8 +209,8 @@ public class ProblemStore extends AbstractProblemStore {
         return new Page.Builder<Problem>()
                 .page(problems)
                 .totalCount(totalCount)
-                .pageIndex(pageIndex)
-                .pageSize(pageSize)
+                .pageIndex(selectionOptions.getPage())
+                .pageSize(selectionOptions.getPageSize())
                 .build();
     }
 

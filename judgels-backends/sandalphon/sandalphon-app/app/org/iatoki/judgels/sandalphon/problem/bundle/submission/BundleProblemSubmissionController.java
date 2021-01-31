@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.List;
@@ -35,9 +34,6 @@ import play.mvc.Result;
 
 @Singleton
 public final class BundleProblemSubmissionController extends AbstractProblemController {
-    private static final long PAGE_SIZE = 20;
-
-    private final ObjectMapper mapper;
     private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final FileSystem bundleSubmissionFs;
@@ -46,7 +42,6 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Inject
     public BundleProblemSubmissionController(
-            ObjectMapper mapper,
             ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
             @SubmissionFs FileSystem bundleSubmissionFs,
@@ -54,7 +49,6 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
             ProfileService profileService) {
 
         super(problemStore, problemRoleChecker);
-        this.mapper = mapper;
         this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleSubmissionFs = bundleSubmissionFs;
@@ -90,7 +84,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
-        Page<BundleSubmission> submissions = bundleSubmissionStore.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
+        Page<BundleSubmission> submissions = bundleSubmissionStore.getPageOfBundleSubmissions(pageIndex, orderBy, orderDir, null, problem.getJid(), null);
 
         Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);

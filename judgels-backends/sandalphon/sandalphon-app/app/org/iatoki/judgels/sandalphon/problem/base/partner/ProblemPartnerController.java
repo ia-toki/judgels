@@ -24,8 +24,6 @@ import play.mvc.Result;
 
 @Singleton
 public class ProblemPartnerController extends AbstractProblemController {
-    private static final long PAGE_SIZE = 20;
-
     private final ProblemStore problemStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
@@ -52,7 +50,7 @@ public class ProblemPartnerController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAuthorOrAbove(req, problem));
 
-        Page<ProblemPartner> pageOfProblemPartners = problemStore.getPageOfProblemPartners(problem.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
+        Page<ProblemPartner> pageOfProblemPartners = problemStore.getPageOfProblemPartners(problem.getJid(), pageIndex, orderBy, orderDir);
 
         Set<String> userJids = pageOfProblemPartners.getPage().stream().map(ProblemPartner::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);

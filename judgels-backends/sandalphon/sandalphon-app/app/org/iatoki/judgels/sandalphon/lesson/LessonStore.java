@@ -116,13 +116,13 @@ public final class LessonStore {
         lessonDao.update(model);
     }
 
-    public Page<LessonPartner> getPageOfLessonPartners(String lessonJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
+    public Page<LessonPartner> getPageOfLessonPartners(String lessonJid, long pageIndex, String orderBy, String orderDir) {
         FilterOptions<LessonPartnerModel> filterOptions = new FilterOptions.Builder<LessonPartnerModel>()
                 .putColumnsEq(LessonPartnerModel_.lessonJid, lessonJid)
                 .build();
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
                 .page((int) pageIndex)
-                .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))
                 .build();
@@ -134,8 +134,8 @@ public final class LessonStore {
         return new Page.Builder<LessonPartner>()
                 .page(partners)
                 .totalCount(totalCount)
-                .pageIndex(pageIndex)
-                .pageSize(pageSize)
+                .pageIndex(selectionOptions.getPage())
+                .pageSize(selectionOptions.getPageSize())
                 .build();
     }
 
@@ -157,11 +157,11 @@ public final class LessonStore {
         lessonDao.update(lessonModel);
     }
 
-    public Page<Lesson> getPageOfLessons(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
+    public Page<Lesson> getPageOfLessons(long pageIndex, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
         FilterOptions<LessonModel> filterOptions;
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
                 .page((int) pageIndex)
-                .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))
                 .build();
@@ -195,8 +195,8 @@ public final class LessonStore {
         return new Page.Builder<Lesson>()
                 .page(lessons)
                 .totalCount(totalCount)
-                .pageIndex(pageIndex)
-                .pageSize(pageSize)
+                .pageIndex(selectionOptions.getPage())
+                .pageSize(selectionOptions.getPageSize())
                 .build();
     }
 

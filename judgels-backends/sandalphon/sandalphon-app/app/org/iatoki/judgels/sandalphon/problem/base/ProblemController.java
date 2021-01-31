@@ -28,8 +28,6 @@ import play.mvc.Result;
 
 @Singleton
 public final class ProblemController extends AbstractBaseProblemController {
-    private static final long PAGE_SIZE = 20;
-
     private final ProblemStore problemStore;
     private final RoleChecker roleChecker;
     private final ProblemRoleChecker problemRoleChecker;
@@ -60,7 +58,7 @@ public final class ProblemController extends AbstractBaseProblemController {
         boolean isAdmin = roleChecker.isAdmin(req);
         boolean isWriter = roleChecker.isWriter(req);
 
-        Page<Problem> problems = problemStore.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, actorJid, isAdmin);
+        Page<Problem> problems = problemStore.getPageOfProblems(pageIndex, sortBy, orderBy, filterString, actorJid, isAdmin);
 
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
