@@ -185,7 +185,7 @@ public final class ProgrammingProblemPartnerController extends AbstractProblemCo
 
         problemStore.updateProblemPartner(partnerId, problemConfig, programmingConfig);
 
-        return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
+        return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.viewPartners(problem.getId()));
     }
 
     private Result showAddPartner(Http.Request req, Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem) {
