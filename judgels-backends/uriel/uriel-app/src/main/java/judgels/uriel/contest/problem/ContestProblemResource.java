@@ -125,6 +125,17 @@ public class ContestProblemResource implements ContestProblemService {
                 .canManage(canManage)
                 .build();
 
+        if (!canManage) {
+            // hide slugs from non-managers.
+            problemsMap = problemsMap.entrySet().stream()
+                    .collect(Collectors.toMap(
+                            e -> e.getKey(),
+                            e -> new ProblemInfo.Builder()
+                                    .from(e.getValue())
+                                    .slug(Optional.empty())
+                                    .build()));
+        }
+
         contestLogger.log(contestJid, "OPEN_PROBLEMS");
 
         return new ContestProblemsResponse.Builder()

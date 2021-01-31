@@ -117,7 +117,7 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .problemJid(PROBLEM_3_JID)
                         .status(ContestProblemStatus.OPEN)
                         .build());
-        assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).isEqualTo(PROBLEM_1_SLUG);
+        assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).contains(PROBLEM_1_SLUG);
         assertThat(response.getTotalSubmissionsMap()).containsOnlyKeys(PROBLEM_1_JID, PROBLEM_2_JID, PROBLEM_3_JID);
         assertThat(response.getConfig().getCanManage()).isTrue();
 
@@ -129,6 +129,7 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
         response = problemService.getProblems(of(SUPERVISOR_HEADER), contest.getJid());
         assertThat(response.getConfig().getCanManage()).isFalse();
+        assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).isEmpty();
 
         test_get_programming_problem_worksheet(contest);
         test_get_bundle_problem_worksheet(contest);
