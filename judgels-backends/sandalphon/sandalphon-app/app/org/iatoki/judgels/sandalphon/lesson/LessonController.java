@@ -54,7 +54,7 @@ public final class LessonController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result index(Http.Request req) {
-        return listLessons(req, 0, "updatedAt", "desc", "");
+        return listLessons(req, 1, "updatedAt", "desc", "");
     }
 
     @Transactional(readOnly = true)

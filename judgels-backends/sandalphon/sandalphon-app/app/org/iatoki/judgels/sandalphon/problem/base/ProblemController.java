@@ -51,7 +51,7 @@ public final class ProblemController extends AbstractBaseProblemController {
 
     @Transactional(readOnly = true)
     public Result index(Http.Request req) {
-        return listProblems(req, 0, "updatedAt", "desc", "");
+        return listProblems(req, 1, "updatedAt", "desc", "");
     }
 
     @Transactional(readOnly = true)

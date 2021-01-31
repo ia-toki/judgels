@@ -121,7 +121,7 @@ public final class LessonStore {
                 .putColumnsEq(LessonPartnerModel_.lessonJid, lessonJid)
                 .build();
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .page((int) pageIndex + 1)
+                .page((int) pageIndex)
                 .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))
@@ -160,7 +160,7 @@ public final class LessonStore {
     public Page<Lesson> getPageOfLessons(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
         FilterOptions<LessonModel> filterOptions;
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .page((int) pageIndex + 1)
+                .page((int) pageIndex)
                 .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))

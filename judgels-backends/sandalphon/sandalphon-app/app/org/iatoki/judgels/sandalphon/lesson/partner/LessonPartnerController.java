@@ -56,7 +56,7 @@ public class LessonPartnerController extends AbstractLessonController {
 
     @Transactional(readOnly = true)
     public Result viewPartners(Http.Request req, long lessonId) {
-        return listPartners(req, lessonId, 0, "id", "desc");
+        return listPartners(req, lessonId, 1, "id", "desc");
     }
 
     @Transactional(readOnly = true)

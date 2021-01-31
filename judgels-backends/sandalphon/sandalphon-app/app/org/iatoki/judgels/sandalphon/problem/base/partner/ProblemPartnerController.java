@@ -44,7 +44,7 @@ public class ProblemPartnerController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result viewPartners(Http.Request req, long problemId) {
-        return listPartners(req, problemId, 0, "id", "desc");
+        return listPartners(req, problemId, 1, "id", "desc");
     }
 
     @Transactional(readOnly = true)

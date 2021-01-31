@@ -103,7 +103,7 @@ public class BundleSubmissionStore {
         }
 
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .page((int) pageIndex + 1)
+                .page((int) pageIndex)
                 .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))

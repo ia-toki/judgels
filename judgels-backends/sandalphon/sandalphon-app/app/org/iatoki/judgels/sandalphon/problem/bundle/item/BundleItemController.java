@@ -51,7 +51,7 @@ public final class BundleItemController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result viewItems(Http.Request req, long problemId)  {
-        return listCreateItems(req, problemId, 0, "id", "desc", "");
+        return listCreateItems(req, problemId, 1, "id", "desc", "");
     }
 
     @Transactional(readOnly = true)

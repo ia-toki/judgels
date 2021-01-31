@@ -82,7 +82,7 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
 
     @Transactional(readOnly = true)
     public Result viewSubmissions(Http.Request req, long problemId)  {
-        return listSubmissions(req, problemId, 0, "id", "desc");
+        return listSubmissions(req, problemId, 1, "id", "desc");
     }
 
     @Transactional(readOnly = true)

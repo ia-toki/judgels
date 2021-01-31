@@ -64,7 +64,7 @@ public final class BundleItemStore extends AbstractBundleProblemStore {
         List<BundleItem> filteredItems = items.stream()
                 .filter(b -> (StringUtils.containsIgnoreCase(b.getMeta(), filterString)) || StringUtils.containsIgnoreCase(b.getJid(), filterString) || StringUtils.containsIgnoreCase(b.getType().name(), filterString))
                 .sorted(new BundleItemComparator(orderBy, orderDir))
-                .skip(pageIndex * pageSize)
+                .skip((pageIndex - 1) * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
 

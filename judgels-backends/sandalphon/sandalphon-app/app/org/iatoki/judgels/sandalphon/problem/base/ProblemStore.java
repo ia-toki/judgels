@@ -136,7 +136,7 @@ public class ProblemStore extends AbstractProblemStore {
                 .putColumnsEq(ProblemPartnerModel_.problemJid, problemJid)
                 .build();
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .page((int) pageIndex + 1)
+                .page((int) pageIndex)
                 .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))
@@ -174,7 +174,7 @@ public class ProblemStore extends AbstractProblemStore {
     public Page<Problem> getPageOfProblems(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
         FilterOptions<ProblemModel> filterOptions;
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .page((int) pageIndex + 1)
+                .page((int) pageIndex)
                 .pageSize((int) pageSize)
                 .orderBy(orderBy)
                 .orderDir(OrderDir.of(orderDir))

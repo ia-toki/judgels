@@ -7,32 +7,32 @@
 
 <div class="showing">
     <small>
-        Showing @{page.getPageIndex * page.getPageSize + 1} - @{page.getPageIndex * page.getPageSize + page.getPage.size} out of @page.getTotalCount data.
+        Showing @{(page.getPageIndex - 1) * page.getPageSize + 1} - @{math.min(page.getTotalCount, page.getPageIndex * page.getPageSize)} out of @page.getTotalCount data.
     </small>
 </div>
 
 <ul class="pagination pagination-sm">
-    @if(page.getPageIndex > 0) {
-        <li><a href="@newPageLink(0L)">&laquo;</a></li>
+    @if(page.getPageIndex > 1) {
+        <li><a href="@newPageLink(1)">&laquo;</a></li>
         <li><a href="@newPageLink(page.getPageIndex - 1)">&larr;</a></li>
     } else {
         <li class="disabled"><a>&laquo;</a></li>
         <li class="disabled"><a>&larr;</a></li>
     }
 
-    @for(i <- math.max(0, page.getPageIndex - 9) to page.getPageIndex - 1) {
-        <li><a href="@newPageLink(i)">@(i + 1)</a></li>
+    @for(i <- math.max(1, page.getPageIndex - 9) to page.getPageIndex - 1) {
+        <li><a href="@newPageLink(i)">@i</a></li>
     }
 
-    <li class="active"><a>@(page.getPageIndex + 1)</a></li>
+    <li class="active"><a>@page.getPageIndex</a></li>
 
-    @for(i <- page.getPageIndex + 1 to math.min((page.getTotalCount + page.getPageSize - 1) / page.getPageSize - 1, page.getPageIndex + 9)) {
-        <li><a href="@newPageLink(i)">@(i + 1)</a></li>
+    @for(i <- page.getPageIndex + 1 to math.min((page.getTotalCount + page.getPageSize - 1) / page.getPageSize, page.getPageIndex + 9)) {
+        <li><a href="@newPageLink(i)">@i</a></li>
     }
 
-    @if(page.getPageIndex + 1 < (page.getTotalCount + page.getPageSize - 1) / page.getPageSize) {
+    @if(page.getPageIndex + 1 <= (page.getTotalCount + page.getPageSize - 1) / page.getPageSize) {
         <li><a href="@newPageLink(page.getPageIndex + 1)">&rarr;</a></li>
-        <li><a href="@newPageLink((page.getTotalCount + page.getPageSize - 1) / page.getPageSize - 1)">&raquo;</a></li>
+        <li><a href="@newPageLink((page.getTotalCount + page.getPageSize - 1) / page.getPageSize)">&raquo;</a></li>
     } else {
         <li class="disabled"><a>&rarr;</a></li>
         <li class="disabled"><a>&raquo;</a></li>
