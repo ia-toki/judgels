@@ -1,13 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 
@@ -54,10 +52,5 @@ public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel>
                 .where(cb.equal(root.get(ProblemModel_.slug), slug));
 
         return currentSession().createQuery(query).getSingleResult() > 0;
-    }
-
-    @Override
-    protected List<SingularAttribute<ProblemModel, String>> getColumnsFilterableByString() {
-        return ImmutableList.of(ProblemModel_.slug, ProblemModel_.additionalNote);
     }
 }

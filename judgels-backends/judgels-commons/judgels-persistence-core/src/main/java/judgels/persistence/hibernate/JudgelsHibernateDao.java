@@ -1,8 +1,6 @@
 package judgels.persistence.hibernate;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -74,12 +72,6 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     @Override
     public M findByJid(String jid) {
         return selectByJid(jid).orElse(null);
-    }
-
-    @Override
-    public List<M> getByJids(Collection<String> jids) {
-        Map<String, M> map = selectByJids(ImmutableSet.copyOf(jids));
-        return jids.stream().map(map::get).collect(Collectors.toList());
     }
 
     @Override

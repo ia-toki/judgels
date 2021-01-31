@@ -3,17 +3,20 @@ package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.persistence.metamodel.SingularAttribute;
 import judgels.fs.FileSystem;
+import judgels.persistence.FilterOptions;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.bundle.BundleAnswer;
 import judgels.sandalphon.api.submission.bundle.BundleGrading;
 import judgels.sandalphon.api.submission.bundle.BundleGradingResult;
@@ -46,66 +49,75 @@ public class BundleSubmissionStore {
 
     public Optional<BundleSubmission> findBundleSubmissionById(long submissionId) {
         return bundleSubmissionDao.select(submissionId).map(sm -> {
-            List<BundleGradingModel> gradingModels = bundleGradingDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.of(BundleGradingModel_.submissionJid, sm.jid), 0, -1);
+            FilterOptions<BundleGradingModel> filterOptions = new FilterOptions.Builder<BundleGradingModel>()
+                    .putColumnsEq(BundleGradingModel_.submissionJid, sm.jid)
+                    .build();
+            List<BundleGradingModel> gradingModels = bundleGradingDao.selectAll(filterOptions, SelectionOptions.DEFAULT_ALL);
             return createSubmissionFromModels(sm, gradingModels);
         });
     }
 
-    public List<BundleSubmission> getAllBundleSubmissions() {
-        List<BundleSubmissionModel> submissionModels = bundleSubmissionDao.getAll();
-        Map<String, List<BundleGradingModel>> gradingModelsMap = bundleGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
-
-        return Lists.transform(submissionModels, m -> createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
-    }
-
     public List<BundleSubmission> getBundleSubmissionsByFilters(String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
-        ImmutableMap.Builder<SingularAttribute<? super BundleSubmissionModel, ?>, String> filterColumnsBuilder = ImmutableMap.builder();
+        FilterOptions.Builder<BundleSubmissionModel> filterOptions = new FilterOptions.Builder<>();
         if (authorJid != null) {
-            filterColumnsBuilder.put(BundleSubmissionModel_.createdBy, authorJid);
+            filterOptions.putColumnsEq(BundleSubmissionModel_.createdBy, authorJid);
         }
         if (problemJid != null) {
-            filterColumnsBuilder.put(BundleSubmissionModel_.problemJid, problemJid);
+            filterOptions.putColumnsEq(BundleSubmissionModel_.problemJid, problemJid);
         }
         if (containerJid != null) {
-            filterColumnsBuilder.put(BundleSubmissionModel_.containerJid, containerJid);
+            filterOptions.putColumnsEq(BundleSubmissionModel_.containerJid, containerJid);
         }
 
-        Map<SingularAttribute<? super BundleSubmissionModel, ?>, String> filterColumns = filterColumnsBuilder.build();
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderBy(orderBy)
+                .orderDir(OrderDir.of(orderDir))
+                .build();
 
-        List<BundleSubmissionModel> submissionModels = bundleSubmissionDao.findSortedByFiltersEq(orderBy, orderDir, "", filterColumns, 0, -1);
+        List<BundleSubmissionModel> submissionModels = bundleSubmissionDao.selectAll(filterOptions.build(), selectionOptions);
 
-        return Lists.transform(submissionModels, m -> createSubmissionFromModel(m));
+        return Lists.transform(submissionModels, this::createSubmissionFromModel);
     }
 
     public List<BundleSubmission> getBundleSubmissionsByJids(List<String> submissionJids) {
-        List<BundleSubmissionModel> submissionModels = bundleSubmissionDao.getByJids(submissionJids);
-
-        return Lists.transform(submissionModels, m -> createSubmissionFromModel(m));
+        Map<String, BundleSubmissionModel> models =
+                bundleSubmissionDao.selectByJids(ImmutableSet.copyOf(submissionJids));
+        return submissionJids.stream()
+                .filter(models::containsKey)
+                .map(models::get)
+                .map(this::createSubmissionFromModel)
+                .collect(Collectors.toList());
     }
 
     public Page<BundleSubmission> getPageOfBundleSubmissions(long pageIndex, long pageSize, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
-        ImmutableMap.Builder<SingularAttribute<? super BundleSubmissionModel, ?>, String> filterColumnsBuilder = ImmutableMap.builder();
+        FilterOptions.Builder<BundleSubmissionModel> filterOptions = new FilterOptions.Builder<>();
         if (authorJid != null) {
-            filterColumnsBuilder.put(BundleSubmissionModel_.createdBy, authorJid);
+            filterOptions.putColumnsEq(BundleSubmissionModel_.createdBy, authorJid);
         }
         if (problemJid != null) {
-            filterColumnsBuilder.put(BundleSubmissionModel_.problemJid, problemJid);
+            filterOptions.putColumnsEq(BundleSubmissionModel_.problemJid, problemJid);
         }
         if (containerJid != null) {
-            filterColumnsBuilder.put(BundleSubmissionModel_.containerJid, containerJid);
+            filterOptions.putColumnsEq(BundleSubmissionModel_.containerJid, containerJid);
         }
 
-        Map<SingularAttribute<? super BundleSubmissionModel, ?>, String> filterColumns = filterColumnsBuilder.build();
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .page((int) pageIndex + 1)
+                .pageSize((int) pageSize)
+                .orderBy(orderBy)
+                .orderDir(OrderDir.of(orderDir))
+                .build();
 
-        long totalRowsCount = bundleSubmissionDao.countByFiltersEq("", filterColumns);
-        List<BundleSubmissionModel> submissionModels = bundleSubmissionDao.findSortedByFiltersEq(orderBy, orderDir, "", filterColumns, pageIndex * pageSize, pageSize);
+        long totalCount = bundleSubmissionDao.selectCount(filterOptions.build());
+        List<BundleSubmissionModel> submissionModels = bundleSubmissionDao.selectAll(filterOptions.build(), selectionOptions);
         Map<String, List<BundleGradingModel>> gradingModelsMap = bundleGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
 
         List<BundleSubmission> submissions = Lists.transform(submissionModels, m -> createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
 
         return new Page.Builder<BundleSubmission>()
                 .page(submissions)
-                .totalCount(totalRowsCount)
+                .totalCount(totalCount)
                 .pageIndex(pageIndex)
                 .pageSize(pageSize)
                 .build();

@@ -1,13 +1,11 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 
@@ -54,10 +52,5 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
                 .where(cb.equal(root.get(LessonModel_.slug), slug));
 
         return currentSession().createQuery(query).getSingleResult() > 0;
-    }
-
-    @Override
-    protected List<SingularAttribute<LessonModel, String>> getColumnsFilterableByString() {
-        return ImmutableList.of(LessonModel_.slug, LessonModel_.additionalNote);
     }
 }

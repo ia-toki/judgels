@@ -1,7 +1,5 @@
 package judgels.persistence;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -16,6 +14,4 @@ public interface JudgelsDao<M extends JudgelsModel> extends Dao<M> {
     boolean existsByJid(String jid);
 
     void setModelMetadataFromDump(M model, JudgelsDump dump);
-
-    @Deprecated List<M> getByJids(Collection<String> jids);
 }

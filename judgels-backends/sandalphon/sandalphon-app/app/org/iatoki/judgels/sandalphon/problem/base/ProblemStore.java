@@ -16,8 +16,11 @@ import java.util.Optional;
 import java.util.Set;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.JidGenerator;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -77,7 +80,7 @@ public class ProblemStore extends AbstractProblemStore {
     }
 
     public Optional<Problem> findProblemById(long problemId) {
-        return problemDao.select(problemId).map(m -> createProblemFromModel(m));
+        return problemDao.select(problemId).map(ProblemStore::createProblemFromModel);
     }
 
     public Problem findProblemByJid(String problemJid) {
@@ -129,20 +132,30 @@ public class ProblemStore extends AbstractProblemStore {
     }
 
     public Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
-        long totalRows = problemPartnerDao.countByFiltersEq("", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid));
-        List<ProblemPartnerModel> models = problemPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(ProblemPartnerModel_.problemJid, problemJid), pageIndex * pageSize, pageSize);
-        List<ProblemPartner> partners = Lists.transform(models, m -> createProblemPartnerFromModel(m));
+        FilterOptions<ProblemPartnerModel> filterOptions = new FilterOptions.Builder<ProblemPartnerModel>()
+                .putColumnsEq(ProblemPartnerModel_.problemJid, problemJid)
+                .build();
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .page((int) pageIndex + 1)
+                .pageSize((int) pageSize)
+                .orderBy(orderBy)
+                .orderDir(OrderDir.of(orderDir))
+                .build();
+
+        long totalCount = problemPartnerDao.selectCount(filterOptions);
+        List<ProblemPartnerModel> models = problemPartnerDao.selectAll(filterOptions, selectionOptions);
+        List<ProblemPartner> partners = Lists.transform(models, this::createProblemPartnerFromModel);
 
         return new Page.Builder<ProblemPartner>()
                 .page(partners)
-                .totalCount(totalRows)
+                .totalCount(totalCount)
                 .pageIndex(pageIndex)
                 .pageSize(pageSize)
                 .build();
     }
 
     public Optional<ProblemPartner> findProblemPartnerById(long problemPartnerId) {
-        return problemPartnerDao.select(problemPartnerId).map(m -> createProblemPartnerFromModel(m));
+        return problemPartnerDao.select(problemPartnerId).map(this::createProblemPartnerFromModel);
     }
 
     public ProblemPartner findProblemPartnerByProblemJidAndPartnerJid(String problemJid, String partnerJid) {
@@ -159,16 +172,18 @@ public class ProblemStore extends AbstractProblemStore {
     }
 
     public Page<Problem> getPageOfProblems(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
-        if (isAdmin) {
-            long totalRows = problemDao.countByFilters(filterString);
-            List<ProblemModel> models = problemDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
+        FilterOptions<ProblemModel> filterOptions;
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .page((int) pageIndex + 1)
+                .pageSize((int) pageSize)
+                .orderBy(orderBy)
+                .orderDir(OrderDir.of(orderDir))
+                .build();
 
-            List<Problem> problems = Lists.transform(models, m -> createProblemFromModel(m));
-            return new Page.Builder<Problem>()
-                    .page(problems)
-                    .totalCount(totalRows)
-                    .pageIndex(pageIndex)
-                    .pageSize(pageSize)
+        if (isAdmin) {
+            filterOptions = new FilterOptions.Builder<ProblemModel>()
+                    .putColumnsLike(ProblemModel_.slug, filterString)
+                    .putColumnsLike(ProblemModel_.additionalNote, filterString)
                     .build();
         } else {
             List<String> problemJidsWhereIsAuthor = problemDao.getJidsByAuthorJid(userJid);
@@ -180,17 +195,23 @@ public class ProblemStore extends AbstractProblemStore {
 
             Set<String> allowedProblemJids = allowedProblemJidsBuilder.build();
 
-            long totalRows = problemDao.countByFiltersIn(filterString, ImmutableMap.of(ProblemModel_.jid, allowedProblemJids));
-            List<ProblemModel> models = problemDao.findSortedByFiltersIn(orderBy, orderDir, filterString, ImmutableMap.of(ProblemModel_.jid, allowedProblemJids), pageIndex * pageSize, pageSize);
-
-            List<Problem> problems = Lists.transform(models, m -> createProblemFromModel(m));
-            return new Page.Builder<Problem>()
-                    .page(problems)
-                    .totalCount(totalRows)
-                    .pageIndex(pageIndex)
-                    .pageSize(pageSize)
+            filterOptions = new FilterOptions.Builder<ProblemModel>()
+                    .putColumnsIn(ProblemModel_.jid, allowedProblemJids)
+                    .putColumnsLike(ProblemModel_.slug, filterString)
+                    .putColumnsLike(ProblemModel_.additionalNote, filterString)
                     .build();
         }
+
+        long totalCount = problemDao.selectCount(filterOptions);
+        List<ProblemModel> models = problemDao.selectAll(filterOptions, selectionOptions);
+
+        List<Problem> problems = Lists.transform(models, ProblemStore::createProblemFromModel);
+        return new Page.Builder<Problem>()
+                .page(problems)
+                .totalCount(totalCount)
+                .pageIndex(pageIndex)
+                .pageSize(pageSize)
+                .build();
     }
 
     public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String problemJid) {

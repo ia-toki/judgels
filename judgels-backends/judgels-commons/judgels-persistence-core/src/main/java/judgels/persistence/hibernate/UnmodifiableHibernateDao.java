@@ -1,6 +1,5 @@
 package judgels.persistence.hibernate;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
@@ -10,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
@@ -205,115 +203,6 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
                     String.format("Unknown mode: %s", dump.getMode())
             );
         }
-    }
-
-    @Override
-    public List<M> getAll() {
-        return selectAll(SelectionOptions.DEFAULT_ALL);
-    }
-
-    @Override
-    public long countByFilters(String filterString) {
-        return countByFilters(filterString, ImmutableMap.of(), ImmutableMap.of());
-    }
-
-    @Override
-    public long countByFilters(
-            String filterString,
-            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn) {
-
-        Map<SingularAttribute<? super M, String>, String> filterColumnsLike = filterString.equals("")
-                ? ImmutableMap.of()
-                : getColumnsFilterableByString()
-                .stream()
-                .collect(Collectors.toMap(e -> e, $ -> filterString));
-
-        return selectCount(new FilterOptions.Builder<M>()
-                .columnsEq(filterColumnsEq)
-                .columnsIn(filterColumnsIn)
-                .columnsLike(filterColumnsLike)
-                .build());
-    }
-
-    @Override
-    public long countByFiltersEq(String filterString, Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq) {
-        return countByFilters(filterString, filterColumnsEq, ImmutableMap.of());
-    }
-
-    @Override
-    public long countByFiltersIn(
-            String filterString,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn) {
-
-        return countByFilters(filterString, ImmutableMap.of(), filterColumnsIn);
-    }
-
-    @Override
-    public List<M> findSortedByFilters(String orderBy, String orderDir, String filterStrin, long offset, long limit) {
-        return findSortedByFilters(orderBy, orderDir, filterStrin, ImmutableMap.of(), ImmutableMap.of(), offset, limit);
-    }
-
-    @Override
-    public List<M> findSortedByFilters(
-            String orderBy,
-            String orderDir,
-            String filterString,
-            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn,
-            long offset,
-            long limit) {
-
-        Map<SingularAttribute<? super M, String>, String> filterColumnsLike = filterString.equals("")
-                ? ImmutableMap.of()
-                : getColumnsFilterableByString()
-                .stream()
-                .collect(Collectors.toMap(e -> e, $ -> filterString));
-
-        SelectionOptions.Builder options = new SelectionOptions.Builder();
-        if (limit != -1) {
-            options.pageSize((int) limit);
-            options.page((int) (offset / limit) + 1);
-        }
-        options.orderBy(orderBy);
-        if (orderDir.equals("asc")) {
-            options.orderDir(OrderDir.ASC);
-        } else {
-            options.orderDir(OrderDir.DESC);
-        }
-
-        return selectAll(new FilterOptions.Builder<M>()
-                .columnsEq(filterColumnsEq)
-                .columnsIn(filterColumnsIn)
-                .columnsLike(filterColumnsLike)
-                .build(), options.build());
-    }
-
-    @Override
-    public List<M> findSortedByFiltersEq(
-            String orderBy,
-            String orderDir,
-            String filterString,
-            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq, long offset, long limit) {
-
-        return findSortedByFilters(orderBy, orderDir, filterString, filterColumnsEq, ImmutableMap.of(), offset, limit);
-    }
-
-    @Override
-    public List<M> findSortedByFiltersIn(
-            String orderBy,
-            String orderDir,
-            String filterString,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn,
-            long offset,
-            long limit) {
-
-        return findSortedByFilters(orderBy, orderDir, filterString, ImmutableMap.of(), filterColumnsIn, offset, limit);
-    }
-
-    @Deprecated
-    protected List<SingularAttribute<M, String>> getColumnsFilterableByString() {
-        return ImmutableList.of();
     }
 
     private void applyFilters(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root, FilterOptions<M> options) {

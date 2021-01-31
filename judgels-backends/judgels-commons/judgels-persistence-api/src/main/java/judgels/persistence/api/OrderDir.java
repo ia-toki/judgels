@@ -17,4 +17,11 @@ public enum OrderDir {
     String toValue() {
         return value;
     }
+
+    public static OrderDir of(String value) {
+        if (value.equals("asc")) {
+            return ASC;
+        }
+        return DESC;
+    }
 }

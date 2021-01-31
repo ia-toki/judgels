@@ -1,6 +1,5 @@
 package judgels.persistence;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,54 +46,4 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     void delete(M model);
 
     void setModelMetadataFromDump(M model, UnmodifiableDump dump);
-
-    @Deprecated List<M> getAll();
-
-    @Deprecated
-    long countByFilters(String filterString);
-
-    @Deprecated
-    long countByFilters(
-            String filterString,
-            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn);
-
-    @Deprecated
-    long countByFiltersEq(String filterString, Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq);
-
-    @Deprecated
-    long countByFiltersIn(
-            String filterString,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn);
-
-    @Deprecated
-    List<M> findSortedByFilters(String orderBy, String orderDir, String filterString, long offset, long limit);
-
-    @Deprecated
-    List<M> findSortedByFilters(
-            String orderBy,
-            String orderDir,
-            String filterString,
-            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn,
-            long offset,
-            long limit);
-
-    @Deprecated
-    List<M> findSortedByFiltersEq(
-            String orderBy,
-            String orderDir,
-            String filterString,
-            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq,
-            long offset,
-            long limit);
-
-    @Deprecated
-    List<M> findSortedByFiltersIn(
-            String orderBy,
-            String orderDir,
-            String filterString,
-            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn,
-            long offset,
-            long limit);
 }

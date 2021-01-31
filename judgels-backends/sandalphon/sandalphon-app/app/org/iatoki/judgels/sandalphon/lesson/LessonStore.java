@@ -17,7 +17,10 @@ import java.util.Set;
 import javax.inject.Inject;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
+import judgels.persistence.FilterOptions;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
@@ -114,20 +117,30 @@ public final class LessonStore {
     }
 
     public Page<LessonPartner> getPageOfLessonPartners(String lessonJid, long pageIndex, long pageSize, String orderBy, String orderDir) {
-        long totalRows = lessonPartnerDao.countByFiltersEq("", ImmutableMap.of(LessonPartnerModel_.lessonJid, lessonJid));
-        List<LessonPartnerModel> lessonPartnerModels = lessonPartnerDao.findSortedByFiltersEq(orderBy, orderDir, "", ImmutableMap.of(LessonPartnerModel_.lessonJid, lessonJid), pageIndex * pageSize, pageSize);
-        List<LessonPartner> lessonPartners = Lists.transform(lessonPartnerModels, m -> createLessonPartnerFromModel(m));
+        FilterOptions<LessonPartnerModel> filterOptions = new FilterOptions.Builder<LessonPartnerModel>()
+                .putColumnsEq(LessonPartnerModel_.lessonJid, lessonJid)
+                .build();
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .page((int) pageIndex + 1)
+                .pageSize((int) pageSize)
+                .orderBy(orderBy)
+                .orderDir(OrderDir.of(orderDir))
+                .build();
+
+        long totalCount = lessonPartnerDao.selectCount(filterOptions);
+        List<LessonPartnerModel> models = lessonPartnerDao.selectAll(filterOptions, selectionOptions);
+        List<LessonPartner> partners = Lists.transform(models, this::createLessonPartnerFromModel);
 
         return new Page.Builder<LessonPartner>()
-                .page(lessonPartners)
-                .totalCount(totalRows)
+                .page(partners)
+                .totalCount(totalCount)
                 .pageIndex(pageIndex)
                 .pageSize(pageSize)
                 .build();
     }
 
     public Optional<LessonPartner> findLessonPartnerById(long lessonPartnerId) {
-        return lessonPartnerDao.select(lessonPartnerId).map(m -> createLessonPartnerFromModel(m));
+        return lessonPartnerDao.select(lessonPartnerId).map(this::createLessonPartnerFromModel);
     }
 
     public LessonPartner findLessonPartnerByLessonJidAndPartnerJid(String lessonJid, String partnerJid) {
@@ -145,16 +158,18 @@ public final class LessonStore {
     }
 
     public Page<Lesson> getPageOfLessons(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
-        if (isAdmin) {
-            long totalRows = lessonDao.countByFilters(filterString);
-            List<LessonModel> lessonModels = lessonDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
+        FilterOptions<LessonModel> filterOptions;
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .page((int) pageIndex + 1)
+                .pageSize((int) pageSize)
+                .orderBy(orderBy)
+                .orderDir(OrderDir.of(orderDir))
+                .build();
 
-            List<Lesson> lessons = Lists.transform(lessonModels, m -> createLessonFromModel(m));
-            return new Page.Builder<Lesson>()
-                    .page(lessons)
-                    .totalCount(totalRows)
-                    .pageIndex(pageIndex)
-                    .pageSize(pageSize)
+        if (isAdmin) {
+            filterOptions = new FilterOptions.Builder<LessonModel>()
+                    .putColumnsLike(LessonModel_.slug, filterString)
+                    .putColumnsLike(LessonModel_.additionalNote, filterString)
                     .build();
         } else {
             List<String> lessonJidsWhereIsAuthor = lessonDao.getJidsByAuthorJid(userJid);
@@ -166,18 +181,23 @@ public final class LessonStore {
 
             Set<String> allowedLessonJids = allowedLessonJidsBuilder.build();
 
-            long totalRows = lessonDao.countByFiltersIn(filterString, ImmutableMap.of(LessonModel_.jid, allowedLessonJids));
-            List<LessonModel> lessonModels = lessonDao.findSortedByFiltersIn(orderBy, orderDir, filterString, ImmutableMap.of(LessonModel_.jid, allowedLessonJids), pageIndex * pageSize, pageSize);
-
-            List<Lesson> lessons = Lists.transform(lessonModels, m -> createLessonFromModel(m));
-            return new Page.Builder<Lesson>()
-                    .page(lessons)
-                    .totalCount(totalRows)
-                    .pageIndex(pageIndex)
-                    .pageSize(pageSize)
+            filterOptions = new FilterOptions.Builder<LessonModel>()
+                    .putColumnsIn(LessonModel_.jid, allowedLessonJids)
+                    .putColumnsLike(LessonModel_.slug, filterString)
+                    .putColumnsLike(LessonModel_.additionalNote, filterString)
                     .build();
         }
 
+        long totalCount = lessonDao.selectCount(filterOptions);
+        List<LessonModel> models = lessonDao.selectAll(filterOptions, selectionOptions);
+
+        List<Lesson> lessons = Lists.transform(models, LessonStore::createLessonFromModel);
+        return new Page.Builder<Lesson>()
+                .page(lessons)
+                .totalCount(totalCount)
+                .pageIndex(pageIndex)
+                .pageSize(pageSize)
+                .build();
     }
 
     public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String lessonJid) {
