@@ -61,7 +61,7 @@ public class LessonRoleChecker {
         String defaultLanguage = lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid());
         Set<String> allowedLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToView();
 
-        return allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage);
+        return allowedLanguages.isEmpty() || allowedLanguages.contains(language) || language.equals(defaultLanguage);
     }
 
     public boolean isAllowedToUpdateStatement(Http.Request req, Lesson lesson) {
@@ -82,7 +82,7 @@ public class LessonRoleChecker {
 
         Set<String> allowedLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToUpdate();
 
-        return allowedLanguages == null || allowedLanguages.contains(language);
+        return allowedLanguages.isEmpty() || allowedLanguages.contains(language);
     }
 
     public boolean isAllowedToManageStatementLanguages(Http.Request req, Lesson lesson) {
@@ -112,10 +112,8 @@ public class LessonRoleChecker {
 
         if (isPartner(req, lesson)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToView();
-            if (allowedPartnerLanguages != null) {
-                allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
-            }
+            allowedLanguages.retainAll(allowedPartnerLanguages);
+            allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);
@@ -133,10 +131,8 @@ public class LessonRoleChecker {
 
         if (isPartner(req, lesson)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToUpdate();
-            if (allowedPartnerLanguages != null) {
-                allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
-            }
+            allowedLanguages.retainAll(allowedPartnerLanguages);
+            allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);

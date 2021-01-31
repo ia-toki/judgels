@@ -62,7 +62,7 @@ public class ProblemRoleChecker {
         String defaultLanguage = problemStore.getDefaultLanguage(getUserJid(req), problem.getJid());
         Set<String> allowedLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
 
-        return allowedLanguages == null || allowedLanguages.contains(language) || language.equals(defaultLanguage);
+        return allowedLanguages.isEmpty() || allowedLanguages.contains(language) || language.equals(defaultLanguage);
     }
 
     public boolean isAllowedToUpdateStatement(Http.Request req, Problem problem) {
@@ -83,7 +83,7 @@ public class ProblemRoleChecker {
 
         Set<String> allowedLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
 
-        return allowedLanguages == null || allowedLanguages.contains(language);
+        return allowedLanguages.isEmpty() || allowedLanguages.contains(language);
     }
 
     public boolean isAllowedToManageStatementLanguages(Http.Request req, Problem problem) {
@@ -128,7 +128,7 @@ public class ProblemRoleChecker {
         }
 
         Set<String> allowedLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
-        return allowedLanguages == null || allowedLanguages.contains(language);
+        return allowedLanguages.isEmpty() || allowedLanguages.contains(language);
     }
 
 
@@ -144,10 +144,8 @@ public class ProblemRoleChecker {
 
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
-            if (allowedPartnerLanguages != null) {
-                allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
-            }
+            allowedLanguages.retainAll(allowedPartnerLanguages);
+            allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);
@@ -165,10 +163,8 @@ public class ProblemRoleChecker {
 
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
-            if (allowedPartnerLanguages != null) {
-                allowedLanguages.retainAll(allowedPartnerLanguages);
-                allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
-            }
+            allowedLanguages.retainAll(allowedPartnerLanguages);
+            allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);
