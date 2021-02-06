@@ -3,15 +3,24 @@ package judgels.jerahmeel.api.problemset;
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_HEADER;
+import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
+import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
+import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_JID;
+import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_SLUG;
+import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_JID;
+import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_SLUG;
 import static judgels.jerahmeel.api.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT_FOUND;
 import static judgels.jerahmeel.api.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
+import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.Optional;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
 import judgels.jerahmeel.api.archive.Archive;
 import judgels.jerahmeel.api.archive.ArchiveCreateData;
+import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemData;
 import org.junit.jupiter.api.Test;
 
 class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrationTests {
@@ -49,6 +58,22 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
                 .name("Problem Set 2B")
                 .archiveSlug(archiveB.getSlug())
                 .build());
+
+        problemSetProblemService.setProblems(ADMIN_HEADER, problemSet1.getJid(), ImmutableList.of(
+                new ProblemSetProblemData.Builder()
+                        .alias("A")
+                        .slug(PROBLEM_1_SLUG)
+                        .type(PROGRAMMING)
+                        .contestSlugs(ImmutableList.of(CONTEST_1_SLUG))
+                        .build()));
+
+        problemSetProblemService.setProblems(ADMIN_HEADER, problemSet2A.getJid(), ImmutableList.of(
+                new ProblemSetProblemData.Builder()
+                        .alias("B")
+                        .slug(PROBLEM_2_SLUG)
+                        .type(PROGRAMMING)
+                        .contestSlugs(ImmutableList.of(CONTEST_2_SLUG))
+                        .build()));
 
         assertThat(problemSet1.getSlug()).isEqualTo("problem-set-1");
         assertThat(problemSet1.getName()).isEqualTo("Problem Set 1");
@@ -114,5 +139,10 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
         response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.empty(), Optional.of("Set 2"), Optional.empty());
         assertThat(response.getData().getPage()).containsExactly(problemSet2B, problemSet2A);
+
+        assertThat(problemSetService.searchProblemSet(CONTEST_1_JID)).isEqualTo(problemSet1);
+        assertThat(problemSetService.searchProblemSet(CONTEST_2_JID)).isEqualTo(problemSet2A);
+        assertThatRemoteExceptionThrownBy(() -> problemSetService.searchProblemSet("bogus"))
+                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
     }
 }

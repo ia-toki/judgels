@@ -25,4 +25,11 @@ public class ProblemContestHibernateDao extends UnmodifiableHibernateDao<Problem
                 .putColumnsEq(ProblemContestModel_.problemJid, problemJid)
                 .build(), new SelectionOptions.Builder().orderDir(OrderDir.ASC).build());
     }
+
+    @Override
+    public List<ProblemContestModel> selectAllByContestJid(String contestJid) {
+        return selectAll(new FilterOptions.Builder<ProblemContestModel>()
+                .putColumnsEq(ProblemContestModel_.contestJid, contestJid)
+                .build());
+    }
 }

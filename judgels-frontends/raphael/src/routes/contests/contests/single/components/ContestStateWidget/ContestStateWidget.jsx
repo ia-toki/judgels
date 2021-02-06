@@ -2,6 +2,7 @@ import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../../../modules/contestSelectors';
@@ -19,6 +20,7 @@ class ContestStateWidget extends PureComponent {
     remainingDuration: undefined,
     isVirtualContestAlertOpen: undefined,
     isVirtualContestButtonLoading: undefined,
+    problemSet: undefined,
   };
 
   currentTimeout;
@@ -27,6 +29,7 @@ class ContestStateWidget extends PureComponent {
     if (prevProps.remainingStateDuration !== this.props.remainingStateDuration) {
       this.setUpBaseRemainingDuration();
     }
+    this.searchProblemSet();
   }
 
   componentDidMount() {
@@ -66,6 +69,21 @@ class ContestStateWidget extends PureComponent {
     </Alert>
   );
 
+  renderUpsolveButton = () => {
+    const { problemSet } = this.state;
+    if (!problemSet) {
+      return null;
+    }
+    return (
+      <>
+        &nbsp;&nbsp;
+        <ButtonLink small intent={Intent.WARNING} to={`/problems/${problemSet.slug}`}>
+          Upsolve problems
+        </ButtonLink>
+      </>
+    );
+  };
+
   getWidgetComponents = () => {
     const state = this.props.state;
 
@@ -98,7 +116,12 @@ class ContestStateWidget extends PureComponent {
     }
     if (state === ContestState.Finished) {
       return {
-        leftComponent: <span>Contest is over.</span>,
+        leftComponent: (
+          <>
+            <span>Contest is over.</span>
+            {this.renderUpsolveButton()}
+          </>
+        ),
       };
     }
     if (state === ContestState.Paused) {
@@ -150,6 +173,15 @@ class ContestStateWidget extends PureComponent {
     await this.props.onGetContestWebConfig(this.props.contest.jid);
     this.setState({ isVirtualContestButtonLoading: false });
   };
+
+  searchProblemSet = async () => {
+    if (this.props.state === ContestState.Finished) {
+      if (!this.state.problemSet) {
+        const problemSet = await this.props.onSearchProblemSet(this.props.contest.jid);
+        this.setState({ problemSet });
+      }
+    }
+  };
 }
 
 const mapStateToProps = state => ({
@@ -161,6 +193,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onGetContestWebConfig: contestWebActions.getWebConfig,
   onStartVirtualContest: contestActions.startVirtualContest,
+  onSearchProblemSet: contestActions.searchProblemSet,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContestStateWidget);

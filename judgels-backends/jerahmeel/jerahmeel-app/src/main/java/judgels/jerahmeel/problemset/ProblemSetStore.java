@@ -18,22 +18,36 @@ import judgels.jerahmeel.api.problemset.ProblemSetErrors;
 import judgels.jerahmeel.api.problemset.ProblemSetUpdateData;
 import judgels.jerahmeel.persistence.ArchiveDao;
 import judgels.jerahmeel.persistence.ArchiveModel;
+import judgels.jerahmeel.persistence.ProblemContestDao;
+import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;
+import judgels.jerahmeel.persistence.ProblemSetProblemDao;
+import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.persistence.SearchOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
 public class ProblemSetStore {
     private final ProblemSetDao problemSetDao;
+    private final ProblemSetProblemDao problemSetProblemDao;
+    private final ProblemContestDao problemContestDao;
     private final ArchiveDao archiveDao;
 
     private final LoadingCache<String, ProblemSet> problemSetByJidCache;
     private final LoadingCache<String, ProblemSet> problemSetBySlugCache;
+    private final LoadingCache<String, ProblemSet> problemSetByContestJidCache;
 
     @Inject
-    public ProblemSetStore(ProblemSetDao problemSetDao, ArchiveDao archiveDao) {
+    public ProblemSetStore(
+            ProblemSetDao problemSetDao,
+            ProblemSetProblemDao problemSetProblemDao,
+            ProblemContestDao problemContestDao,
+            ArchiveDao archiveDao) {
+
         this.problemSetDao = problemSetDao;
+        this.problemSetProblemDao = problemSetProblemDao;
+        this.problemContestDao = problemContestDao;
         this.archiveDao = archiveDao;
 
         this.problemSetByJidCache = Caffeine.newBuilder()
@@ -44,6 +58,10 @@ public class ProblemSetStore {
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build(this::getProblemSetBySlugUncached);
+        this.problemSetByContestJidCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(getShortDuration())
+                .build(this::getProblemSetByContestJidUncached);
     }
 
     public Optional<ProblemSet> getProblemSetByJid(String problemSetJid) {
@@ -60,6 +78,23 @@ public class ProblemSetStore {
 
     private ProblemSet getProblemSetBySlugUncached(String problemSetSlug) {
         return problemSetDao.selectBySlug(problemSetSlug).map(ProblemSetStore::fromModel).orElse(null);
+    }
+
+    public Optional<ProblemSet> getProblemSetByContestJid(String contestJid) {
+        return Optional.ofNullable(problemSetByContestJidCache.get(contestJid));
+    }
+
+    private ProblemSet getProblemSetByContestJidUncached(String contestJid) {
+        for (ProblemContestModel pcm : problemContestDao.selectAllByContestJid(contestJid)) {
+            Optional<ProblemSetProblemModel> pspm = problemSetProblemDao.selectByProblemJid(pcm.problemJid);
+            if (pspm.isPresent()) {
+                Optional<ProblemSetModel> m = problemSetDao.selectByJid(pspm.get().problemSetJid);
+                if (m.isPresent()) {
+                    return fromModel(m.get());
+                }
+            }
+        }
+        return null;
     }
 
     public Page<ProblemSet> getProblemSets(Optional<String> archiveJid, Optional<String> name, Optional<Integer> page) {

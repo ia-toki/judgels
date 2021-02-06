@@ -82,7 +82,7 @@ class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIn
         response = problemSetProblemService.getProblems(Optional.of(ADMIN_HEADER), problemSetB.getJid());
         assertThat(response.getData()).isEmpty();
 
-        // assert user
+        // as user
 
         assertThatRemoteExceptionThrownBy(() -> problemSetProblemService
                 .setProblems(USER_HEADER, problemSetA.getJid(), ImmutableList.of()))

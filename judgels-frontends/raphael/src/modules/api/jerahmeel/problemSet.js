@@ -32,4 +32,9 @@ export const problemSetAPI = {
   getProblemSetBySlug: problemSetSlug => {
     return get(`${baseProblemSetsURL}/slug/${problemSetSlug}`);
   },
+
+  searchProblemSet: contestJid => {
+    const params = stringify({ contestJid });
+    return get(`${baseProblemSetsURL}/search?${params}`);
+  },
 };

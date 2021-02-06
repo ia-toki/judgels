@@ -53,4 +53,9 @@ public interface ProblemSetService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("problemSetJid") String problemSetJid,
             ProblemSetUpdateData data);
+
+    @GET
+    @Path("/search")
+    @Produces(APPLICATION_JSON)
+    ProblemSet searchProblemSet(@QueryParam("contestJid") String contestJid);
 }

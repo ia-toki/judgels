@@ -1,8 +1,10 @@
 import { push } from 'connected-react-router';
 import { SubmissionError } from 'redux-form';
 
+import { hasJerahmeel } from '../../../../conf';
 import { BadRequestError } from '../../../../modules/api/error';
 import { contestAPI, ContestErrors } from '../../../../modules/api/uriel/contest';
+import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { DelContest, EditContest, PutContest } from './contestReducer';
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -94,6 +96,15 @@ export function updateContestDescription(contestJid, description) {
     const token = selectToken(getState());
     await contestAPI.updateContestDescription(token, contestJid, { description });
     toastActions.showSuccessToast('Description updated.');
+  };
+}
+
+export function searchProblemSet(contestJid) {
+  return async () => {
+    if (!hasJerahmeel()) {
+      return await Promise.resolve(undefined);
+    }
+    return await problemSetAPI.searchProblemSet(contestJid);
   };
 }
 

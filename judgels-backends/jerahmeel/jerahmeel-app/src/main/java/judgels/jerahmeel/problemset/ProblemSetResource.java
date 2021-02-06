@@ -117,4 +117,10 @@ public class ProblemSetResource implements ProblemSetService {
 
         return checkFound(problemSetStore.updateProblemSet(problemSetJid, data));
     }
+
+    @Override
+    @UnitOfWork
+    public ProblemSet searchProblemSet(String contestJid) {
+        return checkFound(problemSetStore.getProblemSetByContestJid(contestJid));
+    }
 }
