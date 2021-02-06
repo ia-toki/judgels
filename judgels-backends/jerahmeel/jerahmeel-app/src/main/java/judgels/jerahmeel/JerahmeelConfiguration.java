@@ -10,6 +10,7 @@ import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sealtiel.api.SealtielClientConfiguration;
+import judgels.uriel.api.UrielClientConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -22,6 +23,9 @@ public interface JerahmeelConfiguration {
 
     @JsonProperty("sandalphon")
     SandalphonClientConfiguration getSandalphonConfig();
+
+    @JsonProperty("uriel")
+    Optional<UrielClientConfiguration> getUrielConfig();
 
     @JsonProperty("sealtiel")
     Optional<SealtielClientConfiguration> getSealtielConfig();

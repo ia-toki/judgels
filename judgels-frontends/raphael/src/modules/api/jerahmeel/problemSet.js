@@ -6,6 +6,7 @@ import { get, post } from '../http';
 export const ProblemSetErrors = {
   SlugAlreadyExists: 'Jerahmeel:ProblemSetSlugAlreadyExists',
   ArchiveSlugNotFound: 'Jerahmeel:ArchiveSlugNotFound',
+  ContestSlugsNotAllowed: 'Jerahmeel:ContestSlugsNotAllowed',
 };
 
 export const baseProblemSetsURL = `${APP_CONFIG.apiUrls.jerahmeel}/problemsets`;

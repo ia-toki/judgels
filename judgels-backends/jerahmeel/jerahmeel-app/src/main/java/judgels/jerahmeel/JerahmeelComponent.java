@@ -22,6 +22,7 @@ import judgels.jerahmeel.submission.programming.StatsModule;
 import judgels.jerahmeel.submission.programming.StatsTask;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
+import judgels.jerahmeel.uriel.UrielModule;
 import judgels.jerahmeel.user.UserStatsResource;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsApplicationModule;
@@ -39,6 +40,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
         JophielModule.class,
         SandalphonModule.class,
         SealtielModule.class,
+        UrielModule.class,
 
         JudgelsModule.class,
         JudgelsApplicationModule.class,

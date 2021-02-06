@@ -53,6 +53,7 @@ import judgels.jerahmeel.persistence.ChapterModel;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.CourseModel;
+import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.StatsUserChapterModel;
@@ -78,6 +79,7 @@ import org.junit.jupiter.api.Test;
         ChapterProblemModel.class,
         ProblemSetModel.class,
         ProblemSetProblemModel.class,
+        ProblemContestModel.class,
         StatsUserModel.class,
         StatsUserChapterModel.class,
         StatsUserCourseModel.class,

@@ -57,4 +57,12 @@ public interface ProblemSetProblemService {
             @PathParam("problemSetJid") String problemSetJid,
             @PathParam("problemAlias") String problemAlias);
 
+    @GET
+    @Path("/{problemAlias}/metadata")
+    @Produces(APPLICATION_JSON)
+    ProblemMetadataResponse getProblemMetadata(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            @PathParam("problemAlias") String problemAlias);
+
 }

@@ -26,4 +26,8 @@ export const problemSetProblemAPI = {
   getProblemStats: (token, problemSetJid, problemAlias) => {
     return get(`${baseURL(problemSetJid)}/${problemAlias}/stats`, token);
   },
+
+  getProblemMetadata: (token, problemSetJid, problemAlias) => {
+    return get(`${baseURL(problemSetJid)}/${problemAlias}/metadata`, token);
+  },
 };

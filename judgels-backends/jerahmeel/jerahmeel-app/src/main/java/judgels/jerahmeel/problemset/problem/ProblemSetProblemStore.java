@@ -10,6 +10,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
+import judgels.jerahmeel.persistence.ProblemContestDao;
+import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.persistence.api.OrderDir;
@@ -18,25 +20,27 @@ import judgels.sandalphon.api.problem.ProblemType;
 
 public class ProblemSetProblemStore {
     private final ProblemSetProblemDao problemDao;
+    private final ProblemContestDao problemContestDao;
 
     @Inject
-    public ProblemSetProblemStore(ProblemSetProblemDao problemDao) {
+    public ProblemSetProblemStore(ProblemSetProblemDao problemDao, ProblemContestDao problemContestDao) {
         this.problemDao = problemDao;
+        this.problemContestDao = problemContestDao;
     }
 
     public List<ProblemSetProblem> getProblems(String problemSetJid) {
         return Lists.transform(
                 problemDao.selectAllByProblemSetJid(problemSetJid, createOptions()),
-                ProblemSetProblemStore::fromModel);
+                m -> fromModel(m, getContestJids(m.problemJid)));
     }
 
     public Optional<ProblemSetProblem> getProblem(String problemJid) {
-        return problemDao.selectByProblemJid(problemJid).map(ProblemSetProblemStore::fromModel);
+        return problemDao.selectByProblemJid(problemJid).map(m -> fromModel(m, getContestJids(m.problemJid)));
     }
 
     public Optional<ProblemSetProblem> getProblemByAlias(String problemSetJid, String problemAlias) {
         return problemDao.selectByProblemSetJidAndProblemAlias(problemSetJid, problemAlias)
-                .map(ProblemSetProblemStore::fromModel);
+                .map(m -> fromModel(m, getContestJids(m.problemJid)));
     }
 
     public Map<String, String> getProblemAliasesByJids(Set<String> problemJids) {
@@ -62,17 +66,26 @@ public class ProblemSetProblemStore {
                     problemSetJid,
                     problem.getAlias(),
                     problem.getProblemJid(),
-                    problem.getType()));
+                    problem.getType(),
+                    problem.getContestJids()));
         }
         return problems.build();
     }
 
-    public ProblemSetProblem upsertProblem(String problemSetJid, String alias, String problemJid, ProblemType type) {
+    public ProblemSetProblem upsertProblem(
+            String problemSetJid,
+            String alias,
+            String problemJid,
+            ProblemType type,
+            List<String> contestJids) {
+
+        upsertProblemContests(problemJid, contestJids);
+
         Optional<ProblemSetProblemModel> maybeModel = problemDao.selectByProblemJid(problemJid);
         if (maybeModel.isPresent()) {
             ProblemSetProblemModel model = maybeModel.get();
             model.alias = alias;
-            return fromModel(problemDao.update(model));
+            return fromModel(problemDao.update(model), contestJids);
         } else {
             ProblemSetProblemModel model = new ProblemSetProblemModel();
             model.problemSetJid = problemSetJid;
@@ -80,8 +93,24 @@ public class ProblemSetProblemStore {
             model.problemJid = problemJid;
             model.type = type.name();
             model.status = "VISIBLE";
-            return fromModel(problemDao.insert(model));
+            return fromModel(problemDao.insert(model), contestJids);
         }
+    }
+
+    private void upsertProblemContests(String problemJid, List<String> contestJids) {
+        problemContestDao.selectAllByProblemJid(problemJid).forEach(problemContestDao::delete);
+        problemContestDao.flush();
+
+        for (String contestJid : contestJids) {
+            ProblemContestModel model = new ProblemContestModel();
+            model.problemJid = problemJid;
+            model.contestJid = contestJid;
+            problemContestDao.insert(model);
+        }
+    }
+
+    private List<String> getContestJids(String problemJid) {
+        return Lists.transform(problemContestDao.selectAllByProblemJid(problemJid), m -> m.contestJid);
     }
 
     private static SelectionOptions createOptions() {
@@ -91,11 +120,12 @@ public class ProblemSetProblemStore {
                 .build();
     }
 
-    private static ProblemSetProblem fromModel(ProblemSetProblemModel model) {
+    private static ProblemSetProblem fromModel(ProblemSetProblemModel model, List<String> contestJids) {
         return new ProblemSetProblem.Builder()
                 .problemJid(model.problemJid)
                 .alias(model.alias)
                 .type(ProblemType.valueOf(model.type))
+                .contestJids(contestJids)
                 .build();
     }
 }

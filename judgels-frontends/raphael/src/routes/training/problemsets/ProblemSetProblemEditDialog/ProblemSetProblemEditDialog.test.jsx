@@ -20,21 +20,34 @@ describe('ProblemSetProblemEditDialog', () => {
       alias: 'A',
       problemJid: 'jid-1',
       type: ProblemType.Programming,
+      contestJids: [],
     },
     {
       alias: 'B',
       problemJid: 'jid-2',
       type: ProblemType.Bundle,
+      contestJids: [],
+    },
+    {
+      alias: 'C',
+      problemJid: 'jid-3',
+      type: ProblemType.Programming,
+      contestJids: ['contestJid-1', 'contestJid-2'],
     },
   ];
 
   const problemsMap = {
     'jid-1': { slug: 'slug-1' },
     'jid-2': { slug: 'slug-2' },
+    'jid-3': { slug: 'slug-3' },
+  };
+  const contestsMap = {
+    'contestJid-1': { slug: 'contestSlug-1' },
+    'contestJid-2': { slug: 'contestSlug-2' },
   };
 
   beforeEach(() => {
-    onGetProblems = jest.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap }));
+    onGetProblems = jest.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap, contestsMap }));
     onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(combineReducers({ form: formReducer }));
@@ -62,9 +75,11 @@ describe('ProblemSetProblemEditDialog', () => {
     wrapper.update();
 
     const problemsField = wrapper.find('textarea[name="problems"]');
-    expect(problemsField.prop('value')).toEqual('A,slug-1\nB,slug-2,BUNDLE');
+    expect(problemsField.prop('value')).toEqual(
+      'A,slug-1\nB,slug-2,BUNDLE\nC,slug-3,PROGRAMMING,contestSlug-1;contestSlug-2'
+    );
 
-    problemsField.simulate('change', { target: { value: 'P, slug-3\n  Q,slug-4,BUNDLE  ' } });
+    problemsField.simulate('change', { target: { value: 'P, slug-3\n  Q,slug-4,BUNDLE  ,contestSlug-3 ' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');
@@ -74,11 +89,13 @@ describe('ProblemSetProblemEditDialog', () => {
         alias: 'P',
         slug: 'slug-3',
         type: 'PROGRAMMING',
+        contestSlugs: [],
       },
       {
         alias: 'Q',
         slug: 'slug-4',
         type: 'BUNDLE',
+        contestSlugs: ['contestSlug-3'],
       },
     ]);
   });

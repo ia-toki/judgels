@@ -16,4 +16,5 @@
     <include file="migrations/007-add-category-to-archive.xml"/>
     <include file="migrations/008-add-stats.xml"/>
     <include file="migrations/009-add-submission_jid-to-stats_user_problem.xml"/>
+    <include file="migrations/010-add-problem_contest.xml"/>
 </databaseChangeLog>

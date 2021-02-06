@@ -30,7 +30,17 @@ function resolveUrl(parentPath, childPath) {
   return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
 }
 
-function ContentWithSidebar({ match, location, items, title, action, contentHeader, stickyWidget, smallContent }) {
+function ContentWithSidebar({
+  match,
+  location,
+  items,
+  title,
+  action,
+  contentHeader,
+  stickyWidget1,
+  stickyWidget2,
+  smallContent,
+}) {
   const renderSidebar = () => {
     const sidebarItems = items
       .filter(item => !item.disabled)
@@ -54,12 +64,24 @@ function ContentWithSidebar({ match, location, items, title, action, contentHead
   };
 
   const renderStickyWidget = () => {
-    if (stickyWidget) {
-      const Widget = stickyWidget;
+    let widget1 = null;
+    if (stickyWidget1) {
+      const Widget = stickyWidget1;
+      widget1 = <Widget />;
+    }
+
+    let widget2 = null;
+    if (stickyWidget2) {
+      const Widget = stickyWidget2;
+      widget2 = <Widget />;
+    }
+
+    if (stickyWidget1 || stickyWidget2) {
       return (
         <div>
           <hr />
-          <Widget />
+          {widget1}
+          {widget2}
         </div>
       );
     }

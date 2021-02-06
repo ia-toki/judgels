@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="fushar" id="add-problem_contest-1">
+        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_contest">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="problemJid" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contestJid" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdAt" type="datetime(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar" id="add-problem_contest-2">
+        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="problemJid, contestJid" constraintName="problemJid_contestJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_contest"/>
+    </changeSet>
+</databaseChangeLog>

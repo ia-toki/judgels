@@ -25,6 +25,7 @@ import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.service.jaxrs.JaxRsClients;
+import judgels.uriel.api.UrielClientConfiguration;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.h2.Driver;
@@ -57,6 +58,7 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
                         .baseDataDir(baseDataDir.toString())
                         .jophielConfig(JophielClientConfiguration.DEFAULT)
                         .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
+                        .urielConfig(UrielClientConfiguration.DEFAULT)
                         .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                         .submissionConfig(SubmissionConfiguration.DEFAULT)
                         .statsConfig(StatsConfiguration.DEFAULT)

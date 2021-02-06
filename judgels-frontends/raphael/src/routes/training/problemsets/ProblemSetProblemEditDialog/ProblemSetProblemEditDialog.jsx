@@ -55,7 +55,7 @@ export class ProblemSetProblemEditDialog extends Component {
         validator: this.validateProblems,
         renderFormComponents: this.renderDialogForm,
         onSubmit: this.updateProblems,
-        initialValues: { problems: this.serializeProblems(response.data, response.problemsMap) },
+        initialValues: { problems: this.serializeProblems(response.data, response.problemsMap, response.contestsMap) },
       };
       return <ProblemSetProblemEditForm {...props} />;
     } else {
@@ -88,12 +88,12 @@ export class ProblemSetProblemEditDialog extends Component {
     return (
       <Callout icon={null}>
         <p>
-          <strong>Format:</strong> <code>alias,slug[,type]</code>
+          <strong>Format:</strong> <code>alias,slug[,type[,contestSlugs]]</code>
         </p>
         <p>
           <strong>Example:</strong>
         </p>
-        <pre>{'A,hello\nB,tree,PROGRAMMING\nC,flow,BUNDLE'}</pre>
+        <pre>{'A,hello\nB,tree,PROGRAMMING\nC,flow,BUNDLE,contest-1;contest-2'}</pre>
       </Callout>
     );
   };
@@ -119,10 +119,17 @@ export class ProblemSetProblemEditDialog extends Component {
     this.toggleEditing();
   };
 
-  serializeProblems = (problems, problemsMap) => {
+  serializeProblems = (problems, problemsMap, contestsMap) => {
     return problems
       .map(p => {
-        if (p.type !== ProblemType.Programming) {
+        if (p.contestJids.length > 0) {
+          const contestSlugs = p.contestJids
+            .map(jid => contestsMap[jid])
+            .filter(c => c)
+            .map(c => c.slug)
+            .join(';');
+          return `${p.alias},${problemsMap[p.problemJid].slug},${p.type},${contestSlugs}`;
+        } else if (p.type !== ProblemType.Programming) {
           return `${p.alias},${problemsMap[p.problemJid].slug},${p.type}`;
         } else {
           return `${p.alias},${problemsMap[p.problemJid].slug}`;
@@ -142,6 +149,10 @@ export class ProblemSetProblemEditDialog extends Component {
         alias: s[0],
         slug: s[1],
         type: s[2] || ProblemType.Programming,
+        contestSlugs: (s[3] || '')
+          .split(';')
+          .filter(slug => slug)
+          .map(slug => slug.trim()),
       }));
   };
 
@@ -157,8 +168,8 @@ export class ProblemSetProblemEditDialog extends Component {
     const slugs = [];
 
     for (const p of problems) {
-      if (p.length < 2 || p.length > 3) {
-        return 'Each line must contain 2-3 comma-separated elements';
+      if (p.length < 2 || p.length > 4) {
+        return 'Each line must contain 2-4 comma-separated elements';
       }
       const alias = p[0];
       const aliasValidation = Alias(alias);

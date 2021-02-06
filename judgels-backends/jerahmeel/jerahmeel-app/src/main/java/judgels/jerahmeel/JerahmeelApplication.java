@@ -13,6 +13,7 @@ import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
 import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
+import judgels.jerahmeel.uriel.UrielModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
@@ -46,6 +47,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
                 .sealtielModule(new SealtielModule(jerahmeelConfig.getSealtielConfig()))
+                .urielModule(new UrielModule(jerahmeelConfig.getUrielConfig()))
                 .submissionModule(new SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),
                         jerahmeelConfig.getStatsConfig()))

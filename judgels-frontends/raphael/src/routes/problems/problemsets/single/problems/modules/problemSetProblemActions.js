@@ -33,3 +33,10 @@ export function getProblemStats(problemSetJid, problemAlias) {
     return await problemSetProblemAPI.getProblemStats(token, problemSetJid, problemAlias);
   };
 }
+
+export function getProblemMetadata(problemSetJid, problemAlias) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    return await problemSetProblemAPI.getProblemMetadata(token, problemSetJid, problemAlias);
+  };
+}

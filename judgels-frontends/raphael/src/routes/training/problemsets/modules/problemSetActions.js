@@ -1,7 +1,7 @@
 import { SubmissionError } from 'redux-form';
 
 import { selectToken } from '../../../../modules/session/sessionSelectors';
-import { BadRequestError } from '../../../../modules/api/error';
+import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { problemSetAPI, ProblemSetErrors } from '../../../../modules/api/jerahmeel/problemSet';
 import { problemSetProblemAPI } from '../../../../modules/api/jerahmeel/problemSetProblem';
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -59,7 +59,15 @@ export function getProblems(problemSetJid) {
 export function setProblems(problemSetJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    await problemSetProblemAPI.setProblems(token, problemSetJid, data);
+    try {
+      await problemSetProblemAPI.setProblems(token, problemSetJid, data);
+    } catch (error) {
+      if (error instanceof ForbiddenError && error.message === ProblemSetErrors.ContestSlugsNotAllowed) {
+        const unknownSlugs = error.parameters.contestSlugs;
+        throw new SubmissionError({ problems: 'Contests not found/allowed: ' + unknownSlugs });
+      }
+      throw error;
+    }
     toastActions.showSuccessToast('Problemset problems updated.');
   };
 }

@@ -171,15 +171,32 @@ describe('problemSetActions', () => {
   describe('setProblems()', () => {
     const params = [];
 
-    it('calls API to set problems', async () => {
-      nock(APP_CONFIG.apiUrls.jerahmeel)
-        .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-        .options(`/problemsets/${problemSetJid}/problems`)
-        .reply(200)
-        .put(`/problemsets/${problemSetJid}/problems`, params)
-        .reply(200);
+    describe('when success', () => {
+      it('calls API to set problems', async () => {
+        nock(APP_CONFIG.apiUrls.jerahmeel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/problemsets/${problemSetJid}/problems`)
+          .reply(200)
+          .put(`/problemsets/${problemSetJid}/problems`, params)
+          .reply(200);
 
-      await store.dispatch(problemSetActions.setProblems(problemSetJid, params));
+        await store.dispatch(problemSetActions.setProblems(problemSetJid, params));
+      });
+    });
+
+    describe('when some contests are not found', () => {
+      it('throws SubmissionError', async () => {
+        nock(APP_CONFIG.apiUrls.jerahmeel)
+          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+          .options(`/problemsets/${problemSetJid}/problems`)
+          .reply(200)
+          .put(`/problemsets/${problemSetJid}/problems`, params)
+          .reply(403, { errorName: ProblemSetErrors.ContestSlugsNotAllowed });
+
+        await expect(store.dispatch(problemSetActions.setProblems(problemSetJid, params))).rejects.toEqual(
+          new SubmissionError({ problems: ProblemSetErrors.ContestSlugsNotAllowed })
+        );
+      });
     });
   });
 });

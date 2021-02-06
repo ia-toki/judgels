@@ -45,7 +45,6 @@ class ProblemStatsWidget extends Component {
     return (
       <ContentCard className="problem-stats-widget">
         <h4>Stats</h4>
-        <hr />
         <ul>
           {stats.totalUsersAccepted > 0 && (
             <li>

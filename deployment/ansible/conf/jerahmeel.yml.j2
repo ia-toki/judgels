@@ -60,6 +60,11 @@ jerahmeel:
     clientSecret: {{ sealtiel_jerahmeel_secret }}
 {% endif %}
 
+{% if uriel_url_internal is defined %}
+  uriel:
+    baseUrl: {{ judgels_scheme_internal }}://{{ uriel_url_internal }}
+{% endif %}
+
   gabriel:
     clientJid: JIDSECL-gabriel
 
