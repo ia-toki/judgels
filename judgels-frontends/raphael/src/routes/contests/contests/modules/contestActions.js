@@ -2,7 +2,7 @@ import { push } from 'connected-react-router';
 import { SubmissionError } from 'redux-form';
 
 import { hasJerahmeel } from '../../../../conf';
-import { BadRequestError } from '../../../../modules/api/error';
+import { BadRequestError, NotFoundError } from '../../../../modules/api/error';
 import { contestAPI, ContestErrors } from '../../../../modules/api/uriel/contest';
 import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
@@ -102,9 +102,16 @@ export function updateContestDescription(contestJid, description) {
 export function searchProblemSet(contestJid) {
   return async () => {
     if (!hasJerahmeel()) {
-      return await Promise.resolve(undefined);
+      return await Promise.resolve(null);
     }
-    return await problemSetAPI.searchProblemSet(contestJid);
+    try {
+      return await problemSetAPI.searchProblemSet(contestJid);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return await Promise.resolve(null);
+      }
+      throw error;
+    }
   };
 }
 

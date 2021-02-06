@@ -176,7 +176,7 @@ class ContestStateWidget extends PureComponent {
 
   searchProblemSet = async () => {
     if (this.props.state === ContestState.Finished) {
-      if (!this.state.problemSet) {
+      if (this.state.problemSet === undefined) {
         const problemSet = await this.props.onSearchProblemSet(this.props.contest.jid);
         this.setState({ problemSet });
       }
