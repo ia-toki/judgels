@@ -61,7 +61,6 @@ import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
@@ -83,7 +82,6 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
-    private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
     private final ContestSupervisorStore supervisorStore;
@@ -104,7 +102,6 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
-            ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestSupervisorStore supervisorStore,
@@ -123,7 +120,6 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.submissionRoleChecker = submissionRoleChecker;
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.problemRoleChecker = problemRoleChecker;
-        this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
         this.supervisorStore = supervisorStore;
@@ -239,7 +235,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     @UnitOfWork(readOnly = true)
     public SubmissionInfo getSubmissionInfo(String contestJid, String userJid, String problemJid) {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(scoreboardRoleChecker.canViewSubmissions(contest));
+        checkAllowed(submissionRoleChecker.canViewAll(contest));
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
@@ -252,7 +248,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     @UnitOfWork(readOnly = true)
     public Response getSubmissionSourceImage(String contestJid, String userJid, String problemJid) {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(scoreboardRoleChecker.canViewSubmissions(contest));
+        checkAllowed(submissionRoleChecker.canViewAll(contest));
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
@@ -402,6 +398,22 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         return Response.ok(stream)
                 .header(LAST_SUBMISSION_ID_HEADER, submissions.get(submissions.size() - 1).getId())
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public List<Submission> getSubmissionsForStats(
+            String contestJid,
+            Optional<Long> lastSubmissionId,
+            Optional<Integer> limit) {
+
+
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewAll(contest));
+
+        return submissionStore
+                .getSubmissionsForStats(Optional.of(contestJid), lastSubmissionId, limit.orElse(100))
+                .getPage();
     }
 
     private Optional<String> byUserJid(Optional<String> username) {

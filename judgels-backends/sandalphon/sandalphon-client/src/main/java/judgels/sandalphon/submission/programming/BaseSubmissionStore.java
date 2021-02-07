@@ -109,7 +109,11 @@ public class BaseSubmissionStore<
     }
 
     @Override
-    public Page<Submission> getSubmissionsForStats(Optional<Long> lastSubmissionId, int limit) {
+    public Page<Submission> getSubmissionsForStats(
+            Optional<String> containerJid,
+            Optional<Long> lastSubmissionId,
+            int limit) {
+
         SelectionOptions options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)
                 .pageSize(limit)
@@ -117,7 +121,7 @@ public class BaseSubmissionStore<
                 .build();
 
         Page<SM> submissionModels = submissionDao
-                .selectPaged(Optional.empty(), Optional.empty(), Optional.empty(), lastSubmissionId, options);
+                .selectPaged(containerJid, Optional.empty(), Optional.empty(), lastSubmissionId, options);
         Set<String> submissionJids = submissionModels.getPage().stream().map(m -> m.jid).collect(Collectors.toSet());
         Map<String, GM> gradingModels = gradingDao.selectAllLatestWithDetailsBySubmissionJids(submissionJids);
 

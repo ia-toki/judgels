@@ -19,12 +19,14 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
+import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgles.jophiel.user.UserClient;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestLogger contestLogger;
+    private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final ContestScoreboardPoller scoreboardUpdaterDispatcher;
@@ -37,6 +39,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ActorChecker actorChecker,
             ContestStore contestStore,
             ContestLogger contestLogger,
+            ContestSubmissionRoleChecker submissionRoleChecker,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
             ContestScoreboardPoller scoreboardUpdaterDispatcher,
@@ -46,6 +49,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.contestLogger = contestLogger;
+        this.submissionRoleChecker = submissionRoleChecker;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.scoreboardFetcher = scoreboardFetcher;
         this.scoreboardUpdaterDispatcher = scoreboardUpdaterDispatcher;
@@ -70,7 +74,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         boolean canSupervise = scoreboardRoleChecker.canSupervise(actorJid, contest);
         boolean canViewOfficialAndFrozen = scoreboardRoleChecker.canViewOfficialAndFrozen(actorJid, contest);
         boolean canViewClosedProblems = scoreboardRoleChecker.canViewClosedProblems(actorJid, contest);
-        boolean canViewSubmissions = scoreboardRoleChecker.canViewSubmissions(contest);
+        boolean canViewSubmissions = submissionRoleChecker.canViewAll(contest);
         ContestScoreboardConfig config = new ContestScoreboardConfig.Builder()
                 .canViewOfficialAndFrozen(canViewOfficialAndFrozen)
                 .canViewClosedProblems(canViewClosedProblems)

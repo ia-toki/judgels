@@ -75,6 +75,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
                     component.gradingResponsePoller());
         }
 
-        env.admin().addTask(component.statsTask());
+        env.admin().addTask(component.problemSetStatsTask());
+        env.admin().addTask(component.contestStatsTask());
     }
 }

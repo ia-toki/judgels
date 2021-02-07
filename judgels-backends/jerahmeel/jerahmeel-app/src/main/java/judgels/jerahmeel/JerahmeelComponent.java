@@ -18,8 +18,9 @@ import judgels.jerahmeel.sandalphon.SandalphonModule;
 import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
+import judgels.jerahmeel.submission.programming.ContestStatsTask;
+import judgels.jerahmeel.submission.programming.ProblemSetStatsTask;
 import judgels.jerahmeel.submission.programming.StatsModule;
-import judgels.jerahmeel.submission.programming.StatsTask;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
 import judgels.jerahmeel.uriel.UrielModule;
@@ -69,5 +70,6 @@ public interface JerahmeelComponent {
 
     JudgelsScheduler scheduler();
     GradingResponsePoller gradingResponsePoller();
-    StatsTask statsTask();
+    ProblemSetStatsTask problemSetStatsTask();
+    ContestStatsTask contestStatsTask();
 }

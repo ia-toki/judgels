@@ -1,8 +1,13 @@
 package judgels.uriel.contest.submission;
 
+import static java.time.temporal.ChronoUnit.HOURS;
+import static judgels.persistence.TestClock.NOW;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SUBMISSION;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.contest.AbstractContestRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,6 +79,25 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractContestRoleCh
         moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canViewOwn(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canViewOwn(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void view_all() {
+        Contest contestAFinished;
+        contestAFinished = contestStore.createContest(
+                new ContestCreateData.Builder().slug("contest-a-finished").build());
+        contestAFinished = contestStore.updateContest(
+                contestAFinished.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
+
+        moduleStore.upsertRegistrationModule(contestAFinished.getJid());
+
+        assertThat(checker.canViewAll(contestA)).isFalse();
+        assertThat(checker.canViewAll(contestAStarted)).isFalse();
+        assertThat(checker.canViewAll(contestAFinished)).isTrue();
+        assertThat(checker.canViewAll(contestB)).isFalse();
+        assertThat(checker.canViewAll(contestBStarted)).isFalse();
+        assertThat(checker.canViewAll(contestC)).isFalse();
     }
 
     @Test
