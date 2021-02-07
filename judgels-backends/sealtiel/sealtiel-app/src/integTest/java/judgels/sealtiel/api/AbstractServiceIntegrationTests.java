@@ -23,7 +23,7 @@ public abstract class AbstractServiceIntegrationTests {
 
     @BeforeAll
     static void beforeAll() throws Exception {
-        rabbitmq = new GenericContainer("rabbitmq:3.8.11-management-alpine").withExposedPorts(5672, 15672);
+        rabbitmq = new GenericContainer("rabbitmq:3.7.8-management-alpine").withExposedPorts(5672, 15672);
         rabbitmq.start();
 
         SealtielConfiguration sealtielConfig = new SealtielConfiguration.Builder()
