@@ -54,6 +54,11 @@ public final class GradingResponsePoller implements Runnable {
                 scheduler.scheduleOnce(SCHEDULE_DELAY, () -> processor.process(message), executor);
             } catch (Throwable e) {
                 LOGGER.error("Failed to run grading response poller", e);
+                try {
+                    Thread.sleep(POLLING_DELAY.toMillis());
+                } catch (InterruptedException e2) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }

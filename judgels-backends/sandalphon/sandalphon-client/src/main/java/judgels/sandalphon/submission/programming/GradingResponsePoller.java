@@ -55,6 +55,11 @@ public class GradingResponsePoller implements Runnable {
                         });
             } catch (Throwable e) {
                 LOGGER.error("Failed to run grading response poller", e);
+                try {
+                    Thread.sleep(POLLING_DELAY.toMillis());
+                } catch (InterruptedException e2) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
