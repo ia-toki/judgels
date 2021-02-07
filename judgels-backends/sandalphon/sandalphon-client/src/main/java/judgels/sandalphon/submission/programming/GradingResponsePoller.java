@@ -50,6 +50,7 @@ public class GradingResponsePoller implements Runnable {
                 CompletableFuture.runAsync(() -> processor.process(message), executorService)
                         .exceptionally(e -> {
                             LOGGER.error("Failed to process message: " + message, e);
+                            messageService.retryMessage(sealtielClientAuthHeader, message.getId());
                             return null;
                         });
             } catch (Throwable e) {
