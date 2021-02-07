@@ -65,6 +65,15 @@ class MessageResourceTests {
     }
 
     @Nested
+    class retryMessage {
+        @Test
+        void retries() throws Exception {
+            resource.retryMessage(AUTH_HEADER_1, 123);
+            verify(queueService).retryMessage(123);
+        }
+    }
+
+    @Nested
     class sendMessage {
         @Test
         void sends() throws Exception {

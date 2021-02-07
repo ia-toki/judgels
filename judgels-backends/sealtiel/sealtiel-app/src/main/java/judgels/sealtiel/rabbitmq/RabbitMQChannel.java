@@ -37,4 +37,9 @@ public class RabbitMQChannel implements QueueChannel {
     public void ackMessage(long messageId) throws IOException {
         channel.basicAck(messageId, false);
     }
+
+    @Override
+    public void rejectMessage(long messageId) throws IOException {
+        channel.basicReject(messageId, true);
+    }
 }

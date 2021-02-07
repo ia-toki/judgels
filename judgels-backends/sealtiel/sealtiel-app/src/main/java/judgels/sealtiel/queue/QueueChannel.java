@@ -11,4 +11,6 @@ public interface QueueChannel {
     Optional<QueueMessage> popMessage(String queueName) throws IOException;
 
     void ackMessage(long messageId) throws IOException;
+
+    void rejectMessage(long messageId) throws IOException;
 }

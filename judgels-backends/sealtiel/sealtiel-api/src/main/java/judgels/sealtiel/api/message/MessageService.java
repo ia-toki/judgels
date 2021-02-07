@@ -24,6 +24,10 @@ public interface MessageService {
     void confirmMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, @PathParam("messageId") long messageId);
 
     @POST
+    @Path("/{messageId}/retry")
+    void retryMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, @PathParam("messageId") long messageId);
+
+    @POST
     @Path("/send")
     @Consumes(APPLICATION_JSON)
     void sendMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, MessageData messageData);

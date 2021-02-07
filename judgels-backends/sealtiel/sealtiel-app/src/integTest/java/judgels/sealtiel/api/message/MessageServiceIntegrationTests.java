@@ -27,6 +27,14 @@ class MessageServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(message.getType()).isEqualTo("GRADING_REQUEST");
         assertThat(message.getContent()).isEqualTo("grading content");
 
+        messageService.retryMessage(AUTH_HEADER_1, message.getId());
+
+        message = messageService.receiveMessage(AUTH_HEADER_1).get();
+
+        assertThat(message.getSourceJid()).isEqualTo(CLIENT_2.getJid());
+        assertThat(message.getType()).isEqualTo("GRADING_REQUEST");
+        assertThat(message.getContent()).isEqualTo("grading content");
+
         messageService.confirmMessage(AUTH_HEADER_1, message.getId());
         assertThat(messageService.receiveMessage(AUTH_HEADER_1)).isEmpty();
     }

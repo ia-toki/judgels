@@ -52,6 +52,11 @@ public class QueueService {
         channel.ackMessage(messageId);
     }
 
+    public void retryMessage(long messageId) throws IOException, TimeoutException {
+        QueueChannel channel = queue.createChannel();
+        channel.rejectMessage(messageId);
+    }
+
     public void sendMessage(String sourceJid, String targetJid, String type, String content)
             throws IOException, TimeoutException {
 

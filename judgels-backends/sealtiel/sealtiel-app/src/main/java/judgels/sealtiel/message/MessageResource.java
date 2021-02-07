@@ -45,6 +45,17 @@ public class MessageResource implements MessageService {
     }
 
     @Override
+    public void retryMessage(BasicAuthHeader authHeader, long messageId) {
+        clientChecker.check(authHeader);
+
+        try {
+            queueService.retryMessage(messageId);
+        } catch (IOException | TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void sendMessage(BasicAuthHeader authHeader, MessageData messageData) {
         Client client = clientChecker.check(authHeader);
 
