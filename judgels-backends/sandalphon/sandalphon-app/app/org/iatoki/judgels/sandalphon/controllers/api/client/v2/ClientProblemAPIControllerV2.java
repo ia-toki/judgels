@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
+import static org.iatoki.judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -211,16 +213,5 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         }
 
         return simplifiedLanguages.get(lang);
-    }
-
-    private static String simplifyLanguageCode(String code) {
-        if (code.startsWith("zh")) {
-            return code;
-        }
-        String[] tokens = code.split("-");
-        if (tokens.length < 2) {
-            return code;
-        }
-        return tokens[0];
     }
 }
