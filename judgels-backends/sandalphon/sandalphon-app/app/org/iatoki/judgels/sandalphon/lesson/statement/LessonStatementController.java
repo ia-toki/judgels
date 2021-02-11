@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.lesson.statement;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -325,6 +326,6 @@ public class LessonStatementController extends AbstractLessonController {
 
     private void appendStatementLanguageSelection(HtmlTemplate template, String currentLanguage, Set<String> allowedLanguages, Call target) {
         Http.Request req = template.getRequest();
-        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), allowedLanguages, currentLanguage, c));
+        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), ImmutableList.copyOf(allowedLanguages), currentLanguage, c));
     }
 }

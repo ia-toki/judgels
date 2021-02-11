@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Set;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -98,7 +99,7 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
 
     protected void appendStatementLanguageSelection(HtmlTemplate template, String currentLanguage, Set<String> allowedLanguages, Call target) {
         Http.Request req = template.getRequest();
-        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), allowedLanguages, currentLanguage, c));
+        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), ImmutableList.copyOf(allowedLanguages), currentLanguage, c));
     }
 
     protected Result renderPartnerTemplate(HtmlTemplate template, Problem problem) {

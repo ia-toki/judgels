@@ -1,4 +1,4 @@
-@(switchLanguageUri: String, allowedLanguages: Set[String], currentLanguage: String, content: Html)
+@(switchLanguageUri: String, allowedLanguages: List[String], currentLanguage: String, content: Html)
 
 @import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry
 
@@ -13,7 +13,11 @@
     <div class="form-group">
         <select name="langCode">
             @for(langCode <- allowedLanguages) {
-                <option value="@langCode">@WorldLanguageRegistry.getInstance.getLanguages.get(langCode)</option>
+                @if(langCode == currentLanguage) {
+                    <option value="@langCode" selected="selected">@WorldLanguageRegistry.getInstance.getLanguages.get(langCode)</option>
+                } else {
+                    <option value="@langCode">@WorldLanguageRegistry.getInstance.getLanguages.get(langCode)</option>
+                }
             }
         </select>
     </div>
