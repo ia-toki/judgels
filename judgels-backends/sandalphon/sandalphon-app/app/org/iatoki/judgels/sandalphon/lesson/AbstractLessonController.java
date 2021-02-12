@@ -33,10 +33,16 @@ public class AbstractLessonController extends AbstractSandalphonController {
     }
 
     protected Result renderTemplate(HtmlTemplate template, Lesson lesson) {
+        template.markBreadcrumbLocation(lesson.getSlug(), routes.LessonController.viewLesson(lesson.getId()));
+
         appendTabs(template, lesson);
         appendVersionLocalChangesWarning(template, lesson);
         appendTitle(template, lesson);
 
+        return renderTemplate(template);
+    }
+
+    protected Result renderTemplate(HtmlTemplate template) {
         template.markBreadcrumbLocation("Lessons", routes.LessonController.index());
 
         return super.renderTemplate(template);
@@ -50,6 +56,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
     }
 
     private void appendTabs(HtmlTemplate template, Lesson lesson) {
+        template.addMainTab("General", routes.LessonController.viewLesson(lesson.getId()));
         template.addMainTab("Statements", routes.LessonController.jumpToStatement(lesson.getId()));
 
         if (lessonRoleChecker.isAuthorOrAbove(template.getRequest(), lesson)) {
@@ -61,11 +68,5 @@ public class AbstractLessonController extends AbstractSandalphonController {
 
     private void appendTitle(HtmlTemplate template, Lesson lesson) {
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
-
-        if (lessonRoleChecker.isAllowedToUpdateLesson(template.getRequest(), lesson)) {
-            template.addMainButton("Update lesson", routes.LessonController.editLesson(lesson.getId()));
-        } else {
-            template.addMainButton("View lesson", routes.LessonController.viewLesson(lesson.getId()));
-        }
     }
 }

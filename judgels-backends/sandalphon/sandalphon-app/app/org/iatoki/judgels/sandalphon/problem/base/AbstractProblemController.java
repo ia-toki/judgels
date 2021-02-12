@@ -19,6 +19,8 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
     }
 
     protected Result renderTemplate(HtmlTemplate template, Problem problem) {
+        template.markBreadcrumbLocation(problem.getSlug(), routes.ProblemController.viewProblem(problem.getId()));
+
         appendTabs(template, problem);
         appendVersionLocalChangesWarning(template, problem);
         appendTitle(template, problem);
@@ -28,25 +30,26 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
 
     protected void appendTitle(HtmlTemplate template, Problem problem) {
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
-
-        if (problemRoleChecker.isAllowedToUpdateProblem(template.getRequest(), problem)) {
-            template.addMainButton("Update problem", routes.ProblemController.editProblem(problem.getId()));
-        } else {
-            template.addMainButton("View problem", routes.ProblemController.viewProblem(problem.getId()));
-        }
     }
 
     protected void appendTabs(HtmlTemplate template, Problem problem) {
+        template.addMainTab("General", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.viewProblem(problem.getId()));
+        template.addMainTab("Statements", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
+
         if (problem.getType().equals(ProblemType.PROGRAMMING)) {
             appendProgrammingTabs(template, problem);
         } else if (problem.getType().equals(ProblemType.BUNDLE)) {
             appendBundleTabs(template, problem);
         }
+
+        if (problemRoleChecker.isAuthorOrAbove(template.getRequest(), problem)) {
+            template.addMainTab("Partners", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
+        }
+
+        template.addMainTab("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
     protected void appendProgrammingTabs(HtmlTemplate template, Problem problem) {
-        template.addMainTab("Statements", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
-
         if (problemRoleChecker.isAllowedToManageGrading(template.getRequest(), problem)) {
             template.addMainTab("Grading", org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToGrading(problem.getId()));
         }
@@ -54,17 +57,9 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
         if (problemRoleChecker.isAllowedToSubmit(template.getRequest(), problem)) {
             template.addMainTab("Submissions", org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToSubmissions(problem.getId()));
         }
-
-        if (problemRoleChecker.isAuthorOrAbove(template.getRequest(), problem)) {
-            template.addMainTab("Partners", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
-        }
-
-        template.addMainTab("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
     public void appendBundleTabs(HtmlTemplate template, Problem problem) {
-        template.addMainTab("Statements", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
-
         if (problemRoleChecker.isAllowedToManageItems(template.getRequest(), problem)) {
             template.addMainTab("Items", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
         }
@@ -72,12 +67,6 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
         if (problemRoleChecker.isAllowedToSubmit(template.getRequest(), problem)) {
             template.addMainTab("Submissions", org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
         }
-
-        if (problemRoleChecker.isAuthorOrAbove(template.getRequest(), problem)) {
-            template.addMainTab("Partners", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
-        }
-
-        template.addMainTab("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
     protected Result renderStatementTemplate(HtmlTemplate template, Problem problem) {

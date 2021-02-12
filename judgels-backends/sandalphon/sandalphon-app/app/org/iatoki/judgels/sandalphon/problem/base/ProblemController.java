@@ -27,7 +27,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 @Singleton
-public final class ProblemController extends AbstractBaseProblemController {
+public final class ProblemController extends AbstractProblemController {
     private final ProblemStore problemStore;
     private final RoleChecker roleChecker;
     private final ProblemRoleChecker problemRoleChecker;
@@ -40,7 +40,7 @@ public final class ProblemController extends AbstractBaseProblemController {
             ProblemRoleChecker problemRoleChecker,
             ProfileService profileService) {
 
-        super(problemStore);
+        super(problemStore, problemRoleChecker);
         this.problemStore = problemStore;
         this.roleChecker = roleChecker;
         this.problemRoleChecker = problemRoleChecker;
@@ -64,7 +64,7 @@ public final class ProblemController extends AbstractBaseProblemController {
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(listProblemsView.render(problems, profilesMap, sortBy, orderBy, filterString, isWriter));
+        template.setContent(listProblemsView.render(problems, profilesMap, sortBy, orderBy, filterString));
         if (isWriter) {
             template.addMainButton("Create", routes.ProblemController.createProblem());
         }
@@ -135,7 +135,6 @@ public final class ProblemController extends AbstractBaseProblemController {
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(viewProblemView.render(problem, profile));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
-        template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
         template.markBreadcrumbLocation("View problem", routes.ProblemController.viewProblem(problem.getId()));
         template.setPageTitle("Problem - View");
         return renderProblemTemplate(template, problem);
@@ -199,21 +198,17 @@ public final class ProblemController extends AbstractBaseProblemController {
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editProblemView.render(form, problem));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
-        template.addMainButton("Enter problem", routes.ProblemController.enterProblem(problem.getId()));
         template.markBreadcrumbLocation("Update problem", routes.ProblemController.editProblem(problem.getId()));
         template.setPageTitle("Problem - Update");
         return renderProblemTemplate(template, problem);
     }
 
     private Result renderProblemTemplate(HtmlTemplate template, Problem problem) {
-        appendVersionLocalChangesWarning(template, problem);
-        template.markBreadcrumbLocation(problem.getSlug(), routes.ProblemController.enterProblem(problem.getId()));
-
         template.addSecondaryTab("View", routes.ProblemController.viewProblem(problem.getId()));
         if (problemRoleChecker.isAllowedToUpdateProblem(template.getRequest(), problem)) {
             template.addSecondaryTab("Update", routes.ProblemController.editProblem(problem.getId()));
         }
 
-        return renderTemplate(template);
+        return renderTemplate(template, problem);
     }
 }

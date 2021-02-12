@@ -67,7 +67,7 @@ public final class LessonController extends AbstractLessonController {
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(listLessonsView.render(pageOfLessons, profilesMap, sortBy, orderBy, filterString, isWriter));
+        template.setContent(listLessonsView.render(pageOfLessons, profilesMap, sortBy, orderBy, filterString));
         template.setMainTitle("Lessons");
         if (isWriter) {
             template.addMainButton("Create", routes.LessonController.createLesson());
@@ -116,7 +116,7 @@ public final class LessonController extends AbstractLessonController {
 
         lessonStore.initRepository(actorJid, lesson.getJid());
 
-        return redirect(routes.LessonController.index())
+        return redirect(routes.LessonController.enterLesson(lesson.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(lessonCreateData.initLanguageCode));
     }
 
@@ -145,7 +145,6 @@ public final class LessonController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(viewLessonView.render(lesson, profile));
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
-        template.addMainButton("Enter lesson", routes.LessonController.enterLesson(lesson.getId()));
         template.markBreadcrumbLocation("View lesson", routes.LessonController.viewLesson(lesson.getId()));
         template.setPageTitle("Lesson - View");
 
@@ -211,7 +210,6 @@ public final class LessonController extends AbstractLessonController {
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(editLessonView.render(lessonEditForm, lesson));
         template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
-        template.addMainButton("Enter lesson", routes.LessonController.enterLesson(lesson.getId()));
         template.markBreadcrumbLocation("Update lesson", routes.LessonController.editLesson(lesson.getId()));
         template.setPageTitle("Lesson - Update");
 
@@ -219,15 +217,12 @@ public final class LessonController extends AbstractLessonController {
     }
 
     protected Result renderLessonTemplate(HtmlTemplate template, Lesson lesson) {
-        appendVersionLocalChangesWarning(template, lesson);
         template.addSecondaryTab("View", routes.LessonController.viewLesson(lesson.getId()));
 
         if (lessonRoleChecker.isAllowedToUpdateLesson(template.getRequest(), lesson)) {
             template.addSecondaryTab("Update", routes.LessonController.editLesson(lesson.getId()));
         }
 
-        template.markBreadcrumbLocation("Lessons", routes.LessonController.index());
-
-        return super.renderTemplate(template);
+        return super.renderTemplate(template, lesson);
     }
 }
