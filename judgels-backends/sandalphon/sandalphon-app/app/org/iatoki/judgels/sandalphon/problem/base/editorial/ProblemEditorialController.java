@@ -301,7 +301,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
         template.setMainTitle("Create editorial");
         template.markBreadcrumbLocation("Create editorial", routes.ProblemEditorialController.createEditorial(problem.getId()));
         template.setPageTitle("Problem - Editorial - Create");
-        return renderEditorialTemplate(template, problem);
+        return renderTemplate(template, problem);
     }
 
     private Result showEditEditorial(Http.Request req, String language, Form<EditorialEditForm> form, Problem problem, Set<String> allowedLanguages) {
