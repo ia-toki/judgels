@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.persistence.FilterOptions;
@@ -22,6 +23,7 @@ import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemEditorial;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
@@ -213,7 +215,7 @@ public class ProblemStore extends AbstractProblemStore {
                 .build();
     }
 
-    public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String problemJid) {
+    public Map<String, StatementLanguageStatus> getStatementAvailableLanguages(String userJid, String problemJid) {
         String languages = problemFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, problemJid));
         try {
             return mapper.readValue(languages, new TypeReference<Map<String, StatementLanguageStatus>>() {});
@@ -222,33 +224,33 @@ public class ProblemStore extends AbstractProblemStore {
         }
     }
 
-    public void addLanguage(String userJid, String problemJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
+    public void addStatementLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getStatementAvailableLanguages(userJid, problemJid);
         availableLanguages.put(language, StatementLanguageStatus.ENABLED);
 
-        ProblemStatement statement = getStatement(userJid, problemJid, getDefaultLanguage(userJid, problemJid));
+        ProblemStatement statement = getStatement(userJid, problemJid, getStatementDefaultLanguage(userJid, problemJid));
         problemFs.writeToFile(getStatementTitleFilePath(userJid, problemJid, language), statement.getTitle());
         problemFs.writeToFile(getStatementTextFilePath(userJid, problemJid, language), statement.getText());
         problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
     }
 
-    public void enableLanguage(String userJid, String problemJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
+    public void enableStatementLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getStatementAvailableLanguages(userJid, problemJid);
         availableLanguages.put(language, StatementLanguageStatus.ENABLED);
         problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
     }
 
-    public void disableLanguage(String userJid, String problemJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
+    public void disableStatementLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getStatementAvailableLanguages(userJid, problemJid);
         availableLanguages.put(language, StatementLanguageStatus.DISABLED);
         problemFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
     }
 
-    public void makeDefaultLanguage(String userJid, String problemJid, String language) {
+    public void makeStatementDefaultLanguage(String userJid, String problemJid, String language) {
         problemFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, problemJid), language);
     }
 
-    public String getDefaultLanguage(String userJid, String problemJid) {
+    public String getStatementDefaultLanguage(String userJid, String problemJid) {
         return problemFs.readFromFile(getStatementDefaultLanguageFilePath(userJid, problemJid));
     }
 
@@ -260,7 +262,7 @@ public class ProblemStore extends AbstractProblemStore {
     }
 
     public Map<String, String> getTitlesByLanguage(String userJid, String problemJid) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, problemJid);
+        Map<String, StatementLanguageStatus> availableLanguages = getStatementAvailableLanguages(userJid, problemJid);
 
         ImmutableMap.Builder<String, String> titlesByLanguageBuilder = ImmutableMap.builder();
 
@@ -300,6 +302,88 @@ public class ProblemStore extends AbstractProblemStore {
 
     public String getStatementMediaFileURL(String userJid, String problemJid, String filename) {
         Path mediaFilePath = getStatementMediaDirPath(userJid, problemJid).resolve(filename);
+        return problemFs.getPublicFileUrl(mediaFilePath);
+    }
+
+    public Map<String, StatementLanguageStatus> getEditorialAvailableLanguages(String userJid, String problemJid) {
+        String languages = problemFs.readFromFile(getEditorialAvailableLanguagesFilePath(userJid, problemJid));
+        try {
+            return mapper.readValue(languages, new TypeReference<Map<String, StatementLanguageStatus>>() {});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Set<String> getEditorialLanguages(String userJid, String problemJid) {
+        return getEditorialAvailableLanguages(userJid, problemJid).entrySet().stream()
+                .filter(e -> e.getValue() == StatementLanguageStatus.ENABLED)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet());
+    }
+
+    public void addEditorialLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getEditorialAvailableLanguages(userJid, problemJid);
+        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
+
+        problemFs.writeToFile(getEditorialTextFilePath(userJid, problemJid, language), "");
+        problemFs.writeToFile(getEditorialAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
+    }
+
+    public void enableEditorialLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getEditorialAvailableLanguages(userJid, problemJid);
+        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
+        problemFs.writeToFile(getEditorialAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
+    }
+
+    public void disableEditorialLanguage(String userJid, String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = getEditorialAvailableLanguages(userJid, problemJid);
+        availableLanguages.put(language, StatementLanguageStatus.DISABLED);
+        problemFs.writeToFile(getEditorialAvailableLanguagesFilePath(userJid, problemJid), writeObj(availableLanguages));
+    }
+
+    public void makeEditorialDefaultLanguage(String userJid, String problemJid, String language) {
+        problemFs.writeToFile(getEditorialDefaultLanguageFilePath(userJid, problemJid), language);
+    }
+
+    public String getEditorialDefaultLanguage(String userJid, String problemJid) {
+        return problemFs.readFromFile(getEditorialDefaultLanguageFilePath(userJid, problemJid));
+    }
+
+    public boolean hasEditorial(String userJid, String problemJid) {
+        return problemFs.directoryExists(getEditorialsDirPath(userJid, problemJid));
+    }
+
+    public ProblemEditorial getEditorial(String userJid, String problemJid, String language) {
+        String text = problemFs.readFromFile(getEditorialTextFilePath(userJid, problemJid, language));
+
+        return new ProblemEditorial.Builder().text(text).build();
+    }
+
+    public void updateEditorial(String userJid, String problemJid, String language, ProblemEditorial editorial) {
+        problemFs.writeToFile(getEditorialTextFilePath(userJid, problemJid, language), editorial.getText());
+    }
+
+    public void uploadEditorialMediaFile(String userJid, String problemJid, File mediaFile, String filename) {
+        Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
+        try {
+            problemFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void uploadEditorialMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) {
+        Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
+        problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
+    }
+
+    public List<FileInfo> getEditorialMediaFiles(String userJid, String problemJid) {
+        Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
+        return problemFs.listFilesInDirectory(mediaDirPath);
+    }
+
+    public String getEditorialMediaFileURL(String userJid, String problemJid, String filename) {
+        Path mediaFilePath = getEditorialMediaDirPath(userJid, problemJid).resolve(filename);
         return problemFs.getPublicFileUrl(mediaFilePath);
     }
 
@@ -441,6 +525,48 @@ public class ProblemStore extends AbstractProblemStore {
 
     private Path getStatementMediaDirPath(String userJid, String problemJid) {
         return getStatementsDirPath(userJid, problemJid).resolve("resources");
+    }
+
+    public void initEditorials(String userJid, String problemJid, String initialLanguageCode) {
+        Path editorialsDirPath = getEditorialsDirPath(userJid, problemJid);
+        problemFs.createDirectory(editorialsDirPath);
+
+        Path editorialDirPath = getEditorialDirPath(userJid, problemJid, initialLanguageCode);
+        problemFs.createDirectory(editorialDirPath);
+
+        Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
+        problemFs.createDirectory(mediaDirPath);
+        problemFs.createFile(mediaDirPath.resolve(".gitkeep"));
+
+        problemFs.createFile(getEditorialTextFilePath(userJid, problemJid, initialLanguageCode));
+        problemFs.writeToFile(getEditorialDefaultLanguageFilePath(userJid, problemJid), initialLanguageCode);
+
+        Map<String, StatementLanguageStatus> initialLanguage = ImmutableMap.of(initialLanguageCode, StatementLanguageStatus.ENABLED);
+        problemFs.writeToFile(getEditorialAvailableLanguagesFilePath(userJid, problemJid), writeObj(initialLanguage));
+    }
+
+    private Path getEditorialsDirPath(String userJid, String problemJid) {
+        return getRootDirPath(userJid, problemJid).resolve("editorials");
+    }
+
+    private Path getEditorialDirPath(String userJid, String problemJid, String language) {
+        return getEditorialsDirPath(userJid, problemJid).resolve(language);
+    }
+
+    private Path getEditorialTextFilePath(String userJid, String problemJid, String language) {
+        return getEditorialDirPath(userJid, problemJid, language).resolve("text.html");
+    }
+
+    private Path getEditorialDefaultLanguageFilePath(String userJid, String problemJid) {
+        return getEditorialsDirPath(userJid, problemJid).resolve("defaultLanguage.txt");
+    }
+
+    private Path getEditorialAvailableLanguagesFilePath(String userJid, String problemJid) {
+        return getEditorialsDirPath(userJid, problemJid).resolve("availableLanguages.txt");
+    }
+
+    private Path getEditorialMediaDirPath(String userJid, String problemJid) {
+        return getEditorialsDirPath(userJid, problemJid).resolve("resources");
     }
 
     private static ProblemType getProblemType(ProblemModel model) {

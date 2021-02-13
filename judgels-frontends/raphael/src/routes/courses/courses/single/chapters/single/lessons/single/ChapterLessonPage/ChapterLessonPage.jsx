@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import * as chapterLessonActions from '../../modules/chapterLessonActions';

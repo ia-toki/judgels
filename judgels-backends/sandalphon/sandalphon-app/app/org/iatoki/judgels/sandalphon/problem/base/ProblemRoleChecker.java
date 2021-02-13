@@ -59,7 +59,7 @@ public class ProblemRoleChecker {
             return false;
         }
 
-        String defaultLanguage = problemStore.getDefaultLanguage(getUserJid(req), problem.getJid());
+        String defaultLanguage = problemStore.getStatementDefaultLanguage(getUserJid(req), problem.getJid());
         Set<String> allowedLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
 
         return allowedLanguages.isEmpty() || allowedLanguages.contains(language) || language.equals(defaultLanguage);
@@ -131,10 +131,9 @@ public class ProblemRoleChecker {
         return allowedLanguages.isEmpty() || allowedLanguages.contains(language);
     }
 
-
-    public Set<String> getAllowedLanguagesToView(Http.Request req, Problem problem) {
+    public Set<String> getAllowedStatementLanguagesToView(Http.Request req, Problem problem) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                problemStore.getAvailableLanguages(getUserJid(req), problem.getJid());
+                problemStore.getStatementAvailableLanguages(getUserJid(req), problem.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -145,15 +144,15 @@ public class ProblemRoleChecker {
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
             allowedLanguages.retainAll(allowedPartnerLanguages);
-            allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
+            allowedLanguages.add(problemStore.getStatementDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);
     }
 
-    public Set<String> getAllowedLanguagesToUpdate(Http.Request req, Problem problem) {
+    public Set<String> getAllowedStatementLanguagesToUpdate(Http.Request req, Problem problem) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                problemStore.getAvailableLanguages(getUserJid(req), problem.getJid());
+                problemStore.getStatementAvailableLanguages(getUserJid(req), problem.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -164,7 +163,45 @@ public class ProblemRoleChecker {
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
             allowedLanguages.retainAll(allowedPartnerLanguages);
-            allowedLanguages.add(problemStore.getDefaultLanguage(getUserJid(req), problem.getJid()));
+            allowedLanguages.add(problemStore.getStatementDefaultLanguage(getUserJid(req), problem.getJid()));
+        }
+
+        return ImmutableSet.copyOf(allowedLanguages);
+    }
+
+    public Set<String> getAllowedEditorialLanguagesToView(Http.Request req, Problem problem) {
+        Map<String, StatementLanguageStatus> availableLanguages =
+                problemStore.getEditorialAvailableLanguages(getUserJid(req), problem.getJid());
+
+        Set<String> allowedLanguages = Sets.newTreeSet();
+        allowedLanguages.addAll(availableLanguages.entrySet().stream()
+                .filter(e -> e.getValue() == StatementLanguageStatus.ENABLED)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet()));
+
+        if (isPartner(req, problem)) {
+            Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
+            allowedLanguages.retainAll(allowedPartnerLanguages);
+            allowedLanguages.add(problemStore.getEditorialDefaultLanguage(getUserJid(req), problem.getJid()));
+        }
+
+        return ImmutableSet.copyOf(allowedLanguages);
+    }
+
+    public Set<String> getAllowedEditorialLanguagesToUpdate(Http.Request req, Problem problem) {
+        Map<String, StatementLanguageStatus> availableLanguages =
+                problemStore.getEditorialAvailableLanguages(getUserJid(req), problem.getJid());
+
+        Set<String> allowedLanguages = Sets.newTreeSet();
+        allowedLanguages.addAll(availableLanguages.entrySet().stream()
+                .filter(e -> e.getValue() == StatementLanguageStatus.ENABLED)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet()));
+
+        if (isPartner(req, problem)) {
+            Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
+            allowedLanguages.retainAll(allowedPartnerLanguages);
+            allowedLanguages.add(problemStore.getEditorialDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);

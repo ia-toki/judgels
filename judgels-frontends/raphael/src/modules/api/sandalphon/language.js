@@ -1,5 +1,5 @@
 // extracted from https://github.com/anurbol/languages-iso-639-1-2-3-json/blob/master/data.json
-export const statementLanguageNamesMap = {
+export const languageNamesMap = {
   af: 'Afrikaans',
   ak: 'Akan',
   am: 'Amharic',
@@ -117,17 +117,17 @@ export const statementLanguageNamesMap = {
   zu: 'Zulu',
 };
 
-export const statementLanguageDisplayNamesMap = Object.assign(
+export const languageDisplayNamesMap = Object.assign(
   {},
-  ...Object.keys(statementLanguageNamesMap).map(code => ({
-    [code]: statementLanguageNamesMap[code] + ' (' + code + ')',
+  ...Object.keys(languageNamesMap).map(code => ({
+    [code]: languageNamesMap[code] + ' (' + code + ')',
   }))
 );
 
 export function sortLanguagesByName(languages) {
   return languages.slice().sort((a, b) => {
-    const nameA = statementLanguageNamesMap[a];
-    const nameB = statementLanguageNamesMap[b];
+    const nameA = languageNamesMap[a];
+    const nameB = languageNamesMap[b];
     return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
   });
 }

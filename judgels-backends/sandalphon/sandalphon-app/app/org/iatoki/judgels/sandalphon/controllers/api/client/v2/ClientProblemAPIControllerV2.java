@@ -15,6 +15,7 @@ import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
 import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
@@ -71,6 +72,22 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
+    public Result getProblemEditorial(Http.Request req, String problemJid) {
+        if (!problemStore.problemExistsByJid(problemJid)) {
+            return Results.notFound();
+        }
+
+        String language = sanitizeEditorialLanguageCode(problemJid, req.getQueryString("language"));
+        return okAsJson(req, new ProblemEditorialInfo.Builder()
+                .text(problemStore.getEditorial(null, problemJid, language).getText())
+                .defaultLanguage(simplifyLanguageCode(problemStore.getEditorialDefaultLanguage(null, problemJid)))
+                .languages(problemStore.getEditorialLanguages(null, problemJid).stream()
+                        .map(lang -> simplifyLanguageCode(lang))
+                        .collect(Collectors.toSet()))
+                .build());
+    }
+
+    @Transactional(readOnly = true)
     public Result getProblemSubmissionConfig(Http.Request req, String problemJid) {
         if (!problemStore.problemExistsByJid(problemJid)) {
             return Results.notFound();
@@ -91,7 +108,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         }
 
         GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
-        String language = sanitizeLanguageCode(problemJid, req.getQueryString("language"));
+        String language = sanitizeStatementLanguageCode(problemJid, req.getQueryString("language"));
 
         return okAsJson(req, new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
                 .statement(problemStore.getStatement(null, problemJid, language))
@@ -114,7 +131,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return notFound();
         }
 
-        String language = sanitizeLanguageCode(problemJid, req.getQueryString("language"));
+        String language = sanitizeStatementLanguageCode(problemJid, req.getQueryString("language"));
 
         List<BundleItem> items = bundleItemStore.getBundleItemsInProblemWithClone(problemJid, null);
         List<Item> itemsWithConfig = new ArrayList<>();
@@ -180,10 +197,11 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return new ProblemInfo.Builder()
                 .slug(problem.getSlug())
                 .type(ProblemType.valueOf(problem.getType().name()))
-                .defaultLanguage(simplifyLanguageCode(problemStore.getDefaultLanguage(null, problemJid)))
+                .defaultLanguage(simplifyLanguageCode(problemStore.getStatementDefaultLanguage(null, problemJid)))
                 .titlesByLanguage(problemStore.getTitlesByLanguage(null, problemJid).entrySet()
                         .stream()
                         .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
+                .hasEditorial(problemStore.hasEditorial(null, problemJid))
                 .build();
     }
 
@@ -201,15 +219,29 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
                 .build();
     }
 
-    private String sanitizeLanguageCode(String problemJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getAvailableLanguages(null, problemJid);
+    private String sanitizeStatementLanguageCode(String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getStatementAvailableLanguages(null, problemJid);
         Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
 
         String lang = language;
         if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
-            lang = simplifyLanguageCode(problemStore.getDefaultLanguage(null, problemJid));
+            lang = simplifyLanguageCode(problemStore.getStatementDefaultLanguage(null, problemJid));
+        }
+
+        return simplifiedLanguages.get(lang);
+    }
+
+    private String sanitizeEditorialLanguageCode(String problemJid, String language) {
+        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getEditorialAvailableLanguages(null, problemJid);
+        Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
+
+        String lang = language;
+        if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
+            lang = simplifyLanguageCode(problemStore.getEditorialDefaultLanguage(null, problemJid));
         }
 
         return simplifiedLanguages.get(lang);

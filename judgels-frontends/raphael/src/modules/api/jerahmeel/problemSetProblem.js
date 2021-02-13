@@ -27,7 +27,12 @@ export const problemSetProblemAPI = {
     return get(`${baseURL(problemSetJid)}/${problemAlias}/stats`, token);
   },
 
-  getProblemMetadata: (token, problemSetJid, problemAlias) => {
-    return get(`${baseURL(problemSetJid)}/${problemAlias}/metadata`, token);
+  getProblemMetadata: (problemSetJid, problemAlias) => {
+    return get(`${baseURL(problemSetJid)}/${problemAlias}/metadata`);
+  },
+
+  getProblemEditorial: (problemSetJid, problemAlias, language) => {
+    const params = stringify({ language });
+    return get(`${baseURL(problemSetJid)}/${problemAlias}/editorial?${params}`);
   },
 };

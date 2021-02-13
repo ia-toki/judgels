@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 
 import { sendGAEvent } from '../../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { getGradingLanguageFamily } from '../../../../../../../../../modules/api/gabriel/language.js';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';

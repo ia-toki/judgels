@@ -46,6 +46,7 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
             template.addMainTab("Partners", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
         }
 
+        template.addMainTab("Editorials", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToEditorial(problem.getId()));
         template.addMainTab("Versions", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
@@ -81,6 +82,23 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
 
         if (problemRoleChecker.isAllowedToManageStatementLanguages(template.getRequest(), problem)) {
             template.addSecondaryTab("Languages", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.listStatementLanguages(problem.getId()));
+        }
+
+        return this.renderTemplate(template, problem);
+    }
+
+    protected Result renderEditorialTemplate(HtmlTemplate template, Problem problem) {
+        template.markBreadcrumbLocation("Editorials", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToEditorial(problem.getId()));
+
+        template.addSecondaryTab("View", org.iatoki.judgels.sandalphon.problem.base.editorial.routes.ProblemEditorialController.viewEditorial(problem.getId()));
+        if (problemRoleChecker.isAllowedToUpdateStatement(template.getRequest(), problem)) {
+            template.addSecondaryTab("Update", org.iatoki.judgels.sandalphon.problem.base.editorial.routes.ProblemEditorialController.editEditorial(problem.getId()));
+        }
+
+        template.addSecondaryTab("Media", org.iatoki.judgels.sandalphon.problem.base.editorial.routes.ProblemEditorialController.listEditorialMediaFiles(problem.getId()));
+
+        if (problemRoleChecker.isAllowedToManageStatementLanguages(template.getRequest(), problem)) {
+            template.addSecondaryTab("Languages", org.iatoki.judgels.sandalphon.problem.base.editorial.routes.ProblemEditorialController.listEditorialLanguages(problem.getId()));
         }
 
         return this.renderTemplate(template, problem);

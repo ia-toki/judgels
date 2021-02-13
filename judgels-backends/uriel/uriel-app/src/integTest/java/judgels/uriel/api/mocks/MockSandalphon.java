@@ -68,17 +68,20 @@ public class MockSandalphon {
                                 "type", PROBLEM_1_TYPE,
                                 "slug", PROBLEM_1_SLUG,
                                 "defaultLanguage", "en",
-                                "titlesByLanguage", ImmutableMap.of("en", "Problem 1")),
+                                "titlesByLanguage", ImmutableMap.of("en", "Problem 1"),
+                                "hasEditorial", false),
                         PROBLEM_2_JID, ImmutableMap.of(
                                 "type", PROBLEM_2_TYPE,
                                 "slug", PROBLEM_2_SLUG,
                                 "defaultLanguage", "en",
-                                "titlesByLanguage", ImmutableMap.of("en", "Problem 2")),
+                                "titlesByLanguage", ImmutableMap.of("en", "Problem 2"),
+                                "hasEditorial", false),
                         PROBLEM_3_JID, ImmutableMap.of(
                                 "type", PROBLEM_3_TYPE,
                                 "slug", PROBLEM_3_SLUG,
                                 "defaultLanguage", "en",
-                                "titlesByLanguage", ImmutableMap.of("en", "Problem 3"))))));
+                                "titlesByLanguage", ImmutableMap.of("en", "Problem 3"),
+                                "hasEditorial", false)))));
 
         /* Mocks for problem info */
 
@@ -88,7 +91,8 @@ public class MockSandalphon {
                         "type", PROBLEM_1_TYPE,
                         "slug", PROBLEM_1_SLUG,
                         "defaultLanguage", "en",
-                        "titlesByLanguage", ImmutableMap.of("en", "Problem 1")))));
+                        "titlesByLanguage", ImmutableMap.of("en", "Problem 1"),
+                        "hasEditorial", false))));
 
         mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_2_JID)
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
@@ -96,7 +100,8 @@ public class MockSandalphon {
                         "type", PROBLEM_2_TYPE,
                         "slug", PROBLEM_2_SLUG,
                         "defaultLanguage", "en",
-                        "titlesByLanguage", ImmutableMap.of("en", "Problem 2")))));
+                        "titlesByLanguage", ImmutableMap.of("en", "Problem 2"),
+                        "hasEditorial", false))));
 
         mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_3_JID)
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
@@ -104,7 +109,8 @@ public class MockSandalphon {
                         "type", PROBLEM_3_TYPE,
                         "slug", PROBLEM_3_SLUG,
                         "defaultLanguage", "en",
-                        "titlesByLanguage", ImmutableMap.of("en", "Problem 3")))));
+                        "titlesByLanguage", ImmutableMap.of("en", "Problem 3"),
+                        "hasEditorial", false))));
 
         /* Mocks for programming problem submission config */
 

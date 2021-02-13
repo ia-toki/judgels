@@ -1,10 +1,17 @@
-import webPrefsReducer, { PutStatementLanguage, PutGradingLanguage } from './webPrefsReducer';
+import webPrefsReducer, { PutStatementLanguage, PutGradingLanguage, PutEditorialLanguage } from './webPrefsReducer';
 
 describe('webPrefsReducer', () => {
   test('PUT_STATEMENT_LANGUAGE', () => {
     const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
     const action = PutStatementLanguage('id');
     const nextState = { statementLanguage: 'id', gradingLanguage: 'Cpp17' };
+    expect(webPrefsReducer(state, action)).toEqual(nextState);
+  });
+
+  test('PUT_STATEMENT_LANGUAGE', () => {
+    const state = { editorialLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const action = PutEditorialLanguage('id');
+    const nextState = { editorialLanguage: 'id', gradingLanguage: 'Cpp17' };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
@@ -23,6 +30,7 @@ describe('webPrefsReducer', () => {
   test('initial state', () => {
     expect(webPrefsReducer(undefined, { type: 'other' })).toEqual({
       statementLanguage: 'id',
+      editorialLanguage: 'id',
       gradingLanguage: 'Cpp17',
     });
   });

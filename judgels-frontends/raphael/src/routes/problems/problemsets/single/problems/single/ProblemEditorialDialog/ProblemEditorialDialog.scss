@@ -1,0 +1,18 @@
+.problem-editorial-dialog {
+  width: 800px;
+}
+
+.problem-editorial-dialog-button {
+  width: 100%;
+}
+
+.problem-editorial-card {
+  max-height: 650px;
+  overflow: auto;
+}
+
+@media only screen and (max-width: 800px) {
+  .problem-editorial-dialog {
+    width: inherit;
+  }
+}

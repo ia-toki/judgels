@@ -42,7 +42,7 @@ public final class BundleProblemGrader {
                             null,
                             item.getJid(),
                             problemStore
-                                    .getDefaultLanguage(null, problemJid));
+                                    .getStatementDefaultLanguage(null, problemJid));
                 } else {
                     throw e;
                 }

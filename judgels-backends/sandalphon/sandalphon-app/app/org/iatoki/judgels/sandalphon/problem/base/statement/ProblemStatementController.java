@@ -74,7 +74,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
         Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).fill(updateStatementData);
 
-        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedStatementLanguagesToUpdate(req, problem);
 
         return showEditStatement(req, language, updateStatementForm, problem, allowedLanguages)
                 .addingToSession(req, newCurrentStatementLanguage(language));
@@ -90,7 +90,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
         Form<UpdateStatementForm> updateStatementForm = formFactory.form(UpdateStatementForm.class).bindFromRequest(req);
         if (formHasErrors(updateStatementForm)) {
-            Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
+            Set<String> allowedLanguages = problemRoleChecker.getAllowedStatementLanguagesToUpdate(req, problem);
             return showEditStatement(req, language, updateStatementForm, problem, allowedLanguages);
         }
 
@@ -104,10 +104,9 @@ public class ProblemStatementController extends AbstractProblemController {
 
         problemStore.updateStatement(actorJid, problem.getJid(), language, statement);
 
-        return redirect(routes.ProblemStatementController.editStatement(problem.getId()))
+        return redirect(routes.ProblemStatementController.viewStatement(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));
     }
-
 
     @Transactional(readOnly = true)
     @AddCSRFToken
@@ -160,8 +159,8 @@ public class ProblemStatementController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
-        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getAvailableLanguages(actorJid, problem.getJid());
-        String defaultLanguage = problemStore.getDefaultLanguage(actorJid, problem.getJid());
+        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getStatementAvailableLanguages(actorJid, problem.getJid());
+        String defaultLanguage = problemStore.getStatementDefaultLanguage(actorJid, problem.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
@@ -186,7 +185,7 @@ public class ProblemStatementController extends AbstractProblemController {
             throw new IllegalStateException("Languages is not from list.");
         }
 
-        problemStore.addLanguage(actorJid, problem.getJid(), languageCode);
+        problemStore.addStatementLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
@@ -204,7 +203,7 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.enableLanguage(actorJid, problem.getJid(), languageCode);
+        problemStore.enableStatementLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
@@ -223,10 +222,10 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.disableLanguage(actorJid, problem.getJid(), languageCode);
+        problemStore.disableStatementLanguage(actorJid, problem.getJid(), languageCode);
 
         if (getCurrentStatementLanguage(req).equals(languageCode)) {
-            language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
+            language = problemStore.getStatementDefaultLanguage(actorJid, problem.getJid());
         }
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()))
@@ -246,7 +245,7 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.makeDefaultLanguage(actorJid, problem.getJid(), languageCode);
+        problemStore.makeStatementDefaultLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }

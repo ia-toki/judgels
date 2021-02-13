@@ -1,0 +1,20 @@
+@import judgels.sandalphon.api.problem.ProblemType
+@import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry
+
+@import scala.collection.JavaConverters._
+@import org.iatoki.judgels.sandalphon.problem.base.editorial.EditorialCreateForm
+@import org.iatoki.judgels.sandalphon.problem.base.editorial.routes
+
+@(form: Form[EditorialCreateForm], problemId: Long)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+<h3>Create editorial</h3>
+
+@b3.form(routes.ProblemEditorialController.postCreateEditorial(problemId)) {
+    @helper.CSRF.formField
+
+    @b3.select(form("initLanguageCode"), WorldLanguageRegistry.getInstance.getLanguages.asScala.toSeq, '_label -> "Initial language", 'value -> "en-US")
+
+    @b3.submit('class -> "btn btn-primary") { Create }
+}

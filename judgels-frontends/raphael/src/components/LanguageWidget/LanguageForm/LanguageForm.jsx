@@ -3,28 +3,28 @@ import { Field, reduxForm } from 'redux-form';
 
 import { Required } from '../../forms/validations';
 import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
-import { statementLanguageDisplayNamesMap } from '../../../modules/api/sandalphon/language';
+import { languageDisplayNamesMap } from '../../../modules/api/sandalphon/language';
 
-import './StatementLanguageForm.css';
+import './LanguageForm.css';
 
-function StatementLanguageForm({ handleSubmit, submitting, statementLanguages }) {
+function LanguageForm({ handleSubmit, submitting, languages }) {
   const field = {
-    className: 'form-statement-language',
-    name: 'statementLanguage',
-    optionValues: statementLanguages,
-    optionNamesMap: statementLanguageDisplayNamesMap,
+    className: 'form-language',
+    name: 'language',
+    optionValues: languages,
+    optionNamesMap: languageDisplayNamesMap,
     validate: [Required],
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <table className="statement-language-form__field">
+      <table className="language-form__field">
         <tbody>
           <Field component={FormTableSelect2} {...field} />
         </tbody>
       </table>
       <Button
-        className="statement-language-form__button"
+        className="language-form__button"
         type="submit"
         text="Switch"
         alignText={Alignment.LEFT}
@@ -36,4 +36,4 @@ function StatementLanguageForm({ handleSubmit, submitting, statementLanguages })
   );
 }
 
-export default reduxForm({ form: 'statement-language', touchOnBlur: false })(StatementLanguageForm);
+export default reduxForm({ touchOnBlur: false })(LanguageForm);

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
-import StatementLanguageWidget from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
 import { consolidateLanguages } from '../../../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';

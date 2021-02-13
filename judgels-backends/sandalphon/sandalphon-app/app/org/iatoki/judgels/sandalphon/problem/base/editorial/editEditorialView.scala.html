@@ -1,0 +1,24 @@
+@import b3.vertical.fieldConstructor
+@import org.iatoki.judgels.sandalphon.problem.base.editorial.routes
+@import org.iatoki.judgels.sandalphon.problem.base.editorial.EditorialEditForm
+
+@(form: Form[EditorialEditForm], problemId: Long)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
+
+@implicitFieldConstructor = @{ b3.vertical.fieldConstructor() }
+
+@b3.form(routes.ProblemEditorialController.postEditEditorial(problemId)) {
+    @helper.CSRF.formField
+
+    <small>
+        To insert image, add the image as a media file and then insert it as "render/&lt;imageFilename&gt;".
+    </small>
+    <div class="form-group">
+        <textarea class="ckeditor" name="text">
+            @form("text").value.get
+        </textarea>
+    </div>
+
+    @b3.submit('class -> "btn btn-primary") { Update }
+}

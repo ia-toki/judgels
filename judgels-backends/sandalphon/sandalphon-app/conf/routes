@@ -31,6 +31,7 @@ POST        /problems/:problemId                                                
 GET         /problems/:problemId/enter                                              org.iatoki.judgels.sandalphon.problem.base.ProblemController.enterProblem(problemId: Long)
 
 GET         /problems/:problemId/jumpToStatements                                   org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToStatement(problemId: Long)
+GET         /problems/:problemId/jumpToEditorials                                   org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToEditorial(problemId: Long)
 GET         /problems/:problemId/jumpToVersions                                     org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToVersions(problemId: Long)
 GET         /problems/:problemId/jumpToPartners                                     org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToPartners(problemId: Long)
 
@@ -46,6 +47,19 @@ POST        /problems/:problemId/statements/languages                           
 GET         /problems/:problemId/statements/languages/:language/enable              org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementController.enableStatementLanguage(req: Request, problemId: Long, language)
 GET         /problems/:problemId/statements/languages/:language/disable             org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementController.disableStatementLanguage(req: Request, problemId: Long, language)
 GET         /problems/:problemId/statements/languages/:language/makeDefault         org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementController.makeDefaultStatementLanguage(req: Request, problemId: Long, language)
+
+GET         /problems/:problemId/editorials                                         org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.viewEditorial(req: Request, problemId: Long)
+GET         /problems/:problemId/editorials/new                                     org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.createEditorial(req: Request, problemId: Long)
+POST        /problems/:problemId/editorials/new                                     org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.postCreateEditorial(req: Request, problemId: Long)
+GET         /problems/:problemId/editorials/edit                                    org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.editEditorial(req: Request, problemId: Long)
+POST        /problems/:problemId/editorials                                         org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.postEditEditorial(req: Request, problemId: Long)
+GET         /problems/:problemId/editorials/media                                   org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.listEditorialMediaFiles(req: Request, problemId: Long)
+POST        /problems/:problemId/editorials/media                                   org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.postUploadEditorialMediaFiles(req: Request, problemId: Long)
+GET         /problems/:problemId/editorials/languages                               org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.listEditorialLanguages(req: Request, problemId: Long)
+POST        /problems/:problemId/editorials/languages                               org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.postAddEditorialLanguage(req: Request, problemId: Long)
+GET         /problems/:problemId/editorials/languages/:language/enable              org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.enableEditorialLanguage(req: Request, problemId: Long, language)
+GET         /problems/:problemId/editorials/languages/:language/disable             org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.disableEditorialLanguage(req: Request, problemId: Long, language)
+GET         /problems/:problemId/editorials/languages/:language/makeDefault         org.iatoki.judgels.sandalphon.problem.base.editorial.ProblemEditorialController.makeDefaultEditorialLanguage(req: Request, problemId: Long, language)
 
 GET         /problems/:problemId/partners                                           org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerController.viewPartners(req: Request, problemId: Long)
 GET         /problems/:problemId/partners/                                          org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerController.listPartners(req: Request, problemId: Long, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "desc")
@@ -166,6 +180,10 @@ GET         /lessons/:lessonId/versions/local/discard                           
 GET         /problems/:problemId/statements/render/:mediaFilename                   org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemStatementAPIController.renderMediaById(req: Request, problemId: Long, mediaFilename)
 GET         /problems/:problemId/statements/media/:filename                         org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemStatementAPIController.downloadStatementMediaFile(req: Request, problemId: Long, filename)
 
+GET         /problems/:problemId/render/:mediaFilename                              org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemEditorialAPIController.renderMediaById(req: Request, problemId: Long, mediaFilename)
+GET         /problems/:problemId/editorials/render/:mediaFilename                   org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemEditorialAPIController.renderMediaById(req: Request, problemId: Long, mediaFilename)
+GET         /problems/:problemId/editorials/media/:filename                         org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemEditorialAPIController.downloadEditorialMediaFile(req: Request, problemId: Long, filename)
+
 GET         /problems/programming/:problemId/render/:mediaFilename                  org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemStatementAPIController.renderMediaById(req: Request, problemId: Long, mediaFilename)
 GET         /problems/bundle/:problemId/render/:mediaFilename                       org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemStatementAPIController.renderMediaById(req: Request, problemId: Long, mediaFilename)
 GET         /problems/bundle/:problemId/items/render/:mediaFilename                 org.iatoki.judgels.sandalphon.controllers.api.internal.InternalProblemStatementAPIController.renderMediaById(req: Request, problemId: Long, mediaFilename)
@@ -180,6 +198,7 @@ GET         /problems/programming/:problemId/grading/helpers/:filename          
 # Client API v2
 
 GET         /api/v2/client/problems/:problemJid                                     org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblem(req: Request, problemJid)
+GET         /api/v2/client/problems/:problemJid/editorial                           org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemEditorial(req: Request, problemJid)
 GET         /api/v2/client/problems/:problemJid/programming/submission-config       org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemSubmissionConfig(req: Request, problemJid)
 GET         /api/v2/client/problems/:problemJid/programming/worksheet               org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProgrammingProblemWorksheet(req: Request, problemJid)
 GET         /api/v2/client/problems/:problemJid/bundle/worksheet                    org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getBundleProblemWorksheet(req: Request, problemJid)
@@ -197,5 +216,6 @@ POST        /api/v2/client/lessons/allowed-slug-to-jid                          
 
 # Public API v2
 
-GET         /api/v2/problems/:problemJid/render/:mediaFilename                      org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderMedia(req: Request, problemJid, mediaFilename)
-GET         /api/v2/lessons/:lessonJid/render/:mediaFilename                        org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicLessonAPIControllerV2.renderMedia(req: Request, lessonJid, mediaFilename)
+GET         /api/v2/problems/:problemJid/render/:mediaFilename                     org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderStatementMedia(req: Request, problemJid, mediaFilename)
+GET         /api/v2/problems/:problemJid/editorials/render/:mediaFilename          org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderEditorialMedia(req: Request, problemJid, mediaFilename)
+GET         /api/v2/lessons/:lessonJid/render/:mediaFilename                       org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicLessonAPIControllerV2.renderMedia(req: Request, lessonJid, mediaFilename)

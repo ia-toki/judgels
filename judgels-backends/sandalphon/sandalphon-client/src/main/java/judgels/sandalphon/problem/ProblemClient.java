@@ -19,6 +19,7 @@ import javax.inject.Singleton;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.bundle.Item;
@@ -156,6 +157,18 @@ public class ProblemClient {
                         .map(item -> itemProcessorRegistry.get(item.getType()).removeAnswerKey(item))
                         .collect(Collectors.toList())
                 )
+                .build();
+    }
+
+    public ProblemEditorialInfo getProblemEditorial(String problemJid, Optional<String> language) {
+        ProblemEditorialInfo editorial =
+                clientProblemService.getProblemEditorial(sandalphonClientAuthHeader, problemJid, language);
+        return new ProblemEditorialInfo.Builder()
+                .from(editorial)
+                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(
+                        editorial.getText(),
+                        sandalphonConfig.getBaseUrl(),
+                        problemJid))
                 .build();
     }
 

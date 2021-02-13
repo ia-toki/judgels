@@ -134,7 +134,7 @@ public final class BundleItemController extends AbstractProblemController {
 
         bundleItemStore.createBundleItem(problem.getJid(), actorJid, ItemType.valueOf(itemType), itemConfigAdapter.getMetaFromForm(bundleItemConfForm), itemConfigAdapter
                 .processRequestForm(bundleItemConfForm), problemStore
-                .getDefaultLanguage(actorJid, problem.getJid()));
+                .getStatementDefaultLanguage(actorJid, problem.getJid()));
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));
@@ -155,7 +155,7 @@ public final class BundleItemController extends AbstractProblemController {
         BundleItem item = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
         ItemConfigAdapter itemConfigAdapter = ItemConfigAdapters.fromItemType(item.getType(), mapper);
-        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedStatementLanguagesToUpdate(req, problem);
 
         if (itemConfigAdapter == null) {
             return notFound();
@@ -167,7 +167,7 @@ public final class BundleItemController extends AbstractProblemController {
         } catch (RuntimeException e) {
             if (e.getCause() instanceof IOException) {
                 bundleItemConfForm = itemConfigAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, problemStore
-                        .getDefaultLanguage(actorJid, problem.getJid())), item.getMeta());
+                        .getStatementDefaultLanguage(actorJid, problem.getJid())), item.getMeta());
             } else {
                 throw e;
             }
@@ -192,7 +192,7 @@ public final class BundleItemController extends AbstractProblemController {
         BundleItem item = bundleItemStore.findInProblemWithCloneByItemJid(problem.getJid(), actorJid, itemJid);
 
         ItemConfigAdapter itemConfigAdapter = ItemConfigAdapters.fromItemType(item.getType(), mapper);
-        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToUpdate(req, problem);
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedStatementLanguagesToUpdate(req, problem);
 
         if (itemConfigAdapter == null) {
             return notFound();

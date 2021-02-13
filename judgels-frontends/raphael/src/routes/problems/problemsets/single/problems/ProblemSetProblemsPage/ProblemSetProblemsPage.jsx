@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
-import StatementLanguageWidget from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { ProblemSetProblemCard } from '../ProblemSetProblemCard/ProblemSetProblemCard';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
@@ -88,10 +88,12 @@ export class ProblemSetProblemsPage extends Component {
     }
 
     return problems.map(problem => {
+      const problemInfo = this.state.response.problemsMap[problem.problemJid] || {};
       const props = {
         problemSet: this.props.problemSet,
         problem,
         problemName: getProblemName(this.state.response.problemsMap[problem.problemJid], this.state.defaultLanguage),
+        hasEditorial: problemInfo.hasEditorial,
         progress: problemProgressesMap[problem.problemJid],
         stats: problemStatsMap[problem.problemJid],
       };

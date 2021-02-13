@@ -35,8 +35,13 @@ export function getProblemStats(problemSetJid, problemAlias) {
 }
 
 export function getProblemMetadata(problemSetJid, problemAlias) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await problemSetProblemAPI.getProblemMetadata(token, problemSetJid, problemAlias);
+  return async () => {
+    return await problemSetProblemAPI.getProblemMetadata(problemSetJid, problemAlias);
+  };
+}
+
+export function getProblemEditorial(problemSetJid, problemAlias, language) {
+  return async () => {
+    return await problemSetProblemAPI.getProblemEditorial(problemSetJid, problemAlias, language);
   };
 }

@@ -1,0 +1,54 @@
+@import judgels.fs.FileInfo
+@import org.iatoki.judgels.sandalphon.problem.base.editorial.routes
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.sandalphon.resource.UploadFileForm
+
+@(form: Form[UploadFileForm], problemId: Long, mediaFiles: List[FileInfo], isAllowedToUploadMediaFiles: Boolean)
+
+@implicitFieldConstructor = @{b3.horizontal.fieldConstructor("col-md-2", "col-md-10")}
+
+@if(isAllowedToUploadMediaFiles) {
+    <h3>Upload new</h3>
+
+    @b3.form(routes.ProblemEditorialController.postUploadEditorialMediaFiles(problemId), 'enctype -> "multipart/form-data") {
+        @helper.CSRF.formField
+
+        @b3.file(form("file"), '_label -> "As single file", 'class -> "form-control")
+
+        @b3.submit('class -> "btn btn-primary") { Upload }
+    }
+
+    @b3.form(routes.ProblemEditorialController.postUploadEditorialMediaFiles(problemId), 'enctype -> "multipart/form-data") {
+        @helper.CSRF.formField
+
+        @b3.file(form("fileZipped"), '_label -> "As zip file", 'class -> "form-control")
+
+        @b3.submit('class -> "btn btn-primary") { Upload }
+    }
+
+    <hr />
+}
+
+<h3>Files</h3>
+
+<table class="table table-striped table-condensed table-bordered">
+    <thead>
+    <tr>
+        <th>Filename</th>
+        <th>Last modified</th>
+        <th>Size</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @for(file <- mediaFiles) {
+        <tr>
+            <td>@file.getName</td>
+            <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(file.getLastModifiedTime.toEpochMilli)">@JudgelsPlayUtils.formatDetailedDateTime(file.getLastModifiedTime.toEpochMilli)</time></td>
+            <td>@JudgelsPlayUtils.formatBytesCount(file.getSize)</td>
+            <td class="text-center"><a href="@org.iatoki.judgels.sandalphon.controllers.api.internal.routes.InternalProblemEditorialAPIController.downloadEditorialMediaFile(problemId, file.getName)"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
+        </tr>
+    }
+    </tbody>
+</table>

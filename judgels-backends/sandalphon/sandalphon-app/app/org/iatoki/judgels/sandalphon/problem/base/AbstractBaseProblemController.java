@@ -50,12 +50,26 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
         String userJid = getUserJid(req);
         String currentLanguage = getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus>
-                availableLanguages = problemStore.getAvailableLanguages(userJid, problem.getJid());
+                availableLanguages = problemStore.getStatementAvailableLanguages(userJid, problem.getJid());
 
         if (currentLanguage == null
                 || !availableLanguages.containsKey(currentLanguage)
                 || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            return problemStore.getDefaultLanguage(userJid, problem.getJid());
+            return problemStore.getStatementDefaultLanguage(userJid, problem.getJid());
+        }
+        return currentLanguage;
+    }
+
+    protected String getEditorialLanguage(Http.Request req, Problem problem) {
+        String userJid = getUserJid(req);
+        String currentLanguage = getCurrentStatementLanguage(req);
+        Map<String, StatementLanguageStatus>
+                availableLanguages = problemStore.getEditorialAvailableLanguages(userJid, problem.getJid());
+
+        if (currentLanguage == null
+                || !availableLanguages.containsKey(currentLanguage)
+                || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
+            return problemStore.getEditorialDefaultLanguage(userJid, problem.getJid());
         }
         return currentLanguage;
     }

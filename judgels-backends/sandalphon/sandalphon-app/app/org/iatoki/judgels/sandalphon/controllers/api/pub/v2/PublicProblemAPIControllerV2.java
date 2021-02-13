@@ -21,9 +21,17 @@ public class PublicProblemAPIControllerV2 extends AbstractJudgelsAPIController {
     }
 
     @Transactional(readOnly = true)
-    public Result renderMedia(Http.Request req, String problemJid, String mediaFilename) {
+    public Result renderStatementMedia(Http.Request req, String problemJid, String mediaFilename) {
         Problem problem = problemStore.findProblemByJid(problemJid);
         String mediaUrl = problemStore.getStatementMediaFileURL(null, problem.getJid(), mediaFilename);
+
+        return okAsImage(req, mediaUrl);
+    }
+
+    @Transactional(readOnly = true)
+    public Result renderEditorialMedia(Http.Request req, String problemJid, String mediaFilename) {
+        Problem problem = problemStore.findProblemByJid(problemJid);
+        String mediaUrl = problemStore.getEditorialMediaFileURL(null, problem.getJid(), mediaFilename);
 
         return okAsImage(req, mediaUrl);
     }

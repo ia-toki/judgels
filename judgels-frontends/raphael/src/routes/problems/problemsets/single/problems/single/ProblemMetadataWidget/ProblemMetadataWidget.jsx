@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
+import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
@@ -25,8 +26,13 @@ class ProblemMetadataWidget extends Component {
     if (!response) {
       return null;
     }
-    const { contests } = response;
-    return this.renderContests(contests);
+    const { problem, contests } = response;
+    return (
+      <div className="problem-metadata-widget">
+        {this.renderContests(contests)}
+        {this.renderSpoilers(problem)}
+      </div>
+    );
   }
 
   renderContests = contests => {
@@ -43,6 +49,18 @@ class ProblemMetadataWidget extends Component {
             </li>
           ))}
         </ul>
+      </ContentCard>
+    );
+  };
+
+  renderSpoilers = problem => {
+    if (!problem.hasEditorial) {
+      return null;
+    }
+    return (
+      <ContentCard>
+        <h4>Spoilers</h4>
+        <ProblemEditorialDialog />
       </ContentCard>
     );
   };

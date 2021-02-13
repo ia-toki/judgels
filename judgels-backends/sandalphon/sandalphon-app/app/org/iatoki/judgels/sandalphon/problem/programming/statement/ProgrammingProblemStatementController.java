@@ -70,7 +70,7 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
         template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).absoluteURL(req, req.secure()), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
         template.addAdditionalScript(katexView.render());
 
-        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToView(req, problem);
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedStatementLanguagesToView(req, problem);
 
         appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
         template.markBreadcrumbLocation("View statement", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));

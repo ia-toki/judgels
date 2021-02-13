@@ -12,6 +12,7 @@ public interface ProblemInfo {
     ProblemType getType();
     String getDefaultLanguage();
     Map<String, String> getTitlesByLanguage();
+    boolean hasEditorial();
 
     class Builder extends ImmutableProblemInfo.Builder {}
 }

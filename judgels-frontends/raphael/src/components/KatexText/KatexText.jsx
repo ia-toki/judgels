@@ -29,6 +29,11 @@ export class KatexText extends Component {
 
   async typesetKatex() {
     await require('katex/dist/katex.min.css');
+
+    if (!this.ref.current) {
+      return;
+    }
+
     const { default: renderMathInElement } = await import('katex/dist/contrib/auto-render');
     renderMathInElement(this.ref.current, {
       delimiters: [

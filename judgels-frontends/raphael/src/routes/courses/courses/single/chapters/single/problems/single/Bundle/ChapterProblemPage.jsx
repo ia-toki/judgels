@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import * as chapterSubmissionActions from '../../../results/modules/chapterSubmissionActions';

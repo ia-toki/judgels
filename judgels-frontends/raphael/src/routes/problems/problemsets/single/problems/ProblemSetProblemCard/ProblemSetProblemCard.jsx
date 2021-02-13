@@ -1,4 +1,4 @@
-import { Tag, Intent } from '@blueprintjs/core';
+import { Tag, Intent, Icon } from '@blueprintjs/core';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { VerdictProgressTag } from '../../../../../../components/VerdictProgressTag/VerdictProgressTag';
@@ -7,7 +7,7 @@ import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 
 import './ProblemSetProblemCard.css';
 
-export function ProblemSetProblemCard({ problemSet, problem, problemName, progress, stats }) {
+export function ProblemSetProblemCard({ problemSet, problem, problemName, hasEditorial, progress, stats }) {
   const renderStats = () => {
     if (problem.type === ProblemType.Bundle || !stats) {
       return null;
@@ -20,6 +20,20 @@ export function ProblemSetProblemCard({ problemSet, problem, problemName, progre
       <div className="problemset-problem-card__stats">
         {renderAvgScoreStats(avgScore, totalUsersTried)}
         {renderACStats(totalUsersAccepted)}
+      </div>
+    );
+  };
+
+  const renderMetadata = () => {
+    if (!hasEditorial) {
+      return null;
+    }
+
+    return (
+      <div className="problemset-problem-card__metadata">
+        <Tag round intent={Intent.WARNING}>
+          editorial <Icon icon="small-tick" />
+        </Tag>
       </div>
     );
   };
@@ -71,6 +85,7 @@ export function ProblemSetProblemCard({ problemSet, problem, problemName, progre
       </h4>
       {renderProgressBar()}
       {renderStats()}
+      {renderMetadata()}
     </ContentCardLink>
   );
 }

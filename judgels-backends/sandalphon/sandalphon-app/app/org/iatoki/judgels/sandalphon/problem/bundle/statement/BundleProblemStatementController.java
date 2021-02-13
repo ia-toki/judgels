@@ -82,7 +82,7 @@ public final class BundleProblemStatementController extends AbstractProblemContr
                                 language)));
             } catch (RuntimeException e) {
                 if (e.getCause() instanceof IOException) {
-                    language = problemStore.getDefaultLanguage(actorJid, problem.getJid());
+                    language = problemStore.getStatementDefaultLanguage(actorJid, problem.getJid());
                     htmlBuilder.add(adapter.renderViewHtml(
                             item,
                             bundleItemStore.getItemConfInProblemWithCloneByJid(
@@ -99,7 +99,7 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(bundleStatementView.render(org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.postSubmit(problemId).absoluteURL(req, req.secure()), statement, htmlBuilder.build(), reasonNotAllowedToSubmit));
 
-        Set<String> allowedLanguages = problemRoleChecker.getAllowedLanguagesToView(req, problem);
+        Set<String> allowedLanguages = problemRoleChecker.getAllowedStatementLanguagesToView(req, problem);
         appendStatementLanguageSelection(template, language, allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
 
         template.markBreadcrumbLocation("View statement", org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));

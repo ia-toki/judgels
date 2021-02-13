@@ -17,6 +17,7 @@ import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemStats;
 import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jerahmeel.api.problemset.ProblemSetErrors;
+import judgels.jerahmeel.api.problemset.problem.ProblemEditorialResponse;
 import judgels.jerahmeel.api.problemset.problem.ProblemMetadataResponse;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemData;
@@ -30,6 +31,7 @@ import judgels.jerahmeel.stats.StatsStore;
 import judgels.jerahmeel.uriel.ContestClient;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
+import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.ProblemClient;
@@ -229,15 +231,12 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ProblemMetadataResponse getProblemMetadata(
-            Optional<AuthHeader> authHeader,
-            String problemSetJid,
-            String problemAlias) {
-
-        String actorJid = actorChecker.check(authHeader);
+    public ProblemMetadataResponse getProblemMetadata(String problemSetJid, String problemAlias) {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
+        ProblemInfo problemInfo = problemClient.getProblem(problem.getProblemJid());
+
         Map<String, ContestInfo> contestsMap = contestClient.getContestsByJids(problem.getContestJids());
         List<ContestInfo> contests = problem.getContestJids().stream()
                 .filter(contestsMap::containsKey)
@@ -245,7 +244,24 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                 .collect(Collectors.toList());
 
         return new ProblemMetadataResponse.Builder()
+                .problem(problemInfo)
                 .contests(contests)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ProblemEditorialResponse getProblemEditorial(
+            String problemSetJid,
+            String problemAlias,
+            Optional<String> language) {
+
+        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
+
+        ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
+        ProblemEditorialInfo editorial = problemClient.getProblemEditorial(problem.getProblemJid(), language);
+        return new ProblemEditorialResponse.Builder()
+                .editorial(editorial)
                 .build();
     }
 }

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language.js';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';

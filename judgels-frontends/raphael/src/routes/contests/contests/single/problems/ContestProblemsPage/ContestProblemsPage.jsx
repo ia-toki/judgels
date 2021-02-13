@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import StatementLanguageWidget from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';

@@ -116,6 +116,10 @@ public final class ProblemController extends AbstractProblemController {
         return redirect(org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
     }
 
+    public Result jumpToEditorial(long problemId) {
+        return redirect(org.iatoki.judgels.sandalphon.problem.base.editorial.routes.ProblemEditorialController.viewEditorial(problemId));
+    }
+
     public Result jumpToVersions(long problemId) {
         return redirect(org.iatoki.judgels.sandalphon.problem.base.version.routes.ProblemVersionController.viewVersionLocalChanges(problemId));
     }
