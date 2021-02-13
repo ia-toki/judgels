@@ -112,7 +112,9 @@ public class LessonRoleChecker {
 
         if (isPartner(req, lesson)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToView();
-            allowedLanguages.retainAll(allowedPartnerLanguages);
+            if (!allowedPartnerLanguages.isEmpty()) {
+                allowedLanguages.retainAll(allowedPartnerLanguages);
+            }
             allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
         }
 
@@ -131,7 +133,9 @@ public class LessonRoleChecker {
 
         if (isPartner(req, lesson)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToUpdate();
-            allowedLanguages.retainAll(allowedPartnerLanguages);
+            if (!allowedPartnerLanguages.isEmpty()) {
+                allowedLanguages.retainAll(allowedPartnerLanguages);
+            }
             allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
         }
 

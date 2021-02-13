@@ -143,7 +143,9 @@ public class ProblemRoleChecker {
 
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
-            allowedLanguages.retainAll(allowedPartnerLanguages);
+            if (!allowedPartnerLanguages.isEmpty()) {
+                allowedLanguages.retainAll(allowedPartnerLanguages);
+            }
             allowedLanguages.add(problemStore.getStatementDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
@@ -162,7 +164,9 @@ public class ProblemRoleChecker {
 
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
-            allowedLanguages.retainAll(allowedPartnerLanguages);
+            if (!allowedPartnerLanguages.isEmpty()) {
+                allowedLanguages.retainAll(allowedPartnerLanguages);
+            }
             allowedLanguages.add(problemStore.getStatementDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
@@ -181,7 +185,9 @@ public class ProblemRoleChecker {
 
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToView();
-            allowedLanguages.retainAll(allowedPartnerLanguages);
+            if (!allowedPartnerLanguages.isEmpty()) {
+                allowedLanguages.retainAll(allowedPartnerLanguages);
+            }
             allowedLanguages.add(problemStore.getEditorialDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
@@ -200,7 +206,9 @@ public class ProblemRoleChecker {
 
         if (isPartner(req, problem)) {
             Set<String> allowedPartnerLanguages = getPartnerConfig(req, problem).getAllowedStatementLanguagesToUpdate();
-            allowedLanguages.retainAll(allowedPartnerLanguages);
+            if (!allowedPartnerLanguages.isEmpty()) {
+                allowedLanguages.retainAll(allowedPartnerLanguages);
+            }
             allowedLanguages.add(problemStore.getEditorialDefaultLanguage(getUserJid(req), problem.getJid()));
         }
 
