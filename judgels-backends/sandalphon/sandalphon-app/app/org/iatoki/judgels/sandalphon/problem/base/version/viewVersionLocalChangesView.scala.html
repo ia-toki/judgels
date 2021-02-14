@@ -11,7 +11,7 @@
 @if(isClean) {
     No local changes.
 }else {
-    @if(localChangesError != null) {
+    @if(localChangesError != null && !localChangesError.isEmpty) {
         <p>@localChangesError</p>
     } else {
         @b3.form(routes.ProblemVersionController.postCommitVersionLocalChanges(problem.getId())) {

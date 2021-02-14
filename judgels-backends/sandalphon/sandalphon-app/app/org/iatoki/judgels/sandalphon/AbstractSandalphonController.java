@@ -18,6 +18,9 @@ public abstract class AbstractSandalphonController extends AbstractJophielClient
     }
 
     protected Map<String, String> newCurrentStatementLanguage(String value) {
+        if (value == null) {
+            return ImmutableMap.of();
+        }
         return ImmutableMap.of("currentStatementLanguage", value);
     }
 

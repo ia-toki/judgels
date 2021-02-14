@@ -107,7 +107,7 @@ public final class LessonVersionController extends AbstractLessonController {
         }
 
         VersionCommitForm data = form.get();
-        String localChangesErrorFlash = null;
+        String localChangesErrorFlash = "";
 
         if (lessonStore.fetchUserClone(actorJid, lesson.getJid())) {
             localChangesErrorFlash = "Your working copy has diverged from the master copy. Please update your working copy.";
@@ -131,7 +131,7 @@ public final class LessonVersionController extends AbstractLessonController {
 
         lessonStore.fetchUserClone(actorJid, lesson.getJid());
 
-        String localChangesErrorFlash = null;
+        String localChangesErrorFlash = "";
         if (!lessonStore.updateUserClone(actorJid, lesson.getJid())) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }

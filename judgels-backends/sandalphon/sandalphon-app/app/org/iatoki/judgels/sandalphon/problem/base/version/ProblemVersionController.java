@@ -108,7 +108,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         }
 
         VersionCommitForm data = form.get();
-        String localChangesErrorFlash = null;
+        String localChangesErrorFlash = "";
 
         if (problemStore.fetchUserClone(actorJid, problem.getJid())) {
             localChangesErrorFlash = "Your working copy has diverged from the master copy. Please update your working copy.";
@@ -132,7 +132,7 @@ public final class ProblemVersionController extends AbstractProblemController {
 
         problemStore.fetchUserClone(actorJid, problem.getJid());
 
-        String localChangesErrorFlash = null;
+        String localChangesErrorFlash = "";
         if (!problemStore.updateUserClone(actorJid, problem.getJid())) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }
