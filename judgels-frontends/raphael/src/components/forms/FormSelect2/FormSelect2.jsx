@@ -18,6 +18,7 @@ export function FormSelect2({ input, className, label, meta, optionValues, optio
         className={classNames('form-group__select', getIntentClassName(meta))}
         items={optionValues}
         itemRenderer={renderOption}
+        activeItem={inputProps.value}
         onItemSelect={onChange}
         inputProps={inputProps}
         filterable={false}

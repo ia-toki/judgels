@@ -29,6 +29,7 @@ export function FormTableSelect2(props) {
         className={classNames(getIntentClassName(meta))}
         items={optionValues}
         itemRenderer={renderOption}
+        activeItem={inputProps.value}
         onItemSelect={onChange}
         inputProps={inputProps}
         filterable={false}
