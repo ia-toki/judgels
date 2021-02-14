@@ -39,6 +39,7 @@ dependencies {
     implementation "com.typesafe.play:play-java_${scalaVersion}:${playVersion}"
     implementation "com.typesafe.play:play-java-forms_${scalaVersion}:${playVersion}"
     implementation "com.typesafe.play:play-java-jdbc_${scalaVersion}:${playVersion}"
+    implementation "com.typesafe.play:play-jdbc-evolutions_${scalaVersion}:${playVersion}"
     implementation "com.typesafe.play:play-ws_${scalaVersion}:${playVersion}"
     implementation ("com.typesafe.play:play-java-jpa_${scalaVersion}:${playVersion}") {
         exclude group: 'org.hibernate.javax.persistence', module: 'hibernate-jpa-2.0-implementation'
