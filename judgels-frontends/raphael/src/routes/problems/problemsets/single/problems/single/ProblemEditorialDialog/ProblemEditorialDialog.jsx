@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
-import { KatexText } from '../../../../../../../components/KatexText/KatexText';
+import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../modules/problemSetProblemSelectors';
 import { selectEditorialLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -59,19 +59,34 @@ export class ProblemEditorialDialog extends Component {
 
   renderDialog = () => {
     const { problemSet, problem } = this.props;
-    const { response, isDialogOpen } = this.state;
+    const { isDialogOpen } = this.state;
     return (
-      <Dialog
-        className="problem-editorial-dialog"
-        isOpen={isDialogOpen}
-        onClose={this.toggleDialog}
-        title={`${problemSet.name} - ${problem.alias}: Editorial`}
-      >
+      <Dialog className="problem-editorial-dialog" isOpen={isDialogOpen} onClose={this.toggleDialog} title="Editorial">
         <div className={Classes.DIALOG_BODY}>
           {this.renderEditorialLanguageWidget()}
-          <Card className="problem-editorial-card">{response && <KatexText>{response.editorial.text}</KatexText>}</Card>
+          <Card className="problem-editorial-card">{this.renderEditorial()}</Card>
         </div>
       </Dialog>
+    );
+  };
+
+  renderEditorial = () => {
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+    const { editorial } = response;
+    const { problemSet, problem, settersMap, profilesMap } = this.props;
+
+    return (
+      <ProblemEditorial
+        containerName={problemSet.name}
+        problemAlias={problem.alias}
+        settersMap={settersMap}
+        profilesMap={profilesMap}
+      >
+        {editorial.text}
+      </ProblemEditorial>
     );
   };
 

@@ -2,24 +2,40 @@
 @import judgels.sandalphon.api.problem.Problem
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(problem: Problem, profile: Profile)
+@(problem: Problem, profile: Profile, writerUsernames: String, developerUsernames: String, testerUsernames: String, editorialistUsernames: String)
 
+<h3>Info</h3>
 <table class="table">
     <tbody>
         <tr>
-            <td>ID</td><td>@problem.getId</td>
-        </tr>
-        <tr>
-            <td>JID</td><td>@problem.getJid</td>
+            <td style="width: 200px">JID</td><td>@problem.getJid</td>
         </tr>
         <tr>
             <td>Slug</td><td>@problem.getSlug</td>
         </tr>
         <tr>
-            <td>Author</td><td>@profile.getUsername</td>
+            <td>Creator</td><td>@profile.getUsername</td>
         </tr>
         <tr>
             <td>Additional note</td><td>@Html(JudgelsPlayUtils.escapeHtmlString(problem.getAdditionalNote))</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Metadata</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <td style="width: 200px">Writers</td><td>@writerUsernames</td>
+        </tr>
+        <tr>
+            <td>Developers</td><td>@developerUsernames</td>
+        </tr>
+        <tr>
+            <td>Testers</td><td>@testerUsernames</td>
+        </tr>
+        <tr>
+            <td>Editorialists</td><td>@editorialistUsernames</td>
         </tr>
     </tbody>
 </table>

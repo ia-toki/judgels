@@ -3,15 +3,23 @@ package org.iatoki.judgels.sandalphon.problem.base;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
+import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemType;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
@@ -31,6 +39,7 @@ public final class ProblemController extends AbstractProblemController {
     private final ProblemStore problemStore;
     private final RoleChecker roleChecker;
     private final ProblemRoleChecker problemRoleChecker;
+    private final UserSearchService userSearchService;
     private final ProfileService profileService;
 
     @Inject
@@ -38,12 +47,14 @@ public final class ProblemController extends AbstractProblemController {
             ProblemStore problemStore,
             RoleChecker roleChecker,
             ProblemRoleChecker problemRoleChecker,
+            UserSearchService userSearchService,
             ProfileService profileService) {
 
         super(problemStore, problemRoleChecker);
         this.problemStore = problemStore;
         this.roleChecker = roleChecker;
         this.problemRoleChecker = problemRoleChecker;
+        this.userSearchService = userSearchService;
         this.profileService = profileService;
     }
 
@@ -136,8 +147,19 @@ public final class ProblemController extends AbstractProblemController {
 
         Profile profile = profileService.getProfile(problem.getAuthorJid());
 
+        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        Map<String, Profile> profilesMap = profileService.getProfiles(setters.values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toSet()));
+
+        String writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
+        String developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
+        String testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
+        String editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
+
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(viewProblemView.render(problem, profile));
+        template.setContent(viewProblemView.render(problem, profile, writerUsernames, developerUsernames, testerUsernames, editorialistUsernames));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.markBreadcrumbLocation("View problem", routes.ProblemController.viewProblem(problem.getId()));
         template.setPageTitle("Problem - View");
@@ -150,9 +172,19 @@ public final class ProblemController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatement(req, problem));
 
+        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        Map<String, Profile> profilesMap = profileService.getProfiles(setters.values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toSet()));
+
         ProblemEditForm data = new ProblemEditForm();
         data.slug = problem.getSlug();
         data.additionalNote = problem.getAdditionalNote();
+        data.writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
+        data.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
+        data.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
+        data.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
 
         Form<ProblemEditForm> form = formFactory.form(ProblemEditForm.class).fill(data);
 
@@ -176,7 +208,21 @@ public final class ProblemController extends AbstractProblemController {
         }
 
         ProblemEditForm data = form.get();
+
+        Set<String> usernames = new HashSet<>();
+        usernames.addAll(ImmutableSet.copyOf(Optional.ofNullable(data.writerUsernames).orElse("").split(",")));
+        usernames.addAll(ImmutableSet.copyOf(Optional.ofNullable(data.developerUsernames).orElse("").split(",")));
+        usernames.addAll(ImmutableSet.copyOf(Optional.ofNullable(data.testerUsernames).orElse("").split(",")));
+        usernames.addAll(ImmutableSet.copyOf(Optional.ofNullable(data.editorialistUsernames).orElse("").split(",")));
+        Map<String, String> jidsMap = userSearchService.translateUsernamesToJids(usernames);
+
         problemStore.updateProblem(problem.getJid(), data.slug, data.additionalNote);
+
+        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.WRITER, data.writerUsernames, setters, jidsMap);
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.DEVELOPER, data.developerUsernames, setters, jidsMap);
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.TESTER, data.testerUsernames, setters, jidsMap);
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.EDITORIALIST, data.editorialistUsernames, setters, jidsMap);
 
         return redirect(routes.ProblemController.viewProblem(problem.getId()));
     }
@@ -187,6 +233,41 @@ public final class ProblemController extends AbstractProblemController {
 
         return redirect(req.getHeaders().get("Referer").orElse(""))
                 .addingToSession(req, newCurrentStatementLanguage(language));
+    }
+
+    private String userJidsToUsernames(List<String> userJids, Map<String, Profile> profilesMap) {
+        if (userJids == null) {
+            return "";
+        }
+        return userJids.stream()
+                .filter(profilesMap::containsKey)
+                .map(profilesMap::get)
+                .map(Profile::getUsername)
+                .collect(Collectors.joining(","));
+    }
+
+    private List<String> usernamesToUserJids(String usernames, Map<String, String> jidsMap) {
+        if (usernames == null) {
+            return ImmutableList.of();
+        }
+        return Lists.newArrayList(usernames.split(","))
+                .stream()
+                .filter(jidsMap::containsKey)
+                .map(jidsMap::get)
+                .collect(Collectors.toList());
+    }
+
+    private void updateProblemSetters(
+            String problemJid,
+            ProblemSetterRole role,
+            String usernames,
+            Map<ProblemSetterRole, List<String>> setters,
+            Map<String, String> jidsMap) {
+
+        List<String> userJids = usernamesToUserJids(usernames, jidsMap);
+        if (!userJids.equals(setters.getOrDefault(role, ImmutableList.of()))) {
+            problemStore.updateProblemSettersByProblemJidAndRole(problemJid, role, userJids);
+        }
     }
 
     private Result showCreateProblem(Http.Request req, Form<ProblemCreateForm> form) {

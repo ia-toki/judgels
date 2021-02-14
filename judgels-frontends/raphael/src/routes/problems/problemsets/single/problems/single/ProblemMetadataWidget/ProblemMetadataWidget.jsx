@@ -22,23 +22,25 @@ class ProblemMetadataWidget extends Component {
   }
 
   render() {
+    return (
+      <>
+        {this.renderContests()}
+        {this.renderSpoilers()}
+      </>
+    );
+  }
+
+  renderContests = () => {
     const { response } = this.state;
     if (!response) {
       return null;
     }
-    const { problem, contests } = response;
-    return (
-      <div className="problem-metadata-widget">
-        {this.renderContests(contests)}
-        {this.renderSpoilers(problem)}
-      </div>
-    );
-  }
 
-  renderContests = contests => {
+    const { contests } = response;
     if (contests.length == 0) {
       return null;
     }
+
     return (
       <ContentCard>
         <h4>Contests</h4>
@@ -53,14 +55,21 @@ class ProblemMetadataWidget extends Component {
     );
   };
 
-  renderSpoilers = problem => {
+  renderSpoilers = () => {
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+
+    const { problem, metadata, profilesMap } = response;
     if (!problem.hasEditorial) {
       return null;
     }
+
     return (
       <ContentCard>
         <h4>Spoilers</h4>
-        <ProblemEditorialDialog />
+        <ProblemEditorialDialog settersMap={metadata.settersMap} profilesMap={profilesMap} />
       </ContentCard>
     );
   };

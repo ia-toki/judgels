@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import judgels.sandalphon.SandalphonUtils;
+import judgels.sandalphon.api.ProblemMetadata;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
@@ -36,6 +37,7 @@ public class ProblemClient {
     private final ItemProcessorRegistry itemProcessorRegistry;
 
     private final LoadingCache<String, ProblemInfo> problemCache;
+    private final LoadingCache<String, ProblemMetadata> problemMetadataCache;
 
     @Inject
     public ProblemClient(
@@ -53,6 +55,11 @@ public class ProblemClient {
                 .maximumSize(1_000)
                 .expireAfterWrite(Duration.ofSeconds(10))
                 .build(new ProblemCacheLoader());
+
+        this.problemMetadataCache = Caffeine.newBuilder()
+                .maximumSize(1_000)
+                .expireAfterWrite(Duration.ofSeconds(10))
+                .build(this::getProblemMetadataUncached);
     }
 
     public Map<String, String> translateAllowedSlugsToJids(String actorJid, Set<String> slugs) {
@@ -63,6 +70,14 @@ public class ProblemClient {
 
     public ProblemInfo getProblem(String problemJid) {
         return problemCache.get(problemJid);
+    }
+
+    public ProblemMetadata getProblemMetadata(String problemJid) {
+        return problemMetadataCache.get(problemJid);
+    }
+
+    private ProblemMetadata getProblemMetadataUncached(String problemJid) {
+        return clientProblemService.getProblemMetadata(sandalphonClientAuthHeader, problemJid);
     }
 
     public Map<String, ProblemInfo> getProblems(Set<String> problemJids) {

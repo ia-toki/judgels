@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.sandalphon.api.ProblemMetadata;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -27,6 +28,14 @@ public interface ClientProblemService {
     ProblemInfo getProblem(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @PathParam("problemJid") String problemJid);
+
+    @GET
+    @Path("/{problemJid}/metadata")
+    @Produces(APPLICATION_JSON)
+    ProblemMetadata getProblemMetadata(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            @PathParam("problemJid") String problemJid);
+
 
     @GET
     @Path("/{problemJid}/editorial")

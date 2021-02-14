@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +25,7 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemEditorial;
+import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
@@ -41,6 +43,7 @@ public class ProblemStore extends AbstractProblemStore {
     private final ProblemDao problemDao;
     private final FileSystem problemFs;
     private final Git problemGit;
+    private final ProblemSetterDao problemSetterDao;
     private final ProblemPartnerDao problemPartnerDao;
 
     @Inject
@@ -49,6 +52,7 @@ public class ProblemStore extends AbstractProblemStore {
             ProblemDao problemDao,
             @ProblemFs FileSystem problemFs,
             @ProblemGit Git problemGit,
+            ProblemSetterDao problemSetterDao,
             ProblemPartnerDao problemPartnerDao) {
 
         super(mapper, problemFs);
@@ -56,6 +60,7 @@ public class ProblemStore extends AbstractProblemStore {
         this.problemDao = problemDao;
         this.problemFs = problemFs;
         this.problemGit = problemGit;
+        this.problemSetterDao = problemSetterDao;
         this.problemPartnerDao = problemPartnerDao;
     }
 
@@ -92,6 +97,29 @@ public class ProblemStore extends AbstractProblemStore {
     public Problem findProblemBySlug(String slug) {
         ProblemModel model = problemDao.findBySlug(slug);
         return createProblemFromModel(model);
+    }
+
+    public Map<ProblemSetterRole, List<String>> findProblemSettersByProblemJid(String problemJid) {
+        Map<ProblemSetterRole, List<String>> setters = Maps.newHashMap();
+        for (ProblemSetterModel m : problemSetterDao.selectAllByProblemJid(problemJid)) {
+            ProblemSetterRole role = ProblemSetterRole.valueOf(m.role);
+            setters.putIfAbsent(role, Lists.newArrayList());
+            setters.get(role).add(m.userJid);
+        }
+        return setters;
+    }
+
+    public void updateProblemSettersByProblemJidAndRole(String problemJid, ProblemSetterRole role, List<String> userJids) {
+        problemSetterDao.selectAllByProblemJidAndRole(problemJid, role).forEach(problemSetterDao::delete);
+        problemSetterDao.flush();
+
+        for (String userJid : userJids) {
+            ProblemSetterModel m = new ProblemSetterModel();
+            m.problemJid = problemJid;
+            m.userJid = userJid;
+            m.role = role.name();
+            problemSetterDao.insert(m);
+        }
     }
 
     public boolean isUserPartnerForProblem(String problemJid, String userJid) {

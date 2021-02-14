@@ -10,6 +10,14 @@ public final class ProblemEditForm {
 
     public String additionalNote;
 
+    public String writerUsernames;
+
+    public String developerUsernames;
+
+    public String testerUsernames;
+
+    public String editorialistUsernames;
+
     public String getSlug() {
         return slug;
     }
@@ -24,5 +32,37 @@ public final class ProblemEditForm {
 
     public void setAdditionalNote(String additionalNote) {
         this.additionalNote = additionalNote;
+    }
+
+    public String getWriterUsernames() {
+        return writerUsernames;
+    }
+
+    public void setWriterUsernames(String writerUsernames) {
+        this.writerUsernames = writerUsernames;
+    }
+
+    public String getDeveloperUsernames() {
+        return developerUsernames;
+    }
+
+    public void setDeveloperUsernames(String developerUsernames) {
+        this.developerUsernames = developerUsernames;
+    }
+
+    public String getTesterUsernames() {
+        return testerUsernames;
+    }
+
+    public void setTesterUsernames(String testerUsernames) {
+        this.testerUsernames = testerUsernames;
+    }
+
+    public String getEditorialistUsernames() {
+        return editorialistUsernames;
+    }
+
+    public void setEditorialistUsernames(String editorialistUsernames) {
+        this.editorialistUsernames = editorialistUsernames;
     }
 }

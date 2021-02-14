@@ -30,7 +30,7 @@ import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jerahmeel.uriel.ContestClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
+import judgels.sandalphon.api.ProblemMetadata;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -38,16 +38,17 @@ import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.ContestInfo;
+import judgles.jophiel.user.UserClient;
 
 public class ProblemSetProblemResource implements ProblemSetProblemService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final ProblemSetStore problemSetStore;
     private final ProblemSetProblemStore problemStore;
+    private final UserClient userClient;
     private final ProblemClient problemClient;
     private final ContestClient contestClient;
     private final StatsStore statsStore;
-    private final ProfileService profileService;
 
     @Inject
     public ProblemSetProblemResource(
@@ -55,19 +56,19 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
             RoleChecker roleChecker,
             ProblemSetStore problemSetStore,
             ProblemSetProblemStore problemStore,
+            UserClient userClient,
             ProblemClient problemClient,
             ContestClient contestClient,
-            StatsStore statsStore,
-            ProfileService profileService) {
+            StatsStore statsStore) {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
         this.problemSetStore = problemSetStore;
         this.problemStore = problemStore;
+        this.userClient = userClient;
         this.problemClient = problemClient;
         this.contestClient = contestClient;
         this.statsStore = statsStore;
-        this.profileService = profileService;
     }
 
     @Override
@@ -219,7 +220,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         topStats.getTopUsersByScore().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByMemory().forEach(e -> userJids.add(e.getUserJid()));
-        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
 
         return new ProblemStatsResponse.Builder()
                 .stats(stats)
@@ -236,6 +237,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         ProblemInfo problemInfo = problemClient.getProblem(problem.getProblemJid());
+        ProblemMetadata metadata = problemClient.getProblemMetadata(problem.getProblemJid());
 
         Map<String, ContestInfo> contestsMap = contestClient.getContestsByJids(problem.getContestJids());
         List<ContestInfo> contests = problem.getContestJids().stream()
@@ -243,9 +245,16 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                 .map(contestsMap::get)
                 .collect(Collectors.toList());
 
+        Map<String, Profile> profilesMap = userClient.getProfiles(metadata.getSettersMap().values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toSet()));
+
         return new ProblemMetadataResponse.Builder()
                 .problem(problemInfo)
+                .metadata(metadata)
                 .contests(contests)
+                .profilesMap(profilesMap)
                 .build();
     }
 
