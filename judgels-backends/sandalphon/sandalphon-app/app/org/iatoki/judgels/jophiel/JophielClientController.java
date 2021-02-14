@@ -59,6 +59,7 @@ public final class JophielClientController extends AbstractJophielClientControll
         }
 
         return redirect(getServiceLoginUrl(session.getAuthCode(), getRootUrl(req)))
+                .removingFromFlash("localChangesError")
                 .withSession(new ImmutableMap.Builder<String, String>()
                         .put("version", JophielSessionUtils.getSessionVersion())
                         .put("token", session.getToken())
