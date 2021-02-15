@@ -1,10 +1,18 @@
 .submission-image-dialog {
-  width: 750px;
+  width: 800px;
+}
+
+.submission-image-card {
   height: 650px;
+  overflow: auto;
 }
 
 .submission-image {
   overflow: auto;
-  width: 690px;
-  height: 475px;
+}
+
+@media only screen and (max-width: 800px) {
+  .submission-image-dialog {
+    width: inherit;
+  }
 }

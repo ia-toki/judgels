@@ -1,6 +1,4 @@
-import { Button, Classes, Dialog } from '@blueprintjs/core';
-
-import { ContentCard } from '../ContentCard/ContentCard';
+import { Card, Classes, Dialog } from '@blueprintjs/core';
 
 import './SubmissionImageDialog.css';
 
@@ -15,16 +13,11 @@ export function SubmissionImageDialog({ isOpen, onClose, title, imageUrl }) {
       enforceFocus={true}
     >
       <div className={Classes.DIALOG_BODY}>
-        <ContentCard>
+        <Card className="submission-image-card">
           <div className="submission-image">
             <img src={imageUrl} />
           </div>
-        </ContentCard>
-      </div>
-      <div className={Classes.DIALOG_FOOTER}>
-        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Close" onClick={onClose} />
-        </div>
+        </Card>
       </div>
     </Dialog>
   );
