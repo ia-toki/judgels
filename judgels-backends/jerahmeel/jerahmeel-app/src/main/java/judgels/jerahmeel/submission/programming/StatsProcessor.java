@@ -1,5 +1,6 @@
 package judgels.jerahmeel.submission.programming;
 
+import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.gabriel.api.GradingResultDetails;
@@ -67,6 +68,7 @@ public class StatsProcessor implements SubmissionConsumer {
     }
 
     @Override
+    @UnitOfWork
     public void accept(Submission submission) {
         Optional<ChapterProblemModel> cm = chapterProblemDao.selectByProblemJid(submission.getProblemJid());
         Optional<ProblemSetProblemModel> pm = problemSetProblemDao.selectByProblemJid(submission.getProblemJid());
