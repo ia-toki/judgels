@@ -66,10 +66,10 @@ public class ServiceUtils {
     }
 
     public static Response buildImageResponseFromText(String text, Date lastModifiedStream) {
-        int fontSize = 14;
+        int fontSize = 13;
         int margin = 20;
         int charWidth = 8;
-        int charHeight = 17;
+        int charHeight = 16;
 
         String[] textList = text.split("\\r?\\n");
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
