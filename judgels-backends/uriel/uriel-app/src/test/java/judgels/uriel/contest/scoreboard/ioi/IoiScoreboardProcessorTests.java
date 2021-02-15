@@ -11,10 +11,12 @@ import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.Verdict;
+import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
@@ -56,6 +58,10 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(10)).build());
 
+        private Map<String, Profile> profilesMap = ImmutableMap.of(
+                "c1", new Profile.Builder().username("c1").build(),
+                "c2", new Profile.Builder().username("c2").build());
+
         @Test
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
@@ -69,6 +75,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     Optional.empty(),
                     styleModuleConfig,
                     contestants,
+                    profilesMap,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
@@ -77,6 +84,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new IoiScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c2")
+                            .contestantUsername("c2")
+                            .contestantRating(0)
                             .addScores(
                                     Optional.of(78),
                                     Optional.empty()
@@ -87,6 +96,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new IoiScoreboardEntry.Builder()
                             .rank(2)
                             .contestantJid("c1")
+                            .contestantUsername("c1")
+                            .contestantRating(0)
                             .addScores(
                                     Optional.of(0),
                                     Optional.of(50)
@@ -109,6 +120,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     Optional.empty(),
                     styleModuleConfig,
                     contestants,
+                    profilesMap,
                     submissions,
                     ImmutableList.of(),
                     Optional.of(Instant.ofEpochMilli(23)));
@@ -117,6 +129,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new IoiScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c2")
+                            .contestantUsername("c2")
+                            .contestantRating(0)
                             .addScores(
                                     Optional.of(78),
                                     Optional.empty()
@@ -127,6 +141,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new IoiScoreboardEntry.Builder()
                             .rank(2)
                             .contestantJid("c1")
+                            .contestantUsername("c1")
+                            .contestantRating(0)
                             .addScores(
                                     Optional.empty(),
                                     Optional.of(50)
@@ -169,6 +185,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -177,6 +194,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(0),
                                         Optional.of(95)
@@ -187,6 +206,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(75),
                                         Optional.of(15)
@@ -218,6 +239,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.of(incrementalContent),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -226,6 +248,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(75),
                                         Optional.of(23)
@@ -236,6 +260,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(0),
                                         Optional.of(95)
@@ -274,6 +300,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -282,6 +309,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(50),
                                         Optional.empty()
@@ -292,6 +321,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.empty(),
                                         Optional.of(50)
@@ -314,6 +345,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -322,6 +354,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.empty(),
                                         Optional.of(50)
@@ -332,6 +366,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(50),
                                         Optional.empty()
@@ -358,6 +394,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -366,6 +403,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(50),
                                         Optional.empty()
@@ -376,6 +415,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.empty(),
                                         Optional.of(50)
@@ -395,6 +436,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -403,6 +445,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.of(50),
                                         Optional.empty()
@@ -413,6 +457,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new IoiScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .addScores(
                                         Optional.empty(),
                                         Optional.of(50)
@@ -439,6 +485,11 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(300)).build(),
                     new ContestContestant.Builder().userJid("c3").build());
 
+            Map<String, Profile> profilesMap = ImmutableMap.of(
+                    "c1", new Profile.Builder().username("c1").build(),
+                    "c2", new Profile.Builder().username("c2").build(),
+                    "c3", new Profile.Builder().username("c3").build());
+
             IoiScoreboardIncrementalContent incrementalContent = new IoiScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
                     .putLastAffectingPenaltiesByContestantJid("c2", 75L)
@@ -455,6 +506,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -482,6 +534,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.of(incrementalContent),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         ImmutableList.of(),
                         ImmutableList.of(),
                         Optional.empty());
@@ -500,6 +553,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.of(incrementalContent),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -528,6 +582,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
         IoiScoreboardEntry entry = new IoiScoreboardEntry.Builder()
                 .rank(0)
                 .contestantJid("123")
+                .contestantUsername("123")
+                .contestantRating(0)
                 .totalScores(100)
                 .lastAffectingPenalty(12)
                 .build();
@@ -543,6 +599,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                         .from(entry)
                                         .rank(1)
                                         .contestantJid("c1")
+                                        .contestantUsername("c1")
+                                        .contestantRating(0)
                                         .addScores(of(10), of(20), of(30), of(40))
                                         .totalScores(100)
                                         .build(),
@@ -550,6 +608,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                         .from(entry)
                                         .rank(2)
                                         .contestantJid("c2")
+                                        .contestantUsername("c2")
+                                        .contestantRating(0)
                                         .addScores(of(10), of(10), of(30), of(20))
                                         .totalScores(70)
                                         .build(),
@@ -557,6 +617,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                         .from(entry)
                                         .rank(2)
                                         .contestantJid("c3")
+                                        .contestantUsername("c3")
+                                        .contestantRating(0)
                                         .addScores(of(10), of(20), of(20), of(20))
                                         .totalScores(70)
                                         .build())
@@ -574,6 +636,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                         .from(entry)
                                         .rank(1)
                                         .contestantJid("c1")
+                                        .contestantUsername("c1")
+                                        .contestantRating(0)
                                         .addScores(of(10), of(30))
                                         .totalScores(40)
                                         .build(),
@@ -581,6 +645,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                         .from(entry)
                                         .rank(1)
                                         .contestantJid("c2")
+                                        .contestantUsername("c2")
+                                        .contestantRating(0)
                                         .addScores(of(10), of(30))
                                         .totalScores(40)
                                         .build(),
@@ -588,6 +654,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                         .from(entry)
                                         .rank(3)
                                         .contestantJid("c3")
+                                        .contestantUsername("c3")
+                                        .contestantRating(0)
                                         .addScores(of(10), of(20))
                                         .totalScores(30)
                                         .build())

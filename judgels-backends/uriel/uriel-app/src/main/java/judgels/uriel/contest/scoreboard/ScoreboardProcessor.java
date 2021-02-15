@@ -3,8 +3,10 @@ package judgels.uriel.contest.scoreboard;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -18,7 +20,10 @@ import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 public interface ScoreboardProcessor {
     Scoreboard parse(ObjectMapper mapper, String json);
     Scoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries);
-    ScoreboardContent combineContents(StyleModuleConfig styleModuleConfig, List<Scoreboard> scoreboards);
+    ScoreboardContent combineContents(
+            StyleModuleConfig styleModuleConfig,
+            List<Scoreboard> scoreboards,
+            Map<String, Profile> profilesMap);
 
     boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig);
 
@@ -28,6 +33,7 @@ public interface ScoreboardProcessor {
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
+            Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime);

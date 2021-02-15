@@ -29,6 +29,16 @@ public interface GcjScoreboard extends Scoreboard {
     @Value.Immutable
     @JsonDeserialize(as = ImmutableGcjScoreboardEntry.class)
     interface GcjScoreboardEntry extends ScoreboardEntry {
+        @Value.Default
+        default String getContestantUsername() {
+            return "";
+        }
+
+        @Value.Default
+        default int getContestantRating() {
+            return 0;
+        }
+
         int getTotalPoints();
         long getTotalPenalties();
         List<Integer> getAttemptsList();

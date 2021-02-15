@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.contest.ContestGroupStore;
@@ -68,7 +69,8 @@ public class ContestScoreboardUpdaterModule {
             ItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            ContestScoreboardPusher scoreboardPusher) {
+            ContestScoreboardPusher scoreboardPusher,
+            ProfileService profileService) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdater.class,
@@ -83,7 +85,8 @@ public class ContestScoreboardUpdaterModule {
                         ItemSubmissionStore.class,
                         ScoreboardIncrementalMarker.class,
                         ScoreboardProcessorRegistry.class,
-                        ContestScoreboardPusher.class},
+                        ContestScoreboardPusher.class,
+                        ProfileService.class},
                 new Object[] {
                         objectMapper,
                         contestTimer,
@@ -95,7 +98,8 @@ public class ContestScoreboardUpdaterModule {
                         bundleItemSubmissionStore,
                         scoreboardIncrementalMarker,
                         scoreboardProcessorRegistry,
-                        scoreboardPusher});
+                        scoreboardPusher,
+                        profileService});
     }
 
     @Provides
@@ -109,7 +113,8 @@ public class ContestScoreboardUpdaterModule {
             ContestGroupContestStore groupContestStore,
             ContestGroupScoreboardStore groupScoreboardStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            ContestScoreboardPusher scoreboardPusher) {
+            ContestScoreboardPusher scoreboardPusher,
+            ProfileService profileService) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestGroupScoreboardUpdater.class,
@@ -121,7 +126,8 @@ public class ContestScoreboardUpdaterModule {
                         ContestGroupContestStore.class,
                         ContestGroupScoreboardStore.class,
                         ScoreboardProcessorRegistry.class,
-                        ContestScoreboardPusher.class},
+                        ContestScoreboardPusher.class,
+                        ProfileService.class},
                 new Object[] {
                         objectMapper,
                         contestStore,
@@ -130,6 +136,7 @@ public class ContestScoreboardUpdaterModule {
                         groupContestStore,
                         groupScoreboardStore,
                         scoreboardProcessorRegistry,
-                        scoreboardPusher});
+                        scoreboardPusher,
+                        profileService});
     }
 }

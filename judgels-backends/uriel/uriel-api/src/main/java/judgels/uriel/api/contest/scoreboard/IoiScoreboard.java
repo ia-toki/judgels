@@ -30,9 +30,19 @@ public interface IoiScoreboard extends Scoreboard {
     @Value.Immutable
     @JsonDeserialize(as = ImmutableIoiScoreboardEntry.class)
     interface IoiScoreboardEntry extends ScoreboardEntry {
-        List<Optional<Integer>> getScores();
+        @Value.Default
+        default String getContestantUsername() {
+            return "";
+        }
+
+        @Value.Default
+        default int getContestantRating() {
+            return 0;
+        }
+
         int getTotalScores();
         long getLastAffectingPenalty();
+        List<Optional<Integer>> getScores();
 
         @JsonIgnore
         @Override

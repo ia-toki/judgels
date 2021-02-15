@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +20,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.SubtaskResult;
 import judgels.gabriel.api.Verdict;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.user.rating.UserRating;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -60,16 +61,18 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public ScoreboardContent combineContents(StyleModuleConfig styleModuleConfig, List<Scoreboard> scoreboards) {
+    public ScoreboardContent combineContents(
+            StyleModuleConfig styleModuleConfig,
+            List<Scoreboard> scoreboards,
+            Map<String, Profile> profilesMap) {
         IoiStyleModuleConfig config = (IoiStyleModuleConfig) styleModuleConfig;
 
-        Set<String> contestantJids = new HashSet<>();
+        Set<String> contestantJids = profilesMap.keySet();
         List<Map<String, IoiScoreboardEntry>> entriesMapByContestantJidList = new ArrayList<>();
 
         for (Scoreboard scoreboard : scoreboards) {
             Map<String, IoiScoreboardEntry> entriesMapByContestantJid = new HashMap<>();
             for (ScoreboardEntry entry : scoreboard.getContent().getEntries()) {
-                contestantJids.add(entry.getContestantJid());
                 entriesMapByContestantJid.put(entry.getContestantJid(), (IoiScoreboardEntry) entry);
             }
             entriesMapByContestantJidList.add(entriesMapByContestantJid);
@@ -80,6 +83,11 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             List<Optional<Integer>> scores = new ArrayList<>();
             int totalScores = 0;
             long lastAffectingPenalty = 0;
+
+            Profile contestantProfile = profilesMap.get(contestantJid);
+            Optional<UserRating> maybeUserRating = contestantProfile.getRating();
+            UserRating userRating = maybeUserRating.orElseGet(
+                    () -> new UserRating.Builder().publicRating(0).hiddenRating(0).build());
 
             for (int i = 0; i < scoreboards.size(); i++) {
                 IoiScoreboardEntry entry =  entriesMapByContestantJidList.get(i).get(contestantJid);
@@ -95,6 +103,8 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             entries.add(new IoiScoreboardEntry.Builder()
                     .rank(0)
                     .contestantJid(contestantJid)
+                    .contestantUsername(contestantProfile.getUsername())
+                    .contestantRating(userRating.getPublicRating())
                     .scores(scores)
                     .totalScores(totalScores)
                     .lastAffectingPenalty(lastAffectingPenalty)
@@ -120,6 +130,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
+            Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
@@ -161,6 +172,11 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     scoresMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
             Map<String, Map<Integer, Double>> maxScorePerSubtaskMap = new HashMap<>(
                     maxScorePerSubtaskMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
+
+            Profile contestantProfile = profilesMap.get(contestantJid);
+            Optional<UserRating> maybeUserRating = contestantProfile.getRating();
+            UserRating userRating = maybeUserRating.orElseGet(
+                    () -> new UserRating.Builder().publicRating(0).hiddenRating(0).build());
 
             problemJids.forEach(p -> {
                 scoresMap.putIfAbsent(p, Optional.empty());
@@ -225,6 +241,8 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             entries.add(new IoiScoreboardEntry.Builder()
                     .rank(0)
                     .contestantJid(contestantJid)
+                    .contestantUsername(contestantProfile.getUsername())
+                    .contestantRating(userRating.getPublicRating())
                     .scores(problemJids
                             .stream()
                             .map(scoresMap::get)

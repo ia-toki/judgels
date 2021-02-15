@@ -3,13 +3,16 @@ package judgels.uriel.contest.scoreboard.bundle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Verdict;
@@ -49,6 +52,10 @@ public class BundleScoreboardProcessorTests {
         private Set<ContestContestant> contestants = ImmutableSet.of(
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").build());
+
+        private Map<String, Profile> profilesMap = ImmutableMap.of(
+                "c1", new Profile.Builder().username("c1").build(),
+                "c2", new Profile.Builder().username("c2").build());
 
         @Test
         void latest_answered_time_calculation() {
@@ -113,6 +120,7 @@ public class BundleScoreboardProcessorTests {
                     Optional.empty(),
                     styleModuleConfig,
                     contestants,
+                    profilesMap,
                     ImmutableList.of(),
                     submissions,
                     Optional.empty());
@@ -187,6 +195,7 @@ public class BundleScoreboardProcessorTests {
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         ImmutableList.of(),
                         submissions,
                         Optional.empty());
@@ -245,6 +254,7 @@ public class BundleScoreboardProcessorTests {
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         ImmutableList.of(),
                         submissions,
                         Optional.empty());

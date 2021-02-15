@@ -9,9 +9,11 @@ import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.Verdict;
+import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
@@ -55,6 +57,10 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build());
 
+        private Map<String, Profile> profilesMap = ImmutableMap.of(
+                "c1", new Profile.Builder().username("c1").build(),
+                "c2", new Profile.Builder().username("c2").build());
+
         @Test
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
@@ -70,6 +76,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     Optional.empty(),
                     styleModuleConfig,
                     contestants,
+                    profilesMap,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
@@ -78,6 +85,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new GcjScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c1")
+                            .contestantUsername("c1")
+                            .contestantRating(0)
                             .totalPoints(11)
                             .totalPenalties(26)
                             .addAttemptsList(2, 2)
@@ -90,6 +99,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new GcjScoreboardEntry.Builder()
                             .rank(2)
                             .contestantJid("c2")
+                            .contestantUsername("c2")
+                            .contestantRating(0)
                             .totalPoints(1)
                             .totalPenalties(10)
                             .addAttemptsList(1, 0)
@@ -115,6 +126,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -123,6 +135,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(10)
                                 .totalPenalties(6)
                                 .addAttemptsList(0, 1)
@@ -135,6 +149,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(1)
                                 .addAttemptsList(1, 0)
@@ -160,6 +176,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -168,6 +185,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(10)
                                 .totalPenalties(6)
                                 .addAttemptsList(1, 0)
@@ -180,6 +199,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(1)
                                 .addAttemptsList(0, 1)
@@ -206,6 +227,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -214,6 +236,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(10)
                                 .totalPenalties(10)
                                 .addAttemptsList(0, 1)
@@ -226,6 +250,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(4)
                                 .addAttemptsList(1, 0)
@@ -249,6 +275,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -257,6 +284,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(10)
                                 .addAttemptsList(1, 0)
@@ -269,6 +298,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(14)
                                 .addAttemptsList(1, 0)
@@ -290,6 +321,11 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                 .build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
+                profilesMap = ImmutableMap.of(
+                        "c1", new Profile.Builder().username("c1").build(),
+                        "c2", new Profile.Builder().username("c2").build(),
+                        "c3", new Profile.Builder().username("c3").build());
+
                 List<Submission> submissions = ImmutableList.of(
                         createSubmission(1, 660, "c1", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c2", "p1", 100, Verdict.ACCEPTED));
@@ -300,6 +336,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -308,6 +345,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(10)
                                 .addAttemptsList(1, 0)
@@ -320,6 +359,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(10)
                                 .addAttemptsList(1, 0)
@@ -332,6 +373,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(3)
                                 .contestantJid("c3")
+                                .contestantUsername("c3")
+                                .contestantRating(0)
                                 .totalPoints(0)
                                 .totalPenalties(0)
                                 .addAttemptsList(0, 0)
@@ -350,6 +393,11 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new ContestContestant.Builder().userJid("c2").build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
+                profilesMap = ImmutableMap.of(
+                        "c1", new Profile.Builder().username("c1").build(),
+                        "c2", new Profile.Builder().username("c2").build(),
+                        "c3", new Profile.Builder().username("c3").build());
+
                 List<Submission> submissions = ImmutableList.of(
                         createSubmission(1, 660, "c1", "p1", 0, Verdict.WRONG_ANSWER),
                         createSubmission(2, 900, "c1", "p2", 0, Verdict.WRONG_ANSWER),
@@ -361,6 +409,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -369,6 +418,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(0)
                                 .totalPenalties(0)
                                 .addAttemptsList(1, 1)
@@ -381,6 +432,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c3")
+                                .contestantUsername("c3")
+                                .contestantRating(0)
                                 .totalPoints(0)
                                 .totalPenalties(0)
                                 .addAttemptsList(0, 1)
@@ -393,6 +446,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(0)
                                 .totalPenalties(0)
                                 .addAttemptsList(0, 0)
@@ -422,6 +477,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         baseSubmissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -430,6 +486,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(11)
                                 .totalPenalties(3)
                                 .addAttemptsList(1, 1)
@@ -442,6 +500,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(1)
                                 .addAttemptsList(1, 0)
@@ -466,6 +526,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -474,6 +535,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(11)
                                 .totalPenalties(3)
                                 .addAttemptsList(1, 1)
@@ -486,6 +549,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(1)
                                 .addAttemptsList(1, 0)
@@ -510,6 +575,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -518,6 +584,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(11)
                                 .totalPenalties(3)
                                 .addAttemptsList(1, 1)
@@ -530,6 +598,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(1)
                                 .addAttemptsList(1, 0)
@@ -554,6 +624,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -562,6 +633,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalPoints(11)
                                 .totalPenalties(3)
                                 .addAttemptsList(1, 1)
@@ -574,6 +647,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         new GcjScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalPoints(1)
                                 .totalPenalties(1)
                                 .addAttemptsList(1, 0)
@@ -602,6 +677,11 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build(),
                     new ContestContestant.Builder().userJid("c3").build());
 
+            Map<String, Profile> profilesMap = ImmutableMap.of(
+                    "c1", new Profile.Builder().username("c1").build(),
+                    "c2", new Profile.Builder().username("c2").build(),
+                    "c3", new Profile.Builder().username("c3").build());
+
             GcjScoreboardIncrementalContent incrementalContent = new GcjScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
                     .putAttemptsMapsByContestantJid("c2", ImmutableMap.of("p1", 0, "p2", 2))
@@ -624,6 +704,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -651,6 +732,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.of(incrementalContent),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         ImmutableList.of(),
                         ImmutableList.of(),
                         Optional.empty());
@@ -669,6 +751,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         Optional.of(incrementalContent),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());

@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -47,6 +49,7 @@ public class ContestScoreboardUpdater {
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final ContestScoreboardPusher scoreboardPusher;
+    private final ProfileService profileService;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -59,7 +62,8 @@ public class ContestScoreboardUpdater {
             ItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            ContestScoreboardPusher scoreboardPusher) {
+            ContestScoreboardPusher scoreboardPusher,
+            ProfileService profileService) {
 
         this.objectMapper = objectMapper;
         this.contestTimer = contestTimer;
@@ -72,6 +76,7 @@ public class ContestScoreboardUpdater {
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.scoreboardPusher = scoreboardPusher;
+        this.profileService = profileService;
     }
 
     @UnitOfWork
@@ -91,6 +96,7 @@ public class ContestScoreboardUpdater {
 
         Set<ContestContestant> contestants = contestantStore.getApprovedContestants(contest.getJid());
         Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
+        Map<String, Profile> profilesMap = profileService.getProfiles(contestantJidsSet, contest.getBeginTime());
 
         ScoreboardState state = new ScoreboardState.Builder()
                 .problemJids(problemJids)
@@ -139,6 +145,7 @@ public class ContestScoreboardUpdater {
                 Optional.ofNullable(incrementalMark.getIncrementalContents().get(OFFICIAL)),
                 styleModuleConfig,
                 contestants,
+                profilesMap,
                 programmingSubmissions,
                 bundleItemSubmissions,
                 Optional.empty(),
@@ -157,6 +164,7 @@ public class ContestScoreboardUpdater {
                     Optional.ofNullable(incrementalMark.getIncrementalContents().get(FROZEN)),
                     styleModuleConfig,
                     contestants,
+                    profilesMap,
                     programmingSubmissions,
                     bundleItemSubmissions,
                     Optional.of(freezeTime),
@@ -192,6 +200,7 @@ public class ContestScoreboardUpdater {
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
+            Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime,
@@ -205,6 +214,7 @@ public class ContestScoreboardUpdater {
                 incrementalContent,
                 styleModuleConfig,
                 contestants,
+                profilesMap,
                 programmingSubmissions,
                 bundleItemSubmissions,
                 freezeTime);
