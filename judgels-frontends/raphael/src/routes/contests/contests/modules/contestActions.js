@@ -2,7 +2,7 @@ import { push } from 'connected-react-router';
 import { SubmissionError } from 'redux-form';
 
 import { hasJerahmeel } from '../../../../conf';
-import { BadRequestError, NotFoundError } from '../../../../modules/api/error';
+import { BadRequestError, NotFoundError, RemoteError } from '../../../../modules/api/error';
 import { contestAPI, ContestErrors } from '../../../../modules/api/uriel/contest';
 import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
@@ -108,6 +108,9 @@ export function searchProblemSet(contestJid) {
       return await problemSetAPI.searchProblemSet(contestJid);
     } catch (error) {
       if (error instanceof NotFoundError) {
+        return await Promise.resolve(null);
+      }
+      if (error instanceof RemoteError) {
         return await Promise.resolve(null);
       }
       throw error;
