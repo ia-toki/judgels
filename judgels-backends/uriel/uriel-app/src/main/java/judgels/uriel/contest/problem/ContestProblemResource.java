@@ -3,6 +3,7 @@ package judgels.uriel.contest.problem;
 import static com.google.common.base.Preconditions.checkArgument;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
+import static judgels.service.actor.Actors.GUEST;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
@@ -125,8 +126,8 @@ public class ContestProblemResource implements ContestProblemService {
                 .canManage(canManage)
                 .build();
 
-        if (!canManage) {
-            // hide slugs from non-managers.
+        if (!canManage && !problemRoleChecker.canView(GUEST, contest)) {
+            // hide slugs in non-public contests from non-managers.
             problemsMap = problemsMap.entrySet().stream()
                     .collect(Collectors.toMap(
                             e -> e.getKey(),
