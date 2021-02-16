@@ -14,14 +14,12 @@ public interface IoiScoreboardEntryComparator extends ScoreboardEntryComparator<
         int submittedProblems1 = (int) entry1.getScores().stream().filter(Optional::isPresent).count();
         int submittedProblems2 = (int) entry2.getScores().stream().filter(Optional::isPresent).count();
 
-        if (submittedProblems1 == submittedProblems2) {
-            if (entry1.getContestantRating() != entry2.getContestantRating()) {
-                return Integer.compare(entry2.getContestantRating(), entry1.getContestantRating());
-            } else {
-                return entry1.getContestantUsername().compareTo(entry2.getContestantUsername());
-            }
-        } else {
+        if (submittedProblems1 != submittedProblems2) {
             return Integer.compare(submittedProblems2, submittedProblems1);
         }
+        if (entry1.getContestantRating() != entry2.getContestantRating()) {
+            return Integer.compare(entry2.getContestantRating(), entry1.getContestantRating());
+        }
+        return entry1.getContestantUsername().compareTo(entry2.getContestantUsername());
     }
 }
