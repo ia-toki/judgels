@@ -31,6 +31,16 @@ public interface IcpcScoreboard extends Scoreboard {
     @Value.Immutable
     @JsonDeserialize(as = ImmutableIcpcScoreboardEntry.class)
     interface IcpcScoreboardEntry extends ScoreboardEntry {
+        @Value.Default
+        default String getContestantUsername() {
+            return "";
+        }
+
+        @Value.Default
+        default int getContestantRating() {
+            return 0;
+        }
+
         int getTotalAccepted();
         long getTotalPenalties();
         long getLastAcceptedPenalty();

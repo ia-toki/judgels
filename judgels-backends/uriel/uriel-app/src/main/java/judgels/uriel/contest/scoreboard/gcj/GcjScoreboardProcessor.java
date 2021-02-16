@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.user.rating.UserRating;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -58,7 +60,10 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public ScoreboardContent combineContents(StyleModuleConfig styleModuleConfig, List<Scoreboard> scoreboards) {
+    public ScoreboardContent combineContents(
+            StyleModuleConfig styleModuleConfig,
+            List<Scoreboard> scoreboards,
+            Map<String, Profile> profilesMap) {
         return null;
     }
 
@@ -74,6 +79,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
+            Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
@@ -127,6 +133,11 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             Map<String, GcjScoreboardProblemState> problemStateMap = new HashMap<>(
                     problemStateMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
 
+            Profile contestantProfile = profilesMap.get(contestantJid);
+            Optional<UserRating> maybeUserRating = contestantProfile.getRating();
+            UserRating userRating = maybeUserRating.orElseGet(
+                    () -> new UserRating.Builder().publicRating(0).hiddenRating(0).build());
+
             problemJids.forEach(p -> {
                 attemptsMap.putIfAbsent(p, 0);
                 penaltyMap.putIfAbsent(p, 0L);
@@ -170,6 +181,8 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             entries.add(new GcjScoreboardEntry.Builder()
                     .rank(0)
                     .contestantJid(contestantJid)
+                    .contestantUsername(contestantProfile.getUsername())
+                    .contestantRating(userRating.getPublicRating())
                     .totalPoints(problemJids.stream()
                             .filter(p -> isAccepted(problemStateMap.get(p)))
                             .mapToInt(p -> scoreboardState.getProblemPoints().map($ -> pointsMap.get(p)).orElse(0))

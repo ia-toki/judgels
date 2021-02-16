@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.group.ContestGroup;
 import judgels.uriel.api.contest.group.ContestGroupContest;
@@ -15,6 +19,7 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardContent;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.group.ContestGroupContestStore;
@@ -30,6 +35,7 @@ public class ContestGroupScoreboardUpdater {
     private final ContestGroupScoreboardStore groupScoreboardStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final ContestScoreboardPusher scoreboardPusher;
+    private final ProfileService profileService;
 
     public ContestGroupScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -39,7 +45,8 @@ public class ContestGroupScoreboardUpdater {
             ContestGroupContestStore groupContestStore,
             ContestGroupScoreboardStore groupScoreboardStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            ContestScoreboardPusher scoreboardPusher) {
+            ContestScoreboardPusher scoreboardPusher,
+            ProfileService profileService) {
 
         this.objectMapper = objectMapper;
         this.contestStore = contestStore;
@@ -49,6 +56,7 @@ public class ContestGroupScoreboardUpdater {
         this.groupScoreboardStore = groupScoreboardStore;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.scoreboardPusher = scoreboardPusher;
+        this.profileService = profileService;
     }
 
     @UnitOfWork
@@ -81,8 +89,14 @@ public class ContestGroupScoreboardUpdater {
                 continue;
             }
 
+            Set<String> contestantJidsSet = scoreboards.stream()
+                    .flatMap(scoreboard -> scoreboard.getContent().getEntries().stream())
+                    .map(ScoreboardEntry::getContestantJid)
+                    .collect(Collectors.toSet());
 
-            ScoreboardContent content = processor.combineContents(styleModuleConfig, scoreboards);
+            Map<String, Profile> profilesMap = profileService.getProfiles(contestantJidsSet);
+
+            ScoreboardContent content = processor.combineContents(styleModuleConfig, scoreboards, profilesMap);
             if (content == null) {
                 continue;
             }

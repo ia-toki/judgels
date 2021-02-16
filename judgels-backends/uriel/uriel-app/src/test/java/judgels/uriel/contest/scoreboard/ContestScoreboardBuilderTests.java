@@ -108,9 +108,13 @@ class ContestScoreboardBuilderTests {
         IoiScoreboardEntry entry1 = mock(IoiScoreboardEntry.class);
         when(entry1.getRank()).thenReturn(1);
         when(entry1.getContestantJid()).thenReturn("random-jid");
+        when(entry1.getContestantUsername()).thenReturn("random-username");
+        when(entry1.getContestantRating()).thenReturn(0);
         IoiScoreboardEntry entry2 = mock(IoiScoreboardEntry.class);
         when(entry2.getRank()).thenReturn(2);
         when(entry2.getContestantJid()).thenReturn(USER_JID);
+        when(entry2.getContestantUsername()).thenReturn("username");
+        when(entry2.getContestantRating()).thenReturn(0);
         List<IoiScoreboardEntry> entries = ImmutableList.of(entry1, entry2);
 
         IoiScoreboard scoreboard = new IoiScoreboard.Builder()
@@ -138,9 +142,13 @@ class ContestScoreboardBuilderTests {
         IoiScoreboardEntry entry1 = mock(IoiScoreboardEntry.class);
         when(entry1.getRank()).thenReturn(1);
         when(entry1.getContestantJid()).thenReturn("random-jid");
+        when(entry1.getContestantUsername()).thenReturn("random-username");
+        when(entry1.getContestantRating()).thenReturn(0);
         IoiScoreboardEntry entry2 = mock(IoiScoreboardEntry.class);
         when(entry2.getRank()).thenReturn(2);
         when(entry2.getContestantJid()).thenReturn(USER_JID);
+        when(entry2.getContestantUsername()).thenReturn("username");
+        when(entry2.getContestantRating()).thenReturn(0);
         List<IoiScoreboardEntry> entries = ImmutableList.of(entry1, entry2);
 
         IoiScoreboard scoreboard = new IoiScoreboard.Builder()
@@ -170,6 +178,8 @@ class ContestScoreboardBuilderTests {
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("jid1")
+                                .contestantUsername("jid1")
+                                .contestantRating(0)
                                 .addScores(Optional.of(6), Optional.of(8), Optional.empty())
                                 .totalScores(14)
                                 .lastAffectingPenalty(0)
@@ -177,6 +187,8 @@ class ContestScoreboardBuilderTests {
                         new IoiScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("jid2")
+                                .contestantUsername("jid2")
+                                .contestantRating(0)
                                 .addScores(Optional.of(1), Optional.of(2), Optional.of(7))
                                 .totalScores(10)
                                 .lastAffectingPenalty(0)
@@ -196,6 +208,8 @@ class ContestScoreboardBuilderTests {
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("jid2")
+                                .contestantUsername("jid2")
+                                .contestantRating(0)
                                 .addScores(Optional.of(1), Optional.of(7))
                                 .totalScores(8)
                                 .lastAffectingPenalty(0)
@@ -203,6 +217,8 @@ class ContestScoreboardBuilderTests {
                         new IoiScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("jid1")
+                                .contestantUsername("jid1")
+                                .contestantRating(0)
                                 .addScores(Optional.of(6), Optional.empty())
                                 .totalScores(6)
                                 .lastAffectingPenalty(0)

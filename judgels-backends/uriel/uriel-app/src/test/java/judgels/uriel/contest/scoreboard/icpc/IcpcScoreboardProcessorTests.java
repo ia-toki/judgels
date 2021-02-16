@@ -9,9 +9,11 @@ import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.Verdict;
+import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
@@ -54,6 +56,10 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build());
 
+        private Map<String, Profile> profilesMap = ImmutableMap.of(
+                "c1", new Profile.Builder().username("c1").build(),
+                "c2", new Profile.Builder().username("c2").build());
+
         @Test
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
@@ -69,6 +75,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     Optional.empty(),
                     styleModuleConfig,
                     contestants,
+                    profilesMap,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
@@ -77,6 +84,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     new IcpcScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c2")
+                            .contestantUsername("c2")
+                            .contestantRating(0)
                             .totalAccepted(2)
                             .totalPenalties(11)
                             .lastAcceptedPenalty(600000)
@@ -90,6 +99,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     new IcpcScoreboardEntry.Builder()
                             .rank(2)
                             .contestantJid("c1")
+                            .contestantUsername("c1")
+                            .contestantRating(0)
                             .totalAccepted(2)
                             .totalPenalties(1010)
                             .lastAcceptedPenalty(350000)
@@ -116,6 +127,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -124,6 +136,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(4)
                                 .lastAcceptedPenalty(240000)
@@ -137,6 +151,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(10)
                                 .lastAcceptedPenalty(600000)
@@ -162,6 +178,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -170,6 +187,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(4)
                                 .lastAcceptedPenalty(240000)
@@ -183,6 +202,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(10)
                                 .lastAcceptedPenalty(600000)
@@ -211,6 +232,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -219,6 +241,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(2)
                                 .totalPenalties(11)
                                 .lastAcceptedPenalty(600000)
@@ -232,6 +256,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(4)
                                 .lastAcceptedPenalty(240000)
@@ -256,6 +282,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -264,6 +291,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(10)
                                 .lastAcceptedPenalty(600000)
@@ -277,6 +306,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(14)
                                 .lastAcceptedPenalty(840000)
@@ -299,6 +330,10 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                                 .build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
+                profilesMap = ImmutableMap.of(
+                        "c1", new Profile.Builder().username("c1").build(),
+                        "c2", new Profile.Builder().username("c2").build(),
+                        "c3", new Profile.Builder().username("c3").build());
 
                 List<Submission> submissions = ImmutableList.of(
                         createSubmission(1, 660, "c1", "p1", 100, Verdict.ACCEPTED),
@@ -311,6 +346,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -319,6 +355,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(10)
                                 .lastAcceptedPenalty(600000)
@@ -332,6 +370,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(10)
                                 .lastAcceptedPenalty(600000)
@@ -345,6 +385,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(3)
                                 .contestantJid("c3")
+                                .contestantUsername("c3")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(14)
                                 .lastAcceptedPenalty(840000)
@@ -364,6 +406,10 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new ContestContestant.Builder().userJid("c2").build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
+                profilesMap = ImmutableMap.of(
+                        "c1", new Profile.Builder().username("c1").build(),
+                        "c2", new Profile.Builder().username("c2").build(),
+                        "c3", new Profile.Builder().username("c3").build());
 
                 List<Submission> submissions = ImmutableList.of(
                         createSubmission(1, 660, "c1", "p1", 0, Verdict.WRONG_ANSWER),
@@ -376,6 +422,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -384,6 +431,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(0)
                                 .totalPenalties(0)
                                 .lastAcceptedPenalty(0)
@@ -397,6 +446,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c3")
+                                .contestantUsername("c3")
+                                .contestantRating(0)
                                 .totalAccepted(0)
                                 .totalPenalties(0)
                                 .lastAcceptedPenalty(0)
@@ -410,6 +461,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(0)
                                 .totalPenalties(0)
                                 .lastAcceptedPenalty(0)
@@ -440,6 +493,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         baseSubmissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -448,6 +502,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(2)
                                 .totalPenalties(5)
                                 .lastAcceptedPenalty(150000)
@@ -461,6 +517,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(1)
                                 .lastAcceptedPenalty(40000)
@@ -486,6 +544,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -494,6 +553,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(2)
                                 .totalPenalties(5)
                                 .lastAcceptedPenalty(150000)
@@ -507,6 +568,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(1)
                                 .lastAcceptedPenalty(40000)
@@ -532,6 +595,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -540,6 +604,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(2)
                                 .totalPenalties(5)
                                 .lastAcceptedPenalty(150000)
@@ -553,6 +619,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(1)
                                 .lastAcceptedPenalty(40000)
@@ -578,6 +646,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
@@ -586,6 +655,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
+                                .contestantUsername("c2")
+                                .contestantRating(0)
                                 .totalAccepted(2)
                                 .totalPenalties(5)
                                 .lastAcceptedPenalty(150000)
@@ -599,6 +670,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new IcpcScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c1")
+                                .contestantUsername("c1")
+                                .contestantRating(0)
                                 .totalAccepted(1)
                                 .totalPenalties(1)
                                 .lastAcceptedPenalty(40000)
@@ -628,6 +701,11 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build(),
                     new ContestContestant.Builder().userJid("c3").build());
 
+            Map<String, Profile> profilesMap = ImmutableMap.of(
+                    "c1", new Profile.Builder().username("c1").build(),
+                    "c2", new Profile.Builder().username("c2").build(),
+                    "c3", new Profile.Builder().username("c3").build());
+
             IcpcScoreboardIncrementalContent incrementalContent = new IcpcScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
                     .putFirstToSolveSubmissionJids("p1", "JIDSX")
@@ -653,6 +731,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.empty(),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
@@ -684,6 +763,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.of(incrementalContent),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         ImmutableList.of(),
                         ImmutableList.of(),
                         Optional.empty());
@@ -702,6 +782,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         Optional.of(incrementalContent),
                         styleModuleConfig,
                         contestants,
+                        profilesMap,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());

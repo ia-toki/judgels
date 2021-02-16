@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -50,7 +51,10 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public ScoreboardContent combineContents(StyleModuleConfig styleModuleConfig, List<Scoreboard> scoreboards) {
+    public ScoreboardContent combineContents(
+            StyleModuleConfig styleModuleConfig,
+            List<Scoreboard> scoreboards,
+            Map<String, Profile> profilesMap) {
         return null;
     }
 
@@ -66,6 +70,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
+            Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {

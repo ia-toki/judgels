@@ -17,14 +17,12 @@ public final class StandardGcjScoreboardEntryComparator implements ScoreboardEnt
         int totalAttempts1 = entry1.getAttemptsList().stream().mapToInt(i -> i).sum();
         int totalAttempts2 = entry2.getAttemptsList().stream().mapToInt(i -> i).sum();
 
-        if (totalAttempts1 == 0 && totalAttempts2 == 0) {
-            return entry1.getContestantJid().compareTo(entry2.getContestantJid());
-        } else if (totalAttempts1 == 0) {
-            return 1;
-        } else if (totalAttempts2 == 0) {
-            return -1;
-        } else {
+        if (totalAttempts1 != totalAttempts2) {
             return Integer.compare(totalAttempts2, totalAttempts1);
         }
+        if (entry1.getContestantRating() != entry2.getContestantRating()) {
+            return Integer.compare(entry2.getContestantRating(), entry1.getContestantRating());
+        }
+        return entry1.getContestantUsername().compareTo(entry2.getContestantUsername());
     }
 }
