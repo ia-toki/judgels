@@ -61,8 +61,8 @@ class ProblemMetadataWidget extends Component {
       return null;
     }
 
-    const { problem, metadata, profilesMap } = response;
-    if (!problem.hasEditorial) {
+    const { metadata, profilesMap } = response;
+    if (!metadata.hasEditorial) {
       return null;
     }
 

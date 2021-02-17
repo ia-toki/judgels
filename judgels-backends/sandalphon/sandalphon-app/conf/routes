@@ -206,17 +206,19 @@ GET         /api/v2/client/problems/:problemJid/bundle/worksheet                
 +nocsrf
 POST        /api/v2/client/problems/jids                                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemsByJids(req: Request)
 +nocsrf
+POST        /api/v2/client/problems/metadata/jids                                   org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemMetadatasByJids(req: Request)
++nocsrf
 POST        /api/v2/client/problems/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.translateAllowedSlugToJids(req: Request)
 
-GET         /api/v2/client/lessons/:lessonJid                                      org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLesson(req: Request, lessonJid)
-GET         /api/v2/client/lessons/:lessonJid/statement                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLessonStatement(req: Request, lessonJid)
+GET         /api/v2/client/lessons/:lessonJid                                       org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLesson(req: Request, lessonJid)
+GET         /api/v2/client/lessons/:lessonJid/statement                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLessonStatement(req: Request, lessonJid)
 +nocsrf
-POST        /api/v2/client/lessons/jids                                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.findLessonsByJids(req: Request)
+POST        /api/v2/client/lessons/jids                                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.findLessonsByJids(req: Request)
 +nocsrf
-POST        /api/v2/client/lessons/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.translateAllowedSlugToJids(req: Request)
+POST        /api/v2/client/lessons/allowed-slug-to-jid                              org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.translateAllowedSlugToJids(req: Request)
 
 # Public API v2
 
-GET         /api/v2/problems/:problemJid/render/:mediaFilename                     org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderStatementMedia(req: Request, problemJid, mediaFilename)
-GET         /api/v2/problems/:problemJid/editorials/render/:mediaFilename          org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderEditorialMedia(req: Request, problemJid, mediaFilename)
-GET         /api/v2/lessons/:lessonJid/render/:mediaFilename                       org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicLessonAPIControllerV2.renderMedia(req: Request, lessonJid, mediaFilename)
+GET         /api/v2/problems/:problemJid/render/:mediaFilename                      org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderStatementMedia(req: Request, problemJid, mediaFilename)
+GET         /api/v2/problems/:problemJid/editorials/render/:mediaFilename           org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderEditorialMedia(req: Request, problemJid, mediaFilename)
+GET         /api/v2/lessons/:lessonJid/render/:mediaFilename                        org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicLessonAPIControllerV2.renderMedia(req: Request, lessonJid, mediaFilename)

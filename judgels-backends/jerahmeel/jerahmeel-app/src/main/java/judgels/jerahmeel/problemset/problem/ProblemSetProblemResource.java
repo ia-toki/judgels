@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.HashSet;
@@ -137,9 +138,12 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         return new ProblemSetProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemClient.getProblems(problemJids))
+                .problemMetadatasMap(problemClient.getProblemMetadatas(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
                 .problemStatsMap(statsStore.getProblemStatsMap(problemJids))
-                .contestsMap(contestClient.getContestsByJids(contestJids))
+                .contestsMap(roleChecker.isAdmin(actorJid)
+                        ? contestClient.getContestsByJids(contestJids)
+                        : ImmutableMap.of())
                 .build();
     }
 
@@ -236,7 +240,6 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
-        ProblemInfo problemInfo = problemClient.getProblem(problem.getProblemJid());
         ProblemMetadata metadata = problemClient.getProblemMetadata(problem.getProblemJid());
 
         Map<String, ContestInfo> contestsMap = contestClient.getContestsByJids(problem.getContestJids());
@@ -251,7 +254,6 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                 .collect(Collectors.toSet()));
 
         return new ProblemMetadataResponse.Builder()
-                .problem(problemInfo)
                 .metadata(metadata)
                 .contests(contests)
                 .profilesMap(profilesMap)

@@ -75,6 +75,13 @@ public interface ClientProblemService {
     Map<String, ProblemInfo> getProblems(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             Set<String> jids);
+    @POST
+    @Path("/metadata/jids")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, ProblemMetadata> getProblemMetadatas(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            Set<String> jids);
 
     @POST
     @Path("/allowed-slug-to-jid")

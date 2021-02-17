@@ -59,7 +59,7 @@ public class ProblemClient {
         this.problemMetadataCache = Caffeine.newBuilder()
                 .maximumSize(1_000)
                 .expireAfterWrite(Duration.ofSeconds(10))
-                .build(this::getProblemMetadataUncached);
+                .build(new ProblemMetadataCacheLoader());
     }
 
     public Map<String, String> translateAllowedSlugsToJids(String actorJid, Set<String> slugs) {
@@ -76,8 +76,8 @@ public class ProblemClient {
         return problemMetadataCache.get(problemJid);
     }
 
-    private ProblemMetadata getProblemMetadataUncached(String problemJid) {
-        return clientProblemService.getProblemMetadata(sandalphonClientAuthHeader, problemJid);
+    public Map<String, ProblemMetadata> getProblemMetadatas(Set<String> problemJids) {
+        return problemMetadataCache.getAll(problemJids);
     }
 
     public Map<String, ProblemInfo> getProblems(Set<String> problemJids) {
@@ -198,6 +198,22 @@ public class ProblemClient {
         @Override
         public Map<String, ProblemInfo> loadAll(@Nonnull Iterable<? extends String> problemJids) {
             return clientProblemService.getProblems(sandalphonClientAuthHeader, ImmutableSet.copyOf(problemJids));
+        }
+    }
+
+    private class ProblemMetadataCacheLoader implements CacheLoader<String, ProblemMetadata> {
+        @Nullable
+        @Override
+        public ProblemMetadata load(@Nonnull String problemJid) {
+            return clientProblemService.getProblemMetadata(sandalphonClientAuthHeader, problemJid);
+        }
+
+        @Nonnull
+        @Override
+        public Map<String, ProblemMetadata> loadAll(@Nonnull Iterable<? extends String> problemJids) {
+            return clientProblemService.getProblemMetadatas(
+                    sandalphonClientAuthHeader,
+                    ImmutableSet.copyOf(problemJids));
         }
     }
 }

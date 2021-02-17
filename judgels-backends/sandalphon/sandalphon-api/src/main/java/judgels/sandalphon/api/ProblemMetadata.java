@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableProblemMetadata.class)
 public interface ProblemMetadata {
+    boolean hasEditorial();
     Map<ProblemSetterRole, List<String>> getSettersMap();
 
     class Builder extends ImmutableProblemMetadata.Builder {}

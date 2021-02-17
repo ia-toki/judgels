@@ -78,9 +78,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return Results.notFound();
         }
 
-        return okAsJson(req, new ProblemMetadata.Builder()
-                .settersMap(problemStore.findProblemSettersByProblemJid(problemJid))
-                .build());
+        return okAsJson(req, getProblemMetadataInfo(problemJid));
     }
 
     @Transactional(readOnly = true)
@@ -183,6 +181,21 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
+    public Result findProblemMetadatasByJids(Http.Request req) {
+        JsonNode problemJids = req.body().asJson();
+
+        Map<String, ProblemMetadata> result = new HashMap<>();
+
+        for (JsonNode problemJidNode : problemJids) {
+            String problemJid = problemJidNode.asText();
+            if (problemStore.problemExistsByJid(problemJid)) {
+                result.put(problemJid, getProblemMetadataInfo(problemJid));
+            }
+        }
+        return okAsJson(req, result);
+    }
+
+    @Transactional(readOnly = true)
     public Result translateAllowedSlugToJids(Http.Request req) {
         String userJid = req.getQueryString("userJid");
 
@@ -213,7 +226,13 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
                 .titlesByLanguage(problemStore.getTitlesByLanguage(null, problemJid).entrySet()
                         .stream()
                         .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
+                .build();
+    }
+
+    private ProblemMetadata getProblemMetadataInfo(String problemJid) {
+        return new ProblemMetadata.Builder()
                 .hasEditorial(problemStore.hasEditorial(null, problemJid))
+                .settersMap(problemStore.findProblemSettersByProblemJid(problemJid))
                 .build();
     }
 

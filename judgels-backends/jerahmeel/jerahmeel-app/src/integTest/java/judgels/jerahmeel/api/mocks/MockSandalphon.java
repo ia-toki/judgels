@@ -84,14 +84,12 @@ public class MockSandalphon {
                                 "type", PROBLEM_1_TYPE,
                                 "slug", PROBLEM_1_SLUG,
                                 "defaultLanguage", "en",
-                                "titlesByLanguage", ImmutableMap.of("en", "Problem 1"),
-                                "hasEditorial", false),
+                                "titlesByLanguage", ImmutableMap.of("en", "Problem 1")),
                         PROBLEM_2_JID, ImmutableMap.of(
                                 "type", PROBLEM_2_TYPE,
                                 "slug", PROBLEM_2_SLUG,
                                 "defaultLanguage", "en",
-                                "titlesByLanguage", ImmutableMap.of("en", "Problem 2"),
-                                "hasEditorial", false),
+                                "titlesByLanguage", ImmutableMap.of("en", "Problem 2")),
                         PROBLEM_3_JID, ImmutableMap.of(
                                 "type", PROBLEM_3_TYPE,
                                 "slug", PROBLEM_3_SLUG,
@@ -99,6 +97,9 @@ public class MockSandalphon {
                                 "titlesByLanguage", ImmutableMap.of("en", "Problem 3"),
                                 "hasEditorial", false)))));
 
+        mockSandalphon.stubFor(post("/api/v2/client/problems/metadata/jids")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of())));
 
         mockSandalphon.stubFor(post("/api/v2/client/lessons/jids")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
@@ -124,8 +125,7 @@ public class MockSandalphon {
                         "type", PROBLEM_1_TYPE,
                         "slug", PROBLEM_1_SLUG,
                         "defaultLanguage", "en",
-                        "titlesByLanguage", ImmutableMap.of("en", "Problem 1"),
-                        "hasEditorial", false))));
+                        "titlesByLanguage", ImmutableMap.of("en", "Problem 1")))));
 
         mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_2_JID)
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
@@ -133,8 +133,7 @@ public class MockSandalphon {
                         "type", PROBLEM_2_TYPE,
                         "slug", PROBLEM_2_SLUG,
                         "defaultLanguage", "en",
-                        "titlesByLanguage", ImmutableMap.of("en", "Problem 2"),
-                        "hasEditorial", false))));
+                        "titlesByLanguage", ImmutableMap.of("en", "Problem 2")))));
 
         mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_3_JID)
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
@@ -142,8 +141,7 @@ public class MockSandalphon {
                         "type", PROBLEM_3_TYPE,
                         "slug", PROBLEM_3_SLUG,
                         "defaultLanguage", "en",
-                        "titlesByLanguage", ImmutableMap.of("en", "Problem 3"),
-                        "hasEditorial", false))));
+                        "titlesByLanguage", ImmutableMap.of("en", "Problem 3")))));
 
         /* Mocks for lesson info */
 
