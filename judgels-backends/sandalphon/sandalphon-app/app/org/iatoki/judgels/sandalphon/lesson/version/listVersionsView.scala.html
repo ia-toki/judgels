@@ -9,7 +9,7 @@
     @defining(versions.get(i)) { version =>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <span class="panel-title">@profilesMap.get(version.getUserJid).getUsername<small> @@ <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(version.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(version.getTime.getTime)</time></small></span>
+                <span class="panel-title">@if(profilesMap.containsKey(version.getUserJid)){@profilesMap.get(version.getUserJid).getUsername}else{@version.getUserJid}<small> @@ <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(version.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(version.getTime.getTime)</time></small></span>
                 <span class="panel-title pull-right">@if(i > 0 && isAllowedToRestoreVersionHistory){<a href="@routes.LessonVersionController.restoreVersionHistory(lessonId, version.getHash)" type="button" class="btn btn-danger btn-xs">Restore</a>}</span>
             </div>
             <div class="panel-body content-text">co
