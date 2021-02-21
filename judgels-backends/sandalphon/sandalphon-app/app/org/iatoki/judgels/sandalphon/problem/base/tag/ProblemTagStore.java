@@ -56,14 +56,14 @@ public class ProblemTagStore {
 
         if (problemStore.hasEditorial(null, problemJid)) {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-yes");
+
+            if (problemStore.getEditorialAvailableLanguages(null, problemJid).containsKey("en-US")) {
+                upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
+            } else {
+                removeTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
+            }
         } else {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-no");
-        }
-
-        if (problemStore.getEditorialAvailableLanguages(null, problemJid).containsKey("en-US")) {
-            upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
-        } else {
-            removeTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
         }
 
         if (problemJid.startsWith("JIDPROG")) {
