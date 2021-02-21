@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.problem.base;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -198,49 +197,6 @@ public class ProblemStore extends AbstractProblemStore {
         model.additionalNote = additionalNote;
 
         problemDao.update(model);
-    }
-
-    public Page<Problem> getPageOfProblems(long pageIndex, String orderBy, String orderDir, String filterString, String userJid, boolean isAdmin) {
-        FilterOptions<ProblemModel> filterOptions;
-        SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .page((int) pageIndex)
-                .orderBy(orderBy)
-                .orderDir(OrderDir.of(orderDir))
-                .build();
-
-        if (isAdmin) {
-            filterOptions = new FilterOptions.Builder<ProblemModel>()
-                    .putColumnsLike(ProblemModel_.slug, filterString)
-                    .putColumnsLike(ProblemModel_.additionalNote, filterString)
-                    .build();
-        } else {
-            List<String> problemJidsWhereIsAuthor = problemDao.getJidsByAuthorJid(userJid);
-            List<String> problemJidsWhereIsPartner = problemPartnerDao.getProblemJidsByPartnerJid(userJid);
-
-            ImmutableSet.Builder<String> allowedProblemJidsBuilder = ImmutableSet.builder();
-            allowedProblemJidsBuilder.addAll(problemJidsWhereIsAuthor);
-            allowedProblemJidsBuilder.addAll(problemJidsWhereIsPartner);
-
-            Set<String> allowedProblemJids = allowedProblemJidsBuilder.build();
-
-            filterOptions = new FilterOptions.Builder<ProblemModel>()
-                    .putColumnsIn(ProblemModel_.jid, allowedProblemJids)
-                    .putColumnsLike(ProblemModel_.slug, filterString)
-                    .putColumnsLike(ProblemModel_.additionalNote, filterString)
-                    .build();
-        }
-
-        long totalCount = problemDao.selectCount(filterOptions);
-        List<ProblemModel> models = problemDao.selectAll(filterOptions, selectionOptions);
-
-        List<Problem> problems = Lists.transform(models, ProblemStore::createProblemFromModel);
-        return new Page.Builder<Problem>()
-                .page(problems)
-                .totalCount(totalCount)
-                .pageIndex(selectionOptions.getPage())
-                .pageSize(selectionOptions.getPageSize())
-                .build();
     }
 
     public Map<String, StatementLanguageStatus> getStatementAvailableLanguages(String userJid, String problemJid) {
@@ -607,7 +563,7 @@ public class ProblemStore extends AbstractProblemStore {
         }
     }
 
-    private static Problem createProblemFromModel(ProblemModel model) {
+    public static Problem createProblemFromModel(ProblemModel model) {
         return new Problem.Builder()
                 .id(model.id)
                 .jid(model.jid)

@@ -17,7 +17,7 @@ GET        /logout                           @org.iatoki.judgels.jophiel.Jophiel
 GET         /                                                                       org.iatoki.judgels.sandalphon.ApplicationController.index()
 
 GET         /problems                                                               org.iatoki.judgels.sandalphon.problem.base.ProblemController.index(req: Request)
-GET         /problems/                                                              org.iatoki.judgels.sandalphon.problem.base.ProblemController.listProblems(req: Request, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "asc", filterString ?= "")
+GET         /problems/                                                              org.iatoki.judgels.sandalphon.problem.base.ProblemController.listProblems(req: Request, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "asc", filterString ?= "", tags: java.util.List[String] ?= null)
 GET         /problems/new                                                           org.iatoki.judgels.sandalphon.problem.base.ProblemController.createProblem(req: Request)
 POST        /problems                                                               org.iatoki.judgels.sandalphon.problem.base.ProblemController.postCreateProblem(req: Request)
 GET         /problems/programming/new                                               org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemController.createProgrammingProblem(req: Request)
@@ -219,6 +219,7 @@ POST        /api/v2/client/lessons/allowed-slug-to-jid                          
 
 # Public API v2
 
+POST         /api/v2/problems/refresh-derived-tags                                  org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.refreshProblemDerivedTags(req: Request, lastProblemId: Long, limit: Long)
 GET         /api/v2/problems/:problemJid/render/:mediaFilename                      org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderStatementMedia(req: Request, problemJid, mediaFilename)
 GET         /api/v2/problems/:problemJid/editorials/render/:mediaFilename           org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderEditorialMedia(req: Request, problemJid, mediaFilename)
 GET         /api/v2/lessons/:lessonJid/render/:mediaFilename                        org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicLessonAPIControllerV2.renderMedia(req: Request, lessonJid, mediaFilename)

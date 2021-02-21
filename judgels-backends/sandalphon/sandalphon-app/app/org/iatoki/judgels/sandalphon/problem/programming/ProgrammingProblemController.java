@@ -10,6 +10,7 @@ import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
+import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import org.iatoki.judgels.sandalphon.problem.programming.html.createProgrammingProblemView;
 import org.iatoki.judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
 import play.data.Form;
@@ -23,16 +24,19 @@ import play.mvc.Result;
 public final class ProgrammingProblemController extends AbstractProblemController {
     private final ProblemStore problemStore;
     private final ProgrammingProblemStore programmingProblemStore;
+    private final ProblemTagStore problemTagStore;
 
     @Inject
     public ProgrammingProblemController(
             ProblemStore problemStore,
             ProblemRoleChecker problemRoleChecker,
-            ProgrammingProblemStore programmingProblemStore) {
+            ProgrammingProblemStore programmingProblemStore,
+            ProblemTagStore problemTagStore) {
 
         super(problemStore, problemRoleChecker);
         this.problemStore = problemStore;
         this.programmingProblemStore = programmingProblemStore;
+        this.problemTagStore = problemTagStore;
     }
 
     @Transactional(readOnly = true)
@@ -77,6 +81,7 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
         programmingProblemStore.initProgrammingProblem(problem.getJid(), data.gradingEngineName);
 
         problemStore.initRepository(actorJid, problem.getJid());
+        problemTagStore.refreshDerivedTags(problem.getJid());
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.enterProblem(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(getJustCreatedProblemInitLanguage(req)))

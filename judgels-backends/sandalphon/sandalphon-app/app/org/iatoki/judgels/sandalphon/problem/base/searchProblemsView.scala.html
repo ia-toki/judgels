@@ -1,0 +1,84 @@
+@import org.iatoki.judgels.sandalphon.problem.base.routes
+
+@(pageIndex: Long, orderBy: String, orderDir: String, filterString: String, tags: List[String])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@checkboxView(tag: String, text: String) = {
+    <div class="checkbox">
+        <label>
+            @if(tags != null && tags.contains(tag)){
+                <input type="checkbox" name="tags" value="@tag" checked="checked" /> @text
+            }else{
+                <input type="checkbox" name="tags" value="@tag" /> @text
+            }
+        </label>
+    </div>
+}
+
+@b3.form(routes.ProblemController.listProblems(pageIndex, orderBy, orderDir, "", null)) {
+    <hr />
+
+    <div class="avatar clearfix">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Slug / additional note</label>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="search" class="form-control" name="filterString" value="@filterString">
+                        </div>
+                    </div>
+
+                    <hr class="tag-separator" />
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>Statement</label>
+                            @checkboxView("statement-en", "has English statement")
+                        </div>
+                    </div>
+
+                    <hr class="tag-separator" />
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>Editorial</label>
+                            @checkboxView("editorial-no", "has no editorial")
+                            @checkboxView("editorial-yes", "has editorial")
+                            @checkboxView("editorial-en", "has English editorial")
+                        </div>
+                    </div>
+
+                    <hr class="tag-separator" />
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>Engine</label>
+                            @checkboxView("engine-batch", "batch")
+                            @checkboxView("engine-interactive", "interactive")
+                            @checkboxView("engine-output-only", "output-only")
+                            @checkboxView("engine-functional", "functional")
+                        </div>
+                    </div>
+
+                    <hr class="tag-separator" />
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>Scoring</label>
+                            @checkboxView("scoring-partial", "partial")
+                            @checkboxView("scoring-absolute", "absolute")
+                        </div>
+                    </div>
+
+                    <hr class="tag-separator" />
+
+                    @b3.submit('class -> "btn btn-primary") { Search }
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

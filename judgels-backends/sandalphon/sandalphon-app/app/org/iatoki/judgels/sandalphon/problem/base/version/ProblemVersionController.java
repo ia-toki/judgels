@@ -17,6 +17,7 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
+import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import org.iatoki.judgels.sandalphon.problem.base.version.html.listVersionsView;
 import org.iatoki.judgels.sandalphon.problem.base.version.html.viewVersionLocalChangesView;
 import org.iatoki.judgels.sandalphon.resource.VersionCommitForm;
@@ -30,17 +31,20 @@ import play.mvc.Result;
 @Singleton
 public final class ProblemVersionController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemTagStore problemTagStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
 
     @Inject
     public ProblemVersionController(
             ProblemStore problemStore,
+            ProblemTagStore problemTagStore,
             ProblemRoleChecker problemRoleChecker,
             ProfileService profileService) {
 
         super(problemStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.problemTagStore = problemTagStore;
         this.problemRoleChecker = problemRoleChecker;
         this.profileService = profileService;
     }
@@ -118,6 +122,7 @@ public final class ProblemVersionController extends AbstractProblemController {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         } else {
             problemStore.discardUserClone(actorJid, problem.getJid());
+            problemTagStore.refreshDerivedTags(problem.getJid());
         }
 
         return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()))

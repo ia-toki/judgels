@@ -2,20 +2,20 @@
 @import judgels.persistence.api.Page
 @import judgels.sandalphon.api.problem.Problem
 @import org.iatoki.judgels.play.template.pagination.html.tableView
-@import org.iatoki.judgels.play.template.pagination.html.tableHeadersView
+@import org.iatoki.judgels.play.template.pagination.html.tableHeadersWithTagsView
 @import org.iatoki.judgels.play.template.search.html.searchView
-@import org.iatoki.judgels.play.template.pagination.html.paginationView
+@import org.iatoki.judgels.play.template.pagination.html.paginationWithTagsView
 @import org.iatoki.judgels.sandalphon.problem.base.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(pageOfProblems: Page[Problem], profilesMap: Map[String, Profile], orderBy: String, orderDir: String, filterString: String)
-
-@searchView(pageOfProblems.getPageIndex, orderBy, orderDir, filterString, routes.ProblemController.listProblems)
+@(pageOfProblems: Page[Problem], profilesMap: Map[String, Profile], orderBy: String, orderDir: String, filterString: String, tags: List[String])
 
 <div class="clearfix"></div>
 
+<br />
+
 @tableView() {
-    @tableHeadersView(pageOfProblems.getPageIndex, orderBy, orderDir, filterString, routes.ProblemController.listProblems)(
+    @tableHeadersWithTagsView(pageOfProblems.getPageIndex, orderBy, orderDir, filterString, tags, routes.ProblemController.listProblems)(
         "id" -> "ID",
         "slug" -> "Slug",
         "createdBy" -> "Creator",
@@ -36,4 +36,4 @@
     </tbody>
 }
 
-@paginationView(pageOfProblems, orderBy, orderDir, filterString, routes.ProblemController.listProblems)
+@paginationWithTagsView(pageOfProblems, orderBy, orderDir, filterString, tags, routes.ProblemController.listProblems)

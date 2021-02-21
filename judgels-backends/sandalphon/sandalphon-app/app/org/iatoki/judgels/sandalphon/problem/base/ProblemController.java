@@ -25,6 +25,7 @@ import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.editProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.listProblemsView;
+import org.iatoki.judgels.sandalphon.problem.base.html.searchProblemsView;
 import org.iatoki.judgels.sandalphon.problem.base.html.viewProblemView;
 import org.iatoki.judgels.sandalphon.role.RoleChecker;
 import play.data.Form;
@@ -37,6 +38,7 @@ import play.mvc.Result;
 @Singleton
 public final class ProblemController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemSearchStore problemSearchStore;
     private final RoleChecker roleChecker;
     private final ProblemRoleChecker problemRoleChecker;
     private final UserSearchService userSearchService;
@@ -45,6 +47,7 @@ public final class ProblemController extends AbstractProblemController {
     @Inject
     public ProblemController(
             ProblemStore problemStore,
+            ProblemSearchStore problemSearchStore,
             RoleChecker roleChecker,
             ProblemRoleChecker problemRoleChecker,
             UserSearchService userSearchService,
@@ -52,6 +55,7 @@ public final class ProblemController extends AbstractProblemController {
 
         super(problemStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.problemSearchStore = problemSearchStore;
         this.roleChecker = roleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.userSearchService = userSearchService;
@@ -60,25 +64,26 @@ public final class ProblemController extends AbstractProblemController {
 
     @Transactional(readOnly = true)
     public Result index(Http.Request req) {
-        return listProblems(req, 1, "updatedAt", "desc", "");
+        return listProblems(req, 1, "updatedAt", "desc", "", null);
     }
 
     @Transactional(readOnly = true)
-    public Result listProblems(Http.Request req, long pageIndex, String sortBy, String orderBy, String filterString) {
+    public Result listProblems(Http.Request req, long pageIndex, String sortBy, String orderBy, String filterString, List<String> tags) {
         String actorJid = getUserJid(req);
         boolean isAdmin = roleChecker.isAdmin(req);
         boolean isWriter = roleChecker.isWriter(req);
 
-        Page<Problem> problems = problemStore.getPageOfProblems(pageIndex, sortBy, orderBy, filterString, actorJid, isAdmin);
+        Page<Problem> problems = problemSearchStore.searchProblems(pageIndex, sortBy, orderBy, filterString, tags, actorJid, isAdmin);
 
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(listProblemsView.render(problems, profilesMap, sortBy, orderBy, filterString));
+        template.setContent(listProblemsView.render(problems, profilesMap, sortBy, orderBy, filterString, tags));
         if (isWriter) {
             template.addMainButton("Create", routes.ProblemController.createProblem());
         }
+        template.addLowerSidebarWidget(searchProblemsView.render(pageIndex, sortBy, orderBy, filterString, tags));
         template.setMainTitle("Problems");
         template.setPageTitle("Problems");
         return renderTemplate(template);
