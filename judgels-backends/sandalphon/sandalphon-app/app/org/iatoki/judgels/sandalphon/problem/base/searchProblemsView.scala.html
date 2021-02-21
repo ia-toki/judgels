@@ -17,8 +17,9 @@
 }
 
 @b3.form(routes.ProblemController.listProblems(pageIndex, orderBy, orderDir, "", null)) {
+    <input type="hidden" name="orderBy" value="@orderBy" />
+    <input type="hidden" name="orderDir" value="@orderDir" />
     <hr />
-
     <div class="avatar clearfix">
         <div class="col-md-12">
             <div class="row">
