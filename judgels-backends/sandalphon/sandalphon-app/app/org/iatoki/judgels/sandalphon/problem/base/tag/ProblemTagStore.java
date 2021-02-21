@@ -122,9 +122,14 @@ public class ProblemTagStore {
             return problemJids;
         }
 
-        return Sets.intersection(problemJids, problemTagDao.selectAllByTags(intersectionTags).stream()
+        Set<String> allowedProblemJids = problemTagDao.selectAllByTags(intersectionTags).stream()
                 .map(m -> m.problemJid)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toSet());
+
+        if (problemJids == null) {
+            return allowedProblemJids;
+        }
+        return Sets.intersection(problemJids, allowedProblemJids);
     }
 
     public long refreshProblemDerivedTags(long lastProblemId, long limit) {
