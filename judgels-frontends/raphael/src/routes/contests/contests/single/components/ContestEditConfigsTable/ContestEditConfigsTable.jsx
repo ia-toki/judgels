@@ -7,6 +7,24 @@ import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/la
 import './ContestEditConfigsTable.css';
 
 export function ContestEditConfigsTable({ config }) {
+  const renderTrocStyleConfig = ({ languageRestriction, wrongSubmissionPenalty }) => {
+    const rows = [
+      {
+        key: 'languageRestriction',
+        title: 'Allowed languages',
+        value: formatLanguageRestriction(languageRestriction),
+      },
+      { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: wrongSubmissionPenalty },
+    ];
+    return (
+      <div className="contest-edit-configs-table__config">
+        <h4>TROC style config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
+      </div>
+    );
+  };
+
   const renderIcpcStyleConfig = ({ languageRestriction, wrongSubmissionPenalty }) => {
     const rows = [
       {
@@ -203,6 +221,7 @@ export function ContestEditConfigsTable({ config }) {
 
   return (
     <div className="contest-edit-dialog__content">
+      {config.trocStyle && renderTrocStyleConfig(config.trocStyle)}
       {config.icpcStyle && renderIcpcStyleConfig(config.icpcStyle)}
       {config.ioiStyle && renderIoiStyleConfig(config.ioiStyle)}
       {config.gcjStyle && renderGcjStyleConfig(config.gcjStyle)}

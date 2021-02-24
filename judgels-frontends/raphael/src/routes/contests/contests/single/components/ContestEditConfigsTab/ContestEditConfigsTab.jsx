@@ -56,6 +56,7 @@ class ContestEditConfigsTab extends Component {
     }
     if (isEditing) {
       const {
+        trocStyle,
         icpcStyle,
         ioiStyle,
         gcjStyle,
@@ -70,6 +71,14 @@ class ContestEditConfigsTab extends Component {
       let initialValues = {
         scoreboardIsIncognito: scoreboard.isIncognitoScoreboard,
       };
+      if (trocStyle) {
+        initialValues = {
+          ...initialValues,
+          trocAllowAllLanguages: allLanguagesAllowed(trocStyle.languageRestriction),
+          trocAllowedLanguages: this.fromLanguageRestriction(trocStyle.languageRestriction),
+          trocWrongSubmissionPenalty: '' + trocStyle.wrongSubmissionPenalty,
+        };
+      }
       if (icpcStyle) {
         initialValues = {
           ...initialValues,
@@ -136,6 +145,7 @@ class ContestEditConfigsTab extends Component {
 
   upsertConfig = async data => {
     const {
+      trocStyle,
       icpcStyle,
       ioiStyle,
       gcjStyle,
@@ -151,6 +161,16 @@ class ContestEditConfigsTab extends Component {
         isIncognitoScoreboard: data.scoreboardIsIncognito,
       },
     };
+    if (trocStyle) {
+      const allowedLanguageNames = data.trocAllowAllLanguages ? [] : Object.keys(data.trocAllowedLanguages);
+      config = {
+        ...config,
+        trocStyle: {
+          languageRestriction: { allowedLanguageNames },
+          wrongSubmissionPenalty: +data.trocWrongSubmissionPenalty,
+        },
+      };
+    }
     if (icpcStyle) {
       const allowedLanguageNames = data.icpcAllowAllLanguages ? [] : Object.keys(data.icpcAllowedLanguages);
       config = {

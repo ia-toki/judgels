@@ -1,0 +1,44 @@
+@import '../../../../../../styles/base';
+
+table.troc-scoreboard__content {
+  td {
+    strong {
+      font-size: 12px;
+    }
+    strong.total-points-cell {
+      font-size: 16px;
+    }
+    small {
+      color: $small-color;
+    }
+  }
+
+  td.first-accepted {
+    strong, small {
+      color: #fff;
+    }
+    background: #1f8763 !important;
+  }
+
+  td.accepted {
+    background: #e1fdd7 !important;
+  }
+
+  td.not-accepted {
+    strong, small {
+      color: #fff;
+    }
+    background: #e36262 !important;
+  }
+
+  td.frozen {
+    strong, small {
+      color: #fff;
+    }
+    background: #70a2ff !important;
+  }
+  
+  .clickable {
+    cursor: pointer;
+  }
+}

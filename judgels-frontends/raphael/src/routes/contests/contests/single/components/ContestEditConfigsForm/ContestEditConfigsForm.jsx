@@ -22,8 +22,9 @@ class ContestEditConfigsForm extends Component {
   constructor(props) {
     super(props);
 
-    const { icpcStyle, ioiStyle, gcjStyle } = props.config;
+    const { trocStyle, icpcStyle, ioiStyle, gcjStyle } = props.config;
     const allowAllLanguages =
+      (!!trocStyle && allLanguagesAllowed(trocStyle.languageRestriction)) ||
       (!!icpcStyle && allLanguagesAllowed(icpcStyle.languageRestriction)) ||
       (!!ioiStyle && allLanguagesAllowed(ioiStyle.languageRestriction)) ||
       (!!gcjStyle && allLanguagesAllowed(gcjStyle.languageRestriction));
@@ -35,6 +36,7 @@ class ContestEditConfigsForm extends Component {
     const { handleSubmit, submitting, config, onCancel } = this.props;
     return (
       <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
+        {config.trocStyle && this.renderTrocStyleForm()}
         {config.icpcStyle && this.renderIcpcStyleForm()}
         {config.ioiStyle && this.renderIoiStyleForm()}
         {config.gcjStyle && this.renderGcjStyleForm()}
@@ -56,6 +58,46 @@ class ContestEditConfigsForm extends Component {
 
   toggleAllowAllLanguagesCheckbox = (e, checked) => {
     this.setState({ allowAllLanguages: checked });
+  };
+
+  renderTrocStyleForm = () => {
+    const allowedLanguageField = {
+      label: 'Allowed languages',
+      meta: {},
+    };
+    const allowAllLanguagesField = {
+      name: 'trocAllowAllLanguages',
+      label: '(all)',
+      onChange: this.toggleAllowAllLanguagesCheckbox,
+    };
+    const allowedLanguageFields = gradingLanguages.map(lang => ({
+      name: 'trocAllowedLanguages.' + lang,
+      label: getGradingLanguageName(lang),
+      small: true,
+    }));
+
+    const wrongSubmissionPenaltyField = {
+      name: 'trocWrongSubmissionPenalty',
+      label: 'Wrong submission penalty',
+      validate: [Required, NonnegativeNumber],
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
+    return (
+      <div className="contest-edit-configs-form__config">
+        <h4>TROC style config</h4>
+        <HTMLTable striped>
+          <tbody>
+            <FormTableInput {...allowedLanguageField}>
+              <Field component={FormCheckbox} {...allowAllLanguagesField} />
+              {!this.state.allowAllLanguages &&
+                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
+            </FormTableInput>
+            <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
+          </tbody>
+        </HTMLTable>
+      </div>
+    );
   };
 
   renderIcpcStyleForm = () => {

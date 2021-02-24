@@ -27,7 +27,8 @@ public interface ContestScoreboard {
             @JsonSubTypes.Type(value = ImmutableBundleScoreboard.class),
             @JsonSubTypes.Type(value = ImmutableGcjScoreboard.class),
             @JsonSubTypes.Type(value = ImmutableIcpcScoreboard.class),
-            @JsonSubTypes.Type(value = ImmutableIoiScoreboard.class)
+            @JsonSubTypes.Type(value = ImmutableIoiScoreboard.class),
+            @JsonSubTypes.Type(value = ImmutableTrocScoreboard.class)
     })
     Scoreboard getScoreboard();
 

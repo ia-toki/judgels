@@ -25,8 +25,9 @@ function ContestEditGeneralForm({ handleSubmit, submitting, onCancel }) {
     name: 'style',
     label: 'Style',
     validate: [Required],
-    optionValues: [ContestStyle.ICPC, ContestStyle.IOI, ContestStyle.GCJ, ContestStyle.Bundle],
+    optionValues: [ContestStyle.TROC, ContestStyle.ICPC, ContestStyle.IOI, ContestStyle.GCJ, ContestStyle.Bundle],
     optionNamesMap: {
+      [ContestStyle.TROC]: ContestStyle.TROC,
       [ContestStyle.ICPC]: ContestStyle.ICPC,
       [ContestStyle.IOI]: ContestStyle.IOI,
       [ContestStyle.GCJ]: ContestStyle.GCJ,

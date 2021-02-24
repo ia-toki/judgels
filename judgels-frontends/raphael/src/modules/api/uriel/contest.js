@@ -4,6 +4,7 @@ import { APP_CONFIG } from '../../../conf';
 import { get, post, put } from '../http';
 
 export const ContestStyle = {
+  TROC: 'TROC',
   ICPC: 'ICPC',
   IOI: 'IOI',
   GCJ: 'GCJ',

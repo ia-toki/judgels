@@ -14,6 +14,7 @@ import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectContest } from '../../../modules/contestSelectors';
+import { TrocScoreboardTable } from '../TrocScoreboardTable/TrocScoreboardTable';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
@@ -238,7 +239,18 @@ export class ContestScoreboardPage extends Component {
       profilesMap,
       config: { canViewSubmissions },
     } = response[0];
-    if (this.props.contest.style === ContestStyle.ICPC) {
+    if (this.props.contest.style === ContestStyle.TROC) {
+      return (
+        <TrocScoreboardTable
+          userJid={this.props.userJid}
+          contestJid={this.props.contest.jid}
+          onOpenSubmissionImage={this.onOpenSubmissionImage}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          canViewSubmissions={canViewSubmissions}
+        />
+      );
+    } else if (this.props.contest.style === ContestStyle.ICPC) {
       return (
         <IcpcScoreboardTable
           userJid={this.props.userJid}
