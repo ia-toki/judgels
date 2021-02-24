@@ -65,10 +65,14 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
                     createSubmission(1, 300, "c1", "p1", 100, Verdict.ACCEPTED),
-                    createSubmission(2, 360, "c1", "p1", 0, Verdict.TIME_LIMIT_EXCEEDED),
-                    createSubmission(3, 400, "c1", "p2", 0, Verdict.TIME_LIMIT_EXCEEDED),
-                    createSubmission(4, 410, "c1", "p2", 100, Verdict.ACCEPTED),
-                    createSubmission(5, 900, "c2", "p1", 100, Verdict.ACCEPTED));
+                    createSubmission(2, 320, "c1", "p1", 0, Verdict.WRONG_ANSWER),
+                    createSubmission(3, 340, "c1", "p1", 0, Verdict.COMPILATION_ERROR),
+                    createSubmission(4, 360, "c1", "p1", 0, Verdict.TIME_LIMIT_EXCEEDED),
+                    createSubmission(5, 400, "c1", "p2", 0, Verdict.TIME_LIMIT_EXCEEDED),
+                    createSubmission(6, 420, "c1", "p2", 100, Verdict.ACCEPTED),
+                    createSubmission(7, 440, "c1", "p2", 0, Verdict.WRONG_ANSWER),
+                    createSubmission(8, 900, "c2", "p1", 100, Verdict.ACCEPTED),
+                    createSubmission(9, 920, "c2", "p1", 100, Verdict.COMPILATION_ERROR));
 
             ScoreboardProcessResult result = scoreboardProcessor.process(
                     contest,
