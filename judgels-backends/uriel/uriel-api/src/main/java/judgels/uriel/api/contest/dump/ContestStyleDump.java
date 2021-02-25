@@ -9,6 +9,7 @@ import judgels.uriel.api.contest.module.ImmutableBundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.ImmutableGcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.ImmutableIcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.ImmutableIoiStyleModuleConfig;
+import judgels.uriel.api.contest.module.ImmutableTrocStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import org.immutables.value.Value;
 
@@ -24,6 +25,7 @@ public interface ContestStyleDump extends Dump {
             visible = true
     )
     @JsonSubTypes({
+            @JsonSubTypes.Type(value = ImmutableTrocStyleModuleConfig.class),
             @JsonSubTypes.Type(value = ImmutableIoiStyleModuleConfig.class),
             @JsonSubTypes.Type(value = ImmutableIcpcStyleModuleConfig.class),
             @JsonSubTypes.Type(value = ImmutableGcjStyleModuleConfig.class),

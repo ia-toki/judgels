@@ -47,6 +47,7 @@ import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
+import judgels.uriel.api.contest.module.TrocStyleModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
@@ -137,7 +138,9 @@ public class ContestModuleStore {
                 .frozenScoreboard(getFrozenScoreboardModuleConfig(contestJid))
                 .virtual(getVirtualModuleConfig(contestJid));
 
-        if (contestStyle == ContestStyle.IOI) {
+        if (contestStyle == ContestStyle.TROC) {
+            config.trocStyle(getTrocStyleModuleConfig(contestJid));
+        } else if (contestStyle == ContestStyle.IOI) {
             config.ioiStyle(getIoiStyleModuleConfig(contestJid));
         } else if (contestStyle == ContestStyle.ICPC) {
             config.icpcStyle(getIcpcStyleModuleConfig(contestJid));
@@ -153,6 +156,7 @@ public class ContestModuleStore {
     }
 
     public void upsertConfig(String contestJid, ContestModulesConfig config) {
+        config.getTrocStyle().ifPresent(c -> upsertTrocStyleModule(contestJid, c));
         config.getIcpcStyle().ifPresent(c -> upsertIcpcStyleModule(contestJid, c));
         config.getIoiStyle().ifPresent(c -> upsertIoiStyleModule(contestJid, c));
         config.getGcjStyle().ifPresent(c -> upsertGcjStyleModule(contestJid, c));
@@ -165,6 +169,10 @@ public class ContestModuleStore {
         config.getExternalScoreboard().ifPresent(c -> upsertExternalScoreboardModule(contestJid, c));
         config.getFrozenScoreboard().ifPresent(c -> upsertFrozenScoreboardModule(contestJid, c));
         config.getVirtual().ifPresent(c -> upsertVirtualModule(contestJid, c));
+    }
+
+    public void upsertTrocStyleModule(String contestJid, TrocStyleModuleConfig config) {
+        upsertStyleConfig(contestJid, config);
     }
 
     public void upsertIoiStyleModule(String contestJid, IoiStyleModuleConfig config) {
@@ -184,7 +192,9 @@ public class ContestModuleStore {
     }
 
     public StyleModuleConfig getStyleModuleConfig(String contestJid, ContestStyle contestStyle) {
-        if (contestStyle == ContestStyle.IOI) {
+        if (contestStyle == ContestStyle.TROC) {
+            return getTrocStyleModuleConfig(contestJid);
+        } else if (contestStyle == ContestStyle.IOI) {
             return getIoiStyleModuleConfig(contestJid);
         } else if (contestStyle == ContestStyle.ICPC) {
             return getIcpcStyleModuleConfig(contestJid);
@@ -195,6 +205,11 @@ public class ContestModuleStore {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public TrocStyleModuleConfig getTrocStyleModuleConfig(String contestJid) {
+        return getStyleConfig(contestJid, TrocStyleModuleConfig.class)
+                .orElse(new TrocStyleModuleConfig.Builder().build());
     }
 
     public IcpcStyleModuleConfig getIcpcStyleModuleConfig(String contestJid) {
@@ -346,7 +361,9 @@ public class ContestModuleStore {
 
     public ContestStyleDump exportStyleDump(String contestJid, DumpImportMode mode, ContestStyle contestStyle) {
         Class<? extends StyleModuleConfig> styleModuleConfigClass;
-        if (contestStyle == ContestStyle.IOI) {
+        if (contestStyle == ContestStyle.TROC) {
+            styleModuleConfigClass = TrocStyleModuleConfig.class;
+        } else if (contestStyle == ContestStyle.IOI) {
             styleModuleConfigClass = IoiStyleModuleConfig.class;
         } else if (contestStyle == ContestStyle.ICPC) {
             styleModuleConfigClass = IcpcStyleModuleConfig.class;

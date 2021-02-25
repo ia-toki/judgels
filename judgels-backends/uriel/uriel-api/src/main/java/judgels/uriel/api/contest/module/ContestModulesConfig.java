@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestModulesConfig.class)
 public interface ContestModulesConfig {
+    Optional<TrocStyleModuleConfig> getTrocStyle();
     Optional<IcpcStyleModuleConfig> getIcpcStyle();
     Optional<IoiStyleModuleConfig> getIoiStyle();
     Optional<GcjStyleModuleConfig> getGcjStyle();
