@@ -29,6 +29,7 @@ import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
+import judgles.jophiel.user.UserClient;
 
 public class ContestResource implements ContestService {
     private final ActorChecker actorChecker;
@@ -37,6 +38,7 @@ public class ContestResource implements ContestService {
     private final ContestLogger contestLogger;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
+    private final UserClient userClient;
 
     @Inject
     public ContestResource(
@@ -45,7 +47,8 @@ public class ContestResource implements ContestService {
             ContestStore contestStore,
             ContestLogger contestLogger,
             ContestModuleStore moduleStore,
-            ContestContestantStore contestantStore) {
+            ContestContestantStore contestantStore,
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
@@ -53,6 +56,7 @@ public class ContestResource implements ContestService {
         this.contestLogger = contestLogger;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
+        this.userClient = userClient;
     }
 
     @Override
@@ -183,7 +187,11 @@ public class ContestResource implements ContestService {
 
         contestLogger.log(contest.getJid(), "OPEN_CONTEST");
 
-        return checkFound(contestStore.getContestDescription(contest.getJid()));
+        String description = checkFound(contestStore.getContestDescription(contest.getJid()));
+        return new ContestDescription.Builder()
+                .description(description)
+                .profilesMap(userClient.parseProfiles(description))
+                .build();
     }
 
     @Override

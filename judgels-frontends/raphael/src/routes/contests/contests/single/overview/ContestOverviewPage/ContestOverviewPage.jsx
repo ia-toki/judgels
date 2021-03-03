@@ -12,13 +12,13 @@ import './ContestOverviewPage.css';
 
 class ContestOverviewPage extends Component {
   state = {
-    description: undefined,
+    response: undefined,
   };
 
   async componentDidMount() {
-    const description = await this.props.onGetContestDescription(this.props.contest.jid);
+    const response = await this.props.onGetContestDescription(this.props.contest.jid);
     this.setState({
-      description,
+      response,
     });
   }
 
@@ -36,19 +36,20 @@ class ContestOverviewPage extends Component {
   };
 
   renderDescription = () => {
-    const { description } = this.state;
+    const { response } = this.state;
 
-    if (description === undefined) {
+    if (response === undefined) {
       return <LoadingState />;
     }
 
+    const { description, profilesMap } = response;
     if (!description) {
       return null;
     }
 
     return (
       <ContentCard>
-        <HtmlText>{description}</HtmlText>
+        <HtmlText profilesMap={profilesMap}>{description}</HtmlText>
       </ContentCard>
     );
   };

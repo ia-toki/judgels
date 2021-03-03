@@ -5,11 +5,14 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,6 +22,8 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 
 public class UserClient {
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("\\[user:(\\S+)]");
+
     private final UserSearchService userSearchService;
     private final ProfileService profileService;
 
@@ -65,6 +70,15 @@ public class UserClient {
                 .collect(Collectors.toSet());
         return profileCache.getAll(userJidWithTimes).entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey().split(" ")[0], e -> e.getValue()));
+    }
+
+    public Map<String, Profile> parseProfiles(String str) {
+        Set<String> usernames = Sets.newHashSet();
+        Matcher m = USERNAME_PATTERN.matcher(str);
+        while (m.find()) {
+            usernames.add(m.group(1));
+        }
+        return getProfiles(ImmutableSet.copyOf(translateUsernamesToJids(usernames).values()));
     }
 
     private class UsernameToJidCacheLoader implements CacheLoader<String, String> {

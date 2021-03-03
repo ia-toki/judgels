@@ -86,8 +86,7 @@ export function resetVirtualContest(contestId) {
 export function getContestDescription(contestJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    const { description } = await contestAPI.getContestDescription(token, contestJid);
-    return description;
+    return await contestAPI.getContestDescription(token, contestJid);
   };
 }
 

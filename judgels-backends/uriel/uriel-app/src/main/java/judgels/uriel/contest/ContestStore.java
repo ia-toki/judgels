@@ -207,9 +207,8 @@ public class ContestStore {
         });
     }
 
-    public Optional<ContestDescription> getContestDescription(String contestJid) {
-        return contestDao.selectByJid(contestJid).map(
-                model -> new ContestDescription.Builder().description(model.description).build());
+    public Optional<String> getContestDescription(String contestJid) {
+        return contestDao.selectByJid(contestJid).map(model -> model.description);
     }
 
     public Optional<ContestDescription> updateContestDescription(String contestJid, ContestDescription description) {

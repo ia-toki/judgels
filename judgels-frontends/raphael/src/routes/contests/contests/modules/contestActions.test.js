@@ -177,7 +177,7 @@ describe('contestActions', () => {
         .reply(200, { description });
 
       const response = await store.dispatch(contestActions.getContestDescription(contestJid));
-      expect(response).toEqual(description);
+      expect(response).toEqual({ description });
     });
   });
 

@@ -13,7 +13,7 @@ import * as contestActions from '../../../modules/contestActions';
 class ContestEditDescriptionTab extends Component {
   state = {
     isEditing: false,
-    description: undefined,
+    response: undefined,
   };
 
   async componentDidMount() {
@@ -34,8 +34,8 @@ class ContestEditDescriptionTab extends Component {
   }
 
   refreshContestDescription = async () => {
-    const description = await this.props.onGetContestDescription(this.props.contest.jid);
-    this.setState({ description });
+    const response = await this.props.onGetContestDescription(this.props.contest.jid);
+    this.setState({ response });
   };
 
   renderEditButton = () => {
@@ -49,13 +49,13 @@ class ContestEditDescriptionTab extends Component {
   };
 
   renderContent = () => {
-    const { isEditing, description } = this.state;
-    if (description === undefined) {
+    const { isEditing, response } = this.state;
+    if (response === undefined) {
       return <LoadingState />;
     }
     if (isEditing) {
       const initialValues = {
-        description: description,
+        description: response.description,
       };
       const formProps = {
         onCancel: this.toggleEdit,
@@ -68,10 +68,10 @@ class ContestEditDescriptionTab extends Component {
         />
       );
     }
-    return this.renderDescription(description);
+    return this.renderDescription(response);
   };
 
-  renderDescription = description => {
+  renderDescription = ({ description, profilesMap }) => {
     if (!description) {
       return (
         <p>
@@ -81,7 +81,7 @@ class ContestEditDescriptionTab extends Component {
     }
     return (
       <ContentCard className="contest-edit-dialog__content">
-        <HtmlText>{description}</HtmlText>
+        <HtmlText profilesMap={profilesMap}>{description}</HtmlText>
       </ContentCard>
     );
   };

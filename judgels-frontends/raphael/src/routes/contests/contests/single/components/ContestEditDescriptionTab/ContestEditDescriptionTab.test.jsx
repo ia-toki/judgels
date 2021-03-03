@@ -16,7 +16,11 @@ describe('ContestEditDescriptionTab', () => {
   let wrapper;
 
   beforeEach(() => {
-    contestActions.getContestDescription.mockReturnValue(() => Promise.resolve('current description'));
+    contestActions.getContestDescription.mockReturnValue(() =>
+      Promise.resolve({
+        description: 'current description',
+      })
+    );
     contestActions.updateContestDescription.mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(

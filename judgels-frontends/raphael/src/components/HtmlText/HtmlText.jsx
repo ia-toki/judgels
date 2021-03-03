@@ -1,5 +1,9 @@
 import HTMLReactParser from 'html-react-parser';
 import { Component } from 'react';
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router';
+
+import { UserRef } from '../UserRef/UserRef';
 
 // CSS definition is in index.scss. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
 
@@ -11,9 +15,26 @@ export class HtmlText extends Component {
   }
 
   render() {
+    const { children, profilesMap } = this.props;
+
+    let str = children;
+    if (profilesMap) {
+      Object.keys(profilesMap).forEach(userJid => {
+        const profile = profilesMap[userJid];
+        str = str.replace(
+          '[user:' + profile.username + ']',
+          renderToString(
+            <StaticRouter>
+              <UserRef profile={profile} />
+            </StaticRouter>
+          )
+        );
+      });
+    }
+
     return (
       <div className="html-text" ref={this.createRef}>
-        {HTMLReactParser(this.props.children)}
+        {HTMLReactParser(str)}
       </div>
     );
   }

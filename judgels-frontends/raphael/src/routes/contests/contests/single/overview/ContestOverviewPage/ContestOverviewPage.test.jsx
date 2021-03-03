@@ -15,7 +15,11 @@ describe('ContestOverviewPage', () => {
   let wrapper;
 
   const render = async () => {
-    contestActions.getContestDescription.mockReturnValue(() => Promise.resolve('Contest description'));
+    contestActions.getContestDescription.mockReturnValue(() =>
+      Promise.resolve({
+        description: 'Contest description',
+      })
+    );
 
     const store = createStore(
       combineReducers({
