@@ -14,6 +14,7 @@ class SingleProblemSetProblemDataRoute extends Component {
   async componentDidUpdate(prevProps) {
     if ((prevProps.problemSet && prevProps.problemSet.jid) !== (this.props.problemSet && this.props.problemSet.jid)) {
       this.props.onPopBreadcrumb(this.props.match.url);
+      this.props.onClearProblem();
       await this.refresh();
     }
   }
