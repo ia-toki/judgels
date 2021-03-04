@@ -4,6 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormDateInput } from '../../../../components/forms/FormDateInput/FormDateInput';
 
 function ProblemSetEditForm({ handleSubmit, submitting, renderFormComponents }) {
   const slugField = {
@@ -26,6 +27,11 @@ function ProblemSetEditForm({ handleSubmit, submitting, renderFormComponents }) 
     label: 'Description',
     rows: 5,
   };
+  const contestTimeField = {
+    name: 'contestTime',
+    label: 'Contest time',
+    validate: [Required],
+  };
 
   const fields = (
     <>
@@ -33,6 +39,7 @@ function ProblemSetEditForm({ handleSubmit, submitting, renderFormComponents }) 
       <Field component={FormTextInput} {...nameField} />
       <Field component={FormTextInput} {...archiveSlugField} />
       <Field component={FormTextArea} {...descriptionField} />
+      <Field component={FormDateInput} {...contestTimeField} />
     </>
   );
   const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;

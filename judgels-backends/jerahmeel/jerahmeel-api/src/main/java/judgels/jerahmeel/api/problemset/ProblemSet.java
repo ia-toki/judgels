@@ -1,6 +1,7 @@
 package judgels.jerahmeel.api.problemset;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.Instant;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -12,6 +13,7 @@ public interface ProblemSet {
     String getSlug();
     String getName();
     String getDescription();
+    Instant getContestTime();
 
     class Builder extends ImmutableProblemSet.Builder {}
 }

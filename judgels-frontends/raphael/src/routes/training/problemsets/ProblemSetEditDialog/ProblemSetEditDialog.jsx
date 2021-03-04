@@ -24,6 +24,7 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
     name: problemSet.name,
     archiveSlug: archiveSlug,
     description: problemSet.description,
+    contestTime: new Date(problemSet.contestTime),
   };
   const props = {
     renderFormComponents: renderDialogForm,

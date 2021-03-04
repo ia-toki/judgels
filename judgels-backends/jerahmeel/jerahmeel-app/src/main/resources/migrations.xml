@@ -18,4 +18,5 @@
     <include file="migrations/009-add-submission_jid-to-stats_user_problem.xml"/>
     <include file="migrations/010-add-problem_contest.xml"/>
     <include file="migrations/011-add-index-contest-jid-to-problem_contest.xml"/>
+    <include file="migrations/012-add-contest_date-to-problem_set.xml"/>
 </databaseChangeLog>

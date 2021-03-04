@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,8 +104,10 @@ public class ProblemSetStore {
 
         SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(selectionOptions::page);
+
+        selectionOptions.orderBy("contestTime");
         if (!name.orElse("").isEmpty() || archiveJid.isPresent()) {
-            selectionOptions.orderBy("name");
+            selectionOptions.orderBy2("name");
         }
 
         Page<ProblemSetModel> models =
@@ -145,6 +148,7 @@ public class ProblemSetStore {
         model.slug = data.getSlug();
         model.name = data.getName();
         model.description = data.getDescription().orElse("");
+        model.contestTime = data.getContestTime().orElse(Instant.ofEpochMilli(0));
         return fromModel(problemSetDao.insert(model));
     }
 
@@ -179,6 +183,7 @@ public class ProblemSetStore {
             data.getSlug().ifPresent(slug -> model.slug = slug);
             data.getName().ifPresent(name -> model.name = name);
             data.getDescription().ifPresent(description -> model.description = description);
+            data.getContestTime().ifPresent(contestTime -> model.contestTime = contestTime);
             return fromModel(problemSetDao.update(model));
         });
     }
@@ -191,6 +196,7 @@ public class ProblemSetStore {
                 .slug(Optional.ofNullable(model.slug).orElse("" + model.id))
                 .name(model.name)
                 .description(model.description)
+                .contestTime(model.contestTime)
                 .build();
     }
 }
