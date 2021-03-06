@@ -134,7 +134,7 @@ export function ContestEditConfigsTable({ config }) {
         <h4>Editorial config</h4>
         <label>Preface</label>
         <ContentCard>
-          <HtmlText profilesMap={profilesMap}>{preface}</HtmlText>
+          <HtmlText profilesMap={profilesMap}>{preface || ''}</HtmlText>
         </ContentCard>
         <hr />
       </div>
