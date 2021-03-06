@@ -19,7 +19,7 @@ export function FormTableDateInput(props) {
   return (
     <FormTableInput {...props}>
       <DateInput
-        className={classNames(getIntentClassName(meta))}
+        className={classNames('form-table-date-input', getIntentClassName(meta))}
         formatDate={formatDate}
         parseDate={parseDateTime}
         rightElement={<Tag>{formatDateTimezoneOffset(new Date())}</Tag>}

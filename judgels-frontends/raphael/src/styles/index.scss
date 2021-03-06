@@ -272,3 +272,10 @@ blockquote {
 .progress-bar.bp3-progress-bar {
   height: 4px !important;
 }
+
+// Styles for <VerdictProgressTag />. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
+
+.verdict-progress-tag {
+  float: right;
+  margin-bottom: 5px;
+}

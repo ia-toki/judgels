@@ -3,8 +3,6 @@ import classNames from 'classnames';
 
 import { getVerdictIntent, VerdictCode } from '../../modules/api/gabriel/verdict';
 
-import './VerdictProgressTag.css';
-
 export const VerdictProgressTag = ({ className, verdict, score }) => {
   const intent = getVerdictIntent(verdict);
 

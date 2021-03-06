@@ -15,7 +15,7 @@ export function FormDateInput({ input, className, label, meta }) {
   return (
     <FormGroup className={className} label={label} intent={getIntent(meta)}>
       <DateInput
-        className={classNames(getIntentClassName(meta))}
+        className={classNames('form-date-input', getIntentClassName(meta))}
         formatDate={formatDateTime}
         parseDate={parseDateTime}
         rightElement={<Tag>{formatDateTimezoneOffset(new Date())}</Tag>}
