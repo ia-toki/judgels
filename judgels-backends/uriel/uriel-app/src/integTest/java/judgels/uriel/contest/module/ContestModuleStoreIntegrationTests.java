@@ -2,6 +2,7 @@ package judgels.uriel.contest.module;
 
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.DIVISION;
+import static judgels.uriel.api.contest.module.ContestModuleType.EDITORIAL;
 import static judgels.uriel.api.contest.module.ContestModuleType.EXTERNAL_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
@@ -16,6 +17,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.DivisionModuleConfig;
+import judgels.uriel.api.contest.module.EditorialModuleConfig;
 import judgels.uriel.api.contest.module.ExternalScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
@@ -75,6 +77,9 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
                 .build();
         store.upsertClarificationTimeLimitModule(contest.getJid(), config3);
         store.upsertDivisionModule(contest.getJid(), new DivisionModuleConfig.Builder().division(2).build());
+        store.upsertEditorialModule(contest.getJid(), new EditorialModuleConfig.Builder()
+                .preface("<p>Thank you</p>")
+                .build());
         ExternalScoreboardModuleConfig config4 = new ExternalScoreboardModuleConfig.Builder()
                 .receiverUrl("http://scoreboard")
                 .receiverSecret("secret")
@@ -82,7 +87,7 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
         store.upsertExternalScoreboardModule(contest.getJid(), config4);
         store.upsertHiddenModule(contest.getJid());
 
-        assertThat(store.getEnabledModules(contest.getJid()))
-                .containsOnly(FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT, DIVISION, EXTERNAL_SCOREBOARD, HIDDEN);
+        assertThat(store.getEnabledModules(contest.getJid())).containsOnly(
+                FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT, DIVISION, EDITORIAL, EXTERNAL_SCOREBOARD, HIDDEN);
     }
 }

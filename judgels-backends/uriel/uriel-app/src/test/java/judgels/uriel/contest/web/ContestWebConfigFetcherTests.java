@@ -9,6 +9,7 @@ import static judgels.uriel.api.contest.web.ContestState.STARTED;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
+import static judgels.uriel.api.contest.web.ContestTab.EDITORIAL;
 import static judgels.uriel.api.contest.web.ContestTab.FILES;
 import static judgels.uriel.api.contest.web.ContestTab.LOGS;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
@@ -33,6 +34,7 @@ import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
 import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
+import judgels.uriel.contest.editorial.ContestEditorialRoleChecker;
 import judgels.uriel.contest.file.ContestFileRoleChecker;
 import judgels.uriel.contest.manager.ContestManagerRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
@@ -58,6 +60,7 @@ class ContestWebConfigFetcherTests {
     @Mock private ContestRoleChecker roleChecker;
     @Mock private ContestAnnouncementRoleChecker announcementRoleChecker;
     @Mock private ContestProblemRoleChecker problemRoleChecker;
+    @Mock private ContestEditorialRoleChecker editorialRoleChecker;
     @Mock private ContestSubmissionRoleChecker submissionRoleChecker;
     @Mock private ContestClarificationRoleChecker clarificationRoleChecker;
     @Mock private ContestScoreboardRoleChecker scoreboardRoleChecker;
@@ -79,6 +82,7 @@ class ContestWebConfigFetcherTests {
                 roleChecker,
                 announcementRoleChecker,
                 problemRoleChecker,
+                editorialRoleChecker,
                 submissionRoleChecker,
                 clarificationRoleChecker,
                 scoreboardRoleChecker,
@@ -119,6 +123,8 @@ class ContestWebConfigFetcherTests {
         when(problemRoleChecker.canView(MANAGER, contest)).thenReturn(true);
         when(problemRoleChecker.canView(ADMIN, contest)).thenReturn(true);
 
+        when(editorialRoleChecker.canView(contest)).thenReturn(true);
+
         when(scoreboardRoleChecker.canViewDefault(USER, contest)).thenReturn(true);
         when(scoreboardRoleChecker.canViewDefault(CONTESTANT, contest)).thenReturn(true);
         when(scoreboardRoleChecker.canViewDefault(SUPERVISOR, contest)).thenReturn(true);
@@ -153,17 +159,25 @@ class ContestWebConfigFetcherTests {
     @Test
     void visible_tabs() {
         assertThat(webConfigFetcher.fetchConfig(USER, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD);
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, EDITORIAL, SCOREBOARD);
 
         assertThat(webConfigFetcher.fetchConfig(CONTESTANT, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, EDITORIAL, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
 
-        assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD, FILES);
+        assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest).getVisibleTabs()).containsExactly(
+                ANNOUNCEMENTS,
+                PROBLEMS,
+                EDITORIAL,
+                CONTESTANTS,
+                SUBMISSIONS,
+                CLARIFICATIONS,
+                SCOREBOARD,
+                FILES);
 
         assertThat(webConfigFetcher.fetchConfig(MANAGER, contest).getVisibleTabs()).containsExactly(
                 ANNOUNCEMENTS,
                 PROBLEMS,
+                EDITORIAL,
                 CONTESTANTS,
                 SUPERVISORS,
                 MANAGERS,
@@ -176,6 +190,7 @@ class ContestWebConfigFetcherTests {
         assertThat(webConfigFetcher.fetchConfig(ADMIN, contest).getVisibleTabs()).containsExactly(
                 ANNOUNCEMENTS,
                 PROBLEMS,
+                EDITORIAL,
                 CONTESTANTS,
                 SUPERVISORS,
                 MANAGERS,

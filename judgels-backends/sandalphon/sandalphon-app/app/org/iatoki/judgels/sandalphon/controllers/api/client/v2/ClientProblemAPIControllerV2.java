@@ -87,14 +87,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return Results.notFound();
         }
 
-        String language = sanitizeEditorialLanguageCode(problemJid, req.getQueryString("language"));
-        return okAsJson(req, new ProblemEditorialInfo.Builder()
-                .text(problemStore.getEditorial(null, problemJid, language).getText())
-                .defaultLanguage(simplifyLanguageCode(problemStore.getEditorialDefaultLanguage(null, problemJid)))
-                .languages(problemStore.getEditorialLanguages(null, problemJid).stream()
-                        .map(lang -> simplifyLanguageCode(lang))
-                        .collect(Collectors.toSet()))
-                .build());
+        return okAsJson(req, getProblemEditorialInfo(req, problemJid));
     }
 
     @Transactional(readOnly = true)
@@ -196,6 +189,21 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     @Transactional(readOnly = true)
+    public Result findProblemEditorialsByJids(Http.Request req) {
+        JsonNode problemJids = req.body().asJson();
+
+        Map<String, ProblemEditorialInfo> result = new HashMap<>();
+
+        for (JsonNode problemJidNode : problemJids) {
+            String problemJid = problemJidNode.asText();
+            if (problemStore.hasEditorial(null, problemJid)) {
+                result.put(problemJid, getProblemEditorialInfo(req, problemJid));
+            }
+        }
+        return okAsJson(req, result);
+    }
+
+    @Transactional(readOnly = true)
     public Result translateAllowedSlugToJids(Http.Request req) {
         String userJid = req.getQueryString("userJid");
 
@@ -233,6 +241,17 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return new ProblemMetadata.Builder()
                 .hasEditorial(problemStore.hasEditorial(null, problemJid))
                 .settersMap(problemStore.findProblemSettersByProblemJid(problemJid))
+                .build();
+    }
+
+    private ProblemEditorialInfo getProblemEditorialInfo(Http.Request req, String problemJid) {
+        String language = sanitizeEditorialLanguageCode(problemJid, req.getQueryString("language"));
+        return new ProblemEditorialInfo.Builder()
+                .text(problemStore.getEditorial(null, problemJid, language).getText())
+                .defaultLanguage(simplifyLanguageCode(problemStore.getEditorialDefaultLanguage(null, problemJid)))
+                .languages(problemStore.getEditorialLanguages(null, problemJid).stream()
+                        .map(lang -> simplifyLanguageCode(lang))
+                        .collect(Collectors.toSet()))
                 .build();
     }
 

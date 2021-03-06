@@ -137,7 +137,11 @@ export function consolidateLanguages(resourcesMap, currentLanguage) {
 
   let languages = [];
   Object.keys(resourcesMap).forEach(jid => {
-    languages = [...languages, ...Object.keys(resourcesMap[jid].titlesByLanguage)];
+    languages = [
+      ...languages,
+      ...Object.keys(resourcesMap[jid].titlesByLanguage || {}),
+      ...(resourcesMap[jid].languages || []),
+    ];
   });
   const uniqueLanguages = languages.filter((lang, idx) => languages.indexOf(lang) === idx);
 

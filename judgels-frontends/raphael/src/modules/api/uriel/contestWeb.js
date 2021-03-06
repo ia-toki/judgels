@@ -5,6 +5,7 @@ export const ContestTab = {
   Overview: 'OVERVIEW',
   Announcements: 'ANNOUNCEMENTS',
   Problems: 'PROBLEMS',
+  Editorial: 'EDITORIAL',
   Contestants: 'CONTESTANTS',
   Supervisors: 'SUPERVISORS',
   Managers: 'MANAGERS',

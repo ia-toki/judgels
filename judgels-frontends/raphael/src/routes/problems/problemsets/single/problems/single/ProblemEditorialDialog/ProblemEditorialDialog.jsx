@@ -80,8 +80,8 @@ export class ProblemEditorialDialog extends Component {
 
     return (
       <ProblemEditorial
+        title={`${problemSet.name} - Problem ${problem.alias}`}
         containerName={problemSet.name}
-        problemAlias={problem.alias}
         settersMap={settersMap}
         profilesMap={profilesMap}
       >

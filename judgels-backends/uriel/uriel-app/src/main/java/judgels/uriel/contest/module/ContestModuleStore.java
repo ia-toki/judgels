@@ -5,6 +5,7 @@ import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.DIVISION;
+import static judgels.uriel.api.contest.module.ContestModuleType.EDITORIAL;
 import static judgels.uriel.api.contest.module.ContestModuleType.EXTERNAL_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
@@ -39,6 +40,7 @@ import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.DivisionModuleConfig;
+import judgels.uriel.api.contest.module.EditorialModuleConfig;
 import judgels.uriel.api.contest.module.ExternalScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
@@ -61,6 +63,7 @@ public class ContestModuleStore {
             new ImmutableMap.Builder<ContestModuleType, Object>()
                     .put(CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.DEFAULT)
                     .put(DIVISION, DivisionModuleConfig.DEFAULT)
+                    .put(EDITORIAL, EditorialModuleConfig.DEFAULT)
                     .put(EXTERNAL_SCOREBOARD, ExternalScoreboardModuleConfig.DEFAULT)
                     .put(FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.DEFAULT)
                     .put(SCOREBOARD, ScoreboardModuleConfig.DEFAULT)
@@ -134,6 +137,7 @@ public class ContestModuleStore {
                 .scoreboard(getScoreboardModuleConfig(contestJid))
                 .clarificationTimeLimit(getClarificationTimeLimitModuleConfig(contestJid))
                 .division(getDivisionModuleConfig(contestJid))
+                .editorial(getEditorialModuleConfig(contestJid))
                 .externalScoreboard(getExternalScoreboardModuleConfig(contestJid))
                 .frozenScoreboard(getFrozenScoreboardModuleConfig(contestJid))
                 .virtual(getVirtualModuleConfig(contestJid));
@@ -166,6 +170,7 @@ public class ContestModuleStore {
 
         config.getClarificationTimeLimit().ifPresent(c -> upsertClarificationTimeLimitModule(contestJid, c));
         config.getDivision().ifPresent(c -> upsertDivisionModule(contestJid, c));
+        config.getEditorial().ifPresent(c -> upsertEditorialModule(contestJid, c));
         config.getExternalScoreboard().ifPresent(c -> upsertExternalScoreboardModule(contestJid, c));
         config.getFrozenScoreboard().ifPresent(c -> upsertFrozenScoreboardModule(contestJid, c));
         config.getVirtual().ifPresent(c -> upsertVirtualModule(contestJid, c));
@@ -244,6 +249,10 @@ public class ContestModuleStore {
         upsertModule(contestJid, DIVISION, config);
     }
 
+    public void upsertEditorialModule(String contestJid, EditorialModuleConfig config) {
+        upsertModule(contestJid, EDITORIAL, config);
+    }
+
     public void upsertExternalScoreboardModule(String contestJid, ExternalScoreboardModuleConfig config) {
         upsertModule(contestJid, EXTERNAL_SCOREBOARD, config);
     }
@@ -292,8 +301,16 @@ public class ContestModuleStore {
         return getModuleConfig(contestJid, DIVISION, DivisionModuleConfig.class);
     }
 
+    public Optional<EditorialModuleConfig> getEditorialModuleConfig(String contestJid) {
+        return getModuleConfig(contestJid, EDITORIAL, EditorialModuleConfig.class);
+    }
+
     public Optional<ExternalScoreboardModuleConfig> getExternalScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, EXTERNAL_SCOREBOARD, ExternalScoreboardModuleConfig.class);
+    }
+
+    public boolean hasEditorialModule(String contestJid) {
+        return moduleDao.selectEnabledByContestJidAndType(contestJid, EDITORIAL).isPresent();
     }
 
     public boolean hasFileModule(String contestJid) {

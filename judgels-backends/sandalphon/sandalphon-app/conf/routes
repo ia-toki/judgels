@@ -208,6 +208,8 @@ POST        /api/v2/client/problems/jids                                        
 +nocsrf
 POST        /api/v2/client/problems/metadata/jids                                   org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemMetadatasByJids(req: Request)
 +nocsrf
+POST        /api/v2/client/problems/editorial/jids                                  org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemEditorialsByJids(req: Request)
++nocsrf
 POST        /api/v2/client/problems/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.translateAllowedSlugToJids(req: Request)
 
 GET         /api/v2/client/lessons/:lessonJid                                       org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLesson(req: Request, lessonJid)

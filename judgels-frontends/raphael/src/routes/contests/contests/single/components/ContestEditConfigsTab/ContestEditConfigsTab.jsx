@@ -63,6 +63,7 @@ class ContestEditConfigsTab extends Component {
         scoreboard,
         clarificationTimeLimit,
         division,
+        editorial,
         frozenScoreboard,
         externalScoreboard,
         virtual,
@@ -116,6 +117,12 @@ class ContestEditConfigsTab extends Component {
           divisionDivision: division.division,
         };
       }
+      if (editorial) {
+        initialValues = {
+          ...initialValues,
+          editorialPreface: editorial.preface,
+        };
+      }
       if (frozenScoreboard) {
         initialValues = {
           ...initialValues,
@@ -151,6 +158,7 @@ class ContestEditConfigsTab extends Component {
       gcjStyle,
       clarificationTimeLimit,
       division,
+      editorial,
       frozenScoreboard,
       externalScoreboard,
       virtual,
@@ -212,6 +220,12 @@ class ContestEditConfigsTab extends Component {
       config = {
         ...config,
         division: { division: +data.divisionDivision },
+      };
+    }
+    if (editorial) {
+      config = {
+        ...config,
+        editorial: { preface: data.editorialPreface },
       };
     }
     if (frozenScoreboard) {

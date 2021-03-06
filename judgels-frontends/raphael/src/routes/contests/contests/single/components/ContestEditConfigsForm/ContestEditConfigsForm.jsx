@@ -12,6 +12,7 @@ import { FormTableInput } from '../../../../../../components/forms/FormTableInpu
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
 import { FormTableCheckbox } from '../../../../../../components/forms/FormTableCheckbox/FormTableCheckbox';
 import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { NonnegativeNumber, Required } from '../../../../../../components/forms/validations';
 
 import './ContestEditConfigsForm.css';
@@ -46,6 +47,7 @@ class ContestEditConfigsForm extends Component {
         {config.frozenScoreboard && this.renderFrozenScoreboardForm()}
         {config.externalScoreboard && this.renderExternalScoreboardForm()}
         {config.virtual && this.renderVirtualForm()}
+        {config.editorial && this.renderEditorialForm()}
 
         <hr />
         <ActionButtons>
@@ -263,6 +265,21 @@ class ContestEditConfigsForm extends Component {
             <Field component={FormTableTextInput} {...divisionDivisionField} />
           </tbody>
         </HTMLTable>
+      </div>
+    );
+  };
+
+  renderEditorialForm = () => {
+    const editorialPrefaceField = {
+      name: 'editorialPreface',
+      label: 'Preface',
+      rows: 15,
+    };
+
+    return (
+      <div className="contest-edit-configs-form__config">
+        <h4>Editorial config</h4>
+        <Field component={FormRichTextArea} {...editorialPrefaceField} />
       </div>
     );
   };

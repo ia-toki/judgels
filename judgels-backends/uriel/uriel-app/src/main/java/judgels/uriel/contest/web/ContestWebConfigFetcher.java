@@ -3,6 +3,7 @@ package judgels.uriel.contest.web;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
+import static judgels.uriel.api.contest.web.ContestTab.EDITORIAL;
 import static judgels.uriel.api.contest.web.ContestTab.FILES;
 import static judgels.uriel.api.contest.web.ContestTab.LOGS;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
@@ -26,6 +27,7 @@ import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
 import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
+import judgels.uriel.contest.editorial.ContestEditorialRoleChecker;
 import judgels.uriel.contest.file.ContestFileRoleChecker;
 import judgels.uriel.contest.manager.ContestManagerRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
@@ -38,6 +40,7 @@ public class ContestWebConfigFetcher {
     private final ContestRoleChecker roleChecker;
     private final ContestAnnouncementRoleChecker announcementRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
+    private final ContestEditorialRoleChecker editorialRoleChecker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
@@ -53,6 +56,7 @@ public class ContestWebConfigFetcher {
             ContestRoleChecker roleChecker,
             ContestAnnouncementRoleChecker announcementRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
+            ContestEditorialRoleChecker editorialRoleChecker,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
@@ -66,6 +70,7 @@ public class ContestWebConfigFetcher {
         this.roleChecker = roleChecker;
         this.announcementRoleChecker = announcementRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
+        this.editorialRoleChecker = editorialRoleChecker;
         this.submissionRoleChecker = submissionRoleChecker;
         this.clarificationRoleChecker = clarificationRoleChecker;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
@@ -87,6 +92,9 @@ public class ContestWebConfigFetcher {
 
         if (problemRoleChecker.canView(userJid, contest)) {
             visibleTabs.add(PROBLEMS);
+        }
+        if (editorialRoleChecker.canView(contest)) {
+            visibleTabs.add(EDITORIAL);
         }
         if (contestantRoleChecker.canSupervise(userJid, contest)) {
             visibleTabs.add(CONTESTANTS);

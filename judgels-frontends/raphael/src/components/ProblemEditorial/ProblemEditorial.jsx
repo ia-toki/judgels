@@ -1,10 +1,9 @@
-import { Intent, Card, Button, Classes, Dialog } from '@blueprintjs/core';
 import { Fragment } from 'react';
 
 import { UserRef } from '../UserRef/UserRef';
 import { KatexText } from '../KatexText/KatexText';
 
-export function ProblemEditorial({ containerName, problemAlias, settersMap, profilesMap, children }) {
+export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
   const renderWriters = () => {
     const writerJids = settersMap.WRITER;
     if (!writerJids) {
@@ -64,9 +63,7 @@ export function ProblemEditorial({ containerName, problemAlias, settersMap, prof
 
   return (
     <div>
-      <h4>
-        {containerName} - Problem {problemAlias}
-      </h4>
+      <h4>{title}</h4>
       <ul>
         {renderWriters()}
         {renderDevelopers()}

@@ -187,6 +187,19 @@ public class ProblemClient {
                 .build();
     }
 
+    public Map<String, ProblemEditorialInfo> getProblemEditorials(Set<String> problemJids, Optional<String> language) {
+        return clientProblemService.getProblemEditorials(sandalphonClientAuthHeader, problemJids, language)
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> new ProblemEditorialInfo.Builder()
+                        .from(e.getValue())
+                        .text(SandalphonUtils.replaceProblemEditorialRenderUrls(
+                                e.getValue().getText(),
+                                sandalphonConfig.getBaseUrl(),
+                                e.getKey()))
+                        .build()));
+    }
+
     private class ProblemCacheLoader implements CacheLoader<String, ProblemInfo> {
         @Nullable
         @Override

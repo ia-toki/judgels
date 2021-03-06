@@ -15,6 +15,7 @@ import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
+import judgles.jophiel.user.UserClient;
 
 public class ContestModuleResource implements ContestModuleService {
     private final ActorChecker actorChecker;
@@ -22,6 +23,7 @@ public class ContestModuleResource implements ContestModuleService {
     private final ContestStore contestStore;
     private final ContestLogger contestLogger;
     private final ContestModuleStore moduleStore;
+    private final UserClient userClient;
 
     @Inject
     public ContestModuleResource(
@@ -29,13 +31,15 @@ public class ContestModuleResource implements ContestModuleService {
             ContestRoleChecker contestRoleChecker,
             ContestStore contestStore,
             ContestLogger contestLogger,
-            ContestModuleStore moduleStore) {
+            ContestModuleStore moduleStore,
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
         this.contestStore = contestStore;
         this.contestLogger = contestLogger;
         this.moduleStore = moduleStore;
+        this.userClient = userClient;
     }
 
     @Override
@@ -82,7 +86,14 @@ public class ContestModuleResource implements ContestModuleService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canView(actorJid, contest));
-        return moduleStore.getConfig(contest.getJid(), contest.getStyle());
+        ContestModulesConfig config = moduleStore.getConfig(contest.getJid(), contest.getStyle());
+        if (config.getEditorial().isPresent()) {
+            config = new ContestModulesConfig.Builder()
+                    .from(config)
+                    .profilesMap(userClient.parseProfiles(config.getEditorial().get().getPreface().orElse("")))
+                    .build();
+        }
+        return config;
     }
 
     @Override

@@ -52,6 +52,9 @@ describe('ContestEditConfigsTab', () => {
           division: {
             division: 1,
           },
+          editorial: {
+            preface: '<p>Thank you</p>',
+          },
           frozenScoreboard: {
             scoreboardFreezeTime: parseDuration('1h'),
             isOfficialScoreboardAllowed: false,
@@ -100,6 +103,9 @@ describe('ContestEditConfigsTab', () => {
         const virtualDuration = wrapper.find('input[name="virtualDuration"]');
         virtualDuration.simulate('change', { target: { value: '5h 5m' } });
 
+        const editorialPreface = wrapper.find('textarea[name="editorialPreface"]');
+        editorialPreface.simulate('change', { target: { value: '<p>Thank you for your participation.</p>' } });
+
         const form = wrapper.find('form');
         form.simulate('submit');
 
@@ -127,6 +133,9 @@ describe('ContestEditConfigsTab', () => {
           },
           virtual: {
             virtualDuration: 18300000,
+          },
+          editorial: {
+            preface: '<p>Thank you for your participation.</p>',
           },
         });
       });

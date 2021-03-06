@@ -18,6 +18,7 @@ import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.extension.ResponseDefinitionTransformer;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.jackson.Jackson;
@@ -105,6 +106,39 @@ public class MockSandalphon {
                         "slug", PROBLEM_3_SLUG,
                         "defaultLanguage", "en",
                         "titlesByLanguage", ImmutableMap.of("en", "Problem 3")))));
+
+        /* Mocks for problem metadata */
+
+        mockSandalphon.stubFor(post("/api/v2/client/problems/metadata/jids")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        PROBLEM_1_JID, ImmutableMap.of(
+                                "hasEditorial", true,
+                                "settersMap", ImmutableMap.of()),
+                        PROBLEM_2_JID, ImmutableMap.of(
+                                "hasEditorial", true,
+                                "settersMap", ImmutableMap.of()),
+                        PROBLEM_3_JID, ImmutableMap.of(
+                                "hasEditorial", true,
+                                "settersMap", ImmutableMap.of())))));
+
+        /* Mocks for problem editorial */
+
+        mockSandalphon.stubFor(post("/api/v2/client/problems/editorial/jids")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        PROBLEM_1_JID, ImmutableMap.of(
+                                "text", "Editorial 1",
+                                "defaultLanguage", "en",
+                                "languages", ImmutableList.of("en")),
+                        PROBLEM_2_JID, ImmutableMap.of(
+                                "text", "Editorial 1",
+                                "defaultLanguage", "en",
+                                "languages", ImmutableList.of("en")),
+                        PROBLEM_3_JID, ImmutableMap.of(
+                                "text", "Editorial 1",
+                                "defaultLanguage", "en",
+                                "languages", ImmutableList.of("en"))))));
 
         /* Mocks for programming problem submission config */
 

@@ -1,3 +1,4 @@
+import { Intent, Tag } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
@@ -21,6 +22,7 @@ import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewP
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestClarificationsPage from './clarifications/ContestClarificationsPage/ContestClarificationsPage';
 import ContestProblemRoutes from './problems/ContestProblemRoutes';
+import ContestEditorialPage from './editorial/ContestEditorialPage/ContestEditorialPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import ContestFilesPage from './files/ContestFilesPage/ContestFilesPage';
 import ContestLogsPage from './logs/ContestLogsPage/ContestLogsPage';
@@ -72,6 +74,24 @@ function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfi
       routeComponent: Route,
       component: ContestProblemRoutes,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Problems) === -1,
+    },
+    {
+      id: 'editorial',
+      titleIcon: contestIcon[ContestTab.Editorial],
+      title: (
+        <div className="tab-item-with-widget">
+          <div className="tab-item-with-widget__name">Editorial</div>
+          <div className="tab-item-with-widget__widget">
+            <Tag className="normal-weight" intent={Intent.WARNING}>
+              NEW
+            </Tag>
+          </div>
+          <div className="clearfix" />
+        </div>
+      ),
+      routeComponent: Route,
+      component: ContestEditorialPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Editorial) === -1,
     },
     {
       id: 'contestants',

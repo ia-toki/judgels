@@ -84,6 +84,15 @@ public interface ClientProblemService {
             Set<String> jids);
 
     @POST
+    @Path("/editorial/jids")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, ProblemEditorialInfo> getProblemEditorials(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            Set<String> jids,
+            @QueryParam("language") Optional<String> language);
+
+    @POST
     @Path("/allowed-slug-to-jid")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)

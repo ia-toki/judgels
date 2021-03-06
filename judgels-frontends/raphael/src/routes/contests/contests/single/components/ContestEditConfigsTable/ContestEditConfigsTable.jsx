@@ -1,5 +1,7 @@
 import { Icon } from '@blueprintjs/core';
 
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
 import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
@@ -126,6 +128,19 @@ export function ContestEditConfigsTable({ config }) {
     );
   };
 
+  const renderEditorialConfig = ({ preface }, profilesMap) => {
+    return (
+      <div className="contest-edit-configs-table__config">
+        <h4>Editorial config</h4>
+        <label>Preface</label>
+        <ContentCard>
+          <HtmlText profilesMap={profilesMap}>{preface}</HtmlText>
+        </ContentCard>
+        <hr />
+      </div>
+    );
+  };
+
   const renderScoreboardConfig = ({ isIncognitoScoreboard }) => {
     const rows = [
       {
@@ -231,6 +246,7 @@ export function ContestEditConfigsTable({ config }) {
       {config.frozenScoreboard && renderFrozenScoreboardConfig(config.frozenScoreboard)}
       {config.externalScoreboard && renderExternalScoreboardConfig(config.externalScoreboard)}
       {config.virtual && renderVirtualConfig(config.virtual)}
+      {config.editorial && renderEditorialConfig(config.editorial, config.profilesMap)}
     </div>
   );
 }

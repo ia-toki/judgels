@@ -40,6 +40,7 @@ describe('ContestEditModulesTab', () => {
       'File',
       'Clarification time limit',
       'Division',
+      'Editorial',
       'Freezable scoreboard',
       'External scoreboard',
       'Virtual contest',
