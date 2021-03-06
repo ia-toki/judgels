@@ -30,9 +30,13 @@ export class ProblemSetCreateDialog extends Component {
   };
 
   renderDialog = () => {
+    const initialValues = {
+      contestTime: new Date(),
+    };
     const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createProblemSet,
+      initialValues,
     };
     return (
       <Dialog

@@ -1,5 +1,6 @@
 package judgels.jerahmeel.persistence;
 
+import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
@@ -27,4 +28,7 @@ public final class ProblemSetModel extends JudgelsModel {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     public String description;
+
+    @Column(nullable = false)
+    public Instant contestTime;
 }

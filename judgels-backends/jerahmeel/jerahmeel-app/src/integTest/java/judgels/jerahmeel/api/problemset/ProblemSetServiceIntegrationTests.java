@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import com.palantir.conjure.java.api.errors.ErrorType;
+import java.time.Instant;
 import java.util.Optional;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
 import judgels.jerahmeel.api.archive.Archive;
@@ -45,18 +46,35 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
                 .name("Problem Set 1")
                 .archiveSlug(archiveA.getSlug())
                 .description("This is problem set 1")
+                .contestTime(Instant.ofEpochMilli(1))
                 .build());
 
         ProblemSet problemSet2A = problemSetService.createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
                 .slug("problem-set-2a")
                 .name("Problem Set 2A")
                 .archiveSlug(archiveA.getSlug())
+                .contestTime(Instant.ofEpochMilli(2))
                 .build());
 
         ProblemSet problemSet2B = problemSetService.createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
                 .slug("problem-set-2b")
                 .name("Problem Set 2B")
                 .archiveSlug(archiveB.getSlug())
+                .contestTime(Instant.ofEpochMilli(2))
+                .build());
+
+        ProblemSet problemSet9 = problemSetService.createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
+                .slug("problem-set-9")
+                .name("Problem Set 9")
+                .archiveSlug(archiveB.getSlug())
+                .contestTime(Instant.ofEpochMilli(9))
+                .build());
+
+        ProblemSet problemSet10 = problemSetService.createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
+                .slug("problem-set-10")
+                .name("Problem Set 10")
+                .archiveSlug(archiveB.getSlug())
+                .contestTime(Instant.ofEpochMilli(10))
                 .build());
 
         problemSetProblemService.setProblems(ADMIN_HEADER, problemSet1.getJid(), ImmutableList.of(
@@ -112,7 +130,8 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
 
         ProblemSetsResponse response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.empty(), Optional.empty(), Optional.empty());
-        assertThat(response.getData().getPage()).containsExactly(problemSet2B, problemSet2A, problemSet1);
+        assertThat(response.getData().getPage()).containsExactly(
+                problemSet10, problemSet9, problemSet2B, problemSet2A, problemSet1);
 
         // as user
 
@@ -126,7 +145,8 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
 
         response = problemSetService.getProblemSets(
                 Optional.of(USER_HEADER), Optional.empty(), Optional.empty(), Optional.empty());
-        assertThat(response.getData().getPage()).containsExactly(problemSet2B, problemSet2A, problemSet1);
+        assertThat(response.getData().getPage()).containsExactly(
+                problemSet10, problemSet9, problemSet2B, problemSet2A, problemSet1);
 
         response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.of("archive-a"), Optional.empty(), Optional.empty());
@@ -134,7 +154,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
 
         response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.of("archive-b"), Optional.empty(), Optional.empty());
-        assertThat(response.getData().getPage()).containsExactly(problemSet2B);
+        assertThat(response.getData().getPage()).containsExactly(problemSet10, problemSet9, problemSet2B);
 
         response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.empty(), Optional.of("Set 2"), Optional.empty());

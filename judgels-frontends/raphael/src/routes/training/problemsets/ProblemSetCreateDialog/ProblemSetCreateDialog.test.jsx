@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
+import { parseDateTime } from '../../../../utils/datetime';
 
 import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
 
@@ -51,6 +52,9 @@ describe('ProblemSetCreateDialog', () => {
     const description = wrapper.find('textarea[name="description"]');
     description.simulate('change', { target: { value: 'New description' } });
 
+    const contestTime = wrapper.find('input[name="contestTime"]');
+    contestTime.simulate('change', { target: { value: '2100-01-01 00:00' } });
+
     const form = wrapper.find('form');
     form.simulate('submit');
 
@@ -59,6 +63,7 @@ describe('ProblemSetCreateDialog', () => {
       name: 'New problemSet',
       archiveSlug: 'New archive',
       description: 'New description',
+      contestTime: parseDateTime('2100-01-01 00:00'),
     });
   });
 });
