@@ -77,6 +77,13 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
                 .contestTime(Instant.ofEpochMilli(10))
                 .build());
 
+        ProblemSet problemSet0 = problemSetService.createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
+                .slug("problem-set-0")
+                .name("Problem Set 0")
+                .archiveSlug(archiveB.getSlug())
+                .contestTime(Instant.ofEpochMilli(0))
+                .build());
+
         problemSetProblemService.setProblems(ADMIN_HEADER, problemSet1.getJid(), ImmutableList.of(
                 new ProblemSetProblemData.Builder()
                         .alias("A")
@@ -131,7 +138,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
         ProblemSetsResponse response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.empty(), Optional.empty(), Optional.empty());
         assertThat(response.getData().getPage()).containsExactly(
-                problemSet10, problemSet9, problemSet2B, problemSet2A, problemSet1);
+                problemSet0, problemSet10, problemSet9, problemSet2B, problemSet2A, problemSet1);
 
         // as user
 
@@ -146,7 +153,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
         response = problemSetService.getProblemSets(
                 Optional.of(USER_HEADER), Optional.empty(), Optional.empty(), Optional.empty());
         assertThat(response.getData().getPage()).containsExactly(
-                problemSet10, problemSet9, problemSet2B, problemSet2A, problemSet1);
+                problemSet0, problemSet10, problemSet9, problemSet2B, problemSet2A, problemSet1);
 
         response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.of("archive-a"), Optional.empty(), Optional.empty());
@@ -154,7 +161,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
 
         response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.of("archive-b"), Optional.empty(), Optional.empty());
-        assertThat(response.getData().getPage()).containsExactly(problemSet10, problemSet9, problemSet2B);
+        assertThat(response.getData().getPage()).containsExactly(problemSet10, problemSet9, problemSet2B, problemSet0);
 
         response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.empty(), Optional.of("Set 2"), Optional.empty());

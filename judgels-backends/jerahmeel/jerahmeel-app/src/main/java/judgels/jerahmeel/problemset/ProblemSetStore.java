@@ -105,8 +105,8 @@ public class ProblemSetStore {
         SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(selectionOptions::page);
 
-        selectionOptions.orderBy("contestTime");
         if (!name.orElse("").isEmpty() || archiveJid.isPresent()) {
+            selectionOptions.orderBy("contestTime");
             selectionOptions.orderBy2("name");
         }
 
