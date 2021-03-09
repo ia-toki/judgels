@@ -108,7 +108,7 @@ class ContestEditorialPage extends Component {
 
   renderProblemEditorial = (problem, problemInfo, editorial, metadata, profilesMap) => {
     return (
-      <ContentCard key={problem.problemJid}>
+      <ContentCard key={problem.problemJid + this.state.defaultLanguage}>
         <ProblemEditorial
           title={`${problem.alias}. ${getProblemName(problemInfo, this.state.defaultLanguage)}`}
           settersMap={metadata.settersMap}
