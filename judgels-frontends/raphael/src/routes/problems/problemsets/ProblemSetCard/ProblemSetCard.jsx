@@ -5,7 +5,7 @@ import { ContentCardLink } from '../../../../components/ContentCardLink/ContentC
 
 import './ProblemSetCard.css';
 
-export function ProblemSetCard({ problemSet, archiveDescription, progress }) {
+export function ProblemSetCard({ problemSet, archiveDescription, progress, profilesMap }) {
   const description = (archiveDescription || '') + (problemSet.description || '');
 
   const renderProgress = () => {
@@ -36,7 +36,7 @@ export function ProblemSetCard({ problemSet, archiveDescription, progress }) {
       </h4>
       {description && (
         <div className="problemset-card__description">
-          <HtmlText>{description}</HtmlText>
+          <HtmlText profilesMap={profilesMap}>{description}</HtmlText>
         </div>
       )}
       {renderProgressBar()}

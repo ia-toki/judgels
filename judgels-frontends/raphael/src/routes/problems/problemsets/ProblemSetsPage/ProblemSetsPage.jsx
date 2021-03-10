@@ -116,7 +116,7 @@ class ProblemSetsPage extends Component {
       return <LoadingContentCard />;
     }
 
-    const { data, archiveDescriptionsMap, problemSetProgressesMap } = response;
+    const { data, archiveDescriptionsMap, problemSetProgressesMap, profilesMap } = response;
     if (!data) {
       return <LoadingContentCard />;
     }
@@ -134,6 +134,7 @@ class ProblemSetsPage extends Component {
         problemSet={problemSet}
         archiveDescription={archiveDescriptionsMap[problemSet.archiveJid]}
         progress={problemSetProgressesMap[problemSet.jid]}
+        profilesMap={profilesMap}
       />
     ));
   };

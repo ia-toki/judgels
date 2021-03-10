@@ -2,6 +2,8 @@ package judgels.jerahmeel.api.problemset;
 
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.jerahmeel.api.mocks.MockJophiel.USER_A_JID;
+import static judgels.jerahmeel.api.mocks.MockJophiel.USER_B_JID;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
@@ -33,6 +35,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
                 .slug("archive-a")
                 .name("Archive A")
                 .category("Category")
+                .description("Written by [user:userA]")
                 .build());
 
         Archive archiveB = archiveService.createArchive(ADMIN_HEADER, new ArchiveCreateData.Builder()
@@ -45,7 +48,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
                 .slug("problem-set-1")
                 .name("Problem Set 1")
                 .archiveSlug(archiveA.getSlug())
-                .description("This is problem set 1")
+                .description("This is problem set 1 written by [user:userB]")
                 .contestTime(Instant.ofEpochMilli(1))
                 .build());
 
@@ -103,7 +106,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
         assertThat(problemSet1.getSlug()).isEqualTo("problem-set-1");
         assertThat(problemSet1.getName()).isEqualTo("Problem Set 1");
         assertThat(problemSet1.getArchiveJid()).isEqualTo(archiveA.getJid());
-        assertThat(problemSet1.getDescription()).isEqualTo("This is problem set 1");
+        assertThat(problemSet1.getDescription()).isEqualTo("This is problem set 1 written by [user:userB]");
 
         assertThat(problemSet2A.getSlug()).isEqualTo("problem-set-2a");
 
@@ -139,6 +142,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
                 Optional.of(ADMIN_HEADER), Optional.empty(), Optional.empty(), Optional.empty());
         assertThat(response.getData().getPage()).containsExactly(
                 problemSet0, problemSet10, problemSet9, problemSet2B, problemSet2A, problemSet1);
+        assertThat(response.getProfilesMap()).containsKeys(USER_A_JID, USER_B_JID);
 
         // as user
 

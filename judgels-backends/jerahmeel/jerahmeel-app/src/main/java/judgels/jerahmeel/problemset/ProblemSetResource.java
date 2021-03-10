@@ -22,9 +22,11 @@ import judgels.jerahmeel.api.problemset.ProblemSetsResponse;
 import judgels.jerahmeel.archive.ArchiveStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
+import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgles.jophiel.user.UserClient;
 
 public class ProblemSetResource implements ProblemSetService {
     private final ActorChecker actorChecker;
@@ -32,6 +34,7 @@ public class ProblemSetResource implements ProblemSetService {
     private final ProblemSetStore problemSetStore;
     private final ArchiveStore archiveStore;
     private final StatsStore statsStore;
+    private final UserClient userClient;
 
     @Inject
     public ProblemSetResource(
@@ -39,13 +42,15 @@ public class ProblemSetResource implements ProblemSetService {
             RoleChecker roleChecker,
             ProblemSetStore problemSetStore,
             ArchiveStore archiveStore,
-            StatsStore statsStore) {
+            StatsStore statsStore,
+            UserClient userClient) {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
         this.problemSetStore = problemSetStore;
         this.archiveStore = archiveStore;
         this.statsStore = statsStore;
+        this.userClient = userClient;
     }
 
     @Override
@@ -73,12 +78,22 @@ public class ProblemSetResource implements ProblemSetService {
         Map<String, ProblemSetProgress> problemSetProgressesMap =
                 statsStore.getProblemSetProgressesMap(actorJid, problemSetJids);
 
+        String descriptions = "";
+        for (String description : archiveDescriptionsMap.values()) {
+            descriptions = descriptions.concat(description);
+        }
+        for (ProblemSet problemSet : problemSets.getPage()) {
+            descriptions = descriptions.concat(problemSet.getDescription());
+        }
+        Map<String, Profile> profilesMap = userClient.parseProfiles(descriptions);
+
         return new ProblemSetsResponse.Builder()
                 .data(problemSets)
                 .archiveSlugsMap(archiveSlugsMap)
                 .archiveDescriptionsMap(archiveDescriptionsMap)
                 .archiveName(archive.map(Archive::getName))
                 .problemSetProgressesMap(problemSetProgressesMap)
+                .profilesMap(profilesMap)
                 .build();
     }
 

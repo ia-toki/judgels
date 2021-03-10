@@ -33,11 +33,15 @@ public class MockJophiel {
     public static final String SUPERADMIN_BEARER_TOKEN = "superAdminToken";
     public static final String ADMIN_BEARER_TOKEN = "adminToken";
     public static final String USER_BEARER_TOKEN = "userToken";
+    public static final String USER_A_BEARER_TOKEN = "userAToken";
+    public static final String USER_B_BEARER_TOKEN = "userBToken";
 
     private static final String[] TOKENS = {
             SUPERADMIN_BEARER_TOKEN,
             ADMIN_BEARER_TOKEN,
             USER_BEARER_TOKEN,
+            USER_A_BEARER_TOKEN,
+            USER_B_BEARER_TOKEN,
     };
 
     public static final AuthHeader SUPERADMIN_HEADER = AuthHeader.of(SUPERADMIN_BEARER_TOKEN);
@@ -47,21 +51,29 @@ public class MockJophiel {
     public static final String SUPERADMIN = "superadmin";
     public static final String ADMIN = "admin";
     public static final String USER = "user";
+    public static final String USER_A = "userA";
+    public static final String USER_B = "userB";
 
     private static final String[] USERNAMES = {
             SUPERADMIN,
             ADMIN,
             USER,
+            USER_A,
+            USER_B,
     };
 
     public static final String SUPERADMIN_JID = "superadminJid";
     public static final String ADMIN_JID = "adminJid";
     public static final String USER_JID = "userJid";
+    public static final String USER_A_JID = "userAJid";
+    public static final String USER_B_JID = "userBJid";
 
     private static final String[] JIDS = {
             SUPERADMIN_JID,
             ADMIN_JID,
             USER_JID,
+            USER_A_JID,
+            USER_B_JID,
     };
 
     public static final int JOPHIEL_PORT = 9001;

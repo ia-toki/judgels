@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 
 import { Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
-import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormDateInput } from '../../../../components/forms/FormDateInput/FormDateInput';
 
 function ProblemSetCreateForm({ handleSubmit, submitting, renderFormComponents }) {
@@ -29,7 +29,7 @@ function ProblemSetCreateForm({ handleSubmit, submitting, renderFormComponents }
   const descriptionField = {
     name: 'description',
     label: 'Description',
-    rows: 5,
+    rows: 15,
   };
 
   const contestTimeField = {
@@ -43,8 +43,8 @@ function ProblemSetCreateForm({ handleSubmit, submitting, renderFormComponents }
       <Field component={FormTextInput} {...slugField} />
       <Field component={FormTextInput} {...nameField} />
       <Field component={FormTextInput} {...archiveSlugField} />
-      <Field component={FormTextArea} {...descriptionField} />
       <Field component={FormDateInput} {...contestTimeField} />
+      <Field component={FormRichTextArea} {...descriptionField} />
     </>
   );
   const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
