@@ -41,7 +41,7 @@ class ProblemSetsPage extends Component {
 
   render() {
     return (
-      <Card title="Filter by problemset">
+      <Card title="Browse problemsets">
         {this.renderHeader()}
         {this.renderProblemSets()}
         {this.renderPagination()}

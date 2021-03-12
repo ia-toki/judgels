@@ -39,7 +39,7 @@ class ProblemSetArchiveFilter extends Component {
     }
     return (
       <ContentCard>
-        <h4>Select problemset archive</h4>
+        <h4>Filter problemset</h4>
         <hr />
         {this.renderArchiveCategories()}
       </ContentCard>

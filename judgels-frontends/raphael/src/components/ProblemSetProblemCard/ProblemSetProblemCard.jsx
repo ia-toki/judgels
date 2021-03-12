@@ -1,13 +1,13 @@
 import { Tag, Intent, Icon } from '@blueprintjs/core';
 
-import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
-import { VerdictProgressTag } from '../../../../../../components/VerdictProgressTag/VerdictProgressTag';
-import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
-import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
+import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
+import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
+import { ProgressBar } from '../ProgressBar/ProgressBar';
+import { ProblemType } from '../../modules/api/sandalphon/problem';
 
 import './ProblemSetProblemCard.css';
 
-export function ProblemSetProblemCard({ problemSet, problem, problemName, hasEditorial, progress, stats }) {
+export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemName, hasEditorial, progress, stats }) {
   const renderStats = () => {
     if (problem.type === ProblemType.Bundle || !stats) {
       return null;
@@ -18,8 +18,8 @@ export function ProblemSetProblemCard({ problemSet, problem, problemName, hasEdi
 
     return (
       <div className="problemset-problem-card__stats">
-        {renderAvgScoreStats(avgScore, totalUsersTried)}
-        {renderACStats(totalUsersAccepted)}
+        {renderDifficultyLevel(totalScores, totalUsersTried)}
+        {renderACStats(totalUsersAccepted, totalUsersTried)}
       </div>
     );
   };
@@ -38,19 +38,24 @@ export function ProblemSetProblemCard({ problemSet, problem, problemName, hasEdi
     );
   };
 
-  const renderAvgScoreStats = (avgScore, totalUsersTried) => {
+  const renderDifficultyLevel = (totalScores, totalUsersTried) => {
+    if (totalUsersTried === 0) {
+      return null;
+    }
+    const level = (100 - (totalScores + 100) / (totalUsersTried + 2)) / 10;
     return (
-      <Tag round intent={Intent.PRIMARY}>
-        <span className="problemset-problem-card__stats--large">{avgScore}</span> avg score / {totalUsersTried} users
+      <Tag intent={Intent.PRIMARY} rightIcon="star">
+        level <span className="problemset-problem-card__stats--large">{level.toFixed(1)}</span>
       </Tag>
     );
   };
 
-  const renderACStats = totalUsersAccepted => {
+  const renderACStats = (totalUsersAccepted, totalUsersTried) => {
     if (totalUsersAccepted > 0) {
       return (
-        <Tag round intent={Intent.PRIMARY}>
-          <span className="problemset-problem-card__stats--large">{totalUsersAccepted}</span> solved
+        <Tag intent={Intent.NONE}>
+          solved by <span className="problemset-problem-card__stats--large">{totalUsersAccepted}</span> /{' '}
+          {totalUsersTried} users
         </Tag>
       );
     }
@@ -80,7 +85,8 @@ export function ProblemSetProblemCard({ problemSet, problem, problemName, hasEdi
       elevation={1}
     >
       <h4 data-key="name">
-        {problem.alias}. {problemName}
+        {showAlias && <>{problem.alias}. </>}
+        {problemName}
         {renderProgress()}
       </h4>
       {renderProgressBar()}

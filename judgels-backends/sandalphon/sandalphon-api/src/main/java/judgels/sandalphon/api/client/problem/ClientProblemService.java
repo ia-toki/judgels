@@ -100,4 +100,10 @@ public interface ClientProblemService {
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @QueryParam("userJid") String userJid,
             Set<String> slugs);
+
+    @POST
+    @Path("/tags")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Set<String> getProblemJidsByTags(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, Set<String> tags);
 }

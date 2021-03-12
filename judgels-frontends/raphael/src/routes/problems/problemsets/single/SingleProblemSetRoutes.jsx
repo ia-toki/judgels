@@ -60,7 +60,7 @@ function createSingleProblemSetRoutes() {
   });
 
   const mapDispatchToProps = {
-    onClickBack: () => push('/problems'),
+    onClickBack: () => push('/problems/problemsets'),
   };
 
   return withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetRoutes));

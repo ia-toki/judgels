@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
-import { ProblemSetProblemCard } from '../ProblemSetProblemCard/ProblemSetProblemCard';
+import { ProblemSetProblemCard } from '../../../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
@@ -91,6 +91,7 @@ export class ProblemSetProblemsPage extends Component {
       const props = {
         problemSet: this.props.problemSet,
         problem,
+        showAlias: true,
         problemName: getProblemName(problemsMap[problem.problemJid], this.state.defaultLanguage),
         hasEditorial: problemMetadatasMap[problem.problemJid].hasEditorial,
         progress: problemProgressesMap[problem.problemJid],

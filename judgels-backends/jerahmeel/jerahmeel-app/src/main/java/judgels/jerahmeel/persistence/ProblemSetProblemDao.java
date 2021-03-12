@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.persistence.Dao;
+import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
 public interface ProblemSetProblemDao extends Dao<ProblemSetProblemModel> {
@@ -13,4 +14,5 @@ public interface ProblemSetProblemDao extends Dao<ProblemSetProblemModel> {
     Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(String problemSetJid, String problemAlias);
     List<ProblemSetProblemModel> selectAllByProblemSetJid(String problemSetJid, SelectionOptions options);
     Map<String, Long> selectCountsByProblemSetJids(Set<String> problemSetJids);
+    Page<ProblemSetProblemModel> selectPagedByDifficulty(Set<String> allowedProblemJids, SelectionOptions options);
 }

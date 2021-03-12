@@ -68,6 +68,10 @@ public class ProblemClient {
                 : clientProblemService.translateAllowedSlugsToJids(sandalphonClientAuthHeader, actorJid, slugs);
     }
 
+    public Set<String> getProblemJidsByTags(Set<String> tags) {
+        return clientProblemService.getProblemJidsByTags(sandalphonClientAuthHeader, tags);
+    }
+
     public ProblemInfo getProblem(String problemJid) {
         return problemCache.get(problemJid);
     }

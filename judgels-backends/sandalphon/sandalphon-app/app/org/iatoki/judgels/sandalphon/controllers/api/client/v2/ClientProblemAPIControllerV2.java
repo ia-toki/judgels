@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,6 +29,7 @@ import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
+import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemStore;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import play.db.jpa.Transactional;
@@ -41,6 +44,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     private final ObjectMapper mapper;
     private final ClientUserService userService;
     private final ProblemStore problemStore;
+    private final ProblemTagStore problemTagStore;
     private final ProgrammingProblemStore programmingProblemStore;
     private final BundleItemStore bundleItemStore;
     private final ItemProcessorRegistry itemProcessorRegistry;
@@ -50,6 +54,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             ObjectMapper mapper,
             ClientUserService userService,
             ProblemStore problemStore,
+            ProblemTagStore problemTagStore,
             ProgrammingProblemStore programmingProblemStore,
             BundleItemStore bundleItemStore,
             ItemProcessorRegistry itemProcessorRegistry) {
@@ -58,6 +63,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         this.mapper = mapper;
         this.userService = userService;
         this.problemStore = problemStore;
+        this.problemTagStore = problemTagStore;
         this.programmingProblemStore = programmingProblemStore;
         this.bundleItemStore = bundleItemStore;
         this.itemProcessorRegistry = itemProcessorRegistry;
@@ -222,6 +228,18 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         }
 
         return okAsJson(req, result);
+    }
+
+    @Transactional(readOnly = true)
+    public Result findProblemJidsByTags(Http.Request req) {
+        Set<String> tags = new HashSet<>();
+        for (JsonNode tagNode : req.body().asJson()) {
+            String tag = tagNode.asText();
+            tags.add(tag);
+        }
+
+        Set<String> problemJids = problemTagStore.filterProblemJidsByTags(null, tags);
+        return okAsJson(req, problemJids);
     }
 
     private ProblemInfo getProblemInfo(String problemJid) {
