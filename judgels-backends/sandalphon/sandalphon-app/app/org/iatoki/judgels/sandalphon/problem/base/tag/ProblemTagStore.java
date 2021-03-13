@@ -45,6 +45,10 @@ public class ProblemTagStore {
         Set<String> tagsToAdd = Sets.newHashSet();
         Set<String> tagsToRemove = Sets.newHashSet();
 
+        removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
+        removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-public");
+        upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
+
         if (problemStore.getStatementAvailableLanguages(null, problemJid).containsKey("en-US")) {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "statement-en");
         } else {
@@ -112,6 +116,7 @@ public class ProblemTagStore {
     public Set<String> filterProblemJidsByTags(Set<String> initialProblemJids, Set<String> tags) {
         Set<String> problemJids = initialProblemJids;
 
+        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("visibility-private", "visibility-public"));
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("statement-en"));
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("editorial-no", "editorial-yes", "editorial-en"));
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("engine-batch", "engine-interactive", "engine-output-only", "engine-functional"));

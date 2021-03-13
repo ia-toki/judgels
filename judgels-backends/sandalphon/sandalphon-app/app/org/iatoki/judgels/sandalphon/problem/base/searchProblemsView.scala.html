@@ -36,6 +36,14 @@
 
                     <div class="form-group">
                         <div class="col-md-12">
+                            <label>Visibility</label>
+                            @checkboxView("visibility-private", "private")
+                            @checkboxView("visibility-public", "public")
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
                             <label>Statement</label>
                             @checkboxView("statement-en", "has English statement")
                         </div>
