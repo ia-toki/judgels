@@ -84,13 +84,17 @@ public class ProblemTagStore {
             }
 
             removeTag(curTags, tagsToAdd, tagsToRemove, "scoring-partial");
+            removeTag(curTags, tagsToAdd, tagsToRemove, "scoring-subtasks");
             removeTag(curTags, tagsToAdd, tagsToRemove, "scoring-absolute");
 
-            if (gradingEngine.endsWith("WithSubtasks")
-                    && programmingProblemStore.getGradingConfig(null, problemJid).getSubtasks().size() > 1) {
-                upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-partial");
+            if (gradingEngine.endsWith("WithSubtasks")) {
+                if (programmingProblemStore.getGradingConfig(null, problemJid).getSubtasks().size() == 1) {
+                    upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-absolute");
+                } else {
+                    upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-subtasks");
+                }
             } else {
-                upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-absolute");
+                upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-partial");
             }
         }
 
