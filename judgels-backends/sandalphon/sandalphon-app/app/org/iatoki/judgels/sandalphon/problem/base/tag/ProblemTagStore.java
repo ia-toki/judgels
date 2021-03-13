@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.gabriel.api.GradingConfig;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
@@ -91,14 +92,20 @@ public class ProblemTagStore {
             removeTag(curTags, tagsToAdd, tagsToRemove, "scoring-subtasks");
             removeTag(curTags, tagsToAdd, tagsToRemove, "scoring-absolute");
 
+            GradingConfig gradingConfig = programmingProblemStore.getGradingConfig(null, problemJid);
+
             if (gradingEngine.endsWith("WithSubtasks")) {
-                if (programmingProblemStore.getGradingConfig(null, problemJid).getSubtasks().size() == 1) {
+                if (gradingConfig.getSubtasks().size() == 1) {
                     upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-absolute");
                 } else {
                     upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-subtasks");
                 }
             } else {
-                upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-partial");
+                if (gradingConfig.getTestData().size() == 2 && gradingConfig.getTestData().get(1).getTestCases().size() == 1) {
+                    upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-absolute");
+                } else {
+                    upsertTag(curTags, tagsToAdd, tagsToRemove, "scoring-partial");
+                }
             }
         }
 
