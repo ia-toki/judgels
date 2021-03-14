@@ -38,7 +38,7 @@ class ProblemsPage extends Component {
   render() {
     return (
       <Card title="Browse problems">
-        <p>Sorted by (dynamic) difficulty level.</p>
+        <p>Sorted by (dynamic) difficulty level. We're still experimenting with level computation.</p>
         <hr />
         {this.renderProblems()}
         {this.renderPagination()}
