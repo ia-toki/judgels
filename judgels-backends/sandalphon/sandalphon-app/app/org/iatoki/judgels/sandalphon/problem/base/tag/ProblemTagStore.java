@@ -1,5 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.base.tag;
 
+import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.DISABLED;
+import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.ENABLED;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.List;
@@ -50,7 +53,7 @@ public class ProblemTagStore {
         removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-public");
         upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
 
-        if (problemStore.getStatementAvailableLanguages(null, problemJid).containsKey("en-US")) {
+        if (problemStore.getStatementAvailableLanguages(null, problemJid).getOrDefault("en-US", DISABLED) == ENABLED) {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "statement-en");
         } else {
             removeTag(curTags, tagsToAdd, tagsToRemove, "statement-en");
@@ -62,7 +65,7 @@ public class ProblemTagStore {
         if (problemStore.hasEditorial(null, problemJid)) {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-yes");
 
-            if (problemStore.getEditorialAvailableLanguages(null, problemJid).containsKey("en-US")) {
+            if (problemStore.getEditorialAvailableLanguages(null, problemJid).getOrDefault("en-US", DISABLED) == ENABLED) {
                 upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
             } else {
                 removeTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
