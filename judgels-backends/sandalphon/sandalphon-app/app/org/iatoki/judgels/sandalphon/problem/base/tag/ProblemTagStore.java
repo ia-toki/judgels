@@ -127,7 +127,7 @@ public class ProblemTagStore {
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("statement-en"));
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("editorial-no", "editorial-yes", "editorial-en"));
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("engine-batch", "engine-interactive", "engine-output-only", "engine-functional"));
-        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("scoring-partial", "scoring-absolute"));
+        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("scoring-partial", "scoring-subtasks", "scoring-absolute"));
 
         return problemJids;
     }
