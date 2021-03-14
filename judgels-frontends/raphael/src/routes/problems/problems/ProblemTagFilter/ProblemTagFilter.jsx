@@ -100,6 +100,7 @@ class ProblemTagFilter extends Component {
       search: stringify({
         ...queries,
         tags,
+        page: 1,
       }),
     });
 
