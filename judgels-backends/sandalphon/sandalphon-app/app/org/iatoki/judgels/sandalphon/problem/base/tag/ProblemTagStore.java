@@ -51,7 +51,12 @@ public class ProblemTagStore {
 
         removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
         removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-public");
-        upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
+
+        if (curTags.contains("visibility-public")) {
+            upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-public");
+        } else {
+            upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
+        }
 
         if (problemStore.getStatementAvailableLanguages(null, problemJid).getOrDefault("en-US", DISABLED) == ENABLED) {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "statement-en");
