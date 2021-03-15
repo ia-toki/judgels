@@ -399,15 +399,6 @@ public class ProblemStore extends AbstractProblemStore {
         }
     }
 
-    public void forceCommit(String userJid, String problemJid, String title, String text) {
-        Path root = getOriginDirPath(problemJid);
-
-        problemGit.addAll(root);
-        problemGit.commit(root, userJid, "no@email.com", title, text);
-        ProblemModel model = problemDao.findByJid(problemJid);
-        problemDao.update(model);
-    }
-
     public boolean commitThenMergeUserClone(String userJid, String problemJid, String title, String text) {
         Path root = getCloneDirPath(userJid, problemJid);
 
