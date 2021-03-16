@@ -28,15 +28,6 @@ public class PublicProblemAPIControllerV2 extends AbstractJudgelsAPIController {
     }
 
     @Transactional
-    public Result renameDefaultLanguageToId(Http.Request req, String problemJid) {
-        problemStore.addStatementLanguage(null, problemJid, "id-ID");
-        problemStore.makeStatementDefaultLanguage(null, problemJid, "id-ID");
-        problemStore.disableStatementLanguage(null, problemJid, "en-US");
-        problemStore.forceCommit("JIDUSERkFl4m7hVGs5JUF76aS8g", problemJid, "Fix statement language to Indonesian", "");
-        return ok();
-    }
-
-    @Transactional
     public Result refreshProblemDerivedTags(Http.Request req, long lastProblemId, long limit) {
         return okAsJson(req, problemTagStore.refreshProblemDerivedTags(lastProblemId, limit));
     }
