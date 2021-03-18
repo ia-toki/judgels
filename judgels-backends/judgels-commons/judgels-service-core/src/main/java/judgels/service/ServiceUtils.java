@@ -72,6 +72,8 @@ public class ServiceUtils {
         int charHeight = 16;
 
         String[] textList = text.split("\\r?\\n");
+        int maxDigitLineNumber = String.valueOf(textList.length).length();
+        String lineTemplate = String.format(" %%%dd  | %%s", maxDigitLineNumber);
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
         int longestText = Arrays.asList(textList).stream().map(String::length).max(Integer::compareTo).get();
         int width = charWidth * longestText + 2 * margin;
@@ -85,8 +87,9 @@ public class ServiceUtils {
         g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
         g2d.setColor(Color.BLACK);
         int nextLinePosition = margin;
-        for (String s : textList) {
-            g2d.drawString(s.replaceAll("\t", "    "), 0, nextLinePosition);
+        for (int i = 0; i < textList.length; i++) {
+            String s = textList[i];
+            g2d.drawString(String.format(lineTemplate, i+1, s.replaceAll("\t", "    ")), 0, nextLinePosition);
             nextLinePosition = nextLinePosition + charHeight;
         }
         g2d.dispose();
