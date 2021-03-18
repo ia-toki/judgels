@@ -14,13 +14,24 @@ registerLanguage('java', java);
 registerLanguage('pascal', pascal);
 registerLanguage('python', python);
 
-const customStyle = {
-  padding: '5px',
-};
+const customStyle = {};
 
 export function SourceCode({ language, children }) {
   return (
-    <SyntaxHighlighter style={coy} customStyle={customStyle} language={language}>
+    <SyntaxHighlighter
+      style={coy}
+      customStyle={customStyle}
+      language={language}
+      wrapLines={true}
+      showLineNumbers={true}
+      lineNumberContainerStyle={{
+        backgroundColor: '#f0f0f0',
+        float: 'left',
+        paddingLeft: '10px',
+        paddingRight: '10px',
+        marginRight: '1px',
+      }}
+    >
       {children}
     </SyntaxHighlighter>
   );
