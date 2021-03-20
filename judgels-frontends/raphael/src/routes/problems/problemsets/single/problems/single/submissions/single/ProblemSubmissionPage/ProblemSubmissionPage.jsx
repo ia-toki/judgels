@@ -5,10 +5,12 @@ import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { NotFoundError } from '../../../../../../../../../modules/api/error';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
+import * as toastActions from '../../../../../../../../../modules/toast/toastActions';
 
 export class ProblemSubmissionPage extends Component {
   state = {
@@ -23,8 +25,14 @@ export class ProblemSubmissionPage extends Component {
   async componentDidMount() {
     const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
       +this.props.match.params.submissionId,
-      this.props.statementLanguage
+      this.props.statementLanguage,
+      this.props.problemJid
     );
+    if (data.submission.problemJid !== this.props.problemJid) {
+      const error = new NotFoundError();
+      toastActions.showErrorToast(error);
+      throw error;
+    }
     const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
     this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
     this.setState({

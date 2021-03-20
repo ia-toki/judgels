@@ -40,6 +40,7 @@ function ContentWithSidebar({
   stickyWidget1,
   stickyWidget2,
   smallContent,
+  problemJid,
 }) {
   const renderSidebar = () => {
     const sidebarItems = items
@@ -116,10 +117,11 @@ function ContentWithSidebar({
   const renderContent = () => {
     const components = items.map(item => {
       const RouteC = item.routeComponent;
+      const ComponentC = item.component;
       const props = {
         exact: item.id === '@',
         path: resolveUrl(match.url, item.id),
-        component: item.component,
+        render: props => <ComponentC {...props} problemJid={problemJid} />,
       };
       return <RouteC key={item.id} {...props} />;
     });

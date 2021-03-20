@@ -84,6 +84,7 @@ function SingleProblemSetProblemRoutes({ match, problemSet, problem, onClickBack
     ),
     stickyWidget1: ProblemMetadataWidget,
     stickyWidget2: problem.type === ProblemType.Programming ? ProblemStatsWidget : undefined,
+    problemJid: problem.problemJid,
   };
 
   return (
