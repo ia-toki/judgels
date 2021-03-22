@@ -24,7 +24,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
@@ -71,14 +73,17 @@ public class ServiceUtils {
         int charWidth = 8;
         int charHeight = 16;
 
-        String[] textList = text.split("\\r?\\n");
-        int maxDigitLineNumber = String.valueOf(textList.length).length();
+        List<String> textList = Arrays.asList(text.split("\\r?\\n"))
+                .stream()
+                .map(s -> s.replaceAll("\t", "    "))
+                .collect(Collectors.toList());
+        int maxDigitLineNumber = String.valueOf(textList.size()).length();
         String lineNumTemplate = String.format(" %%%dd | ", maxDigitLineNumber);
-        int prefixDigitCount = String.format(lineNumTemplate, 0).length();
+        int prefixCharCount = String.format(lineNumTemplate, 0).length();
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
-        int longestText = Arrays.asList(textList).stream().map(String::length).max(Integer::compareTo).get();
-        int width = charWidth * longestText + 2 * margin;
-        int height = charHeight * textList.length + 2 * margin;
+        int longestText = textList.stream().map(String::length).max(Integer::compareTo).get();
+        int width = charWidth * (prefixCharCount + longestText) + 2 * margin;
+        int height = charHeight * textList.size() + 2 * margin;
 
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = img.createGraphics();
@@ -87,12 +92,12 @@ public class ServiceUtils {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
         int nextLinePosition = margin;
-        for (int i = 0; i < textList.length; i++) {
-            String s = textList[i];
+        for (int i = 0; i < textList.size(); i++) {
+            String s = textList.get(i);
             g2d.setColor(Color.BLUE);
             g2d.drawString(String.format(lineNumTemplate, i + 1), 0, nextLinePosition);
             g2d.setColor(Color.BLACK);
-            g2d.drawString(s.replaceAll("\t", "    "), prefixDigitCount * charWidth, nextLinePosition);
+            g2d.drawString(s, prefixCharCount * charWidth, nextLinePosition);
             nextLinePosition += charHeight;
         }
         g2d.dispose();
