@@ -8,6 +8,7 @@ import { SubmissionDetails } from '../../../../../../../../../components/Submiss
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
+import { selectProblemSetProblem } from '../../../../modules/problemSetProblemSelectors';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 import * as toastActions from '../../../../../../../../../modules/toast/toastActions';
@@ -25,10 +26,9 @@ export class ProblemSubmissionPage extends Component {
   async componentDidMount() {
     const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
       +this.props.match.params.submissionId,
-      this.props.statementLanguage,
-      this.props.problemJid
+      this.props.statementLanguage
     );
-    if (data.submission.problemJid !== this.props.problemJid) {
+    if (data.submission.problemJid !== this.props.problem.problemJid) {
       const error = new NotFoundError();
       toastActions.showErrorToast(error);
       throw error;
@@ -86,6 +86,7 @@ export class ProblemSubmissionPage extends Component {
 const mapStateToProps = state => ({
   problemSet: selectProblemSet(state),
   statementLanguage: selectStatementLanguage(state),
+  problem: selectProblemSetProblem(state),
 });
 
 const mapDispatchToProps = {

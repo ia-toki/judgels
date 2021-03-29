@@ -4,7 +4,7 @@ import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrappe
 import ProblemSubmissionsPage from './ProblemSubmissionsPage/ProblemSubmissionsPage';
 import ProblemSubmissionPage from './single/ProblemSubmissionPage/ProblemSubmissionPage';
 
-function ProblemSubmissionRoutes({ problemJid }) {
+function ProblemSubmissionRoutes() {
   return (
     <div>
       <Switch>
@@ -17,7 +17,7 @@ function ProblemSubmissionRoutes({ problemJid }) {
 
         <Route
           path="/problems/:problemSetSlug/:problemAlias/submissions/:submissionId"
-          render={props => <ProblemSubmissionPage {...props} problemJid={problemJid} />}
+          component={ProblemSubmissionPage}
         />
       </Switch>
     </div>
