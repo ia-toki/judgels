@@ -14,12 +14,4 @@ public final class JudgelsController extends AbstractJudgelsController {
     public Result logo() {
         return redirect(routes.Assets.at("images/logo.png"));
     }
-
-    public Result coloredLogo() {
-        return redirect(routes.Assets.at("images/logo-colored.png"));
-    }
-
-    public Result checkHealth() {
-        return ok("");
-    }
 }

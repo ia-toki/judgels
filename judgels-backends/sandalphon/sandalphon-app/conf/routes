@@ -5,8 +5,6 @@ GET         /vassets/*file          controllers.Assets.versioned(path="/public",
 # Home page
 GET        /favicon                 @org.iatoki.judgels.play.JudgelsController.favicon()
 GET        /logo                    @org.iatoki.judgels.play.JudgelsController.logo()
-GET        /coloredLogo             @org.iatoki.judgels.play.JudgelsController.coloredLogo()
-GET        /checkHealth             @org.iatoki.judgels.play.JudgelsController.checkHealth()
 
 
 GET        /login                            @org.iatoki.judgels.jophiel.JophielClientController.login(req: Request)
