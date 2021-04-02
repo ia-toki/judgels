@@ -17,6 +17,11 @@
         <link rel="canonical" href="@generalConfig.getCanonicalUrl" itemprop="url">
         <title itemprop='name'>@generalConfig.getTitle @if(!pageTitle.isEmpty) { - @pageTitle }</title>
         <link rel="shortcut icon" type="image/ico" href='@org.iatoki.judgels.play.routes.JudgelsController.favicon()'>
+        <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("stylesheets/reset.css")'>
+        <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("lib/bootstrap/css/bootstrap.min.css")'>
+        <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("lib/select2/css/select2.min.css")'>
+        <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("lib/Eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.css")'>
+        <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("lib/jquery-ui/jquery-ui.min.css")'>
         <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("stylesheets/main.css")'>
         <script type="text/javascript" src="@controllers.routes.Assets.at("lib/requirejs/require.js")"></script>
         <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/settings.js")"></script>
