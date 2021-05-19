@@ -1,11 +1,11 @@
 plugins {
     id 'idea'
     id 'java-library'
+    id 'org.gradle.playframework'
 }
 
 apply from: '../gradle/play.gradle'
-apply plugin: 'org.gradle.playframework-less'
-apply plugin: 'org.gradle.playframework-webjars'
+apply plugin: judgels.play.PlayWebJarsPlugin
 
 sourceSets.main {
     twirl {

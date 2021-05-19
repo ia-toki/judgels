@@ -1,18 +1,13 @@
 buildscript {
     repositories {
+        gradlePluginPortal()
         mavenCentral()
-        maven {
-            url 'https://dl.bintray.com/palantir/releases'
-        }
-        maven {
-            url 'https://dl.bintray.com/ia-toki/releases'
-        }
+        jcenter()
     }
 
     dependencies {
         classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
         classpath "com.palantir.sls-packaging:gradle-sls-packaging:$gradleSlsPackagingVersion"
-        classpath 'org.iatoki:gradle-playframework:0.15'
     }
 }
 
@@ -24,10 +19,6 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
-
-        maven {
-            url 'https://dl.bintray.com/palantir/releases'
-        }
     }
 
     group 'org.iatoki.judgels'
