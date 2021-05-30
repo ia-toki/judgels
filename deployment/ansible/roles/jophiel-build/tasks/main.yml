@@ -1,9 +1,11 @@
 - block:
     - name: Build jophiel image and push it to DockerHub
       docker_image:
-        path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
+        source: build
+        force_source: yes
         name: judgels/jophiel
-        force: yes
         push: yes
-        buildargs:
-          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+        build:
+          path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
+          args:
+            VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

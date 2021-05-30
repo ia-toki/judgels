@@ -1,9 +1,11 @@
 - block:
   - name: Build gabriel image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../../../judgels-backends/gabriel/gabriel-dist"
+      source: build
+      force_source: yes
       name: judgels/gabriel
-      force: yes
       push: yes
-      buildargs:
-        VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/gabriel/gabriel-dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

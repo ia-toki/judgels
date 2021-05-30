@@ -1,9 +1,11 @@
 - block:
     - name: Build jerahmeel image and push it to DockerHub
       docker_image:
-        path: "{{ playbook_dir }}/../../../judgels-backends/jerahmeel/jerahmeel-dist"
+        source: build
+        force_source: yes
         name: judgels/jerahmeel
-        force: yes
         push: yes
-        buildargs:
-          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+        build:
+          path: "{{ playbook_dir }}/../../../judgels-backends/jerahmeel/jerahmeel-dist"
+          args:
+            VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

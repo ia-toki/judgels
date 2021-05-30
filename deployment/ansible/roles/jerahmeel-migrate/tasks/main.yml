@@ -18,7 +18,8 @@
     docker_image:
       name: judgels/jerahmeel
       tag: "{{ judgels_version | default('latest', true) }}"
-      force: yes
+      source: pull
+      force_source: yes
 
   - name: Run a jerahmeel container to do db migration
     docker_container:

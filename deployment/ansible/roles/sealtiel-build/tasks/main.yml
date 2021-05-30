@@ -1,9 +1,11 @@
 - block:
   - name: Build sealtiel image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../../../judgels-backends/sealtiel/sealtiel-dist"
+      source: build
+      force_source: yes
       name: judgels/sealtiel
-      force: yes
       push: yes
-      buildargs:
-        VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/sealtiel/sealtiel-dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

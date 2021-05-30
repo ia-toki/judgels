@@ -1,9 +1,11 @@
 - block:
   - name: Build sandalphon image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-app"
+      source: build
+      force_source: yes
       name: judgels/sandalphon
-      force: yes
       push: yes
-      buildargs:
-        VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-app"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

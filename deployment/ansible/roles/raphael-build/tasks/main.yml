@@ -1,9 +1,11 @@
 - block:
   - name: Build raphael image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../../../judgels-frontends/raphael/dist"
+      source: build
+      force_source: yes
       name: judgels/raphael
-      force: yes
       push: yes
-      buildargs:
-        VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-frontends/raphael/dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

@@ -98,7 +98,7 @@ jobs:
           fetch-depth: 50
 
       - name: Set up Docker
-        run: pip install docker
+        run: pipx inject ansible-base docker six
 
       - id: changed-files
         name: Check changed files
