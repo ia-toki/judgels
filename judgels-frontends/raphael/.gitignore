@@ -6,6 +6,7 @@ node_modules/
 raphael.js
 
 *.css
+*.css.map
 !public/skins/**/*.css
 
 .idea/
