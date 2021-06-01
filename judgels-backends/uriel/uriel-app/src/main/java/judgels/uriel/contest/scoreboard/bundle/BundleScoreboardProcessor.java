@@ -90,7 +90,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                                     .filter(submission -> submission.getProblemJid().equals(problemJid))
                                     .count()
                             )
-                            .map(Long::intValue)
+                            .map(c -> c.intValue())
                             .collect(Collectors.toList());
 
                     Optional<Instant> lastAnsweredTime = submissionsByUserJid
