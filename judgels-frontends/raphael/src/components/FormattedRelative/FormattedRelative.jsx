@@ -1,7 +1,11 @@
 import { FormattedRelativeTime } from 'react-intl';
 
 import { selectUnit } from '@formatjs/intl-utils';
-import '@formatjs/intl-relativetimeformat/polyfill-locales';
+import '@formatjs/intl-locale/polyfill';
+import '@formatjs/intl-pluralrules/polyfill';
+import '@formatjs/intl-relativetimeformat/polyfill';
+// prettier-ignore
+import '@formatjs/intl-relativetimeformat/locale-data/en'
 
 export function FormattedRelative(props) {
   if (!props.value) {
