@@ -7,7 +7,7 @@ import { LoadingState } from '../../../../../components/LoadingState/LoadingStat
 
 import { MAX_AVATAR_FILE_SIZE } from '../../../modules/avatarActions';
 
-import './ChangeAvatarPanel.css';
+import './ChangeAvatarPanel.scss';
 
 export class ChangeAvatarPanel extends Component {
   state = {

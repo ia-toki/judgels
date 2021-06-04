@@ -2,7 +2,7 @@ import { Button, Callout } from '@blueprintjs/core';
 
 import { moduleDescriptionsMap, moduleTitlesMap } from '../../../../../../modules/api/uriel/contestModule';
 
-import './ContestModuleCard.css';
+import './ContestModuleCard.scss';
 
 export function ContestModuleCard({ type, intent, buttonIntent, buttonText, buttonOnClick }) {
   const clickButton = () => {

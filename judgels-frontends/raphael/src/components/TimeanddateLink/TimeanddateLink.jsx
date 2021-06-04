@@ -1,6 +1,6 @@
 import { APP_CONFIG, Mode } from '../../conf';
 
-import './TimeanddateLink.css';
+import './TimeanddateLink.scss';
 
 export function TimeanddateLink({ time, message, children }) {
   const onClick = e => {

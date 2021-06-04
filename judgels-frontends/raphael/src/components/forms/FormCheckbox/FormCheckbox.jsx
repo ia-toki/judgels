@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { getIntentClassName } from '../meta';
 
-import './FormCheckbox.css';
+import './FormCheckbox.scss';
 
 export function FormCheckbox({ input, label, small, meta }) {
   const { value, onChange, ...inputProps } = input;

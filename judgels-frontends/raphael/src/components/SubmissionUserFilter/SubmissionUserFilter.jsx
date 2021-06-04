@@ -3,7 +3,7 @@ import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import './SubmissionUserFilter.css';
+import './SubmissionUserFilter.scss';
 
 function SubmissionUserFilter({ location, push }) {
   const isMine = () => {

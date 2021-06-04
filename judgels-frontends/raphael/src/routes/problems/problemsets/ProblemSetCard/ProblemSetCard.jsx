@@ -3,7 +3,7 @@ import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
 
-import './ProblemSetCard.css';
+import './ProblemSetCard.scss';
 
 export function ProblemSetCard({ problemSet, archiveDescription, progress, profilesMap }) {
   const description = (archiveDescription || '') + (problemSet.description || '');

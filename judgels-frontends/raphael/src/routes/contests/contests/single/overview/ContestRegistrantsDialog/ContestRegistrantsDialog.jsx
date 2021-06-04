@@ -9,7 +9,7 @@ import { getCountryName } from '../../../../../../assets/data/countries';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
-import './ContestRegistrantsDialog.css';
+import './ContestRegistrantsDialog.scss';
 
 class ContestRegistrantsDialog extends Component {
   state = {

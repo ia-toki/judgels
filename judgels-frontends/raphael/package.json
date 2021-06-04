@@ -45,18 +45,12 @@
     "typeface-roboto": "^0.0.54"
   },
   "scripts": {
-    "start": "npm-run-all build:css --parallel watch:css start:js",
-    "build": "npm-run-all build:css build:js",
-    "lint": "npm-run-all lint:prettier",
-    "test": "npm-run-all build:css test:js",
     "ci": "npm-run-all lint test",
-    "start:js": "react-scripts start",
-    "build:js": "react-scripts build",
-    "build:css": "sass src/",
-    "watch:css": "sass src/ --watch",
-    "lint:prettier": "prettier --list-different 'src/**/*.js' 'src/**/*.jsx'",
-    "format:prettier": "prettier --write 'src/**/*.ks' 'src/**/*.jsx'",
-    "test:js": "TZ=Asia/Jakarta react-scripts test --env=jsdom",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "lint": "prettier --list-different 'src/**/*.js' 'src/**/*.jsx'",
+    "format": "prettier --write 'src/**/*.ks' 'src/**/*.jsx'",
+    "test": "TZ=Asia/Jakarta react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "devDependencies": {

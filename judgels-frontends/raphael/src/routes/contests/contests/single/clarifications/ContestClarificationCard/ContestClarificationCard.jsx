@@ -4,7 +4,7 @@ import { FormattedRelative } from '../../../../../../components/FormattedRelativ
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ContestClarificationAnswerBox } from '../ContestClarificationAnswerBox/ContestClarificationAnswerBox';
 
-import './ContestClarificationCard.css';
+import './ContestClarificationCard.scss';
 
 export function ContestClarificationCard({
   contest,

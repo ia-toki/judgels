@@ -1,7 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import './ScoreboardTable.css';
+import './ScoreboardTable.scss';
 
 export function ScoreboardTable({ className, state, children }) {
   const renderHeader = () => {

@@ -9,7 +9,7 @@ import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
 import * as problemSetActions from '../modules/problemSetActions';
 
-import './ProblemSetsPage.css';
+import './ProblemSetsPage.scss';
 
 class ProblemSetsPage extends Component {
   static PAGE_SIZE = 20;

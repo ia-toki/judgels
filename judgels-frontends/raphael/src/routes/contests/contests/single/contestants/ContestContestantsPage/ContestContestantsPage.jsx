@@ -14,7 +14,7 @@ import { selectContest } from '../../../modules/contestSelectors';
 import * as contestContestantActions from '../../modules/contestContestantActions';
 import * as contestActions from '../../../modules/contestActions';
 
-import './ContestContestantsPage.css';
+import './ContestContestantsPage.scss';
 
 class ContestContestantsPage extends Component {
   static PAGE_SIZE = 1000;

@@ -4,7 +4,7 @@ import { FormattedDate } from '../../../../../../components/FormattedDate/Format
 import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 
-import './ContestContestantsTable.css';
+import './ContestContestantsTable.scss';
 
 export function ContestContestantsTable({ contest, virtualModuleConfig, contestants, profilesMap, now }) {
   const isVirtualContest = !!virtualModuleConfig;

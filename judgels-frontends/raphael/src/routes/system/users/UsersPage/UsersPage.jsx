@@ -14,7 +14,7 @@ import { UserRef } from '../../../../components/UserRef/UserRef';
 import { OrderDir } from '../../../../modules/api/pagination';
 import * as userActions from '../../modules/userActions';
 
-import './UsersPage.css';
+import './UsersPage.scss';
 
 export class UsersPage extends Component {
   static PAGE_SIZE = 250;

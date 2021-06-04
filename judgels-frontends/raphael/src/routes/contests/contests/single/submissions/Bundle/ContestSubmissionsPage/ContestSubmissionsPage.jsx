@@ -18,7 +18,7 @@ import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bu
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
-import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
+import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
 export class ContestSubmissionsPage extends Component {
   static PAGE_SIZE = 20;

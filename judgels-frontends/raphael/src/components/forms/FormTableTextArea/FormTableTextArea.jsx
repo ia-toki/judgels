@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getIntentClassName } from '../meta';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 
-import './FormTableTextArea.css';
+import './FormTableTextArea.scss';
 
 export function FormTableTextArea(props) {
   const { input, meta } = props;

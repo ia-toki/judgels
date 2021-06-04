@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import ContestAnnouncementEditForm from '../ContestAnnouncementEditForm/ContestAnnouncementEditForm';
 
-import './ContestAnnouncementEditDialog.css';
+import './ContestAnnouncementEditDialog.scss';
 
 export function ContestAnnouncementEditDialog({ contest, announcement, onToggleEditDialog, onUpdateAnnouncement }) {
   const renderDialogForm = (fields, submitButton) => (

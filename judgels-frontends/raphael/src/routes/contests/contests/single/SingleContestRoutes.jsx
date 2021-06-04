@@ -33,7 +33,7 @@ import { selectContest, selectIsEditingContest } from '../modules/contestSelecto
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
 import { contestIcon } from './modules/contestIcon';
 
-import './SingleContestRoutes.css';
+import './SingleContestRoutes.scss';
 
 function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfig, onSetNotEditingContest }) {
   // Optimization:

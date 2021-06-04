@@ -9,7 +9,7 @@ import { selectUserJid, selectUsername } from '../../../../modules/profileSelect
 import * as avatarActions from '../../../../modules/avatarActions';
 import * as profileActions from '../../modules/profileActions';
 
-import './ProfileSummaryPage.css';
+import './ProfileSummaryPage.scss';
 
 class ProfileSummaryPage extends Component {
   state = {

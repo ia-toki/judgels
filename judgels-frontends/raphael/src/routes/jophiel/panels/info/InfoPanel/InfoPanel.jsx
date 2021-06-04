@@ -5,7 +5,7 @@ import { Card } from '../../../../../components/Card/Card';
 import InfoForm from '../InfoForm/InfoForm';
 import { InfoTable } from '../InfoTable/InfoTable';
 
-import './InfoPanel.css';
+import './InfoPanel.scss';
 
 export class InfoPanel extends Component {
   state = {

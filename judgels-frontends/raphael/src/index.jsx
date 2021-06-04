@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { ConnectedRouter } from 'connected-react-router';
 
-import './styles/index.css';
+import './styles/index.scss';
 
 import { initGA } from './ga';
 import App from './routes/App';

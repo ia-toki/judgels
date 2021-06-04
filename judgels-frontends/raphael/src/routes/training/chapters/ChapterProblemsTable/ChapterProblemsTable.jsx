@@ -1,6 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
 
-import './ChapterProblemsTable.css';
+import './ChapterProblemsTable.scss';
 
 export function ChapterProblemsTable({ response: { data, problemsMap } }) {
   const renderHeader = () => {

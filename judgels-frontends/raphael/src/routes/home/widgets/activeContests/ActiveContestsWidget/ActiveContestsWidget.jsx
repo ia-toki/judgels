@@ -8,7 +8,7 @@ import * as contestActions from '../../../../contests/contests/modules/contestAc
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
 
-import './ActiveContestsWidget.css';
+import './ActiveContestsWidget.scss';
 
 class ActiveContestsWidget extends PureComponent {
   state = {

@@ -21,7 +21,7 @@ import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
 import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardPage';
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
-import './ContestScoreboardPage.css';
+import './ContestScoreboardPage.scss';
 
 export class ContestScoreboardPage extends Component {
   static PAGE_SIZE = 250;

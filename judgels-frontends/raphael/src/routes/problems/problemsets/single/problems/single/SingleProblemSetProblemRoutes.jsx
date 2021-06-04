@@ -15,7 +15,7 @@ import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../modules/problemSetProblemSelectors';
 
-import './SingleProblemSetProblemRoutes.css';
+import './SingleProblemSetProblemRoutes.scss';
 
 function SingleProblemSetProblemRoutes({ match, problemSet, problem, onClickBack }) {
   const clickBack = () => {

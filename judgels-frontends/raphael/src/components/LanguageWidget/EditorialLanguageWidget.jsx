@@ -5,7 +5,7 @@ import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
 import LanguageForm from './LanguageForm/LanguageForm';
 import * as webPrefsActions from '../../modules/webPrefs/webPrefsActions';
 
-import './LanguageWidget.css';
+import './LanguageWidget.scss';
 
 function EditorialLanguageWidget({ defaultLanguage, editorialLanguages, editorialLanguage, onChangeLanguage }) {
   let initialLanguage;

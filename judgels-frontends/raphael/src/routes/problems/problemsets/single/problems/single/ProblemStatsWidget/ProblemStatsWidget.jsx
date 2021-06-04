@@ -10,7 +10,7 @@ import { VerdictProgressTag } from '../../../../../../../components/VerdictProgr
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
-import './ProblemStatsWidget.css';
+import './ProblemStatsWidget.scss';
 
 class ProblemStatsWidget extends Component {
   static TOP_STATS_SIZE = 5;

@@ -1,6 +1,6 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 
-import './ProblemSetsTable.css';
+import './ProblemSetsTable.scss';
 
 export function ProblemSetsTable({ problemSets, archiveSlugsMap, onEditProblemSet, onEditProblemSetProblems }) {
   const renderHeader = () => {

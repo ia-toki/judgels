@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Card } from '../Card/Card';
 
-import './Sidebar.css';
+import './Sidebar.scss';
 
 export class Sidebar extends PureComponent {
   state = { isResponsivePopoverOpen: false };

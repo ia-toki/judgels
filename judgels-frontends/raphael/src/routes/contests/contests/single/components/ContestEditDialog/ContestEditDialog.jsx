@@ -6,7 +6,7 @@ import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditD
 import ContestEditModulesTab from '../ContestEditModulesTab/ContestEditModulesTab';
 import ContestEditConfigsTab from '../ContestEditConfigsTab/ContestEditConfigsTab';
 
-import './ContestEditDialog.css';
+import './ContestEditDialog.scss';
 
 export class ContestEditDialog extends Component {
   state = {

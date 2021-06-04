@@ -7,7 +7,7 @@ import ResendActivationEmailButton from '../../components/ResendActivationEmailB
 import RegisterForm from '../RegisterForm/RegisterForm';
 import * as registerActions from '../modules/registerActions';
 
-import './RegisterPage.css';
+import './RegisterPage.scss';
 
 class RegisterPage extends Component {
   state = {

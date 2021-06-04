@@ -10,7 +10,7 @@ import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 import * as contestActions from '../modules/contestActions';
 
-import './ContestsPage.css';
+import './ContestsPage.scss';
 
 class ContestsPage extends Component {
   static PAGE_SIZE = 20;

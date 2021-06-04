@@ -14,7 +14,7 @@ import * as contestSubmissionActions from '../../../../submissions/Programming/m
 import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-import './ContestProblemPage.css';
+import './ContestProblemPage.scss';
 
 export class ContestProblemPage extends Component {
   state = {

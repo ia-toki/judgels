@@ -19,7 +19,7 @@ import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
-import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
+import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
 export class ProblemSubmissionsPage extends Component {
   static PAGE_SIZE = 20;

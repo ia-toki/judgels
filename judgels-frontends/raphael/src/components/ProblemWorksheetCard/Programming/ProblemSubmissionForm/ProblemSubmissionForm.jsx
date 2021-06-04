@@ -12,7 +12,7 @@ import {
 } from '../../../forms/validations';
 import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
 
-import './ProblemSubmissionForm.css';
+import './ProblemSubmissionForm.scss';
 
 function ProblemSubmissionForm({
   handleSubmit,

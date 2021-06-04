@@ -10,7 +10,7 @@ import { selectContest } from '../../../modules/contestSelectors';
 import * as contestWebActions from '../../modules/contestWebActions';
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
-import './ContestRegistrationCard.css';
+import './ContestRegistrationCard.scss';
 
 class ContestRegistrationCard extends Component {
   state = {

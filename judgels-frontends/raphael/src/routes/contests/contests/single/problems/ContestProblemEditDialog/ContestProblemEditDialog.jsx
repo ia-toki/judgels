@@ -5,7 +5,7 @@ import { Component } from 'react';
 import ContestProblemEditForm from '../ContestProblemEditForm/ContestProblemEditForm';
 import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';
 
-import './ContestProblemEditDialog.css';
+import './ContestProblemEditDialog.scss';
 
 export class ContestProblemEditDialog extends Component {
   state;

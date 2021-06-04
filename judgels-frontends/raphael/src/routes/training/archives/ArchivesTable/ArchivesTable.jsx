@@ -1,6 +1,6 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 
-import './ArchivesTable.css';
+import './ArchivesTable.scss';
 
 export function ArchivesTable({ archives, onEditArchive }) {
   const renderHeader = () => {

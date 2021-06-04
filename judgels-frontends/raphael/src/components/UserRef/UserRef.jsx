@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
 
-import './UserRef.css';
+import './UserRef.scss';
 
 export function UserRef({ profile, showFlag }) {
   const renderFlag = () => {

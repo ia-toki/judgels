@@ -3,7 +3,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 
-import './ContestProblemCard.css';
+import './ContestProblemCard.scss';
 
 export function ContestProblemCard({
   contest,

@@ -10,7 +10,7 @@ import { selectProblemSetProblem } from '../../modules/problemSetProblemSelector
 import { selectEditorialLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
-import './ProblemEditorialDialog.css';
+import './ProblemEditorialDialog.scss';
 
 export class ProblemEditorialDialog extends Component {
   state = {

@@ -5,7 +5,7 @@ import { Card } from '../../../../../../components/Card/Card';
 import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
 import { getCountryName } from '../../../../../../assets/data/countries';
 
-import './BasicProfilePanel.css';
+import './BasicProfilePanel.scss';
 
 export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, country, rating } }) {
   const renderMain = () => {

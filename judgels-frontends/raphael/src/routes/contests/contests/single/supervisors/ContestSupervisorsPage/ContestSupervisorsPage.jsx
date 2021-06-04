@@ -11,7 +11,7 @@ import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
 
-import './ContestSupervisorsPage.css';
+import './ContestSupervisorsPage.scss';
 
 class ContestSupervisorsPage extends Component {
   static PAGE_SIZE = 250;

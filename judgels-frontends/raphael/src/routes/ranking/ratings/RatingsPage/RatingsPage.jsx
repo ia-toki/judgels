@@ -10,7 +10,7 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import * as profileActions from '../../../jophiel/modules/profileActions';
 
-import './RatingsPage.css';
+import './RatingsPage.scss';
 
 class RatingsPage extends Component {
   static PAGE_SIZE = 50;

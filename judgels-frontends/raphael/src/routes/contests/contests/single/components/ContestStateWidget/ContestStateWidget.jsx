@@ -10,7 +10,7 @@ import { selectContestWebConfig } from '../../../modules/contestWebConfigSelecto
 import * as contestWebActions from '../../modules/contestWebActions';
 import * as contestActions from '../../../modules/contestActions';
 
-import './ContestStateWidget.css';
+import './ContestStateWidget.scss';
 
 // TODO(fushar): unit tests
 class ContestStateWidget extends PureComponent {

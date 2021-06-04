@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getIntent } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 
-import './FormTableInput.css';
+import './FormTableInput.scss';
 
 export function FormTableInput({ className, keyClassName, label, labelHelper, meta, inputHelper, children }) {
   return (

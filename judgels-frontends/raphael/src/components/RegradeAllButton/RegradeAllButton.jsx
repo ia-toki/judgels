@@ -1,6 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
 
-import './RegradeAllButton.css';
+import './RegradeAllButton.scss';
 
 export function RegradeAllButton({ onRegradeAll }) {
   return (

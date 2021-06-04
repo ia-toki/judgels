@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getIntent, getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 
-import './FormTextArea.css';
+import './FormTextArea.scss';
 
 export function FormTextArea({ input, label, labelHelper, meta, autoFocus, rows, isCode }) {
   return (

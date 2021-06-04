@@ -7,7 +7,7 @@ import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTe
 import { Required } from '../../../../components/forms/validations';
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 
-import './LoginForm.css';
+import './LoginForm.scss';
 
 const usernameOrEmailField = {
   name: 'usernameOrEmail',

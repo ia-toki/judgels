@@ -10,7 +10,7 @@ import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
 import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersWidget';
 
-import './HomePage.css';
+import './HomePage.scss';
 
 import bannerImage from '../../../assets/images/welcome-banner.jpg';
 import overlayImage from '../../../assets/images/welcome-overlay.png';

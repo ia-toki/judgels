@@ -3,7 +3,7 @@ import { VerdictProgressTag } from '../../../../../../../../components/VerdictPr
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
 
-import './ChapterProblemCard.css';
+import './ChapterProblemCard.scss';
 
 export function ChapterProblemCard({ course, chapter, problem, progress, problemName }) {
   const renderProgress = () => {

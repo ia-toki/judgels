@@ -9,7 +9,7 @@ import { getRatingClass } from '../../modules/api/jophiel/userRating';
 import { selectUserProfile, selectIsUserWebConfigLoaded } from '../../routes/jophiel/modules/userWebSelectors';
 import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
 
-import './UserWidget.css';
+import './UserWidget.scss';
 
 export class UserWidget extends PureComponent {
   state = { avatarUrl: undefined };

@@ -9,7 +9,7 @@ import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleCho
 import { ItemShortAnswerCard } from './ItemShortAnswerCard/ItemShortAnswerCard';
 import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';
 
-import './ProblemStatementCard.css';
+import './ProblemStatementCard.scss';
 
 export function ProblemStatementCard({
   items,

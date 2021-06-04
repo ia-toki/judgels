@@ -3,7 +3,7 @@ import { Field, reduxForm, Form } from 'redux-form';
 
 import { FormTextInput } from '../forms/FormTextInput/FormTextInput';
 
-import './SearchBox.css';
+import './SearchBox.scss';
 
 function SearchBoxForm({ handleSubmit, submitting, isLoading }) {
   const contentField = {

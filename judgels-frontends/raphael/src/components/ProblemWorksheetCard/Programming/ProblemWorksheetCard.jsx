@@ -1,7 +1,7 @@
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
 import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmissionCard';
 
-import './ProblemWorksheetCard.css';
+import './ProblemWorksheetCard.scss';
 
 export function ProblemWorksheetCard({
   alias,

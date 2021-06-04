@@ -4,7 +4,7 @@ import { Card } from '../../../../components/Card/Card';
 import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { getRatingClass } from '../../../../modules/api/jophiel/userRating';
 
-import './RatingSystemPage.css';
+import './RatingSystemPage.scss';
 
 function RatingSystemPage() {
   return (

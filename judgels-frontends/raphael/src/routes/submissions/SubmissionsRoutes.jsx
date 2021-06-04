@@ -6,7 +6,7 @@ import SubmissionsPage from './SubmissionsPage/SubmissionsPage';
 import SubmissionPage from './single/SubmissionPage/SubmissionPage';
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
-import './SubmissionsRoutes.css';
+import './SubmissionsRoutes.scss';
 
 function SubmissionsRoutes() {
   return (

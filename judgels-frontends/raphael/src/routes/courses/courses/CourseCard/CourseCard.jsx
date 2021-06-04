@@ -3,7 +3,7 @@ import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
 
-import './CourseCard.css';
+import './CourseCard.scss';
 
 export function CourseCard({ course: { slug, name, description }, progress }) {
   const renderProgress = () => {

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getIntentClassName } from '../meta';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 
-import './FormTableSelect.css';
+import './FormTableSelect.scss';
 
 export function FormTableSelect(props) {
   const { input, meta, children } = props;

@@ -3,7 +3,7 @@ import { HTMLTable } from '@blueprintjs/core';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import { KatexText } from '../../../KatexText/KatexText';
 
-import './ProblemStatementCard.css';
+import './ProblemStatementCard.scss';
 
 export function ProblemStatementCard({ alias, statement: { title, text }, limits: { timeLimit, memoryLimit } }) {
   const renderTimeLimit = timeLimit => {

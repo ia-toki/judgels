@@ -6,7 +6,7 @@ import { APP_CONFIG } from '../../conf';
 import UserWidget from '../UserWidget/UserWidget';
 import { askDesktopNotificationPermission } from '../../modules/notification/notification';
 
-import './Header.css';
+import './Header.scss';
 
 import logo from '../../assets/images/logo-header.png';
 

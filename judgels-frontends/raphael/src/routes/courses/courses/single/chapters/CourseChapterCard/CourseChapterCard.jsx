@@ -2,7 +2,7 @@ import { ContentCardLink } from '../../../../../../components/ContentCardLink/Co
 import { ProgressTag } from '../../../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
 
-import './CourseChapterCard.css';
+import './CourseChapterCard.scss';
 
 export function CourseChapterCard({ course, chapter, chapterName, progress }) {
   const renderProgress = () => {

@@ -5,7 +5,7 @@ import { Required } from '../../forms/validations';
 import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
 import { languageDisplayNamesMap } from '../../../modules/api/sandalphon/language';
 
-import './LanguageForm.css';
+import './LanguageForm.scss';
 
 function LanguageForm({ handleSubmit, submitting, languages }) {
   const field = {

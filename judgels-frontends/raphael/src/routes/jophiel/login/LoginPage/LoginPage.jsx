@@ -6,7 +6,7 @@ import { Card } from '../../../../components/Card/Card';
 import LoginForm from '../LoginForm/LoginForm';
 import * as loginActions from '../modules/loginActions';
 
-import './LoginPage.css';
+import './LoginPage.scss';
 
 function LoginPage({ onLogIn }) {
   return (

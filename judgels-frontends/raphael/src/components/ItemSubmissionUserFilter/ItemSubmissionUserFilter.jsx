@@ -3,7 +3,7 @@ import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import './ItemSubmissionUserFilter.css';
+import './ItemSubmissionUserFilter.scss';
 
 function ItemSubmissionUserFilter({ location, push }) {
   const isAll = () => {

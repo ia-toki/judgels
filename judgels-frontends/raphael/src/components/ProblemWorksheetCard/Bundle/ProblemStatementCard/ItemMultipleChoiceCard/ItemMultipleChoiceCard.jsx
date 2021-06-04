@@ -3,7 +3,7 @@ import { Component } from 'react';
 
 import { HtmlText } from '../../../../HtmlText/HtmlText';
 
-import './ItemMultipleChoiceCard.css';
+import './ItemMultipleChoiceCard.scss';
 
 export class ItemMultipleChoiceCard extends Component {
   constructor(props) {

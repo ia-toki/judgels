@@ -10,7 +10,7 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import * as rankingActions from '../../modules/rankingActions';
 
-import './ScoresPage.css';
+import './ScoresPage.scss';
 
 class ScoresPage extends Component {
   static PAGE_SIZE = 50;

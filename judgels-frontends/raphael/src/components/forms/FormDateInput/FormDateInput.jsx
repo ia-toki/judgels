@@ -7,7 +7,7 @@ import { formatDateTime, formatDateTimezoneOffset, parseDateTime } from '../../.
 import { getIntent, getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 
-import './FormDateInput.css';
+import './FormDateInput.scss';
 
 export function FormDateInput({ input, className, label, meta }) {
   const { onChange, ...inputProps } = input;

@@ -7,7 +7,7 @@ import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import * as widgetActions from '../../modules/widgetActions';
 
-import './TopRatingsWidget.css';
+import './TopRatingsWidget.scss';
 
 class TopRatingsWidget extends Component {
   state = {

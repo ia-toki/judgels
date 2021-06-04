@@ -6,7 +6,7 @@ import { FormattedDate } from '../../../../components/FormattedDate/FormattedDat
 import { FormattedDuration } from '../../../../components/FormattedDuration/FormattedDuration';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
 
-import './ContestCard.css';
+import './ContestCard.scss';
 
 export class ContestCard extends PureComponent {
   render() {

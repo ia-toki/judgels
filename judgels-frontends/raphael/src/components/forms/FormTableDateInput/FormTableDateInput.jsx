@@ -8,7 +8,7 @@ import { getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 
-import './FormTableDateInput.css';
+import './FormTableDateInput.scss';
 
 export function FormTableDateInput(props) {
   const { input, meta } = props;

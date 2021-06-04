@@ -15,7 +15,7 @@ import { FormTableTextInput } from '../../../../../../components/forms/FormTable
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { NonnegativeNumber, Required } from '../../../../../../components/forms/validations';
 
-import './ContestEditConfigsForm.css';
+import './ContestEditConfigsForm.scss';
 
 class ContestEditConfigsForm extends Component {
   state;

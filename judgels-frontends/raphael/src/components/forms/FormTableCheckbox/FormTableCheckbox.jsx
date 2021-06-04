@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getIntentClassName } from '../meta';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 
-import './FormTableCheckbox.css';
+import './FormTableCheckbox.scss';
 
 export function FormTableCheckbox(props) {
   const { input, meta } = props;

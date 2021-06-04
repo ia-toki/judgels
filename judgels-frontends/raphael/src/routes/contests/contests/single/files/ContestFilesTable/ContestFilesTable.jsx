@@ -4,7 +4,7 @@ import prettyBytes from 'pretty-bytes';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { contestFileAPI } from '../../../../../../modules/api/uriel/contestFile';
 
-import './ContestFilesTable.css';
+import './ContestFilesTable.scss';
 
 export function ContestFilesTable({ contest, files }) {
   const renderHeader = () => {

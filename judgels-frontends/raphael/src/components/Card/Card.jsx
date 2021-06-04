@@ -1,6 +1,6 @@
 import { Card as BlueprintCard } from '@blueprintjs/core';
 
-import './Card.css';
+import './Card.scss';
 
 export function Card({ className, title, action, actionRightJustified, children }) {
   return (

@@ -8,7 +8,7 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import CourseChaptersPage from './chapters/CourseChaptersPage/CourseChaptersPage';
 import { selectCourse } from '../modules/courseSelectors';
 
-import './SingleCourseRoutes.css';
+import './SingleCourseRoutes.scss';
 
 function SingleCourseRoutes({ match, course }) {
   // Optimization:

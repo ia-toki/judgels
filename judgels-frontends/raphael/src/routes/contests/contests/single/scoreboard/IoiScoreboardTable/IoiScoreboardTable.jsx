@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './IoiScoreboardTable.css';
+import './IoiScoreboardTable.scss';
 
 export function IoiScoreboardTable({
   userJid,

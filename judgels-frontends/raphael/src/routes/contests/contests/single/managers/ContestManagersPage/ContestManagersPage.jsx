@@ -11,7 +11,7 @@ import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/Contes
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestManagerActions from '../modules/contestManagerActions';
 
-import './ContestManagersPage.css';
+import './ContestManagersPage.scss';
 
 class ContestManagersPage extends Component {
   static PAGE_SIZE = 250;

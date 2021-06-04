@@ -1,6 +1,6 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 
-import './ChaptersTable.css';
+import './ChaptersTable.scss';
 
 export function ChaptersTable({ chapters, onEditChapter, onEditChapterLessons, onEditChapterProblems }) {
   const renderHeader = () => {

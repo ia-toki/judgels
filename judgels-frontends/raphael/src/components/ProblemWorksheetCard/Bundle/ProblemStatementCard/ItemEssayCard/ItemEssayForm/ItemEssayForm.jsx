@@ -4,7 +4,7 @@ import { PureComponent } from 'react';
 
 import { AnswerState, StatementButtonText } from '../../../itemStatement';
 
-import './ItemEssayForm.css';
+import './ItemEssayForm.scss';
 
 export default class ItemEssayForm extends PureComponent {
   _input;

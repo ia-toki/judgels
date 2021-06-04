@@ -19,7 +19,7 @@ import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
-import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
+import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
 export class ChapterSubmissionsPage extends Component {
   static PAGE_SIZE = 20;

@@ -16,7 +16,7 @@ import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine
 import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
 
-import './SubmissionDetails.css';
+import './SubmissionDetails.scss';
 
 export function SubmissionDetails({
   submission: { gradingEngine, gradingLanguage, time, latestGrading },

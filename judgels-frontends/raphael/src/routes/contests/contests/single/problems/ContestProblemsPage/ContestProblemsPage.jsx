@@ -14,7 +14,7 @@ import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestProblemActions from '../modules/contestProblemActions';
 
-import './ContestProblemsPage.css';
+import './ContestProblemsPage.scss';
 
 export class ContestProblemsPage extends Component {
   state = {

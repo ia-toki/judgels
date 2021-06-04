@@ -5,7 +5,7 @@ import { ContentCard } from '../../../ContentCard/ContentCard';
 import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 
-import './ProblemSubmissionCard.css';
+import './ProblemSubmissionCard.scss';
 
 export function ProblemSubmissionCard({
   name,

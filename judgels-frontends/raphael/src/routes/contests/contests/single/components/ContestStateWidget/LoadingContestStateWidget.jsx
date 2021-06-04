@@ -1,6 +1,6 @@
 import { Callout, Intent } from '@blueprintjs/core';
 
-import './ContestStateWidget.css';
+import './ContestStateWidget.scss';
 
 export function LoadingContestStateWidget() {
   return (

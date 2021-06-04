@@ -1,6 +1,6 @@
 import { Card, Classes, Dialog } from '@blueprintjs/core';
 
-import './SubmissionImageDialog.css';
+import './SubmissionImageDialog.scss';
 
 export function SubmissionImageDialog({ isOpen, onClose, title, imageUrl }) {
   return (

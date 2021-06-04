@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { ContentCard } from '../ContentCard/ContentCard';
 
-import './ContentCardLink.css';
+import './ContentCardLink.scss';
 
 export function ContentCardLink({ className, to, elevation, children }) {
   return (

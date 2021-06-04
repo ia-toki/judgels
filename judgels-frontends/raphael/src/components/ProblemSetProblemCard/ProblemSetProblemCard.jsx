@@ -5,7 +5,7 @@ import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
 import { ProblemType } from '../../modules/api/sandalphon/problem';
 
-import './ProblemSetProblemCard.css';
+import './ProblemSetProblemCard.scss';
 
 export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemName, hasEditorial, progress, stats }) {
   const renderStats = () => {

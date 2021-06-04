@@ -1,7 +1,7 @@
 import { Icon, Navbar } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 
-import './Announcements.css';
+import './Announcements.scss';
 
 function Announcements({ config }) {
   const announcements = config.announcements || [];

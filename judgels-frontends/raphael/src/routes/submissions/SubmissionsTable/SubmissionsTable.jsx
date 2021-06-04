@@ -7,7 +7,7 @@ import { VerdictTag } from '../../../components/VerdictTag/VerdictTag';
 import { getGradingLanguageName } from '../../../modules/api/gabriel/language';
 import { constructProblemName } from '../../../modules/api/sandalphon/problem';
 
-import '../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
+import '../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
 
 export function SubmissionsTable({
   submissions,

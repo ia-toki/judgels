@@ -7,7 +7,7 @@ import { FormRecaptcha } from '../../../../components/forms/FormRecaptcha/FormRe
 import { ConfirmPassword, EmailAddress, Required, Username } from '../../../../components/forms/validations';
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 
-import './RegisterForm.css';
+import './RegisterForm.scss';
 
 const usernameField = {
   name: 'username',

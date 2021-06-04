@@ -11,7 +11,7 @@ import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
 import ChapterSubmissionRoutes from './submissions/ChapterSubmissionRoutes';
 import ChapterItemSubmissionRoutes from './results/ChapterItemSubmissionRoutes';
 
-import './SingleCourseChapterRoutes.css';
+import './SingleCourseChapterRoutes.scss';
 
 function SingleCourseChapterRoutes({ chapter, chapterName, courseSlug, match }) {
   // Optimization:

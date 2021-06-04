@@ -11,7 +11,7 @@ import ProblemSetProblemsPage from './problems/ProblemSetProblemsPage/ProblemSet
 
 import { selectProblemSet } from '../modules/problemSetSelectors';
 
-import './SingleProblemSetRoutes.css';
+import './SingleProblemSetRoutes.scss';
 
 function SingleProblemSetRoutes({ match, problemSet, onClickBack }) {
   // Optimization:

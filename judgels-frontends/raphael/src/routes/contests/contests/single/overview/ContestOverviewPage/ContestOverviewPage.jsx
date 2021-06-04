@@ -8,7 +8,7 @@ import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrat
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestActions from '../../../modules/contestActions';
 
-import './ContestOverviewPage.css';
+import './ContestOverviewPage.scss';
 
 class ContestOverviewPage extends Component {
   state = {

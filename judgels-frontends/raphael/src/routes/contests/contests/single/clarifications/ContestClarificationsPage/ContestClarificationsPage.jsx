@@ -15,7 +15,7 @@ import { ContestClarificationCreateDialog } from '../ContestClarificationCreateD
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
-import './ContestClarificationsPage.css';
+import './ContestClarificationsPage.scss';
 
 class ContestClarificationsPage extends Component {
   static PAGE_SIZE = 20;

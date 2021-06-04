@@ -9,7 +9,7 @@ import { ContestTab } from '../../../../../../modules/api/uriel/contestWeb';
 
 import { contestIcon } from '../../modules/contestIcon';
 
-import './ContestSupervisorsTable.css';
+import './ContestSupervisorsTable.scss';
 
 const managementPermissionTabsMap = {
   [SupervisorManagementPermission.All]: 'ninja',

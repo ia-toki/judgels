@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Required } from '../forms/validations';
 import { FormSelect2 } from '../forms/FormSelect2/FormSelect2';
 
-import './ClarificationFilterForm.css';
+import './ClarificationFilterForm.scss';
 
 function ClarificationFilterForm({ handleSubmit, isLoading, statuses }) {
   const statusField = {

@@ -8,7 +8,7 @@ import { parse, stringify } from 'query-string';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import * as problemActions from '../modules/problemActions';
 
-import './ProblemTagFilter.css';
+import './ProblemTagFilter.scss';
 
 class ProblemTagFilter extends Component {
   state;

@@ -1,7 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import './FormTable.css';
+import './FormTable.scss';
 
 export function FormTable({ rows, small, keyClassName }) {
   const htmlRows = rows.map(({ key, title, value }) => (

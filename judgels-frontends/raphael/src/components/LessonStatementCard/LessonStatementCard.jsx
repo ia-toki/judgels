@@ -1,7 +1,7 @@
 import { ContentCard } from '../ContentCard/ContentCard';
 import { KatexText } from '../KatexText/KatexText';
 
-import './LessonStatementCard.css';
+import './LessonStatementCard.scss';
 
 export function LessonStatementCard({ alias, statement }) {
   return (

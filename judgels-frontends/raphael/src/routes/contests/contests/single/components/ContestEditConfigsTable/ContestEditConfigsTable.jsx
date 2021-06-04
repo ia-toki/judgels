@@ -6,7 +6,7 @@ import { FormattedDuration } from '../../../../../../components/FormattedDuratio
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
 import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
 
-import './ContestEditConfigsTable.css';
+import './ContestEditConfigsTable.scss';
 
 export function ContestEditConfigsTable({ config }) {
   const renderTrocStyleConfig = ({ languageRestriction, wrongSubmissionPenalty }) => {

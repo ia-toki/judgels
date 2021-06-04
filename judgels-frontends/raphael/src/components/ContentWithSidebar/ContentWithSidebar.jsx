@@ -3,7 +3,7 @@ import { Redirect, Switch, withRouter } from 'react-router';
 
 import { Sidebar } from '../Sidebar/Sidebar';
 
-import './ContentWithSidebar.css';
+import './ContentWithSidebar.scss';
 
 function ContentAndSidebar({ sidebarElement, contentElement, stickyWidget, smallContent }) {
   const responsive = window.matchMedia && window.matchMedia('(max-width: 750px)').matches;

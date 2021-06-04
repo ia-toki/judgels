@@ -5,7 +5,7 @@ import { FormattedContent } from '../../../../../../components/FormattedContent/
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 
-import './ContestAnnouncementCard.css';
+import './ContestAnnouncementCard.scss';
 
 export function ContestAnnouncementCard({
   contest,

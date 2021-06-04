@@ -4,7 +4,7 @@ import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { TrocScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './TrocScoreboardTable.css';
+import './TrocScoreboardTable.scss';
 
 export function TrocScoreboardTable({
   userJid,

@@ -9,7 +9,7 @@ import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
 import * as profileActions from '../../modules/profileActions';
 
-import './ContestHistoryPage.css';
+import './ContestHistoryPage.scss';
 
 class ContestHistoryPage extends Component {
   state = {

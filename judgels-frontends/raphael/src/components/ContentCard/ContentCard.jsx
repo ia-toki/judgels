@@ -1,6 +1,6 @@
 import { Card } from '@blueprintjs/core';
 
-import './ContentCard.css';
+import './ContentCard.scss';
 
 export function ContentCard({ className, elevation, children }) {
   return (

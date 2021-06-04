@@ -4,7 +4,7 @@ import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { GcjScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './GcjScoreboardTable.css';
+import './GcjScoreboardTable.scss';
 
 export function GcjScoreboardTable({
   userJid,

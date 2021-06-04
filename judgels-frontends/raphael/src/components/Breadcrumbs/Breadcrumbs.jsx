@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { selectSortedBreadcrumbs } from '../../modules/breadcrumbs/breadcrumbsSelectors';
 
-import './Breadcrumbs.css';
+import './Breadcrumbs.scss';
 
 function Breadcrumbs({ breadcrumbs }) {
   const items = breadcrumbs.map((item, idx) => (

@@ -3,7 +3,7 @@ import { PureComponent } from 'react';
 
 import { SingleColumnLayout } from '../SingleColumnLayout/SingleColumnLayout';
 
-import './LoadingState.css';
+import './LoadingState.scss';
 
 export class LoadingState extends PureComponent {
   timer;

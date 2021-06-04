@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 
-import './BundleScoreboardPage.css';
+import './BundleScoreboardPage.scss';
 
 export function BundleScoreboardTable({ userJid, scoreboard, profilesMap }) {
   const renderData = content => {

@@ -6,7 +6,7 @@ import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { VerdictTag } from '../../../../../../../../components/VerdictTag/VerdictTag';
 import { getGradingLanguageName } from '../../../../../../../../modules/api/gabriel/language.js';
 
-import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
+import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
 
 export function ProblemSubmissionsTable({ problemSet, problem, submissions, canManage, profilesMap, onRegrade }) {
   const renderHeader = () => {

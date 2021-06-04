@@ -4,7 +4,7 @@ import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { IcpcScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './IcpcScoreboardTable.css';
+import './IcpcScoreboardTable.scss';
 
 export function IcpcScoreboardTable({
   userJid,

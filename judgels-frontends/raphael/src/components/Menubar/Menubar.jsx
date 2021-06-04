@@ -2,7 +2,7 @@ import { Tab, Tabs } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { matchPath, Link } from 'react-router-dom';
 
-import './Menubar.css';
+import './Menubar.scss';
 
 function Menubar({ match, location, items, homeRoute }) {
   const getActiveItemId = () => {

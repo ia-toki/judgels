@@ -3,7 +3,7 @@ import { HTMLTable } from '@blueprintjs/core';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 
-import './ContestLogsTable.css';
+import './ContestLogsTable.scss';
 
 export function ContestLogsTable({ logs, profilesMap, problemAliasesMap }) {
   const renderHeader = () => {

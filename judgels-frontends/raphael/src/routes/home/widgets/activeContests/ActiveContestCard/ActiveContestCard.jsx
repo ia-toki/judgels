@@ -5,7 +5,7 @@ import { TimeanddateLink } from '../../../../../components/TimeanddateLink/Timea
 import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
 import { ContestRoleTag } from '../../../../../components/ContestRole/ContestRoleTag';
 
-import './ActiveContestCard.css';
+import './ActiveContestCard.scss';
 
 export class ActiveContestCard extends PureComponent {
   render() {

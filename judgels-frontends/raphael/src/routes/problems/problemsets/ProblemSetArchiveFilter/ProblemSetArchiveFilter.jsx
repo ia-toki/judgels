@@ -10,7 +10,7 @@ import { sendGAEvent } from '../../../../ga';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import * as archiveActions from '../modules/archiveActions';
 
-import './ProblemSetArchiveFilter.css';
+import './ProblemSetArchiveFilter.scss';
 
 class ProblemSetArchiveFilter extends Component {
   state;

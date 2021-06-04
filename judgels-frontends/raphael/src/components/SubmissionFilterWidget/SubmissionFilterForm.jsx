@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Required } from '../forms/validations';
 import { FormSelect2 } from '../forms/FormSelect2/FormSelect2';
 
-import './SubmissionFilterForm.css';
+import './SubmissionFilterForm.scss';
 
 function SubmissionFilterForm({ handleSubmit, usernames, problemAliases, isLoading }) {
   const userField = usernames && {
