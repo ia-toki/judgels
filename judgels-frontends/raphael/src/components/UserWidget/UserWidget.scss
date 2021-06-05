@@ -33,7 +33,7 @@
 }
 
 .widget-user__burger, .widget-user__menu-helper {
-  display: none;
+  display: none !important;
 }
 
 .widget-user__menu a {
@@ -46,14 +46,14 @@
 
 @media only screen and (max-width: 600px) {
   .widget-user__avatar, .widget-user__avatar-menu, .widget-user__link {
-    display: none;
+    display: none !important;
   }
 
   .widget-user__burger, .widget-user__menu-helper {
-    display: block;
+    display: block !important;
     cursor: pointer;
 
-    span.bp3-icon {
+    span.bp4-icon {
       float: left;
     }
   }

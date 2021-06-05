@@ -5,7 +5,7 @@
     outline: none;
   }
 
-  .bp3-icon {
+  .bp4-icon {
     padding-bottom: 1px;
   }
 
@@ -14,18 +14,18 @@
     padding-bottom: 0;
   }
 
-  .bp3-tab-list {
+  .bp4-tab-list {
     left: -20px;
     width: 270px;
   }
 
-  .bp3-tab-indicator {
+  .bp4-tab-indicator {
     background-color: $div-hover-color !important;
     border-radius: 0 !important;
     border-left: 3px solid $primary-color;
   }
 
-  .bp3-tab {
+  .bp4-tab {
     a {
       width: 100%;
       position: absolute;
@@ -37,12 +37,12 @@
     height: 50px;
   }
 
-  .bp3-tab[aria-selected="true"] {
+  .bp4-tab[aria-selected="true"] {
     font-weight: bold;
     color: $text-color;
   }
 
-  .bp3-tab[aria-selected="false"] {
+  .bp4-tab[aria-selected="false"] {
     color: $primary-color;
   }
 }
@@ -58,32 +58,32 @@
 }
 
 .card-sidebar__responsive {
-  display: none;
+  display: none !important;
 }
 
 @media only screen and (max-width: 750px) {
   .card-sidebar__full {
-    display: none;
+    display: none !important;
   }
 
   .card-sidebar__responsive {
-    display: block;
+    display: block !important;
     width: 200px;
     top: -15px;
     height: 30px;
 
-    .bp3-tab-list {
+    .bp4-tab-list {
       left: 0;
     }
   }
 
   .card-sidebar__responsive-menu {
-    .bp3-icon {
+    .bp4-icon {
       padding-bottom: 0 !important;
     }
   }
 
-  .bp3-overlay-content {
+  .bp4-overlay-content {
     top: -10px !important;
   }
 }

@@ -70,7 +70,7 @@ export class UserWidget extends PureComponent {
 
     const responsivePopover = (
       <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
-        <Icon icon="menu" iconSize={Icon.SIZE_LARGE} />
+        <Icon icon="menu" />
       </Popover>
     );
 
@@ -115,7 +115,7 @@ export class UserWidget extends PureComponent {
 
     return (
       <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
-        <Icon icon="menu" iconSize={Icon.SIZE_LARGE} />
+        <Icon icon="menu" />
       </Popover>
     );
   };

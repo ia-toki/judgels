@@ -39,10 +39,11 @@ describe('ContestEditGeneralTab', () => {
     );
   });
 
-  test('form', () => {
+  test('form', async () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
+    await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
 
     const slug = wrapper.find('input[name="slug"]');

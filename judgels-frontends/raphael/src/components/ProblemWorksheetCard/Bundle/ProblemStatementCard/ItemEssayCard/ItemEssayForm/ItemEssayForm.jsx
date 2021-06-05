@@ -99,7 +99,7 @@ export default class ItemEssayForm extends PureComponent {
           </Callout>
         );
       default:
-        return <div className="bp3-callout bp3-callout-icon essay-callout-edit">&nbsp;</div>;
+        return <div className="bp4-callout bp4-callout-icon essay-callout-edit">&nbsp;</div>;
     }
   }
 

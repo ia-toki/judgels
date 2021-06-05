@@ -1,8 +1,8 @@
-import { Intent, Position, Toaster } from '@blueprintjs/core';
+import { Intent, Position, OverlayToaster } from '@blueprintjs/core';
 import { SubmissionError } from 'redux-form';
 import { ForbiddenError, NotFoundError, RemoteError } from '../api/error';
 
-const toaster = Toaster.create({
+const toaster = OverlayToaster.create({
   position: Position.TOP,
   className: 'toast',
 });

@@ -16,9 +16,7 @@ export class Sidebar extends PureComponent {
       const titleIcon = item.titleIcon && <Icon icon={item.titleIcon} />;
       const itemIcon = widget ? 'chevron-down' : 'chevron-right';
 
-      const icon = item.id === activeItemId && (
-        <Icon icon={itemIcon} iconSize={Icon.SIZE_LARGE} className="card-sidebar__arrow" />
-      );
+      const icon = item.id === activeItemId && <Icon icon={itemIcon} className="card-sidebar__arrow" />;
 
       return (
         <Tab key={item.id} id={item.id}>
@@ -61,7 +59,7 @@ export class Sidebar extends PureComponent {
       >
         <div>
           <p className="card-sidebar__responsive-menu">
-            <Icon icon="menu" iconSize={Icon.SIZE_LARGE} />
+            <Icon icon="menu" />
             &nbsp;<small>{title}</small>
           </p>
         </div>
