@@ -1,4 +1,5 @@
 import { Button, Intent, Classes, ControlGroup, Callout } from '@blueprintjs/core';
+import { BanCircle, Circle, Confirm, Remove } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { PureComponent } from 'react';
 
@@ -26,25 +27,25 @@ export default class ItemShortAnswerForm extends PureComponent {
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         return (
-          <Callout intent={Intent.NONE} icon="circle" className="callout">
+          <Callout intent={Intent.NONE} icon={<Circle />} className="callout">
             Not answered.
           </Callout>
         );
       case AnswerState.SavingAnswer:
         return (
-          <Callout intent={Intent.NONE} icon="ban-circle" className="callout">
+          <Callout intent={Intent.NONE} icon={<BanCircle />} className="callout">
             Saving...
           </Callout>
         );
       case AnswerState.AnswerSaved:
         return (
-          <Callout intent={Intent.PRIMARY} icon="confirm" className="callout">
+          <Callout intent={Intent.PRIMARY} icon={<Confirm />} className="callout">
             Answered.
           </Callout>
         );
       case AnswerState.ClearingAnswer:
         return (
-          <Callout intent={Intent.NONE} icon="ban-circle" className="callout">
+          <Callout intent={Intent.NONE} icon={<BanCircle />} className="callout">
             Clearing Answer...
           </Callout>
         );
@@ -130,7 +131,7 @@ export default class ItemShortAnswerForm extends PureComponent {
       answer !== '' &&
       wrongFormat &&
       answerState === AnswerState.Answering && (
-        <Callout intent={Intent.DANGER} icon="remove" className="callout">
+        <Callout intent={Intent.DANGER} icon={<Remove />} className="callout">
           <strong>Wrong answer format!</strong>
         </Callout>
       )

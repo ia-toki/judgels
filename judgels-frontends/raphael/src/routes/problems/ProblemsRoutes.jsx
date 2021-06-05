@@ -1,4 +1,5 @@
 import { Intent, Tag } from '@blueprintjs/core';
+import { Manual, PanelStats } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -12,7 +13,7 @@ function ProblemsRoutes() {
   const sidebarItems = [
     {
       id: '@',
-      titleIcon: 'manual',
+      titleIcon: <Manual />,
       title: (
         <div className="tab-item-with-widget">
           <div className="tab-item-with-widget__name">Browse problems</div>
@@ -30,7 +31,7 @@ function ProblemsRoutes() {
     },
     {
       id: 'problemsets',
-      titleIcon: 'panel-stats',
+      titleIcon: <PanelStats />,
       title: 'Browse problemsets',
       routeComponent: Route,
       component: ProblemSetsPage,

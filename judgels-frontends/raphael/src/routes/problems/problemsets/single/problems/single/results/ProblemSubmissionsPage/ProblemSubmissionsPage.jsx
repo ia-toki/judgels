@@ -1,4 +1,5 @@
 import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
+import { Refresh, Search } from '@blueprintjs/icons';
 import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
@@ -93,11 +94,11 @@ export class ProblemSubmissionsPage extends Component {
                         profilesMap[item.userJid].username
                       }`}
                     >
-                      <Button icon="search" intent={Intent.NONE} small />
+                      <Button icon={<Search />} intent={Intent.NONE} small />
                     </Link>
                   )}
                   {canManage && (
-                    <Button icon="refresh" intent={Intent.NONE} small onClick={this.onClickRegrade(item.jid)} />
+                    <Button icon={<Refresh />} intent={Intent.NONE} small onClick={this.onClickRegrade(item.jid)} />
                   )}
                 </ButtonGroup>
               </td>
@@ -158,7 +159,7 @@ export class ProblemSubmissionsPage extends Component {
       <Button
         className="item-submissions-table__regrade-button"
         intent="primary"
-        icon="refresh"
+        icon={<Refresh />}
         onClick={this.onRegradeAll}
       >
         Regrade all pages

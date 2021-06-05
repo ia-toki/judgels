@@ -1,4 +1,4 @@
-import { Icon } from '@blueprintjs/core';
+import { ChevronRight } from '@blueprintjs/icons';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
@@ -81,9 +81,9 @@ describe('ContentWithSidebar', () => {
       it('has the correct active item', () => {
         const items = wrapper.find('[role="tab"]');
 
-        expect(items.at(0).find(Icon)).toHaveLength(0);
-        expect(items.at(1).find(Icon)).toHaveLength(1);
-        expect(items.at(2).find(Icon)).toHaveLength(0);
+        expect(items.at(0).find(ChevronRight)).toHaveLength(0);
+        expect(items.at(1).find(ChevronRight)).toHaveLength(1);
+        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
       });
 
       it('renders the active component', () => {
@@ -107,9 +107,9 @@ describe('ContentWithSidebar', () => {
       it('has the first item active by default', () => {
         const items = wrapper.find('[role="tab"]');
 
-        expect(items.at(0).find(Icon)).toHaveLength(1);
-        expect(items.at(1).find(Icon)).toHaveLength(0);
-        expect(items.at(2).find(Icon)).toHaveLength(0);
+        expect(items.at(0).find(ChevronRight)).toHaveLength(1);
+        expect(items.at(1).find(ChevronRight)).toHaveLength(0);
+        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
       });
     });
   });
@@ -142,9 +142,9 @@ describe('ContentWithSidebar', () => {
       it('has the correct active item', () => {
         const items = wrapper.find('[role="tab"]');
 
-        expect(items.at(0).find(Icon)).toHaveLength(0);
-        expect(items.at(1).find(Icon)).toHaveLength(1);
-        expect(items.at(2).find(Icon)).toHaveLength(0);
+        expect(items.at(0).find(ChevronRight)).toHaveLength(0);
+        expect(items.at(1).find(ChevronRight)).toHaveLength(1);
+        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
       });
 
       it('renders the active component', () => {
@@ -168,9 +168,9 @@ describe('ContentWithSidebar', () => {
       it('has the first item active by default', () => {
         const items = wrapper.find('[role="tab"]');
 
-        expect(items.at(0).find(Icon)).toHaveLength(1);
-        expect(items.at(1).find(Icon)).toHaveLength(0);
-        expect(items.at(2).find(Icon)).toHaveLength(0);
+        expect(items.at(0).find(ChevronRight)).toHaveLength(1);
+        expect(items.at(1).find(ChevronRight)).toHaveLength(0);
+        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
       });
     });
   });

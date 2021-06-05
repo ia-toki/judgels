@@ -1,4 +1,5 @@
 import { ControlGroup, Classes, Button, Intent, Callout } from '@blueprintjs/core';
+import { BanCircle, Circle, Confirm } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { PureComponent } from 'react';
 
@@ -76,25 +77,25 @@ export default class ItemEssayForm extends PureComponent {
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         return (
-          <Callout intent={Intent.NONE} icon="circle" className="essay-callout">
+          <Callout intent={Intent.NONE} icon={<Circle />} className="essay-callout">
             Not answered.
           </Callout>
         );
       case AnswerState.SavingAnswer:
         return (
-          <Callout intent={Intent.NONE} icon="ban-circle" className="essay-callout">
+          <Callout intent={Intent.NONE} icon={<BanCircle />} className="essay-callout">
             Saving...
           </Callout>
         );
       case AnswerState.AnswerSaved:
         return (
-          <Callout intent={Intent.PRIMARY} icon="confirm" className="essay-callout">
+          <Callout intent={Intent.PRIMARY} icon={<Confirm />} className="essay-callout">
             Answered.
           </Callout>
         );
       case AnswerState.ClearingAnswer:
         return (
-          <Callout intent={Intent.NONE} icon="ban-circle" className="essay-callout">
+          <Callout intent={Intent.NONE} icon={<BanCircle />} className="essay-callout">
             Clearing answer...
           </Callout>
         );

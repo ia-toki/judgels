@@ -1,4 +1,5 @@
-import { HTMLTable, Icon } from '@blueprintjs/core';
+import { HTMLTable } from '@blueprintjs/core';
+import { Edit, Manual, Presentation } from '@blueprintjs/icons';
 
 import './ChaptersTable.scss';
 
@@ -23,9 +24,9 @@ export function ChaptersTable({ chapters, onEditChapter, onEditChapterLessons, o
         <td>{chapter.jid}</td>
         <td>{chapter.name}</td>
         <td>
-          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditChapter(chapter)} />
-          <Icon className="action" icon="presentation" intent="primary" onClick={() => onEditChapterLessons(chapter)} />
-          <Icon className="action" icon="manual" intent="primary" onClick={() => onEditChapterProblems(chapter)} />
+          <Edit className="action" intent="primary" onClick={() => onEditChapter(chapter)} />
+          <Presentation className="action" intent="primary" onClick={() => onEditChapterLessons(chapter)} />
+          <Manual className="action" intent="primary" onClick={() => onEditChapterProblems(chapter)} />
         </td>
       </tr>
     ));

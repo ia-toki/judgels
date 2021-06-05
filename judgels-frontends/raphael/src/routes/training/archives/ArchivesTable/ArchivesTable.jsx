@@ -1,4 +1,5 @@
-import { HTMLTable, Icon } from '@blueprintjs/core';
+import { HTMLTable } from '@blueprintjs/core';
+import { Edit } from '@blueprintjs/icons';
 
 import './ArchivesTable.scss';
 
@@ -25,7 +26,7 @@ export function ArchivesTable({ archives, onEditArchive }) {
         <td>{archive.name}</td>
         <td>{archive.category}</td>
         <td>
-          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditArchive(archive)} />
+          <Edit className="action" intent="primary" onClick={() => onEditArchive(archive)} />
         </td>
       </tr>
     ));

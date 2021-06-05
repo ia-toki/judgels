@@ -1,4 +1,5 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { Component } from 'react';
 
 import ChapterCreateForm from '../ChapterCreateForm/ChapterCreateForm';
@@ -19,7 +20,7 @@ export class ChapterCreateDialog extends Component {
 
   renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New chapter
       </Button>
     );

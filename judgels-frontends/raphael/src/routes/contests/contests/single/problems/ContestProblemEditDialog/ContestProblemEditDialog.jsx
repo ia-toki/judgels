@@ -1,4 +1,5 @@
 import { Callout, Classes, Button, Dialog, Intent } from '@blueprintjs/core';
+import { Edit } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { Component } from 'react';
 
@@ -44,7 +45,7 @@ export class ContestProblemEditDialog extends Component {
       <Button
         className="contest-problem-set-dialog__button"
         intent={Intent.PRIMARY}
-        icon="edit"
+        icon={<Edit />}
         onClick={this.toggleDialog}
         disabled={this.state.isDialogOpen}
       >

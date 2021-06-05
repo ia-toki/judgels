@@ -1,4 +1,5 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { Component } from 'react';
 
@@ -26,7 +27,7 @@ export class ContestSupervisorAddDialog extends Component {
       <Button
         className="contest-supervisor-dialog-button"
         intent={Intent.PRIMARY}
-        icon="plus"
+        icon={<Plus />}
         onClick={this.toggleDialog}
         disabled={this.state.isDialogOpen}
       >

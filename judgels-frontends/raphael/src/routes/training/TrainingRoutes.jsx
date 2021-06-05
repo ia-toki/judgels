@@ -1,3 +1,4 @@
+import { Box, PanelStats, PredictiveAnalysis, Properties } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -14,28 +15,28 @@ function TrainingRoutes() {
   const sidebarItems = [
     {
       id: 'courses',
-      titleIcon: 'predictive-analysis',
+      titleIcon: <PredictiveAnalysis />,
       title: 'Courses',
       routeComponent: Route,
       component: CoursesPage,
     },
     {
       id: 'chapters',
-      titleIcon: 'properties',
+      titleIcon: <Properties />,
       title: 'Chapters',
       routeComponent: Route,
       component: ChaptersPage,
     },
     {
       id: 'archives',
-      titleIcon: 'box',
+      titleIcon: <Box />,
       title: 'Archives',
       routeComponent: Route,
       component: ArchivesPage,
     },
     {
       id: 'problemsets',
-      titleIcon: 'panel-stats',
+      titleIcon: <PanelStats />,
       title: 'Problemsets',
       routeComponent: Route,
       component: ProblemSetsPage,

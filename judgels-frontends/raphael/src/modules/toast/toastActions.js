@@ -1,4 +1,5 @@
 import { Intent, Position, OverlayToaster } from '@blueprintjs/core';
+import { Envelope, Tick, WarningSign } from '@blueprintjs/icons';
 import { SubmissionError } from 'redux-form';
 import { ForbiddenError, NotFoundError, RemoteError } from '../api/error';
 
@@ -17,7 +18,7 @@ export function showToast(message) {
 
 export function showSuccessToast(message) {
   toaster.show({
-    icon: 'tick',
+    icon: <Tick />,
     message,
     intent: Intent.SUCCESS,
     timeout: 1500,
@@ -26,7 +27,7 @@ export function showSuccessToast(message) {
 
 export function showAlertToast(message) {
   toaster.show({
-    icon: 'envelope',
+    icon: <Envelope />,
     message,
     intent: Intent.WARNING,
     timeout: 0,
@@ -48,7 +49,7 @@ export function showErrorToast(error) {
   }
 
   toaster.show({
-    icon: 'warning-sign',
+    icon: <WarningSign />,
     message,
     intent: Intent.DANGER,
   });

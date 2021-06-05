@@ -1,3 +1,4 @@
+import { Properties } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
@@ -20,7 +21,7 @@ function SingleCourseRoutes({ match, course }) {
   const sidebarItems = [
     {
       id: '@',
-      titleIcon: 'properties',
+      titleIcon: <Properties />,
       title: 'Chapters',
       routeComponent: Route,
       component: CourseChaptersPage,

@@ -1,3 +1,4 @@
+import { PredictiveAnalysis } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -9,7 +10,7 @@ function CoursesRoutes() {
   const sidebarItems = [
     {
       id: '@',
-      titleIcon: 'predictive-analysis',
+      titleIcon: <PredictiveAnalysis />,
       title: 'Courses',
       routeComponent: Route,
       component: CoursesPage,

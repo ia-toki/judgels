@@ -1,4 +1,5 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
+import { WarningSign } from '@blueprintjs/icons';
 import { Field, reduxForm } from 'redux-form';
 
 import { isOutputOnly } from '../../../../modules/api/gabriel/engine';
@@ -26,7 +27,7 @@ function ProblemSubmissionForm({
     return (
       submissionWarning && (
         <Callout
-          icon="warning-sign"
+          icon={<WarningSign />}
           className="programming-problem-submission-form__warning"
           data-key="submission-warning"
         >

@@ -1,4 +1,5 @@
-import { HTMLTable, Icon } from '@blueprintjs/core';
+import { HTMLTable } from '@blueprintjs/core';
+import { Edit, Properties } from '@blueprintjs/icons';
 
 import './CoursesTable.scss';
 
@@ -23,8 +24,8 @@ export function CoursesTable({ courses, onEditCourse, onEditCourseChapters }) {
         <td>{course.slug}</td>
         <td>{course.name}</td>
         <td>
-          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditCourse(course)} />
-          <Icon className="action" icon="properties" intent="primary" onClick={() => onEditCourseChapters(course)} />
+          <Edit className="action" intent="primary" onClick={() => onEditCourse(course)} />
+          <Properties className="action" intent="primary" onClick={() => onEditCourseChapters(course)} />
         </td>
       </tr>
     ));

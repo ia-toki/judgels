@@ -1,4 +1,5 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
+import { Trash } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { Component } from 'react';
 
@@ -25,7 +26,7 @@ export class ContestManagerRemoveDialog extends Component {
       <Button
         className="contest-manager-dialog-button"
         intent={Intent.DANGER}
-        icon="trash"
+        icon={<Trash />}
         onClick={this.toggleDialog}
         disabled={this.state.isDialogOpen}
       >

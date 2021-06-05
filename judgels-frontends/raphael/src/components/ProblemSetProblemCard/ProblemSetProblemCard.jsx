@@ -1,4 +1,5 @@
-import { Tag, Intent, Icon } from '@blueprintjs/core';
+import { Tag, Intent } from '@blueprintjs/core';
+import { SmallTick, Star } from '@blueprintjs/icons';
 
 import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
 import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
@@ -32,7 +33,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     return (
       <div className="problemset-problem-card__metadata">
         <Tag round intent={Intent.WARNING}>
-          editorial <Icon icon="small-tick" />
+          editorial <SmallTick />
         </Tag>
       </div>
     );
@@ -44,7 +45,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     }
     const level = (100 - (totalScores + 100) / (totalUsersTried + 2)) / 10;
     return (
-      <Tag intent={Intent.PRIMARY} rightIcon="star">
+      <Tag intent={Intent.PRIMARY} rightIcon={<Star />}>
         level <span className="problemset-problem-card__stats--large">{level.toFixed(1)}</span>
       </Tag>
     );

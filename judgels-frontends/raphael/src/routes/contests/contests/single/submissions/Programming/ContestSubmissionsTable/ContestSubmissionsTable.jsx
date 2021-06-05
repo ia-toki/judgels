@@ -1,4 +1,5 @@
-import { HTMLTable, Icon } from '@blueprintjs/core';
+import { HTMLTable } from '@blueprintjs/core';
+import { Refresh, Search } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
@@ -42,7 +43,7 @@ export function ContestSubmissionsTable({
           {canManage && (
             <>
               &nbsp;&nbsp;&nbsp;
-              <Icon className="action" icon="refresh" intent="primary" onClick={onClickRegrade(submission.jid)} />
+              <Refresh className="action" intent="primary" onClick={onClickRegrade(submission.jid)} />
             </>
           )}
         </td>
@@ -62,7 +63,7 @@ export function ContestSubmissionsTable({
         </td>
         <td className="cell-centered">
           <Link className="action" to={`/contests/${contest.slug}/submissions/${submission.id}`}>
-            <Icon icon="search" />
+            <Search />
           </Link>
         </td>
       </tr>

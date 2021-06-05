@@ -1,4 +1,5 @@
-import { Button, Callout, Icon, Intent, Tag } from '@blueprintjs/core';
+import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
+import { BanCircle, People, Tick } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -27,7 +28,7 @@ class ContestRegistrationCard extends Component {
   render() {
     if (!this.props.isLoggedIn) {
       return (
-        <Callout icon="ban-circle" className="contest-registration-card--error secondary-info">
+        <Callout icon={<BanCircle />} className="contest-registration-card--error secondary-info">
           Please log in to register.
         </Callout>
       );
@@ -72,7 +73,7 @@ class ContestRegistrationCard extends Component {
     ) {
       return (
         <Tag large intent={Intent.SUCCESS} className="contest-registration-card__item contest-registration-card__state">
-          <Icon icon="tick" /> Registered
+          <Tick /> Registered
         </Tag>
       );
     }
@@ -119,7 +120,7 @@ class ContestRegistrationCard extends Component {
     return (
       <Button
         className="contest-registration-card__item"
-        icon="people"
+        icon={<People />}
         text={`View registrants (${contestantsCount})`}
         onClick={this.toggleRegistrantsDialog}
       />

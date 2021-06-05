@@ -1,4 +1,4 @@
-import { Icon } from '@blueprintjs/core';
+import { SmallCross, SmallTick } from '@blueprintjs/icons';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
@@ -55,12 +55,12 @@ export function ContestEditConfigsTable({ config }) {
       {
         key: 'usingLastAffectingPenalty',
         title: 'Using last affecting penalty?',
-        value: <Icon icon={usingLastAffectingPenalty ? 'small-tick' : 'small-cross'} />,
+        value: usingLastAffectingPenalty ? <SmallTick /> : <SmallCross />,
       },
       {
         key: 'usingMaxScorePerSubtask',
         title: 'Using max score per subtask?',
-        value: <Icon icon={usingMaxScorePerSubtask ? 'small-tick' : 'small-cross'} />,
+        value: usingMaxScorePerSubtask ? <SmallTick /> : <SmallCross />,
       },
     ];
     return (
@@ -146,7 +146,7 @@ export function ContestEditConfigsTable({ config }) {
       {
         key: 'isIncognitoScoreboard',
         title: 'Incognito scoreboard?',
-        value: <Icon icon={isIncognitoScoreboard ? 'small-tick' : 'small-cross'} />,
+        value: isIncognitoScoreboard ? <SmallTick /> : <SmallCross />,
       },
     ];
     return (
@@ -173,7 +173,7 @@ export function ContestEditConfigsTable({ config }) {
       {
         key: 'isIncognitoScoreboard',
         title: 'Is now unfrozen?',
-        value: <Icon icon={isOfficialScoreboardAllowed ? 'small-tick' : 'small-cross'} />,
+        value: isOfficialScoreboardAllowed ? <SmallTick /> : <SmallCross />,
       },
     ];
     return (

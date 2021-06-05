@@ -1,4 +1,5 @@
-import { Classes, Button, Dialog, Icon, Intent, Tab, Tabs } from '@blueprintjs/core';
+import { Classes, Button, Dialog, Intent, Tab, Tabs } from '@blueprintjs/core';
+import { ChevronRight, Cog } from '@blueprintjs/icons';
 import { Component } from 'react';
 
 import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
@@ -37,7 +38,7 @@ export class ContestEditDialog extends Component {
       <Button
         className="contest-edit-dialog-button"
         intent={Intent.PRIMARY}
-        icon="cog"
+        icon={<Cog />}
         onClick={this.toggleDialog}
         disabled={this.state.isDialogOpen}
       >
@@ -64,19 +65,19 @@ export class ContestEditDialog extends Component {
           <Tabs id="contest-edit-dialog-tabs" vertical renderActiveTabPanelOnly>
             <Tab id="general" panel={<ContestEditGeneralTab />}>
               General
-              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+              <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
             <Tab id="description" panel={<ContestEditDescriptionTab />}>
               Description
-              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+              <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
             <Tab id="modules" panel={<ContestEditModulesTab />}>
               Modules
-              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+              <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
             <Tab id="configs" panel={<ContestEditConfigsTab />}>
               Configs
-              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+              <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
           </Tabs>
         </div>

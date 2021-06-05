@@ -1,3 +1,4 @@
+import { User } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -11,7 +12,7 @@ function SystemRoutes() {
   const sidebarItems = [
     {
       id: 'users',
-      titleIcon: 'user',
+      titleIcon: <User />,
       title: 'Users',
       routeComponent: Route,
       component: UsersPage,

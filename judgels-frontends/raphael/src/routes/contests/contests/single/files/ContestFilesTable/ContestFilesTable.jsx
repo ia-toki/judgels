@@ -1,4 +1,5 @@
-import { HTMLTable, Icon } from '@blueprintjs/core';
+import { HTMLTable } from '@blueprintjs/core';
+import { Download } from '@blueprintjs/icons';
 import prettyBytes from 'pretty-bytes';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
@@ -30,7 +31,7 @@ export function ContestFilesTable({ contest, files }) {
         </td>
         <td className="col-download">
           <a href={contestFileAPI.renderDownloadFileUrl(contest.jid, file.name)}>
-            <Icon icon="download" />
+            <Download />
           </a>
         </td>
       </tr>

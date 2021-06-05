@@ -3,9 +3,9 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "4.0.0-alpha.0",
-    "@blueprintjs/datetime": "3.23.4",
+    "@blueprintjs/datetime": "4.0.0-alpha.0",
     "@blueprintjs/icons": "4.0.0-alpha.0",
-    "@blueprintjs/select": "3.16.4",
+    "@blueprintjs/select": "4.0.0-alpha.0",
     "@formatjs/intl-locale": "2.4.32",
     "@formatjs/intl-pluralrules": "1.2.0",
     "@formatjs/intl-relativetimeformat": "9.1.4",

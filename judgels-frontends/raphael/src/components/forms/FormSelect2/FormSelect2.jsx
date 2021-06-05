@@ -1,4 +1,5 @@
 import { Alignment, Button, FormGroup, MenuItem } from '@blueprintjs/core';
+import { CaretDown } from '@blueprintjs/icons';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
 
@@ -28,7 +29,7 @@ export function FormSelect2({ input, className, label, meta, optionValues, optio
           data-key={inputProps.name}
           alignText={Alignment.LEFT}
           text={optionNamesMap[input.value]}
-          rightIcon="caret-down"
+          rightIcon={<CaretDown />}
         />
       </Select>
       <FormInputValidation meta={meta} />

@@ -1,4 +1,5 @@
 import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
+import { Time } from '@blueprintjs/icons';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -63,7 +64,7 @@ class ContestStateWidget extends PureComponent {
       cancelButtonText="Cancel"
       onCancel={this.cancelVirtualContest}
       intent={Intent.WARNING}
-      icon="time"
+      icon={<Time />}
     >
       Are you sure you want to start your participation in this contest?
     </Alert>

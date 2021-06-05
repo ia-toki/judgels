@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Refresh } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -105,7 +106,7 @@ class ContestContestantsPage extends Component {
           <Button
             className="contest-contestant-dialog-button"
             intent={Intent.DANGER}
-            icon="refresh"
+            icon={<Refresh />}
             onClick={this.onResetVirtualContest}
           >
             Reset all contestant virtual start times

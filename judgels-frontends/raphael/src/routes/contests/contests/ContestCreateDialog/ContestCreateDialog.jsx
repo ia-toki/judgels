@@ -1,4 +1,5 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { Component } from 'react';
 
 import ContestCreateForm from '../ContestCreateForm/ContestCreateForm';
@@ -17,7 +18,7 @@ export class ContestCreateDialog extends Component {
 
   renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New contest
       </Button>
     );

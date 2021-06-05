@@ -1,3 +1,4 @@
+import { TimelineEvents } from '@blueprintjs/icons';
 import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -8,7 +9,7 @@ function ContestsRoutes() {
   const sidebarItems = [
     {
       id: '@',
-      titleIcon: 'timeline-events',
+      titleIcon: <TimelineEvents />,
       title: 'Contests',
       routeComponent: Route,
       component: ContestsPage,

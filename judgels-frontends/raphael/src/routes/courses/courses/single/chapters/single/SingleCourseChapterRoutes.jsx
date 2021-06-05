@@ -1,3 +1,4 @@
+import { Layers, Manual, ManuallyEnteredData, Presentation } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
@@ -23,28 +24,28 @@ function SingleCourseChapterRoutes({ chapter, chapterName, courseSlug, match }) 
   const sidebarItems = [
     {
       id: 'lessons',
-      titleIcon: 'presentation',
+      titleIcon: <Presentation />,
       title: 'Lessons',
       routeComponent: Route,
       component: ChapterLessonRoutes,
     },
     {
       id: 'problems',
-      titleIcon: 'manual',
+      titleIcon: <Manual />,
       title: 'Problems',
       routeComponent: Route,
       component: ChapterProblemRoutes,
     },
     {
       id: 'results',
-      titleIcon: 'manually-entered-data',
+      titleIcon: <ManuallyEnteredData />,
       title: 'Quiz Results',
       routeComponent: Route,
       component: ChapterItemSubmissionRoutes,
     },
     {
       id: 'submissions',
-      titleIcon: 'layers',
+      titleIcon: <Layers />,
       title: 'Submissions',
       routeComponent: Route,
       component: ChapterSubmissionRoutes,

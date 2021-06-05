@@ -1,4 +1,5 @@
 import { Callout } from '@blueprintjs/core';
+import { BanCircle } from '@blueprintjs/icons';
 
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import { getAllowedGradingLanguages } from '../../../../modules/api/gabriel/language.js';
@@ -14,7 +15,7 @@ export function ProblemSubmissionCard({
   const renderSubmissionForm = () => {
     if (reasonNotAllowedToSubmit) {
       return (
-        <Callout icon="ban-circle" className="secondary-info">
+        <Callout icon={<BanCircle />} className="secondary-info">
           <span data-key="reason-not-allowed-to-submit">{reasonNotAllowedToSubmit}</span>
         </Callout>
       );

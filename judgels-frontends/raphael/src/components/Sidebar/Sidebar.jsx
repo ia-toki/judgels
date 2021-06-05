@@ -1,4 +1,5 @@
-import { Icon, Popover, Position, Tab, Tabs } from '@blueprintjs/core';
+import { Popover, Position, Tab, Tabs } from '@blueprintjs/core';
+import { ChevronDown, ChevronRight, Menu } from '@blueprintjs/icons';
 import { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -13,16 +14,15 @@ export class Sidebar extends PureComponent {
     const { title, action, activeItemId, items, widget, onResolveItemUrl } = this.props;
 
     const tabs = items.map(item => {
-      const titleIcon = item.titleIcon && <Icon icon={item.titleIcon} />;
-      const itemIcon = widget ? 'chevron-down' : 'chevron-right';
+      const ItemIcon = widget ? ChevronDown : ChevronRight;
 
-      const icon = item.id === activeItemId && <Icon icon={itemIcon} className="card-sidebar__arrow" />;
+      const icon = item.id === activeItemId && <ItemIcon className="card-sidebar__arrow" />;
 
       return (
         <Tab key={item.id} id={item.id}>
           <Link to={onResolveItemUrl(item.id)}>
-            {titleIcon}
-            {titleIcon && <span>&nbsp;&nbsp;</span>}
+            {item.titleIcon}
+            {item.titleIcon && <span>&nbsp;&nbsp;</span>}
             {item.title}
           </Link>
           {icon}
@@ -59,7 +59,7 @@ export class Sidebar extends PureComponent {
       >
         <div>
           <p className="card-sidebar__responsive-menu">
-            <Icon icon="menu" />
+            <Menu />
             &nbsp;<small>{title}</small>
           </p>
         </div>

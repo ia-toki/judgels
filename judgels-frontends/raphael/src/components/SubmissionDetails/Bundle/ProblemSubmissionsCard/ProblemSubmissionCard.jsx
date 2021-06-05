@@ -1,4 +1,5 @@
 import { Button, HTMLTable } from '@blueprintjs/core';
+import { Refresh } from '@blueprintjs/icons';
 
 import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
 import { ContentCard } from '../../../ContentCard/ContentCard';
@@ -69,7 +70,7 @@ export function ProblemSubmissionCard({
           {name}
         </h4>
         {canManage && onRegrade && (
-          <Button intent="primary" icon="refresh" onClick={onRegrade}>
+          <Button intent="primary" icon={<Refresh />} onClick={onRegrade}>
             Regrade
           </Button>
         )}

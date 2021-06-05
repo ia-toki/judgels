@@ -1,4 +1,5 @@
 import { Alignment, Button, MenuItem } from '@blueprintjs/core';
+import { CaretDown } from '@blueprintjs/icons';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
 
@@ -39,7 +40,7 @@ export function FormTableSelect2(props) {
           data-key={inputProps.name}
           alignText={Alignment.LEFT}
           text={optionNamesMap[input.value]}
-          rightIcon="caret-down"
+          rightIcon={<CaretDown />}
         />
       </Select>
     </FormTableInput>

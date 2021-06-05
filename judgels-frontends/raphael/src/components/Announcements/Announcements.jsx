@@ -1,4 +1,5 @@
-import { Icon, Navbar } from '@blueprintjs/core';
+import { Navbar } from '@blueprintjs/core';
+import { WarningSign } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
 
 import './Announcements.scss';
@@ -12,7 +13,7 @@ function Announcements({ config }) {
     <Navbar className="announcement">
       <div className="announcement__wrapper">
         <Navbar.Heading className="announcement__text">
-          <Icon icon="warning-sign" />
+          <WarningSign />
           &nbsp;&nbsp;
           {announcemet}
         </Navbar.Heading>

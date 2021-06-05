@@ -1,3 +1,4 @@
+import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
@@ -19,14 +20,14 @@ function SingleProfileRoutes({ userJid, username }) {
   const sidebarItems = [
     {
       id: '@',
-      titleIcon: 'properties',
+      titleIcon: <Properties />,
       title: 'Summary',
       routeComponent: Route,
       component: ProfileSummaryPage,
     },
     {
       id: 'contest-history',
-      titleIcon: 'timeline-events',
+      titleIcon: <TimelineEvents />,
       title: 'Contest history',
       routeComponent: Route,
       component: ContestHistoryPage,
@@ -36,7 +37,7 @@ function SingleProfileRoutes({ userJid, username }) {
       : [
           {
             id: 'submission-history',
-            titleIcon: 'layers',
+            titleIcon: <Layers />,
             title: 'Submission history',
             routeComponent: Route,
             component: SubmissionHistoryPage,

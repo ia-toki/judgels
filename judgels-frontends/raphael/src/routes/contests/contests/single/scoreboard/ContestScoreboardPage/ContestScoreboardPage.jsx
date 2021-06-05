@@ -1,4 +1,5 @@
 import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
+import { Pause, Refresh } from '@blueprintjs/icons';
 import { parse, stringify } from 'query-string';
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -120,7 +121,7 @@ export class ContestScoreboardPage extends Component {
     return (
       <Callout
         className="contest-scoreboard-page__frozen"
-        icon="pause"
+        icon={<Pause />}
         intent={Intent.WARNING}
         title="SCOREBOARD HAS BEEN FROZEN"
       />
@@ -176,7 +177,7 @@ export class ContestScoreboardPage extends Component {
       <Button
         className="contest-scoreboard-page__refresh-button"
         intent="primary"
-        icon="refresh"
+        icon={<Refresh />}
         onClick={this.forceRefreshScoreboard}
         loading={!!this.state.isForceRefreshButtonLoading}
       >

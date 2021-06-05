@@ -1,4 +1,5 @@
 import { HTMLTable, Tag, Button } from '@blueprintjs/core';
+import { Download } from '@blueprintjs/icons';
 import * as base64 from 'base-64';
 import { Link } from 'react-router-dom';
 
@@ -339,7 +340,7 @@ export function SubmissionDetails({
     return (
       <div>
         <h4 className="source-heading">Source Files</h4>
-        <Button small className="source-download" icon="download" onClick={onDownload}>
+        <Button small className="source-download" icon={<Download />} onClick={onDownload}>
           Download
         </Button>
         <div className="clearfix" />

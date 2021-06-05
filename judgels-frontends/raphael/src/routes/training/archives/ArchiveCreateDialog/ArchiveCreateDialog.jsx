@@ -1,4 +1,5 @@
 import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { Component } from 'react';
 
 import ArchiveCreateForm from '../ArchiveCreateForm/ArchiveCreateForm';
@@ -19,7 +20,7 @@ export class ArchiveCreateDialog extends Component {
 
   renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New archive
       </Button>
     );

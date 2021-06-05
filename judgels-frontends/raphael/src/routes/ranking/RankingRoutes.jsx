@@ -1,3 +1,4 @@
+import { ListDetailView, Property, TimelineLineChart } from '@blueprintjs/icons';
 import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -12,21 +13,21 @@ function RankingRoutes() {
   const sidebarItems = [
     {
       id: '@',
-      titleIcon: 'timeline-line-chart',
+      titleIcon: <TimelineLineChart />,
       title: 'Top ratings',
       routeComponent: Route,
       component: RatingsPage,
     },
     {
       id: 'rating-system',
-      titleIcon: 'property',
+      titleIcon: <Property />,
       title: 'Rating system',
       routeComponent: Route,
       component: RatingSystemPage,
     },
     {
       id: 'scores',
-      titleIcon: 'list-detail-view',
+      titleIcon: <ListDetailView />,
       title: 'Top scorers',
       routeComponent: Route,
       component: ScoresPage,

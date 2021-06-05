@@ -1,4 +1,5 @@
-import { Tag, Intent, Icon } from '@blueprintjs/core';
+import { Tag, Intent } from '@blueprintjs/core';
+import { Follower, Time } from '@blueprintjs/icons';
 
 import { Verdict } from '../../../../modules/api/sandalphon/submissionBundle';
 
@@ -24,9 +25,9 @@ export function VerdictTag({ verdict }) {
   const intent = verdictIntentMap[verdict] || Intent.NONE;
   let displayCode = verdictDisplayCode[verdict] || verdict;
   if (verdict === Verdict.PENDING_REGRADE) {
-    displayCode = <Icon icon="time" />;
+    displayCode = <Time />;
   } else if (verdict === Verdict.PENDING_MANUAL_GRADING) {
-    displayCode = <Icon icon="follower" />;
+    displayCode = <Follower />;
   }
   return (
     <Tag round intent={intent}>

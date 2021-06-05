@@ -1,9 +1,10 @@
+import { HTMLTable } from '@blueprintjs/core';
+import { CaretDown, CaretUp } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { HTMLTable, Icon } from '@blueprintjs/core';
 
 import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
@@ -99,7 +100,7 @@ export class UsersPage extends Component {
     if (orderBy === title.toLowerCase()) {
       return (
         <span>
-          {title} <Icon icon={orderDir === OrderDir.DESC ? 'caret-up' : 'caret-down'} />
+          {title} {orderDir === OrderDir.DESC ? <CaretUp /> : <CaretDown />}
         </span>
       );
     }

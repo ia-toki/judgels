@@ -1,4 +1,5 @@
 import { Button } from '@blueprintjs/core';
+import { ChevronLeft, Manual } from '@blueprintjs/icons';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
@@ -23,7 +24,7 @@ function SingleProblemSetRoutes({ match, problemSet, onClickBack }) {
   const sidebarItems = [
     {
       id: '@',
-      titleIcon: 'manual',
+      titleIcon: <Manual />,
       title: 'Problems',
       routeComponent: Route,
       component: ProblemSetProblemsPage,
@@ -34,7 +35,7 @@ function SingleProblemSetRoutes({ match, problemSet, onClickBack }) {
     title: 'Problemset Menu',
     items: sidebarItems,
     action: (
-      <Button small icon="chevron-left" onClick={onClickBack}>
+      <Button small icon={<ChevronLeft />} onClick={onClickBack}>
         Back
       </Button>
     ),

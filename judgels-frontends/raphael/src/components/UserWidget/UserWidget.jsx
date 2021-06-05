@@ -1,4 +1,5 @@
-import { Alignment, Icon, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
+import { Alignment, MenuDivider, Menu, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
+import { ChevronDown, Menu as IconMenu, User } from '@blueprintjs/icons';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -47,7 +48,7 @@ export class UserWidget extends PureComponent {
   renderForUser = (avatarUrl, profile) => {
     const menu = (
       <Menu className="widget-user__menu">
-        <MenuItem className="widget-user__menu-helper" icon="user" text={profile.username} disabled />
+        <MenuItem className="widget-user__menu-helper" icon={<User />} text={profile.username} disabled />
         <MenuDivider className="widget-user__menu-helper" />
         <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
         {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && <MenuItemLink text="My account" to="/account" />}
@@ -63,14 +64,14 @@ export class UserWidget extends PureComponent {
               {profile.username}
             </span>
           </span>{' '}
-          <Icon icon="chevron-down" color="#252627" />
+          <ChevronDown color="#252627" />
         </div>
       </Popover>
     );
 
     const responsivePopover = (
       <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
-        <Icon icon="menu" />
+        <IconMenu />
       </Popover>
     );
 
@@ -115,7 +116,7 @@ export class UserWidget extends PureComponent {
 
     return (
       <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
-        <Icon icon="menu" />
+        <IconMenu />
       </Popover>
     );
   };

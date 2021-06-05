@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Comment } from '@blueprintjs/icons';
 
 import ContestClarificationAnswerForm from '../ContestClarificationAnswerForm/ContestClarificationAnswerForm';
 
@@ -12,7 +13,7 @@ export function ContestClarificationAnswerBox({
 }) {
   const renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon="comment" onClick={showBox}>
+      <Button intent={Intent.PRIMARY} icon={<Comment />} onClick={showBox}>
         Answer
       </Button>
     );

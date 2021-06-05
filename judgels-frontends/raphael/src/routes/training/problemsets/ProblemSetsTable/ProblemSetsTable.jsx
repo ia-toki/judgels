@@ -1,4 +1,5 @@
-import { HTMLTable, Icon } from '@blueprintjs/core';
+import { HTMLTable } from '@blueprintjs/core';
+import { Edit, Manual } from '@blueprintjs/icons';
 
 import './ProblemSetsTable.scss';
 
@@ -25,13 +26,8 @@ export function ProblemSetsTable({ problemSets, archiveSlugsMap, onEditProblemSe
         <td>{problemSet.name}</td>
         <td>{archiveSlugsMap[problemSet.archiveJid]}</td>
         <td>
-          <Icon className="action" icon="edit" intent="primary" onClick={() => onEditProblemSet(problemSet)} />
-          <Icon
-            className="action"
-            icon="manual"
-            intent="primary"
-            onClick={() => onEditProblemSetProblems(problemSet)}
-          />
+          <Edit className="action" intent="primary" onClick={() => onEditProblemSet(problemSet)} />
+          <Manual className="action" intent="primary" onClick={() => onEditProblemSetProblems(problemSet)} />
         </td>
       </tr>
     ));

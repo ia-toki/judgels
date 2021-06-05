@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Edit } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -42,7 +43,7 @@ class ContestEditConfigsTab extends Component {
   renderEditButton = () => {
     return (
       !this.state.isEditing && (
-        <Button small className="right-action-button" intent={Intent.PRIMARY} icon="edit" onClick={this.toggleEdit}>
+        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={this.toggleEdit}>
           Edit
         </Button>
       )
