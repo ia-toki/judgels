@@ -1,13 +1,34 @@
-import ReactFormattedDuration from 'react-intl-formatted-duration';
-
-import '@formatjs/intl-pluralrules/polyfill-locales';
-
 export function FormattedDuration({ value }) {
-  const seconds = Math.floor(value / 1000);
+  const oneSecond = 1000;
+  const oneMinute = 60 * oneSecond;
+  const oneHour = 60 * oneMinute;
+  const oneDay = 24 * oneHour;
 
-  let format = '{hours} {minutes} {seconds}';
-  if (seconds >= 86400) {
-    format = `{days} ${format}`;
+  let res = [];
+  let val = value;
+
+  const days = Math.floor(val / oneDay);
+  if (days > 0) {
+    res = [...res, days + ' day' + (days > 1 ? 's' : '')];
   }
-  return <ReactFormattedDuration seconds={seconds} format={format} />;
+  val = val % oneDay;
+
+  const hours = Math.floor(val / oneHour);
+  if (hours > 0) {
+    res = [...res, hours + ' hour' + (hours > 1 ? 's' : '')];
+  }
+  val = val % oneHour;
+
+  const minutes = Math.floor(val / oneMinute);
+  if (minutes > 0) {
+    res = [...res, minutes + ' minute' + (minutes > 1 ? 's' : '')];
+  }
+  val = val % oneMinute;
+
+  const seconds = Math.floor(val / oneSecond);
+  if (seconds > 0) {
+    res = [...res, seconds + ' second' + (seconds > 1 ? 's' : '')];
+  }
+
+  return res.join(' ');
 }

@@ -1,5 +1,4 @@
 import { PureComponent } from 'react';
-import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import DocumentTitle from 'react-document-title';
@@ -35,23 +34,21 @@ class App extends PureComponent {
 
     return (
       <DocumentTitle title={title}>
-        <IntlProvider locale={navigator.language}>
-          <div>
-            <Announcements />
-            <Header />
-            <Menubar items={visibleAppRoutes} homeRoute={homeRoute} />
-            <AppContent>
-              <Breadcrumbs />
-              <Switch>
-                {visibleAppRoutes.map(item => (
-                  <Route key={item.id} {...item.route} />
-                ))}
-                <Route {...homeRoute.route} />
-              </Switch>
-              <Footer />
-            </AppContent>
-          </div>
-        </IntlProvider>
+        <div>
+          <Announcements />
+          <Header />
+          <Menubar items={visibleAppRoutes} homeRoute={homeRoute} />
+          <AppContent>
+            <Breadcrumbs />
+            <Switch>
+              {visibleAppRoutes.map(item => (
+                <Route key={item.id} {...item.route} />
+              ))}
+              <Route {...homeRoute.route} />
+            </Switch>
+            <Footer />
+          </AppContent>
+        </div>
       </DocumentTitle>
     );
   }

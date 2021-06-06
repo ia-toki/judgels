@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -31,11 +30,9 @@ describe('ContestOverviewPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
-      <IntlProvider locale={navigator.language}>
-        <Provider store={store}>
-          <ContestOverviewPage />
-        </Provider>
-      </IntlProvider>
+      <Provider store={store}>
+        <ContestOverviewPage />
+      </Provider>
     );
 
     await new Promise(resolve => setImmediate(resolve));

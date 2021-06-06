@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -32,13 +31,11 @@ describe('ContestFilesPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
-      <IntlProvider locale={navigator.language}>
-        <Provider store={store}>
-          <MemoryRouter>
-            <ContestFilesPage />
-          </MemoryRouter>
-        </Provider>
-      </IntlProvider>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ContestFilesPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     await new Promise(resolve => setImmediate(resolve));

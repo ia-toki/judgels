@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -56,13 +55,11 @@ describe('ContestClarificationsPage', () => {
     store.dispatch(PutStatementLanguage('en'));
 
     wrapper = mount(
-      <IntlProvider locale={navigator.language}>
-        <Provider store={store}>
-          <MemoryRouter>
-            <ContestClarificationsPage />
-          </MemoryRouter>
-        </Provider>
-      </IntlProvider>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ContestClarificationsPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     await new Promise(resolve => setImmediate(resolve));

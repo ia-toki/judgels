@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
@@ -31,11 +30,9 @@ describe('ContestEditGeneralTab', () => {
     store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a', style: ContestStyle.ICPC }));
 
     wrapper = mount(
-      <IntlProvider locale={navigator.language}>
-        <Provider store={store}>
-          <ContestEditGeneralTab />
-        </Provider>
-      </IntlProvider>
+      <Provider store={store}>
+        <ContestEditGeneralTab />
+      </Provider>
     );
   });
 

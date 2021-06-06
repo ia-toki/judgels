@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -60,13 +59,11 @@ describe('ChapterSubmissionsPage', () => {
     );
 
     wrapper = mount(
-      <IntlProvider locale={navigator.language}>
-        <Provider store={store}>
-          <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1/submissions']}>
-            <Route path="/courses/courseSlug/chapter/chapter-1/submissions" component={ChapterSubmissionsPage} />
-          </MemoryRouter>
-        </Provider>
-      </IntlProvider>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1/submissions']}>
+          <Route path="/courses/courseSlug/chapter/chapter-1/submissions" component={ChapterSubmissionsPage} />
+        </MemoryRouter>
+      </Provider>
     );
 
     await new Promise(resolve => setImmediate(resolve));

@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import thunk from 'redux-thunk';
@@ -30,13 +29,11 @@ describe('ContestScoreboardPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid', style: ContestStyle.ICPC }));
 
     wrapper = mount(
-      <IntlProvider locale={navigator.language}>
-        <Provider store={store}>
-          <MemoryRouter>
-            <ContestScoreboardPage />
-          </MemoryRouter>
-        </Provider>
-      </IntlProvider>
+      <Provider store={store}>
+        <MemoryRouter>
+          <ContestScoreboardPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     await new Promise(resolve => setImmediate(resolve));
