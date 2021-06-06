@@ -33,7 +33,11 @@ class ContestRegistrationCard extends Component {
         </Callout>
       );
     }
-    return <Callout className="contest-registration-card">{this.renderCard()}</Callout>;
+    return (
+      <Callout className="contest-registration-card" icon={null}>
+        {this.renderCard()}
+      </Callout>
+    );
   }
 
   refresh = async () => {

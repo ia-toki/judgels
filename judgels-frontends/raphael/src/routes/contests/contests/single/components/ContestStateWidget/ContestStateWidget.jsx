@@ -1,5 +1,5 @@
 import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
-import { Time } from '@blueprintjs/icons';
+import { InfoSign, Time } from '@blueprintjs/icons';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -47,7 +47,7 @@ class ContestStateWidget extends PureComponent {
   render() {
     const { leftComponent, rightComponent } = this.getWidgetComponents();
     return (
-      <Callout intent={Intent.PRIMARY} className="secondary-info">
+      <Callout intent={Intent.PRIMARY} className="secondary-info" icon={<InfoSign />}>
         <div className="contest-state-widget__left">{leftComponent}</div>
         <div className="contest-state-widget__right">{rightComponent}</div>
         <div className="clearfix" />
