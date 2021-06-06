@@ -49,21 +49,22 @@ export class Sidebar extends PureComponent {
     );
 
     const responsiveMenu = (
-      <Popover
-        className="card-sidebar card-sidebar__responsive"
-        content={tabsContainer}
-        position={Position.BOTTOM_LEFT}
-        isOpen={this.state.isResponsivePopoverOpen}
-        onInteraction={this.onResponsivePopoverInteraction}
-        usePortal={false}
-      >
-        <div>
-          <p className="card-sidebar__responsive-menu">
-            <Menu />
-            &nbsp;<small>{title}</small>
-          </p>
-        </div>
-      </Popover>
+      <div className="card-sidebar card-sidebar__responsive">
+        <Popover
+          content={tabsContainer}
+          position={Position.BOTTOM_LEFT}
+          isOpen={this.state.isResponsivePopoverOpen}
+          onInteraction={this.onResponsivePopoverInteraction}
+          usePortal={false}
+        >
+          <div>
+            <p className="card-sidebar__responsive-menu">
+              <Menu />
+              &nbsp;<small>{title}</small>
+            </p>
+          </div>
+        </Popover>
+      </div>
     );
 
     return (

@@ -37,12 +37,12 @@
     height: 50px;
   }
 
-  .bp4-tab[aria-selected="true"] {
+  .bp4-tab[aria-selected='true'] {
     font-weight: bold;
     color: $text-color;
   }
 
-  .bp4-tab[aria-selected="false"] {
+  .bp4-tab[aria-selected='false'] {
     color: $primary-color;
   }
 }
@@ -81,9 +81,5 @@
     .bp4-icon {
       padding-bottom: 0 !important;
     }
-  }
-
-  .bp4-overlay-content {
-    top: -10px !important;
   }
 }
