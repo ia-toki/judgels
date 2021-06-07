@@ -7,7 +7,6 @@ import 'tinymce/plugins/image';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/paste';
-import 'tinymce/plugins/table';
 
 export class TinyMCETextArea extends PureComponent {
   componentDidMount() {
@@ -18,12 +17,12 @@ export class TinyMCETextArea extends PureComponent {
         content_css: '/skins/raphael/content.css',
         branding: false,
         menubar: false,
-        plugins: 'code image link lists table',
+        plugins: 'code image link lists',
         toolbar:
           'bold italic underline strikethrough subscript superscript blockquote removeformat | ' +
           'bullist numlist | outdent indent | ' +
           'alignleft aligncenter alignright alignjustify | ' +
-          'image link table | ' +
+          'image link | ' +
           'styleselect formatselect | ' +
           'code',
         relative_urls: false,
