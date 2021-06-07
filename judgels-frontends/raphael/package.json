@@ -6,7 +6,6 @@
     "@blueprintjs/datetime": "4.0.0-alpha.0",
     "@blueprintjs/icons": "4.0.0-alpha.0",
     "@blueprintjs/select": "4.0.0-alpha.0",
-    "base-64": "^0.1.0",
     "classnames": "^2.2.5",
     "connected-react-router": "6.9.1",
     "history": "4.9.0",

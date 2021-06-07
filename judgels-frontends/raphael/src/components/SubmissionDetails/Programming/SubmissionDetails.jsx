@@ -1,6 +1,5 @@
 import { HTMLTable, Tag, Button } from '@blueprintjs/core';
 import { Download } from '@blueprintjs/icons';
-import * as base64 from 'base-64';
 import { Link } from 'react-router-dom';
 
 import { SourceCode } from '../../SourceCode/SourceCode';
@@ -298,7 +297,7 @@ export function SubmissionDetails({
           {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
         </h5>
         <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
-          {base64.decode(submissionFiles[key].content)}
+          {atob(submissionFiles[key].content)}
         </SourceCode>
         {verdict.code === VerdictCode.CE &&
           details &&
