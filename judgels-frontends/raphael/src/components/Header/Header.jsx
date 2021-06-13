@@ -39,4 +39,5 @@ class Header extends PureComponent {
   }
 }
 
-export default () => <Header userWidget={UserWidget} />;
+const HeaderWrapper = () => <Header userWidget={UserWidget} />;
+export default HeaderWrapper;

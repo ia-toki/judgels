@@ -113,7 +113,6 @@ const mapDispatchToProps = {
   onGetProgrammingSubmissions: submissionActions.getSubmissions,
   onRegrade: submissionActions.regradeSubmission,
   onAppendRoute: queries => push({ search: stringify(queries) }),
-  onRegrade: submissionActions.regradeSubmission,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionsPage));

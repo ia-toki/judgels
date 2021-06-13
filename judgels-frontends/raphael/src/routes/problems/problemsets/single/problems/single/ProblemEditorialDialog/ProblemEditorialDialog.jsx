@@ -58,7 +58,6 @@ export class ProblemEditorialDialog extends Component {
   };
 
   renderDialog = () => {
-    const { problemSet, problem } = this.props;
     const { isDialogOpen } = this.state;
     return (
       <Dialog className="problem-editorial-dialog" isOpen={isDialogOpen} onClose={this.toggleDialog} title="Editorial">

@@ -15,7 +15,7 @@ export function SubmissionImageDialog({ isOpen, onClose, title, imageUrl }) {
       <div className={Classes.DIALOG_BODY}>
         <Card className="submission-image-card">
           <div className="submission-image">
-            <img src={imageUrl} />
+            <img src={imageUrl} alt="submission" />
           </div>
         </Card>
       </div>

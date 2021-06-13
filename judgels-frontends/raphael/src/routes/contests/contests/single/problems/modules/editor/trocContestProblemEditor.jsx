@@ -1,7 +1,7 @@
 import { ContestProblemStatus } from '../../../../../../../modules/api/uriel/contestProblem';
 import { Alias, Slug, NonnegativeNumber } from '../../../../../../../components/forms/validations';
 
-export default {
+const trocContestProblemEditor = {
   validator: value => {
     const problems = value
       .split('\n')
@@ -95,3 +95,5 @@ export default {
   format: <code>alias,slug,points[,status[,submissionsLimit]]</code>,
   example: <pre>{'A,hello,3\nB,tree,4,CLOSED\nC,flow,6,OPEN,20'}</pre>,
 };
+
+export default trocContestProblemEditor;

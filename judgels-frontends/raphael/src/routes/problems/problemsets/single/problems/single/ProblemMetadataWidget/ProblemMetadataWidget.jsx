@@ -37,7 +37,7 @@ class ProblemMetadataWidget extends Component {
     }
 
     const { contests } = response;
-    if (contests.length == 0) {
+    if (contests.length === 0) {
       return null;
     }
 

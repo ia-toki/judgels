@@ -67,7 +67,7 @@ describe('InfoPanel', () => {
     institutionName.simulate('change', { target: { value: 'My New Institution' } });
 
     const institutionCountry = wrapper.find('select[name="institutionCountry"]');
-    institutionCountry.simulate('change', { target: { value: 'United States' } });
+    institutionCountry.simulate('change', { target: { value: 'US' } });
 
     const institutionProvince = wrapper.find('input[name="institutionProvince"]');
     institutionProvince.simulate('change', {
@@ -87,7 +87,7 @@ describe('InfoPanel', () => {
       homeAddress: 'My New Address',
       shirtSize: 'S',
       institutionName: 'My New Institution',
-      institutionCountry: 'United States',
+      institutionCountry: 'US',
       institutionProvince: 'My New Province',
       institutionCity: 'My New City',
     });

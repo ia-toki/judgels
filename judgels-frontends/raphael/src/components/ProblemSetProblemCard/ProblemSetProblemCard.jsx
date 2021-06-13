@@ -15,7 +15,6 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     }
 
     const { totalScores, totalUsersAccepted, totalUsersTried } = stats;
-    const avgScore = Math.ceil(totalScores / (totalUsersTried || 1));
 
     return (
       <div className="problemset-problem-card__stats">

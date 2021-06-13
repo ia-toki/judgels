@@ -89,7 +89,6 @@ export const languageNamesMap = {
   sn: 'Shona',
   sq: 'Albanian',
   sr: 'Serbian',
-  sr: 'Serbian',
   sv: 'Swedish',
   sw: 'Swahili',
   ta: 'Tamil',
