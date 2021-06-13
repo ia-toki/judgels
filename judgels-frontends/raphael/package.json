@@ -61,7 +61,6 @@
     "react-dev-utils": "^11.0.3",
     "react-document-title": "2.0.3",
     "react-dropzone": "11.3.2",
-    "react-flags": "^0.1.18",
     "react-ga": "3.3.0",
     "react-google-recaptcha": "^0.9.9",
     "react-paginate": "7.1.3",

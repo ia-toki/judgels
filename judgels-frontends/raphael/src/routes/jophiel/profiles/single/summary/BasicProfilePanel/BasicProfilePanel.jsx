@@ -1,5 +1,4 @@
 import { HTMLTable } from '@blueprintjs/core';
-import Flag from 'react-flags';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
@@ -26,7 +25,7 @@ export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, c
     }
     return (
       <div>
-        <Flag basePath="/flags" name={country} format="png" pngSize={24} shiny className="basic-profile-card__flag" />
+        <img alt={country} src={`/flags/flags-iso/shiny/24/${country}.png`} className="basic-profile-card__flag" />
         <span className="basic-profile-card__country">{getCountryName(country)}</span>
       </div>
     );

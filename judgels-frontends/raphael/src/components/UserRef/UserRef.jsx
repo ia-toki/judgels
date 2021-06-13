@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import Flag from 'react-flags';
 import { Link } from 'react-router-dom';
 
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
@@ -14,7 +13,9 @@ export function UserRef({ profile, showFlag }) {
     if (!profile || !profile.country) {
       return <div className="user-ref__flag-dummy" />;
     }
-    return <Flag basePath="/flags" name={profile.country} format="png" pngSize={24} shiny className="user-ref__flag" />;
+    return (
+      <img alt={profile.country} src={`/flags/flags-iso/shiny/24/${profile.country}.png`} className="user-ref__flag" />
+    );
   };
 
   const renderUsername = () => {
