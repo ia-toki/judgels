@@ -35,6 +35,7 @@ export class Sidebar extends PureComponent {
         id="sidebar"
         selectedTabId={activeItemId}
         onChange={this.onResponsiveItemClick}
+        animate={!this.state.isResponsivePopoverOpen}
         vertical
         renderActiveTabPanelOnly
       >

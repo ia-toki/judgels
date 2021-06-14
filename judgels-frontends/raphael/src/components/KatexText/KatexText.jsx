@@ -1,10 +1,10 @@
-import { createRef, Component } from 'react';
+import { createRef, PureComponent } from 'react';
 
 import { HtmlText } from '../HtmlText/HtmlText';
 
 import './KatexText.scss';
 
-export class KatexText extends Component {
+export class KatexText extends PureComponent {
   ref;
 
   constructor(props) {
