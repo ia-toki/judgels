@@ -1,10 +1,13 @@
 import { configure } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Adapter from 'enzyme-adapter-preact-pure';
+import ReactDOM from 'react-dom';
 import nock from 'nock';
 
 configure({ adapter: new Adapter() });
 
 nock.disableNetConnect();
+
+ReactDOM.createPortal = el => el;
 
 window.conf = {
   name: 'Judgels',

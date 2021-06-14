@@ -29,10 +29,12 @@ describe('ResetPasswordPage', () => {
 
   test('form', () => {
     const password = wrapper.find('input[name="password"]');
-    password.simulate('change', { target: { value: 'pass' } });
+    password.getDOMNode().value = 'pass';
+    password.simulate('input');
 
     const confirmPassword = wrapper.find('input[name="confirmPassword"]');
-    confirmPassword.simulate('change', { target: { value: 'pass' } });
+    confirmPassword.getDOMNode().value = 'pass';
+    confirmPassword.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

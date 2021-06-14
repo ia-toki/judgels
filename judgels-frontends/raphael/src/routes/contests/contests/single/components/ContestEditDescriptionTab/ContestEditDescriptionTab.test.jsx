@@ -47,7 +47,8 @@ describe('ContestEditDescriptionTab', () => {
     wrapper.update();
 
     const description = wrapper.find('textarea[name="description"]');
-    description.simulate('change', { target: { value: 'new description' } });
+    description.getDOMNode().value = 'new description';
+    description.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

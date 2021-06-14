@@ -44,16 +44,20 @@ describe('ContestEditGeneralTab', () => {
     wrapper.update();
 
     const slug = wrapper.find('input[name="slug"]');
-    slug.simulate('change', { target: { value: 'contest-b' } });
+    slug.getDOMNode().value = 'contest-b';
+    slug.simulate('input');
 
     const name = wrapper.find('input[name="name"]');
-    name.simulate('change', { target: { value: 'Contest B' } });
+    name.getDOMNode().value = 'Contest B';
+    name.simulate('input');
 
     const beginTime = wrapper.find('input[name="beginTime"]');
-    beginTime.simulate('change', { target: { value: '2018-09-10 17:00' } });
+    beginTime.getDOMNode().value = '2018-09-10 17:00';
+    beginTime.simulate('input');
 
     const duration = wrapper.find('input[name="duration"]');
-    duration.simulate('change', { target: { value: '6h' } });
+    duration.getDOMNode().value = '6h';
+    duration.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

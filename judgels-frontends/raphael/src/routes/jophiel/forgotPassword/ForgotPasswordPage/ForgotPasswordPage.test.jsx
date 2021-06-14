@@ -26,7 +26,8 @@ describe('ForgotPasswordPage', () => {
 
   test('form', async () => {
     const email = wrapper.find('input[name="email"]');
-    email.simulate('change', { target: { value: 'email@domain.com' } });
+    email.getDOMNode().value = 'email@domain.com';
+    email.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

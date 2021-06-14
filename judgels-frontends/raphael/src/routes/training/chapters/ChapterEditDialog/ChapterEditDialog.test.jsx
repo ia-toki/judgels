@@ -39,7 +39,8 @@ describe('ChapterEditDialog', () => {
 
   test('edit dialog form', async () => {
     const name = wrapper.find('input[name="name"]');
-    name.simulate('change', { target: { value: 'New chapter' } });
+    name.getDOMNode().value = 'New chapter';
+    name.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

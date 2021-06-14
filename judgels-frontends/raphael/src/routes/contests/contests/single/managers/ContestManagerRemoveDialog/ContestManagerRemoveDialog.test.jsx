@@ -32,7 +32,8 @@ describe('ContestManagerRemoveDialog', () => {
     wrapper.update();
 
     const usernames = wrapper.find('textarea[name="usernames"]');
-    usernames.simulate('change', { target: { value: 'andi\n\nbudi\n caca  \n' } });
+    usernames.getDOMNode().value = 'andi\n\nbudi\n caca  \n';
+    usernames.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

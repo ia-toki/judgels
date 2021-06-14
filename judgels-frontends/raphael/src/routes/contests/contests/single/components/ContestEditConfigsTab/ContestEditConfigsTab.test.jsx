@@ -74,34 +74,44 @@ describe('ContestEditConfigsTab', () => {
         wrapper.update();
 
         const icpcWrongSubmissionPenalty = wrapper.find('input[name="icpcWrongSubmissionPenalty"]');
-        icpcWrongSubmissionPenalty.simulate('change', { target: { value: '25' } });
+        icpcWrongSubmissionPenalty.getDOMNode().value = '25';
+        icpcWrongSubmissionPenalty.simulate('input');
 
         const scoreboardIsIncognito = wrapper.find('input[name="scoreboardIsIncognito"]');
-        scoreboardIsIncognito.simulate('change', { target: { checked: true } });
+        scoreboardIsIncognito.getDOMNode().checked = true;
+        scoreboardIsIncognito.simulate('change');
 
         const clarificationTimeLimitDuration = wrapper.find('input[name="clarificationTimeLimitDuration"]');
-        clarificationTimeLimitDuration.simulate('change', { target: { value: '2h 5m' } });
+        clarificationTimeLimitDuration.getDOMNode().value = '2h 5m';
+        clarificationTimeLimitDuration.simulate('input');
 
         const divisionDivision = wrapper.find('input[name="divisionDivision"]');
-        divisionDivision.simulate('change', { target: { value: '2' } });
+        divisionDivision.getDOMNode().value = '2';
+        divisionDivision.simulate('input');
 
         const frozenScoreboardFreezeTime = wrapper.find('input[name="frozenScoreboardFreezeTime"]');
-        frozenScoreboardFreezeTime.simulate('change', { target: { value: '1h 5m' } });
+        frozenScoreboardFreezeTime.getDOMNode().value = '1h 5m';
+        frozenScoreboardFreezeTime.simulate('input');
 
         const frozenScoreboardIsOfficialAllowed = wrapper.find('input[name="frozenScoreboardIsOfficialAllowed"]');
-        frozenScoreboardIsOfficialAllowed.simulate('change', { target: { checked: true } });
+        frozenScoreboardIsOfficialAllowed.getDOMNode().checked = true;
+        frozenScoreboardIsOfficialAllowed.simulate('change');
 
         const externalScoreboardReceiverUrl = wrapper.find('input[name="externalScoreboardReceiverUrl"]');
-        externalScoreboardReceiverUrl.simulate('change', { target: { value: 'http://new.external.scoreboard' } });
+        externalScoreboardReceiverUrl.getDOMNode().value = 'http://new.external.scoreboard';
+        externalScoreboardReceiverUrl.simulate('input');
 
         const externalScoreboardReceiverSecret = wrapper.find('input[name="externalScoreboardReceiverSecret"]');
-        externalScoreboardReceiverSecret.simulate('change', { target: { value: 'the_new_secret' } });
+        externalScoreboardReceiverSecret.getDOMNode().value = 'the_new_secret';
+        externalScoreboardReceiverSecret.simulate('input');
 
         const virtualDuration = wrapper.find('input[name="virtualDuration"]');
-        virtualDuration.simulate('change', { target: { value: '5h 5m' } });
+        virtualDuration.getDOMNode().value = '5h 5m';
+        virtualDuration.simulate('input');
 
         const editorialPreface = wrapper.find('textarea[name="editorialPreface"]');
-        editorialPreface.simulate('change', { target: { value: '<p>Thank you for your participation.</p>' } });
+        editorialPreface.getDOMNode().value = '<p>Thank you for your participation.</p>';
+        editorialPreface.simulate('input');
 
         const form = wrapper.find('form');
         form.simulate('submit');
@@ -157,7 +167,8 @@ describe('ContestEditConfigsTab', () => {
         wrapper.update();
 
         const icpcAllowAllLanguages = wrapper.find('input[name="icpcAllowAllLanguages"]');
-        icpcAllowAllLanguages.simulate('change', { target: { checked: true } });
+        icpcAllowAllLanguages.getDOMNode().checked = true;
+        icpcAllowAllLanguages.simulate('change');
 
         const form = wrapper.find('form');
         form.simulate('submit');
@@ -191,15 +202,18 @@ describe('ContestEditConfigsTab', () => {
         wrapper.update();
 
         const icpcAllowAllLanguages = wrapper.find('input[name="icpcAllowAllLanguages"]');
-        icpcAllowAllLanguages.simulate('change', { target: { checked: false } });
+        icpcAllowAllLanguages.getDOMNode().checked = false;
+        icpcAllowAllLanguages.simulate('change');
 
         wrapper.update();
 
         const icpcAllowedLanguagesPascal = wrapper.find('input[name="icpcAllowedLanguages.Pascal"]');
-        icpcAllowedLanguagesPascal.simulate('change', { target: { checked: true } });
+        icpcAllowedLanguagesPascal.getDOMNode().checked = true;
+        icpcAllowedLanguagesPascal.simulate('change');
 
         const icpcAllowedLanguagesPython3 = wrapper.find('input[name="icpcAllowedLanguages.Python3"]');
-        icpcAllowedLanguagesPython3.simulate('change', { target: { checked: true } });
+        icpcAllowedLanguagesPython3.getDOMNode().checked = true;
+        icpcAllowedLanguagesPython3.simulate('change');
 
         const form = wrapper.find('form');
         form.simulate('submit');

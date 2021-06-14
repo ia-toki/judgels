@@ -1,5 +1,6 @@
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
+import { act } from 'preact/test-utils';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
@@ -92,11 +93,13 @@ describe('ProgrammingContestProblemPage', () => {
   });
 
   test('form', async () => {
-    const encoder = wrapper.find('input[name="sourceFiles.encoder"]');
-    encoder.simulate('change', { target: { files: [{ name: 'encoder.cpp', size: 1000 }] } });
+    act(() => {
+      const encoder = wrapper.find('input[name="sourceFiles.encoder"]');
+      encoder.prop('onChange')({ target: { files: [{ name: 'encoder.cpp', size: 1000 }] }, preventDefault: () => {} });
 
-    const decoder = wrapper.find('input[name="sourceFiles.decoder"]');
-    decoder.simulate('change', { target: { files: [{ name: 'decoder.cpp', size: 2000 }] } });
+      const decoder = wrapper.find('input[name="sourceFiles.decoder"]');
+      decoder.prop('onChange')({ target: { files: [{ name: 'decoder.cpp', size: 2000 }] }, preventDefault: () => {} });
+    });
 
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478

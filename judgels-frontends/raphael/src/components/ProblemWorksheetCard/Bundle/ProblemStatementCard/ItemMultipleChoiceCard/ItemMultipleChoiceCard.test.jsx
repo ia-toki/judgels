@@ -44,7 +44,8 @@ describe('ItemMultipleChoiceCard', () => {
       .children()
       .find('input')
       .first();
-    radioButton.simulate('change', { target: { checked: true } });
+    radioButton.getDOMNode().checked = true;
+    radioButton.simulate('change');
     expect(onChoiceChangeFn).toBeCalled();
   });
 
@@ -54,13 +55,15 @@ describe('ItemMultipleChoiceCard', () => {
       .children()
       .find('input')
       .first();
-    prevAnswer.simulate('click', { target: { checked: true } });
+    prevAnswer.getDOMNode().checked = true;
+    prevAnswer.simulate('click');
     const currentAnswer = wrapper
       .find('label')
       .children()
       .find('input')
       .last();
-    currentAnswer.simulate('change', { target: { checked: true } });
+    currentAnswer.getDOMNode().checked = true;
+    currentAnswer.simulate('change');
     expect(onChoiceChangeFn).toHaveBeenCalled();
   });
 });

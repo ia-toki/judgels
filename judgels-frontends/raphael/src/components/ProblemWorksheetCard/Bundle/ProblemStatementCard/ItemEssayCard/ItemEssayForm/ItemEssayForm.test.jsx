@@ -53,11 +53,12 @@ describe('ItemEssayForm', () => {
     });
 
     describe('fill and submit the answer', () => {
-      beforeEach(async () => {
-        const answerButton = wrapper.find('button').first();
-        await answerButton.simulate('submit');
+      beforeEach(() => {
+        const answerButton = wrapper.find('form');
+        answerButton.simulate('submit');
         const textarea = wrapper.find('textarea');
-        textarea.simulate('change', { target: { value: 'answer' } });
+        textarea.getDOMNode().value = 'answer';
+        textarea.simulate('input');
       });
 
       test("textarea value should be 'answer'", () => {
@@ -65,19 +66,19 @@ describe('ItemEssayForm', () => {
         expect(value).toEqual('answer');
       });
 
-      test('cancel filling the answer should render 1 button', async () => {
+      test('cancel filling the answer should render 1 button', () => {
         const cancelButton = wrapper.find('button').last();
-        await cancelButton.simulate('click');
+        cancelButton.simulate('click');
         const button = wrapper.find('button');
         expect(button.length).toEqual(1);
         expect(button.text()).toEqual('Answer');
         expect(onSubmitFn).not.toBeCalled();
       });
 
-      test('submit the answer', async () => {
+      test('submit the answer', () => {
         const prevHelpText = wrapper.find('div').last();
-        const submitButton = wrapper.find('button').first();
-        await submitButton.simulate('submit');
+        const submitButton = wrapper.find('form');
+        submitButton.simulate('submit');
         const helpText = wrapper.find('div').last();
         expect(helpText).not.toEqual(prevHelpText);
         expect(onSubmitFn).toBeCalled();
@@ -125,10 +126,11 @@ describe('ItemEssayForm', () => {
 
     describe('change the answer', () => {
       beforeEach(async () => {
-        const changeButton = wrapper.find('button').first();
+        const changeButton = wrapper.find('form');
         await changeButton.simulate('submit');
         const textarea = wrapper.find('textarea').first();
-        textarea.simulate('change', { target: { value: 'answer' } });
+        textarea.getDOMNode().value = 'answer';
+        textarea.simulate('input');
       });
 
       test("textarea value should be 'answer'", () => {
@@ -147,7 +149,7 @@ describe('ItemEssayForm', () => {
 
       test('submit the answer', async () => {
         const prevHelpText = wrapper.find('div').last();
-        const submitButton = wrapper.find('button').first();
+        const submitButton = wrapper.find('form');
         await submitButton.simulate('submit');
         const helpText = wrapper.find('div').last();
         expect(helpText).not.toEqual(prevHelpText);

@@ -70,7 +70,8 @@ describe('ContestProblemEditDialog', () => {
     const problemsField = wrapper.find('textarea[name="problems"]');
     expect(problemsField.prop('value')).toEqual('A,pp1\nB,pp2,OPEN,10\nC,pp3,CLOSED\nD,pp4,CLOSED,10');
 
-    problemsField.simulate('change', { target: { value: 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20' } });
+    problemsField.getDOMNode().value = 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20';
+    problemsField.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

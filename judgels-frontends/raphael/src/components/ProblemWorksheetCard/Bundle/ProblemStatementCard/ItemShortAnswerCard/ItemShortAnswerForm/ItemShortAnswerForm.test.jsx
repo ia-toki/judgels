@@ -52,16 +52,19 @@ describe('ItemShortAnswerForm', () => {
     });
 
     describe('fill and submit the answer', () => {
-      beforeEach(async () => {
-        const answerButton = wrapper.find('button');
-        await answerButton.simulate('submit');
+      beforeEach(() => {
+        const answerButton = wrapper.find('form');
+        answerButton.simulate('submit');
+
         const textInput = wrapper.find('input');
-        textInput.simulate('change', { target: { value: '1' } });
+        textInput.getDOMNode().value = '1';
+        textInput.simulate('input');
       });
 
       test('fill the answer with wrong format will render the new help text', () => {
         const textInput = wrapper.find('input');
-        textInput.simulate('change', { target: { value: 'answer' } });
+        textInput.getDOMNode().value = 'answer';
+        textInput.simulate('input');
         const helpText = wrapper
           .find('div')
           .at(1)
@@ -77,10 +80,10 @@ describe('ItemShortAnswerForm', () => {
         expect(button.text()).toEqual('Answer');
       });
 
-      test('submit the answer', async () => {
+      test('submit the answer', () => {
         const prevHelpText = wrapper.find('div').at(1);
-        const submitButton = wrapper.find('button').first();
-        await submitButton.simulate('submit');
+        const submitButton = wrapper.find('form');
+        submitButton.simulate('submit');
         const helpText = wrapper.find('div').at(1);
         expect(helpText).not.toEqual(prevHelpText);
         expect(onSubmitFn).toBeCalled();
@@ -117,11 +120,12 @@ describe('ItemShortAnswerForm', () => {
     });
 
     describe('change the answer', () => {
-      beforeEach(async () => {
-        const changeButton = wrapper.find('button').first();
-        await changeButton.simulate('submit');
+      beforeEach(() => {
+        const changeButton = wrapper.find('form');
+        changeButton.simulate('submit');
         const textInput = wrapper.find('input');
-        textInput.simulate('change', { target: { value: '2' } });
+        textInput.getDOMNode().value = '2';
+        textInput.simulate('input');
       });
 
       test('change the answer with right format', () => {
@@ -131,7 +135,8 @@ describe('ItemShortAnswerForm', () => {
 
       test('change the answer with wrong format', () => {
         const textInput = wrapper.find('input');
-        textInput.simulate('change', { target: { value: 'answer' } });
+        textInput.getDOMNode().value = 'answer';
+        textInput.simulate('input');
         const helpText = wrapper
           .find('div')
           .at(1)
@@ -139,30 +144,30 @@ describe('ItemShortAnswerForm', () => {
         expect(helpText).toContain('Wrong answer format!');
       });
 
-      test('cancel answer should render new buttons', async () => {
+      test('cancel answer should render new buttons', () => {
         const prevButtons = wrapper.find('button');
         const cancelButton = prevButtons.last();
-        await cancelButton.simulate('click');
+        cancelButton.simulate('click');
         const buttons = wrapper.find('button');
         const buttonTexts = buttons.map(bt => bt.text());
         expect(buttons).not.toEqual(prevButtons);
         expect(buttonTexts).toEqual(['Change', 'Clear']);
       });
 
-      test('submit the answer', async () => {
+      test('submit the answer', () => {
         const prevHelpText = wrapper.find('div').at(1);
-        const submitButton = wrapper.find('button').first();
-        await submitButton.simulate('submit');
+        const submitButton = wrapper.find('form');
+        submitButton.simulate('submit');
         const helpText = wrapper.find('div').at(1);
         expect(onSubmitFn).toBeCalled();
         expect(helpText).not.toEqual(prevHelpText);
       });
     });
 
-    test('clear the answer', async () => {
+    test('clear the answer', () => {
       const prevButtons = wrapper.find('button');
       const clearButton = prevButtons.last();
-      await clearButton.simulate('click');
+      clearButton.simulate('click');
       const button = wrapper.find('button');
       expect(button).not.toEqual(prevButtons);
     });

@@ -39,10 +39,12 @@ describe('ContestAnnouncementCreateDialog', () => {
     // status.simulate('click');
 
     const title = wrapper.find('input[name="title"]');
-    title.simulate('change', { target: { value: 'Snack' } });
+    title.getDOMNode().value = 'Snack';
+    title.simulate('input');
 
     const content = wrapper.find('textarea[name="content"]');
-    content.simulate('change', { target: { value: 'Snack is provided.' } });
+    content.getDOMNode().value = 'Snack is provided.';
+    content.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

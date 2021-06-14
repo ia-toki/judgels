@@ -56,7 +56,8 @@ describe('CourseChapterEditDialog', () => {
     const chaptersField = wrapper.find('textarea[name="chapters"]');
     expect(chaptersField.prop('value')).toEqual('A,jid-1\nB,jid-2');
 
-    chaptersField.simulate('change', { target: { value: 'P, jid-3\n  Q,jid-4  ' } });
+    chaptersField.getDOMNode().value = 'P, jid-3\n  Q,jid-4  ';
+    chaptersField.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

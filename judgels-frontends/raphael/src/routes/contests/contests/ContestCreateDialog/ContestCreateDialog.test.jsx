@@ -32,7 +32,8 @@ describe('ContestCreateDialog', () => {
     wrapper.update();
 
     const slug = wrapper.find('input[name="slug"]');
-    slug.simulate('change', { target: { value: 'new-contest' } });
+    slug.getDOMNode().value = 'new-contest';
+    slug.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

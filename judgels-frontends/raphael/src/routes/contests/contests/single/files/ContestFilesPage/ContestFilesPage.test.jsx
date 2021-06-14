@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'preact/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -82,8 +83,10 @@ describe('ContestFilesPage', () => {
   });
 
   test('upload form', () => {
-    const file = wrapper.find('input[name="file"]');
-    file.simulate('change', { target: { files: [{ name: 'editorial.txt', size: 1000 }] } });
+    act(() => {
+      const file = wrapper.find('input[name="file"]');
+      file.prop('onChange')({ target: { files: [{ name: 'editorial.txt', size: 1000 }] }, preventDefault: () => {} });
+    });
 
     const form = wrapper.find('form');
     form.simulate('submit');

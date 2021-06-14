@@ -29,13 +29,16 @@ describe('ChangePasswordPage', () => {
 
   test('form', () => {
     const oldPassword = wrapper.find('input[name="oldPassword"]');
-    oldPassword.simulate('change', { target: { value: 'oldPass' } });
+    oldPassword.getDOMNode().value = 'oldPass';
+    oldPassword.simulate('input');
 
     const password = wrapper.find('input[name="password"]');
-    password.simulate('change', { target: { value: 'newPass' } });
+    password.getDOMNode().value = 'newPass';
+    password.simulate('input');
 
     const confirmPassword = wrapper.find('input[name="confirmPassword"]');
-    confirmPassword.simulate('change', { target: { value: 'newPass' } });
+    confirmPassword.getDOMNode().value = 'newPass';
+    confirmPassword.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

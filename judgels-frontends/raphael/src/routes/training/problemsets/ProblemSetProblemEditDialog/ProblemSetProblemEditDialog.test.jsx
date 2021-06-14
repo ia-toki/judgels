@@ -79,7 +79,8 @@ describe('ProblemSetProblemEditDialog', () => {
       'A,slug-1\nB,slug-2,BUNDLE\nC,slug-3,PROGRAMMING,contestSlug-1;contestSlug-2'
     );
 
-    problemsField.simulate('change', { target: { value: 'P, slug-3\n  Q,slug-4,BUNDLE  ,contestSlug-3 ' } });
+    problemsField.getDOMNode().value = 'P, slug-3\n  Q,slug-4,BUNDLE  ,contestSlug-3 ';
+    problemsField.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

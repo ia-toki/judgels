@@ -38,13 +38,16 @@ describe('CourseEditDialog', () => {
 
   test('edit dialog form', async () => {
     const slug = wrapper.find('input[name="slug"]');
-    slug.simulate('change', { target: { value: 'new-course' } });
+    slug.getDOMNode().value = 'new-course';
+    slug.simulate('input');
 
     const name = wrapper.find('input[name="name"]');
-    name.simulate('change', { target: { value: 'New course' } });
+    name.getDOMNode().value = 'New course';
+    name.simulate('input');
 
     const description = wrapper.find('textarea[name="description"]');
-    description.simulate('change', { target: { value: 'New description' } });
+    description.getDOMNode().value = 'New description';
+    description.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

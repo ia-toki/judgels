@@ -64,7 +64,8 @@ describe('ChapterProblemEditDialog', () => {
     const problemsField = wrapper.find('textarea[name="problems"]');
     expect(problemsField.prop('value')).toEqual('A,slug-1\nB,slug-2,BUNDLE');
 
-    problemsField.simulate('change', { target: { value: 'P, slug-3\n  Q,slug-4,BUNDLE  ' } });
+    problemsField.getDOMNode().value = 'P, slug-3\n  Q,slug-4,BUNDLE  ';
+    problemsField.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

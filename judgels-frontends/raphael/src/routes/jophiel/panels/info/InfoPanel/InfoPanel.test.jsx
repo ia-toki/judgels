@@ -49,33 +49,40 @@ describe('InfoPanel', () => {
     wrapper.find('button[data-key="edit"]').simulate('click');
 
     const name = wrapper.find('input[name="name"]');
-    name.simulate('change', { target: { value: 'My New Name' } });
+    name.getDOMNode().value = 'My New Name';
+    name.simulate('input');
 
     const gender = wrapper.find('select[name="gender"]');
-    gender.simulate('change', { target: { value: 'FEMALE' } });
+    gender.getDOMNode().value = 'FEMALE';
+    gender.simulate('change');
 
     const country = wrapper.find('select[name="country"]');
-    country.simulate('change', { target: { value: 'SG' } });
+    country.getDOMNode().value = 'SG';
+    country.simulate('change');
 
     const homeAddress = wrapper.find('textarea[name="homeAddress"]');
-    homeAddress.simulate('change', { target: { value: 'My New Address' } });
+    homeAddress.getDOMNode().value = 'My New Address';
+    homeAddress.simulate('input');
 
     const shirtSize = wrapper.find('select[name="shirtSize"]');
-    shirtSize.simulate('change', { target: { value: 'S' } });
+    shirtSize.getDOMNode().value = 'S';
+    shirtSize.simulate('change');
 
     const institutionName = wrapper.find('input[name="institutionName"]');
-    institutionName.simulate('change', { target: { value: 'My New Institution' } });
+    institutionName.getDOMNode().value = 'My New Institution';
+    institutionName.simulate('input');
 
     const institutionCountry = wrapper.find('select[name="institutionCountry"]');
-    institutionCountry.simulate('change', { target: { value: 'US' } });
+    institutionCountry.getDOMNode().value = 'US';
+    institutionCountry.simulate('change');
 
     const institutionProvince = wrapper.find('input[name="institutionProvince"]');
-    institutionProvince.simulate('change', {
-      target: { value: 'My New Province' },
-    });
+    institutionProvince.getDOMNode().value = 'My New Province';
+    institutionProvince.simulate('input');
 
     const institutionCity = wrapper.find('input[name="institutionCity"]');
-    institutionCity.simulate('change', { target: { value: 'My New City' } });
+    institutionCity.getDOMNode().value = 'My New City';
+    institutionCity.simulate('input');
 
     const form = wrapper.find('form');
     form.simulate('submit');

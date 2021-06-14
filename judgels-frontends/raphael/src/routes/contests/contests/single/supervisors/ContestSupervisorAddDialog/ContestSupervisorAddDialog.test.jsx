@@ -35,13 +35,16 @@ describe('ContestSupervisorAddDialog', () => {
     wrapper.update();
 
     const usernames = wrapper.find('textarea[name="usernames"]');
-    usernames.simulate('change', { target: { value: 'andi\n\nbudi\n caca  \n' } });
+    usernames.getDOMNode().value = 'andi\n\nbudi\n caca  \n';
+    usernames.simulate('input');
 
     const announcementPermission = wrapper.find('input[name="managementPermissions.Announcements"]');
-    announcementPermission.simulate('change', { target: { checked: true } });
+    announcementPermission.getDOMNode().checked = true;
+    announcementPermission.simulate('change');
 
     const clarificationPermission = wrapper.find('input[name="managementPermissions.Clarifications"]');
-    clarificationPermission.simulate('change', { target: { checked: true } });
+    clarificationPermission.getDOMNode().checked = true;
+    clarificationPermission.simulate('change');
 
     wrapper.update();
 
