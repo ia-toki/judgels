@@ -1,8 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
-import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
 
 import { CourseEditDialog } from './CourseEditDialog';
 
@@ -21,7 +19,7 @@ describe('CourseEditDialog', () => {
   beforeEach(() => {
     onUpdateCourse = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = configureMockStore()({});
 
     const props = {
       isOpen: true,
@@ -38,14 +36,17 @@ describe('CourseEditDialog', () => {
 
   test('edit dialog form', async () => {
     const slug = wrapper.find('input[name="slug"]');
+    expect(slug.prop('value')).toEqual('course');
     slug.getDOMNode().value = 'new-course';
     slug.simulate('input');
 
     const name = wrapper.find('input[name="name"]');
+    expect(name.prop('value')).toEqual('Course');
     name.getDOMNode().value = 'New course';
     name.simulate('input');
 
     const description = wrapper.find('textarea[name="description"]');
+    expect(description.prop('value')).toEqual('This is a course');
     description.getDOMNode().value = 'New description';
     description.simulate('input');
 

@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
 import { Required } from '../../../../../../components/forms/validations';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
@@ -7,11 +7,11 @@ import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/Form
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 
-function ContestAnnouncementEditForm({ handleSubmit, submitting, renderFormComponents }) {
+export default function ContestAnnouncementEditForm({ onSubmit, initialValues, renderFormComponents }) {
   const statusField = {
     name: 'status',
     label: 'Status',
-    validate: [Required],
+    validate: Required,
     optionValues: [ContestAnnouncementStatus.Draft, ContestAnnouncementStatus.Published],
     optionNamesMap: { [ContestAnnouncementStatus.Draft]: 'Draft', [ContestAnnouncementStatus.Published]: 'Published' },
   };
@@ -19,14 +19,14 @@ function ContestAnnouncementEditForm({ handleSubmit, submitting, renderFormCompo
   const titleField = {
     name: 'title',
     label: 'Title',
-    validate: [Required],
+    validate: Required,
   };
 
   const contentField = {
     name: 'content',
     label: 'Content',
     rows: 16,
-    validate: [Required],
+    validate: Required,
   };
 
   const fields = (
@@ -37,12 +37,12 @@ function ContestAnnouncementEditForm({ handleSubmit, submitting, renderFormCompo
     </>
   );
 
-  const submitButton = <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />;
-
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'contest-announcement-edit',
-  touchOnBlur: false,
-})(ContestAnnouncementEditForm);

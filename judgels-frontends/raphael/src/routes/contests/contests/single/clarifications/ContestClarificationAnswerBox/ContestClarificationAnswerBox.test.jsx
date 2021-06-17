@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import createMockStore from 'redux-mock-store';
 
 import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
 
@@ -12,7 +12,7 @@ describe('ContestClarificationAnswerBox', () => {
   beforeEach(() => {
     onAnswerClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = createMockStore()({});
 
     const props = {
       contest: { jid: 'contestJid' },

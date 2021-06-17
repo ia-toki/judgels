@@ -1,5 +1,3 @@
-import { SubmissionError } from 'redux-form';
-
 import { NotFoundError } from '../api/error';
 import toastMiddleware from './toastMiddleware';
 import * as toastActions from './toastActions';
@@ -26,19 +24,6 @@ describe('toastMiddleware', () => {
 
     it('shows the error toast', async () => {
       await applyMiddleware(myAction);
-      expect(toastActions.showErrorToast).toHaveBeenCalledWith(error);
-    });
-  });
-
-  describe('when the action throws SubmissionError', () => {
-    const error = new SubmissionError({ field: 'error' });
-    const next = async action => {
-      throw error;
-    };
-    const applyMiddleware = action => toastMiddleware(store)(next)(action);
-
-    it('rethrows the error and shows the error toast', async () => {
-      await expect(applyMiddleware(myAction)).rejects.toMatchObject(error);
       expect(toastActions.showErrorToast).toHaveBeenCalledWith(error);
     });
   });

@@ -1,26 +1,27 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
-import { Required, Slug } from '../../../../components/forms/validations';
+import { withSubmissionError } from '../../../../modules/form/submissionError';
+import { composeValidators, Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 
-function ArchiveEditForm({ handleSubmit, submitting, renderFormComponents }) {
+export default function ArchiveEditForm({ onSubmit, initialValues, renderFormComponents }) {
   const slugField = {
     name: 'slug',
     label: 'Slug',
-    validate: [Required, Slug],
+    validate: composeValidators(Required, Slug),
   };
   const nameField = {
     name: 'name',
     label: 'Name',
-    validate: [Required],
+    validate: Required,
   };
 
   const categoryField = {
     name: 'category',
     label: 'Category',
-    validate: [Required],
+    validate: Required,
   };
   const descriptionField = {
     name: 'description',
@@ -36,13 +37,13 @@ function ArchiveEditForm({ handleSubmit, submitting, renderFormComponents }) {
       <Field component={FormTextArea} {...descriptionField} />
     </>
   );
-  const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'archive-edit',
-  touchOnBlur: false,
-  enableReinitialize: true,
-})(ArchiveEditForm);

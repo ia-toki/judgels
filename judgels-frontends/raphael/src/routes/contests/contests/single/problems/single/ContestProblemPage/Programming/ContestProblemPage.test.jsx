@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
@@ -63,7 +62,6 @@ describe('ProgrammingContestProblemPage', () => {
 
     const store = createStore(
       combineReducers({
-        form: formReducer,
         webPrefs: webPrefsReducer,
         uriel: combineReducers({ contest: contestReducer }),
         router: connectRouter(history),

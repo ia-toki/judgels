@@ -1,9 +1,9 @@
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../../utils/nock';
+import { SubmissionError } from '../../../../../../modules/form/submissionError';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import * as contestProblemActions from './contestProblemActions';
 

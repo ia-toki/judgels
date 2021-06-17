@@ -1,9 +1,9 @@
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import { CourseErrors } from '../../../../modules/api/jerahmeel/course';
 import * as courseActions from './courseActions';
 
@@ -47,7 +47,7 @@ describe('courseActions', () => {
           .reply(400, { errorName: CourseErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(courseActions.createCourse(params))).rejects.toEqual(
-          new SubmissionError({ slug: CourseErrors.SlugAlreadyExists })
+          new SubmissionError({ slug: 'Slug already exists' })
         );
       });
     });
@@ -97,7 +97,7 @@ describe('courseActions', () => {
             .reply(400, { errorName: CourseErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(courseActions.updateCourse(courseJid, params))).rejects.toEqual(
-            new SubmissionError({ slug: CourseErrors.SlugAlreadyExists })
+            new SubmissionError({ slug: 'Slug already exists' })
           );
         });
       });

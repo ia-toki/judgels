@@ -1,8 +1,7 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
 import { InfoPanel } from './InfoPanel';
 
 describe('InfoPanel', () => {
@@ -24,13 +23,11 @@ describe('InfoPanel', () => {
       institutionCity: 'My City',
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = configureMockStore()({});
 
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />
-        </MemoryRouter>
+        <InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />
       </Provider>
     );
   });

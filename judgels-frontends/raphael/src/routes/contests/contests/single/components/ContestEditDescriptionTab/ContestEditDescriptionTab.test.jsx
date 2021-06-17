@@ -1,8 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
@@ -23,30 +21,24 @@ describe('ContestEditDescriptionTab', () => {
     contestActions.updateContestDescription.mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
+      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestEditDescriptionTab />
-        </MemoryRouter>
+        <ContestEditDescriptionTab />
       </Provider>
     );
   });
 
   test('contest edit description tab form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
     const button = wrapper.find('button');
     button.simulate('click');
 
-    wrapper.update();
-
     const description = wrapper.find('textarea[name="description"]');
+    expect(description.prop('value')).toEqual('current description');
     description.getDOMNode().value = 'new description';
     description.simulate('input');
 

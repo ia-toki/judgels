@@ -2,8 +2,6 @@ import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { push } from 'connected-react-router';
-import { createStore, combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import createMockStore from 'redux-mock-store';
 import { stringify } from 'query-string';
 
@@ -12,11 +10,10 @@ import SearchBox from './SearchBox';
 describe('SearchBox', () => {
   let wrapper;
   let onRouteChange;
-  let mockStore;
 
-  const realStore = createStore(combineReducers({ form: formReducer }));
+  const store = createMockStore()({});
 
-  const render = (store, key, initialValue) => {
+  const render = (key, initialValue) => {
     const props = {
       initialValue,
       onRouteChange,
@@ -45,15 +42,14 @@ describe('SearchBox', () => {
     });
 
     it('updates the query string', () => {
-      mockStore = createMockStore()({});
-      render(mockStore, 'key', 'test');
+      render('key', 'test');
       submit('judgels');
       const query = stringify({ key: 'judgels' });
-      expect(mockStore.getActions()).toContainEqual(push({ search: query }));
+      expect(store.getActions()).toContainEqual(push({ search: query }));
     });
 
     it('calls onRouteChange with correct previous route and the typed string', () => {
-      render(realStore, 'key', 'test');
+      render('key', 'test');
       submit('judgels');
       expect(onRouteChange).toBeCalledWith('judgels', { key: 'test', page: '2' });
     });

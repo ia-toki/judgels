@@ -3,7 +3,6 @@ import { act } from 'preact/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import ContestFilesPage from './ContestFilesPage';
@@ -26,7 +25,7 @@ describe('ContestFilesPage', () => {
     );
 
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
+      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));

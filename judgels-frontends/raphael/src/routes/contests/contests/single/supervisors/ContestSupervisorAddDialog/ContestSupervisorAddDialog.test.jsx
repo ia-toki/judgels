@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
 
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
 import { ContestSupervisorAddDialog } from './ContestSupervisorAddDialog';
@@ -15,7 +14,7 @@ describe('ContestSupervisorAddDialog', () => {
       .fn()
       .mockReturnValue(Promise.resolve({ upsertedSupervisorProfilesMap: {}, alreadySupervisorProfilesMap: {} }));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = configureMockStore()({});
 
     const props = {
       contest: { jid: 'contestJid' },
@@ -32,8 +31,6 @@ describe('ContestSupervisorAddDialog', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
-    wrapper.update();
-
     const usernames = wrapper.find('textarea[name="usernames"]');
     usernames.getDOMNode().value = 'andi\n\nbudi\n caca  \n';
     usernames.simulate('input');
@@ -45,8 +42,6 @@ describe('ContestSupervisorAddDialog', () => {
     const clarificationPermission = wrapper.find('input[name="managementPermissions.Clarifications"]');
     clarificationPermission.getDOMNode().checked = true;
     clarificationPermission.simulate('change');
-
-    wrapper.update();
 
     const form = wrapper.find('form');
     form.simulate('submit');

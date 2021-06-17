@@ -1,6 +1,5 @@
-import { SubmissionError } from 'redux-form';
-
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { SubmissionError } from '../../../../../../modules/form/submissionError';
 import { ForbiddenError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import { contestProblemAPI } from '../../../../../../modules/api/uriel/contestProblem';

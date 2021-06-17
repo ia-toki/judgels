@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import createMockStore from 'redux-mock-store';
 
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { ContestAnnouncementEditDialog } from './ContestAnnouncementEditDialog';
@@ -24,7 +23,7 @@ describe('ContestAnnouncementEditDialog', () => {
       return;
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = createMockStore()({});
 
     const props = {
       contest: { jid: 'contestJid' },

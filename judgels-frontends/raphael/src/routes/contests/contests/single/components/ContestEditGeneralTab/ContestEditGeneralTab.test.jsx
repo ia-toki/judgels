@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { parseDateTime } from '../../../../../../utils/datetime';
@@ -24,10 +23,10 @@ describe('ContestEditGeneralTab', () => {
     contestActions.updateContest.mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
+      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a', style: ContestStyle.ICPC }));
+    store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a', name: 'Contest A', style: ContestStyle.ICPC }));
 
     wrapper = mount(
       <Provider store={store}>
@@ -40,14 +39,13 @@ describe('ContestEditGeneralTab', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
     const slug = wrapper.find('input[name="slug"]');
+    expect(slug.prop('value')).toEqual('contest-a');
     slug.getDOMNode().value = 'contest-b';
     slug.simulate('input');
 
     const name = wrapper.find('input[name="name"]');
+    expect(name.prop('value')).toEqual('Contest A');
     name.getDOMNode().value = 'Contest B';
     name.simulate('input');
 

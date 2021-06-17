@@ -62,3 +62,7 @@ export function CompatibleFilenameExtensionForGradingLanguage(value, { gradingLa
   }
   return 'Allowed extensions: ' + extensions.join(', ') + '.';
 }
+
+export function composeValidators(...validators) {
+  return (value, allValues) => validators.reduce((error, validator) => error || validator(value, allValues), undefined);
+}

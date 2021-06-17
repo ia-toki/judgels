@@ -1,24 +1,26 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
-import { Required, Slug } from '../../../../components/forms/validations';
+import { withSubmissionError } from '../../../../modules/form/submissionError';
+import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 
-function ContestCreateForm({ handleSubmit, submitting, renderFormComponents }) {
+export default function ContestCreateForm({ onSubmit, renderFormComponents }) {
   const slugField = {
     name: 'slug',
     label: 'Slug',
-    validate: [Required, Slug],
+    validate: composeValidators(Required, Slug),
     autoFocus: true,
   };
 
   const fields = <Field component={FormTextInput} {...slugField} />;
-  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={withSubmissionError(onSubmit)}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'contest-create',
-  touchOnBlur: false,
-})(ContestCreateForm);

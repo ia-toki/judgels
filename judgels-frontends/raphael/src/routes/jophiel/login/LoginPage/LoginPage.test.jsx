@@ -1,8 +1,7 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import LoginPage from './LoginPage';
@@ -16,7 +15,7 @@ describe('LoginPage', () => {
   beforeEach(() => {
     loginActions.logIn.mockReturnValue(() => Promise.resolve());
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createMockStore([thunk])({});
 
     wrapper = mount(
       <Provider store={store}>

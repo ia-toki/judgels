@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { BadRequestError } from '../../../../../../modules/api/error';
@@ -29,9 +28,7 @@ export function answerClarification(contestJid, clarificationJid, answer) {
       await contestClarificationAPI.answerClarification(token, contestJid, clarificationJid, { answer });
     } catch (error) {
       if (error instanceof BadRequestError && error.message === ContestErrors.ClarificationAlreadyAnswered) {
-        throw new SubmissionError({
-          _error: 'This clarification has already been answered. Please refresh this page.',
-        });
+        throw new Error('This clarification has already been answered. Please refresh this page.');
       }
       throw error;
     }

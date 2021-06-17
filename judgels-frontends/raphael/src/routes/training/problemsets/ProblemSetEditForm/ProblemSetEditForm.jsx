@@ -1,26 +1,26 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
-import { Required, Slug } from '../../../../components/forms/validations';
+import { composeValidators, Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormDateInput } from '../../../../components/forms/FormDateInput/FormDateInput';
 
-function ProblemSetEditForm({ handleSubmit, submitting, renderFormComponents }) {
+export default function ProblemSetEditForm({ onSubmit, initialValues, renderFormComponents }) {
   const slugField = {
     name: 'slug',
     label: 'Slug',
-    validate: [Required, Slug],
+    validate: composeValidators(Required, Slug),
   };
   const nameField = {
     name: 'name',
     label: 'Name',
-    validate: [Required],
+    validate: Required,
   };
   const archiveSlugField = {
     name: 'archiveSlug',
     label: 'Archive slug',
-    validate: [Required],
+    validate: Required,
   };
   const descriptionField = {
     name: 'description',
@@ -30,7 +30,7 @@ function ProblemSetEditForm({ handleSubmit, submitting, renderFormComponents }) 
   const contestTimeField = {
     name: 'contestTime',
     label: 'Contest time',
-    validate: [Required],
+    validate: Required,
   };
 
   const fields = (
@@ -42,13 +42,13 @@ function ProblemSetEditForm({ handleSubmit, submitting, renderFormComponents }) 
       <Field component={FormRichTextArea} {...descriptionField} />
     </>
   );
-  const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'problem-set-edit',
-  touchOnBlur: false,
-  enableReinitialize: true,
-})(ProblemSetEditForm);

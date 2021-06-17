@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
 import { Required } from '../../../../../../components/forms/validations';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
@@ -7,11 +7,11 @@ import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/Form
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 
-function ContestAnnouncementCreateForm({ handleSubmit, submitting, renderFormComponents }) {
+export default function ContestAnnouncementCreateForm({ onSubmit, renderFormComponents }) {
   const statusField = {
     name: 'status',
     label: 'Status',
-    validate: [Required],
+    validate: Required,
     optionValues: [ContestAnnouncementStatus.Draft, ContestAnnouncementStatus.Published],
     optionNamesMap: { [ContestAnnouncementStatus.Draft]: 'Draft', [ContestAnnouncementStatus.Published]: 'Published' },
   };
@@ -19,7 +19,7 @@ function ContestAnnouncementCreateForm({ handleSubmit, submitting, renderFormCom
   const titleField = {
     name: 'title',
     label: 'Title',
-    validate: [Required],
+    validate: Required,
     autoFocus: true,
   };
 
@@ -27,7 +27,7 @@ function ContestAnnouncementCreateForm({ handleSubmit, submitting, renderFormCom
     name: 'content',
     label: 'Content',
     rows: 15,
-    validate: [Required],
+    validate: Required,
   };
 
   const fields = (
@@ -38,13 +38,14 @@ function ContestAnnouncementCreateForm({ handleSubmit, submitting, renderFormCom
     </>
   );
 
-  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
+  const initialValues = { status: ContestAnnouncementStatus.Published };
 
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'contest-announcement-create',
-  initialValues: { status: ContestAnnouncementStatus.Published },
-  touchOnBlur: false,
-})(ContestAnnouncementCreateForm);

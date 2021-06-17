@@ -1,34 +1,35 @@
 import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
-import { Required, Max100Lines } from '../../../../../../components/forms/validations';
+import { composeValidators, Required, Max100Lines } from '../../../../../../components/forms/validations';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
 import { supervisorManagementPermissions } from '../../../../../../modules/api/uriel/contestSupervisor';
 
-class ContestSupervisorAddForm extends Component {
-  state = {
-    allowAllPermissions: false,
-  };
-
+export default class ContestSupervisorAddForm extends Component {
   render() {
+    const initialValues = { managementPermissions: { All: false } };
     return (
-      <form onSubmit={this.props.handleSubmit}>
-        {this.props.renderFormComponents(this.renderFields(), this.renderSubmitButton())}
-      </form>
+      <Form onSubmit={this.props.onSubmit} initialValues={initialValues}>
+        {({ handleSubmit, values, submitting }) => (
+          <form onSubmit={handleSubmit}>
+            {this.props.renderFormComponents(this.renderFields(values), this.renderSubmitButton(submitting))}
+          </form>
+        )}
+      </Form>
     );
   }
 
-  renderSubmitButton() {
-    return <Button type="submit" text="Add/update" intent={Intent.PRIMARY} loading={this.props.submitting} />;
+  renderSubmitButton(submitting) {
+    return <Button type="submit" text="Add/update" intent={Intent.PRIMARY} loading={submitting} />;
   }
 
-  renderFields() {
+  renderFields(values) {
     return (
       <>
         {this.renderUsernamesField()}
-        {this.renderPermissionFields()}
+        {this.renderPermissionFields(values)}
       </>
     );
   }
@@ -40,18 +41,17 @@ class ContestSupervisorAddForm extends Component {
       labelHelper: '(one username per line, max 100 users)',
       rows: 8,
       isCode: true,
-      validate: [Required, Max100Lines],
+      validate: composeValidators(Required, Max100Lines),
       autoFocus: true,
     };
 
     return <Field component={FormTextArea} {...usernamesField} />;
   }
 
-  renderPermissionFields() {
+  renderPermissionFields(values) {
     const allowAllPermissionsField = {
       name: 'managementPermissions.All',
       label: '(all)',
-      onChange: this.toggleAllowAllPermissionsCheckbox,
     };
 
     const permissionFields = supervisorManagementPermissions
@@ -65,18 +65,9 @@ class ContestSupervisorAddForm extends Component {
     return (
       <FormGroup label="Management permissions">
         <Field component={FormCheckbox} {...allowAllPermissionsField} />
-        {!this.state.allowAllPermissions &&
+        {!values.managementPermissions.All &&
           permissionFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
       </FormGroup>
     );
   }
-
-  toggleAllowAllPermissionsCheckbox = (e, checked) => {
-    this.setState({ allowAllPermissions: checked });
-  };
 }
-
-export default reduxForm({
-  form: 'contest-supervisor-add',
-  touchOnBlur: false,
-})(ContestSupervisorAddForm);

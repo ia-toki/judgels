@@ -1,9 +1,9 @@
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import { ArchiveErrors } from '../../../../modules/api/jerahmeel/archive';
 import * as archiveActions from './archiveActions';
 
@@ -47,7 +47,7 @@ describe('archiveActions', () => {
           .reply(400, { errorName: ArchiveErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(archiveActions.createArchive(params))).rejects.toEqual(
-          new SubmissionError({ slug: ArchiveErrors.SlugAlreadyExists })
+          new SubmissionError({ slug: 'Slug already exists' })
         );
       });
     });
@@ -95,7 +95,7 @@ describe('archiveActions', () => {
             .reply(400, { errorName: ArchiveErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(archiveActions.updateArchive(archiveJid, params))).rejects.toEqual(
-            new SubmissionError({ slug: ArchiveErrors.SlugAlreadyExists })
+            new SubmissionError({ slug: 'Slug already exists' })
           );
         });
       });

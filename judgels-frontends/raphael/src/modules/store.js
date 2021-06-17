@@ -1,7 +1,6 @@
 import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
@@ -24,7 +23,6 @@ const rootReducer = combineReducers({
   uriel: urielReducer,
   jerahmeel: jerahmeelReducer,
   router: connectRouter(history),
-  form: formReducer,
   breadcrumbs: breadcrumbsReducer,
 });
 

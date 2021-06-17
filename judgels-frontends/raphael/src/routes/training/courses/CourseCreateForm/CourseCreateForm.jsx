@@ -1,22 +1,23 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
-import { Required, Slug } from '../../../../components/forms/validations';
+import { withSubmissionError } from '../../../../modules/form/submissionError';
+import { composeValidators, Required, Slug } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 
-function CourseCreateForm({ handleSubmit, submitting, renderFormComponents }) {
+export default function CourseCreateForm({ onSubmit, renderFormComponents }) {
   const slugField = {
     name: 'slug',
     label: 'Slug',
-    validate: [Required, Slug],
+    validate: composeValidators(Required, Slug),
     autoFocus: true,
   };
 
   const nameField = {
     name: 'name',
     label: 'Name',
-    validate: [Required],
+    validate: Required,
   };
 
   const descriptionField = {
@@ -32,12 +33,13 @@ function CourseCreateForm({ handleSubmit, submitting, renderFormComponents }) {
       <Field component={FormTextArea} {...descriptionField} />
     </>
   );
-  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={withSubmissionError(onSubmit)}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'course-create',
-  touchOnBlur: false,
-})(CourseCreateForm);

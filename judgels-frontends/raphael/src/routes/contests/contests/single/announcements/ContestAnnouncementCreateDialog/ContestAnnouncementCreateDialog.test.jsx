@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import createMockStore from 'redux-mock-store';
 
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { ContestAnnouncementCreateDialog } from './ContestAnnouncementCreateDialog';
@@ -13,7 +13,7 @@ describe('ContestAnnouncementCreateDialog', () => {
   beforeEach(() => {
     onCreateAnnouncement = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = createMockStore()({});
 
     const props = {
       contest: { jid: 'contestJid' },
@@ -29,8 +29,6 @@ describe('ContestAnnouncementCreateDialog', () => {
   test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
-
-    wrapper.update();
 
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478

@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
 
 import { CourseChapterEditDialog } from './CourseChapterEditDialog';
 
@@ -29,7 +28,7 @@ describe('CourseChapterEditDialog', () => {
     onGetChapters = jest.fn().mockReturnValue(Promise.resolve({ data: chapters, chaptersMap: {} }));
     onSetChapters = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = configureMockStore()({});
 
     const props = {
       isOpen: true,
@@ -50,8 +49,6 @@ describe('CourseChapterEditDialog', () => {
 
     const button = wrapper.find('button[data-key="edit"]');
     button.simulate('click');
-
-    wrapper.update();
 
     const chaptersField = wrapper.find('textarea[name="chapters"]');
     expect(chaptersField.prop('value')).toEqual('A,jid-1\nB,jid-2');

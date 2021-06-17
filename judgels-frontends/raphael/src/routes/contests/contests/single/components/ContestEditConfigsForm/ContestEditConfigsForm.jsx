@@ -1,68 +1,49 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
-import {
-  allLanguagesAllowed,
-  getGradingLanguageName,
-  gradingLanguages,
-} from '../../../../../../modules/api/gabriel/language.js';
+import { getGradingLanguageName, gradingLanguages } from '../../../../../../modules/api/gabriel/language.js';
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { FormTableInput } from '../../../../../../components/forms/FormTableInput/FormTableInput';
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
 import { FormTableCheckbox } from '../../../../../../components/forms/FormTableCheckbox/FormTableCheckbox';
 import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
-import { NonnegativeNumber, Required } from '../../../../../../components/forms/validations';
+import { composeValidators, NonnegativeNumber, Required } from '../../../../../../components/forms/validations';
 
 import './ContestEditConfigsForm.scss';
 
-class ContestEditConfigsForm extends Component {
-  state;
-
-  constructor(props) {
-    super(props);
-
-    const { trocStyle, icpcStyle, ioiStyle, gcjStyle } = props.config;
-    const allowAllLanguages =
-      (!!trocStyle && allLanguagesAllowed(trocStyle.languageRestriction)) ||
-      (!!icpcStyle && allLanguagesAllowed(icpcStyle.languageRestriction)) ||
-      (!!ioiStyle && allLanguagesAllowed(ioiStyle.languageRestriction)) ||
-      (!!gcjStyle && allLanguagesAllowed(gcjStyle.languageRestriction));
-
-    this.state = { allowAllLanguages };
-  }
-
+export default class ContestEditConfigsForm extends Component {
   render() {
-    const { handleSubmit, submitting, config, onCancel } = this.props;
+    const { onSubmit, initialValues, config, onCancel } = this.props;
     return (
-      <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
-        {config.trocStyle && this.renderTrocStyleForm()}
-        {config.icpcStyle && this.renderIcpcStyleForm()}
-        {config.ioiStyle && this.renderIoiStyleForm()}
-        {config.gcjStyle && this.renderGcjStyleForm()}
-        {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
-        {config.division && this.renderDivisionForm()}
-        {this.renderScoreboardForm()}
-        {config.frozenScoreboard && this.renderFrozenScoreboardForm()}
-        {config.externalScoreboard && this.renderExternalScoreboardForm()}
-        {config.virtual && this.renderVirtualForm()}
-        {config.editorial && this.renderEditorialForm()}
+      <Form onSubmit={onSubmit} initialValues={initialValues}>
+        {({ handleSubmit, values, submitting }) => (
+          <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
+            {config.trocStyle && this.renderTrocStyleForm(values)}
+            {config.icpcStyle && this.renderIcpcStyleForm(values)}
+            {config.ioiStyle && this.renderIoiStyleForm(values)}
+            {config.gcjStyle && this.renderGcjStyleForm(values)}
+            {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
+            {config.division && this.renderDivisionForm()}
+            {this.renderScoreboardForm()}
+            {config.frozenScoreboard && this.renderFrozenScoreboardForm()}
+            {config.externalScoreboard && this.renderExternalScoreboardForm()}
+            {config.virtual && this.renderVirtualForm()}
+            {config.editorial && this.renderEditorialForm()}
 
-        <hr />
-        <ActionButtons>
-          <Button text="Cancel" disabled={submitting} onClick={onCancel} />
-          <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
-        </ActionButtons>
-      </form>
+            <hr />
+            <ActionButtons>
+              <Button text="Cancel" disabled={submitting} onClick={onCancel} />
+              <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
+            </ActionButtons>
+          </form>
+        )}
+      </Form>
     );
   }
 
-  toggleAllowAllLanguagesCheckbox = (e, checked) => {
-    this.setState({ allowAllLanguages: checked });
-  };
-
-  renderTrocStyleForm = () => {
+  renderTrocStyleForm = ({ trocAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -81,7 +62,7 @@ class ContestEditConfigsForm extends Component {
     const wrongSubmissionPenaltyField = {
       name: 'trocWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
-      validate: [Required, NonnegativeNumber],
+      validate: composeValidators(Required, NonnegativeNumber),
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -92,7 +73,7 @@ class ContestEditConfigsForm extends Component {
           <tbody>
             <FormTableInput {...allowedLanguageField}>
               <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!this.state.allowAllLanguages &&
+              {!trocAllowAllLanguages &&
                 allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
             </FormTableInput>
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
@@ -102,7 +83,7 @@ class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderIcpcStyleForm = () => {
+  renderIcpcStyleForm = ({ icpcAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -110,7 +91,6 @@ class ContestEditConfigsForm extends Component {
     const allowAllLanguagesField = {
       name: 'icpcAllowAllLanguages',
       label: '(all)',
-      onChange: this.toggleAllowAllLanguagesCheckbox,
     };
     const allowedLanguageFields = gradingLanguages.map(lang => ({
       name: 'icpcAllowedLanguages.' + lang,
@@ -121,7 +101,7 @@ class ContestEditConfigsForm extends Component {
     const wrongSubmissionPenaltyField = {
       name: 'icpcWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
-      validate: [Required, NonnegativeNumber],
+      validate: composeValidators(Required, NonnegativeNumber),
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -132,7 +112,7 @@ class ContestEditConfigsForm extends Component {
           <tbody>
             <FormTableInput {...allowedLanguageField}>
               <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!this.state.allowAllLanguages &&
+              {!icpcAllowAllLanguages &&
                 allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
             </FormTableInput>
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
@@ -142,7 +122,7 @@ class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderIoiStyleForm = () => {
+  renderIoiStyleForm = ({ ioiAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -150,7 +130,6 @@ class ContestEditConfigsForm extends Component {
     const allowAllLanguagesField = {
       name: 'ioiAllowAllLanguages',
       label: '(all)',
-      onChange: this.toggleAllowAllLanguagesCheckbox,
     };
     const allowedLanguageFields = gradingLanguages.map(lang => ({
       name: 'ioiAllowedLanguages.' + lang,
@@ -177,7 +156,7 @@ class ContestEditConfigsForm extends Component {
           <tbody>
             <FormTableInput {...allowedLanguageField}>
               <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!this.state.allowAllLanguages &&
+              {!ioiAllowAllLanguages &&
                 allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
             </FormTableInput>
             <Field component={FormTableCheckbox} {...usingLastAffectingPenaltyField} />
@@ -188,7 +167,7 @@ class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderGcjStyleForm = () => {
+  renderGcjStyleForm = ({ gcjAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -196,7 +175,6 @@ class ContestEditConfigsForm extends Component {
     const allowAllLanguagesField = {
       name: 'gcjAllowAllLanguages',
       label: '(all)',
-      onChange: this.toggleAllowAllLanguagesCheckbox,
     };
     const allowedLanguageFields = gradingLanguages.map(lang => ({
       name: 'gcjAllowedLanguages.' + lang,
@@ -207,7 +185,7 @@ class ContestEditConfigsForm extends Component {
     const wrongSubmissionPenaltyField = {
       name: 'gcjWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
-      validate: [Required, NonnegativeNumber],
+      validate: composeValidators(Required, NonnegativeNumber),
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -218,7 +196,7 @@ class ContestEditConfigsForm extends Component {
           <tbody>
             <FormTableInput {...allowedLanguageField}>
               <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!this.state.allowAllLanguages &&
+              {!gcjAllowAllLanguages &&
                 allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
             </FormTableInput>
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
@@ -233,7 +211,7 @@ class ContestEditConfigsForm extends Component {
       name: 'clarificationTimeLimitDuration',
       label: 'Clarification duration',
       inputHelper: 'Since contest start time. Example: 2h 30m',
-      validate: [Required],
+      validate: Required,
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -253,7 +231,7 @@ class ContestEditConfigsForm extends Component {
     const divisionDivisionField = {
       name: 'divisionDivision',
       label: 'Division',
-      validate: [Required],
+      validate: Required,
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -308,7 +286,7 @@ class ContestEditConfigsForm extends Component {
       name: 'frozenScoreboardFreezeTime',
       label: 'Freeze time',
       inputHelper: 'Before contest end time. Example: 2h 30m',
-      validate: [Required],
+      validate: Required,
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -335,7 +313,7 @@ class ContestEditConfigsForm extends Component {
     const externalScoreboardReceiverUrlField = {
       name: 'externalScoreboardReceiverUrl',
       label: 'Receiver URL',
-      validate: [Required],
+      validate: Required,
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -363,7 +341,7 @@ class ContestEditConfigsForm extends Component {
       name: 'virtualDuration',
       label: 'Virtual contest duration',
       inputHelper: 'Example: 2h 30m',
-      validate: [Required],
+      validate: Required,
       keyClassName: 'contest-edit-configs-form__key',
     };
 
@@ -379,8 +357,3 @@ class ContestEditConfigsForm extends Component {
     );
   };
 }
-
-export default reduxForm({
-  form: 'contest-edit-configs',
-  touchOnBlur: false,
-})(ContestEditConfigsForm);

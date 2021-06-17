@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
 
 import { ContestContestantRemoveDialog } from './ContestContestantRemoveDialog';
 
@@ -12,7 +11,7 @@ describe('ContestContestantRemoveDialog', () => {
   beforeEach(() => {
     onDeleteContestants = jest.fn().mockReturnValue(Promise.resolve({ deletedContestantProfilesMap: {} }));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = configureMockStore()({});
 
     const props = {
       contest: { jid: 'contestJid' },
@@ -28,8 +27,6 @@ describe('ContestContestantRemoveDialog', () => {
   test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
-
-    wrapper.update();
 
     const usernames = wrapper.find('textarea[name="usernames"]');
     usernames.getDOMNode().value = 'andi\n\nbudi\n caca  \n';

@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
 import { Required } from '../../../../../../components/forms/validations';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
@@ -7,9 +7,9 @@ import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/Form
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
 
-function ContestClarificationCreateForm({
-  handleSubmit,
-  submitting,
+export default function ContestClarificationCreateForm({
+  onSubmit,
+  initialValues,
   contestJid,
   problemJids,
   problemAliasesMap,
@@ -19,7 +19,7 @@ function ContestClarificationCreateForm({
   const topicField = {
     name: 'topicJid',
     label: 'Topic',
-    validate: [Required],
+    validate: Required,
     optionValues: [contestJid, ...problemJids],
     optionNamesMap: {
       [contestJid]: '(General)',
@@ -35,14 +35,14 @@ function ContestClarificationCreateForm({
   const titleField = {
     name: 'title',
     label: 'Title',
-    validate: [Required],
+    validate: Required,
   };
 
   const questionField = {
     name: 'question',
     label: 'Question',
     rows: 5,
-    validate: [Required],
+    validate: Required,
   };
 
   const fields = (
@@ -53,12 +53,12 @@ function ContestClarificationCreateForm({
     </>
   );
 
-  const submitButton = <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />;
-
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'contest-clarification-create',
-  touchOnBlur: false,
-})(ContestClarificationCreateForm);

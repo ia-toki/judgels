@@ -1,14 +1,15 @@
-import { SubmissionError } from 'redux-form';
-
+import { SubmissionError } from '../form/submissionError';
 import * as toastActions from './toastActions';
 
 const toastMiddleware = store => next => async action => {
   try {
     return await next(action);
   } catch (error) {
-    toastActions.showErrorToast(error);
+    if (!(error instanceof SubmissionError)) {
+      toastActions.showErrorToast(error);
+    }
 
-    if (!(error instanceof Error) || error instanceof SubmissionError) {
+    if (!(error instanceof Error)) {
       throw error;
     }
   }

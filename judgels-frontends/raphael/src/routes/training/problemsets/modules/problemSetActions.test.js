@@ -1,9 +1,9 @@
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import { ProblemSetErrors } from '../../../../modules/api/jerahmeel/problemSet';
 import * as problemSetActions from './problemSetActions';
 
@@ -47,7 +47,7 @@ describe('problemSetActions', () => {
           .reply(400, { errorName: ProblemSetErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(problemSetActions.createProblemSet(params))).rejects.toEqual(
-          new SubmissionError({ slug: ProblemSetErrors.SlugAlreadyExists })
+          new SubmissionError({ slug: 'Slug already exists' })
         );
       });
     });
@@ -62,7 +62,7 @@ describe('problemSetActions', () => {
           .reply(400, { errorName: ProblemSetErrors.ArchiveSlugNotFound });
 
         await expect(store.dispatch(problemSetActions.createProblemSet(params))).rejects.toEqual(
-          new SubmissionError({ archiveSlug: ProblemSetErrors.ArchiveSlugNotFound })
+          new SubmissionError({ archiveSlug: 'Archive slug not found' })
         );
       });
     });
@@ -110,7 +110,7 @@ describe('problemSetActions', () => {
             .reply(400, { errorName: ProblemSetErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params))).rejects.toEqual(
-            new SubmissionError({ slug: ProblemSetErrors.SlugAlreadyExists })
+            new SubmissionError({ slug: 'Slug already exists' })
           );
         });
       });
@@ -128,7 +128,7 @@ describe('problemSetActions', () => {
             .reply(400, { errorName: ProblemSetErrors.ArchiveSlugNotFound });
 
           await expect(store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params))).rejects.toEqual(
-            new SubmissionError({ archiveSlug: ProblemSetErrors.ArchiveSlugNotFound })
+            new SubmissionError({ archiveSlug: 'Archive slug not found' })
           );
         });
       });
@@ -191,10 +191,13 @@ describe('problemSetActions', () => {
           .options(`/problemsets/${problemSetJid}/problems`)
           .reply(200)
           .put(`/problemsets/${problemSetJid}/problems`, params)
-          .reply(403, { errorName: ProblemSetErrors.ContestSlugsNotAllowed });
+          .reply(403, {
+            errorName: ProblemSetErrors.ContestSlugsNotAllowed,
+            parameters: { contestSlugs: ['foo', 'bar'] },
+          });
 
         await expect(store.dispatch(problemSetActions.setProblems(problemSetJid, params))).rejects.toEqual(
-          new SubmissionError({ problems: ProblemSetErrors.ContestSlugsNotAllowed })
+          new SubmissionError({ problems: 'Contests not found/allowed: foo,bar' })
         );
       });
     });

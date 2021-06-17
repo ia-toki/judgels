@@ -1,8 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
-import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
 
 import { CourseCreateDialog } from './CourseCreateDialog';
 
@@ -14,7 +12,7 @@ describe('CourseCreateDialog', () => {
   beforeEach(() => {
     onCreateCourse = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = configureMockStore()({});
 
     const props = {
       onGetCourseConfig,
@@ -27,14 +25,9 @@ describe('CourseCreateDialog', () => {
     );
   });
 
-  test('create dialog form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
+  test('create dialog form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
-
-    wrapper.update();
 
     const slug = wrapper.find('input[name="slug"]');
     slug.getDOMNode().value = 'new-course';

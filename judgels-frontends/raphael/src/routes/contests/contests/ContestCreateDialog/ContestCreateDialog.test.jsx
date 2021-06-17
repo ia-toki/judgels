@@ -1,8 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
-import thunk from 'redux-thunk';
+import createMockStore from 'redux-mock-store';
 
 import { ContestCreateDialog } from './ContestCreateDialog';
 
@@ -13,7 +11,7 @@ describe('ContestCreateDialog', () => {
   beforeEach(() => {
     onCreateContest = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = createMockStore()({});
 
     const props = {
       onCreateContest,
@@ -28,8 +26,6 @@ describe('ContestCreateDialog', () => {
   test('form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
-
-    wrapper.update();
 
     const slug = wrapper.find('input[name="slug"]');
     slug.getDOMNode().value = 'new-contest';

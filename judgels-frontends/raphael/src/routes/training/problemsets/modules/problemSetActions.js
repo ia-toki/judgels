@@ -1,6 +1,5 @@
-import { SubmissionError } from 'redux-form';
-
 import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { problemSetAPI, ProblemSetErrors } from '../../../../modules/api/jerahmeel/problemSet';
 import { problemSetProblemAPI } from '../../../../modules/api/jerahmeel/problemSetProblem';

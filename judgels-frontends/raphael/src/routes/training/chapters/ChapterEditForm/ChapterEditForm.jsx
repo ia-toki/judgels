@@ -1,14 +1,14 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Field, reduxForm } from 'redux-form';
+import { Field, Form } from 'react-final-form';
 
 import { Required } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 
-function ChapterEditForm({ handleSubmit, submitting, renderFormComponents }) {
+export default function ChapterEditForm({ onSubmit, initialValues, renderFormComponents }) {
   const nameField = {
     name: 'name',
     label: 'Name',
-    validate: [Required],
+    validate: Required,
     autoFocus: true,
   };
 
@@ -17,13 +17,13 @@ function ChapterEditForm({ handleSubmit, submitting, renderFormComponents }) {
       <Field component={FormTextInput} {...nameField} />
     </>
   );
-  const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
 
-  return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+  return (
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
+      {({ handleSubmit, submitting }) => {
+        const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
+        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+      }}
+    </Form>
+  );
 }
-
-export default reduxForm({
-  form: 'chapter-edit',
-  touchOnBlur: false,
-  enableReinitialize: true,
-})(ChapterEditForm);

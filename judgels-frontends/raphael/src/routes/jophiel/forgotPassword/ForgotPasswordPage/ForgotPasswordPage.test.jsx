@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import ForgotPasswordPage from './ForgotPasswordPage';
@@ -15,7 +14,7 @@ describe('ForgotPasswordPage', () => {
   beforeEach(() => {
     forgotPasswordActions.requestToResetPassword.mockReturnValue(() => Promise.resolve());
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = configureMockStore([thunk])({});
 
     wrapper = mount(
       <Provider store={store}>

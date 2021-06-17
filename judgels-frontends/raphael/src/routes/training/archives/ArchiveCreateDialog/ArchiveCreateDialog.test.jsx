@@ -1,9 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
-import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
 
 import { ArchiveCreateDialog } from './ArchiveCreateDialog';
 
@@ -15,7 +12,7 @@ describe('ArchiveCreateDialog', () => {
   beforeEach(() => {
     onCreateArchive = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = configureMockStore()({});
 
     const props = {
       onGetArchiveConfig,
@@ -23,21 +20,14 @@ describe('ArchiveCreateDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ArchiveCreateDialog {...props} />
-        </MemoryRouter>
+        <ArchiveCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('create dialog form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
+  test('create dialog form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
-
-    wrapper.update();
 
     const slug = wrapper.find('input[name="slug"]');
     slug.getDOMNode().value = 'new-archive';

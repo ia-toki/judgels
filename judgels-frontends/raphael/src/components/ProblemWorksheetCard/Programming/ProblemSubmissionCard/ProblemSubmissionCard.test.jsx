@@ -1,8 +1,7 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import createMockStore from 'redux-mock-store';
 
 import { ProblemSubmissionCard } from './ProblemSubmissionCard';
 
@@ -32,7 +31,7 @@ describe('ProblemSubmissionCard', () => {
       preferredGradingLanguage,
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = createMockStore()({});
 
     wrapper = mount(
       <Provider store={store}>

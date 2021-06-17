@@ -1,5 +1,4 @@
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -76,7 +75,7 @@ describe('contestClarificationActions', () => {
       });
     });
     describe('when the clarification has already been answered', () => {
-      it('calls API', async () => {
+      it('throws Error', async () => {
         nockUriel()
           .options(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`)
           .reply(200)
@@ -85,9 +84,7 @@ describe('contestClarificationActions', () => {
 
         await expect(
           store.dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, answer))
-        ).rejects.toEqual(
-          new SubmissionError({ _error: 'This clarification has already been answered. Please refresh this page.' })
-        );
+        ).rejects.toEqual(new Error('This clarification has already been answered. Please refresh this page.'));
       });
     });
   });

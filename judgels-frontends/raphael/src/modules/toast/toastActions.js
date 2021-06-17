@@ -1,6 +1,6 @@
 import { Intent, Position, OverlayToaster } from '@blueprintjs/core';
 import { Envelope, Tick, WarningSign } from '@blueprintjs/icons';
-import { SubmissionError } from 'redux-form';
+
 import { ForbiddenError, NotFoundError, RemoteError } from '../api/error';
 
 const toaster = OverlayToaster.create({
@@ -42,8 +42,6 @@ export function showErrorToast(error) {
     message = 'Operation not allowed.';
   } else if (error instanceof NotFoundError) {
     message = 'Resource not found.';
-  } else if (error instanceof SubmissionError) {
-    message = error.errors['_error'] || error.message;
   } else {
     message = error.message;
   }

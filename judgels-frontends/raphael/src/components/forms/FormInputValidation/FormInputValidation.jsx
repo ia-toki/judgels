@@ -5,6 +5,8 @@ import { isValid } from '../meta';
 
 export function FormInputValidation({ meta }) {
   return isValid(meta) ? null : (
-    <div className={classNames(Classes.FORM_HELPER_TEXT, 'form-text-input-error')}>{meta.error}</div>
+    <div className={classNames(Classes.FORM_HELPER_TEXT, 'form-text-input-error')}>
+      {meta.error || meta.submitError}
+    </div>
   );
 }

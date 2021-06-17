@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
 
 import { ContestSupervisorRemoveDialog } from './ContestSupervisorRemoveDialog';
 
@@ -12,7 +11,7 @@ describe('ContestSupervisorRemoveDialog', () => {
   beforeEach(() => {
     onDeleteSupervisors = jest.fn().mockReturnValue(Promise.resolve({ deletedSupervisorProfilesMap: {} }));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = configureMockStore()({});
 
     const props = {
       contest: { jid: 'contestJid' },

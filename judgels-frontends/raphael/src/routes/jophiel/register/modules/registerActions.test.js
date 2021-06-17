@@ -1,9 +1,9 @@
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockJophiel } from '../../../../utils/nock';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import * as registerActions from './registerActions';
 
 const mockStore = configureMockStore([thunk]);
@@ -37,7 +37,9 @@ describe('registerActions', () => {
           .get(`/user-search/email-exists/${data.email}`)
           .reply(200, 'false');
 
-        await expect(store.dispatch(registerActions.registerUser(data))).rejects.toBeInstanceOf(SubmissionError);
+        await expect(store.dispatch(registerActions.registerUser(data))).rejects.toEqual(
+          new SubmissionError({ username: 'Username already exists' })
+        );
       });
     });
 
@@ -50,7 +52,9 @@ describe('registerActions', () => {
           .get(`/user-search/email-exists/${data.email}`)
           .reply(200, 'true');
 
-        await expect(store.dispatch(registerActions.registerUser(data))).rejects.toBeInstanceOf(SubmissionError);
+        await expect(store.dispatch(registerActions.registerUser(data))).rejects.toEqual(
+          new SubmissionError({ email: 'Email already exists' })
+        );
       });
     });
 

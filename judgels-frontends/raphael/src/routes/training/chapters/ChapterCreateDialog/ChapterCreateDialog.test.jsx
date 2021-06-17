@@ -1,9 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
-import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
 
 import { ChapterCreateDialog } from './ChapterCreateDialog';
 
@@ -15,7 +12,7 @@ describe('ChapterCreateDialog', () => {
   beforeEach(() => {
     onCreateChapter = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = configureMockStore()({});
 
     const props = {
       onGetChapterConfig,
@@ -23,17 +20,12 @@ describe('ChapterCreateDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ChapterCreateDialog {...props} />
-        </MemoryRouter>
+        <ChapterCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('create dialog form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
+  test('create dialog form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 

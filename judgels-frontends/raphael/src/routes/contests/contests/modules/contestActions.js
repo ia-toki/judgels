@@ -1,8 +1,8 @@
 import { push } from 'connected-react-router';
-import { SubmissionError } from 'redux-form';
 
 import { hasJerahmeel } from '../../../../conf';
 import { BadRequestError, NotFoundError, RemoteError } from '../../../../modules/api/error';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import { contestAPI, ContestErrors } from '../../../../modules/api/uriel/contest';
 import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
 import { selectToken } from '../../../../modules/session/sessionSelectors';

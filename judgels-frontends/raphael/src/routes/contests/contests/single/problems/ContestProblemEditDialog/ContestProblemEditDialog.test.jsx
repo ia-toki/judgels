@@ -1,8 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import configureMockStore from 'redux-mock-store';
 
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { ContestProblemEditDialog } from './ContestProblemEditDialog';
@@ -45,7 +43,7 @@ describe('ContestProblemEditDialog', () => {
   beforeEach(() => {
     onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = configureMockStore()({});
 
     const props = {
       contest: { jid: 'contestJid' },
@@ -54,9 +52,7 @@ describe('ContestProblemEditDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestProblemEditDialog {...props} />
-        </MemoryRouter>
+        <ContestProblemEditDialog {...props} />
       </Provider>
     );
   });

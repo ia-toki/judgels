@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { parseDuration } from '../../../../../../utils/duration';
@@ -20,7 +19,7 @@ describe('ContestEditConfigsTab', () => {
     contestModuleActions.upsertConfig.mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
+      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
@@ -70,8 +69,6 @@ describe('ContestEditConfigsTab', () => {
       it('submits the form', () => {
         const button = wrapper.find('button');
         button.simulate('click');
-
-        wrapper.update();
 
         const icpcWrongSubmissionPenalty = wrapper.find('input[name="icpcWrongSubmissionPenalty"]');
         icpcWrongSubmissionPenalty.getDOMNode().value = '25';

@@ -1,10 +1,10 @@
 import { push } from 'connected-react-router';
 import nock from 'nock';
-import { SubmissionError } from 'redux-form';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../utils/nock';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import { ContestErrors } from '../../../../modules/api/uriel/contest';
 import * as contestActions from './contestActions';
 import { EditContest, PutContest } from './contestReducer';
@@ -46,7 +46,7 @@ describe('contestActions', () => {
           .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(contestActions.createContest(params))).rejects.toEqual(
-          new SubmissionError({ slug: ContestErrors.SlugAlreadyExists })
+          new SubmissionError({ slug: 'Slug already exists' })
         );
       });
     });
@@ -89,7 +89,7 @@ describe('contestActions', () => {
             .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(contestActions.updateContest(contestJid, slug, params))).rejects.toEqual(
-            new SubmissionError({ slug: ContestErrors.SlugAlreadyExists })
+            new SubmissionError({ slug: 'Slug already exists' })
           );
         });
       });

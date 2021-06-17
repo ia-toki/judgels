@@ -2,7 +2,6 @@ import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import RegisterPage from './RegisterPage';
@@ -21,7 +20,6 @@ describe('RegisterPage', () => {
 
     const store = createStore(
       combineReducers({
-        form: formReducer,
         jophiel: jophielReducer,
       }),
       applyMiddleware(thunk)

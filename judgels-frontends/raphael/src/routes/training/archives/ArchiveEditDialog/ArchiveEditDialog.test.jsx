@@ -1,9 +1,7 @@
+import { expect } from '@jest/globals';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { reducer as formReducer } from 'redux-form';
-import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
 
 import { ArchiveEditDialog } from './ArchiveEditDialog';
 
@@ -23,7 +21,7 @@ describe('ArchiveEditDialog', () => {
   beforeEach(() => {
     onUpdateArchive = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store = configureMockStore()({});
 
     const props = {
       isOpen: true,
@@ -33,27 +31,29 @@ describe('ArchiveEditDialog', () => {
     };
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ArchiveEditDialog {...props} />
-        </MemoryRouter>
+        <ArchiveEditDialog {...props} />
       </Provider>
     );
   });
 
   test('edit dialog form', async () => {
     const slug = wrapper.find('input[name="slug"]');
+    expect(slug.prop('value')).toEqual('archive');
     slug.getDOMNode().value = 'new-archive';
     slug.simulate('input');
 
     const name = wrapper.find('input[name="name"]');
+    expect(name.prop('value')).toEqual('Archive');
     name.getDOMNode().value = 'New archive';
     name.simulate('input');
 
     const category = wrapper.find('input[name="category"]');
+    expect(category.prop('value')).toEqual('Category');
     category.getDOMNode().value = 'New category';
     category.simulate('input');
 
     const description = wrapper.find('textarea[name="description"]');
+    expect(description.prop('value')).toEqual('This is a archive');
     description.getDOMNode().value = 'New description';
     description.simulate('input');
 
