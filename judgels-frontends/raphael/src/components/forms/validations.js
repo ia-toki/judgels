@@ -21,6 +21,10 @@ export const EmailAddress = value =>
 export const ConfirmPassword = (value, { password }) =>
   value === password ? undefined : 'Confirmed password does not match';
 
+export const MaxFileSize100KB = value => {
+  return value && value.size <= 100 * 1024 ? undefined : 'File size must be at most 100 KB';
+};
+
 export const MaxFileSize300KB = value => {
   return value && value.size <= 300 * 1024 ? undefined : 'File size must be at most 300 KB';
 };
@@ -50,6 +54,15 @@ export const Max1000Lines = value => {
     ? undefined
     : 'Max 1000 lines';
 };
+
+export function HasImageExtension(value) {
+  const extensions = ['png', 'jpg', 'jpeg'];
+  const re = new RegExp('\\.(' + extensions.join('|') + ')$', 'i');
+  if (value.name.toLowerCase().match(re)) {
+    return undefined;
+  }
+  return 'Allowed extensions: ' + extensions.join(', ') + '.';
+}
 
 export function CompatibleFilenameExtensionForGradingLanguage(value, { gradingLanguage }) {
   if (!gradingLanguage || !value) {
