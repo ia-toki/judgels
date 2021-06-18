@@ -13,6 +13,7 @@ import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webP
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { selectContest } from '../../../modules/contestSelectors';
+import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
 import './ContestClarificationsPage.scss';
@@ -36,6 +37,10 @@ class ContestClarificationsPage extends Component {
       filter: { status },
       isFilterLoading: false,
     };
+  }
+
+  componentDidMount() {
+    askDesktopNotificationPermission();
   }
 
   componentDidUpdate() {

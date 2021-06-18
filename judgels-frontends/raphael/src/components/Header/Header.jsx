@@ -4,17 +4,12 @@ import { Link } from 'react-router-dom';
 
 import { APP_CONFIG } from '../../conf';
 import UserWidget from '../UserWidget/UserWidget';
-import { askDesktopNotificationPermission } from '../../modules/notification/notification';
 
 import './Header.scss';
 
 import logo from '../../assets/images/logo-header.png';
 
 class Header extends PureComponent {
-  componentDidMount() {
-    askDesktopNotificationPermission();
-  }
-
   render() {
     const UW = this.props.userWidget;
 

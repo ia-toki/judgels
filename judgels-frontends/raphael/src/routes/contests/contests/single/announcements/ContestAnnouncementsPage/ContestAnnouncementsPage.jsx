@@ -9,6 +9,7 @@ import { selectContest } from '../../../modules/contestSelectors';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
+import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
 class ContestAnnouncementsPage extends Component {
@@ -19,6 +20,10 @@ class ContestAnnouncementsPage extends Component {
     lastRefreshAnnouncementsTime: 0,
     openEditDialogAnnouncement: undefined,
   };
+
+  componentDidMount() {
+    askDesktopNotificationPermission();
+  }
 
   render() {
     return (
