@@ -15,10 +15,10 @@ describe('FormattedRelative', () => {
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 10, 6) })).toEqual('just now');
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 10, 5) })).toEqual('5 seconds ago');
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 9, 10) })).toEqual('1 minute ago');
-    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 5, 9) })).toEqual('5 minutes 1 second ago');
-    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 5, 6) })).toEqual('5 minutes 4 seconds ago');
+    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 5, 9) })).toEqual('5 minutes ago');
+    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 5, 6) })).toEqual('5 minutes ago');
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 9, 10, 10) })).toEqual('1 hour ago');
-    expect(FormattedRelative({ value: new Date(2021, 10, 10, 5, 6, 7) })).toEqual('5 hours 4 minutes 3 seconds ago');
+    expect(FormattedRelative({ value: new Date(2021, 10, 10, 5, 6, 7) })).toEqual('5 hours ago');
     expect(FormattedRelative({ value: new Date(2021, 10, 9, 10, 10, 10) })).toEqual('1 day ago');
     expect(FormattedRelative({ value: new Date(2021, 10, 9, 1, 0, 0) })).toEqual('1 day ago');
     expect(FormattedRelative({ value: new Date(2021, 10, 8, 12, 0, 0) })).toEqual('2 days ago');
@@ -34,10 +34,10 @@ describe('FormattedRelative', () => {
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 10, 11) })).toEqual('in 1 second');
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 10, 15) })).toEqual('in 5 seconds');
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 11, 10) })).toEqual('in 1 minute');
-    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 15, 11) })).toEqual('in 5 minutes 1 second');
-    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 15, 14) })).toEqual('in 5 minutes 4 seconds');
+    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 15, 11) })).toEqual('in 5 minutes');
+    expect(FormattedRelative({ value: new Date(2021, 10, 10, 10, 15, 14) })).toEqual('in 5 minutes');
     expect(FormattedRelative({ value: new Date(2021, 10, 10, 11, 10, 10) })).toEqual('in 1 hour');
-    expect(FormattedRelative({ value: new Date(2021, 10, 10, 15, 14, 13) })).toEqual('in 5 hours 4 minutes 3 seconds');
+    expect(FormattedRelative({ value: new Date(2021, 10, 10, 15, 14, 13) })).toEqual('in 5 hours');
     expect(FormattedRelative({ value: new Date(2021, 10, 11, 10, 10, 10) })).toEqual('in 1 day');
     expect(FormattedRelative({ value: new Date(2021, 10, 11, 15, 10, 10) })).toEqual('in 1 day');
     expect(FormattedRelative({ value: new Date(2021, 10, 11, 23, 10, 10) })).toEqual('in 2 days');

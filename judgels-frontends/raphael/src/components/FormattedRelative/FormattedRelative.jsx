@@ -30,19 +30,19 @@ export function FormattedRelative({ value }) {
   } else if (diff >= oneDay) {
     const days = Math.round(diff / oneDay);
     res = [...res, days + ' day' + (days > 1 ? 's' : '')];
-  } else {
+  } else if (diff >= oneHour) {
     const hours = Math.floor(diff / oneHour);
     if (hours > 0) {
       res = [...res, hours + ' hour' + (hours > 1 ? 's' : '')];
       diff = diff % oneHour;
     }
-
+  } else if (diff >= oneMinute) {
     const minutes = Math.floor(diff / oneMinute);
     if (minutes > 0) {
       res = [...res, minutes + ' minute' + (minutes > 1 ? 's' : '')];
       diff = diff % oneMinute;
     }
-
+  } else {
     const seconds = Math.floor(diff / oneSecond);
     if (seconds > 0) {
       res = [...res, seconds + ' second' + (seconds > 1 ? 's' : '')];
