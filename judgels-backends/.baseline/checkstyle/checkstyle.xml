@@ -408,7 +408,6 @@
             <property name="offset" value="0"/>
         </module>
         <module name="LocalFinalVariableName"/> <!-- Java Style Guide: Local variable names -->
-        <module name="MethodLength"/> <!-- Java Coding Guide: Methods and functions: focused, crisp, concise -->
         <module name="MethodTypeParameterName"> <!-- Java Style Guide: Type variable names -->
             <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
             <message key="name.invalidPattern" value="Method type name ''{0}'' must match pattern ''{1}''."/>

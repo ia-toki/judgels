@@ -688,6 +688,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
             TrocScoreboardIncrementalContent incrementalContent = new TrocScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
+                    .putFirstToSolveSubmissionJids("p1", "JIDSX")
                     .putAttemptsMapsByContestantJid("c2", ImmutableMap.of("p1", 0, "p2", 2))
                     .putAttemptsMapsByContestantJid("c3", ImmutableMap.of("p1", 1, "p2", 0))
                     .putPenaltyMapsByContestantJid("c2", ImmutableMap.of("p1", 0L, "p2", 3L))
@@ -715,6 +716,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
+                        .putFirstToSolveSubmissionJids("p1", "JIDS8")
+                        .putFirstToSolveSubmissionJids("p2", "JIDS9")
                         .putAttemptsMapsByContestantJid("c1", ImmutableMap.of("p1", 3, "p2", 0))
                         .putAttemptsMapsByContestantJid("c2", ImmutableMap.of("p1", 1, "p2", 1))
                         .putPenaltyMapsByContestantJid("c1", ImmutableMap.of("p1", 6L, "p2", 0L))
@@ -762,6 +765,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
+                        .putFirstToSolveSubmissionJids("p1", "JIDSX")
+                        .putFirstToSolveSubmissionJids("p2", "JIDS9")
                         .putAttemptsMapsByContestantJid("c1", ImmutableMap.of("p1", 3, "p2", 0))
                         .putAttemptsMapsByContestantJid("c2", ImmutableMap.of("p1", 1, "p2", 3))
                         .putAttemptsMapsByContestantJid("c3", ImmutableMap.of("p1", 1, "p2", 0))
@@ -769,7 +774,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         .putPenaltyMapsByContestantJid("c2", ImmutableMap.of("p1", 0L, "p2", 4L))
                         .putPenaltyMapsByContestantJid("c3", ImmutableMap.of("p1", 3L, "p2", 0L))
                         .putProblemStateMapsByContestantJid("c1", ImmutableMap.of(
-                                "p1", TrocScoreboardProblemState.FIRST_ACCEPTED,
+                                "p1", TrocScoreboardProblemState.ACCEPTED,
                                 "p2", TrocScoreboardProblemState.NOT_ACCEPTED))
                         .putProblemStateMapsByContestantJid("c2", ImmutableMap.of(
                                 "p1", TrocScoreboardProblemState.NOT_ACCEPTED,

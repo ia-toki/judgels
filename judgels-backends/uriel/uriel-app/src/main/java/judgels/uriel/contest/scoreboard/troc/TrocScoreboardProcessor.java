@@ -226,6 +226,7 @@ public class TrocScoreboardProcessor implements ScoreboardProcessor {
                 .entries(entries)
                 .incrementalContent(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(nextLastSubmissionId)
+                        .firstToSolveSubmissionJids(firstToSolveSubmissionJids)
                         .attemptsMapsByContestantJid(attemptsMapsByContestantJid)
                         .penaltyMapsByContestantJid(penaltyMapsByContestantJid)
                         .problemStateMapsByContestantJid(problemStateMapsByContestantJid)
