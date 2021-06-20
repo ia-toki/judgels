@@ -1,5 +1,4 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
 import { Field, Form } from 'react-final-form';
 
 import { getGradingLanguageName, gradingLanguages } from '../../../../../../modules/api/gabriel/language.js';
@@ -13,37 +12,8 @@ import { composeValidators, NonnegativeNumber, Required } from '../../../../../.
 
 import './ContestEditConfigsForm.scss';
 
-export default class ContestEditConfigsForm extends Component {
-  render() {
-    const { onSubmit, initialValues, config, onCancel } = this.props;
-    return (
-      <Form onSubmit={onSubmit} initialValues={initialValues}>
-        {({ handleSubmit, values, submitting }) => (
-          <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
-            {config.trocStyle && this.renderTrocStyleForm(values)}
-            {config.icpcStyle && this.renderIcpcStyleForm(values)}
-            {config.ioiStyle && this.renderIoiStyleForm(values)}
-            {config.gcjStyle && this.renderGcjStyleForm(values)}
-            {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
-            {config.division && this.renderDivisionForm()}
-            {this.renderScoreboardForm()}
-            {config.frozenScoreboard && this.renderFrozenScoreboardForm()}
-            {config.externalScoreboard && this.renderExternalScoreboardForm()}
-            {config.virtual && this.renderVirtualForm()}
-            {config.editorial && this.renderEditorialForm()}
-
-            <hr />
-            <ActionButtons>
-              <Button text="Cancel" disabled={submitting} onClick={onCancel} />
-              <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
-            </ActionButtons>
-          </form>
-        )}
-      </Form>
-    );
-  }
-
-  renderTrocStyleForm = ({ trocAllowAllLanguages }) => {
+export default function ContestEditConfigsForm({ onSubmit, initialValues, config, onCancel }) {
+  const renderTrocStyleForm = ({ trocAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -83,7 +53,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderIcpcStyleForm = ({ icpcAllowAllLanguages }) => {
+  const renderIcpcStyleForm = ({ icpcAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -122,7 +92,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderIoiStyleForm = ({ ioiAllowAllLanguages }) => {
+  const renderIoiStyleForm = ({ ioiAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -167,7 +137,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderGcjStyleForm = ({ gcjAllowAllLanguages }) => {
+  const renderGcjStyleForm = ({ gcjAllowAllLanguages }) => {
     const allowedLanguageField = {
       label: 'Allowed languages',
       meta: {},
@@ -206,7 +176,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderClarificationTimeLimitForm = () => {
+  const renderClarificationTimeLimitForm = () => {
     const clarificationTimeLimitDurationField = {
       name: 'clarificationTimeLimitDuration',
       label: 'Clarification duration',
@@ -227,7 +197,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderDivisionForm = () => {
+  const renderDivisionForm = () => {
     const divisionDivisionField = {
       name: 'divisionDivision',
       label: 'Division',
@@ -247,7 +217,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderEditorialForm = () => {
+  const renderEditorialForm = () => {
     const editorialPrefaceField = {
       name: 'editorialPreface',
       label: 'Preface',
@@ -262,7 +232,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderScoreboardForm = () => {
+  const renderScoreboardForm = () => {
     const scoreboardIsIncognitoField = {
       name: 'scoreboardIsIncognito',
       label: 'Incognito scoreboard?',
@@ -281,7 +251,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderFrozenScoreboardForm = () => {
+  const renderFrozenScoreboardForm = () => {
     const frozenScoreboardFreezeTimeField = {
       name: 'frozenScoreboardFreezeTime',
       label: 'Freeze time',
@@ -309,7 +279,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderExternalScoreboardForm = () => {
+  const renderExternalScoreboardForm = () => {
     const externalScoreboardReceiverUrlField = {
       name: 'externalScoreboardReceiverUrl',
       label: 'Receiver URL',
@@ -336,7 +306,7 @@ export default class ContestEditConfigsForm extends Component {
     );
   };
 
-  renderVirtualForm = () => {
+  const renderVirtualForm = () => {
     const virtualDurationField = {
       name: 'virtualDuration',
       label: 'Virtual contest duration',
@@ -356,4 +326,30 @@ export default class ContestEditConfigsForm extends Component {
       </div>
     );
   };
+
+  return (
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
+      {({ handleSubmit, values, submitting }) => (
+        <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
+          {config.trocStyle && renderTrocStyleForm(values)}
+          {config.icpcStyle && renderIcpcStyleForm(values)}
+          {config.ioiStyle && renderIoiStyleForm(values)}
+          {config.gcjStyle && renderGcjStyleForm(values)}
+          {config.clarificationTimeLimit && renderClarificationTimeLimitForm()}
+          {config.division && renderDivisionForm()}
+          {renderScoreboardForm()}
+          {config.frozenScoreboard && renderFrozenScoreboardForm()}
+          {config.externalScoreboard && renderExternalScoreboardForm()}
+          {config.virtual && renderVirtualForm()}
+          {config.editorial && renderEditorialForm()}
+
+          <hr />
+          <ActionButtons>
+            <Button text="Cancel" disabled={submitting} onClick={onCancel} />
+            <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
+          </ActionButtons>
+        </form>
+      )}
+    </Form>
+  );
 }
