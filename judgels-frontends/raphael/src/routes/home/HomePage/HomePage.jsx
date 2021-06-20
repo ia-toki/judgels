@@ -12,9 +12,6 @@ import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersW
 
 import './HomePage.scss';
 
-import bannerImage from '../../../assets/images/welcome-banner.jpg';
-import overlayImage from '../../../assets/images/welcome-overlay.png';
-
 function HomePage({ isLoggedIn }) {
   const renderBanner = () => {
     if (isLoggedIn) {
@@ -23,12 +20,6 @@ function HomePage({ isLoggedIn }) {
 
     return (
       <div className="home-banner">
-        <div>
-          <img src={bannerImage} alt="banner" className="home-banner__image" />
-        </div>
-        <div>
-          <img src={overlayImage} alt="banner-overlay" className="home-banner__overlay" />
-        </div>
         <div className="home-banner__contents">
           <div>
             <h1 className="home-banner__text">{APP_CONFIG.welcomeBanner.title}</h1>

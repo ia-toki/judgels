@@ -1,5 +1,8 @@
+@import '../../../styles/base';
+
 .home-banner {
   position: relative;
+  background-color: $primary-color;
   height: 300px;
   margin-top: -40px;
   margin-bottom: 20px;
@@ -26,21 +29,6 @@
   margin-right: 15px;
 }
 
-.home-banner__image {
-  position: absolute;
-  height: 300px;
-  width: 100%;
-  object-fit: cover;
-  filter: opacity(40%);
-}
-
-.home-banner__overlay {
-  position: absolute;
-  height: 300px;
-  width: 100%;
-  object-fit: cover;
-}
-
 .home-widget-row {
   margin-top: 10px;
   width: 100%;
@@ -63,7 +51,9 @@
     margin-top: 0;
   }
 
-  .home-banner, .home-banner__image, .home-banner__overlay {
+  .home-banner,
+  .home-banner__image,
+  .home-banner__overlay {
     height: 350px;
   }
 
@@ -72,7 +62,8 @@
     margin: 0 30px 30px;
   }
 
-  .home-widget-row__two-thirds, .home-widget-row__one-third {
+  .home-widget-row__two-thirds,
+  .home-widget-row__one-third {
     width: 100%;
     float: none;
     padding: 0;
