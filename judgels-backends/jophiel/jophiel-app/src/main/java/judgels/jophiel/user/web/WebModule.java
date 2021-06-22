@@ -1,4 +1,4 @@
-package judgels.jophiel.web;
+package judgels.jophiel.user.web;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,7 +12,7 @@ public class WebModule {
     }
 
     @Provides
-    WebConfiguration userWebConfig() {
+    WebConfiguration webConfig() {
         return config;
     }
 }

@@ -5,6 +5,7 @@ const initialState = {
     role: {
       jophiel: JophielRole.Guest,
     },
+    announcements: [],
     isConfigLoaded: false,
   },
 };

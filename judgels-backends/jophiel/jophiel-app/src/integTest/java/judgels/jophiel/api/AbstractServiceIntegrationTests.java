@@ -26,7 +26,7 @@ import judgels.jophiel.user.account.UserRegistrationConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
-import judgels.jophiel.web.WebConfiguration;
+import judgels.jophiel.user.web.WebConfiguration;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.jaxrs.JaxRsClients;
 import org.h2.Driver;

@@ -26,8 +26,7 @@ import judgels.jophiel.user.search.UserSearchResource;
 import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.UserWebResource;
-import judgels.jophiel.web.WebModule;
-import judgels.jophiel.web.WebResource;
+import judgels.jophiel.user.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
@@ -65,7 +64,6 @@ public interface JophielComponent {
     UserRatingResource userRatingResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
-    WebResource webResource();
     ClientUserResource clientUserResource();
     PingResource pingResource();
 }

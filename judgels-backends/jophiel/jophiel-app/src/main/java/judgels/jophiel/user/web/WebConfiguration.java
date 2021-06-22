@@ -1,4 +1,4 @@
-package judgels.jophiel.web;
+package judgels.jophiel.user.web;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;

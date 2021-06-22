@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 
 import './Announcements.scss';
 
-function Announcements({ config }) {
-  const announcements = config.announcements || [];
+function Announcements({ announcements }) {
   if (!announcements) {
     return null;
   }
@@ -23,7 +22,7 @@ function Announcements({ config }) {
 }
 
 const mapStateToProps = state => ({
-  config: state.jophiel.web.config,
+  announcements: state.jophiel.userWeb.config.announcements,
 });
 
 export default connect(mapStateToProps)(Announcements);
