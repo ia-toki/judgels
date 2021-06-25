@@ -1,5 +1,5 @@
 import { Tag, Intent } from '@blueprintjs/core';
-import { SmallTick, Star } from '@blueprintjs/icons';
+import { SmallTick } from '@blueprintjs/icons';
 
 import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
 import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
@@ -14,11 +14,11 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
       return null;
     }
 
-    const { totalScores, totalUsersAccepted, totalUsersTried } = stats;
+    const { totalUsersAccepted, totalUsersTried } = stats;
 
     return (
       <div className="problemset-problem-card__stats">
-        {renderDifficultyLevel(totalScores, totalUsersTried)}
+        {renderLevel(problem)}
         {renderACStats(totalUsersAccepted, totalUsersTried)}
       </div>
     );
@@ -38,14 +38,13 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     );
   };
 
-  const renderDifficultyLevel = (totalScores, totalUsersTried) => {
-    if (totalUsersTried === 0) {
+  const renderLevel = ({ level }) => {
+    if (!level) {
       return null;
     }
-    const level = (100 - (totalScores + 100) / (totalUsersTried + 2)) / 10;
     return (
-      <Tag intent={Intent.PRIMARY} rightIcon={<Star />}>
-        level <span className="problemset-problem-card__stats--large">{level.toFixed(1)}</span>
+      <Tag intent={Intent.PRIMARY}>
+        level <span className="problemset-problem-card__stats--large">{level}</span>
       </Tag>
     );
   };
@@ -55,7 +54,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
       return (
         <Tag intent={Intent.NONE}>
           solved by <span className="problemset-problem-card__stats--large">{totalUsersAccepted}</span> /{' '}
-          {totalUsersTried} users
+          {totalUsersTried}
         </Tag>
       );
     }

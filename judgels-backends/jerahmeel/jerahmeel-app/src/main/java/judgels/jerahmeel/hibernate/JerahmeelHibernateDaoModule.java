@@ -11,6 +11,7 @@ import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CurriculumDao;
 import judgels.jerahmeel.persistence.ProblemContestDao;
+import judgels.jerahmeel.persistence.ProblemLevelDao;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
@@ -62,6 +63,11 @@ public class JerahmeelHibernateDaoModule {
 
     @Provides
     static ProblemContestDao problemContestDao(ProblemContestHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ProblemLevelDao problemLevelDao(ProblemLevelHibernateDao dao) {
         return dao;
     }
 

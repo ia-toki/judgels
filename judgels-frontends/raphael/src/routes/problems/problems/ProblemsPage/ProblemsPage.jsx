@@ -38,8 +38,6 @@ class ProblemsPage extends Component {
   render() {
     return (
       <Card title="Browse problems">
-        <p>Sorted by (dynamic) difficulty level. We're still experimenting with level computation.</p>
-        <hr />
         {this.renderProblems()}
         {this.renderPagination()}
       </Card>
@@ -63,10 +61,10 @@ class ProblemsPage extends Component {
     }
 
     return problems.page.map(problem => {
-      const { problemSetSlug, problemAlias, problemJid } = problem;
+      const { problemSetSlug, problemAlias, problemJid, problemLevel } = problem;
       const props = {
         problemSet: { slug: problemSetSlug },
-        problem: { type: ProblemType.Programming, alias: problemAlias },
+        problem: { type: ProblemType.Programming, alias: problemAlias, level: problemLevel },
         problemName: getProblemName(problemsMap[problemJid], 'en'),
         hasEditorial: problemMetadatasMap[problemJid].hasEditorial,
         progress: problemProgressesMap[problemJid],
