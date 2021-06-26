@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jerahmeel.api.problem.ProblemLevel;
 import judgels.jerahmeel.api.problem.ProblemSetProblemInfo;
 import judgels.jerahmeel.persistence.ProblemLevelDao;
 import judgels.jerahmeel.persistence.ProblemSetDao;
@@ -50,7 +51,13 @@ public class ProblemStore {
                 .problemSetSlug(problemSetsMap.get(m.problemSetJid).slug)
                 .problemAlias(m.alias)
                 .problemJid(m.problemJid)
-                .problemLevel(Optional.ofNullable(problemLevelsMap.get(m.problemJid)))
                 .build()));
+    }
+
+    public Map<String, ProblemLevel> getProblemLevelsMap(Set<String> problemJids) {
+        Map<String, Integer> levelsMap = problemLevelDao.selectAllAverageByProblemJids(problemJids);
+        return levelsMap.entrySet().stream().collect(Collectors.toMap(
+                e -> e.getKey(),
+                e -> new ProblemLevel.Builder().level(e.getValue()).build()));
     }
 }

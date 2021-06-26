@@ -9,9 +9,11 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jerahmeel.api.problem.ProblemLevel;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.persistence.ProblemContestDao;
 import judgels.jerahmeel.persistence.ProblemContestModel;
+import judgels.jerahmeel.persistence.ProblemLevelDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.persistence.api.OrderDir;
@@ -21,17 +23,30 @@ import judgels.sandalphon.api.problem.ProblemType;
 public class ProblemSetProblemStore {
     private final ProblemSetProblemDao problemDao;
     private final ProblemContestDao problemContestDao;
+    private final ProblemLevelDao problemLevelDao;
 
     @Inject
-    public ProblemSetProblemStore(ProblemSetProblemDao problemDao, ProblemContestDao problemContestDao) {
+    public ProblemSetProblemStore(
+            ProblemSetProblemDao problemDao,
+            ProblemContestDao problemContestDao,
+            ProblemLevelDao problemLevelDao) {
+
         this.problemDao = problemDao;
         this.problemContestDao = problemContestDao;
+        this.problemLevelDao = problemLevelDao;
     }
 
     public List<ProblemSetProblem> getProblems(String problemSetJid) {
         return Lists.transform(
                 problemDao.selectAllByProblemSetJid(problemSetJid, createOptions()),
                 m -> fromModel(m, getContestJids(m.problemJid)));
+    }
+
+    public Map<String, ProblemLevel> getProblemLevelsMap(Set<String> problemJids) {
+        Map<String, Integer> levelsMap = problemLevelDao.selectAllAverageByProblemJids(problemJids);
+        return levelsMap.entrySet().stream().collect(Collectors.toMap(
+                e -> e.getKey(),
+                e -> new ProblemLevel.Builder().level(e.getValue()).build()));
     }
 
     public Optional<ProblemSetProblem> getProblem(String problemJid) {

@@ -8,7 +8,16 @@ import { ProblemType } from '../../modules/api/sandalphon/problem';
 
 import './ProblemSetProblemCard.scss';
 
-export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemName, hasEditorial, progress, stats }) {
+export function ProblemSetProblemCard({
+  problemSet,
+  problem,
+  showAlias,
+  problemName,
+  level,
+  hasEditorial,
+  progress,
+  stats,
+}) {
   const renderStats = () => {
     if (problem.type === ProblemType.Bundle || !stats) {
       return null;
@@ -18,7 +27,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
 
     return (
       <div className="problemset-problem-card__stats">
-        {renderLevel(problem)}
+        {renderLevel(level)}
         {renderACStats(totalUsersAccepted, totalUsersTried)}
       </div>
     );
@@ -38,13 +47,13 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     );
   };
 
-  const renderLevel = ({ level }) => {
+  const renderLevel = level => {
     if (!level) {
       return null;
     }
     return (
       <Tag intent={Intent.PRIMARY}>
-        level <span className="problemset-problem-card__stats--large">{level}</span>
+        level <span className="problemset-problem-card__stats--large">{level.level}</span>
       </Tag>
     );
   };

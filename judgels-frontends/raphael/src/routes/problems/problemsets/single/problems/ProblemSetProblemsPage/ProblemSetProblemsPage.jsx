@@ -77,7 +77,14 @@ export class ProblemSetProblemsPage extends Component {
       return <LoadingContentCard />;
     }
 
-    const { data: problems, problemsMap, problemMetadatasMap, problemProgressesMap, problemStatsMap } = response;
+    const {
+      data: problems,
+      problemsMap,
+      problemLevelsMap,
+      problemMetadatasMap,
+      problemProgressesMap,
+      problemStatsMap,
+    } = response;
 
     if (problems.length === 0) {
       return (
@@ -93,6 +100,7 @@ export class ProblemSetProblemsPage extends Component {
         problem,
         showAlias: true,
         problemName: getProblemName(problemsMap[problem.problemJid], this.state.defaultLanguage),
+        level: problemLevelsMap[problem.problemJid],
         hasEditorial: problemMetadatasMap[problem.problemJid].hasEditorial,
         progress: problemProgressesMap[problem.problemJid],
         stats: problemStatsMap[problem.problemJid],

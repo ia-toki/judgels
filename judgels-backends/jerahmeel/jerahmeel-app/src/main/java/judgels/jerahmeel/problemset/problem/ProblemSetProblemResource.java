@@ -138,6 +138,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         return new ProblemSetProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemClient.getProblems(problemJids))
+                .problemLevelsMap(problemStore.getProblemLevelsMap(problemJids))
                 .problemMetadatasMap(problemClient.getProblemMetadatas(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
                 .problemStatsMap(statsStore.getProblemStatsMap(problemJids))
