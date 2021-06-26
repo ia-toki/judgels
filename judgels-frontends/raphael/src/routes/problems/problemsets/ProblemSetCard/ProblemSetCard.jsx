@@ -29,7 +29,7 @@ export function ProblemSetCard({ problemSet, archiveDescription, progress, profi
   };
 
   return (
-    <ContentCardLink to={`/problems/${problemSet.slug}`} className="problemset-card" elevation={1}>
+    <ContentCardLink to={`/problems/${problemSet.slug}`} elevation={1}>
       <h4 className="problemset-card__name">
         {problemSet.name}
         {renderProgress()}
