@@ -43,7 +43,7 @@ export class ChapterProblemPage extends Component {
       statementLanguages: languages,
     };
     return (
-      <div className="statement-language-widget-wrapper">
+      <div className="language-widget-wrapper">
         <StatementLanguageWidget {...props} />
       </div>
     );
