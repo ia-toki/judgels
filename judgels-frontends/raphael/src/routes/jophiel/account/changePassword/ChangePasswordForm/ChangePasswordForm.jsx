@@ -8,21 +8,21 @@ import { HorizontalDivider } from '../../../../../components/HorizontalDivider/H
 const oldPasswordField = {
   name: 'oldPassword',
   label: 'Old password',
-  type: 'password',
+  inputType: 'password',
   validate: Required,
 };
 
 const newPasswordField = {
   name: 'password',
   label: 'New password',
-  type: 'password',
+  inputType: 'password',
   validate: Required,
 };
 
 const confirmNewPasswordField = {
   name: 'confirmPassword',
   label: 'Confirm new password',
-  type: 'password',
+  inputType: 'password',
   validate: composeValidators(Required, ConfirmPassword),
 };
 

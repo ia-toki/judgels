@@ -9,14 +9,14 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 const newPasswordField = {
   name: 'password',
   label: 'New Password',
-  type: 'password',
+  inputType: 'password',
   validate: Required,
 };
 
 const confirmNewPasswordField = {
   name: 'confirmPassword',
   label: 'Confirm New Password',
-  type: 'password',
+  inputType: 'password',
   validate: composeValidators(Required, ConfirmPassword),
 };
 
