@@ -62,7 +62,7 @@ export class ContestEditDialog extends Component {
         enforceFocus={false}
       >
         <div className={Classes.DIALOG_BODY}>
-          <Tabs id="contest-edit-dialog-tabs" vertical renderActiveTabPanelOnly>
+          <Tabs id="contest-edit-dialog-tabs" vertical renderActiveTabPanelOnly animate={false}>
             <Tab id="general" panel={<ContestEditGeneralTab />}>
               General
               <ChevronRight className="contest-edit-dialog__arrow" />

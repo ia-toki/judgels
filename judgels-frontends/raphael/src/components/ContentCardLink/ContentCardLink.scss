@@ -1,6 +1,7 @@
 @import '../../styles/base';
 
 .content-card-link {
+  color: inherit !important;
   display: block;
   margin: -15px;
   padding: 15px;
@@ -8,7 +9,14 @@
 }
 
 .content-card-link:hover {
-  background-color: $div-hover-color;
   cursor: pointer;
   text-decoration: none;
+}
+
+.bp4-light .content-card-link:hover {
+  background-color: $div-hover-color;
+}
+
+.bp4-dark .content-card-link:hover {
+  background-color: $dark-secondary-background-color;
 }

@@ -87,11 +87,7 @@ export function ProblemSetProblemCard({
   };
 
   return (
-    <ContentCardLink
-      to={`/problems/${problemSet.slug}/${problem.alias}`}
-      className="problemset-problem-card"
-      elevation={1}
-    >
+    <ContentCardLink to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-card">
       <h4 data-key="name">
         {showAlias && <>{problem.alias}. </>}
         {problemName}

@@ -1,6 +1,18 @@
-import webPrefsReducer, { PutStatementLanguage, PutGradingLanguage, PutEditorialLanguage } from './webPrefsReducer';
+import webPrefsReducer, {
+  PutStatementLanguage,
+  PutGradingLanguage,
+  PutEditorialLanguage,
+  PutIsDarkMode,
+} from './webPrefsReducer';
 
 describe('webPrefsReducer', () => {
+  test('PUT_IS_DARK_MODE', () => {
+    const state = { isDarkMode: false };
+    const action = PutIsDarkMode(true);
+    const nextState = { isDarkMode: true };
+    expect(webPrefsReducer(state, action)).toEqual(nextState);
+  });
+
   test('PUT_STATEMENT_LANGUAGE', () => {
     const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
     const action = PutStatementLanguage('id');
@@ -8,7 +20,7 @@ describe('webPrefsReducer', () => {
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
-  test('PUT_STATEMENT_LANGUAGE', () => {
+  test('PUT_EDITORIAL_LANGUAGE', () => {
     const state = { editorialLanguage: 'en', gradingLanguage: 'Cpp17' };
     const action = PutEditorialLanguage('id');
     const nextState = { editorialLanguage: 'id', gradingLanguage: 'Cpp17' };

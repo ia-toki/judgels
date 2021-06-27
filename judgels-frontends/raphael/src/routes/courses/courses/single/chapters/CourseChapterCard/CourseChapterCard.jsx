@@ -24,11 +24,7 @@ export function CourseChapterCard({ course, chapter, chapterName, progress }) {
   };
 
   return (
-    <ContentCardLink
-      to={`/courses/${course.slug}/chapters/${chapter.alias}`}
-      className="course-chapter-card"
-      elevation={1}
-    >
+    <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}`} className="course-chapter-card">
       <div data-key="name">
         <h4>
           {chapter.alias}. {chapterName}

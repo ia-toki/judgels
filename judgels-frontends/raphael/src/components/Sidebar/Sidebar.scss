@@ -20,9 +20,7 @@
   }
 
   .bp4-tab-indicator {
-    background-color: $div-hover-color !important;
     border-radius: 0 !important;
-    border-left: 3px solid $primary-color;
   }
 
   .bp4-tab {
@@ -39,16 +37,10 @@
 
   .bp4-tab[aria-selected='true'] {
     font-weight: bold;
-    color: $text-color;
-  }
-
-  .bp4-tab[aria-selected='false'] {
-    color: $primary-color;
   }
 }
 
 .card-sidebar__arrow {
-  color: $primary-color !important;
   float: right;
   padding-top: 15px;
 }
@@ -81,5 +73,35 @@
     .bp4-icon {
       padding-bottom: 0 !important;
     }
+  }
+}
+
+.bp4-light .card-sidebar {
+  .card-sidebar__arrow {
+    color: $primary-color !important;
+  }
+
+  .bp4-tab-indicator {
+    background-color: $div-hover-color !important;
+    border-left: 3px solid $primary-color;
+  }
+
+  .bp4-tab[aria-selected='true'] {
+    color: $text-color;
+  }
+
+  .bp4-tab[aria-selected='false'] {
+    color: $primary-color;
+  }
+}
+
+.bp4-dark .card-sidebar {
+  .bp4-tab[aria-selected='true'] {
+    color: inherit;
+  }
+
+  .bp4-tab-indicator {
+    background-color: $dark-secondary-background-color !important;
+    border-left: 3px solid $gray3;
   }
 }

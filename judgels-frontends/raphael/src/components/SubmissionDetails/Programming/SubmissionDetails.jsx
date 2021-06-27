@@ -2,7 +2,7 @@ import { HTMLTable, Tag, Button } from '@blueprintjs/core';
 import { Download } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
-import { SourceCode } from '../../SourceCode/SourceCode';
+import SourceCode from '../../SourceCode/SourceCode';
 import { FormattedDate } from '../../FormattedDate/FormattedDate';
 import { UserRef } from '../../UserRef/UserRef';
 import { ContentCard } from '../../ContentCard/ContentCard';

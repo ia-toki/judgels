@@ -1,11 +1,20 @@
 @import '../../styles/base';
 
 .header {
+  height: 50px;
+}
+
+.bp4-light .header {
   background-color: $primary-color !important;
   height: 50px;
 }
 
-.header, .header a {
+.bp4-dark .header {
+  background-color: $dark-gray1 !important;
+}
+
+.header,
+.header a {
   color: white;
 }
 

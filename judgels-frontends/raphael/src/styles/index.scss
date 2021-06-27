@@ -9,17 +9,23 @@
 @import './ratings';
 
 body {
-  color: $text-color !important;
   font-family: $primary-font;
   background-color: #f4f5f6;
+}
+
+body .bp4-dark {
+  background-color: $dark-gray5 !important;
 }
 
 .secondary-info {
   font-family: $accent-font;
 }
 
-h1, h2, h3, h4, h5 {
-  color: $text-color !important;
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-family: $accent-font !important;
   font-weight: 500 !important;
   margin: 0 0 10px;
@@ -30,8 +36,15 @@ p {
 }
 
 small {
-  color: $small-color;
   line-height: 14px !important;
+}
+
+.bp4-light small {
+  color: $secondary-text-color;
+}
+
+.bp4-dark small {
+  color: $dark-secondary-text-color !important;
 }
 
 strong {
@@ -61,15 +74,19 @@ hr {
   margin-bottom: 15px !important;
 
   border: none;
-  border-bottom: 1px solid rgba($text-color, .15);
+  border-bottom: 1px solid rgba($text-color, 0.15);
+}
+
+.bp4-light hr {
+  border-bottom: 1px solid rgba($text-color, 0.15);
+}
+
+.bp4-dark hr {
+  border-bottom: 1px solid $dark-secondary-text-color;
 }
 
 a {
   color: $primary-color;
-}
-
-td {
-  color: $text-color !important;
 }
 
 ol {
@@ -80,17 +97,20 @@ ul {
   list-style: disc;
 }
 
-ol, ul {
+ol,
+ul {
   padding-left: 25px;
 }
 
-ol li, ul li {
+ol li,
+ul li {
   line-height: 20px;
   margin-bottom: 2px;
 }
 
-code, pre {
-  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+code,
+pre {
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
   background-color: #f5f5f5;
   border: 1px solid #cccccc;
   border-radius: 4px;
@@ -111,6 +131,16 @@ pre {
     border: initial;
     border-radius: initial;
   }
+}
+
+.bp4-dark code,
+.bp4-dark pre {
+  border-color: $dark-gray2;
+  background-color: $dark-gray3;
+}
+
+pre.source-code {
+  background-color: inherit !important;
 }
 
 em {
@@ -135,6 +165,11 @@ select {
 
 table {
   width: 100%;
+}
+
+.bp4-dark td,
+.bp4-dark th {
+  border-color: $dark-secondary-background-color !important;
 }
 
 blockquote {
@@ -174,13 +209,16 @@ blockquote {
 .html-text {
   line-height: 20px !important;
 
-  h2, h3, h4 {
+  h2,
+  h3,
+  h4 {
     margin-top: 20px;
     margin-bottom: 10px !important;
     line-height: 20px !important;
   }
 
-  ol, ul {
+  ol,
+  ul {
     margin-bottom: 10px;
   }
 
@@ -188,7 +226,8 @@ blockquote {
     width: inherit;
   }
 
-  td, th {
+  td,
+  th {
     border: solid 1px #cccccc;
     text-align: left;
     padding: 5px;
@@ -221,14 +260,24 @@ blockquote {
 
   .spoiler .spoiler-content {
     display: none;
-    border-top: 1px solid $text-color;
+    border-top: 1px solid;
     margin-top: 5px;
     padding-top: 15px;
     font-family: $primary-font;
     font-style: normal;
     font-weight: normal;
   }
+}
 
+.bp4-dark .html-text {
+  .spoiler {
+    background-color: $gray1;
+    border: 2px dashed $gray5;
+  }
+
+  .spoiler:hover {
+    background-color: $dark-gray5;
+  }
 }
 
 // Styles for <Pagination />. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
@@ -243,8 +292,6 @@ blockquote {
 
 .pagination__helper-text {
   margin-bottom: 0;
-  color: $small-color;
-  font-size: $font-size-small;
 }
 
 .pagination__item {

@@ -26,7 +26,6 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
     <ContentCardLink
       className="chapter-problem-card"
       to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}
-      elevation={1}
     >
       <h4 data-key="name">
         {problem.alias}. {problemName}

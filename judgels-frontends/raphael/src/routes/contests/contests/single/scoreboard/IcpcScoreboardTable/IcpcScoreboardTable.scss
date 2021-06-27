@@ -6,12 +6,13 @@ table.icpc-scoreboard__content {
       font-size: 16px;
     }
     small {
-      color: $small-color;
+      color: $secondary-text-color;
     }
   }
 
   td.first-accepted {
-    strong, small {
+    strong,
+    small {
       color: #fff;
     }
     background: #1f8763 !important;
@@ -22,14 +23,16 @@ table.icpc-scoreboard__content {
   }
 
   td.not-accepted {
-    strong, small {
+    strong,
+    small {
       color: #fff;
     }
     background: #e36262 !important;
   }
 
   td.frozen {
-    strong, small {
+    strong,
+    small {
       color: #fff;
     }
     background: #70a2ff !important;

@@ -21,7 +21,6 @@
   }
 
   .bp4-tab-indicator {
-    background-color: #ebf1f5 !important;
     border-radius: 0 !important;
   }
 
@@ -32,13 +31,10 @@
     height: 40px;
   }
 
-  .bp4-tab[aria-selected="true"] {
-    background-color: white !important;
-    border-left: 3px solid $primary-color;
+  .bp4-tab[aria-selected='true'] {
     left: -3px;
     border-radius: 0 !important;
     font-weight: bold;
-    color: $text-color;
 
     svg {
       display: initial;
@@ -46,9 +42,7 @@
     }
   }
 
-  .bp4-tab[aria-selected="false"] {
-    color: $text-color;
-
+  .bp4-tab[aria-selected='false'] {
     svg {
       display: none;
     }
@@ -56,7 +50,6 @@
 
   .contest-edit-dialog__arrow {
     line-height: 40px !important;
-    color: $primary-color !important;
     float: right;
   }
 
@@ -109,5 +102,25 @@
 
   .contest-edit-dialog__content {
     max-height: 460px;
+  }
+}
+
+.bp4-light .contest-edit-dialog {
+  .contest-edit-dialog__arrow {
+    color: $primary-color !important;
+  }
+
+  .bp4-tab[aria-selected='true'] {
+    background-color: white !important;
+    border-left: 3px solid $primary-color;
+    color: $text-color;
+  }
+}
+
+.bp4-dark .contest-edit-dialog {
+  .bp4-tab[aria-selected='true'] {
+    color: inherit !important;
+    background-color: $dark-secondary-background-color !important;
+    border-left: 3px solid $gray3;
   }
 }

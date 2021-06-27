@@ -3,16 +3,15 @@ import { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { APP_CONFIG } from '../../conf';
+import DarkModeWidget from '../DarkModeWidget/DarkModeWidget';
 import UserWidget from '../UserWidget/UserWidget';
 
 import './Header.scss';
 
 import logo from '../../assets/images/logo-header.png';
 
-class Header extends PureComponent {
+export default class Header extends PureComponent {
   render() {
-    const UW = this.props.userWidget;
-
     return (
       <Navbar className="header">
         <div className="header__wrapper">
@@ -27,12 +26,10 @@ class Header extends PureComponent {
             <div className="header__subtitle">Competitive Programming Platform</div>
           </Navbar.Group>
 
-          {<UW />}
+          <UserWidget />
+          <DarkModeWidget />
         </div>
       </Navbar>
     );
   }
 }
-
-const HeaderWrapper = () => <Header userWidget={UserWidget} />;
-export default HeaderWrapper;

@@ -1,5 +1,10 @@
+@import '../../../node_modules/@blueprintjs/core/lib/scss/variables.scss';
+
 $primary-color: #3b73b9;
 $text-color: #252527;
-$small-color: #5d5d66;
+$secondary-text-color: #5d5d66;
 $div-hover-color: #eef2fb;
 $header-color: #fbfbfc;
+
+$dark-secondary-text-color: $gray4;
+$dark-secondary-background-color: $gray1;

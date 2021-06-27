@@ -2,10 +2,17 @@
 
 .home-banner {
   position: relative;
-  background-color: $primary-color;
   height: 300px;
   margin-top: -40px;
   margin-bottom: 20px;
+}
+
+.bp4-light .home-banner {
+  background-color: $primary-color;
+}
+
+.bp4-dark .home-banner {
+  background-color: $blue3;
 }
 
 .home-banner__contents {

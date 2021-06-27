@@ -7,11 +7,18 @@
   height: 30px;
   line-height: 30px;
   vertical-align: middle !important;
-  background-color: #f4f5f6;
 
   svg {
     vertical-align: middle !important;
   }
+}
+
+.bp4-light .widget-user__profile {
+  background-color: #f4f5f6;
+}
+
+.bp4-dark .widget-user__profile {
+  background-color: $gray1;
 }
 
 .widget-user__avatar-wrapper {
@@ -32,12 +39,13 @@
   font-size: 0.9 * $font-size;
 }
 
-.widget-user__burger, .widget-user__menu-helper {
+.widget-user__burger,
+.widget-user__menu-helper {
   display: none !important;
 }
 
 .widget-user__menu a {
-  color: $text-color !important;
+  color: inherit !important;
 }
 
 .widget-user__user__username {
@@ -45,11 +53,14 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .widget-user__avatar, .widget-user__avatar-menu, .widget-user__link {
+  .widget-user__avatar,
+  .widget-user__avatar-menu,
+  .widget-user__link {
     display: none !important;
   }
 
-  .widget-user__burger, .widget-user__menu-helper {
+  .widget-user__burger,
+  .widget-user__menu-helper {
     display: block !important;
     cursor: pointer;
 

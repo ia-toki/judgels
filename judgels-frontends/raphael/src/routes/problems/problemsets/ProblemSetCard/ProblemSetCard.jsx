@@ -29,15 +29,15 @@ export function ProblemSetCard({ problemSet, archiveDescription, progress, profi
   };
 
   return (
-    <ContentCardLink to={`/problems/${problemSet.slug}`} elevation={1}>
+    <ContentCardLink to={`/problems/${problemSet.slug}`}>
       <h4 className="problemset-card__name">
         {problemSet.name}
         {renderProgress()}
       </h4>
       {description && (
-        <div className="problemset-card__description">
+        <small>
           <HtmlText profilesMap={profilesMap}>{description}</HtmlText>
-        </div>
+        </small>
       )}
       {renderProgressBar()}
     </ContentCardLink>

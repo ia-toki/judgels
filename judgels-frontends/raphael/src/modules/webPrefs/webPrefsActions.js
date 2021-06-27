@@ -1,6 +1,12 @@
 import { languageDisplayNamesMap } from '../api/sandalphon/language';
-import { PutStatementLanguage, PutEditorialLanguage, PutGradingLanguage } from './webPrefsReducer';
+import { PutStatementLanguage, PutEditorialLanguage, PutGradingLanguage, PutIsDarkMode } from './webPrefsReducer';
 import * as toastActions from '../toast/toastActions';
+
+export function switchDarkMode(isDarkMode) {
+  return async dispatch => {
+    dispatch(PutIsDarkMode(isDarkMode));
+  };
+}
 
 export function switchStatementLanguage(language) {
   return async dispatch => {

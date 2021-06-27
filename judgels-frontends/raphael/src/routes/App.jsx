@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
@@ -11,6 +12,7 @@ import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
+import { selectIsDarkMode } from '../modules/webPrefs/webPrefsSelectors';
 import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 
 import { getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
@@ -24,15 +26,21 @@ class App extends PureComponent {
     setGAUser(this.props.userJid);
   }
 
+  getChildContext() {
+    return {
+      blueprintPortalClassName: this.props.isDarkMode ? 'bp4-dark' : 'bp4-light',
+    };
+  }
+
   render() {
-    const { title, role } = this.props;
+    const { isDarkMode, title, role } = this.props;
 
     const visibleAppRoutes = getVisibleAppRoutes(role);
     const homeRoute = getHomeRoute();
 
     return (
       <DocumentTitle title={title}>
-        <div>
+        <div className={classNames({ 'bp4-light': !isDarkMode, 'bp4-dark': isDarkMode })}>
           <Announcements />
           <Header />
           <Menubar items={visibleAppRoutes} homeRoute={homeRoute} />
@@ -53,6 +61,7 @@ class App extends PureComponent {
 }
 
 const mapStateToProps = state => ({
+  isDarkMode: selectIsDarkMode(state),
   userJid: selectMaybeUserJid(state),
   title: selectDocumentTitle(state),
   role: selectRole(state),
