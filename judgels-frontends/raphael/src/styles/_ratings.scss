@@ -45,9 +45,20 @@
   font-weight: bold;
 }
 
+.bp4-dark .rating-red {
+  color: #db3737 !important;
+}
+
 .rating-legend {
   font-weight: bold;
   background: linear-gradient(0deg, #bb0000 0%, #bb0000 50%, #000000 51%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bp4-dark .rating-legend {
+  font-weight: bold;
+  background: linear-gradient(0deg, #db3737 0%, #db3737 50%, #f5f8fa 51%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

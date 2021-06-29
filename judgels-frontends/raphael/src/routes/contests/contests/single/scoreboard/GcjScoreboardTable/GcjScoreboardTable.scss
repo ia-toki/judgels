@@ -41,11 +41,13 @@ table.gcj-scoreboard__content {
 .bp4-dark table.gcj-scoreboard__content {
   td {
     small {
-      color: $gray2 !important;
+      color: $dark-secondary-text-color !important;
     }
   }
 
-  td.first-accepted {
+  td.first-accepted,
+  td.not-accepted,
+  td.frozen {
     small {
       color: inherit !important;
     }
@@ -54,11 +56,9 @@ table.gcj-scoreboard__content {
   td.accepted {
     background: #e1fdd7 !important;
     color: $dark-gray5 !important;
-  }
 
-  td.not-accepted {
     small {
-      color: inherit !important;
+      color: $gray2 !important;
     }
   }
 }
