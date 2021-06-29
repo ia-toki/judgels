@@ -2,13 +2,7 @@
 
 .layout-full-page {
   max-width: 1160px;
-  min-height: 600px;
+  min-height: 100vh;
   margin-left: auto;
   margin-right: auto;
-}
-
-@media only screen and (max-width: 600px) {
-  .layout-full-page {
-    min-height: 300px;
-  }
 }

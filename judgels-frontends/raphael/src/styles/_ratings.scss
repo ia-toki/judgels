@@ -26,13 +26,18 @@
   font-weight: bold;
 }
 
+.bp4-dark .rating-blue {
+  color: #39ace7 !important;
+  font-weight: bold;
+}
+
 .rating-purple {
   color: #7030a0 !important;
   font-weight: bold;
 }
 
 .bp4-dark .rating-purple {
-  color: #a854a8 !important;
+  color: #cc99cd !important;
 }
 
 .rating-orange {
@@ -46,7 +51,7 @@
 }
 
 .bp4-dark .rating-red {
-  color: #db3737 !important;
+  color: #ff4545 !important;
 }
 
 .rating-legend {
@@ -58,7 +63,7 @@
 
 .bp4-dark .rating-legend {
   font-weight: bold;
-  background: linear-gradient(0deg, #db3737 0%, #db3737 50%, #f5f8fa 51%);
+  background: linear-gradient(0deg, #ff4545 0%, #ff4545 50%, #f5f8fa 51%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
