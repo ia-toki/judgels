@@ -42,3 +42,28 @@ table.icpc-scoreboard__content {
     cursor: pointer;
   }
 }
+
+.bp4-dark table.icpc-scoreboard__content {
+  td {
+    small {
+      color: $gray2 !important;
+    }
+  }
+
+  td.first-accepted {
+    small {
+      color: inherit !important;
+    }
+  }
+
+  td.accepted {
+    background: #e1fdd7 !important;
+    color: $dark-gray5 !important;
+  }
+
+  td.not-accepted {
+    small {
+      color: inherit !important;
+    }
+  }
+}
