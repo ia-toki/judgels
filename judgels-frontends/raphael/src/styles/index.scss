@@ -8,6 +8,16 @@
 @import './table';
 @import './ratings';
 
+.bp4-dark,
+.bp4-dark td,
+.bp4-dark th,
+.bp4-dark label,
+.bp4-dark .bp4-control,
+.bp4-dark .bp4-dialog,
+.bp4-dark .bp4-breadcrumb-current {
+  color: $dark-text-color !important;
+}
+
 body {
   font-family: $primary-font;
   background-color: #f4f5f6;

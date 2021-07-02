@@ -96,6 +96,10 @@
 }
 
 .bp4-dark .card-sidebar {
+  .bp4-tab a {
+    color: $dark-text-color !important;
+  }
+
   .bp4-tab[aria-selected='true'] {
     color: inherit;
   }
