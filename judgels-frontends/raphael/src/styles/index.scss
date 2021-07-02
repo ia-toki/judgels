@@ -11,11 +11,13 @@
 .bp4-dark,
 .bp4-dark td,
 .bp4-dark th,
+.bp4-dark table.bp4-html-table td,
+.bp4-dark table.bp4-html-table th,
 .bp4-dark label,
 .bp4-dark .bp4-control,
 .bp4-dark .bp4-dialog,
 .bp4-dark .bp4-breadcrumb-current {
-  color: $dark-text-color !important;
+  color: $dark-text-color;
 }
 
 body {
