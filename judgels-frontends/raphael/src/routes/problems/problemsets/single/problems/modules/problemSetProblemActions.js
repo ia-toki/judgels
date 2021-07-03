@@ -35,8 +35,9 @@ export function getProblemStats(problemSetJid, problemAlias) {
 }
 
 export function getProblemReport(problemSetJid, problemAlias) {
-  return async () => {
-    return await problemSetProblemAPI.getProblemReport(problemSetJid, problemAlias);
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    return await problemSetProblemAPI.getProblemReport(token, problemSetJid, problemAlias);
   };
 }
 
