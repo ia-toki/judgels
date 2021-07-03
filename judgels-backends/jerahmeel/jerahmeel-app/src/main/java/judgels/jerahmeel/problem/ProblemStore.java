@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jerahmeel.api.problem.ProblemLevel;
+import judgels.jerahmeel.api.problem.ProblemDifficulty;
 import judgels.jerahmeel.api.problem.ProblemSetProblemInfo;
 import judgels.jerahmeel.persistence.ProblemLevelDao;
 import judgels.jerahmeel.persistence.ProblemSetDao;
@@ -43,10 +43,6 @@ public class ProblemStore {
                 .stream()
                 .map(m -> m.problemSetJid)
                 .collect(Collectors.toSet()));
-        Map<String, Integer> problemLevelsMap = problemLevelDao.selectAllAverageByProblemJids(models.getPage()
-                .stream()
-                .map(m -> m.problemJid)
-                .collect(Collectors.toSet()));
         return models.mapPage(p -> Lists.transform(p, m -> new ProblemSetProblemInfo.Builder()
                 .problemSetSlug(problemSetsMap.get(m.problemSetJid).slug)
                 .problemAlias(m.alias)
@@ -54,10 +50,10 @@ public class ProblemStore {
                 .build()));
     }
 
-    public Map<String, ProblemLevel> getProblemLevelsMap(Set<String> problemJids) {
+    public Map<String, ProblemDifficulty> getProblemLevelsMap(Set<String> problemJids) {
         Map<String, Integer> levelsMap = problemLevelDao.selectAllAverageByProblemJids(problemJids);
         return levelsMap.entrySet().stream().collect(Collectors.toMap(
                 e -> e.getKey(),
-                e -> new ProblemLevel.Builder().level(e.getValue()).build()));
+                e -> new ProblemDifficulty.Builder().level(e.getValue()).build()));
     }
 }

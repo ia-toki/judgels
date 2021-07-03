@@ -1,18 +1,22 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { Component } from 'react';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
+import { ProblemDifficulty } from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
+import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
+import { selectProblemSetProblem } from '../../modules/problemSetProblemSelectors';
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
-import './ProblemStatsWidget.scss';
+import './ProblemReportWidget.scss';
 
-class ProblemStatsWidget extends Component {
+class ProblemReportWidget extends Component {
   static TOP_STATS_SIZE = 5;
 
   state = {
@@ -20,7 +24,7 @@ class ProblemStatsWidget extends Component {
   };
 
   async componentDidMount() {
-    const response = await this.props.onGetProblemStats(
+    const response = await this.props.onGetProblemReport(
       this.props.problemSet.jid,
       this.props.match.params.problemAlias
     );
@@ -32,46 +36,74 @@ class ProblemStatsWidget extends Component {
     if (!response) {
       return null;
     }
-    const { progress, stats, topStats, profilesMap } = response;
+
     return (
       <>
-        {this.renderStats(progress, stats)}
-        {this.renderTopStats(topStats, profilesMap)}
+        {this.renderContests(response)}
+        {this.renderProgress(response)}
+        {this.renderSpoilers(response)}
+        {this.renderTopStats(response)}
       </>
     );
   }
 
-  renderStats = (progress, stats) => {
+  renderContests = ({ contests }) => {
+    if (contests.length === 0) {
+      return null;
+    }
+
     return (
-      <ContentCard className="problem-stats-widget">
-        <h4>Stats</h4>
+      <ContentCard>
+        <h4>Contests</h4>
         <ul>
-          {stats.totalUsersAccepted > 0 && (
-            <li>
-              Users solved: <b className="stats-value">{stats.totalUsersAccepted}</b>
+          {contests.map(c => (
+            <li key={c.slug}>
+              <Link to={`/contests/${c.slug}`}>{c.name}</Link>
             </li>
-          )}
-          <li>
-            Avg score:{' '}
-            <span className="stats-value">
-              <b>{Math.ceil(stats.totalScores / (stats.totalUsersTried || 1))}</b> / {stats.totalUsersTried} users
-            </span>
-          </li>
-          <li>
-            Your score: <VerdictProgressTag {...progress} />
-            <br />
-            <ProgressBar num={progress.score} denom={100} verdict={progress.verdict} />
-          </li>
+          ))}
         </ul>
       </ContentCard>
     );
   };
 
-  renderTopStats = (topStats, profilesMap) => {
+  renderProgress = ({ progress }) => {
+    return (
+      <ContentCard className="problem-report-widget">
+        <h4 className="progress-title">Your score</h4>
+        <VerdictProgressTag {...progress} />
+        <br />
+        <ProgressBar num={progress.score} denom={100} verdict={progress.verdict} />
+      </ContentCard>
+    );
+  };
+
+  renderSpoilers = ({ metadata, difficulty, profilesMap }) => {
+    return (
+      <ContentCard>
+        <h4>Spoilers</h4>
+        {this.renderDifficulty({ difficulty })}
+        {this.renderEditorial({ metadata, profilesMap })}
+      </ContentCard>
+    );
+  };
+
+  renderDifficulty = ({ difficulty }) => {
+    return <ProblemDifficulty problem={this.props.problem} difficulty={difficulty} />;
+  };
+
+  renderEditorial = ({ metadata, profilesMap }) => {
+    const { hasEditorial, settersMap } = metadata;
+    if (!hasEditorial) {
+      return null;
+    }
+    return <ProblemEditorialDialog settersMap={settersMap} profilesMap={profilesMap} />;
+  };
+
+  renderTopStats = ({ topStats, profilesMap }) => {
     const { topUsersByScore, topUsersByTime, topUsersByMemory } = topStats;
     if (
-      topUsersByScore.length === ProblemStatsWidget.TOP_STATS_SIZE &&
-      topUsersByScore[ProblemStatsWidget.TOP_STATS_SIZE - 1].stats >= 100
+      topUsersByScore.length === ProblemReportWidget.TOP_STATS_SIZE &&
+      topUsersByScore[ProblemReportWidget.TOP_STATS_SIZE - 1].stats >= 100
     ) {
       return (
         <>
@@ -113,7 +145,7 @@ class ProblemStatsWidget extends Component {
     ));
 
     return (
-      <ContentCard className="problem-stats-widget">
+      <ContentCard className="problem-report-widget">
         <h4>Top users by {title}</h4>
         <HTMLTable striped className="table-list stats-table">
           <thead>
@@ -132,8 +164,9 @@ class ProblemStatsWidget extends Component {
 
 const mapStateToProps = state => ({
   problemSet: selectProblemSet(state),
+  problem: selectProblemSetProblem(state),
 });
 const mapDispatchToProps = {
-  onGetProblemStats: problemSetProblemActions.getProblemStats,
+  onGetProblemReport: problemSetProblemActions.getProblemReport,
 };
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemStatsWidget));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemReportWidget));

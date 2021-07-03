@@ -14,18 +14,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jerahmeel.api.problem.ProblemDifficulty;
 import judgels.jerahmeel.api.problem.ProblemProgress;
-import judgels.jerahmeel.api.problem.ProblemStats;
 import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jerahmeel.api.problemset.ProblemSetErrors;
 import judgels.jerahmeel.api.problemset.problem.ProblemEditorialResponse;
-import judgels.jerahmeel.api.problemset.problem.ProblemMetadataResponse;
+import judgels.jerahmeel.api.problemset.problem.ProblemReportResponse;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemData;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemService;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemWorksheet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemsResponse;
-import judgels.jerahmeel.api.problemset.problem.ProblemStatsResponse;
+import judgels.jerahmeel.difficulty.ProblemDifficultyStore;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
@@ -46,6 +46,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     private final RoleChecker roleChecker;
     private final ProblemSetStore problemSetStore;
     private final ProblemSetProblemStore problemStore;
+    private final ProblemDifficultyStore difficultyStore;
     private final UserClient userClient;
     private final ProblemClient problemClient;
     private final ContestClient contestClient;
@@ -57,6 +58,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
             RoleChecker roleChecker,
             ProblemSetStore problemSetStore,
             ProblemSetProblemStore problemStore,
+            ProblemDifficultyStore difficultyStore,
             UserClient userClient,
             ProblemClient problemClient,
             ContestClient contestClient,
@@ -66,6 +68,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         this.roleChecker = roleChecker;
         this.problemSetStore = problemSetStore;
         this.problemStore = problemStore;
+        this.difficultyStore = difficultyStore;
         this.userClient = userClient;
         this.problemClient = problemClient;
         this.contestClient = contestClient;
@@ -138,10 +141,9 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         return new ProblemSetProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemClient.getProblems(problemJids))
-                .problemLevelsMap(problemStore.getProblemLevelsMap(problemJids))
                 .problemMetadatasMap(problemClient.getProblemMetadatas(problemJids))
+                .problemDifficultiesMap(difficultyStore.getProblemDifficultiesMap(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
-                .problemStatsMap(statsStore.getProblemStatsMap(problemJids))
                 .contestsMap(roleChecker.isAdmin(actorJid)
                         ? contestClient.getContestsByJids(contestJids)
                         : ImmutableMap.of())
@@ -205,7 +207,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ProblemStatsResponse getProblemStats(
+    public ProblemReportResponse getProblemReport(
             Optional<AuthHeader> authHeader,
             String problemSetJid,
             String problemAlias) {
@@ -215,33 +217,12 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         String problemJid = problem.getProblemJid();
+        Set<String> problemJids = ImmutableSet.of(problemJid);
 
-        ProblemProgress progress = statsStore
-                .getProblemProgressesMap(actorJid, ImmutableSet.of(problemJid)).get(problemJid);
-        ProblemStats stats = statsStore.getProblemStatsMap(ImmutableSet.of(problemJid)).get(problemJid);
-        ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
-
-        Set<String> userJids = new HashSet<>();
-        topStats.getTopUsersByScore().forEach(e -> userJids.add(e.getUserJid()));
-        topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
-        topStats.getTopUsersByMemory().forEach(e -> userJids.add(e.getUserJid()));
-        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
-
-        return new ProblemStatsResponse.Builder()
-                .stats(stats)
-                .topStats(topStats)
-                .progress(progress)
-                .profilesMap(profilesMap)
-                .build();
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public ProblemMetadataResponse getProblemMetadata(String problemSetJid, String problemAlias) {
-        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
-
-        ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         ProblemMetadata metadata = problemClient.getProblemMetadata(problem.getProblemJid());
+        ProblemDifficulty difficulty = difficultyStore.getProblemDifficultiesMap(problemJids).get(problemJid);
+        ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
+        ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, problemJids).get(problemJid);
 
         Map<String, ContestInfo> contestsMap = contestClient.getContestsByJids(problem.getContestJids());
         List<ContestInfo> contests = problem.getContestJids().stream()
@@ -249,13 +230,18 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                 .map(contestsMap::get)
                 .collect(Collectors.toList());
 
-        Map<String, Profile> profilesMap = userClient.getProfiles(metadata.getSettersMap().values()
-                .stream()
-                .flatMap(List::stream)
-                .collect(Collectors.toSet()));
+        Set<String> userJids = new HashSet<>();
+        metadata.getSettersMap().values().forEach(userJids::addAll);
+        topStats.getTopUsersByScore().forEach(e -> userJids.add(e.getUserJid()));
+        topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
+        topStats.getTopUsersByMemory().forEach(e -> userJids.add(e.getUserJid()));
+        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
 
-        return new ProblemMetadataResponse.Builder()
+        return new ProblemReportResponse.Builder()
                 .metadata(metadata)
+                .difficulty(difficulty)
+                .topStats(topStats)
+                .progress(progress)
                 .contests(contests)
                 .profilesMap(profilesMap)
                 .build();

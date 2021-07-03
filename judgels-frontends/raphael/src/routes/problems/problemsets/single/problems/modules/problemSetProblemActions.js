@@ -34,9 +34,9 @@ export function getProblemStats(problemSetJid, problemAlias) {
   };
 }
 
-export function getProblemMetadata(problemSetJid, problemAlias) {
+export function getProblemReport(problemSetJid, problemAlias) {
   return async () => {
-    return await problemSetProblemAPI.getProblemMetadata(problemSetJid, problemAlias);
+    return await problemSetProblemAPI.getProblemReport(problemSetJid, problemAlias);
   };
 }
 

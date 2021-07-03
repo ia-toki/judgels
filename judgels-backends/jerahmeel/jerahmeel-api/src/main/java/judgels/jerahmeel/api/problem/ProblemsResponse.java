@@ -12,10 +12,9 @@ import org.immutables.value.Value;
 public interface ProblemsResponse {
     Page<ProblemSetProblemInfo> getData();
     Map<String, ProblemInfo> getProblemsMap();
-    Map<String, ProblemLevel> getProblemLevelsMap();
     Map<String, ProblemMetadata> getProblemMetadatasMap();
+    Map<String, ProblemDifficulty> getProblemDifficultiesMap();
     Map<String, ProblemProgress> getProblemProgressesMap();
-    Map<String, ProblemStats> getProblemStatsMap();
 
     class Builder extends ImmutableProblemsResponse.Builder {}
 }

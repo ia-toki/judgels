@@ -11,6 +11,7 @@ import judgels.jerahmeel.api.problem.ProblemTagCategory;
 import judgels.jerahmeel.api.problem.ProblemTagOption;
 import judgels.jerahmeel.api.problem.ProblemTagsResponse;
 import judgels.jerahmeel.api.problem.ProblemsResponse;
+import judgels.jerahmeel.difficulty.ProblemDifficultyStore;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.problem.ProblemClient;
@@ -21,6 +22,7 @@ public class ProblemResource implements ProblemService {
     private final ActorChecker actorChecker;
     private final ProblemStore problemStore;
     private final StatsStore statsStore;
+    private final ProblemDifficultyStore difficultyStore;
     private final ProblemClient problemClient;
 
     @Inject
@@ -28,11 +30,13 @@ public class ProblemResource implements ProblemService {
             ActorChecker actorChecker,
             ProblemStore problemStore,
             StatsStore statsStore,
+            ProblemDifficultyStore difficultyStore,
             ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
         this.problemStore = problemStore;
         this.statsStore = statsStore;
+        this.difficultyStore = difficultyStore;
         this.problemClient = problemClient;
     }
 
@@ -58,10 +62,9 @@ public class ProblemResource implements ProblemService {
         return new ProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemClient.getProblems(problemJids))
-                .problemLevelsMap(problemStore.getProblemLevelsMap(problemJids))
                 .problemMetadatasMap(problemClient.getProblemMetadatas(problemJids))
+                .problemDifficultiesMap(difficultyStore.getProblemDifficultiesMap(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
-                .problemStatsMap(statsStore.getProblemStatsMap(problemJids))
                 .build();
     }
 

@@ -7,8 +7,7 @@ import { Route, withRouter } from 'react-router';
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import ProblemMetadataWidget from './ProblemMetadataWidget/ProblemMetadataWidget';
-import ProblemStatsWidget from './ProblemStatsWidget/ProblemStatsWidget';
+import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
 import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
 import ProblemSubmissionRoutes from './submissions/ProblemSubmissionRoutes';
 import ProblemItemSubmissionRoutes from './results/ProblemItemSubmissionRoutes';
@@ -83,8 +82,7 @@ function SingleProblemSetProblemRoutes({ match, problemSet, problem, onClickBack
         Problem {problem.alias}
       </h3>
     ),
-    stickyWidget1: ProblemMetadataWidget,
-    stickyWidget2: problem.type === ProblemType.Programming ? ProblemStatsWidget : undefined,
+    stickyWidget1: ProblemReportWidget,
   };
 
   return (

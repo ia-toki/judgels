@@ -50,14 +50,7 @@ class ProblemsPage extends Component {
       return <LoadingState />;
     }
 
-    const {
-      data: problems,
-      problemsMap,
-      problemLevelsMap,
-      problemMetadatasMap,
-      problemProgressesMap,
-      problemStatsMap,
-    } = response;
+    const { data: problems, problemsMap, problemMetadatasMap, problemDifficultiesMap, problemProgressesMap } = response;
 
     if (problems.page.length === 0) {
       return (
@@ -73,10 +66,9 @@ class ProblemsPage extends Component {
         problemSet: { slug: problemSetSlug },
         problem: { type: ProblemType.Programming, alias: problemAlias },
         problemName: getProblemName(problemsMap[problemJid], 'en'),
-        level: problemLevelsMap[problemJid],
-        hasEditorial: problemMetadatasMap[problemJid].hasEditorial,
+        metadata: problemMetadatasMap[problemJid],
+        difficulty: problemDifficultiesMap[problemJid],
         progress: problemProgressesMap[problemJid],
-        stats: problemStatsMap[problemJid],
       };
       return <ProblemSetProblemCard key={problemJid} {...props} />;
     });

@@ -1,18 +1,9 @@
-.problemset-problem-card__stats {
+.problemset-problem-card__difficulty {
   float: left;
   margin-top: 10px;
-
-  > span {
-    margin-right: 5px;
-  }
 }
 
 .problemset-problem-card__metadata {
   float: right;
   margin-top: 10px;
-}
-
-.problemset-problem-card__stats--large {
-  font-weight: bold;
-  font-size: 16px;
 }

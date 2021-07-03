@@ -1,6 +1,6 @@
-.problem-stats-widget {
-  hr {
-    margin-top: 0 !important;
+.problem-report-widget {
+  h4.progress-title {
+    display: inline;
   }
 
   .stats-value {
@@ -14,5 +14,5 @@
     .col-value {
       width: 100px;
     }
-  } 
+  }
 }

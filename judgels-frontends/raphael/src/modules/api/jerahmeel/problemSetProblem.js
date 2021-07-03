@@ -23,12 +23,8 @@ export const problemSetProblemAPI = {
     return get(`${baseURL(problemSetJid)}/${problemAlias}/worksheet?${params}`, token);
   },
 
-  getProblemStats: (token, problemSetJid, problemAlias) => {
-    return get(`${baseURL(problemSetJid)}/${problemAlias}/stats`, token);
-  },
-
-  getProblemMetadata: (problemSetJid, problemAlias) => {
-    return get(`${baseURL(problemSetJid)}/${problemAlias}/metadata`);
+  getProblemReport: (problemSetJid, problemAlias) => {
+    return get(`${baseURL(problemSetJid)}/${problemAlias}/report`);
   },
 
   getProblemEditorial: (problemSetJid, problemAlias, language) => {
