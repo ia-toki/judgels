@@ -9,10 +9,13 @@
   height: 50px;
 }
 
-.bp4-dark .header,
-.bp4-dark .header a {
+.bp4-dark .header {
   color: $dark-text-color !important;
   background-color: $dark-gray1 !important;
+}
+
+.bp4-dark .header a {
+  color: $dark-text-color !important;
 }
 
 .header,
