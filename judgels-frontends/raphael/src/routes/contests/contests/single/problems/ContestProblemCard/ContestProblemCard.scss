@@ -1,9 +1,5 @@
 @import '../../../../../../styles/base';
 
-.contest-problem-card__name {
-  float: left;
-}
-
-.contest-problem-card__status {
-  float: right;
+.bp4-light .contest-problem-card {
+  color: $primary-color !important;
 }
