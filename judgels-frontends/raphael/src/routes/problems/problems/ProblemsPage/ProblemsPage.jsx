@@ -8,6 +8,7 @@ import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemC
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { getProblemName, ProblemType } from '../../../../modules/api/sandalphon/problem';
 import * as problemActions from '../modules/problemActions';
+import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 
 class ProblemsPage extends Component {
   static PAGE_SIZE = 20;
@@ -38,11 +39,17 @@ class ProblemsPage extends Component {
   render() {
     return (
       <Card title="Browse problems">
+        {this.renderHeader()}
+        <hr />
         {this.renderProblems()}
         {this.renderPagination()}
       </Card>
     );
   }
+
+  renderHeader = () => {
+    return <ProblemSpoilerWidget />;
+  };
 
   renderProblems = () => {
     const { response } = this.state;

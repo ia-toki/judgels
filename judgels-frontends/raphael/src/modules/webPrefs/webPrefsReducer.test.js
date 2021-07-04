@@ -3,6 +3,7 @@ import webPrefsReducer, {
   PutGradingLanguage,
   PutEditorialLanguage,
   PutIsDarkMode,
+  PutShowProblemDifficulty,
 } from './webPrefsReducer';
 
 describe('webPrefsReducer', () => {
@@ -10,6 +11,13 @@ describe('webPrefsReducer', () => {
     const state = { isDarkMode: false };
     const action = PutIsDarkMode(true);
     const nextState = { isDarkMode: true };
+    expect(webPrefsReducer(state, action)).toEqual(nextState);
+  });
+
+  test('PUT_SHOW_PROBLEM_DIFFICULTY', () => {
+    const state = { hideProblemDifficulty: false };
+    const action = PutShowProblemDifficulty(false);
+    const nextState = { hideProblemDifficulty: true };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 

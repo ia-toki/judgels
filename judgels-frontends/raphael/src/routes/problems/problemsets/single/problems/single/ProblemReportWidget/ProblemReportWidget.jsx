@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
-import { ProblemDifficulty } from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
+import ProblemSpoilerWidget from '../../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
+import ProblemDifficulty from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
 import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
@@ -38,12 +39,12 @@ class ProblemReportWidget extends Component {
     }
 
     return (
-      <>
+      <div className="problem-report-widget">
         {this.renderContests(response)}
         {this.renderProgress(response)}
         {this.renderSpoilers(response)}
         {this.renderTopStats(response)}
-      </>
+      </div>
     );
   }
 
@@ -68,7 +69,7 @@ class ProblemReportWidget extends Component {
 
   renderProgress = ({ progress }) => {
     return (
-      <ContentCard className="problem-report-widget">
+      <ContentCard>
         <h4 className="progress-title">Your score</h4>
         <VerdictProgressTag {...progress} />
         <br />
@@ -81,10 +82,15 @@ class ProblemReportWidget extends Component {
     return (
       <ContentCard>
         <h4>Spoilers</h4>
+        {this.renderSpoilersWidget()}
         {this.renderDifficulty({ difficulty })}
         {this.renderEditorial({ metadata, profilesMap })}
       </ContentCard>
     );
+  };
+
+  renderSpoilersWidget = () => {
+    return <ProblemSpoilerWidget />;
   };
 
   renderDifficulty = ({ difficulty }) => {
@@ -96,7 +102,12 @@ class ProblemReportWidget extends Component {
     if (!hasEditorial) {
       return null;
     }
-    return <ProblemEditorialDialog settersMap={settersMap} profilesMap={profilesMap} />;
+    return (
+      <>
+        <hr />
+        <ProblemEditorialDialog settersMap={settersMap} profilesMap={profilesMap} />
+      </>
+    );
   };
 
   renderTopStats = ({ topStats, profilesMap }) => {

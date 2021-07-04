@@ -2,7 +2,7 @@ import { Tag, Intent } from '@blueprintjs/core';
 import { SmallTick } from '@blueprintjs/icons';
 
 import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
-import { ProblemDifficulty } from '../ProblemDifficulty/ProblemDifficulty';
+import ProblemDifficulty from '../ProblemDifficulty/ProblemDifficulty';
 import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
 import { ProblemType } from '../../modules/api/sandalphon/problem';

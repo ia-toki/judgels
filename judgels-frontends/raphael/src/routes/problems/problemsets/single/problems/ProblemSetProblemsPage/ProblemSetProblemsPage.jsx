@@ -4,12 +4,15 @@ import { connect } from 'react-redux';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import ProblemSpoilerWidget from '../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { ProblemSetProblemCard } from '../../../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
+
+import './ProblemSetProblemsPage.scss';
 
 export class ProblemSetProblemsPage extends Component {
   state = {
@@ -52,11 +55,25 @@ export class ProblemSetProblemsPage extends Component {
       <ContentCard>
         <h3>Problems</h3>
         <hr />
-        {this.renderStatementLanguageWidget()}
+        {this.renderHeader()}
         {this.renderProblems()}
       </ContentCard>
     );
   }
+
+  renderHeader = () => {
+    return (
+      <>
+        <div className="problemset-problems-page__header--spoilers">{this.renderProblemSpoilerWidget()}</div>
+        <div className="problemset-problems-page__header--language">{this.renderStatementLanguageWidget()}</div>
+        <div className="clearfix" />
+      </>
+    );
+  };
+
+  renderProblemSpoilerWidget = () => {
+    return <ProblemSpoilerWidget />;
+  };
 
   renderStatementLanguageWidget = () => {
     const { defaultLanguage, uniqueLanguages } = this.state;
