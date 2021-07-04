@@ -3,8 +3,6 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 
-import './ContestProblemCard.scss';
-
 export function ContestProblemCard({
   contest,
   problem: { alias, points, status, submissionsLimit },
@@ -25,13 +23,13 @@ export function ContestProblemCard({
 
   return (
     <ContentCardLink className="contest-problem-card" to={`/contests/${contest.slug}/problems/${alias}`}>
-      <div className="contest-problem-card__name">
+      <div className="float-left">
         <span data-key="name">
           {alias}. {problemName}
           {problemPoints}
         </span>
       </div>
-      <div data-key="status" className="contest-problem-card__status secondary-info">
+      <div data-key="status" className="float-right secondary-info">
         {renderStatus()}
       </div>
       <div className="clearfix" />

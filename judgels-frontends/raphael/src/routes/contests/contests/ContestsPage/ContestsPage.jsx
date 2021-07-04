@@ -10,8 +10,6 @@ import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 import * as contestActions from '../modules/contestActions';
 
-import './ContestsPage.scss';
-
 class ContestsPage extends Component {
   static PAGE_SIZE = 20;
 
@@ -43,8 +41,8 @@ class ContestsPage extends Component {
   renderHeader = () => {
     return (
       <>
-        <div className="content-card__section create-contest-button-inline">{this.renderCreateDialog()}</div>
-        <div className="content-card__section search-box-inline">{this.renderFilter()}</div>
+        <div className="float-left">{this.renderCreateDialog()}</div>
+        <div className="float-right">{this.renderFilter()}</div>
         <div className="clearfix" />
         {this.renderFilterResultsBanner()}
       </>

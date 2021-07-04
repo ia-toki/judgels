@@ -48,14 +48,22 @@ export class ContestSubmissionsPage extends Component {
       <ContentCard>
         <h3>Submissions</h3>
         <hr />
-        {this.renderRegradeAllButton()}
-        {this.renderFilterWidget()}
-        <div className="clearfix" />
+        {this.renderHeader()}
         {this.renderSubmissions()}
         {this.renderPagination()}
       </ContentCard>
     );
   }
+
+  renderHeader = () => {
+    return (
+      <div className="content-card__header">
+        <div className="float-left">{this.renderRegradeAllButton()}</div>
+        <div className="float-right">{this.renderFilterWidget()}</div>
+        <div className="clearfix" />
+      </div>
+    );
+  };
 
   renderRegradeAllButton = () => {
     if (!this.state.response || !this.state.response.config.canManage) {

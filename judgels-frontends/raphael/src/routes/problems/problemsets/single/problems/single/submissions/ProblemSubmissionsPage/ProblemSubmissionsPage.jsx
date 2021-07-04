@@ -29,8 +29,7 @@ export class ProblemSubmissionsPage extends Component {
         <h3>Submissions</h3>
         <hr />
         {this.renderUserFilter()}
-        {this.renderRegradeAllButton()}
-        <div className="clearfix" />
+        {this.renderHeader()}
         {this.renderSubmissions()}
         {this.renderPagination()}
       </ContentCard>
@@ -43,6 +42,10 @@ export class ProblemSubmissionsPage extends Component {
 
   isUserFilterMine = () => {
     return (this.props.location.pathname + '/').includes('/mine/');
+  };
+
+  renderHeader = () => {
+    return <div className="content-card__header">{this.renderRegradeAllButton()}</div>;
   };
 
   renderRegradeAllButton = () => {

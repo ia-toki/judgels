@@ -149,7 +149,7 @@ describe('ContestClarificationsPage', () => {
                 .at(0)
                 .map(n => n.text().replace(/\s+/g, ' ')),
               card
-                .find('.contest-clarification-card__info')
+                .find('p')
                 .at(0)
                 .map(n => n.text().replace(/\s+/g, ' ')),
               card
@@ -181,7 +181,7 @@ describe('ContestClarificationsPage', () => {
                 .at(0)
                 .map(n => n.text().replace(/\s+/g, ' ')),
               card
-                .find('.contest-clarification-card__info')
+                .find('p')
                 .at(0)
                 .map(n => n.text().replace(/\s+/g, ' ')),
               card

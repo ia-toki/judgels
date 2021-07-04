@@ -9,6 +9,8 @@ import ProblemTagFilter from './problems/ProblemTagFilter/ProblemTagFilter';
 import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 import ProblemSetArchiveFilter from './problemsets/ProblemSetArchiveFilter/ProblemSetArchiveFilter';
 
+import './ProblemsRoutes.scss';
+
 function ProblemsRoutes() {
   const sidebarItems = [
     {
@@ -16,8 +18,8 @@ function ProblemsRoutes() {
       titleIcon: <Manual />,
       title: (
         <div className="tab-item-with-widget">
-          <div className="tab-item-with-widget__name">Browse problems</div>
-          <div className="tab-item-with-widget__widget">
+          <div className="float-left">Browse problems</div>
+          <div className="float-right">
             <Tag className="normal-weight" intent={Intent.WARNING}>
               BETA
             </Tag>

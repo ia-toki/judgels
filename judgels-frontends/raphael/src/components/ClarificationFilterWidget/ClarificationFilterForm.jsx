@@ -22,6 +22,7 @@ export default function ClarificationFilterForm({ onSubmit, initialValues, statu
         <form onSubmit={handleSubmit} className="clarification-filter-form">
           <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
           <Field component={FormSelect2} {...statusField} />
+          <div className="clearfix" />
         </form>
       )}
     </Form>

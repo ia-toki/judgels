@@ -47,7 +47,6 @@ export class ContestLogsPage extends Component {
         <h3>Logs</h3>
         <hr />
         {this.renderFilterWidget()}
-        <div className="clearfix" />
         {this.renderLogs()}
         {this.renderPagination()}
       </ContentCard>

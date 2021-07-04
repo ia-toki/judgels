@@ -61,14 +61,22 @@ export class ChapterSubmissionsPage extends Component {
         <h3>Submissions</h3>
         <hr />
         {this.renderUserFilter()}
-        {this.renderRegradeAllButton()}
-        {this.renderFilterWidget()}
-        <div className="clearfix" />
+        {this.renderHeader()}
         {this.renderSubmissions()}
         {this.renderPagination()}
       </ContentCard>
     );
   }
+
+  renderHeader = () => {
+    return (
+      <div className="content-card__header">
+        <div className="action-buttons float-left">{this.renderRegradeAllButton()}</div>
+        {this.renderFilterWidget()}
+        <div className="clearfix" />
+      </div>
+    );
+  };
 
   renderUserFilter = () => {
     return this.props.userJid && <SubmissionUserFilter />;
@@ -82,11 +90,7 @@ export class ChapterSubmissionsPage extends Component {
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
-    return (
-      <div className="action-buttons">
-        <RegradeAllButton onRegradeAll={this.onRegradeAll} />
-      </div>
-    );
+    return <RegradeAllButton onRegradeAll={this.onRegradeAll} />;
   };
 
   renderSubmissions = () => {

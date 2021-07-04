@@ -16,8 +16,6 @@ import { selectContest } from '../../../modules/contestSelectors';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
-import './ContestClarificationsPage.scss';
-
 class ContestClarificationsPage extends Component {
   static PAGE_SIZE = 20;
 
@@ -63,7 +61,6 @@ class ContestClarificationsPage extends Component {
         <hr />
         {this.renderCreateDialog()}
         {this.renderFilterWidget()}
-        <div className="clearfix" />
         {this.renderClarifications()}
         {this.renderPagination()}
       </ContentCard>

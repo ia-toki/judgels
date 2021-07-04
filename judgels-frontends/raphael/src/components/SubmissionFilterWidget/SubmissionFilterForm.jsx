@@ -32,6 +32,7 @@ export default function SubmissionFilterForm({ onSubmit, initialValues, username
           <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
           {problemAliases && <Field component={FormSelect2} {...problemField} />}
           {usernames && <Field component={FormSelect2} {...userField} />}
+          <div className="clearfix" />
         </form>
       )}
     </Form>

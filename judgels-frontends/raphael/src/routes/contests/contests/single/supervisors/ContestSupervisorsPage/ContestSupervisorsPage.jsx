@@ -81,11 +81,11 @@ class ContestSupervisorsPage extends Component {
       return null;
     }
     return (
-      <>
+      <div className="content-card__header">
         <ContestSupervisorAddDialog contest={this.props.contest} onUpsertSupervisors={this.upsertSupervisors} />
         <ContestSupervisorRemoveDialog contest={this.props.contest} onDeleteSupervisors={this.deleteSupervisors} />
         <div className="clearfix" />
-      </>
+      </div>
     );
   };
 

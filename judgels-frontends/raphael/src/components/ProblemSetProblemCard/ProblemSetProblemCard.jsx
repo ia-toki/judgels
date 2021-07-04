@@ -12,7 +12,7 @@ import './ProblemSetProblemCard.scss';
 export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemName, metadata, difficulty, progress }) {
   const renderDifficulty = () => {
     return (
-      <div className="problemset-problem-card__difficulty">
+      <div className="float-left">
         <ProblemDifficulty problem={problem} difficulty={difficulty} />
       </div>
     );
@@ -25,10 +25,19 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     }
 
     return (
-      <div className="problemset-problem-card__metadata">
+      <div className="float-right">
         <Tag round intent={Intent.WARNING}>
           editorial <SmallTick />
         </Tag>
+      </div>
+    );
+  };
+
+  const renderSpoilers = () => {
+    return (
+      <div className="problemset-problem-card__spoilers">
+        {renderDifficulty()}
+        {renderMetadata()}
       </div>
     );
   };
@@ -57,8 +66,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
         {renderProgress()}
       </h4>
       {renderProgressBar()}
-      {renderDifficulty()}
-      {renderMetadata()}
+      {renderSpoilers()}
     </ContentCardLink>
   );
 }

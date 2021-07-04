@@ -11,11 +11,11 @@ export function ContestModuleCard({ type, intent, buttonIntent, buttonText, butt
 
   return (
     <Callout className="contest-module-card" intent={intent} icon={null}>
-      <div className="contest-module-card__content">
+      <div className="float-left">
         <h5>{moduleTitlesMap[type]}</h5>
         <small>{moduleDescriptionsMap[type]}</small>
       </div>
-      <div className="contest-module-card__button">
+      <div className="float-right">
         <Button small intent={buttonIntent} onClick={clickButton}>
           {buttonText}
         </Button>

@@ -55,9 +55,11 @@ export class ContestScoreboardPage extends Component {
         {this.renderScoreboardUpdatedTime()}
         <div className="clearfix" />
         <hr />
-        {this.renderFilter()}
-        {this.renderForceRefreshButton()}
-        <div className="clearfix" />
+        <div className="content-card__header">
+          {this.renderFilter()}
+          {this.renderForceRefreshButton()}
+          <div className="clearfix" />
+        </div>
         {this.renderFrozenScoreboardNotice()}
         {this.renderScoreboard()}
         <Pagination
@@ -140,7 +142,7 @@ export class ContestScoreboardPage extends Component {
     }
 
     return (
-      <div className="contest-scoreboard-page__filters">
+      <div className="float-left">
         {canViewOfficialAndFrozen && (
           <Switch
             className="contest-scoreboard-page__filter"
@@ -175,7 +177,7 @@ export class ContestScoreboardPage extends Component {
 
     return (
       <Button
-        className="contest-scoreboard-page__refresh-button"
+        className="float-right"
         intent="primary"
         icon={<Refresh />}
         onClick={this.forceRefreshScoreboard}

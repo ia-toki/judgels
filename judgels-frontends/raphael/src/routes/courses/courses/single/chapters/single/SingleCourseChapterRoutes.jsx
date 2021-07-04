@@ -57,10 +57,9 @@ function SingleCourseChapterRoutes({ chapter, chapterName, courseSlug, match }) 
     items: sidebarItems,
     contentHeader: (
       <div className="single-course-chapter-routes__header">
-        <h2 className="single-course-chapter-routes__title">
+        <h2>
           {chapter.alias}. {chapterName}
         </h2>
-        <div className="clearfix" />
       </div>
     ),
   };

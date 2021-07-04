@@ -33,8 +33,7 @@ function SingleCourseRoutes({ match, course }) {
     items: sidebarItems,
     contentHeader: (
       <div className="single-course-routes__header">
-        <h2 className="single-course-routes__title">{course.name}</h2>
-        <div className="clearfix" />
+        <h2>{course.name}</h2>
       </div>
     ),
   };

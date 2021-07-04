@@ -41,8 +41,7 @@ function SingleProblemSetRoutes({ match, problemSet, onClickBack }) {
     ),
     contentHeader: (
       <div className="single-problemset-routes__header">
-        <h2 className="single-problemset-routes__title">{problemSet.name}</h2>
-        <div className="clearfix" />
+        <h2>{problemSet.name}</h2>
       </div>
     ),
   };

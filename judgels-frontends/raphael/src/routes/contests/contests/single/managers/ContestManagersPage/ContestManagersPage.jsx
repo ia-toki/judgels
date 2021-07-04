@@ -81,11 +81,11 @@ class ContestManagersPage extends Component {
       return null;
     }
     return (
-      <>
+      <div className="content-card__header">
         <ContestManagerAddDialog contest={this.props.contest} onUpsertManagers={this.upsertManagers} />
         <ContestManagerRemoveDialog contest={this.props.contest} onDeleteManagers={this.deleteManagers} />
         <div className="clearfix" />
-      </>
+      </div>
     );
   };
 

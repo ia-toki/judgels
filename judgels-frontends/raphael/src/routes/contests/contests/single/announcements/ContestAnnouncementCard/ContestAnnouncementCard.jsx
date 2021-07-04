@@ -42,7 +42,7 @@ export function ContestAnnouncementCard({
   return (
     <Callout className="contest-announcement-card" title={announcement.title} intent={intent} icon={null}>
       {isDraft ? <Tag intent={intent}>Draft</Tag> : null}
-      <p className="contest-announcement-card__info">
+      <p className="float-right">
         <small>
           published <FormattedRelative value={announcement.updatedTime} /> {user} {renderEditDialog()}
         </small>

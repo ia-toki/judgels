@@ -11,8 +11,6 @@ import { selectContestWebConfig } from '../../../modules/contestWebConfigSelecto
 import * as contestWebActions from '../../modules/contestWebActions';
 import * as contestActions from '../../../modules/contestActions';
 
-import './ContestStateWidget.scss';
-
 // TODO(fushar): unit tests
 class ContestStateWidget extends PureComponent {
   state = {
@@ -48,8 +46,8 @@ class ContestStateWidget extends PureComponent {
     const { leftComponent, rightComponent } = this.getWidgetComponents();
     return (
       <Callout intent={Intent.PRIMARY} className="secondary-info" icon={<InfoSign />}>
-        <div className="contest-state-widget__left">{leftComponent}</div>
-        <div className="contest-state-widget__right">{rightComponent}</div>
+        <div className="float-left">{leftComponent}</div>
+        <div className="float-right">{rightComponent}</div>
         <div className="clearfix" />
         {this.renderVirtualContestAlert()}
       </Callout>

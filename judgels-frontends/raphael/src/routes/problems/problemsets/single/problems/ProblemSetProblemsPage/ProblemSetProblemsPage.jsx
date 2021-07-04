@@ -12,8 +12,6 @@ import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
-import './ProblemSetProblemsPage.scss';
-
 export class ProblemSetProblemsPage extends Component {
   state = {
     response: undefined,
@@ -64,8 +62,8 @@ export class ProblemSetProblemsPage extends Component {
   renderHeader = () => {
     return (
       <>
-        <div className="problemset-problems-page__header--spoilers">{this.renderProblemSpoilerWidget()}</div>
-        <div className="problemset-problems-page__header--language">{this.renderStatementLanguageWidget()}</div>
+        <div className="float-left">{this.renderProblemSpoilerWidget()}</div>
+        <div className="float-right">{this.renderStatementLanguageWidget()}</div>
         <div className="clearfix" />
       </>
     );

@@ -22,7 +22,6 @@ export class SubmissionsPage extends Component {
     return (
       <>
         {this.renderUserFilter()}
-        <div className="clearfix" />
         {this.renderSubmissions()}
         {this.renderPagination()}
       </>

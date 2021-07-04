@@ -17,3 +17,16 @@
 .content-card__section {
   margin-bottom: 15px;
 }
+
+.content-card__header {
+  margin-bottom: 10px;
+
+  button.float-left,
+  .float-left button {
+    margin-bottom: 5px;
+  }
+
+  .bp4-form-group {
+    margin-bottom: 0;
+  }
+}

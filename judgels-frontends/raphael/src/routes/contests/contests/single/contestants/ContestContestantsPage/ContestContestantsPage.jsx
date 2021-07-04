@@ -99,7 +99,7 @@ class ContestContestantsPage extends Component {
     const { data: contestants } = response;
     const isVirtualContest = contestants.page.some(contestant => contestant.contestStartTime !== null);
     return (
-      <>
+      <div className="content-card__header">
         <ContestContestantAddDialog contest={this.props.contest} onUpsertContestants={this.upsertContestants} />
         <ContestContestantRemoveDialog contest={this.props.contest} onDeleteContestants={this.deleteContestants} />
         {isVirtualContest && (
@@ -113,7 +113,7 @@ class ContestContestantsPage extends Component {
           </Button>
         )}
         <div className="clearfix" />
-      </>
+      </div>
     );
   };
 

@@ -9,8 +9,6 @@ import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
 import * as problemSetActions from '../modules/problemSetActions';
 
-import './ProblemSetsPage.scss';
-
 class ProblemSetsPage extends Component {
   static PAGE_SIZE = 20;
 
@@ -52,7 +50,7 @@ class ProblemSetsPage extends Component {
   renderHeader = () => {
     return (
       <>
-        <div className="content-card__section search-box-inline">{this.renderFilter()}</div>
+        <div className="float-right">{this.renderFilter()}</div>
         <div className="clearfix" />
         <div className="content-card__section">
           {this.renderFilterResultsBanner()}

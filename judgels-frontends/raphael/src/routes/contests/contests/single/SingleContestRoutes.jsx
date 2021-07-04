@@ -56,8 +56,8 @@ function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfi
       titleIcon: contestIcon[ContestTab.Announcements],
       title: (
         <div className="tab-item-with-widget">
-          <div className="tab-item-with-widget__name">Announcements</div>
-          <div className="tab-item-with-widget__widget">
+          <div className="float-left">Announcements</div>
+          <div className="float-right">
             <ContestAnnouncementsWidget />
           </div>
           <div className="clearfix" />
@@ -80,8 +80,8 @@ function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfi
       titleIcon: contestIcon[ContestTab.Editorial],
       title: (
         <div className="tab-item-with-widget">
-          <div className="tab-item-with-widget__name">Editorial</div>
-          <div className="tab-item-with-widget__widget">
+          <div className="float-left">Editorial</div>
+          <div className="float-right">
             <Tag className="normal-weight" intent={Intent.WARNING}>
               NEW
             </Tag>
@@ -130,8 +130,8 @@ function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfi
       titleIcon: contestIcon[ContestTab.Clarifications],
       title: (
         <div className="tab-item-with-widget">
-          <div className="tab-item-with-widget__name">Clarifications</div>
-          <div className="tab-item-with-widget__widget">
+          <div className="float-left">Clarifications</div>
+          <div className="float-right">
             <ContestClarificationsWidget />
           </div>
           <div className="clearfix" />
@@ -173,9 +173,9 @@ function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfi
     items: sidebarItems,
     contentHeader: (
       <div className="single-contest-routes__header">
-        <h2 className="single-contest-routes__title">{contest.name}</h2>
+        <h2 className="float-left">{contest.name}</h2>
         {contestWebConfig && (
-          <div className="single-contest-routes__button">
+          <div className="float-right">
             <ContestEditDialog
               contest={contest}
               canManage={contestWebConfig.canManage}

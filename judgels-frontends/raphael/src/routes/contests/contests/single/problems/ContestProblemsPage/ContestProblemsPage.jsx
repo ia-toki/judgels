@@ -14,8 +14,6 @@ import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { selectContest } from '../../../modules/contestSelectors';
 import * as contestProblemActions from '../modules/contestProblemActions';
 
-import './ContestProblemsPage.scss';
-
 export class ContestProblemsPage extends Component {
   state = {
     response: undefined,
@@ -57,7 +55,7 @@ export class ContestProblemsPage extends Component {
       <ContentCard>
         <h3>Problems</h3>
         <hr />
-        <div className="contest-problems-page__header">
+        <div className="content-card__header">
           {this.renderSetDialog()}
           {this.renderStatementLanguageWidget()}
           <div className="clearfix" />

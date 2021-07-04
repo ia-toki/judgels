@@ -125,7 +125,7 @@ describe('ContestAnnouncementsPage', () => {
             cards.map(card => [
               card.find('h4').text(),
               card
-                .find('.contest-announcement-card__info')
+                .find('p')
                 .text()
                 .replace(/\s+/g, ' '),
               card.find('.html-text').text(),
@@ -150,7 +150,7 @@ describe('ContestAnnouncementsPage', () => {
             cards.map(card => [
               card.find('h4').text(),
               card
-                .find('.contest-announcement-card__info')
+                .find('p')
                 .text()
                 .replace(/\s+/g, ' '),
               card.find('.html-text').text(),
@@ -175,7 +175,7 @@ describe('ContestAnnouncementsPage', () => {
             cards.map(card => [
               card.find('h4').text(),
               card
-                .find('.contest-announcement-card__info')
+                .find('p')
                 .text()
                 .replace(/\s+/g, ' '),
               card.find('.html-text').text(),

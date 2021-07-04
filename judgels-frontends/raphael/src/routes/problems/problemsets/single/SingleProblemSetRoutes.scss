@@ -3,28 +3,6 @@
   padding-bottom: 8px;
 }
 
-.single-problemset-routes__title {
-  float: left;
-}
-
-.single-problemset-routes__button {
-  float: right;
-}
-
-.tab-item-with-widget {
-  position: absolute;
-  display: inline-block;
-  width: 190px;
-}
-
-.tab-item-with-widget__name {
-  float: left;
-}
-
-.tab-item-with-widget__widget {
-  float: right;
-}
-
 @media only screen and (max-width: 750px) {
   .single-problemset-routes__header {
     h2 {
