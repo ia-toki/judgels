@@ -34,9 +34,10 @@ server {
     access_log off;
 
     location /jophiel/  {
-        rewrite ^/jophiel/(.*) /$1 break;
+        rewrite ^ $request_uri;
+        rewrite ^/jophiel/(.*) $1 break;
         include proxy_params;
-        proxy_pass http://jophiel;
+        proxy_pass http://jophiel/$uri;
         proxy_set_header Connection "";
         proxy_http_version 1.1;
         proxy_buffering off;
