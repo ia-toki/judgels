@@ -4,6 +4,7 @@ build/
 node_modules/
 
 raphael.js
+raphael-v2.js
 
 *.css
 *.css.map
