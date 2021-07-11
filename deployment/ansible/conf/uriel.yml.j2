@@ -49,16 +49,16 @@ uriel:
   baseDataDir: /judgels/uriel/var/data
 
   jophiel:
-    baseUrl: {{ judgels_scheme_internal }}://{{ jophiel_url_internal }}
+    baseUrl: {{ judgels_scheme }}://{{ jophiel_url }}
 
   sandalphon:
     baseUrl: {{ judgels_scheme }}://{{ sandalphon_url }}
     clientJid: JIDSACL-uriel
     clientSecret: {{ sandalphon_uriel_secret }}
 
-{% if sealtiel_url_internal is defined %}
+{% if sealtiel_url is defined %}
   sealtiel:
-    baseUrl: {{ judgels_scheme_internal }}://{{ sealtiel_url_internal }}
+    baseUrl: {{ judgels_scheme }}://{{ sealtiel_url }}
     clientJid: JIDSECL-uriel
     clientSecret: {{ sealtiel_uriel_secret }}
 {% endif %}

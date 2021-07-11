@@ -71,9 +71,9 @@ jophiel {
     baseUrl = "{{ judgels_scheme }}://{{ jophiel_url }}"
 }
 
-{% if sealtiel_url_internal is defined %}
+{% if sealtiel_url is defined %}
 sealtiel {
-    baseUrl = "{{ judgels_scheme_internal }}://{{ sealtiel_url_internal }}"
+    baseUrl = "{{ judgels_scheme }}://{{ sealtiel_url }}"
     clientJid = "JIDSECL-sandalphon"
     clientSecret = "{{ sealtiel_sandalphon_secret }}"
 }

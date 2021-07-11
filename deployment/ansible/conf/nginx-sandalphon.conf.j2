@@ -1,0 +1,51 @@
+upstream sandalphon {
+    {% for host in groups['sandalphon'] %}
+    server {{ host }}:9002;
+    {% endfor %}
+}
+
+proxy_cache_path /tmp/sandalphon_cache levels=1:2 keys_zone=sandalphon_cache:10m max_size=2g inactive=15m use_temp_path=off;
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    ssl_certificate /etc/letsencrypt/live/{{ domain.fqdn }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ domain.fqdn }}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    server_name {{ domain.fqdn }};
+
+    location /  {
+        include proxy_params;
+        proxy_pass http://sandalphon;
+        proxy_set_header Connection "";
+        proxy_http_version 1.1;
+        proxy_buffering off;
+
+        # Use cache for sandalphon
+        # Sandalphon is prone to high CPU usage if serving many asset files concurrently
+        proxy_cache sandalphon_cache;
+
+        # On cache miss, block incoming connections while waiting for a response from sandalphon
+        # Otherwise all incoming requests are directed to sandalphon until sandalphon responds,
+        # which causes a short high CPU initial burst
+        proxy_cache_lock on;
+
+        # Try to serve responses from cache if sandalphon is down
+        proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
+
+        client_max_body_size 512M;
+    }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name {{ domain.fqdn }};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}

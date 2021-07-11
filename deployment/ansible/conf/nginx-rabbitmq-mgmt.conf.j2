@@ -1,0 +1,36 @@
+upstream rabbitmq {
+    {% for host in groups['sealtiel'] %}
+    server {{ host }}:15672;
+    {% endfor %}
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    ssl_certificate /etc/letsencrypt/live/{{ domain.fqdn }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ domain.fqdn }}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    server_name {{ domain.fqdn }};
+
+    location /  {
+        include proxy_params;
+        proxy_pass http://rabbitmq;
+        proxy_set_header Connection "";
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        client_max_body_size 512M;
+    }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name {{ domain.fqdn }};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}

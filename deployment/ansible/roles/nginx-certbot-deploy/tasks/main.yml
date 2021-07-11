@@ -1,67 +1,49 @@
-- block:
-  - name: Add or modify nofile hard limit for the user root
-    pam_limits:
-      domain: root
-      limit_type: hard
-      limit_item: nofile
-      value: "262144"
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+  notify: Restart nginx
 
-  - name: Add or modify nofile soft limit for the user root
-    pam_limits:
-      domain: root
-      limit_type: soft
-      limit_item: nofile
-      value: "262144"
+- name: Enable nginx to start automatically on boot
+  service:
+    name: nginx
+    enabled: yes
 
-  - name: Create nginx-certbot container mount volume
-    file:
-      path: "{{ item }}"
-      state: directory
-      mode: "0755"
-    with_items:
-      - /judgels/letsencrypt
-      - /judgels/sites
+- name: Disable default sites config
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  tags: config
+  notify: Restart nginx
 
-  - name: Generate nginx site
-    template:
-      src: "{{ playbook_dir }}/../conf/nginx-certbot.conf.j2"
-      dest: /judgels/sites/default.conf
-      mode: '0644'
+- name: Generate judgels nginx config
+  template:
+    src: "{{ playbook_dir}}/../conf/nginx.conf.j2"
+    dest: /etc/nginx/conf.d/judgels.conf
+  tags: config
+  notify: Restart nginx
 
-  - name: Pull nginx-certbot image
-    docker_image:
-      name: judgels/nginx-certbot
-      source: pull
-      force_source: yes
+- name: Allow nginx HTTP traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "80"
+    proto: tcp
+    comment: judgels nginx http
 
-  - name: Create a nginx-certbot container
-    docker_container:
-      name: nginx-certbot
-      image: judgels/nginx-certbot
-      command: nginx
-      restart: yes
-      restart_policy: always
-      log_driver: json-file
-      log_options:
-        max-size: 256m
-        max-file: "2"
-      network_mode: host
-      volumes:
-        - /judgels/letsencrypt:/etc/letsencrypt
-        - /judgels/sites:/etc/nginx/conf.d
-      env:
-        CERTBOT_EMAIL: "{{ letsencrypt_email }}"
+- name: Allow nginx HTTPS traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "443"
+    proto: tcp
+    comment: judgels nginx https
 
-  - name: Allow Nginx HTTP traffic through the firewall
-    ufw:
-      rule: allow
-      to_port: "80"
-      proto: tcp
-      comment: Judgels Nginx HTTP
+- name: Setup certbot
+  include_tasks: setup_certbot.yml
+  tags: always
 
-  - name: Allow Nginx HTTPS traffic through the firewall
-    ufw:
-      rule: allow
-      to_port: "443"
-      proto: tcp
-      comment: Judgels Nginx HTTPS
+- name: Configure domains
+  include_tasks: configure_domain.yml
+  loop: "{{ domains }}"
+  loop_control:
+    loop_var: domain
+  tags: always

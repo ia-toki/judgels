@@ -1,0 +1,38 @@
+- name: Add nginx domain config
+  template:
+    src: "{{ domain.config_template | mandatory }}"
+    dest: /etc/nginx/sites-available/{{ domain.name | mandatory }}
+    owner: www-data
+    group: www-data
+    mode: 0644
+  tags: config
+  notify: Restart nginx
+
+- name: Configure letsencrypt for the domain
+  block:
+    - name: Check whether a letsencrypt SSL certificate already exists for the domain
+      stat:
+        path: /etc/letsencrypt/live/{{ domain.fqdn | mandatory }}/cert.pem
+      register: letsencrypt_certificate
+
+    - name: Ensure nginx is using latest config
+      service:
+        name: nginx
+        state: reloaded
+      when: not letsencrypt_certificate.stat.exists
+
+    - name: Generate SSL certificate using certbot
+      command: "certbot certonly --webroot --email {{ letsencrypt_email | mandatory }} --agree-tos --webroot-path={{ letsencrypt_webroot_directory | mandatory }} -d {{ domain.fqdn | mandatory }} --non-interactive"
+      when: not letsencrypt_certificate.stat.exists
+      notify: Restart nginx
+  tags: config
+
+- name: Enable nginx domain config
+  file:
+    src: /etc/nginx/sites-available/{{ domain.name | mandatory }}
+    dest: /etc/nginx/sites-enabled/{{ domain.name | mandatory }}
+    owner: www-data
+    group: www-data
+    state: link
+  tags: config
+  notify: Restart nginx

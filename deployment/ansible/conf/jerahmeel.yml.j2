@@ -46,23 +46,23 @@ jerahmeel:
   baseDataDir: /judgels/jerahmeel/var/data
 
   jophiel:
-    baseUrl: {{ judgels_scheme_internal }}://{{ jophiel_url_internal }}
+    baseUrl: {{ judgels_scheme }}://{{ jophiel_url }}
 
   sandalphon:
     baseUrl: {{ judgels_scheme }}://{{ sandalphon_url }}
     clientJid: JIDSACL-jerahmeel
     clientSecret: {{ sandalphon_jerahmeel_secret }}
 
-{% if sealtiel_url_internal is defined %}
+{% if sealtiel_url is defined %}
   sealtiel:
-    baseUrl: {{ judgels_scheme_internal }}://{{ sealtiel_url_internal }}
+    baseUrl: {{ judgels_scheme }}://{{ sealtiel_url }}
     clientJid: JIDSECL-jerahmeel
     clientSecret: {{ sealtiel_jerahmeel_secret }}
 {% endif %}
 
-{% if uriel_url_internal is defined %}
+{% if uriel_url is defined %}
   uriel:
-    baseUrl: {{ judgels_scheme_internal }}://{{ uriel_url_internal }}
+    baseUrl: {{ judgels_scheme }}://{{ uriel_url }}
 {% endif %}
 
   gabriel:

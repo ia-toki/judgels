@@ -4,6 +4,9 @@ localhost
 [judgels]
 1.2.3.4 ansible_user=root
 
+[nginx]
+1.2.3.4 ansible_user=root
+
 [database]
 1.2.3.4 ansible_user=root
 
