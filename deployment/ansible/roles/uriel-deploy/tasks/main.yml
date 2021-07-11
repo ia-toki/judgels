@@ -42,9 +42,9 @@
       volumes:
         - "/judgels/uriel/var:/judgels/uriel/var"
 
-  - name: Allow Uriel traffic through the firewall
+  - name: Allow uriel traffic through the firewall
     ufw:
       rule: allow
       to_port: "9004"
       proto: tcp
-      comment: Judgels Uriel
+      comment: judgels uriel

@@ -39,9 +39,9 @@
         JAVA_OPTS: "-Xmx{{ sandalphon_xmx }}"
         MAIN_OPTS: "-Dhttp.port=9002 -Dconfig.file=/judgels/sandalphon/var/conf/sandalphon.conf -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/sandalphon/var/log"
 
-  - name: Allow Sandalphon traffic through the firewall
+  - name: Allow sandalphon traffic through the firewall
     ufw:
       rule: allow
       to_port: "9002"
       proto: tcp
-      comment: Judgels Sandalphon
+      comment: judgels sandalphon

@@ -47,4 +47,4 @@
       rule: allow
       to_port: "9001"
       proto: tcp
-      comment: Judgels Jophiel
+      comment: judgels jophiel

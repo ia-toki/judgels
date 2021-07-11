@@ -41,9 +41,9 @@
       volumes:
         - "/judgels/sealtiel/var:/judgels/sealtiel/var"
 
-  - name: Allow Sealtiel traffic through the firewall
+  - name: Allow sealtiel traffic through the firewall
     ufw:
       rule: allow
       to_port: "9003"
       proto: tcp
-      comment: Judgels Sealtiel
+      comment: judgels sealtiel

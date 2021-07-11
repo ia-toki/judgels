@@ -45,6 +45,6 @@
   - name: Allow jerahmeel traffic through the firewall
     ufw:
       rule: allow
-      to_port: 9005
+      to_port: "9005"
       proto: tcp
-      comment: Judgels Jerahmeel
+      comment: judgels jerahmeel

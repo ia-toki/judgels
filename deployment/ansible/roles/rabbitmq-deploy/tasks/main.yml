@@ -19,9 +19,9 @@
         RABBITMQ_DEFAULT_USER: "{{ rabbitmq_mgmt_username }}"
         RABBITMQ_DEFAULT_PASS: "{{ rabbitmq_mgmt_password }}"
 
-  - name: Allow RabbitMQ management traffic through the firewall
+  - name: Allow rabbitmq management traffic through the firewall
     ufw:
       rule: allow
       to_port: "15672"
       proto: tcp
-      comment: RabbitMQ management
+      comment: rabbitmq management
