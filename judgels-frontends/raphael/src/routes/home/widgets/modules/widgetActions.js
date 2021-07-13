@@ -1,5 +1,5 @@
 import { profileAPI } from '../../../../modules/api/jophiel/profile';
-import { userStatsAPI } from '../../../../modules/api/jerahmeel/user';
+import { statsAPI } from '../../../../modules/api/jerahmeel/stats';
 
 export function getTopRatedProfiles(page, pageSize) {
   return async () => {
@@ -9,6 +9,6 @@ export function getTopRatedProfiles(page, pageSize) {
 
 export function getTopUserStats(page, pageSize) {
   return async () => {
-    return await userStatsAPI.getTopUserStats(page, pageSize);
+    return await statsAPI.getTopUserStats(page, pageSize);
   };
 }

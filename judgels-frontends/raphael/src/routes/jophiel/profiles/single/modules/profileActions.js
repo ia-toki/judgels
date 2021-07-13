@@ -1,7 +1,7 @@
 import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { profileAPI } from '../../../../../modules/api/jophiel/profile';
 import { contestHistoryAPI } from '../../../../../modules/api/uriel/contestHistory';
-import { userStatsAPI } from '../../../../../modules/api/jerahmeel/user';
+import { statsAPI } from '../../../../../modules/api/jerahmeel/stats';
 import { submissionProgrammingAPI } from '../../../../../modules/api/jerahmeel/submissionProgramming';
 
 export function getBasicProfile(userJid) {
@@ -12,7 +12,7 @@ export function getBasicProfile(userJid) {
 
 export function getUserStats(username) {
   return async () => {
-    return await userStatsAPI.getUserStats(username);
+    return await statsAPI.getUserStats(username);
   };
 }
 

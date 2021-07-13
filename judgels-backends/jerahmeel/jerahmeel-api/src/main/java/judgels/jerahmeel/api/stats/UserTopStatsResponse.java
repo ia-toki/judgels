@@ -1,4 +1,4 @@
-package judgels.jerahmeel.api.user;
+package judgels.jerahmeel.api.stats;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;

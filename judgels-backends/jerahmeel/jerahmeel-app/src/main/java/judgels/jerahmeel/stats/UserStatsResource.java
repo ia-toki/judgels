@@ -1,4 +1,4 @@
-package judgels.jerahmeel.user;
+package judgels.jerahmeel.stats;
 
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkFound;
@@ -8,11 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import judgels.jerahmeel.api.user.UserStats;
-import judgels.jerahmeel.api.user.UserStatsService;
-import judgels.jerahmeel.api.user.UserTopStatsEntry;
-import judgels.jerahmeel.api.user.UserTopStatsResponse;
-import judgels.jerahmeel.stats.StatsStore;
+import judgels.jerahmeel.api.stats.UserStats;
+import judgels.jerahmeel.api.stats.UserStatsService;
+import judgels.jerahmeel.api.stats.UserTopStatsEntry;
+import judgels.jerahmeel.api.stats.UserTopStatsResponse;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
 import judgles.jophiel.user.UserClient;
