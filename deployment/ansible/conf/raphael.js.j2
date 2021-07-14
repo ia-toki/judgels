@@ -3,10 +3,10 @@ window.conf = {
   name: '{{ judgels_name }}',
   slogan: '{{ judgels_slogan }}',
   apiUrls: {
-    jophiel: '{{ judgels_scheme }}://{{ jophiel_url }}/api/v2',
-    uriel: '{{ judgels_scheme }}://{{ uriel_url }}/api/v2',
+    jophiel: '{{ judgels_scheme }}://{{ jophiel_url }}/v2',
+    uriel: '{{ judgels_scheme }}://{{ uriel_url }}/v2',
 {% if jerahmeel_url is defined %}
-    jerahmeel: '{{ judgels_scheme }}://{{ jerahmeel_url }}/api/v2',
+    jerahmeel: '{{ judgels_scheme }}://{{ jerahmeel_url }}/v2',
 {% endif %}
   },
   welcomeBanner: {
