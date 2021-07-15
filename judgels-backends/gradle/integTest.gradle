@@ -4,6 +4,7 @@ sourceSets {
             compileClasspath += main.output + test.output + project.configurations.annotationProcessor
             runtimeClasspath += main.output + test.output
             srcDir file('src/integTest/java')
+            srcDirs += 'build/generated/sources/annotationProcessor/java/integTest'
         }
         resources.srcDir file('src/integTest/resources')
     }

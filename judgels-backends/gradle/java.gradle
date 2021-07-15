@@ -1,12 +1,28 @@
 apply plugin: 'idea'
 apply plugin: 'java-library'
+apply plugin: 'net.ltgt.apt-eclipse'
 
 tasks.withType(Test) {
     useJUnitPlatform()
 }
 
+sourceSets {
+  main {
+    java {
+      srcDirs += 'build/generated/sources/annotationProcessor/java/main'
+    }
+  }
+
+  test {
+    java {
+      srcDirs += 'build/generated/sources/annotationProcessor/java/test'
+    }
+  }
+}
+
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testCompile "org.junit.platform:junit-platform-commons:1.7.2"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
 }
 

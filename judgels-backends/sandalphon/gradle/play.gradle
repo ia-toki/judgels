@@ -24,3 +24,21 @@ play {
         runPlayTask.forkOptions.jvmArgs = ['-Xdebug', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=4002']
     }
 }
+
+sourceSets {
+  main {
+    java {
+      srcDirs += [
+        'build/generated/sources/annotationProcessor/scala/main',
+        'build/src/play/routes',
+        'build/src/play/twirl'
+      ]
+    }
+  }
+
+  test {
+    java {
+      srcDirs += 'build/generated/sources/annotationProcessor/scala/test'
+    }
+  }
+}

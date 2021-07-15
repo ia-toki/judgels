@@ -7,6 +7,12 @@ generated_tests/
 
 data/
 
+bin
+.project
+.settings/
+.classpath
+.metals/
+
 .idea/
 .ideaDataSources/
 *.iml
