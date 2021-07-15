@@ -33,17 +33,6 @@ server {
     server_name {{ domain.fqdn }};
     access_log off;
 
-    location /jophiel/ {
-        rewrite ^ $request_uri;
-        rewrite ^/jophiel/(.*) $1 break;
-        include proxy_params;
-        proxy_pass http://jophiel/$uri;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
     location ~ /api/play/session {
         include proxy_params;
         proxy_pass http://jophiel;
@@ -63,15 +52,6 @@ server {
         client_max_body_size 512M;
     }
 
-    location /sealtiel {
-        include proxy_params;
-        proxy_pass http://sealtiel;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
     location ~ /(api/)?v2/message {
         rewrite ^(?:/api)?(.*) /api$1 break;
         include proxy_params;
@@ -82,30 +62,10 @@ server {
         client_max_body_size 512M;
     }
 
-    location /uriel/ {
-        rewrite ^/uriel/(.*) /$1 break;
-        include proxy_params;
-        proxy_pass http://uriel;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
     location ~ /(api/)?v2/contest {
         rewrite ^(?:/api)?(.*) /api$1 break;
         include proxy_params;
         proxy_pass http://uriel;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
-    location /jerahmeel/ {
-        rewrite ^/jerahmeel/(.*) /$1 break;
-        include proxy_params;
-        proxy_pass http://jerahmeel;
         proxy_set_header Connection "";
         proxy_http_version 1.1;
         proxy_buffering off;
