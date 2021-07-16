@@ -44,7 +44,6 @@ public class MockSandalphon {
     public static final String PROBLEM_1_TYPE = "PROGRAMMING";
     public static final String PROBLEM_2_TYPE = "PROGRAMMING";
     public static final String PROBLEM_3_TYPE = "BUNDLE";
-    private static final String[] PROBLEM_TYPES = {PROBLEM_1_TYPE, PROBLEM_2_TYPE, PROBLEM_3_TYPE};
 
     public static final int SANDALPHON_PORT = 9002;
 

@@ -75,7 +75,7 @@ public class ChapterLessonResource implements ChapterLessonService {
     @Override
     @UnitOfWork(readOnly = true)
     public ChapterLessonsResponse getLessons(Optional<AuthHeader> authHeader, String chapterJid) {
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         List<ChapterLesson> lessons = lessonStore.getLessons(chapterJid);
@@ -95,7 +95,7 @@ public class ChapterLessonResource implements ChapterLessonService {
             String chapterJid,
             String lessonAlias) {
 
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         ChapterLesson lesson = checkFound(lessonStore.getLessonByAlias(chapterJid, lessonAlias));

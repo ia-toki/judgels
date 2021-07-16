@@ -239,7 +239,8 @@ public class SubmissionResource implements SubmissionService {
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
     public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
+
         String containerJid = checkNotNull(parts.getField("containerJid"), "containerJid").getValue();
         String problemJid = checkNotNull(parts.getField("problemJid"), "problemJid").getValue();
         String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();

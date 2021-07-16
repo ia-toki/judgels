@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.sandalphon.api.problem.bundle.ItemType;
@@ -58,7 +57,6 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         Map<String, ItemSubmission> answersMap;
         ItemSubmission itemSubmissionResult;
         ContestSubmissionSummaryResponse summaryResult;
-        List<ItemSubmission> problemSubmissions;
         ContestItemSubmissionsResponse submissionsResponse;
 
         submissionsResponse = submissionService.getSubmissions(

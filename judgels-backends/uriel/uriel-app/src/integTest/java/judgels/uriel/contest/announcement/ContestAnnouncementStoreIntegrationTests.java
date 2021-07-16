@@ -18,13 +18,9 @@ import judgels.uriel.persistence.ContestModel;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @WithHibernateSession(models = {ContestModel.class, ContestAnnouncementModel.class})
 class ContestAnnouncementStoreIntegrationTests extends AbstractIntegrationTests {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContestAnnouncementStoreIntegrationTests.class);
-
     private ContestStore contestStore;
     private ContestAnnouncementStore store;
 

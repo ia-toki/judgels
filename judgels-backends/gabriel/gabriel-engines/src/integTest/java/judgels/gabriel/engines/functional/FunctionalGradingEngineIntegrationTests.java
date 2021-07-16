@@ -136,6 +136,8 @@ class FunctionalGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
         assertThat(result.getVerdict()).isEqualTo(COMPILATION_ERROR);
         assertThat(result.getScore()).isEqualTo(0);
 
-        GradingResultDetails details = getDetails(result);
+        // implementation-dependent; removed for now
+        // GradingResultDetails details = getDetails(result);
+        // assertThat(details.getCompilationOutputs().get("source")).contains("duplicate symbol");
     }
 }
