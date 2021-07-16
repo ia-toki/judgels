@@ -8,7 +8,6 @@ buildscript {
     dependencies {
         classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
         classpath "com.palantir.sls-packaging:gradle-sls-packaging:$gradleSlsPackagingVersion"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.21"
     }
 }
 
