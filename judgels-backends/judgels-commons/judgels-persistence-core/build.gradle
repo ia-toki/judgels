@@ -12,8 +12,9 @@ dependencies {
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
-    testImplementation project(':judgels-commons:judgels-persistence-testing')
     testImplementation "org.assertj:assertj-core:$assertJVersion"
+
+    integTestImplementation project(':judgels-commons:judgels-persistence-testing')
 
     integTestAnnotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     integTestAnnotationProcessor "org.immutables:value:$immutablesVersion"

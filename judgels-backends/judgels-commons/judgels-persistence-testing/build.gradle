@@ -1,8 +1,9 @@
 apply from: '../../gradle/java.gradle'
 
 dependencies {
-    api project(':judgels-commons:judgels-persistence-core')
+    api project(':judgels-commons:judgels-persistence-api')
 
     api "com.h2database:h2:$h2Version"
+    api "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
     api "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 }
