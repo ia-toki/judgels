@@ -14,7 +14,7 @@ server:
 
 database:
   driverClass: com.mysql.jdbc.Driver
-  url: jdbc:mysql://{{ db_host }}/judgels_uriel{{ db_options }}
+  url: jdbc:mysql://{{ db_host }}/judgels{{ db_options }}
   user: {{ db_username }}
   password: {{ db_password }}
   initialSize: 50
@@ -22,7 +22,7 @@ database:
   maxSize: 400
   properties:
     charSet: UTF-8
-    hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+    hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate.generate_statistics: false
     hibernate.query.plan_cache_max_size: 64
     hibernate.query.plan_parameter_metadata_max_size: 32

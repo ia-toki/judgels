@@ -2,9 +2,9 @@
   - name: Install mysql components
     apt:
       name:
-        - mysql-server-5.7
-        - mysql-client-5.7
-        - python-mysqldb
+        - mysql-server
+        - mysql-client
+        - python3-mysqldb
       state: present
 
   - name: Secure mysql installation
@@ -18,7 +18,7 @@
 
   - name: Change mysql root password
     shell: > 
-      mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH mysql_native_password BY "{{ db_root_password }}";'
+      mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH caching_sha2_password BY "{{ db_root_password }}";'
     changed_when: false
 
   - name: Change mysql bind-address to allow connection from phpmyadmin
@@ -51,18 +51,13 @@
       state: present
     no_log: True
 
-  - name: Create judgels databases
+  - name: Create judgels database
     mysql_db:
       login_user: root
       login_password: "{{ db_root_password }}"
-      name: "{{ item }}"
+      name: judgels
       collation: utf8mb4_unicode_ci
       state: present
-    with_items:
-      - judgels_jophiel
-      - judgels_sandalphon
-      - judgels_uriel
-      - judgels_jerahmeel
 
   - name: Allow MySQL access from Docker containers
     ufw:
