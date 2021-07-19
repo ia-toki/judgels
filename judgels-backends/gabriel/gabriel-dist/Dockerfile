@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update \
     && apt-get install -y git make gcc libcap-dev
@@ -12,7 +12,7 @@ RUN git clone --depth 1 git://git.ucw.cz/moe.git; \
     gcc -o iwrapper iwrapper.c
 
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update \
     && apt-get -y install openjdk-8-jre libcap-dev g++ \
