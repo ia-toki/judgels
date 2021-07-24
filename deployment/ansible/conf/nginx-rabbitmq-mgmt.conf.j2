@@ -1,5 +1,5 @@
 upstream rabbitmq {
-    {% for host in groups['sealtiel'] %}
+    {% for host in groups['rabbitmq'] %}
     server {{ host }}:15672;
     {% endfor %}
 }

@@ -1,4 +1,0 @@
-- hosts: sealtiel
-  gather_facts: false
-  roles:
-    - name: sealtiel-deploy

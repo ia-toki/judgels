@@ -13,11 +13,11 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.uriel.file.FileModule;
-import judgels.uriel.gabriel.GabrielModule;
+import judgels.uriel.grader.GraderModule;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.jophiel.JophielModule;
+import judgels.uriel.messaging.MessagingModule;
 import judgels.uriel.sandalphon.SandalphonModule;
-import judgels.uriel.sealtiel.SealtielModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
 public class UrielApplication extends Application<UrielApplicationConfiguration> {
@@ -43,12 +43,12 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         UrielComponent component = DaggerUrielComponent.builder()
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
                 .fileModule(new FileModule(urielConfig.getFileConfig()))
-                .gabrielModule(new GabrielModule(urielConfig.getGabrielConfig()))
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
-                .sealtielModule(new SealtielModule(urielConfig.getSealtielConfig()))
+                .graderModule(new GraderModule(urielConfig.getGraderConfig()))
+                .messagingModule(new MessagingModule(urielConfig.getRabbitMQConfig()))
                 .submissionModule(new SubmissionModule(urielConfig.getSubmissionConfig()))
                 .urielModule(new UrielModule(urielConfig))
                 .build();
@@ -83,7 +83,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
                 "contest-log-poller",
                 component.contestLogPoller());
 
-        if (urielConfig.getSealtielConfig().isPresent()) {
+        if (urielConfig.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
                     "grading-response-poller",
                     component.gradingResponsePoller());

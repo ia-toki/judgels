@@ -15,6 +15,7 @@ import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.jerahmeel.JerahmeelBaseDataDir;
 import judgels.jerahmeel.stats.StatsConfiguration;
+import judgels.messaging.MessageClient;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
 import judgels.sandalphon.submission.programming.NoOpSubmissionConsumer;
@@ -24,8 +25,6 @@ import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.sealtiel.api.message.MessageService;
-import judgels.service.api.client.BasicAuthHeader;
 
 @Module
 public class SubmissionModule {
@@ -54,16 +53,16 @@ public class SubmissionModule {
     @Singleton
     SubmissionClient submissionClient(
             SubmissionStore submissionStore,
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
-            @Named("gabrielClientJid") String gabrielClientJid,
+            @Named("gradingRequestQueueName") String gradingRequestQueueName,
+            @Named("gradingResponseQueueName") String gradingResponseQueueName,
+            MessageClient messageClient,
             ObjectMapper mapper) {
 
         return new SubmissionClient(
                 submissionStore,
-                sealtielClientAuthHeader,
-                messageService,
-                gabrielClientJid,
+                gradingRequestQueueName,
+                gradingResponseQueueName,
+                messageClient,
                 mapper);
     }
 
@@ -87,8 +86,8 @@ public class SubmissionModule {
     @Singleton
     static GradingResponsePoller gradingResponsePoller(
             LifecycleEnvironment lifecycleEnvironment,
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            @Named("gradingResponseQueueName") String gradingResponseQueueName,
+            MessageClient messageClient,
             GradingResponseProcessor processor) {
 
         ExecutorService executorService =
@@ -97,7 +96,7 @@ public class SubmissionModule {
                         .minThreads(10)
                         .build();
 
-        return new GradingResponsePoller(sealtielClientAuthHeader, messageService, executorService, processor);
+        return new GradingResponsePoller(gradingResponseQueueName, messageClient, executorService, processor);
     }
 
     @Provides
@@ -106,8 +105,7 @@ public class SubmissionModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
             SubmissionStore submissionStore,
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            MessageClient messageClient,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -115,14 +113,12 @@ public class SubmissionModule {
                 new Class<?>[] {
                         ObjectMapper.class,
                         SubmissionStore.class,
-                        BasicAuthHeader.class,
-                        MessageService.class,
+                        MessageClient.class,
                         SubmissionConsumer.class},
                 new Object[] {
                         mapper,
                         submissionStore,
-                        sealtielClientAuthHeader,
-                        messageService,
+                        messageClient,
                         statsConfig.getEnabled() ? statsProcessor : new NoOpSubmissionConsumer()});
     }
 }

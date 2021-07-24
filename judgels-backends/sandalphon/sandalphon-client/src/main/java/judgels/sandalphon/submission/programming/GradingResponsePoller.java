@@ -4,9 +4,8 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import judgels.sealtiel.api.message.Message;
-import judgels.sealtiel.api.message.MessageService;
-import judgels.service.api.client.BasicAuthHeader;
+import judgels.messaging.MessageClient;
+import judgels.messaging.api.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,19 +14,19 @@ public class GradingResponsePoller implements Runnable {
 
     private static final Duration POLLING_DELAY = Duration.ofSeconds(2);
 
-    private final BasicAuthHeader sealtielClientAuthHeader;
-    private final MessageService messageService;
+    private final String queueName;
+    private final MessageClient messageClient;
     private final ExecutorService executorService;
     private final GradingResponseProcessor processor;
 
     public GradingResponsePoller(
-            BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            String queueName,
+            MessageClient messageClient,
             ExecutorService executorService,
             GradingResponseProcessor processor) {
 
-        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
-        this.messageService = messageService;
+        this.queueName = queueName;
+        this.messageClient = messageClient;
         this.executorService = executorService;
         this.processor = processor;
     }
@@ -36,7 +35,7 @@ public class GradingResponsePoller implements Runnable {
     public void run() {
         while (true) {
             try {
-                Optional<Message> maybeMessage = messageService.receiveMessage(sealtielClientAuthHeader);
+                Optional<Message> maybeMessage = messageClient.receiveMessage(queueName);
                 if (!maybeMessage.isPresent()) {
                     try {
                         Thread.sleep(POLLING_DELAY.toMillis());
@@ -50,7 +49,7 @@ public class GradingResponsePoller implements Runnable {
                 CompletableFuture.runAsync(() -> processor.process(message), executorService)
                         .exceptionally(e -> {
                             LOGGER.error("Failed to process message: " + message, e);
-                            messageService.retryMessage(sealtielClientAuthHeader, message.getId());
+                            messageClient.retryMessage(message.getId());
                             return null;
                         });
             } catch (Throwable e) {

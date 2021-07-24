@@ -26,7 +26,7 @@ public final class SandalphonThreadsScheduler {
         Scheduler scheduler = actorSystem.scheduler();
         ExecutionContextExecutor context = actorSystem.dispatcher();
 
-        if (config.getSealtielConfig().isPresent()) {
+        if (config.getRabbitMQConfig().isPresent()) {
             scheduler.schedule(
                     Duration.create(1, TimeUnit.SECONDS),
                     Duration.create(3, TimeUnit.SECONDS),

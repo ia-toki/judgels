@@ -56,15 +56,18 @@ uriel:
     clientJid: JIDSACL-uriel
     clientSecret: {{ sandalphon_uriel_secret }}
 
-{% if sealtiel_url is defined %}
-  sealtiel:
-    baseUrl: {{ judgels_scheme }}://{{ sealtiel_url }}
-    clientJid: JIDSECL-uriel
-    clientSecret: {{ sealtiel_uriel_secret }}
-{% endif %}
+  grader:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: uriel-grading-response
 
-  gabriel:
-    clientJid: JIDSECL-gabriel
+{% if rabbitmq_host is defined %}
+  rabbitmq:
+    host: {{ rabbitmq_host }}
+    port: 5672
+    username: {{ rabbitmq_username }}
+    password: {{ rabbitmq_password }}
+    virtualHost: "/"
+{% endif %}
 
 {% if uriel_aws_accessKey is defined %}
   aws:

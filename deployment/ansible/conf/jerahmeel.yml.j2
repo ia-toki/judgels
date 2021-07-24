@@ -53,20 +53,23 @@ jerahmeel:
     clientJid: JIDSACL-jerahmeel
     clientSecret: {{ sandalphon_jerahmeel_secret }}
 
-{% if sealtiel_url is defined %}
-  sealtiel:
-    baseUrl: {{ judgels_scheme }}://{{ sealtiel_url }}
-    clientJid: JIDSECL-jerahmeel
-    clientSecret: {{ sealtiel_jerahmeel_secret }}
-{% endif %}
-
 {% if uriel_url is defined %}
   uriel:
     baseUrl: {{ judgels_scheme }}://{{ uriel_url }}
 {% endif %}
 
-  gabriel:
-    clientJid: JIDSECL-gabriel
+  grader:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: jerahmeel-grading-response
+
+{% if rabbitmq_host is defined %}
+  rabbitmq:
+    host: {{ rabbitmq_host }}
+    port: 5672
+    username: {{ rabbitmq_username }}
+    password: {{ rabbitmq_password }}
+    virtualHost: "/"
+{% endif %}
 
 {% if jerahmeel_aws_accessKey is defined %}
   aws:

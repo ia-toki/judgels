@@ -28,8 +28,8 @@ play {
     modules {
         enabled += "org.iatoki.judgels.sandalphon.SandalphonModule"
         enabled += "org.iatoki.judgels.sandalphon.jophiel.JophielModule"
-        enabled += "org.iatoki.judgels.sandalphon.sealtiel.SealtielModule"
-        enabled += "org.iatoki.judgels.sandalphon.gabriel.GabrielModule"
+        enabled += "org.iatoki.judgels.sandalphon.grader.GraderModule"
+        enabled += "org.iatoki.judgels.sandalphon.messaging.MessagingModule"
         disabled += "play.core.ObjectMapperModule"
     }
 
@@ -71,17 +71,20 @@ jophiel {
     baseUrl = "{{ judgels_scheme }}://{{ jophiel_url }}"
 }
 
-{% if sealtiel_url is defined %}
-sealtiel {
-    baseUrl = "{{ judgels_scheme }}://{{ sealtiel_url }}"
-    clientJid = "JIDSECL-sandalphon"
-    clientSecret = "{{ sealtiel_sandalphon_secret }}"
+grader {
+    gradingRequestQueueName = gabriel-grading-request
+    gradingResponseQueueName = sandalphon-grading-response
+}
+
+{% if rabbitmq_host is defined %}
+rabbitmq {
+    host = {{ rabbitmq_host }}
+    port = 5672
+    username = {{ rabbitmq_username }}
+    password = {{ rabbitmq_password }}
+    virtualHost = "/"
 }
 {% endif %}
-
-gabriel {
-    clientJid = "JIDSECL-gabriel"
-}
 
 banner {
     use = false

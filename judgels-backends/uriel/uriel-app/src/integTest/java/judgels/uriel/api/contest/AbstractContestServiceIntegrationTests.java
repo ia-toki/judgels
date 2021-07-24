@@ -6,7 +6,6 @@ import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
 import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
-import static judgels.uriel.api.mocks.MockSealtiel.mockSealtiel;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableSet;
@@ -23,7 +22,6 @@ import org.junit.jupiter.api.BeforeAll;
 public abstract class AbstractContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
     private static WireMockServer mockSandalphon;
-    private static WireMockServer mockSealtiel;
 
     protected ContestService contestService = createService(ContestService.class);
     protected ContestModuleService moduleService = createService(ContestModuleService.class);
@@ -37,15 +35,12 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         mockJophiel.start();
         mockSandalphon = mockSandalphon();
         mockSandalphon.start();
-        mockSealtiel = mockSealtiel();
-        mockSealtiel.start();
     }
 
     @AfterAll
     static void tearDownMocks() {
         mockJophiel.shutdown();
         mockSandalphon.shutdown();
-        mockSealtiel.shutdown();
     }
 
     protected Contest createContest(String slug) {

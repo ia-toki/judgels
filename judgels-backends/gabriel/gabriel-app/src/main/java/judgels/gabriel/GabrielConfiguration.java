@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.gabriel.grading.GradingConfiguration;
 import judgels.gabriel.moe.MoeConfiguration;
-import judgels.sealtiel.api.SealtielClientConfiguration;
+import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -16,8 +16,8 @@ public interface GabrielConfiguration {
     @JsonProperty("grading")
     GradingConfiguration getGradingWorkerConfig();
 
-    @JsonProperty("sealtiel")
-    SealtielClientConfiguration getSealtielConfig();
+    @JsonProperty("rabbitmq")
+    RabbitMQConfiguration getRabbitMQConfig();
 
     @JsonProperty("moe")
     Optional<MoeConfiguration> getMoeConfig();

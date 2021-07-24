@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.client.WebTarget;
-import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.gabriel.api.GraderConfiguration;
 import judgels.jerahmeel.AbstractIntegrationTests;
 import judgels.jerahmeel.JerahmeelApplication;
 import judgels.jerahmeel.JerahmeelApplicationConfiguration;
@@ -23,6 +23,7 @@ import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.service.jaxrs.JaxRsClients;
 import judgels.uriel.api.UrielClientConfiguration;
@@ -59,7 +60,8 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
                         .jophielConfig(JophielClientConfiguration.DEFAULT)
                         .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
                         .urielConfig(UrielClientConfiguration.DEFAULT)
-                        .gabrielConfig(GabrielClientConfiguration.DEFAULT)
+                        .graderConfig(GraderConfiguration.DEFAULT)
+                        .rabbitMQConfig(RabbitMQConfiguration.DEFAULT)
                         .submissionConfig(SubmissionConfiguration.DEFAULT)
                         .statsConfig(StatsConfiguration.DEFAULT)
                         .build());

@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import java.util.Set;
-import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.gabriel.api.GraderConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
-import judgels.sealtiel.api.SealtielClientConfiguration;
+import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.service.api.client.Client;
 import org.immutables.value.Value;
 
@@ -20,11 +20,11 @@ public interface SandalphonConfiguration {
     @JsonProperty("jophiel")
     JophielClientConfiguration getJophielConfig();
 
-    @JsonProperty("sealtiel")
-    Optional<SealtielClientConfiguration> getSealtielConfig();
+    @JsonProperty("grader")
+    GraderConfiguration getGraderConfig();
 
-    @JsonProperty("gabriel")
-    Optional<GabrielClientConfiguration> getGabrielConfig();
+    @JsonProperty("rabbitmq")
+    Optional<RabbitMQConfiguration> getRabbitMQConfig();
 
     class Builder extends ImmutableSandalphonConfiguration.Builder {}
 }

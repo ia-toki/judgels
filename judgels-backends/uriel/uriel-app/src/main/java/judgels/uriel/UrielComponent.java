@@ -31,11 +31,11 @@ import judgels.uriel.contest.submission.programming.ContestSubmissionResource;
 import judgels.uriel.contest.supervisor.ContestSupervisorResource;
 import judgels.uriel.contest.web.ContestWebResource;
 import judgels.uriel.file.FileModule;
-import judgels.uriel.gabriel.GabrielModule;
+import judgels.uriel.grader.GraderModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.jophiel.JophielModule;
+import judgels.uriel.messaging.MessagingModule;
 import judgels.uriel.sandalphon.SandalphonModule;
-import judgels.uriel.sealtiel.SealtielModule;
 import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
@@ -45,10 +45,10 @@ import judgels.uriel.submission.programming.SubmissionModule;
         SubmissionModule.class,
         ItemSubmissionModule.class,
 
-        GabrielModule.class,
         JophielModule.class,
         SandalphonModule.class,
-        SealtielModule.class,
+        GraderModule.class,
+        MessagingModule.class,
 
         JudgelsModule.class,
         JudgelsApplicationModule.class,

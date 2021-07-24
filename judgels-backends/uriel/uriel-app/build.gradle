@@ -5,7 +5,7 @@ dependencies {
     implementation project(':uriel:uriel-api')
     implementation project(':jophiel:jophiel-client')
     implementation project(':sandalphon:sandalphon-client')
-    implementation project(':sealtiel:sealtiel-api')
+    implementation project(':judgels-commons:judgels-messaging')
 
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"

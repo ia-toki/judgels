@@ -13,13 +13,16 @@ gabriel:
   baseDataDir: var/data
 
   grading:
+    gradingRequestQueueName: gabriel-grading-request
     localSandalphonBaseDataDir: /judgels/sandalphon/var/data
     numWorkerThreads: 2
 
-  sealtiel:
-    baseUrl: http://localhost:9003
-    clientJid: JIDSECL-uriel-local
-    clientSecret: sealtiel-local
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: "/"
 
   moe:
     isolatePath: /judgels/moe/isolate

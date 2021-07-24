@@ -1,6 +1,7 @@
 rootProject.name = 'judgels-backends'
 
 include ':judgels-commons:judgels-fs'
+include ':judgels-commons:judgels-messaging'
 include ':judgels-commons:judgels-persistence-api'
 include ':judgels-commons:judgels-persistence-core'
 include ':judgels-commons:judgels-persistence-testing'
@@ -18,10 +19,6 @@ include ':jophiel:jophiel-dist'
 include ':sandalphon:sandalphon-app'
 include ':sandalphon:sandalphon-client'
 include ':sandalphon:sandalphon-api'
-
-include ':sealtiel:sealtiel-api'
-include ':sealtiel:sealtiel-app'
-include ':sealtiel:sealtiel-dist'
 
 include ':uriel:uriel-api'
 include ':uriel:uriel-app'

@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.client.WebTarget;
-import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.gabriel.api.GraderConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
-import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.service.jaxrs.JaxRsClients;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielApplication;
@@ -58,8 +58,8 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
                         .baseDataDir(baseDataDir.toString())
                         .jophielConfig(JophielClientConfiguration.DEFAULT)
                         .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
-                        .sealtielConfig(SealtielClientConfiguration.DEFAULT)
-                        .gabrielConfig(GabrielClientConfiguration.DEFAULT)
+                        .graderConfig(GraderConfiguration.DEFAULT)
+                        .rabbitMQConfig(RabbitMQConfiguration.DEFAULT)
                         .submissionConfig(SubmissionConfiguration.DEFAULT)
                         .fileConfig(FileConfiguration.DEFAULT)
                         .build());

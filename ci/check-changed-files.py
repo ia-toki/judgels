@@ -10,6 +10,7 @@ FORCE_CI = '[force ci]'
 
 MODULES = OrderedDict([
     (':judgels-commons:judgels-fs', set()),
+    (':judgels-commons:judgels-messaging', set()),
     (':judgels-commons:judgels-persistence-api', set()),
     (':judgels-commons:judgels-persistence-core', {':judgels-commons:judgels-persistence-testing'}),
     (':judgels-commons:judgels-persistence-testing', {':judgels-commons:judgels-persistence-api'}),
@@ -25,30 +26,25 @@ MODULES = OrderedDict([
     (':jophiel:jophiel-dist', set()),
     (':jophiel', {':jophiel:jophiel-app', ':jophiel:jophiel-client', ':jophiel:jophiel-api', ':jophiel:jophiel-dist'}),
 
-    (':sealtiel:sealtiel-api', {':judgels-commons:judgels-service-api'}),
-    (':sealtiel:sealtiel-app', {':sealtiel:sealtiel-api', ':judgels-commons:judgels-service-core'}),
-    (':sealtiel:sealtiel-dist', set()),
-    (':sealtiel', {':sealtiel:sealtiel-app', ':sealtiel:sealtiel-api', ':sealtiel:sealtiel-dist'}),
-
     (':gabriel:gabriel-api', set()),
     (':gabriel:gabriel-engine-api', {':gabriel:gabriel-api'}),
     (':gabriel:gabriel-engines', {':gabriel:gabriel-engine-api', ':judgels-commons:judgels-fs'}),
-    (':gabriel:gabriel-app', {':gabriel:gabriel-engines', ':sealtiel:sealtiel-api', ':judgels-commons:judgels-service-core'}),
+    (':gabriel:gabriel-app', {':gabriel:gabriel-engines', ':judgels-commons:judgels-messaging', ':judgels-commons:judgels-service-core'}),
     (':gabriel:gabriel-dist', set()),
     (':gabriel', {':gabriel:gabriel-app', ':gabriel:gabriel-dist', ':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
 
     (':sandalphon:sandalphon-api', {':jophiel:jophiel-api', ':gabriel:gabriel-api'}),
-    (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
+    (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':judgels-commons:judgels-messaging'}),
     (':sandalphon:sandalphon-app', {':sandalphon:sandalphon-client', ':jophiel:jophiel-client', ':gabriel:gabriel-engines'}),
     (':sandalphon', {':sandalphon:sandalphon-app', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client'}),
 
     (':uriel:uriel-api', {':sandalphon:sandalphon-api'}),
-    (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),
+    (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':judgels-commons:judgels-messaging'}),
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
 
     (':jerahmeel:jerahmeel-api', {':sandalphon:sandalphon-api'}),
-    (':jerahmeel:jerahmeel-app', {':jerahmeel:jerahmeel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),
+    (':jerahmeel:jerahmeel-app', {':jerahmeel:jerahmeel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':judgels-commons:judgels-messaging'}),
     (':jerahmeel:jerahmeel-dist', set()),
     (':jerahmeel', {':jerahmeel:jerahmeel-app', ':jerahmeel:jerahmeel-api', ':jerahmeel:jerahmeel-dist'}),
 
@@ -59,7 +55,6 @@ MODULES = OrderedDict([
 SERVICES = [
     ':jophiel',
     ':uriel',
-    ':sealtiel',
     ':sandalphon',
     ':jerahmeel',
     ':gabriel',

@@ -19,7 +19,7 @@ localhost
 [sandalphon]
 1.2.3.4 ansible_user=root
 
-[sealtiel]
+[rabbitmq]
 1.2.3.4 ansible_user=root
 
 [uriel]

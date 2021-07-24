@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
-import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.gabriel.api.GraderConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
-import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.uriel.file.FileConfiguration;
 import judgels.uriel.submission.programming.SubmissionConfiguration;
 import org.immutables.value.Value;
@@ -24,11 +24,11 @@ public interface UrielConfiguration {
     @JsonProperty("sandalphon")
     SandalphonClientConfiguration getSandalphonConfig();
 
-    @JsonProperty("sealtiel")
-    Optional<SealtielClientConfiguration> getSealtielConfig();
+    @JsonProperty("grader")
+    GraderConfiguration getGraderConfig();
 
-    @JsonProperty("gabriel")
-    Optional<GabrielClientConfiguration> getGabrielConfig();
+    @JsonProperty("rabbitmq")
+    Optional<RabbitMQConfiguration> getRabbitMQConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

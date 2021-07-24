@@ -3,8 +3,8 @@ apply from: '../../gradle/integTest.gradle'
 
 dependencies {
     implementation project(':gabriel:gabriel-engines')
-    implementation project(':sealtiel:sealtiel-api')
     implementation project(':judgels-commons:judgels-service-core')
+    implementation project(':judgels-commons:judgels-messaging')
 
     implementation "commons-io:commons-io:$apacheCommonsIoVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"

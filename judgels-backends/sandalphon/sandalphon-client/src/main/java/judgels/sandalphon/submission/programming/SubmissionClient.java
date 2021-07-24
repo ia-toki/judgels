@@ -8,31 +8,29 @@ import java.io.IOException;
 import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
+import judgels.messaging.MessageClient;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
-import judgels.sealtiel.api.message.MessageData;
-import judgels.sealtiel.api.message.MessageService;
-import judgels.service.api.client.BasicAuthHeader;
 
 public class SubmissionClient {
     private final SubmissionStore submissionStore;
-    private final BasicAuthHeader sealtielClientAuthHeader;
-    private final MessageService messageService;
-    private final String gabrielClientJid;
+    private final String gradingRequestQueueName;
+    private final String gradingResponseQueueName;
+    private final MessageClient messageClient;
     private final ObjectMapper mapper;
 
     public SubmissionClient(
             SubmissionStore submissionStore,
-            BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
-            String gabrielClientJid,
+            String gradingRequestQueueName,
+            String gradingResponseQueueName,
+            MessageClient messageClient,
             ObjectMapper mapper) {
 
         this.submissionStore = submissionStore;
-        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
-        this.messageService = messageService;
-        this.gabrielClientJid = gabrielClientJid;
+        this.gradingRequestQueueName = gradingRequestQueueName;
+        this.gradingResponseQueueName = gradingResponseQueueName;
+        this.messageClient = messageClient;
         this.mapper = mapper;
     }
 
@@ -70,17 +68,14 @@ public class SubmissionClient {
                 .submissionSource(source)
                 .build();
 
-        MessageData data;
         try {
-            data = new MessageData.Builder()
-                    .targetJid(gabrielClientJid)
-                    .type(GradingRequest.class.getSimpleName())
-                    .content(mapper.writeValueAsString(gradingRequest))
-                    .build();
+            messageClient.sendMessage(
+                    gradingResponseQueueName,
+                    gradingRequestQueueName,
+                    GradingRequest.class.getSimpleName(),
+                    mapper.writeValueAsString(gradingRequest));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        messageService.sendMessage(sealtielClientAuthHeader, data);
     }
 }

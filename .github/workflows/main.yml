@@ -9,6 +9,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      rabbitmq:
+        image: rabbitmq
+        ports:
+          - 5672:5672
     steps:
       - uses: actions/checkout@v2
         with:
@@ -38,10 +43,6 @@ jobs:
       - name: Test Jophiel
         if: steps.changed-files.outputs.jophiel == '1'
         run: ./judgels-backends/gradlew -p judgels-backends/jophiel check
-
-      - name: Test Sealtiel
-        if: steps.changed-files.outputs.sealtiel == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/sealtiel check
 
       - name: Test Sandalphon
         if: steps.changed-files.outputs.sandalphon == '1'
@@ -124,10 +125,6 @@ jobs:
       - name: Build Jophiel
         if: steps.changed-files.outputs.jophiel == '1'
         run: ./deployment/scripts/build_jophiel.sh
-
-      - name: Build Sealtiel
-        if: steps.changed-files.outputs.sealtiel == '1'
-        run: ./deployment/scripts/build_sealtiel.sh
 
       - name: Build Sandalphon
         if: steps.changed-files.outputs.sandalphon == '1'

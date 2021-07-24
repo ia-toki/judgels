@@ -4,11 +4,9 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.util.concurrent.ExecutorService;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import judgels.sealtiel.api.message.MessageService;
-import judgels.service.api.client.BasicAuthHeader;
+import judgels.messaging.MessageClient;
 
 @Module
 public class GradingModule {
@@ -26,8 +24,7 @@ public class GradingModule {
     @Provides
     @Singleton
     GradingRequestPoller gradingRequestPoller(
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            MessageClient messageClient,
             Provider<GradingWorker> workerFactory,
             LifecycleEnvironment lifecycleEnvironment) {
 
@@ -38,8 +35,8 @@ public class GradingModule {
 
         return new GradingRequestPoller(
                 executorService,
-                sealtielClientAuthHeader,
-                messageService,
+                gradingConfig.getGradingRequestQueueName(),
+                messageClient,
                 workerFactory);
     }
 }

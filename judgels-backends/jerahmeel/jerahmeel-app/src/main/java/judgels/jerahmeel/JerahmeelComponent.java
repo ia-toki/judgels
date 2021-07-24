@@ -9,14 +9,14 @@ import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
 import judgels.jerahmeel.chapter.problem.ChapterProblemResource;
 import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
-import judgels.jerahmeel.gabriel.GabrielModule;
+import judgels.jerahmeel.grader.GraderModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.jophiel.JophielModule;
+import judgels.jerahmeel.messaging.MessagingModule;
 import judgels.jerahmeel.problem.ProblemResource;
 import judgels.jerahmeel.problemset.ProblemSetResource;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemResource;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
-import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.stats.UserStatsResource;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
@@ -38,11 +38,11 @@ import judgels.service.hibernate.JudgelsHibernateModule;
         SubmissionModule.class,
         ItemSubmissionModule.class,
 
-        GabrielModule.class,
         JophielModule.class,
         SandalphonModule.class,
-        SealtielModule.class,
         UrielModule.class,
+        GraderModule.class,
+        MessagingModule.class,
 
         JudgelsModule.class,
         JudgelsApplicationModule.class,

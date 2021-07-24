@@ -13,6 +13,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
+import judgels.messaging.MessageClient;
 import judgels.persistence.ActorProvider;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
@@ -20,9 +21,7 @@ import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.sealtiel.api.message.MessageService;
 import judgels.service.actor.JudgelsActorProvider;
-import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.client.ClientChecker;
 import org.hibernate.SessionFactory;
 import org.iatoki.judgels.Git;
@@ -74,16 +73,16 @@ public final class SandalphonModule extends AbstractModule {
     @Singleton
     SubmissionClient submissionClient(
             SubmissionStore submissionStore,
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
-            @Named("gabrielClientJid") String gabrielClientJid,
+            @Named("gradingRequestQueueName") String gradingRequestQueueName,
+            @Named("gradingResponseQueueName") String gradingResponseQueueName,
+            MessageClient messageClient,
             ObjectMapper mapper) {
 
         return new SubmissionClient(
                 submissionStore,
-                sealtielClientAuthHeader,
-                messageService,
-                gabrielClientJid,
+                gradingRequestQueueName,
+                gradingResponseQueueName,
+                messageClient,
                 mapper);
     }
 
@@ -111,13 +110,13 @@ public final class SandalphonModule extends AbstractModule {
     @Singleton
     GradingResponsePoller gradingResponsePoller(
             ActorSystem actorSystem,
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            @Named("gradingResponseQueueName") String queueName,
+            MessageClient messageClient,
             GradingResponseProcessor processor) {
 
         return new GradingResponsePoller(
-                sealtielClientAuthHeader,
-                messageService,
+                queueName,
+                messageClient,
                 actorSystem.scheduler(),
                 actorSystem.dispatcher(),
                 processor);
@@ -128,16 +127,14 @@ public final class SandalphonModule extends AbstractModule {
     GradingResponseProcessor gradingResponseProcessor(
             JPAApi jpaApi,
             ObjectMapper mapper,
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            MessageClient messageClient,
             SubmissionStore submissionStore) {
 
         return new GradingResponseProcessor(
                 jpaApi,
                 mapper,
                 submissionStore,
-                sealtielClientAuthHeader,
-                messageService);
+                messageClient);
     }
 
     @Provides

@@ -3,10 +3,10 @@ package org.iatoki.judgels.sandalphon;
 import com.typesafe.config.Config;
 import java.util.HashSet;
 import java.util.Set;
-import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.gabriel.api.GraderConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
-import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.service.api.client.Client;
 
 public final class SandalphonProperties {
@@ -27,22 +27,20 @@ public final class SandalphonProperties {
                 .clients(clients)
                 .jophielConfig(new JophielClientConfiguration.Builder()
                         .baseUrl(config.getString("jophiel.baseUrl"))
+                        .build())
+                .graderConfig(new GraderConfiguration.Builder()
+                        .gradingRequestQueueName(config.getString("grader.gradingRequestQueueName"))
+                        .gradingResponseQueueName(config.getString("grader.gradingResponseQueueName"))
                         .build());
 
-        if (config.hasPath("sealtiel.baseUrl")) {
-            sandalphonConfig.sealtielConfig(new SealtielClientConfiguration.Builder()
-                    .baseUrl(config.getString("sealtiel.baseUrl"))
-                    .clientJid(config.getString("sealtiel.clientJid"))
-                    .clientSecret(config.getString("sealtiel.clientSecret"))
+        if (config.hasPath("rabbitmq.host")) {
+            sandalphonConfig.rabbitMQConfig(new RabbitMQConfiguration.Builder()
+                    .host(config.getString("rabbitmq.host"))
+                    .port(config.getInt("rabbitmq.port"))
+                    .username(config.getString("rabbitmq.username"))
+                    .password(config.getString("rabbitmq.password"))
+                    .virtualHost(config.getString("rabbitmq.virtualHost"))
                     .build());
-        }
-
-        if (config.hasPath("gabriel.clientJid")) {
-            sandalphonConfig.gabrielConfig(new GabrielClientConfiguration.Builder()
-                    .clientJid(config.getString("gabriel.clientJid"))
-                    .build());
-        } else {
-            sandalphonConfig.gabrielConfig(GabrielClientConfiguration.DEFAULT);
         }
 
         return sandalphonConfig.build();

@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.Optional;
 import judgels.gabriel.api.GradingResponse;
+import judgels.messaging.MessageClient;
+import judgels.messaging.api.Message;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.sealtiel.api.message.Message;
-import judgels.sealtiel.api.message.MessageService;
-import judgels.service.api.client.BasicAuthHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import play.db.jpa.JPAApi;
@@ -22,21 +21,18 @@ public final class GradingResponseProcessor {
     private final JPAApi jpaApi;
     private final ObjectMapper mapper;
     private final SubmissionStore submissionStore;
-    private final BasicAuthHeader sealtielClientAuthHeader;
-    private final MessageService messageService;
+    private final MessageClient messageClient;
 
     public GradingResponseProcessor(
             JPAApi jpaApi,
             ObjectMapper mapper,
             SubmissionStore submissionStore,
-            BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService) {
+            MessageClient messageClient) {
 
         this.jpaApi = jpaApi;
         this.mapper = mapper;
         this.submissionStore = submissionStore;
-        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
-        this.messageService = messageService;
+        this.messageClient = messageClient;
     }
 
     public void process(Message message) {
@@ -52,7 +48,7 @@ public final class GradingResponseProcessor {
                             submissionStore.updateGrading(response.getGradingJid(), response.getResult());
                     if (submission.isPresent()) {
                         gradingExists = true;
-                        messageService.confirmMessage(sealtielClientAuthHeader, message.getId());
+                        messageClient.confirmMessage(message.getId());
                         break;
                     }
 

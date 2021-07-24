@@ -52,13 +52,16 @@ uriel:
     clientJid: JIDSACL-uriel-local
     clientSecret: sandalphon-local
 
-  sealtiel:
-    baseUrl: http://localhost:9003
-    clientJid: JIDSECL-uriel-local
-    clientSecret: sealtiel-local
+  grader:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: uriel-grading-response
 
-  gabriel:
-    clientJid: JIDSECL-gabriel-local
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: "/"
 
   aws:
     accessKey: xxx

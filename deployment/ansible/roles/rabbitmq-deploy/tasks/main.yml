@@ -16,8 +16,8 @@
         max-file: "2"
       network_mode: host
       env:
-        RABBITMQ_DEFAULT_USER: "{{ rabbitmq_mgmt_username }}"
-        RABBITMQ_DEFAULT_PASS: "{{ rabbitmq_mgmt_password }}"
+        RABBITMQ_DEFAULT_USER: "{{ rabbitmq_username }}"
+        RABBITMQ_DEFAULT_PASS: "{{ rabbitmq_password }}"
 
   - name: Allow rabbitmq management traffic through the firewall
     ufw:

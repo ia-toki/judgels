@@ -5,7 +5,7 @@ dependencies {
     api project(':judgels-commons:judgels-fs')
     api project(':judgels-commons:judgels-persistence-core')
     api project(':judgels-commons:judgels-service-persistence')
-    api project(':sealtiel:sealtiel-api')
+    api project(':judgels-commons:judgels-messaging')
 
     api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     api "io.dropwizard:dropwizard-forms:$dropwizardVersion"

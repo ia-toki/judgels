@@ -6,10 +6,9 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Optional;
 import judgels.gabriel.api.GradingResponse;
+import judgels.messaging.MessageClient;
+import judgels.messaging.api.Message;
 import judgels.sandalphon.api.submission.programming.Submission;
-import judgels.sealtiel.api.message.Message;
-import judgels.sealtiel.api.message.MessageService;
-import judgels.service.api.client.BasicAuthHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,21 +20,18 @@ public class GradingResponseProcessor {
 
     private final ObjectMapper mapper;
     private final SubmissionStore submissionStore;
-    private final BasicAuthHeader sealtielClientAuthHeader;
-    private final MessageService messageService;
+    private final MessageClient messageClient;
     private final SubmissionConsumer submissionConsumer;
 
     public GradingResponseProcessor(
             ObjectMapper mapper,
             SubmissionStore submissionStore,
-            BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            MessageClient messageClient,
             SubmissionConsumer submissionConsumer) {
 
         this.mapper = mapper;
         this.submissionStore = submissionStore;
-        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
-        this.messageService = messageService;
+        this.messageClient = messageClient;
         this.submissionConsumer = submissionConsumer;
     }
 
@@ -58,7 +54,7 @@ public class GradingResponseProcessor {
             if (submission.isPresent()) {
                 gradingExists = true;
                 submissionConsumer.accept(submission.get());
-                messageService.confirmMessage(sealtielClientAuthHeader, message.getId());
+                messageClient.confirmMessage(message.getId());
                 break;
             }
 

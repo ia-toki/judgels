@@ -32,10 +32,8 @@ import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
 import judgels.gabriel.sandboxes.moe.MoeSandboxFactory;
-import judgels.sealtiel.api.message.Message;
-import judgels.sealtiel.api.message.MessageData;
-import judgels.sealtiel.api.message.MessageService;
-import judgels.service.api.client.BasicAuthHeader;
+import judgels.messaging.MessageClient;
+import judgels.messaging.api.Message;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +46,7 @@ public class GradingWorker {
     private final GradingConfiguration gradingConfig;
     private final Path workersDir;
     private final Path problemsDir;
-    private final BasicAuthHeader sealtielClientAuthHeader;
-    private final MessageService messageService;
+    private final MessageClient messageClient;
     private final Optional<MoeSandboxFactory> moeSandboxFactory;
 
     private Message message;
@@ -76,15 +73,13 @@ public class GradingWorker {
             GradingConfiguration gradingConfig,
             @Named("workersDir") Path workersDir,
             @Named("problemsDir") Path problemsDir,
-            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService,
+            MessageClient messageClient,
             Optional<MoeSandboxFactory> moeSandboxFactory) {
 
         this.gradingConfig = gradingConfig;
         this.workersDir = workersDir;
         this.problemsDir = problemsDir;
-        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
-        this.messageService = messageService;
+        this.messageClient = messageClient;
         this.moeSandboxFactory = moeSandboxFactory;
     }
 
@@ -164,13 +159,12 @@ public class GradingWorker {
                 .build();
 
         try {
-            MessageData reply = new MessageData.Builder()
-                    .targetJid(message.getSourceJid())
-                    .type("GradingResponse")
-                    .content(MAPPER.writeValueAsString(response))
-                    .build();
-            messageService.sendMessage(sealtielClientAuthHeader, reply);
-            messageService.confirmMessage(sealtielClientAuthHeader, message.getId());
+            messageClient.sendMessage(
+                    gradingConfig.getGradingRequestQueueName(),
+                    message.getSourceQueueName(),
+                    "GradingResponse",
+                    MAPPER.writeValueAsString(response));
+            messageClient.confirmMessage(message.getId());
         }  catch (IOException | RemoteException e) {
             throw new RuntimeException("Grading result failed to send!", e);
         }

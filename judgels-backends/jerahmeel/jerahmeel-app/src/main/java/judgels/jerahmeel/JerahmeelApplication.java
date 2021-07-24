@@ -7,11 +7,11 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import judgels.fs.aws.AwsModule;
-import judgels.jerahmeel.gabriel.GabrielModule;
+import judgels.jerahmeel.grader.GraderModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateBundle;
 import judgels.jerahmeel.jophiel.JophielModule;
+import judgels.jerahmeel.messaging.MessagingModule;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
-import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.uriel.UrielModule;
 import judgels.service.JudgelsApplicationModule;
@@ -41,13 +41,13 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
                 .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
-                .gabrielModule(new GabrielModule(jerahmeelConfig.getGabrielConfig()))
                 .jophielModule(new JophielModule(jerahmeelConfig.getJophielConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
-                .sealtielModule(new SealtielModule(jerahmeelConfig.getSealtielConfig()))
                 .urielModule(new UrielModule(jerahmeelConfig.getUrielConfig()))
+                .graderModule(new GraderModule(jerahmeelConfig.getGraderConfig()))
+                .messagingModule(new MessagingModule(jerahmeelConfig.getRabbitMQConfig()))
                 .submissionModule(new SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),
                         jerahmeelConfig.getStatsConfig()))
@@ -70,7 +70,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         env.jersey().register(component.userStatsResource());
         env.jersey().register(component.pingResource());
 
-        if (jerahmeelConfig.getSealtielConfig().isPresent()) {
+        if (jerahmeelConfig.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
                     "grading-response-poller",
                     component.gradingResponsePoller());

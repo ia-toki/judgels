@@ -1,0 +1,13 @@
+apply from: '../../gradle/java.gradle'
+
+dependencies {
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"
+
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}

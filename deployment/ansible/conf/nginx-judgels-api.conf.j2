@@ -4,12 +4,6 @@ upstream jophiel {
     {% endfor %}
 }
 
-upstream sealtiel {
-    {% for host in groups['sealtiel'] %}
-    server {{ host }}:9003;
-    {% endfor %}
-}
-
 upstream uriel {
     {% for host in groups['uriel'] %}
     server {{ host }}:9004;
@@ -46,16 +40,6 @@ server {
         rewrite ^(?:/api)?(.*) /api$1 break;
         include proxy_params;
         proxy_pass http://jophiel;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
-    location ~ /(api/)?v2/message {
-        rewrite ^(?:/api)?(.*) /api$1 break;
-        include proxy_params;
-        proxy_pass http://sealtiel;
         proxy_set_header Connection "";
         proxy_http_version 1.1;
         proxy_buffering off;

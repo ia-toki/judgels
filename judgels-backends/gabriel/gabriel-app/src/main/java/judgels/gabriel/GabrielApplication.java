@@ -3,8 +3,8 @@ package judgels.gabriel;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 import judgels.gabriel.grading.GradingModule;
+import judgels.gabriel.messaging.MessagingModule;
 import judgels.gabriel.moe.MoeModule;
-import judgels.gabriel.sealtiel.SealtielModule;
 import judgels.service.JudgelsApplicationModule;
 
 public class GabrielApplication extends Application<GabrielApplicationConfiguration> {
@@ -19,8 +19,8 @@ public class GabrielApplication extends Application<GabrielApplicationConfigurat
                 .judgelsApplicationModule(new JudgelsApplicationModule(environment))
                 .gabrielModule(new GabrielModule(gabrielConfig))
                 .gradingModule(new GradingModule(gabrielConfig.getGradingWorkerConfig()))
+                .messagingModule(new MessagingModule(gabrielConfig.getRabbitMQConfig()))
                 .moeModule(new MoeModule(gabrielConfig.getMoeConfig()))
-                .sealtielModule(new SealtielModule(gabrielConfig.getSealtielConfig()))
                 .build();
 
         component.scheduler().scheduleOnce(
