@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet author="fushar" id="initial-1">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_legacy_session">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_legacy_session">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -17,7 +17,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-2">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_role_admin">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_role_admin">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -32,7 +32,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-3">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_session">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_session">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -48,7 +48,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-4">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -78,7 +78,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-5">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_info">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -107,7 +107,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-6">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_rating">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_rating">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -129,7 +129,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-7">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_rating_event">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_rating_event">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -145,7 +145,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-8">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_registration_email">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_registration_email">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -171,7 +171,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-9">
-        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_reset_password">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_reset_password">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -195,74 +195,74 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-10">
-        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="time, eventJid" constraintName="time_eventJid" schemaName="judgels_jophiel" tableName="jophiel_user_rating_event"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="time, eventJid" constraintName="time_eventJid" schemaName="judgels" tableName="jophiel_user_rating_event"/>
     </changeSet>
     <changeSet author="fushar" id="initial-11">
-        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="time, userJid" constraintName="time_userJid" schemaName="judgels_jophiel" tableName="jophiel_user_rating"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="time, userJid" constraintName="time_userJid" schemaName="judgels" tableName="jophiel_user_rating"/>
     </changeSet>
     <changeSet author="fushar" id="initial-12">
-        <createIndex catalogName="judgels_jophiel" indexName="country" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createIndex catalogName="judgels" indexName="country" schemaName="judgels" tableName="jophiel_user_info">
             <column name="country"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-13">
-        <createIndex catalogName="judgels_jophiel" indexName="createdAt" schemaName="judgels_jophiel" tableName="jophiel_user">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jophiel_user">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-14">
-        <createIndex catalogName="judgels_jophiel" indexName="createdAt" schemaName="judgels_jophiel" tableName="jophiel_user_reset_password">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jophiel_user_reset_password">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-15">
-        <createIndex catalogName="judgels_jophiel" indexName="gender" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createIndex catalogName="judgels" indexName="gender" schemaName="judgels" tableName="jophiel_user_info">
             <column name="gender"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-16">
-        <createIndex catalogName="judgels_jophiel" indexName="institutionCity" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createIndex catalogName="judgels" indexName="institutionCity" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionCity"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-17">
-        <createIndex catalogName="judgels_jophiel" indexName="institutionCountry" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createIndex catalogName="judgels" indexName="institutionCountry" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionCountry"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-18">
-        <createIndex catalogName="judgels_jophiel" indexName="institutionName" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createIndex catalogName="judgels" indexName="institutionName" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionName"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-19">
-        <createIndex catalogName="judgels_jophiel" indexName="institutionProvince" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createIndex catalogName="judgels" indexName="institutionProvince" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionProvince"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-20">
-        <createIndex catalogName="judgels_jophiel" indexName="name" schemaName="judgels_jophiel" tableName="jophiel_user_info">
+        <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jophiel_user_info">
             <column name="name"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-21">
-        <createIndex catalogName="judgels_jophiel" indexName="time_publicRating" schemaName="judgels_jophiel" tableName="jophiel_user_rating">
+        <createIndex catalogName="judgels" indexName="time_publicRating" schemaName="judgels" tableName="jophiel_user_rating">
             <column name="time"/>
             <column name="publicRating"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-22">
-        <createIndex catalogName="judgels_jophiel" indexName="userJid" schemaName="judgels_jophiel" tableName="jophiel_session">
+        <createIndex catalogName="judgels" indexName="userJid" schemaName="judgels" tableName="jophiel_session">
             <column name="userJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-23">
-        <createIndex catalogName="judgels_jophiel" indexName="userJid" schemaName="judgels_jophiel" tableName="jophiel_user_rating">
+        <createIndex catalogName="judgels" indexName="userJid" schemaName="judgels" tableName="jophiel_user_rating">
             <column name="userJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-24">
-        <createIndex catalogName="judgels_jophiel" indexName="userJid" schemaName="judgels_jophiel" tableName="jophiel_user_reset_password">
+        <createIndex catalogName="judgels" indexName="userJid" schemaName="judgels" tableName="jophiel_user_reset_password">
             <column name="userJid"/>
         </createIndex>
     </changeSet>

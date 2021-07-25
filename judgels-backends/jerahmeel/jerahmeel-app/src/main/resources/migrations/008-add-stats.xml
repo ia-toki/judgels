@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet author="fushar" id="add-stats-1">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_stats_user">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -24,7 +24,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="add-stats-2">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -59,7 +59,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="add-stats-3">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem_set">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_stats_user_problem_set">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -85,7 +85,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="add-stats-4">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_chapter">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_stats_user_chapter">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -111,7 +111,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="add-stats-5">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_course">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_stats_user_course">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -137,46 +137,46 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="add-stats-6">
-        <createIndex catalogName="judgels_jerahmeel" indexName="score" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user">
+        <createIndex catalogName="judgels" indexName="score" schemaName="judgels" tableName="jerahmeel_stats_user">
             <column name="score"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="add-stats-7">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="userJid, problemJid" constraintName="userJid_problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem"/>
-        <createIndex catalogName="judgels_jerahmeel" indexName="problemJid_verdict" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem">
+        <addUniqueConstraint catalogName="judgels" columnNames="userJid, problemJid" constraintName="userJid_problemJid" schemaName="judgels" tableName="jerahmeel_stats_user_problem"/>
+        <createIndex catalogName="judgels" indexName="problemJid_verdict" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="verdict"/>
         </createIndex>
-        <createIndex catalogName="judgels_jerahmeel" indexName="problemJid_score" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem">
+        <createIndex catalogName="judgels" indexName="problemJid_score" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="score"/>
         </createIndex>
-        <createIndex catalogName="judgels_jerahmeel" indexName="problemJid_time" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem">
+        <createIndex catalogName="judgels" indexName="problemJid_time" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="time"/>
         </createIndex>
-        <createIndex catalogName="judgels_jerahmeel" indexName="problemJid_memory" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem">
+        <createIndex catalogName="judgels" indexName="problemJid_memory" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="memory"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="add-stats-8">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="userJid, problemSetJid" constraintName="userJid_problemSetJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem_set"/>
-        <createIndex catalogName="judgels_jerahmeel" indexName="problemSetJid_score" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_problem_set">
+        <addUniqueConstraint catalogName="judgels" columnNames="userJid, problemSetJid" constraintName="userJid_problemSetJid" schemaName="judgels" tableName="jerahmeel_stats_user_problem_set"/>
+        <createIndex catalogName="judgels" indexName="problemSetJid_score" schemaName="judgels" tableName="jerahmeel_stats_user_problem_set">
             <column name="problemSetJid"/>
             <column name="score"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="add-stats-9">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="userJid, chapterJid" constraintName="userJid_chapterJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_chapter"/>
-        <createIndex catalogName="judgels_jerahmeel" indexName="chapterJid_progress" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_chapter">
+        <addUniqueConstraint catalogName="judgels" columnNames="userJid, chapterJid" constraintName="userJid_chapterJid" schemaName="judgels" tableName="jerahmeel_stats_user_chapter"/>
+        <createIndex catalogName="judgels" indexName="chapterJid_progress" schemaName="judgels" tableName="jerahmeel_stats_user_chapter">
             <column name="chapterJid"/>
             <column name="progress"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="add-stats-10">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="userJid, courseJid" constraintName="userJid_courseJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_course"/>
-        <createIndex catalogName="judgels_jerahmeel" indexName="courseJid_progress" schemaName="judgels_jerahmeel" tableName="jerahmeel_stats_user_course">
+        <addUniqueConstraint catalogName="judgels" columnNames="userJid, courseJid" constraintName="userJid_courseJid" schemaName="judgels" tableName="jerahmeel_stats_user_course"/>
+        <createIndex catalogName="judgels" indexName="courseJid_progress" schemaName="judgels" tableName="jerahmeel_stats_user_course">
             <column name="courseJid"/>
             <column name="progress"/>
         </createIndex>

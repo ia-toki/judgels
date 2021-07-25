@@ -30,6 +30,8 @@ task dbMigrate(type: JavaExec, dependsOn: jar) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'judgels.jerahmeel.JerahmeelApplication'
     args = [ 'db', 'migrate', 'var/conf/jerahmeel.yml' ]
+    systemProperty 'liquibase.databaseChangeLogTableName', 'jerahmeel_DATABASECHANGELOG'
+    systemProperty 'liquibase.databaseChangeLogLockTableName', 'jerahmeel_DATABASECHANGELOGLOCK'
 }
 
 task dbDump(type: JavaExec, dependsOn: jar) {

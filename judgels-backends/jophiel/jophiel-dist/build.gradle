@@ -30,6 +30,8 @@ task dbMigrate(type: JavaExec, dependsOn: jar) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'judgels.jophiel.JophielApplication'
     args = [ 'db', 'migrate', 'var/conf/jophiel.yml' ]
+    systemProperty 'liquibase.databaseChangeLogTableName', 'jophiel_DATABASECHANGELOG'
+    systemProperty 'liquibase.databaseChangeLogLockTableName', 'jophiel_DATABASECHANGELOGLOCK'
 }
 
 task dbDump(type: JavaExec, dependsOn: jar) {

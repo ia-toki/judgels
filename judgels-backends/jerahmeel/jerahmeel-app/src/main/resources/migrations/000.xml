@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet author="fushar" id="initial-1">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_archive">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -28,7 +28,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-2">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_grading">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_bundle_grading">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -55,7 +55,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-3">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -81,7 +81,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-4">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_chapter">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -107,7 +107,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-5">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_dependency">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_chapter_dependency">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -130,7 +130,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-6">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_lesson">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_chapter_lesson">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -159,7 +159,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-7">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_problem">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_chapter_problem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -191,7 +191,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-8">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_course">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_course">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -217,7 +217,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-9">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_course_chapter">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_course_chapter">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -243,7 +243,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-10">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_curriculum">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -269,7 +269,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-11">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum_course">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_curriculum_course">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -295,7 +295,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-12">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -324,7 +324,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-13">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set_problem">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_problem_set_problem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -356,7 +356,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-14">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_grading">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_programming_grading">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -389,7 +389,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-15">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -421,7 +421,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-16">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_role_admin">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_role_admin">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -436,7 +436,7 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-17">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_user_item">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_user_item">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -462,209 +462,209 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-18">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="chapterJid, alias" constraintName="chapterJid_alias" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_lesson"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, alias" constraintName="chapterJid_alias" schemaName="judgels" tableName="jerahmeel_chapter_lesson"/>
     </changeSet>
     <changeSet author="fushar" id="initial-19">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="chapterJid, alias" constraintName="chapterJid_alias" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_problem"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, alias" constraintName="chapterJid_alias" schemaName="judgels" tableName="jerahmeel_chapter_problem"/>
     </changeSet>
     <changeSet author="fushar" id="initial-20">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="chapterJid, dependedChapterJid" constraintName="chapterJid_dependedChapterJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_dependency"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, dependedChapterJid" constraintName="chapterJid_dependedChapterJid" schemaName="judgels" tableName="jerahmeel_chapter_dependency"/>
     </changeSet>
     <changeSet author="fushar" id="initial-21">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="chapterJid, lessonJid" constraintName="chapterJid_lessonJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_lesson"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, lessonJid" constraintName="chapterJid_lessonJid" schemaName="judgels" tableName="jerahmeel_chapter_lesson"/>
     </changeSet>
     <changeSet author="fushar" id="initial-22">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="chapterJid, problemJid" constraintName="chapterJid_problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter_problem"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, problemJid" constraintName="chapterJid_problemJid" schemaName="judgels" tableName="jerahmeel_chapter_problem"/>
     </changeSet>
     <changeSet author="fushar" id="initial-23">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="courseJid, alias" constraintName="courseJid_alias" schemaName="judgels_jerahmeel" tableName="jerahmeel_course_chapter"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="courseJid, alias" constraintName="courseJid_alias" schemaName="judgels" tableName="jerahmeel_course_chapter"/>
     </changeSet>
     <changeSet author="fushar" id="initial-24">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="courseJid, chapterJid" constraintName="courseJid_chapterJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_course_chapter"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="courseJid, chapterJid" constraintName="courseJid_chapterJid" schemaName="judgels" tableName="jerahmeel_course_chapter"/>
     </changeSet>
     <changeSet author="fushar" id="initial-25">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="curriculumJid, alias" constraintName="curriculumJid_alias" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum_course"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="curriculumJid, alias" constraintName="curriculumJid_alias" schemaName="judgels" tableName="jerahmeel_curriculum_course"/>
     </changeSet>
     <changeSet author="fushar" id="initial-26">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="curriculumJid, courseJid" constraintName="curriculumJid_courseJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum_course"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="curriculumJid, courseJid" constraintName="curriculumJid_courseJid" schemaName="judgels" tableName="jerahmeel_curriculum_course"/>
     </changeSet>
     <changeSet author="fushar" id="initial-27">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="problemSetJid, alias" constraintName="problemSetJid_alias" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set_problem"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="problemSetJid, alias" constraintName="problemSetJid_alias" schemaName="judgels" tableName="jerahmeel_problem_set_problem"/>
     </changeSet>
     <changeSet author="fushar" id="initial-28">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="problemSetJid, problemJid" constraintName="problemSetJid_problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set_problem"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="problemSetJid, problemJid" constraintName="problemSetJid_problemJid" schemaName="judgels" tableName="jerahmeel_problem_set_problem"/>
     </changeSet>
     <changeSet author="fushar" id="initial-29">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="userJid, itemJid" constraintName="userJid_itemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_user_item"/>
+        <addUniqueConstraint catalogName="judgels" columnNames="userJid, itemJid" constraintName="userJid_itemJid" schemaName="judgels" tableName="jerahmeel_user_item"/>
     </changeSet>
     <changeSet author="fushar" id="initial-30">
-        <createIndex catalogName="judgels_jerahmeel" indexName="archiveJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
+        <createIndex catalogName="judgels" indexName="archiveJid" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="archiveJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-31">
-        <createIndex catalogName="judgels_jerahmeel" indexName="containerJid_createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="containerJid_createdAt" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-32">
-        <createIndex catalogName="judgels_jerahmeel" indexName="containerJid_createdBy" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
+        <createIndex catalogName="judgels" indexName="containerJid_createdBy" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="containerJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-33">
-        <createIndex catalogName="judgels_jerahmeel" indexName="containerJid_createdBy" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="containerJid_createdBy" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-34">
-        <createIndex catalogName="judgels_jerahmeel" indexName="containerJid_gradingLanguage" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="containerJid_gradingLanguage" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="gradingLanguage"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-35">
-        <createIndex catalogName="judgels_jerahmeel" indexName="containerJid_problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
+        <createIndex catalogName="judgels" indexName="containerJid_problemJid" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="containerJid"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-36">
-        <createIndex catalogName="judgels_jerahmeel" indexName="containerJid_problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="containerJid_problemJid" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-37">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-38">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-39">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_chapter">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-40">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_course">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_course">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-41">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_curriculum">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-42">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-43">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-44">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdBy" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
+        <createIndex catalogName="judgels" indexName="createdBy" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-45">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdBy" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="createdBy" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-46">
-        <createIndex catalogName="judgels_jerahmeel" indexName="gradingLanguage" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="gradingLanguage" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="gradingLanguage"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-47">
-        <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
+        <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="name"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-48">
-        <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter">
+        <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_chapter">
             <column name="name"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-49">
-        <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_course">
+        <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_course">
             <column name="name"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-50">
-        <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
+        <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_curriculum">
             <column name="name"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-51">
-        <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
+        <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="name"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-52">
-        <createIndex catalogName="judgels_jerahmeel" indexName="parentJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
+        <createIndex catalogName="judgels" indexName="parentJid" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="parentJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-53">
-        <createIndex catalogName="judgels_jerahmeel" indexName="problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
+        <createIndex catalogName="judgels" indexName="problemJid" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-54">
-        <createIndex catalogName="judgels_jerahmeel" indexName="problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels" indexName="problemJid" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-55">
-        <createIndex catalogName="judgels_jerahmeel" indexName="submissionJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_grading">
+        <createIndex catalogName="judgels" indexName="submissionJid" schemaName="judgels" tableName="jerahmeel_bundle_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-56">
-        <createIndex catalogName="judgels_jerahmeel" indexName="submissionJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_grading">
+        <createIndex catalogName="judgels" indexName="submissionJid" schemaName="judgels" tableName="jerahmeel_programming_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-57">
-        <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
+        <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-58">
-        <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter">
+        <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_chapter">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-59">
-        <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_course">
+        <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_course">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-60">
-        <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
+        <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_curriculum">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-61">
-        <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
+        <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-62">
-        <createIndex catalogName="judgels_jerahmeel" indexName="verdictCode" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_grading">
+        <createIndex catalogName="judgels" indexName="verdictCode" schemaName="judgels" tableName="jerahmeel_programming_grading">
             <column name="verdictCode"/>
         </createIndex>
     </changeSet>

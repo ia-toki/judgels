@@ -30,6 +30,8 @@ task dbMigrate(type: JavaExec, dependsOn: jar) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'judgels.uriel.UrielApplication'
     args = [ 'db', 'migrate', 'var/conf/uriel.yml' ]
+    systemProperty 'liquibase.databaseChangeLogTableName', 'uriel_DATABASECHANGELOG'
+    systemProperty 'liquibase.databaseChangeLogLockTableName', 'uriel_DATABASECHANGELOGLOCK'
 }
 
 task dbRollbackOnce(type: JavaExec, dependsOn: jar) {

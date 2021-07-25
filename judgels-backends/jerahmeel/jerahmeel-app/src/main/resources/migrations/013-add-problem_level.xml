@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet author="fushar" id="add-problem_level-1">
-        <createTable catalogName="judgels_jerahmeel" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_level">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_problem_level">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -27,8 +27,8 @@
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="add-problem_level-2">
-        <addUniqueConstraint catalogName="judgels_jerahmeel" columnNames="problemJid, userJid" constraintName="problemJid_userJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_level"/>
-        <createIndex catalogName="judgels_jerahmeel" indexName="level" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_level">
+        <addUniqueConstraint catalogName="judgels" columnNames="problemJid, userJid" constraintName="problemJid_userJid" schemaName="judgels" tableName="jerahmeel_problem_level"/>
+        <createIndex catalogName="judgels" indexName="level" schemaName="judgels" tableName="jerahmeel_problem_level">
             <column name="level"/>
         </createIndex>
     </changeSet>
