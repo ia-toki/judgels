@@ -20,4 +20,6 @@
     <include file="migrations/011-add-index-contest-jid-to-problem_contest.xml"/>
     <include file="migrations/012-add-contest_date-to-problem_set.xml"/>
     <include file="migrations/013-add-problem_level.xml"/>
+    <include file="migrations/014-remove-user_item.xml"/>
+    <include file="migrations/015-remove-role_admin.xml"/>
 </databaseChangeLog>
