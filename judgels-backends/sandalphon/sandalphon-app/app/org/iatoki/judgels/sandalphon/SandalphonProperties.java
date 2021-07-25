@@ -3,7 +3,7 @@ package org.iatoki.judgels.sandalphon;
 import com.typesafe.config.Config;
 import java.util.HashSet;
 import java.util.Set;
-import judgels.gabriel.api.GraderConfiguration;
+import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
@@ -28,7 +28,7 @@ public final class SandalphonProperties {
                 .jophielConfig(new JophielClientConfiguration.Builder()
                         .baseUrl(config.getString("jophiel.baseUrl"))
                         .build())
-                .graderConfig(new GraderConfiguration.Builder()
+                .graderConfig(new GabrielClientConfiguration.Builder()
                         .gradingRequestQueueName(config.getString("grader.gradingRequestQueueName"))
                         .gradingResponseQueueName(config.getString("grader.gradingResponseQueueName"))
                         .build());

@@ -9,7 +9,7 @@ import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
 import judgels.jerahmeel.chapter.problem.ChapterProblemResource;
 import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
-import judgels.jerahmeel.grader.GraderModule;
+import judgels.jerahmeel.gabriel.GabrielModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.messaging.MessagingModule;
@@ -41,7 +41,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
         JophielModule.class,
         SandalphonModule.class,
         UrielModule.class,
-        GraderModule.class,
+        GabrielModule.class,
         MessagingModule.class,
 
         JudgelsModule.class,

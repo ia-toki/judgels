@@ -13,7 +13,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.uriel.file.FileModule;
-import judgels.uriel.grader.GraderModule;
+import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.messaging.MessagingModule;
@@ -47,7 +47,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
-                .graderModule(new GraderModule(urielConfig.getGraderConfig()))
+                .gabrielModule(new GabrielModule(urielConfig.getGabrielConfig()))
                 .messagingModule(new MessagingModule(urielConfig.getRabbitMQConfig()))
                 .submissionModule(new SubmissionModule(urielConfig.getSubmissionConfig()))
                 .urielModule(new UrielModule(urielConfig))

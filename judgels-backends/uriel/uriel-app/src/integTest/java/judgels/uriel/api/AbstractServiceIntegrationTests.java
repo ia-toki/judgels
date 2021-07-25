@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.client.WebTarget;
-import judgels.gabriel.api.GraderConfiguration;
+import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
@@ -58,7 +58,7 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
                         .baseDataDir(baseDataDir.toString())
                         .jophielConfig(JophielClientConfiguration.DEFAULT)
                         .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
-                        .graderConfig(GraderConfiguration.DEFAULT)
+                        .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                         .rabbitMQConfig(RabbitMQConfiguration.DEFAULT)
                         .submissionConfig(SubmissionConfiguration.DEFAULT)
                         .fileConfig(FileConfiguration.DEFAULT)

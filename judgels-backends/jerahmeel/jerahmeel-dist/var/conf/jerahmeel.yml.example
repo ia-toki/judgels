@@ -55,7 +55,7 @@ jerahmeel:
   uriel:
     baseUrl: http://localhost:9004
 
-  grader:
+  gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: jerahmeel-grading-response
 

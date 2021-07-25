@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
-import judgels.gabriel.api.GraderConfiguration;
+import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
@@ -27,8 +27,8 @@ public interface JerahmeelConfiguration {
     @JsonProperty("uriel")
     Optional<UrielClientConfiguration> getUrielConfig();
 
-    @JsonProperty("grader")
-    GraderConfiguration getGraderConfig();
+    @JsonProperty("gabriel")
+    GabrielClientConfiguration getGabrielConfig();
 
     @JsonProperty("rabbitmq")
     Optional<RabbitMQConfiguration> getRabbitMQConfig();

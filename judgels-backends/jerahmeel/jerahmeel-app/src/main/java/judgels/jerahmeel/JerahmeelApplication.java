@@ -7,7 +7,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import judgels.fs.aws.AwsModule;
-import judgels.jerahmeel.grader.GraderModule;
+import judgels.jerahmeel.gabriel.GabrielModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateBundle;
 import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.messaging.MessagingModule;
@@ -46,7 +46,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
                 .urielModule(new UrielModule(jerahmeelConfig.getUrielConfig()))
-                .graderModule(new GraderModule(jerahmeelConfig.getGraderConfig()))
+                .gabrielModule(new GabrielModule(jerahmeelConfig.getGabrielConfig()))
                 .messagingModule(new MessagingModule(jerahmeelConfig.getRabbitMQConfig()))
                 .submissionModule(new SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),

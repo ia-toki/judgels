@@ -1,15 +1,15 @@
-package judgels.uriel.grader;
+package judgels.uriel.gabriel;
 
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
-import judgels.gabriel.api.GraderConfiguration;
+import judgels.gabriel.api.GabrielClientConfiguration;
 
 @Module
-public final class GraderModule {
-    private final GraderConfiguration config;
+public final class GabrielModule {
+    private final GabrielClientConfiguration config;
 
-    public GraderModule(GraderConfiguration config) {
+    public GabrielModule(GabrielClientConfiguration config) {
         this.config = config;
     }
 

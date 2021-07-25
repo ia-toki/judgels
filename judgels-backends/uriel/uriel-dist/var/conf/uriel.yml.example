@@ -52,7 +52,7 @@ uriel:
     clientJid: JIDSACL-uriel-local
     clientSecret: sandalphon-local
 
-  grader:
+  gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: uriel-grading-response
 

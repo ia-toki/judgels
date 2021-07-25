@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableGraderConfiguration.class)
-public interface GraderConfiguration {
-    GraderConfiguration DEFAULT = new Builder()
+@JsonDeserialize(as = ImmutableGabrielClientConfiguration.class)
+public interface GabrielClientConfiguration {
+    GabrielClientConfiguration DEFAULT = new Builder()
             .gradingRequestQueueName("grading-request")
             .gradingResponseQueueName("grading-response")
             .build();
@@ -14,5 +14,5 @@ public interface GraderConfiguration {
     String getGradingRequestQueueName();
     String getGradingResponseQueueName();
 
-    class Builder extends ImmutableGraderConfiguration.Builder {}
+    class Builder extends ImmutableGabrielClientConfiguration.Builder {}
 }

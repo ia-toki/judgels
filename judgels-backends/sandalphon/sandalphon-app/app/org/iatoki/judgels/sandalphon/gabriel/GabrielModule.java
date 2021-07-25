@@ -1,11 +1,11 @@
-package org.iatoki.judgels.sandalphon.grader;
+package org.iatoki.judgels.sandalphon.gabriel;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import javax.inject.Named;
 import judgels.sandalphon.SandalphonConfiguration;
 
-public final class GraderModule extends AbstractModule {
+public final class GabrielModule extends AbstractModule {
     @Override
     protected void configure() {}
 
