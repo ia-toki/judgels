@@ -23,14 +23,15 @@
 
   - name: Pull gabriel image
     docker_image:
-      name: "{{ gabriel_image }}"
+      name: judgels/gabriel
+      tag: "{{ judgels_version | default('latest', true) }}"
       source: pull
       force_source: yes
 
   - name: Run a gabriel container
     docker_container:
       name: gabriel
-      image: "{{ gabriel_image }}"
+      image: "judgels/gabriel:{{ judgels_version | default('latest', true) }}"
       privileged: yes
       restart: yes
       restart_policy: always
