@@ -11,10 +11,9 @@ EXPOSE 9004 9104
 
 ARG VCS_REF
 
-LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.name="judgels/uriel"
-LABEL org.label-schema.vcs-url="https://github.com/ia-toki/judgels"
-LABEL org.label-schema.vcs-ref=$VCS_REF
+LABEL org.opencontainers.image.title judgels/uriel
+LABEL org.opencontainers.image.source https://github.com/ia-toki/judgels
+LABEL org.opencontainers.image.revision $VCS_REF
 
 COPY build/distributions .
 

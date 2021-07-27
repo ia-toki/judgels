@@ -10,14 +10,14 @@
 
   - name: Pull scoreboard-receiver image
     docker_image:
-      name: judgels/scoreboard-receiver
+      name: ghcr.io/ia-toki/judgels/scoreboard-receiver
       source: pull
       force_source: yes
 
   - name: Run a scoreboard-receiver container
     docker_container:
       name: scoreboard-receiver
-      image: judgels/scoreboard-receiver
+      image: ghcr.io/ia-toki/judgels/scoreboard-receiver
       restart: yes
       restart_policy: always
       network_mode: host

@@ -4,10 +4,9 @@ WORKDIR /judgels/raphael
 
 ARG VCS_REF
 
-LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.name="judgels/raphael"
-LABEL org.label-schema.vcs-url="https://github.com/ia-toki/judgels"
-LABEL org.label-schema.vcs-ref=$VCS_REF
+LABEL org.opencontainers.image.title judgels/raphael
+LABEL org.opencontainers.image.source https://github.com/ia-toki/judgels
+LABEL org.opencontainers.image.revision $VCS_REF
 
 COPY raphael.conf /etc/nginx/conf.d/default.conf
 COPY build .

@@ -23,7 +23,7 @@
 
   - name: Pull gabriel image
     docker_image:
-      name: judgels/gabriel
+      name: ghcr.io/ia-toki/judgels/gabriel
       tag: "{{ judgels_version | default('latest', true) }}"
       source: pull
       force_source: yes
@@ -31,7 +31,7 @@
   - name: Run a gabriel container
     docker_container:
       name: gabriel
-      image: "judgels/gabriel:{{ judgels_version | default('latest', true) }}"
+      image: "ghcr.io/ia-toki/judgels/gabriel:{{ judgels_version | default('latest', true) }}"
       privileged: yes
       restart: yes
       restart_policy: always

@@ -1,9 +1,9 @@
 - block:
-  - name: Build sandalphon image and push it to DockerHub
+  - name: Build sandalphon image and push it to GitHub container registry
     docker_image:
       source: build
       force_source: yes
-      name: judgels/sandalphon
+      name: ghcr.io/ia-toki/judgels/sandalphon
       push: yes
       build:
         path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-app"

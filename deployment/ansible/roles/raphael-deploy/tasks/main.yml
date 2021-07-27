@@ -16,7 +16,7 @@
 
   - name: Pull raphael image
     docker_image:
-      name: judgels/raphael
+      name: ghcr.io/ia-toki/judgels/raphael
       tag: "{{ judgels_version | default('latest', true) }}"
       source: pull
       force_source: yes
@@ -24,7 +24,7 @@
   - name: Run a raphael container
     docker_container:
       name: raphael
-      image: "judgels/raphael:{{ judgels_version | default('latest', true) }}"
+      image: "ghcr.io/ia-toki/judgels/raphael:{{ judgels_version | default('latest', true) }}"
       restart: yes
       restart_policy: always
       log_driver: json-file

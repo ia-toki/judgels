@@ -1,9 +1,9 @@
 - block:
-  - name: Build raphael image and push it to DockerHub
+  - name: Build raphael image and push it to GitHub container registry
     docker_image:
       source: build
       force_source: yes
-      name: judgels/raphael
+      name: ghcr.io/ia-toki/judgels/raphael
       push: yes
       build:
         path: "{{ playbook_dir }}/../../../judgels-frontends/raphael/dist"

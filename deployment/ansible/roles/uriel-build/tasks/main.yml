@@ -1,9 +1,9 @@
 - block:
-  - name: Build uriel image and push it to DockerHub
+  - name: Build uriel image and push it to GitHub container registry
     docker_image:
       source: build
       force_source: yes
-      name: judgels/uriel
+      name: ghcr.io/ia-toki/judgels/uriel
       push: yes
       build:
         path: "{{ playbook_dir }}/../../../judgels-backends/uriel/uriel-dist"

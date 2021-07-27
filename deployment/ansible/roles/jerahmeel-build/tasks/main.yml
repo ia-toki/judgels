@@ -1,9 +1,9 @@
 - block:
-    - name: Build jerahmeel image and push it to DockerHub
+    - name: Build jerahmeel image and push it to GitHub container registry
       docker_image:
         source: build
         force_source: yes
-        name: judgels/jerahmeel
+        name: ghcr.io/ia-toki/judgels/jerahmeel
         push: yes
         build:
           path: "{{ playbook_dir }}/../../../judgels-backends/jerahmeel/jerahmeel-dist"
