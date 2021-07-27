@@ -5,6 +5,12 @@
       dest: /judgels/jerahmeel/var/conf/jerahmeel.yml
       mode: '0644'
 
+  - name: Generate jerahmeel launcher config
+    template:
+      src: "{{ playbook_dir }}/../conf/jerahmeel-launcher.yml.j2"
+      dest: /judgels/jerahmeel/var/conf/launcher-custom.yml
+      mode: '0644'
+
   - name: Restart jerahmeel
     docker_container:
       name: jerahmeel
