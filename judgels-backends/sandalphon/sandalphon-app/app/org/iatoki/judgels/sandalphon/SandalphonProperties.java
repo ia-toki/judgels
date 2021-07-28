@@ -29,8 +29,8 @@ public final class SandalphonProperties {
                         .baseUrl(config.getString("jophiel.baseUrl"))
                         .build())
                 .gabrielConfig(new GabrielClientConfiguration.Builder()
-                        .gradingRequestQueueName(config.getString("grader.gradingRequestQueueName"))
-                        .gradingResponseQueueName(config.getString("grader.gradingResponseQueueName"))
+                        .gradingRequestQueueName(config.getString("gabriel.gradingRequestQueueName"))
+                        .gradingResponseQueueName(config.getString("gabriel.gradingResponseQueueName"))
                         .build());
 
         if (config.hasPath("rabbitmq.host")) {
