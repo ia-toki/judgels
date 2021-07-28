@@ -20,8 +20,8 @@ public interface SandalphonConfiguration {
     @JsonProperty("jophiel")
     JophielClientConfiguration getJophielConfig();
 
-    @JsonProperty("grader")
-    GabrielClientConfiguration getGraderConfig();
+    @JsonProperty("gabriel")
+    GabrielClientConfiguration getGabrielConfig();
 
     @JsonProperty("rabbitmq")
     Optional<RabbitMQConfiguration> getRabbitMQConfig();

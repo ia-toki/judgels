@@ -12,12 +12,12 @@ public final class GabrielModule extends AbstractModule {
     @Provides
     @Named("gradingRequestQueueName")
     String gradingRequestQueueName(SandalphonConfiguration config) {
-        return config.getGraderConfig().getGradingRequestQueueName();
+        return config.getGabrielConfig().getGradingRequestQueueName();
     }
 
     @Provides
     @Named("gradingResponseQueueName")
     String gradingResponseQueueName(SandalphonConfiguration config) {
-        return config.getGraderConfig().getGradingResponseQueueName();
+        return config.getGabrielConfig().getGradingResponseQueueName();
     }
 }

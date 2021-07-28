@@ -28,7 +28,7 @@ public final class SandalphonProperties {
                 .jophielConfig(new JophielClientConfiguration.Builder()
                         .baseUrl(config.getString("jophiel.baseUrl"))
                         .build())
-                .graderConfig(new GabrielClientConfiguration.Builder()
+                .gabrielConfig(new GabrielClientConfiguration.Builder()
                         .gradingRequestQueueName(config.getString("grader.gradingRequestQueueName"))
                         .gradingResponseQueueName(config.getString("grader.gradingResponseQueueName"))
                         .build());
