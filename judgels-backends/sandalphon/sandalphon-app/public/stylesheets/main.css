@@ -438,7 +438,7 @@ th {
 }
 
 .nav-tabs > li > a {
-    color: darken(var(--accent-color), 20%);
+    color: #555;
 }
 
 .form-inline > .form-group {
