@@ -300,6 +300,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
         template.setContent(createEditorialView.render(form, problem.getId()));
         template.setMainTitle("Create editorial");
         template.markBreadcrumbLocation("Create editorial", routes.ProblemEditorialController.createEditorial(problem.getId()));
+        template.markBreadcrumbLocation("Editorials", org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToEditorial(problem.getId()));
         template.setPageTitle("Problem - Editorial - Create");
         return renderTemplate(template, problem);
     }
