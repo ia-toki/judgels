@@ -1,7 +1,7 @@
 - block:
   - name: Install cgroup
     apt:
-      name: cgroup-bin
+      name: cgroup-tools
       state: present
       install_recommends: no
 
