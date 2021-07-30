@@ -326,6 +326,6 @@ public class LessonStatementController extends AbstractLessonController {
 
     private void appendStatementLanguageSelection(HtmlTemplate template, String currentLanguage, Set<String> allowedLanguages, Call target) {
         Http.Request req = template.getRequest();
-        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), ImmutableList.copyOf(allowedLanguages), currentLanguage, c));
+        template.transformContent(c -> statementLanguageSelectionLayout.render(target.url(), ImmutableList.copyOf(allowedLanguages), currentLanguage, c));
     }
 }

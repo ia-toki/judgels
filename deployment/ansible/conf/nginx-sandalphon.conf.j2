@@ -20,6 +20,7 @@ server {
         include proxy_params;
         proxy_pass http://sandalphon;
         proxy_set_header Connection "";
+        proxy_set_header X-Forwarded-Proto https;
         proxy_http_version 1.1;
         proxy_buffering off;
 

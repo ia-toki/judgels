@@ -67,7 +67,7 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
         }
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).absoluteURL(req, req.secure()), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).url(), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
         template.addAdditionalScript(katexView.render());
 
         Set<String> allowedLanguages = problemRoleChecker.getAllowedStatementLanguagesToView(req, problem);

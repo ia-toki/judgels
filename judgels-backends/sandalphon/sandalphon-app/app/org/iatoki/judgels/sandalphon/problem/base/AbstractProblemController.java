@@ -106,7 +106,7 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
 
     protected void appendStatementLanguageSelection(HtmlTemplate template, String currentLanguage, Set<String> allowedLanguages, Call target) {
         Http.Request req = template.getRequest();
-        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(req, req.secure()), ImmutableList.copyOf(allowedLanguages), currentLanguage, c));
+        template.transformContent(c -> statementLanguageSelectionLayout.render(target.url(), ImmutableList.copyOf(allowedLanguages), currentLanguage, c));
     }
 
     protected Result renderPartnerTemplate(HtmlTemplate template, Problem problem) {
