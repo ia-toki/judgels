@@ -30,3 +30,5 @@
       volumes:
         - "/judgels/jerahmeel/var:/judgels/jerahmeel/var"
       command: dbMigrate
+      env:
+        JAVA_OPTS: '-Dliquibase.databaseChangeLogTableName=jerahmeel_DATABASECHANGELOG -Dliquibase.databaseChangeLogLockTableName=jerahmeel_DATABASECHANGELOGLOCK'

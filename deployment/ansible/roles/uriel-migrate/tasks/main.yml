@@ -30,3 +30,5 @@
       volumes:
         - "/judgels/uriel/var:/judgels/uriel/var"
       command: dbMigrate
+      env:
+        JAVA_OPTS: '-Dliquibase.databaseChangeLogTableName=uriel_DATABASECHANGELOG -Dliquibase.databaseChangeLogLockTableName=uriel_DATABASECHANGELOGLOCK'

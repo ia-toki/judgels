@@ -30,3 +30,5 @@
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
       command: dbMigrate
+      env:
+        JAVA_OPTS: '-Dliquibase.databaseChangeLogTableName=jophiel_DATABASECHANGELOG -Dliquibase.databaseChangeLogLockTableName=jophiel_DATABASECHANGELOGLOCK'
