@@ -114,6 +114,7 @@ class ProblemReportWidget extends Component {
     const { topUsersByScore, topUsersByTime, topUsersByMemory } = topStats;
     if (
       topUsersByScore.length === ProblemReportWidget.TOP_STATS_SIZE &&
+      topUsersByTime.length === ProblemReportWidget.TOP_STATS_SIZE &&
       topUsersByScore[ProblemReportWidget.TOP_STATS_SIZE - 1].stats >= 100
     ) {
       return (
