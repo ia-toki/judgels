@@ -1,6 +1,7 @@
 const initialState = {
   isDarkMode: undefined,
   hideProblemDifficulty: undefined,
+  showProblemTopicTags: undefined,
   statementLanguage: 'id',
   editorialLanguage: 'id',
   gradingLanguage: 'Cpp17',
@@ -16,6 +17,13 @@ export function PutIsDarkMode(val) {
 export function PutShowProblemDifficulty(val) {
   return {
     type: 'webPrefs/PUT_SHOW_PROBLEM_DIFFICULTY',
+    payload: val,
+  };
+}
+
+export function PutShowProblemTopicTags(val) {
+  return {
+    type: 'webPrefs/PUT_SHOW_PROBLEM_TOPIC_TAGS',
     payload: val,
   };
 }
@@ -47,6 +55,8 @@ export default function webPrefsReducer(state = initialState, action) {
       return { ...state, isDarkMode: action.payload };
     case 'webPrefs/PUT_SHOW_PROBLEM_DIFFICULTY':
       return { ...state, hideProblemDifficulty: !action.payload };
+    case 'webPrefs/PUT_SHOW_PROBLEM_TOPIC_TAGS':
+      return { ...state, showProblemTopicTags: action.payload };
     case 'webPrefs/PUT_STATEMENT_LANGUAGE':
       return { ...state, statementLanguage: action.payload };
     case 'webPrefs/PUT_EDITORIAL_LANGUAGE':

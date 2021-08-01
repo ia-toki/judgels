@@ -10,6 +10,10 @@ export function selectShowProblemDifficulty(state) {
   return !state.webPrefs.hideProblemDifficulty;
 }
 
+export function selectShowProblemTopicTags(state) {
+  return !!state.webPrefs.showProblemTopicTags;
+}
+
 export function selectStatementLanguage(state) {
   return state.webPrefs.statementLanguage;
 }

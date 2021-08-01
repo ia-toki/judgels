@@ -16,10 +16,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.gabriel.api.GradingConfig;
 import judgels.jophiel.api.client.user.ClientUserService;
-import judgels.sandalphon.api.ProblemMetadata;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.ProblemMetadata;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.Item;
@@ -242,6 +242,11 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return okAsJson(req, problemJids);
     }
 
+    @Transactional(readOnly = true)
+    public Result getPublicTagCounts(Http.Request req) {
+        return okAsJson(req, problemTagStore.getPublicTagCounts());
+    }
+
     private ProblemInfo getProblemInfo(String problemJid) {
         Problem problem = problemStore.findProblemByJid(problemJid);
 
@@ -258,6 +263,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     private ProblemMetadata getProblemMetadataInfo(String problemJid) {
         return new ProblemMetadata.Builder()
                 .hasEditorial(problemStore.hasEditorial(null, problemJid))
+                .tags(problemTagStore.findTopicTags(problemJid))
                 .settersMap(problemStore.findProblemSettersByProblemJid(problemJid))
                 .build();
     }

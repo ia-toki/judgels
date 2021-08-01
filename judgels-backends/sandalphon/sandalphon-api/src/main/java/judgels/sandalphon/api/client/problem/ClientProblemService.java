@@ -14,9 +14,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.sandalphon.api.ProblemMetadata;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.ProblemMetadata;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.service.api.client.BasicAuthHeader;
 
@@ -106,4 +106,9 @@ public interface ClientProblemService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     Set<String> getProblemJidsByTags(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, Set<String> tags);
+
+    @GET
+    @Path("/public-tag-counts")
+    @Produces(APPLICATION_JSON)
+    Map<String, Integer> getPublicTagCounts(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader);
 }

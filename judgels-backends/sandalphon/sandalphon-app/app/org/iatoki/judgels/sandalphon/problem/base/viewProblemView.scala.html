@@ -2,7 +2,9 @@
 @import judgels.sandalphon.api.problem.Problem
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(problem: Problem, profile: Profile, writerUsernames: String, developerUsernames: String, testerUsernames: String, editorialistUsernames: String)
+@(problem: Problem, profile: Profile, writerUsernames: String, developerUsernames: String, testerUsernames: String, editorialistUsernames: String, tags: List[String])
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/problemTags.js")"></script>
 
 <h3>Info</h3>
 <table class="table">
@@ -39,3 +41,27 @@
         </tr>
     </tbody>
 </table>
+
+<h3>Tags</h3>
+
+@if(tags.isEmpty) {
+    <p>(none)</p>
+}else {
+    @for(tag <- tags) {
+        @defining(tag.substring("topic-".length())) { tagName =>
+            <div class="checkbox" @if(tagName.contains(": ")) { style="margin-left: 20px" }>
+                <label>
+                    <input
+                            type="checkbox"
+                            class="problemTag"
+                            name="tags[@tag]"
+                            value="@tag"
+                            disabled="disabled"
+                            checked="checked"
+                    >
+                    @if(tagName.contains(": ")) { @tagName.split(": ")(1) } else { @tagName }
+                </label>
+            </div>
+        }
+    }
+}

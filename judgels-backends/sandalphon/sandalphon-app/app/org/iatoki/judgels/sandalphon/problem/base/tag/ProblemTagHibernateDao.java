@@ -1,10 +1,17 @@
 package org.iatoki.judgels.sandalphon.problem.base.tag;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
@@ -33,6 +40,49 @@ public class ProblemTagHibernateDao extends UnmodifiableHibernateDao<ProblemTagM
         return selectAll(new FilterOptions.Builder<ProblemTagModel>()
                 .putColumnsIn(ProblemTagModel_.tag, tags)
                 .build());
+    }
+
+    @Override
+    public Map<String, Integer> selectTagCounts() {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<ProblemTagModel> root = cq.from(getEntityClass());
+
+        cq.select(cb.tuple(
+                root.get(ProblemTagModel_.tag),
+                cb.count(root)));
+
+        cq.groupBy(root.get(ProblemTagModel_.tag));
+
+        return currentSession().createQuery(cq).getResultList()
+                .stream()
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> (int) (long) tuple.get(1, Long.class)));
+    }
+
+    @Override
+    public Map<String, Integer> selectPublicTagCounts() {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<ProblemTagModel> root = cq.from(getEntityClass());
+
+        cq.select(cb.tuple(
+                root.get(ProblemTagModel_.tag),
+                cb.count(root)));
+
+        Subquery<ProblemTagModel> sq = cq.subquery(getEntityClass());
+        Root<ProblemTagModel> subroot = sq.from(getEntityClass());
+        sq.where(
+                cb.equal(subroot.get(ProblemTagModel_.problemJid), root.get(ProblemTagModel_.problemJid)),
+                cb.equal(subroot.get(ProblemTagModel_.tag), "visibility-public"));
+        sq.select(subroot);
+
+        cq.where(cb.exists(sq));
+
+        cq.groupBy(root.get(ProblemTagModel_.tag));
+
+        return currentSession().createQuery(cq).getResultList()
+                .stream()
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> (int) (long) tuple.get(1, Long.class)));
     }
 
     @Override

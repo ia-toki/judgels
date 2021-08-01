@@ -4,6 +4,7 @@ import webPrefsReducer, {
   PutEditorialLanguage,
   PutIsDarkMode,
   PutShowProblemDifficulty,
+  PutShowProblemTopicTags,
 } from './webPrefsReducer';
 
 describe('webPrefsReducer', () => {
@@ -18,6 +19,13 @@ describe('webPrefsReducer', () => {
     const state = { hideProblemDifficulty: false };
     const action = PutShowProblemDifficulty(false);
     const nextState = { hideProblemDifficulty: true };
+    expect(webPrefsReducer(state, action)).toEqual(nextState);
+  });
+
+  test('PUT_SHOW_PROBLEM_TOPIC_TAGS', () => {
+    const state = { showProblemTopicTags: false };
+    const action = PutShowProblemTopicTags(true);
+    const nextState = { showProblemTopicTags: true };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 

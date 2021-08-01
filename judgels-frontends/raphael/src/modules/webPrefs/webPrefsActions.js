@@ -5,11 +5,13 @@ import {
   PutGradingLanguage,
   PutIsDarkMode,
   PutShowProblemDifficulty,
+  PutShowProblemTopicTags,
 } from './webPrefsReducer';
 import * as toastActions from '../toast/toastActions';
 
 export const switchDarkMode = PutIsDarkMode;
 export const switchShowProblemDifficulty = PutShowProblemDifficulty;
+export const switchShowProblemTopicTags = PutShowProblemTopicTags;
 
 export function switchStatementLanguage(language) {
   return async dispatch => {

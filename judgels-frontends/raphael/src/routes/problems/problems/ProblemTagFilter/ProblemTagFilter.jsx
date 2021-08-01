@@ -1,4 +1,5 @@
 import { Checkbox } from '@blueprintjs/core';
+import classNames from 'classnames';
 import { push } from 'connected-react-router';
 import { Component } from 'react';
 import { connect } from 'react-redux';
@@ -49,13 +50,7 @@ class ProblemTagFilter extends Component {
     }
 
     const { data: problemTags } = response;
-    return (
-      <>
-        {problemTags.map(category => this.renderTagCategory(category))}
-        <h5>Topic</h5>
-        <small>coming soon...</small>
-      </>
-    );
+    return problemTags.map(category => this.renderTagCategory(category));
   };
 
   renderTagCategory = ({ title, options }) => {
@@ -66,9 +61,13 @@ class ProblemTagFilter extends Component {
           <Checkbox
             key={opt.value}
             name={opt.value}
-            className="problem-tag-filter__option"
-            label={opt.label}
+            className={classNames('problem-tag-filter__option', {
+              'problem-tag-filter__option-child': this.isTagChild(opt.value),
+            })}
+            label={this.getTagName(opt) + ' (' + opt.count + ')'}
             checked={this.isTagSelected(opt.value)}
+            indeterminate={this.isTagChildSelected(opt.value)}
+            disabled={this.isTagParentSelected(opt.value)}
             onChange={this.changeTag}
           />
         ))}
@@ -80,13 +79,31 @@ class ProblemTagFilter extends Component {
     return this.state.tags.includes(tag);
   };
 
+  isTagParentSelected = tag => {
+    return this.state.tags.some(t => t !== tag && tag.startsWith(t));
+  };
+
+  isTagChildSelected = tag => {
+    return this.state.tags.some(t => t !== tag && t.startsWith(tag));
+  };
+
+  isTagChild = tag => {
+    return tag.includes(': ');
+  };
+
+  getTagName = opt => {
+    return this.isTagChild(opt.value) ? opt.label.split(': ')[1] : opt.label;
+  };
+
   changeTag = e => {
     const tag = e.target.name;
     const checked = e.target.checked;
 
     let tags = this.state.tags;
     if (checked) {
-      tags = [...new Set([...tags, tag])];
+      tags = [...new Set([...tags, tag])]
+        .filter(t => !(t !== tag && t.startsWith(tag)))
+        .filter(t => !(t !== tag && tag.startsWith(t)));
     } else {
       let s = new Set(tags);
       s.delete(tag);

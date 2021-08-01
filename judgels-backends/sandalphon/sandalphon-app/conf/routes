@@ -195,6 +195,7 @@ GET         /problems/programming/:problemId/grading/helpers/:filename          
 
 # Client API v2
 
+GET         /api/v2/client/problems/public-tag-counts                               org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getPublicTagCounts(req: Request)
 GET         /api/v2/client/problems/:problemJid                                     org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblem(req: Request, problemJid)
 GET         /api/v2/client/problems/:problemJid/metadata                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemMetadata(req: Request, problemJid)
 GET         /api/v2/client/problems/:problemJid/editorial                           org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemEditorial(req: Request, problemJid)

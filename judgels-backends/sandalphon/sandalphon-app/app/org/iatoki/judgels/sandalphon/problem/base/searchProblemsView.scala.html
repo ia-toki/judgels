@@ -1,6 +1,9 @@
+@import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTags
 @import org.iatoki.judgels.sandalphon.problem.base.routes
 
-@(pageIndex: Long, orderBy: String, orderDir: String, filterString: String, tags: List[String])
+@(pageIndex: Long, orderBy: String, orderDir: String, filterString: String, tags: List[String], tagCounts: Map[String, Integer])
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/problemTags.js")"></script>
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
@@ -61,6 +64,34 @@
                             @checkboxView("editorial-en", "has English editorial")
                         </div>
                     </div>
+
+                    <hr class="tag-separator" />
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>Tag</label>
+                            @for(tag <- ProblemTags.TOPIC_TAGS) {
+                                @if(tagCounts.containsKey(tag)) {
+                                    @defining(tag.substring("topic-".length())) { tagName =>
+                                        <div class="checkbox" @if(tagName.contains(": ")) { style="margin-left: 20px" }>
+                                            <label>
+                                                <input
+                                                        type="checkbox"
+                                                        class="problemTag"
+                                                        name="tags"
+                                                        value="@tag"
+                                                        @if(tags != null && tags.contains(tag)) { checked="checked" }
+                                                >
+                                                @if(tagName.contains(": ")) { @tagName.split(": ")(1) } else { @tagName }
+                                                (@tagCounts.get(tag))
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+
 
                     <hr class="tag-separator" />
 

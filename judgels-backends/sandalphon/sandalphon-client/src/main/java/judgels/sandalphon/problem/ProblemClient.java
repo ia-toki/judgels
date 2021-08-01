@@ -17,11 +17,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import judgels.sandalphon.SandalphonUtils;
-import judgels.sandalphon.api.ProblemMetadata;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.ProblemMetadata;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -38,6 +38,7 @@ public class ProblemClient {
 
     private final LoadingCache<String, ProblemInfo> problemCache;
     private final LoadingCache<String, ProblemMetadata> problemMetadataCache;
+    private final LoadingCache<Integer, Map<String, Integer>> publicTagCountsCache;
 
     @Inject
     public ProblemClient(
@@ -60,6 +61,10 @@ public class ProblemClient {
                 .maximumSize(1_000)
                 .expireAfterWrite(Duration.ofSeconds(10))
                 .build(new ProblemMetadataCacheLoader());
+
+        this.publicTagCountsCache = Caffeine.newBuilder()
+                .expireAfterWrite(Duration.ofMinutes(1))
+                .build(this::getPublicTagCountsUncached);
     }
 
     public Map<String, String> translateAllowedSlugsToJids(String actorJid, Set<String> slugs) {
@@ -202,6 +207,14 @@ public class ProblemClient {
                                 sandalphonConfig.getBaseUrl(),
                                 e.getKey()))
                         .build()));
+    }
+
+    public Map<String, Integer> getPublicTagCounts() {
+        return publicTagCountsCache.get(0);
+    }
+
+    private Map<String, Integer> getPublicTagCountsUncached(int key) {
+        return clientProblemService.getPublicTagCounts(sandalphonClientAuthHeader);
     }
 
     private class ProblemCacheLoader implements CacheLoader<String, ProblemInfo> {

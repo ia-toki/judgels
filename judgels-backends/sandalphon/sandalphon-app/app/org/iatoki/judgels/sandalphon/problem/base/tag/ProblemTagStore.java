@@ -6,6 +6,7 @@ import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.ENABLED;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -39,6 +40,36 @@ public class ProblemTagStore {
         this.problemTagDao = problemTagDao;
         this.problemStore = problemStore;
         this.programmingProblemStore = programmingProblemStore;
+    }
+
+    public Map<String, Integer> getTagCounts() {
+        return problemTagDao.selectPublicTagCounts();
+    }
+
+    public Map<String, Integer> getPublicTagCounts() {
+        return problemTagDao.selectPublicTagCounts();
+    }
+
+    public Set<String> findTopicTags(String problemJid) {
+        return problemTagDao.selectAllByProblemJid(problemJid)
+                .stream()
+                .map(m -> m.tag)
+                .filter(tag -> tag.startsWith("topic-"))
+                .collect(Collectors.toSet());
+    }
+
+    public void updateTopicTags(String problemJid, Set<String> topicTags) {
+        Set<String> curTags = findTopicTags(problemJid);
+
+        for (String tag : Sets.difference(topicTags, curTags)) {
+            ProblemTagModel m = new ProblemTagModel();
+            m.problemJid = problemJid;
+            m.tag = tag;
+            problemTagDao.insert(m);
+        }
+        for (String tag : Sets.difference(curTags, topicTags)) {
+            problemTagDao.selectByProblemJidAndTag(problemJid, tag).ifPresent(problemTagDao::delete);
+        }
     }
 
     public void refreshDerivedTags(String problemJid) {
@@ -136,6 +167,7 @@ public class ProblemTagStore {
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("editorial-no", "editorial-yes", "editorial-en"));
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("engine-batch", "engine-interactive", "engine-output-only", "engine-functional"));
         problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("scoring-partial", "scoring-subtasks", "scoring-absolute"));
+        problemJids = filterProblemJidsByTopicTags(problemJids, tags);
 
         return problemJids;
     }
@@ -147,6 +179,22 @@ public class ProblemTagStore {
         }
 
         Set<String> allowedProblemJids = problemTagDao.selectAllByTags(intersectionTags).stream()
+                .map(m -> m.problemJid)
+                .collect(Collectors.toSet());
+
+        if (problemJids == null) {
+            return allowedProblemJids;
+        }
+        return Sets.intersection(problemJids, allowedProblemJids);
+    }
+
+    public Set<String> filterProblemJidsByTopicTags(Set<String> problemJids, Set<String> tags) {
+        Set<String> topicTags = Sets.filter(tags, tag -> tag.startsWith("topic-"));
+        if (topicTags.isEmpty()) {
+            return problemJids;
+        }
+
+        Set<String> allowedProblemJids = problemTagDao.selectAllByTags(topicTags).stream()
                 .map(m -> m.problemJid)
                 .collect(Collectors.toSet());
 

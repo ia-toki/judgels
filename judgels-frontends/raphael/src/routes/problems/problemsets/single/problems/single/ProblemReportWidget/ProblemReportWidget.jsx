@@ -8,6 +8,7 @@ import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import ProblemSpoilerWidget from '../../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import ProblemDifficulty from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
+import ProblemTopicTags from '../../../../../../../components/ProblemTopicTags/ProblemTopicTags';
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
 import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
@@ -84,6 +85,7 @@ class ProblemReportWidget extends Component {
         <h4>Spoilers</h4>
         {this.renderSpoilersWidget()}
         {this.renderDifficulty({ difficulty })}
+        {this.renderTopicTags({ metadata })}
         {this.renderEditorial({ metadata, profilesMap })}
       </ContentCard>
     );
@@ -95,6 +97,10 @@ class ProblemReportWidget extends Component {
 
   renderDifficulty = ({ difficulty }) => {
     return <ProblemDifficulty problem={this.props.problem} difficulty={difficulty} />;
+  };
+
+  renderTopicTags = ({ metadata }) => {
+    return <ProblemTopicTags tags={metadata.tags} alignLeft />;
   };
 
   renderEditorial = ({ metadata, profilesMap }) => {

@@ -37,8 +37,8 @@ function ProblemDifficulty({ problem, difficulty, showProblemDifficulty }) {
 
   return (
     <div className="problem-difficulty">
-      {renderLevel(difficulty)}
       {renderACStats(difficulty)}
+      {renderLevel(difficulty)}
     </div>
   );
 }

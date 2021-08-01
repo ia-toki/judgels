@@ -1,8 +1,8 @@
 import { Tag, Intent } from '@blueprintjs/core';
-import { SmallTick } from '@blueprintjs/icons';
 
 import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
 import ProblemDifficulty from '../ProblemDifficulty/ProblemDifficulty';
+import ProblemTopicsTags from '../ProblemTopicTags/ProblemTopicTags';
 import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
 import { ProblemType } from '../../modules/api/sandalphon/problem';
@@ -19,26 +19,36 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
   };
 
   const renderMetadata = () => {
-    const { hasEditorial } = metadata;
-    if (!hasEditorial) {
-      return null;
-    }
-
     return (
       <div className="float-right">
-        <Tag round intent={Intent.WARNING}>
-          editorial <SmallTick />
-        </Tag>
+        {renderTopicTags()}
+        {renderEditorialTag()}
       </div>
     );
   };
 
+  const renderEditorialTag = () => {
+    if (!metadata.hasEditorial) {
+      return null;
+    }
+
+    return (
+      <Tag round intent={Intent.WARNING} className="problemset-problem-card__tag">
+        editorial
+      </Tag>
+    );
+  };
+
+  const renderTopicTags = () => {
+    return <ProblemTopicsTags tags={metadata.tags} />;
+  };
+
   const renderSpoilers = () => {
     return (
-      <div className="problemset-problem-card__spoilers">
+      <>
         {renderDifficulty()}
         {renderMetadata()}
-      </div>
+      </>
     );
   };
 

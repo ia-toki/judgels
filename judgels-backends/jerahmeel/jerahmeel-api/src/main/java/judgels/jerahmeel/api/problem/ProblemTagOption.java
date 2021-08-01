@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 public interface ProblemTagOption {
     String getLabel();
     String getValue();
+    int getCount();
 
     class Builder extends ImmutableProblemTagOption.Builder {}
 }

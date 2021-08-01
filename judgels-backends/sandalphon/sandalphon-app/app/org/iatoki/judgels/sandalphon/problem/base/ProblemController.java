@@ -4,6 +4,7 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import org.iatoki.judgels.sandalphon.problem.base.html.editProblemView;
 import org.iatoki.judgels.sandalphon.problem.base.html.listProblemsView;
 import org.iatoki.judgels.sandalphon.problem.base.html.searchProblemsView;
 import org.iatoki.judgels.sandalphon.problem.base.html.viewProblemView;
+import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import org.iatoki.judgels.sandalphon.role.RoleChecker;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -38,6 +40,7 @@ import play.mvc.Result;
 @Singleton
 public final class ProblemController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemTagStore problemTagStore;
     private final ProblemSearchStore problemSearchStore;
     private final RoleChecker roleChecker;
     private final ProblemRoleChecker problemRoleChecker;
@@ -47,6 +50,7 @@ public final class ProblemController extends AbstractProblemController {
     @Inject
     public ProblemController(
             ProblemStore problemStore,
+            ProblemTagStore problemTagStore,
             ProblemSearchStore problemSearchStore,
             RoleChecker roleChecker,
             ProblemRoleChecker problemRoleChecker,
@@ -55,6 +59,7 @@ public final class ProblemController extends AbstractProblemController {
 
         super(problemStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.problemTagStore = problemTagStore;
         this.problemSearchStore = problemSearchStore;
         this.roleChecker = roleChecker;
         this.problemRoleChecker = problemRoleChecker;
@@ -77,13 +82,14 @@ public final class ProblemController extends AbstractProblemController {
 
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+        Map<String, Integer> tagCounts = problemTagStore.getTagCounts();
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listProblemsView.render(problems, profilesMap, sortBy, orderBy, filterString, tags));
         if (isWriter) {
             template.addMainButton("Create", routes.ProblemController.createProblem());
         }
-        template.addLowerSidebarWidget(searchProblemsView.render(pageIndex, sortBy, orderBy, filterString, tags));
+        template.addLowerSidebarWidget(searchProblemsView.render(pageIndex, sortBy, orderBy, filterString, tags, tagCounts));
         template.setMainTitle("Problems");
         template.setPageTitle("Problems");
         return renderTemplate(template);
@@ -163,8 +169,10 @@ public final class ProblemController extends AbstractProblemController {
         String testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
         String editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
 
+        List<String> tags = problemTagStore.findTopicTags(problem.getJid()).stream().sorted().collect(Collectors.toList());
+
         HtmlTemplate template = getBaseHtmlTemplate(req);
-        template.setContent(viewProblemView.render(problem, profile, writerUsernames, developerUsernames, testerUsernames, editorialistUsernames));
+        template.setContent(viewProblemView.render(problem, profile, writerUsernames, developerUsernames, testerUsernames, editorialistUsernames, tags));
         template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.markBreadcrumbLocation("View problem", routes.ProblemController.viewProblem(problem.getId()));
         template.setPageTitle("Problem - View");
@@ -183,6 +191,8 @@ public final class ProblemController extends AbstractProblemController {
                 .flatMap(List::stream)
                 .collect(Collectors.toSet()));
 
+        Set<String> tags = problemTagStore.findTopicTags(problem.getJid());
+
         ProblemEditForm data = new ProblemEditForm();
         data.slug = problem.getSlug();
         data.additionalNote = problem.getAdditionalNote();
@@ -190,6 +200,7 @@ public final class ProblemController extends AbstractProblemController {
         data.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
         data.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
         data.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
+        data.tags = tags.stream().collect(Collectors.toMap(e -> e, e -> e));
 
         Form<ProblemEditForm> form = formFactory.form(ProblemEditForm.class).fill(data);
 
@@ -228,6 +239,8 @@ public final class ProblemController extends AbstractProblemController {
         updateProblemSetters(problem.getJid(), ProblemSetterRole.DEVELOPER, data.developerUsernames, setters, jidsMap);
         updateProblemSetters(problem.getJid(), ProblemSetterRole.TESTER, data.testerUsernames, setters, jidsMap);
         updateProblemSetters(problem.getJid(), ProblemSetterRole.EDITORIALIST, data.editorialistUsernames, setters, jidsMap);
+
+        problemTagStore.updateTopicTags(problem.getJid(), Optional.ofNullable(data.tags).orElse(ImmutableMap.of()).keySet());
 
         return redirect(routes.ProblemController.viewProblem(problem.getId()));
     }

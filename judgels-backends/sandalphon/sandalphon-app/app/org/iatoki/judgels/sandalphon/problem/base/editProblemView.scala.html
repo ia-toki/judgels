@@ -1,9 +1,12 @@
 @import judgels.sandalphon.api.problem.Problem
+@import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTags
 @import org.iatoki.judgels.sandalphon.problem.base.ProblemEditForm
 @import org.iatoki.judgels.play.template.html.formErrorView
 @import org.iatoki.judgels.sandalphon.problem.base.routes
 
 @(form: Form[ProblemEditForm], problem: Problem)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/problemTags.js")"></script>
 
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
 
@@ -24,6 +27,27 @@
     @b3.text(form("developerUsernames"), '_label -> "Developers", '_help -> "List of comma-separated usernames. Fill only if different from writers.")
     @b3.text(form("testerUsernames"), '_label -> "Testers", '_help -> "List of comma-separated usernames.")
     @b3.text(form("editorialistUsernames"), '_label -> "Editorialists", '_help -> "List of comma-separated usernames.")
+
+    <h3>Tags</h3>
+
+    @for(tag <- ProblemTags.TOPIC_TAGS) {
+        @defining(tag.substring("topic-".length())) { tagName =>
+            <div class="checkbox" @if(tagName.contains(": ")) { style="margin-left: 20px" }>
+                <label>
+                    <input
+                            type="checkbox"
+                            class="problemTag"
+                            name="tags[@tag]"
+                            value="@tag"
+                            @if(form("tags[" + tag + "]").value.isPresent) { checked="checked" }
+                    >
+                    @if(tagName.contains(": ")) { @tagName.split(": ")(1) } else { @tagName }
+                </label>
+            </div>
+        }
+    }
+
+    <br />
 
     @b3.submit('class -> "btn btn-primary") { Update }
 }

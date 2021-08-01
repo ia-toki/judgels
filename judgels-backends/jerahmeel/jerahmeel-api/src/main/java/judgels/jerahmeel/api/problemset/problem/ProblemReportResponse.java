@@ -7,7 +7,7 @@ import judgels.jerahmeel.api.problem.ProblemDifficulty;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jophiel.api.profile.Profile;
-import judgels.sandalphon.api.ProblemMetadata;
+import judgels.sandalphon.api.problem.ProblemMetadata;
 import judgels.uriel.api.contest.ContestInfo;
 import org.immutables.value.Value;
 

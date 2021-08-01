@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
+import java.util.Map;
 import play.data.validation.Constraints;
 
 public final class ProblemEditForm {
@@ -17,6 +18,8 @@ public final class ProblemEditForm {
     public String testerUsernames;
 
     public String editorialistUsernames;
+
+    public Map<String, String> tags;
 
     public String getSlug() {
         return slug;
@@ -64,5 +67,13 @@ public final class ProblemEditForm {
 
     public void setEditorialistUsernames(String editorialistUsernames) {
         this.editorialistUsernames = editorialistUsernames;
+    }
+
+    public Map<String, String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Map<String, String> tags) {
+        this.tags = tags;
     }
 }
