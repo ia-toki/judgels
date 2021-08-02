@@ -189,7 +189,11 @@ public class ProblemTagStore {
     }
 
     public Set<String> filterProblemJidsByTopicTags(Set<String> problemJids, Set<String> tags) {
-        Set<String> topicTags = Sets.filter(tags, tag -> tag.startsWith("topic-"));
+        Set<String> topicTags = tags.stream()
+                .filter(tag -> tag.startsWith("topic-"))
+                .filter(tag -> tags.stream().noneMatch(t -> isTagChild(tag, t)))
+                .collect(Collectors.toSet());
+
         if (topicTags.isEmpty()) {
             return problemJids;
         }
@@ -239,5 +243,9 @@ public class ProblemTagStore {
         } else if (curTags.contains(tag)) {
             tagsToRemove.add(tag);
         }
+    }
+
+    private static boolean isTagChild(String tag, String tagChild) {
+        return !tag.equals(tagChild) && tagChild.startsWith(tag);
     }
 }
