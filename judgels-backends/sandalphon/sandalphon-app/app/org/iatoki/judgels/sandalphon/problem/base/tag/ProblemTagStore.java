@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.problem.base.tag;
 import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.DISABLED;
 import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.ENABLED;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.List;
@@ -42,8 +43,11 @@ public class ProblemTagStore {
         this.programmingProblemStore = programmingProblemStore;
     }
 
-    public Map<String, Integer> getTagCounts() {
-        return problemTagDao.selectPublicTagCounts();
+    public Map<String, Integer> getTagCounts(boolean isAdmin) {
+        if (!isAdmin) {
+            return ImmutableMap.of();
+        }
+        return problemTagDao.selectTagCounts();
     }
 
     public Map<String, Integer> getPublicTagCounts() {

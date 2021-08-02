@@ -10,10 +10,15 @@
 @checkboxView(tag: String, text: String) = {
     <div class="checkbox">
         <label>
-            @if(tags != null && tags.contains(tag)){
-                <input type="checkbox" name="tags" value="@tag" checked="checked" /> @text
-            }else{
-                <input type="checkbox" name="tags" value="@tag" /> @text
+            <input
+                    type="checkbox"
+                    name="tags"
+                    value="@tag"
+                    @if(tags != null && tags.contains(tag)) { checked="checked" }
+            />
+            @text
+            @if(tagCounts.containsKey(tag)) {
+                (@tagCounts.get(tag))
             }
         </label>
     </div>

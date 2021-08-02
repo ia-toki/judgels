@@ -82,7 +82,7 @@ public final class ProblemController extends AbstractProblemController {
 
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
-        Map<String, Integer> tagCounts = problemTagStore.getTagCounts();
+        Map<String, Integer> tagCounts = problemTagStore.getTagCounts(isAdmin);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listProblemsView.render(problems, profilesMap, sortBy, orderBy, filterString, tags));
