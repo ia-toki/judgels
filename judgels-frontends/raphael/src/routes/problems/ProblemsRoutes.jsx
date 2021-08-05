@@ -1,4 +1,3 @@
-import { Intent, Tag } from '@blueprintjs/core';
 import { Manual, PanelStats } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
@@ -16,17 +15,7 @@ function ProblemsRoutes() {
     {
       id: '@',
       titleIcon: <Manual />,
-      title: (
-        <div className="tab-item-with-widget">
-          <div className="float-left">Browse problems</div>
-          <div className="float-right">
-            <Tag className="normal-weight" intent={Intent.WARNING}>
-              BETA
-            </Tag>
-          </div>
-          <div className="clearfix" />
-        </div>
-      ),
+      title: 'Browse problems',
       routeComponent: Route,
       component: ProblemsPage,
       widgetComponent: ProblemTagFilter,
