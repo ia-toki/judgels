@@ -1,4 +1,5 @@
 import { Tag, Intent } from '@blueprintjs/core';
+import { SmallTick } from '@blueprintjs/icons';
 
 import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
 import ProblemDifficulty from '../ProblemDifficulty/ProblemDifficulty';
@@ -19,12 +20,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
   };
 
   const renderMetadata = () => {
-    return (
-      <div className="float-right">
-        {renderTopicTags()}
-        {renderEditorialTag()}
-      </div>
-    );
+    return <div className="float-right">{renderTopicTags()}</div>;
   };
 
   const renderEditorialTag = () => {
@@ -33,8 +29,8 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     }
 
     return (
-      <Tag round intent={Intent.WARNING} className="problemset-problem-card__tag">
-        editorial
+      <Tag round intent={Intent.WARNING} className="problemset-problem-card__editorial-tag">
+        editorial <SmallTick />
       </Tag>
     );
   };
@@ -74,6 +70,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
         {showAlias && <>{problem.alias}. </>}
         {problemName}
         {renderProgress()}
+        {renderEditorialTag()}
       </h4>
       {renderProgressBar()}
       {renderSpoilers()}
