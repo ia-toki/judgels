@@ -87,6 +87,7 @@ public class ProblemTags {
             "searching: brute force",
             "searching: divide-and-conquer",
             "searching: meet-in-the-middle",
+            "searching: sweep line",
             "searching: ternary search",
             "searching: two pointers",
             "string",
