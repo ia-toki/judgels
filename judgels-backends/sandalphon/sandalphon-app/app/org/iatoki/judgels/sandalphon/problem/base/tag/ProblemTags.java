@@ -10,8 +10,6 @@ public class ProblemTags {
     public static final List<String> TOPIC_TAGS = ImmutableList.of(
             "ad hoc",
             "bits",
-            "bits: bitset",
-            "bits: bitwise operation",
             "constructive",
             "data structure",
             "data structure: binary search tree",
@@ -35,6 +33,7 @@ public class ProblemTags {
             "dynamic programming: connected components",
             "dynamic programming: matrix exponentiation",
             "dynamic programming: sum over subsets",
+            "dynamic programming: tree",
             "game theory",
             "game theory: sprague-grundy number",
             "geometry",
@@ -70,16 +69,12 @@ public class ProblemTags {
             "math: combinatorics",
             "math: fast fourier transform",
             "math: gaussian elimination",
-            "math: greatest common divisor",
             "math: inclusion-exclusion",
             "math: inversion",
             "math: linearity of expectation",
-            "math: number base",
             "math: number theory",
-            "math: permutation",
             "math: pigeonhole principle",
             "math: polynomials",
-            "math: prime number",
             "math: probability",
             "optimization trick",
             "optimization trick: convex hull",
@@ -106,7 +101,6 @@ public class ProblemTags {
             "tree: heavy-light decomposition",
             "tree: lowest common ancestor",
             "tree: small-to-large",
-            "tree: tree flattening",
             "EOF")
             .stream()
             .filter(s -> !s.equals("EOF"))
