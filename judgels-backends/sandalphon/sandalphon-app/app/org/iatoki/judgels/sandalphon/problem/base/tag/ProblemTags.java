@@ -39,7 +39,6 @@ public class ProblemTags {
             "geometry",
             "geometry: convex hull",
             "geometry: delaunay triangulation",
-            "geometry: sweep line",
             "graph",
             "graph: 2-satisfiability",
             "graph: biconnected components",
