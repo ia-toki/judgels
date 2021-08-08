@@ -363,6 +363,10 @@ th {
     overflow-y: scroll;
 }
 
+.content-text table {
+    margin-bottom: 10px;
+}
+
 .content-text table, .content-text th, .content-text td {
     border-collapse: collapse;
     border: 1px solid black;
