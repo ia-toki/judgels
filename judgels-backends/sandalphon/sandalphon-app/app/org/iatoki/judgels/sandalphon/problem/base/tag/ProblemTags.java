@@ -9,12 +9,12 @@ public class ProblemTags {
 
     public static final List<String> TOPIC_TAGS = ImmutableList.of(
             "ad hoc",
-            "bits",
             "constructive",
             "data structure",
             "data structure: binary search tree",
             "data structure: bitset",
             "data structure: compression",
+            "data structure: deque",
             "data structure: disjoint set union",
             "data structure: fenwick tree",
             "data structure: heap",
