@@ -18,6 +18,7 @@ public class ProblemTags {
             "data structure: disjoint set union",
             "data structure: fenwick/segment tree",
             "data structure: heap",
+            "data structure: lazy propagation",
             "data structure: persistent",
             "data structure: prefix sum",
             "data structure: sparse table",
