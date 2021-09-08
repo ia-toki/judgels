@@ -9,6 +9,7 @@ public class ProblemTags {
 
     public static final List<String> TOPIC_TAGS = ImmutableList.of(
             "ad hoc",
+            "bitwise operation",
             "constructive",
             "data structure",
             "data structure: binary search tree",
@@ -63,7 +64,6 @@ public class ProblemTags {
             "implementation",
             "math",
             "math: big integer",
-            "math: bitwise operation",
             "math: burnside's lemma",
             "math: chinese remainder theorem",
             "math: combinatorics",
