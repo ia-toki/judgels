@@ -67,7 +67,6 @@ public class ProblemTags {
             "implementation",
             "math",
             "math: big integer",
-            "math: bitwise operation",
             "math: burnside's lemma",
             "math: chinese remainder theorem",
             "math: combinatorics",
