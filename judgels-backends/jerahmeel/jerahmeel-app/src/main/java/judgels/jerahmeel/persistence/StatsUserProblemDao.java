@@ -10,6 +10,7 @@ import judgels.persistence.api.SelectionOptions;
 public interface StatsUserProblemDao extends Dao<StatsUserProblemModel> {
     Optional<StatsUserProblemModel> selectByUserJidAndProblemJid(String userJid, String problemJid);
     List<StatsUserProblemModel> selectAllByUserJidAndProblemJids(String userJid, Set<String> problemJids);
+    List<StatsUserProblemModel> selectAllByUserJidsAndProblemJids(Set<String> userJids, Set<String> problemJids);
     List<StatsUserProblemModel> selectAllAcceptedByProblemJid(String problemJid, SelectionOptions options);
     List<StatsUserProblemModel> selectAllByProblemJid(String problemJid, SelectionOptions options);
     Map<String, Long> selectTotalScoresByProblemJids(Set<String> problemJids);

@@ -58,4 +58,10 @@ public interface ProblemSetService {
     @Path("/search")
     @Produces(APPLICATION_JSON)
     ProblemSet searchProblemSet(@QueryParam("contestJid") String contestJid);
+
+    @POST
+    @Path("/user-progresses")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    ProblemSetUserProgressesResponse getProblemSetUserProgresses(ProblemSetUserProgressesData data);
 }

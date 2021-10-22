@@ -43,6 +43,16 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
+    public List<StatsUserProblemModel> selectAllByUserJidsAndProblemJids(
+            Set<String> userJids,
+            Set<String> problemJids) {
+        return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
+                .putColumnsIn(StatsUserProblemModel_.userJid, userJids)
+                .putColumnsIn(StatsUserProblemModel_.problemJid, problemJids)
+                .build());
+    }
+
+    @Override
     public List<StatsUserProblemModel> selectAllByProblemJid(String problemJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
                 .putColumnsEq(StatsUserProblemModel_.problemJid, problemJid)

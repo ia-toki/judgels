@@ -65,6 +65,15 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
     }
 
     @Override
+    public List<ProblemSetProblemModel> selectAllByProblemSetJids(
+            Set<String> problemSetJids,
+            SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
+                .putColumnsIn(ProblemSetProblemModel_.problemSetJid, problemSetJids)
+                .build(), options);
+    }
+
+    @Override
     public Map<String, Long> selectCountsByProblemSetJids(Set<String> problemSetJids) {
         if (problemSetJids.isEmpty()) {
             return Collections.emptyMap();

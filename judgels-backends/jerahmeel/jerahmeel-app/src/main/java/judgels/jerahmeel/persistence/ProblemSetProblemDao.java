@@ -13,6 +13,7 @@ public interface ProblemSetProblemDao extends Dao<ProblemSetProblemModel> {
     List<ProblemSetProblemModel> selectAllByProblemJids(Set<String> problemJids);
     Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(String problemSetJid, String problemAlias);
     List<ProblemSetProblemModel> selectAllByProblemSetJid(String problemSetJid, SelectionOptions options);
+    List<ProblemSetProblemModel> selectAllByProblemSetJids(Set<String> problemSetJids, SelectionOptions options);
     Map<String, Long> selectCountsByProblemSetJids(Set<String> problemSetJids);
     Page<ProblemSetProblemModel> selectPagedByDifficulty(Set<String> allowedProblemJids, SelectionOptions options);
 }

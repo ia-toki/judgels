@@ -77,6 +77,10 @@ public class ProblemSetStore {
         return Optional.ofNullable(problemSetBySlugCache.get(problemSetSlug));
     }
 
+    public Map<String, ProblemSet> getProblemSetsBySlugs(Set<String> problemSetSlugs) {
+        return problemSetBySlugCache.getAll(problemSetSlugs);
+    }
+
     private ProblemSet getProblemSetBySlugUncached(String problemSetSlug) {
         return problemSetDao.selectBySlug(problemSetSlug).map(ProblemSetStore::fromModel).orElse(null);
     }

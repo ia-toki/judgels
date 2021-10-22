@@ -217,6 +217,26 @@ public class StatsStore {
                         .build()));
     }
 
+    public Map<String, Map<String, ProblemProgress>> getUserProblemProgressesMap(
+            Set<String> userJids,
+            Set<String> problemJids) {
+
+        List<StatsUserProblemModel> models =
+                statsUserProblemDao.selectAllByUserJidsAndProblemJids(userJids, problemJids);
+
+        Map<String, Map<String, ProblemProgress>> progressesMap = new HashMap<>();
+        for (String userJid : userJids) {
+            progressesMap.put(userJid, new HashMap<>());
+        }
+        for (StatsUserProblemModel m : models) {
+            progressesMap.get(m.userJid).put(m.problemJid, new ProblemProgress.Builder()
+                    .verdict(m.verdict)
+                    .score(m.score)
+                    .build());
+        }
+        return ImmutableMap.copyOf(progressesMap);
+    }
+
     public UserStats getUserStats(String userJid) {
         int totalScores = statsUserDao.selectByUserJid(userJid).map(m -> m.score).orElse(0);
         int totalProblemsTried = (int) statsUserProblemDao.selectCountTriedByUserJid(userJid);

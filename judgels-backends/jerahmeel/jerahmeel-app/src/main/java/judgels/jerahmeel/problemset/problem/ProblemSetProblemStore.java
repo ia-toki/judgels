@@ -1,5 +1,6 @@
 package judgels.jerahmeel.problemset.problem;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -32,6 +33,16 @@ public class ProblemSetProblemStore {
         return Lists.transform(
                 problemDao.selectAllByProblemSetJid(problemSetJid, createOptions()),
                 m -> fromModel(m, getContestJids(m.problemJid)));
+    }
+
+    public Map<String, List<ProblemSetProblem>> getProblems(Set<String> problemSetJids) {
+        return problemDao.selectAllByProblemSetJids(problemSetJids, createOptions())
+                .stream()
+                .collect(Collectors.groupingBy(
+                        m -> m.problemSetJid,
+                        Collectors.mapping(
+                                m -> fromModel(m, ImmutableList.of()),
+                                Collectors.toList())));
     }
 
     public Optional<ProblemSetProblem> getProblem(String problemJid) {
