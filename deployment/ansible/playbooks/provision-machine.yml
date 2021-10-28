@@ -1,4 +1,4 @@
-- hosts: gabriel
+- hosts: judgels
   pre_tasks:
     - name: Install python for ansible
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python3 python3-pip)
