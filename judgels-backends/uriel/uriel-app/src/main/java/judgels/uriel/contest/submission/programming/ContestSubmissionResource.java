@@ -4,7 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.service.ServiceUtils.buildImageResponseFromText;
+import static judgels.service.ServiceUtils.buildDarkImageResponseFromText;
+import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -254,7 +255,20 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
         String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
 
-        return buildImageResponseFromText(source, Date.from(submission.getTime()));
+        return buildLightImageResponseFromText(source, Date.from(submission.getTime()));
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Response getSubmissionSourceDarkImage(String contestJid, String userJid, String problemJid) {
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewAll(contest));
+
+        Submission submission = checkFound(submissionStore
+                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
+        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
+
+        return buildDarkImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
     @POST

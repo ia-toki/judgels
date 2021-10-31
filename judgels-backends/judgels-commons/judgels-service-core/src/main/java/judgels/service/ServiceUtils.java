@@ -67,7 +67,30 @@ public class ServiceUtils {
         }
     }
 
-    public static Response buildImageResponseFromText(String text, Date lastModifiedStream) {
+    public static Response buildLightImageResponseFromText(String text, Date lastModifiedStream) {
+        return buildImageResponseFromText(
+                text,
+                lastModifiedStream,
+                new Color(24, 32, 38),
+                Color.WHITE,
+                new Color(240, 240, 240));
+    }
+
+    public static Response buildDarkImageResponseFromText(String text, Date lastModifiedStream) {
+        return buildImageResponseFromText(
+                text,
+                lastModifiedStream,
+                new Color(204, 204, 204),
+                new Color(48, 64, 77),
+                new Color(57, 75, 89));
+    }
+
+    public static Response buildImageResponseFromText(
+            String text, Date lastModifiedStream,
+            Color textColor,
+            Color backgroundColor,
+            Color lineNumberBackgroundColor) {
+
         int fontSize = 13;
         int margin = 20;
         int charWidth = 8;
@@ -75,10 +98,10 @@ public class ServiceUtils {
 
         List<String> textList = Arrays.asList(text.split("\\r?\\n"))
                 .stream()
-                .map(s -> s.replaceAll("\t", "    "))
+                .map(s -> " " + s.replaceAll("\t", "    "))
                 .collect(Collectors.toList());
         int maxDigitLineNumber = String.valueOf(textList.size()).length();
-        String lineNumTemplate = String.format(" %%%dd | ", maxDigitLineNumber);
+        String lineNumTemplate = String.format(" %%%dd ", maxDigitLineNumber);
         int prefixCharCount = String.format(lineNumTemplate, 0).length();
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
         int longestText = textList.stream().map(String::length).max(Integer::compareTo).get();
@@ -89,14 +112,17 @@ public class ServiceUtils {
         Graphics2D g2d = img.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setFont(font);
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(backgroundColor);
         g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
+        g2d.setColor(lineNumberBackgroundColor);
+        g2d.fillRect(0, 0, prefixCharCount * charWidth, img.getHeight());
+
         int nextLinePosition = margin;
+
+        g2d.setColor(textColor);
         for (int i = 0; i < textList.size(); i++) {
             String s = textList.get(i);
-            g2d.setColor(Color.BLUE);
             g2d.drawString(String.format(lineNumTemplate, i + 1), 0, nextLinePosition);
-            g2d.setColor(Color.BLACK);
             g2d.drawString(s, prefixCharCount * charWidth, nextLinePosition);
             nextLinePosition += charHeight;
         }

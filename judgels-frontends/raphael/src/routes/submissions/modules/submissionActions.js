@@ -1,4 +1,5 @@
 import { selectToken } from '../../../modules/session/sessionSelectors';
+import { selectIsDarkMode } from '../../../modules/webPrefs/webPrefsSelectors';
 import { submissionProgrammingAPI } from '../../../modules/api/jerahmeel/submissionProgramming';
 import { toastActions } from '../../../modules/toast/toastActions';
 
@@ -35,7 +36,8 @@ export function regradeSubmissions(containerJid, userJid, problemJid) {
 }
 
 export function getSubmissionSourceImage(submissionJid) {
-  return async () => {
-    return await submissionProgrammingAPI.getSubmissionSourceImage(submissionJid);
+  return async (dispatch, getState) => {
+    const isDarkMode = selectIsDarkMode(getState());
+    return await submissionProgrammingAPI.getSubmissionSourceImage(submissionJid, isDarkMode);
   };
 }

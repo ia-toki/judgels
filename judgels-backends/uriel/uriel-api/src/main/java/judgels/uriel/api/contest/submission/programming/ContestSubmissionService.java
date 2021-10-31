@@ -54,6 +54,14 @@ public interface ContestSubmissionService {
             @QueryParam("userJid") String userJid,
             @QueryParam("problemJid") String problemJid);
 
+    @GET
+    @Path("/image/dark")
+    @Produces("image/png")
+    Response getSubmissionSourceDarkImage(
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") String userJid,
+            @QueryParam("problemJid") String problemJid);
+
     @POST
     @Path("/{submissionJid}/regrade")
     void regradeSubmission(

@@ -2,6 +2,7 @@ import { selectToken } from '../../../../../../modules/session/sessionSelectors'
 import { contestScoreboardAPI } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { contestSubmissionProgrammingAPI } from '../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import * as toastActions from '../../../../../../modules/toast/toastActions';
+import { selectIsDarkMode } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 
 export function getScoreboard(contestJid, frozen, showClosedProblems, page) {
   return async (dispatch, getState) => {
@@ -19,8 +20,9 @@ export function refreshScoreboard(contestJid) {
 }
 
 export function getSubmissionSourceImage(contestJid, userJid, problemJid) {
-  return async () => {
-    return await contestSubmissionProgrammingAPI.getSubmissionSourceImage(contestJid, userJid, problemJid);
+  return async (dispatch, getState) => {
+    const isDarkMode = selectIsDarkMode(getState());
+    return await contestSubmissionProgrammingAPI.getSubmissionSourceImage(contestJid, userJid, problemJid, isDarkMode);
   };
 }
 

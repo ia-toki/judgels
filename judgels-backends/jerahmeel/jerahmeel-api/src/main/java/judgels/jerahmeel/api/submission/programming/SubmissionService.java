@@ -41,6 +41,11 @@ public interface SubmissionService {
     @Produces("image/png")
     Response getSubmissionSourceImage(@PathParam("submissionJid") String submissionJid);
 
+    @GET
+    @Path("/{submissionJid}/image/dark")
+    @Produces("image/png")
+    Response getSubmissionSourceDarkImage(@PathParam("submissionJid") String submissionJid);
+
     @POST
     @Path("/{submissionJid}/regrade")
     void regradeSubmission(

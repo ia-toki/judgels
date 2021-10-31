@@ -4,7 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.service.ServiceUtils.buildImageResponseFromText;
+import static judgels.service.ServiceUtils.buildDarkImageResponseFromText;
+import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -231,7 +232,16 @@ public class SubmissionResource implements SubmissionService {
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
 
-        return buildImageResponseFromText(source, Date.from(submission.getTime()));
+        return buildLightImageResponseFromText(source, Date.from(submission.getTime()));
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Response getSubmissionSourceDarkImage(String submissionJid) {
+        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
+
+        return buildDarkImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
     @POST
