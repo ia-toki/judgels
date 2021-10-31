@@ -204,6 +204,10 @@ describe('ContestEditConfigsTab', () => {
 
         wrapper.update();
 
+        const icpcAllowedLanguagesGo = wrapper.find('input[name="icpcAllowedLanguages.Go"]');
+        icpcAllowedLanguagesGo.getDOMNode().checked = false;
+        icpcAllowedLanguagesGo.simulate('change');
+
         const icpcAllowedLanguagesPascal = wrapper.find('input[name="icpcAllowedLanguages.Pascal"]');
         icpcAllowedLanguagesPascal.getDOMNode().checked = true;
         icpcAllowedLanguagesPascal.simulate('change');

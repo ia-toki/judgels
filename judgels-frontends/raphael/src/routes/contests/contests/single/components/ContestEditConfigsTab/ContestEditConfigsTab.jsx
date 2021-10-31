@@ -3,7 +3,7 @@ import { Edit } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language.js';
+import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 
@@ -171,7 +171,9 @@ class ContestEditConfigsTab extends Component {
       },
     };
     if (trocStyle) {
-      const allowedLanguageNames = data.trocAllowAllLanguages ? [] : Object.keys(data.trocAllowedLanguages);
+      const allowedLanguageNames = data.trocAllowAllLanguages
+        ? []
+        : this.toLanguageRestriction(data.trocAllowedLanguages);
       config = {
         ...config,
         trocStyle: {
@@ -181,7 +183,9 @@ class ContestEditConfigsTab extends Component {
       };
     }
     if (icpcStyle) {
-      const allowedLanguageNames = data.icpcAllowAllLanguages ? [] : Object.keys(data.icpcAllowedLanguages);
+      const allowedLanguageNames = data.icpcAllowAllLanguages
+        ? []
+        : this.toLanguageRestriction(data.icpcAllowedLanguages);
       config = {
         ...config,
         icpcStyle: {
@@ -191,7 +195,9 @@ class ContestEditConfigsTab extends Component {
       };
     }
     if (ioiStyle) {
-      const allowedLanguageNames = data.ioiAllowAllLanguages ? [] : Object.keys(data.ioiAllowedLanguages);
+      const allowedLanguageNames = data.ioiAllowAllLanguages
+        ? []
+        : this.toLanguageRestriction(data.ioiAllowedLanguages);
       config = {
         ...config,
         ioiStyle: {
@@ -202,7 +208,9 @@ class ContestEditConfigsTab extends Component {
       };
     }
     if (gcjStyle) {
-      const allowedLanguageNames = data.gcjAllowAllLanguages ? [] : Object.keys(data.gcjAllowedLanguages);
+      const allowedLanguageNames = data.gcjAllowAllLanguages
+        ? []
+        : this.toLanguageRestriction(data.gcjAllowedLanguages);
       config = {
         ...config,
         gcjStyle: {
@@ -258,6 +266,10 @@ class ContestEditConfigsTab extends Component {
 
   fromLanguageRestriction = r => {
     return Object.assign({}, ...r.allowedLanguageNames.map(l => ({ [l]: true })));
+  };
+
+  toLanguageRestriction = r => {
+    return Object.keys(r).filter(l => r[l]);
   };
 
   toggleEdit = () => {
