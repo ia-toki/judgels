@@ -87,6 +87,7 @@ GET         /problems/programming/:problemId/submissions                        
 GET         /problems/programming/:problemId/submissions/                           org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingProblemSubmissionController.listSubmissions(req: Request, problemId: Long, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "desc")
 GET         /problems/programming/:problemId/submissions/:submissionId              org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingProblemSubmissionController.viewSubmission(req: Request, problemId: Long, submissionId: Long)
 GET         /problems/programming/:problemId/submissions/:submissionId/regrade      org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingProblemSubmissionController.regradeSubmission(req: Request, problemId: Long, submissionId: Long, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "desc")
++nocsrf
 POST        /problems/programming/:problemId/submissions/regrade                    org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingProblemSubmissionController.regradeSubmissions(req: Request, problemId: Long, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "desc")
 
 GET         /problems/programming/:problemId/grading/engine                         org.iatoki.judgels.sandalphon.problem.programming.grading.ProgrammingProblemGradingController.editGradingEngine(req: Request, problemId: Long)
@@ -128,6 +129,7 @@ GET         /problems/bundle/:problemId/submissions                             
 GET         /problems/bundle/:problemId/submissions/                                org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleProblemSubmissionController.listSubmissions(req: Request, problemId: Long, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "desc")
 GET         /problems/bundle/:problemId/submissions/:submissionId                   org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleProblemSubmissionController.viewSubmission(req: Request, problemId: Long, submissionId: Long)
 GET         /problems/bundle/:problemId/submissions/:submissionId/regrade           org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleProblemSubmissionController.regradeSubmission(req: Request, problemId: Long, submissionId: Long, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "desc")
++nocsrf
 POST        /problems/bundle/:problemId/submissions/regrade                         org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleProblemSubmissionController.regradeSubmissions(req: Request, problemId: Long, pageIndex: Long ?= 1, orderBy ?= "id", orderDir ?= "desc")
 
 GET         /lessons                                                                org.iatoki.judgels.sandalphon.lesson.LessonController.index(req: Request)
