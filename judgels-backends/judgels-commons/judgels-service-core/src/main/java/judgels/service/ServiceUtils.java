@@ -106,7 +106,7 @@ public class ServiceUtils {
         Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
         int longestText = textList.stream().map(String::length).max(Integer::compareTo).get();
         int width = charWidth * (prefixCharCount + longestText) + 2 * margin;
-        int height = charHeight * textList.size() + 2 * margin;
+        int height = charHeight * textList.size() + margin;
 
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = img.createGraphics();
