@@ -33,7 +33,7 @@ func main() {
 		panic("RECEIVER_SECRET is not set")
 	}
 	serverSecret = os.Getenv("SERVER_SECRET")
-	if receiverSecret == "" {
+	if serverSecret == "" {
 		panic("SERVER_SECRET is not set")
 	}
 
