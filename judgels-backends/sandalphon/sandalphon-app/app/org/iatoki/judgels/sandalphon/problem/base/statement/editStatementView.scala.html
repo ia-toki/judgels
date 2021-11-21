@@ -1,4 +1,6 @@
 @import b3.vertical.fieldConstructor
+@import org.iatoki.judgels.sandalphon.problem.base.html.statementManualBodyView
+@import org.iatoki.judgels.sandalphon.problem.base.html.statementManualButtonsView
 @import org.iatoki.judgels.sandalphon.problem.base.statement.routes
 @import org.iatoki.judgels.sandalphon.resource.UpdateStatementForm
 
@@ -14,10 +16,9 @@
     @b3.text(updateStatementForm("title"), '_label -> "Title")
 
     <label class="control-label">Text</label>
+    &nbsp;
+    @statementManualButtonsView()
     <div></div>
-    <small>
-        To insert image, add the image as a media file and then insert it as "render/&lt;imageFilename&gt;".
-    </small>
     <div class="form-group">
         <textarea class="ckeditor" name="text">
             @updateStatementForm("text").value.get
@@ -26,3 +27,5 @@
 
     @b3.submit('class -> "btn btn-primary") { Update }
 }
+
+@statementManualBodyView()
