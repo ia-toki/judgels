@@ -35,7 +35,7 @@ public class FunctionalCompiler implements Compiler {
             throw new PreparationException(this.graderFilename + " is missing");
         }
 
-        sandbox.setTimeLimitInMilliseconds(10 * 1000);
+        sandbox.setTimeLimitInMilliseconds(20 * 1000);
         sandbox.setMemoryLimitInKilobytes(1024 * 1024);
 
         sandbox.resetRedirections();

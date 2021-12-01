@@ -22,7 +22,7 @@ public class SingleSourceFileCompiler implements Compiler {
     private GradingLanguage language;
 
     public void prepare(Sandbox sandbox, File compilationDir, GradingLanguage language) {
-        sandbox.setTimeLimitInMilliseconds(10 * 1000);
+        sandbox.setTimeLimitInMilliseconds(20 * 1000);
         sandbox.setMemoryLimitInKilobytes(1024 * 1024);
 
         sandbox.resetRedirections();
