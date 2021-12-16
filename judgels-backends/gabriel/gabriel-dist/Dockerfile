@@ -17,15 +17,18 @@ FROM ubuntu:20.04
 RUN apt-get update \
     && apt-get -y --no-install-recommends install software-properties-common \
     && add-apt-repository -y ppa:pypy/ppa \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get -y --no-install-recommends install \
        fp-compiler \
-       g++ \
+       g++-11 \
        golang \
        libcap-dev \
        openjdk-8-jdk-headless \
        openjdk-8-jre \
        pypy3 \
        python3 \
+    && ln -s /usr/bin/gcc-11 /usr/bin/gcc \
+    && ln -s /usr/bin/g++-11 /usr/bin/g++ \
     && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64

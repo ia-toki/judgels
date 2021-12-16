@@ -30,28 +30,28 @@ describe('webPrefsReducer', () => {
   });
 
   test('PUT_STATEMENT_LANGUAGE', () => {
-    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp20' };
     const action = PutStatementLanguage('id');
-    const nextState = { statementLanguage: 'id', gradingLanguage: 'Cpp17' };
+    const nextState = { statementLanguage: 'id', gradingLanguage: 'Cpp20' };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
   test('PUT_EDITORIAL_LANGUAGE', () => {
-    const state = { editorialLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const state = { editorialLanguage: 'en', gradingLanguage: 'Cpp20' };
     const action = PutEditorialLanguage('id');
-    const nextState = { editorialLanguage: 'id', gradingLanguage: 'Cpp17' };
+    const nextState = { editorialLanguage: 'id', gradingLanguage: 'Cpp20' };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
   test('PUT_GRADING_LANGUAGE', () => {
-    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp20' };
     const action = PutGradingLanguage('Java');
     const nextState = { statementLanguage: 'en', gradingLanguage: 'Java' };
     expect(webPrefsReducer(state, action)).toEqual(nextState);
   });
 
   test('other actions', () => {
-    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp17' };
+    const state = { statementLanguage: 'en', gradingLanguage: 'Cpp20' };
     expect(webPrefsReducer(state, { type: 'other' })).toEqual(state);
   });
 
@@ -59,7 +59,7 @@ describe('webPrefsReducer', () => {
     expect(webPrefsReducer(undefined, { type: 'other' })).toEqual({
       statementLanguage: 'id',
       editorialLanguage: 'id',
-      gradingLanguage: 'Cpp17',
+      gradingLanguage: 'Cpp20',
     });
   });
 });

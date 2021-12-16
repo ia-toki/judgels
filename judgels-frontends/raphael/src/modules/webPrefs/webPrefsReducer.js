@@ -4,7 +4,7 @@ const initialState = {
   showProblemTopicTags: undefined,
   statementLanguage: 'id',
   editorialLanguage: 'id',
-  gradingLanguage: 'Cpp17',
+  gradingLanguage: 'Cpp20',
 };
 
 export function PutIsDarkMode(val) {
