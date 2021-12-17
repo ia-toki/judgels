@@ -6,6 +6,7 @@ import go from 'react-syntax-highlighter/languages/prism/go';
 import java from 'react-syntax-highlighter/languages/prism/java';
 import pascal from 'react-syntax-highlighter/languages/prism/pascal';
 import python from 'react-syntax-highlighter/languages/prism/python';
+import rust from 'react-syntax-highlighter/languages/prism/rust';
 import coy from 'react-syntax-highlighter/styles/prism/coy';
 import tomorrow from 'react-syntax-highlighter/styles/prism/tomorrow';
 
@@ -17,6 +18,7 @@ registerLanguage('go', go);
 registerLanguage('java', java);
 registerLanguage('pascal', pascal);
 registerLanguage('python', python);
+registerLanguage('rust', rust);
 
 function SourceCode({ isDarkMode, language, children }) {
   return (

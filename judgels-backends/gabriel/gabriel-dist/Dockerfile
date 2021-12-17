@@ -14,11 +14,18 @@ RUN git clone --depth 1 git://git.ucw.cz/moe.git; \
 
 FROM ubuntu:20.04
 
+ENV CARGO_HOME /usr
+ENV RUSTUP_HOME /usr
+ENV XDG_CACHE_HOME /tmp
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV PATH $JAVA_HOME/bin:$PATH
+
 RUN apt-get update \
     && apt-get -y --no-install-recommends install software-properties-common \
     && add-apt-repository -y ppa:pypy/ppa \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get -y --no-install-recommends install \
+       curl \
        fp-compiler \
        g++-11 \
        golang \
@@ -29,11 +36,8 @@ RUN apt-get update \
        python3 \
     && ln -s /usr/bin/gcc-11 /usr/bin/gcc \
     && ln -s /usr/bin/g++-11 /usr/bin/g++ \
+    && curl -sSf https://sh.rustup.rs/ | bash -s -- -y -q --default-toolchain=1.57.0 \
     && rm -rf /var/lib/apt/lists/*
-
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-ENV PATH $JAVA_HOME/bin:$PATH
-ENV XDG_CACHE_HOME /tmp
 
 WORKDIR /judgels/gabriel
 

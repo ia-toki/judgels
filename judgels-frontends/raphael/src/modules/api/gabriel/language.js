@@ -13,6 +13,7 @@ export const gradingLanguageNamesMap = {
   Pascal: 'Pascal',
   Python3: 'Python 3',
   PyPy3: 'PyPy 3',
+  Rust2021: 'Rust 2021',
   OutputOnly: '-',
 };
 
@@ -26,6 +27,7 @@ export const gradingLanguageFamiliesMap = {
   Pascal: 'Pascal',
   Python3: 'Python',
   PyPy3: 'Python',
+  Rust2021: 'Rust',
 };
 
 export const gradingLanguageFilenameExtensionsMap = {
@@ -38,6 +40,7 @@ export const gradingLanguageFilenameExtensionsMap = {
   Pascal: ['pas'],
   Python3: ['py'],
   PyPy3: ['py'],
+  Rust2021: ['rs'],
   OutputOnly: ['zip'],
 };
 
@@ -51,6 +54,7 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
   Pascal: 'pascal',
   Python3: 'python',
   PyPy3: 'python',
+  Rust2021: 'rust',
   OutputOnly: '',
 };
 
