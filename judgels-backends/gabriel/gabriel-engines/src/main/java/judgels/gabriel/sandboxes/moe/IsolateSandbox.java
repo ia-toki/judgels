@@ -46,7 +46,7 @@ public class IsolateSandbox implements Sandbox {
         this.allowedDirs = Sets.newHashSet();
         this.filenames = Sets.newHashSet();
         this.fileSizeLimit = 100 * 1024;
-        this.maxProcesses = 20;
+        this.maxProcesses = 50;
 
         LOGGER.info("Initialization of Isolate box {} started.", boxId);
         initIsolate();
