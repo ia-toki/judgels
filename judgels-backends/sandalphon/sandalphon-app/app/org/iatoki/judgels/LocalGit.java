@@ -63,10 +63,10 @@ public final class LocalGit implements Git {
             new org.eclipse.jgit.api.Git(repo).fetch().setCheckFetchedObjects(true).call();
 
             RevWalk walk = new RevWalk(repo);
-            RevCommit commit = walk.parseCommit(repo.getRef("master").getObjectId());
+            RevCommit commit = walk.parseCommit(repo.resolve("master").toObjectId());
 
             walk.reset();
-            RevCommit originCommit = walk.parseCommit(repo.getRef("origin/master").getObjectId());
+            RevCommit originCommit = walk.parseCommit(repo.resolve("origin/master").toObjectId());
 
             repo.close();
             return !commit.getName().equals(originCommit.getName());
