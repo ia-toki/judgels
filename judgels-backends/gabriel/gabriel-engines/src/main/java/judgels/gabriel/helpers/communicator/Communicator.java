@@ -21,7 +21,7 @@ import judgels.gabriel.api.SandboxInteractor;
 import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.compilers.SingleSourceFileCompiler;
 import judgels.gabriel.helpers.TestCaseVerdictParser;
-import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
+import judgels.gabriel.languages.cpp.Cpp17GradingLanguage;
 import judgels.gabriel.languages.cpp.CppFamilyGradingLanguage;
 import org.apache.commons.io.FileUtils;
 
@@ -49,7 +49,7 @@ public class Communicator {
     public Communicator() {
         this.compiler = new SingleSourceFileCompiler();
         this.verdictParser = new TestCaseVerdictParser();
-        this.communicatorLanguage = new Cpp11GradingLanguage();
+        this.communicatorLanguage = new Cpp17GradingLanguage();
     }
 
     public void prepare(

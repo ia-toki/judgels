@@ -30,7 +30,7 @@ import judgels.gabriel.api.SubtaskResult;
 import judgels.gabriel.api.TestCaseResult;
 import judgels.gabriel.api.TestGroupResult;
 import judgels.gabriel.api.Verdict;
-import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
+import judgels.gabriel.languages.cpp.Cpp17GradingLanguage;
 import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -68,7 +68,7 @@ public class BlackboxGradingEngineIntegrationTests {
         this.helperFiles = listFilesAsMap(helperDir);
 
         this.engine = engine;
-        this.language = new Cpp11GradingLanguage();
+        this.language = new Cpp17GradingLanguage();
     }
 
     @BeforeEach

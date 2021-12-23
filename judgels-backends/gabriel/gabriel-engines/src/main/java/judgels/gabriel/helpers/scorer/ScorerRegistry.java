@@ -7,11 +7,11 @@ import javax.annotation.Nullable;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.Scorer;
-import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
+import judgels.gabriel.languages.cpp.Cpp17GradingLanguage;
 import judgels.gabriel.languages.cpp.CppFamilyGradingLanguage;
 
 public class ScorerRegistry {
-    private static final CppFamilyGradingLanguage language = new Cpp11GradingLanguage();
+    private static final CppFamilyGradingLanguage language = new Cpp17GradingLanguage();
 
     private ScorerRegistry() {}
 
