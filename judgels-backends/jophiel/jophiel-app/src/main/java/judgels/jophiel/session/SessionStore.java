@@ -73,6 +73,10 @@ public class SessionStore {
         sessionDao.selectAllByUserJid(userJid).forEach(sessionDao::delete);
     }
 
+    public void deleteSessionsOlderThan(Instant time) {
+        sessionDao.selectAllOlderThan(time).forEach(sessionDao::delete);
+    }
+
     private static Session fromModel(SessionModel model) {
         return Session.of(model.token, model.userJid);
     }

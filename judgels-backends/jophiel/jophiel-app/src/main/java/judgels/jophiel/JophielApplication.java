@@ -8,6 +8,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.mailer.MailerModule;
@@ -19,6 +20,7 @@ import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
+import judgels.service.JudgelsApplicationModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
@@ -47,6 +49,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
 
         JophielComponent component = DaggerJophielComponent.builder()
                 .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
+                .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
@@ -80,5 +83,10 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.clientUserResource());
         env.jersey().register(component.pingResource());
+
+        component.scheduler().scheduleWithFixedDelay(
+                "session-cleaner",
+                component.sessionCleaner(),
+                Duration.ofDays(1));
     }
 }

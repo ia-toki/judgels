@@ -9,6 +9,7 @@ import judgels.jophiel.legacy.user.LegacyUserResource;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.play.PlaySessionResource;
 import judgels.jophiel.profile.ProfileResource;
+import judgels.jophiel.session.SessionCleaner;
 import judgels.jophiel.session.SessionModule;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
@@ -28,8 +29,10 @@ import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.UserWebResource;
 import judgels.jophiel.user.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
+import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
+import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
@@ -37,6 +40,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
         JophielModule.class,
         JophielHibernateDaoModule.class,
         JudgelsModule.class,
+        JudgelsApplicationModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
         MailerModule.class,
@@ -66,4 +70,7 @@ public interface JophielComponent {
     UserWebResource userWebResource();
     ClientUserResource clientUserResource();
     PingResource pingResource();
+
+    JudgelsScheduler scheduler();
+    SessionCleaner sessionCleaner();
 }

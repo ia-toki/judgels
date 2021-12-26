@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.google.common.collect.ImmutableSet;
+import java.time.Duration;
 import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.persistence.SessionModel;
+import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -16,11 +18,13 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {SessionModel.class})
 class SessionStoreIntegrationTests extends AbstractIntegrationTests {
+    private TestClock clock;
     private SessionStore store;
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
-        JophielIntegrationTestComponent component = createComponent(sessionFactory);
+        clock = new TestClock();
+        JophielIntegrationTestComponent component = createComponent(sessionFactory, clock);
         store = component.sessionStore();
     }
 
@@ -52,5 +56,23 @@ class SessionStoreIntegrationTests extends AbstractIntegrationTests {
 
         assertThatExceptionOfType(ConstraintViolationException.class)
                 .isThrownBy(() -> store.createSession("token123", "userJid2"));
+    }
+
+    @Test
+    void delete_sessions_older_than() {
+        store.createSession("token123", "userJid1");
+        clock.tick(Duration.ofHours(1));
+        store.createSession("token456", "userJid1");
+        clock.tick(Duration.ofHours(2));
+        store.createSession("token789", "userJid1");
+        store.createSession("token000", "userJid2");
+        clock.tick(Duration.ofHours(2));
+
+        store.deleteSessionsOlderThan(clock.instant().minus(Duration.ofHours(3)));
+
+        assertThat(store.getSessionByToken("token123")).isEmpty();
+        assertThat(store.getSessionByToken("token456")).isEmpty();
+        assertThat(store.getSessionByToken("token789")).isNotEmpty();
+        assertThat(store.getSessionByToken("token000")).isNotEmpty();
     }
 }
