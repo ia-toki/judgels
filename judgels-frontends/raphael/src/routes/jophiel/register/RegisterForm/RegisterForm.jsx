@@ -38,14 +38,14 @@ const emailField = {
 const passwordField = {
   name: 'password',
   label: 'Password',
-  type: 'password',
+  inputType: 'password',
   validate: Required,
 };
 
 const confirmPasswordField = {
   name: 'confirmPassword',
   label: 'Confirm password',
-  type: 'password',
+  inputType: 'password',
   validate: composeValidators(Required, ConfirmPassword),
 };
 
