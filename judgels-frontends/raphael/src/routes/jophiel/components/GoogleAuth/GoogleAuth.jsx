@@ -67,7 +67,7 @@ class GoogleAuth extends React.Component {
         <p>
           Welcome, <b>{this.state.email}</b>!
         </p>
-        <p>Create a username for your account to complete the step.</p>
+        <p>Create a username for your account to complete the registration.</p>
         <hr />
         {fields}
       </div>

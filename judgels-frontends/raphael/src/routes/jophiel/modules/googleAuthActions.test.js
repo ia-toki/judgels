@@ -1,3 +1,4 @@
+import { push } from 'connected-react-router';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -99,6 +100,7 @@ describe('googleAuthActions', () => {
           .reply(200, config);
 
         await store.dispatch(googleAuthActions.register({ idToken, username }));
+        expect(store.getActions()).toContainEqual(push('/registered?source=google'));
         expect(store.getActions()).toContainEqual(PutToken(token));
         expect(store.getActions()).toContainEqual(PutUser(user));
         expect(store.getActions()).toContainEqual(PutWebConfig(config));

@@ -8,6 +8,7 @@ import LoginPage from './login/LoginPage/LoginPage';
 import LogoutPage from './logout/LogoutPage/LogoutPage';
 import NeedActivationPage from './needActivation/NeedActivationPage/NeedActivationPage';
 import RegisterPage from './register/RegisterPage/RegisterPage';
+import RegisteredPage from './registered/RegisteredPage/RegisteredPage';
 import ActivatePage from './activate/ActivatePage/ActivatePage';
 import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
@@ -19,6 +20,7 @@ function JophielRoutes() {
     <div>
       <Switch>
         <Route exact path="/" component={HomePage} />
+        <Route exact path="/registered" component={RegisteredPage} />
         <GuestRoute exact path="/login" component={LoginPage} />
         <UserRoute exact path="/logout" component={LogoutPage} />
         <GuestRoute exact path="/register" component={RegisterPage} />

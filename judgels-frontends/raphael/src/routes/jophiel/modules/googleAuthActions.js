@@ -1,3 +1,5 @@
+import { push } from 'connected-react-router';
+
 import { ForbiddenError } from '../../../modules/api/error';
 import { sessionAPI } from '../../../modules/api/jophiel/session';
 import { userAccountAPI } from '../../../modules/api/jophiel/userAccount';
@@ -28,6 +30,7 @@ export function register(data) {
     }
 
     await userAccountAPI.registerGoogleUser(data);
+    await dispatch(push('/registered?source=google'));
     await dispatch(logIn({ tokenId: data.idToken }));
   };
 }
