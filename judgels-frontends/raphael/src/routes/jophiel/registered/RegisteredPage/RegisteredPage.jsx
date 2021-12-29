@@ -3,7 +3,7 @@ import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/Si
 
 export default function RegisteredPage() {
   setTimeout(() => {
-    window.location.href = '/';
+    window.location.href = '/login';
   }, 3000);
 
   return (
