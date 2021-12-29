@@ -16,13 +16,11 @@ window.conf = {
 {% if googleAnalytics_trackingId is defined %}
   googleAnalytics: {
     trackingId: '{{ googleAnalytics_trackingId }}',
-  }
+  },
 {% endif %}
-
 {% if jophiel_auth_google_clientId is defined %}
   googleAuth: {
     clientId: '{{ jophiel_auth_google_clientId }}',
-  }
+  },
 {% endif %}
-
 };
