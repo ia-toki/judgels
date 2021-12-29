@@ -19,6 +19,12 @@ public interface SessionService {
     Session logIn(Credentials credentials);
 
     @POST
+    @Path("/login-google")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Session logInWithGoogle(GoogleCredentials credentials);
+
+    @POST
     @Path("/logout")
     void logOut(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
 

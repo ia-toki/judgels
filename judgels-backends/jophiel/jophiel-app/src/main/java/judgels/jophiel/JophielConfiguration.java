@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
+import judgels.jophiel.auth.AuthConfiguration;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
 import judgels.jophiel.user.account.UserRegistrationConfiguration;
@@ -19,6 +20,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableJophielConfiguration.class)
 public interface JophielConfiguration {
     String getBaseDataDir();
+
+    @JsonProperty("auth")
+    Optional<AuthConfiguration> getAuthConfig();
 
     @JsonProperty("mailer")
     Optional<MailerConfiguration> getMailerConfig();

@@ -8,6 +8,7 @@ dependencies {
     implementation project(':judgels-commons:judgels-recaptcha')
     implementation project(':judgels-commons:judgels-service-persistence')
 
+    implementation "com.google.api-client:google-api-client:$googleApiClientVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
     implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"

@@ -6,6 +6,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.account.GoogleUserRegistrationData;
 import judgels.jophiel.api.user.account.PasswordResetData;
 import judgels.jophiel.api.user.account.UserAccountService;
 import judgels.jophiel.api.user.account.UserRegistrationData;
@@ -34,6 +35,12 @@ public class UserAccountResource implements UserAccountService {
     @UnitOfWork
     public User registerUser(UserRegistrationData data) {
         return checkFound(userRegisterer).register(data);
+    }
+
+    @Override
+    @UnitOfWork
+    public User registerGoogleUser(GoogleUserRegistrationData data) {
+        return checkFound(userRegisterer).registerGoogleUser(data);
     }
 
     @Override

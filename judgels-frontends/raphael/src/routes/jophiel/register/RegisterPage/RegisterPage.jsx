@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
+import GoogleAuth from '../../components/GoogleAuth/GoogleAuth';
 import ResendActivationEmailButton from '../../components/ResendActivationEmailButton/ResendActivationEmailButton';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import * as registerActions from '../modules/registerActions';
@@ -13,6 +14,7 @@ class RegisterPage extends Component {
   state = {
     config: undefined,
     registeredUser: undefined,
+    isInternalAuthEnabled: true,
   };
 
   async componentDidMount() {
@@ -48,7 +50,8 @@ class RegisterPage extends Component {
       };
       content = (
         <Card title="Register" className="card-register">
-          <RegisterForm onSubmit={this.onRegisterUser} {...registerFormProps} />
+          <GoogleAuth onToggleInternalAuth={this.toggleInternalAuth} />
+          {this.state.isInternalAuthEnabled && <RegisterForm onSubmit={this.onRegisterUser} {...registerFormProps} />}
         </Card>
       );
     }
@@ -64,6 +67,10 @@ class RegisterPage extends Component {
         email: data.email,
       },
     });
+  };
+
+  toggleInternalAuth = () => {
+    this.setState(prevState => ({ isInternalAuthEnabled: !prevState.isInternalAuthEnabled }));
   };
 }
 

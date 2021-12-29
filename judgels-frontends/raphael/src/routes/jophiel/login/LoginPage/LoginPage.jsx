@@ -1,21 +1,34 @@
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 import { Card } from '../../../../components/Card/Card';
+import GoogleAuth from '../../components/GoogleAuth/GoogleAuth';
 
 import LoginForm from '../LoginForm/LoginForm';
 import * as loginActions from '../modules/loginActions';
 
 import './LoginPage.scss';
 
-function LoginPage({ onLogIn }) {
-  return (
-    <SingleColumnLayout>
-      <Card title="Log in" className="card-login">
-        <LoginForm onSubmit={onLogIn} />
-      </Card>
-    </SingleColumnLayout>
-  );
+class LoginPage extends React.Component {
+  state = {
+    isInternalAuthEnabled: true,
+  };
+
+  render() {
+    return (
+      <SingleColumnLayout>
+        <Card title="Log in" className="card-login">
+          <GoogleAuth onToggleInternalAuth={this.toggleInternalAuth} />
+          {this.state.isInternalAuthEnabled && <LoginForm onSubmit={this.props.onLogIn} />}
+        </Card>
+      </SingleColumnLayout>
+    );
+  }
+
+  toggleInternalAuth = () => {
+    this.setState(prevState => ({ isInternalAuthEnabled: !prevState.isInternalAuthEnabled }));
+  };
 }
 
 const mapDispatchToProps = {

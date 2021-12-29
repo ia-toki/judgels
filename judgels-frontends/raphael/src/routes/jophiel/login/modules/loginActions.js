@@ -30,7 +30,12 @@ export function logIn(usernameOrEmail, password) {
         throw error;
       }
     }
+    await dispatch(afterLogin(session));
+  };
+}
 
+export function afterLogin(session) {
+  return async dispatch => {
     const { token } = session;
     const [user, config] = await Promise.all([myUserAPI.getMyself(session.token), userWebAPI.getWebConfig(token)]);
 

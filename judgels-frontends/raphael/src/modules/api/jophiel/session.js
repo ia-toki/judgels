@@ -14,6 +14,10 @@ export const sessionAPI = {
     return post(`${baseUrl}/login`, undefined, { usernameOrEmail, password });
   },
 
+  logInWithGoogle: idToken => {
+    return post(`${baseUrl}/login-google`, undefined, { idToken });
+  },
+
   logOut: token => {
     return post(`${baseUrl}/logout`, token);
   },

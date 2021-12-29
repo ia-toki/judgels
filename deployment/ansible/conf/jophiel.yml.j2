@@ -45,6 +45,12 @@ webSecurity:
 jophiel:
   baseDataDir: /judgels/jophiel/var/data
 
+  auth:
+{% if jophiel_auth_google_clientId is defined %}
+    google:
+      clientId: {{ jophiel_auth_google_clientId }}
+{% endif %}
+
 {% if jophiel_mailer_host is defined %}
   mailer:
     host: {{ jophiel_mailer_host }}

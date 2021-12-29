@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import judgels.fs.aws.AwsModule;
+import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.session.SessionModule;
@@ -48,6 +49,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         Path baseDataDir = Paths.get(jophielConfig.getBaseDataDir());
 
         JophielComponent component = DaggerJophielComponent.builder()
+                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                 .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))

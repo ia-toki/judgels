@@ -3,6 +3,7 @@ package judgels.jophiel;
 import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
+import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.client.user.ClientUserResource;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.legacy.user.LegacyUserResource;
@@ -36,6 +37,7 @@ import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
+        AuthModule.class,
         AwsModule.class,
         JophielModule.class,
         JophielHibernateDaoModule.class,

@@ -18,6 +18,12 @@ public interface UserAccountService {
     User registerUser(UserRegistrationData data);
 
     @POST
+    @Path("/register-google")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    User registerGoogleUser(GoogleUserRegistrationData data);
+
+    @POST
     @Path("/activate/{emailCode}")
     void activateUser(@PathParam("emailCode") String emailCode);
 

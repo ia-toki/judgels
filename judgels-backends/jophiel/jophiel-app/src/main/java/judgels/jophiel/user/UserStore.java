@@ -169,8 +169,13 @@ public class UserStore {
 
     private static void toModel(UserData data, UserModel model) {
         model.username = data.getUsername();
-        model.password = hashPassword(data.getPassword());
         model.email = data.getEmail();
+
+        if (data.getPassword().isPresent()) {
+            model.password = hashPassword(data.getPassword().get());
+        } else {
+            model.password = "";
+        }
     }
 
     private static String hashPassword(String password) {

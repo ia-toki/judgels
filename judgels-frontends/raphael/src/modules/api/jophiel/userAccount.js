@@ -8,6 +8,10 @@ export const userAccountAPI = {
     return post(`${baseURL}/register`, undefined, data);
   },
 
+  registerGoogleUser: data => {
+    return post(`${baseURL}/register-google`, undefined, data);
+  },
+
   activateUser: emailCode => {
     return post(`${baseURL}/activate/${emailCode}`);
   },

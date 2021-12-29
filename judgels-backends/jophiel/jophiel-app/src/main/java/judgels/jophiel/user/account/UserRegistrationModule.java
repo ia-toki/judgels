@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Optional;
 import javax.inject.Singleton;
+import judgels.jophiel.auth.google.GoogleAuth;
 import judgels.jophiel.mailer.Mailer;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.info.UserInfoStore;
@@ -32,7 +33,8 @@ public class UserRegistrationModule {
             UserInfoStore userInfoStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
             Optional<Mailer> mailer,
-            Optional<RecaptchaVerifier> recaptchaVerifier) {
+            Optional<RecaptchaVerifier> recaptchaVerifier,
+            Optional<GoogleAuth> googleAuth) {
 
         if (!config.getEnabled()) {
             return Optional.empty();
@@ -48,6 +50,7 @@ public class UserRegistrationModule {
                 userInfoStore,
                 userRegistrationEmailStore,
                 new UserRegistrationEmailMailer(mailer.get(), config.getActivationEmailTemplate()),
-                actualRecaptchaVerifier));
+                actualRecaptchaVerifier,
+                googleAuth));
     }
 }
