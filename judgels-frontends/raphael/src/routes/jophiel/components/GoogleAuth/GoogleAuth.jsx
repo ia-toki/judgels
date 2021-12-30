@@ -1,5 +1,5 @@
 import { Classes, Dialog } from '@blueprintjs/core';
-import React from 'react';
+import { Component } from 'react';
 import GoogleLogin from 'react-google-login';
 import { connect } from 'react-redux';
 
@@ -9,7 +9,7 @@ import * as googleAuthActions from '../../modules/googleAuthActions';
 
 import './GoogleAuth.scss';
 
-class GoogleAuth extends React.Component {
+class GoogleAuth extends Component {
   state = {
     email: undefined,
     idToken: undefined,

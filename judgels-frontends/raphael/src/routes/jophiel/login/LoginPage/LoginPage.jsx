@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
@@ -10,7 +10,7 @@ import * as loginActions from '../modules/loginActions';
 
 import './LoginPage.scss';
 
-class LoginPage extends React.Component {
+class LoginPage extends Component {
   state = {
     isInternalAuthEnabled: true,
   };
