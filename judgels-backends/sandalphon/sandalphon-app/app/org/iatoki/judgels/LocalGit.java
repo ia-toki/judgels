@@ -35,7 +35,7 @@ public final class LocalGit implements Git {
         File dir = fs.getFile(rootDirPath);
 
         try {
-            org.eclipse.jgit.api.Git.init().setDirectory(dir).call().close();
+            org.eclipse.jgit.api.Git.init().setInitialBranch("master").setDirectory(dir).call().close();
         } catch (GitAPIException e) {
             throw new RuntimeException(e);
         }
