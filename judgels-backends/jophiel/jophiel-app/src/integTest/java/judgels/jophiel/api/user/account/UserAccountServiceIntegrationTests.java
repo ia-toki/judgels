@@ -94,6 +94,9 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         wiser.setPort(2500);
         wiser.start();
 
+        assertThatCode(() -> accountService.requestToResetPassword("delta@domain.com"))
+                .doesNotThrowAnyException();
+
         userService.createUser(adminHeader, new UserData.Builder()
                 .username("delta")
                 .password("pass")
