@@ -10,6 +10,10 @@ export function selectUserJid(state) {
   return state.session.user.jid;
 }
 
+export function selectUserEmail(state) {
+  return state.session.user.email;
+}
+
 export function selectMaybeUserJid(state) {
   return state.session.user && state.session.user.jid;
 }

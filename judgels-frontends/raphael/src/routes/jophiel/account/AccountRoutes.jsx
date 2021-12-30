@@ -5,7 +5,7 @@ import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWi
 import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import InfoPage from './info/InfoPage/InfoPage';
-import ChangePasswordPage from './changePassword/ChangePasswordPage/ChangePasswordPage';
+import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
 import ChangeAvatarPage from './changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
 
 function AccountRoutes() {
@@ -24,9 +24,9 @@ function AccountRoutes() {
     },
     {
       id: 'password',
-      title: 'Change password',
+      title: 'Reset password',
       routeComponent: UserRoute,
-      component: ChangePasswordPage,
+      component: ResetPasswordPage,
     },
   ];
 
