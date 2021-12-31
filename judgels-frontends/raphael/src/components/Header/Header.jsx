@@ -23,7 +23,7 @@ export default class Header extends PureComponent {
             </div>
             <Navbar.Heading className="header__title">{APP_CONFIG.name}</Navbar.Heading>
             <Navbar.Divider />
-            <div className="header__subtitle">Competitive Programming Platform</div>
+            <div className="header__subtitle">{APP_CONFIG.slogan}</div>
           </Navbar.Group>
 
           <UserWidget />
