@@ -56,7 +56,7 @@ server {
         client_max_body_size 512M;
     }
 
-    location ~ /(api/)?v2/(archive|course|chapter|problem|submission|stat) {
+    location ~ /(api/)?v2/(archive|curriculum|course|chapter|problem|submission|stat) {
         rewrite ^(?:/api)?(.*) /api$1 break;
         include proxy_params;
         proxy_pass http://jerahmeel;

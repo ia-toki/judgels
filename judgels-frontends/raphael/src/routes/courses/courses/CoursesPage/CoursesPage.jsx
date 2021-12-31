@@ -1,3 +1,4 @@
+import { Callout, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -18,7 +19,10 @@ class CoursesPage extends Component {
   }
 
   render() {
-    return <Card title="Courses">{this.renderCourses()}</Card>;
+    const { response } = this.state;
+    const curriculumName = response ? response.curriculum.name : '';
+
+    return <Card title={`Courses by ${curriculumName}`}>{this.renderCourses()}</Card>;
   }
 
   renderCourses = () => {
@@ -27,7 +31,7 @@ class CoursesPage extends Component {
       return <LoadingContentCard />;
     }
 
-    const { data: courses, curriculumDescription, courseProgressesMap } = response;
+    const { data: courses, curriculum, courseProgressesMap } = response;
 
     if (courses.length === 0) {
       return (
@@ -39,7 +43,9 @@ class CoursesPage extends Component {
 
     return (
       <>
-        <HtmlText>{curriculumDescription || ''}</HtmlText>
+        <Callout intent={Intent.NONE} icon={null}>
+          <HtmlText>{curriculum.description}</HtmlText>
+        </Callout>
         <hr />
         {courses.map(course => (
           <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />

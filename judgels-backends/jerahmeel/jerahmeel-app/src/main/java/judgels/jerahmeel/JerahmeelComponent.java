@@ -9,6 +9,7 @@ import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
 import judgels.jerahmeel.chapter.problem.ChapterProblemResource;
 import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
+import judgels.jerahmeel.curriculum.CurriculumResource;
 import judgels.jerahmeel.gabriel.GabrielModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.jophiel.JophielModule;
@@ -57,6 +58,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 @Singleton
 public interface JerahmeelComponent {
     ArchiveResource archiveResource();
+    CurriculumResource curriculumResource();
     CourseResource courseResource();
     ChapterResource chapterResource();
     CourseChapterResource courseChapterResource();

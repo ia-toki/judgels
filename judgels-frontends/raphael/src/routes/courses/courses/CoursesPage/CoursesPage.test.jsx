@@ -18,7 +18,10 @@ describe('CoursesPage', () => {
     courseActions.getCourses.mockReturnValue(() =>
       Promise.resolve({
         data: courses,
-        curriculumDescription: 'This is curriculum',
+        curriculum: {
+          name: 'Curriculum 1',
+          description: 'This is curriculum',
+        },
         courseProgressesMap: {
           courseJid1: {
             solvedChapters: 2,

@@ -16,6 +16,7 @@ import judgels.jerahmeel.api.course.CourseProgress;
 import judgels.jerahmeel.api.course.CourseService;
 import judgels.jerahmeel.api.course.CourseUpdateData;
 import judgels.jerahmeel.api.course.CoursesResponse;
+import judgels.jerahmeel.api.curriculum.Curriculum;
 import judgels.jerahmeel.curriculum.CurriculumStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
@@ -50,12 +51,12 @@ public class CourseResource implements CourseService {
         String actorJid = actorChecker.check(authHeader);
 
         List<Course> courses = courseStore.getCourses();
+        Optional<Curriculum> curriculum = curriculumStore.getCurriculum();
         Set<String> courseJids = courses.stream().map(Course::getJid).collect(Collectors.toSet());
-        Optional<String> curriculumDescription = curriculumStore.getCurriculumDescription();
         Map<String, CourseProgress> courseProgressMap = statsStore.getCourseProgressesMap(actorJid, courseJids);
         return new CoursesResponse.Builder()
                 .data(courses)
-                .curriculumDescription(curriculumDescription)
+                .curriculum(curriculum)
                 .courseProgressesMap(courseProgressMap)
                 .build();
     }
