@@ -54,7 +54,12 @@
 }
 
 .home-banner__button-register {
+  margin-top: 10px;
   margin-right: 5px;
+}
+
+.home-banner__button-login {
+  margin-top: 10px;
 }
 
 .home-widget-row {
@@ -89,18 +94,16 @@
     max-width: 100%;
   }
 
-  .home-banner__button-register {
-    margin-right: 0;
-  }
-
-  .home-banner__button-login {
-    margin-top: 10px;
-  }
-
   .home-widget-row__two-thirds,
   .home-widget-row__one-third {
     width: 100%;
     float: none;
     padding: 0;
+  }
+}
+
+@media only screen and (max-width: 370px) {
+  .home-banner__button-register {
+    margin-right: 0;
   }
 }
