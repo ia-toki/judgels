@@ -11,6 +11,7 @@ import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsW
 import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersWidget';
 
 import './HomePage.scss';
+import { HtmlText } from '../../../components/HtmlText/HtmlText';
 
 function HomePage({ isLoggedIn }) {
   const renderBanner = () => {
@@ -22,16 +23,20 @@ function HomePage({ isLoggedIn }) {
       <div className="home-banner">
         <div className="home-banner__contents">
           <div>
-            <h1 className="home-banner__text">{APP_CONFIG.welcomeBanner.title}</h1>
-            <p className="home-banner__text">{APP_CONFIG.welcomeBanner.description}</p>
+            <div className="home-banner__text home-banner__title">
+              <HtmlText>{APP_CONFIG.welcomeBanner.title}</HtmlText>
+            </div>
+            <div className="home-banner__text home-banner__description">
+              <HtmlText>{APP_CONFIG.welcomeBanner.description}</HtmlText>
+            </div>
           </div>
           <div className="home-banner__buttons">
             {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
-              <ButtonLink to="/register" intent={Intent.PRIMARY} className="home-banner__button">
-                Register
+              <ButtonLink to="/register" intent={Intent.PRIMARY} large className="home-banner__button">
+                Register and start training for free
               </ButtonLink>
             )}
-            <ButtonLink to="/login" intent={Intent.NONE} className="home-banner__button">
+            <ButtonLink to="/login" intent={Intent.NONE} large className="home-banner__button">
               Log in
             </ButtonLink>
           </div>
@@ -56,10 +61,10 @@ function HomePage({ isLoggedIn }) {
   };
 
   return (
-    <FullPageLayout>
+    <>
       {renderBanner()}
-      {renderWidgets()}
-    </FullPageLayout>
+      <FullPageLayout>{renderWidgets()}</FullPageLayout>
+    </>
   );
 }
 

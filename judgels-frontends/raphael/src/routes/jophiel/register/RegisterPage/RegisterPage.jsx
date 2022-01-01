@@ -49,7 +49,7 @@ class RegisterPage extends Component {
         recaptchaSiteKey: config.recaptcha && config.recaptcha.siteKey,
       };
       content = (
-        <Card title="Register" className="card-register">
+        <Card title="Register and start training for free" className="card-register">
           <GoogleAuth onToggleInternalAuth={this.toggleInternalAuth} />
           {this.state.isInternalAuthEnabled && <RegisterForm onSubmit={this.onRegisterUser} {...registerFormProps} />}
         </Card>

@@ -17,15 +17,31 @@
 
 .home-banner__contents {
   position: absolute;
-  margin-left: 100px;
-  margin-right: 50px;
-  max-width: 600px;
+  width: 100%;
+  text-align: center;
 }
 
 .home-banner__text {
-  margin-top: 40px;
-  margin-bottom: 40px;
   color: white !important;
+}
+
+.home-banner__title {
+  margin-top: 40px;
+  font-size: 32px;
+}
+
+.home-banner__title h1 {
+  font-size: 32px;
+}
+
+.home-banner__description {
+  margin-top: 40px;
+  font-family: $accent-font;
+  font-size: 18px;
+}
+
+.home-banner__description p {
+  margin-bottom: 5px !important;
 }
 
 .bp4-dark .home-banner__text {
