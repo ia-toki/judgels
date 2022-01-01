@@ -1,10 +1,10 @@
 @import '../../../styles/base';
 
 .home-banner {
-  position: relative;
-  height: 300px;
   margin-top: -40px;
   margin-bottom: 20px;
+  padding-top: 40px;
+  padding-bottom: 20px;
 }
 
 .bp4-light .home-banner {
@@ -16,7 +16,6 @@
 }
 
 .home-banner__contents {
-  position: absolute;
   width: 100%;
   text-align: center;
 }
@@ -26,7 +25,6 @@
 }
 
 .home-banner__title {
-  margin-top: 40px;
   font-size: 32px;
 }
 
@@ -50,7 +48,7 @@
 }
 
 .home-banner__buttons {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .home-banner__button-register {
@@ -82,12 +80,6 @@
 @media only screen and (max-width: 600px) {
   .home-banner {
     margin-top: 0;
-  }
-
-  .home-banner,
-  .home-banner__image,
-  .home-banner__overlay {
-    height: 390px;
   }
 
   .home-banner__contents {
