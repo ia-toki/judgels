@@ -32,11 +32,11 @@ function HomePage({ isLoggedIn }) {
           </div>
           <div className="home-banner__buttons">
             {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
-              <ButtonLink to="/register" intent={Intent.PRIMARY} large className="home-banner__button">
+              <ButtonLink to="/register" intent={Intent.PRIMARY} large className="home-banner__button-register">
                 Register and start training for free
               </ButtonLink>
             )}
-            <ButtonLink to="/login" intent={Intent.NONE} large className="home-banner__button">
+            <ButtonLink to="/login" intent={Intent.NONE} large className="home-banner__button-login">
               Log in
             </ButtonLink>
           </div>

@@ -32,6 +32,7 @@
 
 .home-banner__title h1 {
   font-size: 32px;
+  line-height: 32px;
 }
 
 .home-banner__description {
@@ -52,8 +53,8 @@
   margin-top: 40px;
 }
 
-.home-banner__button {
-  margin-right: 15px;
+.home-banner__button-register {
+  margin-right: 5px;
 }
 
 .home-widget-row {
@@ -81,12 +82,19 @@
   .home-banner,
   .home-banner__image,
   .home-banner__overlay {
-    height: 350px;
+    height: 390px;
   }
 
   .home-banner__contents {
     max-width: 100%;
-    margin: 0 30px 30px;
+  }
+
+  .home-banner__button-register {
+    margin-right: 0;
+  }
+
+  .home-banner__button-login {
+    margin-top: 10px;
   }
 
   .home-widget-row__two-thirds,
