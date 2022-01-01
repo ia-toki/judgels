@@ -1,3 +1,4 @@
+import { push } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
@@ -15,6 +16,7 @@ jest.mock('../modules/chapterLessonActions');
 describe('ChapterLessonsPage', () => {
   let wrapper;
   let lessons;
+  let store;
 
   const render = async () => {
     chapterLessonActions.getLessons.mockReturnValue(() =>
@@ -32,8 +34,9 @@ describe('ChapterLessonsPage', () => {
         },
       })
     );
+    chapterLessonActions.redirectToFirstLesson.mockReturnValue(() => Promise.resolve());
 
-    const store = createStore(
+    store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
         jerahmeel: combineReducers({ course: courseReducer, courseChapter: courseChapterReducer }),
@@ -71,6 +74,23 @@ describe('ChapterLessonsPage', () => {
     it('shows placeholder text and no lessons', () => {
       expect(wrapper.text()).toContain('No lessons.');
       expect(wrapper.find('div.chapter-lesson-card')).toHaveLength(0);
+    });
+  });
+
+  describe('when there is one lesson', () => {
+    beforeEach(async () => {
+      lessons = [{ lessonJid: 'lessonJid1', alias: 'A' }];
+      await render();
+    });
+
+    it('redirects to the only lesson', async () => {
+      await new Promise(resolve => setImmediate(resolve));
+      wrapper.update();
+
+      expect(chapterLessonActions.redirectToFirstLesson).toHaveBeenCalledWith(
+        '/courses/courseSlug/chapter/chapter-1/lessons',
+        lessons
+      );
     });
   });
 

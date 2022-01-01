@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
@@ -21,6 +22,11 @@ export class ChapterLessonsPage extends Component {
 
   async componentDidMount() {
     const response = await this.props.onGetLessons(this.props.chapter.chapterJid);
+
+    if (response.data.length === 1) {
+      this.props.onRedirectToFirstLesson(this.props.match.url, response.data);
+    }
+
     const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
       response.lessonsMap,
       this.props.statementLanguage
@@ -108,6 +114,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onGetLessons: chapterLessonActions.getLessons,
+  onRedirectToFirstLesson: chapterLessonActions.redirectToFirstLesson,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChapterLessonsPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterLessonsPage));
