@@ -17,6 +17,9 @@ public class CurriculumStore {
         this.curriculumDao = curriculumDao;
     }
 
+    /**
+     * Currently, only one curriculum is supported.
+     */
     public Optional<Curriculum> getCurriculum() {
         List<Curriculum> curriculums = getCurriculums();
         if (curriculums.isEmpty()) {
