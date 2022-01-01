@@ -1,5 +1,5 @@
 const initialState = {
-  isDarkMode: undefined,
+  isDarkMode: true,
   hideProblemDifficulty: undefined,
   showProblemTopicTags: undefined,
   statementLanguage: 'id',

@@ -1,7 +1,3 @@
-export function selectIsNewToDarkMode(state) {
-  return state.webPrefs.isDarkMode === undefined;
-}
-
 export function selectIsDarkMode(state) {
   return !!state.webPrefs.isDarkMode;
 }

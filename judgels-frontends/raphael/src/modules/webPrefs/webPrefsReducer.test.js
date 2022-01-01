@@ -57,6 +57,7 @@ describe('webPrefsReducer', () => {
 
   test('initial state', () => {
     expect(webPrefsReducer(undefined, { type: 'other' })).toEqual({
+      isDarkMode: true,
       statementLanguage: 'id',
       editorialLanguage: 'id',
       gradingLanguage: 'Cpp20',
