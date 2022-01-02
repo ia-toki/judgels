@@ -36,10 +36,12 @@
 .home-banner__description {
   margin-top: 40px;
   font-family: $accent-font;
-  font-size: 18px;
 }
 
-.home-banner__description p {
+.home-banner__description h2 {
+  font-size: 18px !important;
+  font-weight: normal !important;
+  line-height: 24px !important;
   margin-bottom: 5px !important;
 }
 
