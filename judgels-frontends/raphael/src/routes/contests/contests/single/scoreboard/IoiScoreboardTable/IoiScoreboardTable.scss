@@ -1,7 +1,11 @@
 @import '../../../../../../styles/base';
 
 table.ioi-scoreboard__content {
-  td strong {
+  tbody tr {
+    height: 40px;
+  }
+
+  td span.top {
     font-size: $font-size !important;
   }
 

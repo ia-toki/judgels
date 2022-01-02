@@ -23,9 +23,7 @@ export function ScoreboardTable({ className, state, children }) {
       state.problemPoints === undefined || state.problemPoints === null ? (
         ''
       ) : (
-        <>
-          <br />[{state.problemPoints[idx]}]
-        </>
+        <span className="bottom">{state.problemPoints[idx]}</span>
       );
     return (
       <th key={alias} className="problem-cell">

@@ -2,20 +2,21 @@
 
 table.troc-scoreboard__content {
   td {
-    strong {
+    span.top {
       font-size: 12px;
     }
-    strong.total-points-cell {
-      font-size: 16px;
+    span.total-points-cell {
+      font-size: 14px !important;
+      line-height: 14px;
     }
-    small {
+    span.bottom {
       color: $secondary-text-color;
     }
   }
 
   td.first-accepted {
-    strong,
-    small {
+    span.top,
+    span.bottom {
       color: #fff;
     }
     background: #1f8763 !important;
@@ -26,16 +27,16 @@ table.troc-scoreboard__content {
   }
 
   td.not-accepted {
-    strong,
-    small {
+    span.top,
+    span.bottom {
       color: #fff;
     }
     background: #e36262 !important;
   }
 
   td.frozen {
-    strong,
-    small {
+    span.top,
+    span.bottom {
       color: #fff;
     }
     background: #70a2ff !important;
@@ -48,7 +49,7 @@ table.troc-scoreboard__content {
 
 .bp4-dark table.troc-scoreboard__content {
   td {
-    small {
+    span.bottom {
       color: $dark-secondary-text-color !important;
     }
   }
@@ -56,7 +57,7 @@ table.troc-scoreboard__content {
   td.first-accepted,
   td.not-accepted,
   td.frozen {
-    small {
+    span.bottom {
       color: inherit !important;
     }
   }
@@ -65,7 +66,7 @@ table.troc-scoreboard__content {
     background: #e1fdd7 !important;
     color: $dark-gray5 !important;
 
-    small {
+    span.bottom {
       color: $gray2 !important;
     }
   }

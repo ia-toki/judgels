@@ -26,9 +26,8 @@ export function GcjScoreboardTable({
         <UserRef profile={profilesMap[entry.contestantJid]} showFlag />
       </td>,
       <td key="totalAccepted">
-        <strong className="total-points-cell">{entry.totalPoints}</strong>
-        <br />
-        <small>{renderPenalty(entry.totalPenalties, GcjScoreboardProblemState.Accepted)}</small>
+        <span className="top total-points-cell">{entry.totalPoints}</span>
+        <span className="bottom">{renderPenalty(entry.totalPenalties, GcjScoreboardProblemState.Accepted)}</span>
       </td>,
     ];
     const problemCells = entry.attemptsList.map((item, i) =>
@@ -70,9 +69,8 @@ export function GcjScoreboardTable({
         className={classNames(className, clickable ? 'clickable' : {})}
         onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
       >
-        <strong>{renderAttempts(attempts, state)}</strong>
-        <br />
-        <small>{renderPenalty(penalty, state)}</small>
+        <span className="top">{renderAttempts(attempts, state)}</span>
+        <span className="bottom">{renderPenalty(penalty, state)}</span>
       </td>
     );
   };

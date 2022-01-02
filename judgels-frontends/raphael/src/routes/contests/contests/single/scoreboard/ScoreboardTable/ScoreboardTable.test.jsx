@@ -48,7 +48,7 @@ describe('ScoreboardTable', () => {
           .first()
           .children()
           .map(th => th.text());
-        expect(header).toEqual(['#', 'Contestant', 'Total', 'A[10]', 'B[0]', 'C[30]']);
+        expect(header).toEqual(['#', 'Contestant', 'Total', 'A10', 'B0', 'C30']);
       });
     });
   });

@@ -102,7 +102,8 @@ describe('GcjScoreboardTable', () => {
   test('points', () => {
     const getColor = td =>
       td === undefined ? '' : td === 'accepted' ? 'G ' : td === 'not-accepted' ? 'R ' : td === 'frozen' ? 'F ' : 'X ';
-    const mapCell = td => getColor(td.prop('className')) + td.find('strong').text() + '/' + td.find('small').text();
+    const mapCell = td =>
+      getColor(td.prop('className')) + td.find('span.top').text() + '/' + td.find('span.bottom').text();
     const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
     const points = wrapper
       .find('tbody')

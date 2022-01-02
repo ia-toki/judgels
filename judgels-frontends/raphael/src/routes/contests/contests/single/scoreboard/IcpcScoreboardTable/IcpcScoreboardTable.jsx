@@ -26,9 +26,8 @@ export function IcpcScoreboardTable({
         <UserRef profile={profilesMap[entry.contestantJid]} showFlag />
       </td>,
       <td key="totalAccepted">
-        <strong>{entry.totalAccepted}</strong>
-        <br />
-        <small>{entry.totalPenalties}</small>
+        <span className="top">{entry.totalAccepted}</span>
+        <span className="bottom">{entry.totalPenalties}</span>
       </td>,
     ];
     const problemCells = entry.attemptsList.map((item, i) =>
@@ -80,9 +79,8 @@ export function IcpcScoreboardTable({
         className={classNames(className, clickable ? 'clickable' : {})}
         onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
       >
-        <strong>{shownAttempts}</strong>
-        <br />
-        <small>{shownPenalty}</small>
+        <span className="top">{shownAttempts}</span>
+        <span className="bottom">{shownPenalty}</span>
       </td>
     );
   };

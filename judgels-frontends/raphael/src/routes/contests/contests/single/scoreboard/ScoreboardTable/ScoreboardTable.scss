@@ -7,7 +7,8 @@ table.scoreboard__content {
     border: 1px #dee0e1 solid;
     vertical-align: middle;
 
-    strong {
+    span.top {
+      display: block;
       font-weight: bold;
     }
   }
@@ -15,14 +16,15 @@ table.scoreboard__content {
   th {
     color: #3b73ba;
     font-weight: bold;
+
+    span.bottom {
+      display: block;
+      font-size: 12px;
+    }
   }
 
   thead tr {
     height: 50px;
-  }
-
-  tbody tr {
-    height: 40px;
   }
 
   .my-rank,
@@ -39,12 +41,17 @@ table.scoreboard__content {
   }
 
   .problem-cell {
-    width: 60px;
+    width: 50px;
   }
 
   td {
     padding-top: 5px;
-    padding-bottom: 5px;
+    padding-bottom: 4px;
+  }
+
+  td span.bottom {
+    display: block;
+    font-size: 9px;
   }
 }
 
@@ -52,5 +59,11 @@ table.scoreboard__content {
   .my-rank,
   .my-rank td {
     background-color: $dark-gray1 !important;
+  }
+
+  th {
+    span.bottom {
+      color: #a7b6c2 !important;
+    }
   }
 }

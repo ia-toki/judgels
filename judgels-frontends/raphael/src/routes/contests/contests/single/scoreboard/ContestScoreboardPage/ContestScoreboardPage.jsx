@@ -179,6 +179,7 @@ export class ContestScoreboardPage extends Component {
       <Button
         className="float-right"
         intent="primary"
+        small
         icon={<Refresh />}
         onClick={this.forceRefreshScoreboard}
         loading={!!this.state.isForceRefreshButtonLoading}

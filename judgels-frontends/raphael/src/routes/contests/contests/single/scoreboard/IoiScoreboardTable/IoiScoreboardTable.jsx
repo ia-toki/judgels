@@ -25,7 +25,7 @@ export function IoiScoreboardTable({
         <UserRef profile={profilesMap[entry.contestantJid]} showFlag />
       </td>,
       <td key="totalScores">
-        <strong>{entry.totalScores}</strong>
+        <span className="top">{entry.totalScores}</span>
       </td>,
     ];
     const problemCells = entry.scores.map((item, i) =>
