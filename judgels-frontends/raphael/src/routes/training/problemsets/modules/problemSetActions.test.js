@@ -44,7 +44,7 @@ describe('problemSetActions', () => {
           .options(`/problemsets`)
           .reply(200)
           .post(`/problemsets`, params)
-          .reply(400, { errorName: ProblemSetErrors.SlugAlreadyExists });
+          .reply(400, { message: ProblemSetErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(problemSetActions.createProblemSet(params))).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
@@ -59,7 +59,7 @@ describe('problemSetActions', () => {
           .options(`/problemsets`)
           .reply(200)
           .post(`/problemsets`, params)
-          .reply(400, { errorName: ProblemSetErrors.ArchiveSlugNotFound });
+          .reply(400, { message: ProblemSetErrors.ArchiveSlugNotFound });
 
         await expect(store.dispatch(problemSetActions.createProblemSet(params))).rejects.toEqual(
           new SubmissionError({ archiveSlug: 'Archive slug not found' })
@@ -107,7 +107,7 @@ describe('problemSetActions', () => {
             .options(`/problemsets/${problemSetJid}`)
             .reply(200)
             .post(`/problemsets/${problemSetJid}`, params)
-            .reply(400, { errorName: ProblemSetErrors.SlugAlreadyExists });
+            .reply(400, { message: ProblemSetErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params))).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })
@@ -125,7 +125,7 @@ describe('problemSetActions', () => {
             .options(`/problemsets`)
             .reply(200)
             .post(`/problemsets/${problemSetJid}`, params)
-            .reply(400, { errorName: ProblemSetErrors.ArchiveSlugNotFound });
+            .reply(400, { message: ProblemSetErrors.ArchiveSlugNotFound });
 
           await expect(store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params))).rejects.toEqual(
             new SubmissionError({ archiveSlug: 'Archive slug not found' })
@@ -192,8 +192,8 @@ describe('problemSetActions', () => {
           .reply(200)
           .put(`/problemsets/${problemSetJid}/problems`, params)
           .reply(403, {
-            errorName: ProblemSetErrors.ContestSlugsNotAllowed,
-            parameters: { contestSlugs: ['foo', 'bar'] },
+            message: ProblemSetErrors.ContestSlugsNotAllowed,
+            args: { contestSlugs: ['foo', 'bar'] },
           });
 
         await expect(store.dispatch(problemSetActions.setProblems(problemSetJid, params))).rejects.toEqual(

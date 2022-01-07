@@ -3,8 +3,16 @@ package judgels.service.jaxrs;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class JudgelsObjectMappers {
+    public static final ObjectMapper OBJECT_MAPPER = configure(new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .registerModule(new GuavaModule())
+            .registerModule(new Jdk8Module()));
+
     private JudgelsObjectMappers() {}
 
     public static ObjectMapper configure(ObjectMapper mapper) {

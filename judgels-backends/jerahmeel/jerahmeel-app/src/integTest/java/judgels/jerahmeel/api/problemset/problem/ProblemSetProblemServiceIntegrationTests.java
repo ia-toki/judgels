@@ -1,6 +1,5 @@
 package judgels.jerahmeel.api.problemset.problem;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_JID;
@@ -13,9 +12,9 @@ import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_JID;
 import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_SLUG;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.Optional;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
 import judgels.jerahmeel.api.archive.ArchiveCreateData;
@@ -56,7 +55,7 @@ class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIn
                 new ProblemSetProblemData.Builder().alias("B").slug(PROBLEM_2_SLUG).type(PROGRAMMING).build())
         );
 
-        assertThatRemoteExceptionThrownBy(() -> problemSetProblemService
+        assertThatThrownBy(() -> problemSetProblemService
                 .setProblems(ADMIN_HEADER, problemSetA.getJid(), ImmutableList.of(
                         new ProblemSetProblemData.Builder()
                         .alias("A")
@@ -64,7 +63,8 @@ class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIn
                         .type(PROGRAMMING)
                         .contestSlugs(ImmutableList.of("bogus"))
                         .build())))
-                .isGeneratedFromErrorType(ProblemSetErrors.CONTEST_SLUGS_NOT_ALLOWED);
+                .hasFieldOrPropertyWithValue("code", 403)
+                .hasMessageContaining(ProblemSetErrors.CONTEST_SLUGS_NOT_ALLOWED);
 
         ProblemSetProblemsResponse response =
                 problemSetProblemService.getProblems(Optional.of(ADMIN_HEADER), problemSetA.getJid());
@@ -84,9 +84,9 @@ class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIn
 
         // as user
 
-        assertThatRemoteExceptionThrownBy(() -> problemSetProblemService
+        assertThatThrownBy(() -> problemSetProblemService
                 .setProblems(USER_HEADER, problemSetA.getJid(), ImmutableList.of()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         response = problemSetProblemService.getProblems(Optional.of(USER_HEADER), problemSetA.getJid());
 

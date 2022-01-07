@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.contestant;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
@@ -16,9 +15,9 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -72,13 +71,13 @@ class ContestContestantServiceIntegrationTests extends AbstractContestServiceInt
 
         // as supervisor
 
-        assertThatRemoteExceptionThrownBy(() -> contestantService
+        assertThatThrownBy(() -> contestantService
                 .upsertContestants(SUPERVISOR_HEADER, contest.getJid(), ImmutableSet.of("userC")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(() -> contestantService
+        assertThatThrownBy(() -> contestantService
                 .deleteContestants(SUPERVISOR_HEADER, contest.getJid(), ImmutableSet.of("userC")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         // as contestant
 

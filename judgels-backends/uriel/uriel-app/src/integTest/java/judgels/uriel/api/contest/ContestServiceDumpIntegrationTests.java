@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
@@ -14,10 +13,10 @@ import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
@@ -406,13 +405,13 @@ public class ContestServiceDumpIntegrationTests extends AbstractServiceIntegrati
     }
 
     void testUnauthorizedImportsAndExports() {
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> contestService.importDump(USER_HEADER, testImportDump))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> contestService.exportDump(USER_HEADER, testExportDumpDataWithMismatchingContestJid))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 
     void testImport() {

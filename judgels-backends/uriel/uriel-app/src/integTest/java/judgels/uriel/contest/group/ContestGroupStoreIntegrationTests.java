@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ServiceException;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.service.api.JudgelsServiceException;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
@@ -54,8 +54,8 @@ class ContestGroupStoreIntegrationTests  extends AbstractIntegrationTests {
 
         assertThatThrownBy(
                 () -> store.createContestGroup(new ContestGroupCreateData.Builder().slug("contest-group-c").build()))
-                .isInstanceOf(ServiceException.class)
-                .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
+                .isInstanceOf(JudgelsServiceException.class)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
         assertThat(contestGroupA.getSlug()).isEqualTo("contest-group-a");
 

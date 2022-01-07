@@ -2,11 +2,11 @@ package judgels.jerahmeel.uriel;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.palantir.conjure.java.api.errors.RemoteException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.service.api.JudgelsServiceException;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.ContestService;
@@ -49,7 +49,7 @@ public class ContestClient {
                     .name(contest.getName())
                     .beginTime(contest.getBeginTime())
                     .build();
-        } catch (RemoteException e) {
+        } catch (JudgelsServiceException e) {
             return null;
         }
     }
@@ -60,7 +60,7 @@ public class ContestClient {
         }
         try {
             return contestService.get().getContestBySlug(Optional.empty(), contestSlug).getJid();
-        } catch (RemoteException e) {
+        } catch (JudgelsServiceException e) {
             return null;
         }
     }

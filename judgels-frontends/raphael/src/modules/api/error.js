@@ -4,7 +4,7 @@ export class BadRequestError {
   stack;
 
   constructor(message) {
-    const error = new Error(message && message.errorName);
+    const error = new Error(message && message.message);
     this.stack = error.stack;
     this.message = error.message;
   }
@@ -16,7 +16,7 @@ export class UnauthorizedError {
   stack;
 
   constructor(message) {
-    const error = new Error(message && message.errorName);
+    const error = new Error(message && message.message);
     this.stack = error.stack;
     this.message = error.message;
   }
@@ -25,13 +25,13 @@ export class UnauthorizedError {
 export class ForbiddenError {
   name = 'ForbiddenError';
   message;
-  parameters;
+  args;
   stack;
 
   constructor(message) {
-    const error = new Error(message && message.errorName);
+    const error = new Error(message && message.message);
     this.stack = error.stack;
-    this.parameters = (message && message.parameters) || {};
+    this.args = (message && message.args) || {};
     this.message = error.message;
   }
 }
@@ -42,7 +42,7 @@ export class NotFoundError {
   stack;
 
   constructor(message) {
-    const error = new Error(message && message.errorName);
+    const error = new Error(message && message.message);
     this.stack = error.stack;
     this.message = error.message;
   }
@@ -54,7 +54,7 @@ export class RemoteError {
   stack;
 
   constructor(message) {
-    const error = new Error(message && message.errorName);
+    const error = new Error(message && message.message);
     this.stack = error.stack;
     this.message = error.message;
   }

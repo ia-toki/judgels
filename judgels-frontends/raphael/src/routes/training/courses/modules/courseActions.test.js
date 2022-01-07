@@ -44,7 +44,7 @@ describe('courseActions', () => {
           .options(`/courses`)
           .reply(200)
           .post(`/courses`, params)
-          .reply(400, { errorName: CourseErrors.SlugAlreadyExists });
+          .reply(400, { message: CourseErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(courseActions.createCourse(params))).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
@@ -94,7 +94,7 @@ describe('courseActions', () => {
             .options(`/courses/${courseJid}`)
             .reply(200)
             .post(`/courses/${courseJid}`, params)
-            .reply(400, { errorName: CourseErrors.SlugAlreadyExists });
+            .reply(400, { message: CourseErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(courseActions.updateCourse(courseJid, params))).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })

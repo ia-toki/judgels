@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.supervisor;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.ALL;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.FILE;
@@ -12,9 +11,9 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import org.junit.jupiter.api.Test;
@@ -67,7 +66,7 @@ class ContestSupervisorServiceIntegrationTests extends AbstractContestServiceInt
                 new ContestSupervisor.Builder().userJid(USER_B_JID).addManagementPermissions(FILE).build());
         assertThat(supervisorGetSupervisorsResponse.getProfilesMap().get(USER_B_JID).getUsername()).isEqualTo(USER_B);
 
-        assertThatRemoteExceptionThrownBy(() -> supervisorService
+        assertThatThrownBy(() -> supervisorService
                 .upsertSupervisors(
                         USER_B_HEADER,
                         contest.getJid(),
@@ -75,10 +74,10 @@ class ContestSupervisorServiceIntegrationTests extends AbstractContestServiceInt
                                 .addUsernames(USER_A)
                                 .addManagementPermissions(ALL)
                                 .build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(() -> supervisorService
+        assertThatThrownBy(() -> supervisorService
                 .deleteSupervisors(USER_B_HEADER, contest.getJid(), ImmutableSet.of("userC")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 }

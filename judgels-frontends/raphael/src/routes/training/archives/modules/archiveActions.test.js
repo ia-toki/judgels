@@ -44,7 +44,7 @@ describe('archiveActions', () => {
           .options(`/archives`)
           .reply(200)
           .post(`/archives`, params)
-          .reply(400, { errorName: ArchiveErrors.SlugAlreadyExists });
+          .reply(400, { message: ArchiveErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(archiveActions.createArchive(params))).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
@@ -92,7 +92,7 @@ describe('archiveActions', () => {
             .options(`/archives/${archiveJid}`)
             .reply(200)
             .post(`/archives/${archiveJid}`, params)
-            .reply(400, { errorName: ArchiveErrors.SlugAlreadyExists });
+            .reply(400, { message: ArchiveErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(archiveActions.updateArchive(archiveJid, params))).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })

@@ -1,6 +1,5 @@
 package judgels.jerahmeel.uriel;
 
-import com.palantir.conjure.java.api.config.service.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Optional;
@@ -19,13 +18,11 @@ public class UrielModule {
 
     @Provides
     Optional<ContestService> contestService() {
-        UserAgent userAgent = UserAgent.of(UserAgent.Agent.of("jerahmeel", UserAgent.Agent.DEFAULT_VERSION));
-        return config.map(cfg -> JaxRsClients.create(ContestService.class, cfg.getBaseUrl(), userAgent));
+        return config.map(cfg -> JaxRsClients.create(ContestService.class, cfg.getBaseUrl()));
     }
 
     @Provides
     Optional<ContestSubmissionService> contestSubmissionService() {
-        UserAgent userAgent = UserAgent.of(UserAgent.Agent.of("jerahmeel", UserAgent.Agent.DEFAULT_VERSION));
-        return config.map(cfg -> JaxRsClients.create(ContestSubmissionService.class, cfg.getBaseUrl(), userAgent));
+        return config.map(cfg -> JaxRsClients.create(ContestSubmissionService.class, cfg.getBaseUrl()));
     }
 }

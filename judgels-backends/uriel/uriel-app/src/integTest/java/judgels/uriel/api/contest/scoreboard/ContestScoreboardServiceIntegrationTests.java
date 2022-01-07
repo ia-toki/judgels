@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.scoreboard;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
@@ -12,10 +11,10 @@ import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
 import com.google.common.collect.ImmutableList;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
@@ -106,16 +105,16 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
 
         // as user
 
-        assertThatRemoteExceptionThrownBy(() -> scoreboardService
+        assertThatThrownBy(() -> scoreboardService
                 .getScoreboard(of(USER_HEADER), contest.getJid(), false, false, empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
 
         // as guest
 
-        assertThatRemoteExceptionThrownBy(() -> scoreboardService
+        assertThatThrownBy(() -> scoreboardService
                 .getScoreboard(empty(), contest.getJid(), false, false, empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
 
         // as user and guest for open contests

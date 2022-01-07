@@ -72,7 +72,7 @@ describe('loginActions', () => {
       it('throws a more descriptive error', async () => {
         nockJophiel()
           .post(`/session/login`, { usernameOrEmail, password })
-          .reply(403, { errorName: 'Jophiel:UserMaxConcurrentSessionsExceeded' });
+          .reply(403, { message: 'Jophiel:UserMaxConcurrentSessionsExceeded' });
 
         await expect(store.dispatch(loginActions.logIn(usernameOrEmail, password))).rejects.toEqual(
           new Error('Login failed because you are trying to log in from too many places at once.')

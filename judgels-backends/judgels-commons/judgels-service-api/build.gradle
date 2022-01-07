@@ -2,9 +2,8 @@ apply from: '../../gradle/java.gradle'
 
 dependencies {
     api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "com.google.code.findbugs:jsr305:$findbugsJsr305Version"
     api "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
-    api "com.palantir.conjure.java.api:errors:$conjureJavaRuntimeApiVersion"
-    api "com.palantir.conjure.java.api:service-config:$conjureJavaRuntimeApiVersion"
 
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 

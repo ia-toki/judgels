@@ -1,7 +1,5 @@
 package judgels.uriel.api.contest.problem;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThat;
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
@@ -14,11 +12,12 @@ import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_3_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_3_SLUG;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.List;
 import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
@@ -74,8 +73,9 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .points(11)
                         .build());
 
-        assertThatRemoteExceptionThrownBy(() -> problemService.setProblems(MANAGER_HEADER, contest.getJid(), data))
-                .isGeneratedFromErrorType(ContestErrors.PROBLEM_SLUGS_NOT_ALLOWED);
+        assertThatThrownBy(() -> problemService.setProblems(MANAGER_HEADER, contest.getJid(), data))
+                .hasFieldOrPropertyWithValue("code", 403)
+                .hasMessageContaining(ContestErrors.PROBLEM_SLUGS_NOT_ALLOWED);
 
         problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
@@ -123,9 +123,9 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
         // as supervisor
 
-        assertThatRemoteExceptionThrownBy(() -> problemService
+        assertThatThrownBy(() -> problemService
                 .setProblems(SUPERVISOR_HEADER, contest.getJid(), data))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         response = problemService.getProblems(of(SUPERVISOR_HEADER), contest.getJid());
         assertThat(response.getConfig().getCanManage()).isFalse();
@@ -175,12 +175,12 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
         // as non-contestant
 
-        assertThatRemoteExceptionThrownBy(() -> problemService.getProgrammingProblemWorksheet(
+        assertThatThrownBy(() -> problemService.getProgrammingProblemWorksheet(
                 of(USER_HEADER),
                 contest.getJid(),
                 "A",
                 Optional.empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 
     private void test_get_bundle_problem_worksheet(Contest contest) {
@@ -296,12 +296,12 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
         // as non-contestant
 
-        assertThatRemoteExceptionThrownBy(() -> problemService.getBundleProblemWorksheet(
+        assertThatThrownBy(() -> problemService.getBundleProblemWorksheet(
                 of(USER_HEADER),
                 contest.getJid(),
                 "D",
                 Optional.empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 
 }

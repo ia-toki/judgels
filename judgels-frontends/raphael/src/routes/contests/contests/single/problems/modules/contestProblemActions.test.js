@@ -58,8 +58,8 @@ describe('contestProblemActions', () => {
           .reply(200)
           .put(`/contests/${contestJid}/problems`, data)
           .reply(403, {
-            errorName: ContestErrors.ProblemSlugsNotAllowed,
-            parameters: { slugs: 'slug2, slug4' },
+            message: ContestErrors.ProblemSlugsNotAllowed,
+            args: { slugs: 'slug2, slug4' },
           });
 
         await expect(store.dispatch(contestProblemActions.setProblems(contestJid, data))).rejects.toEqual(

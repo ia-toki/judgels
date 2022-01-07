@@ -2,7 +2,6 @@ package judgels.gabriel.grading;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.palantir.conjure.java.api.errors.RemoteException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -165,7 +164,7 @@ public class GradingWorker {
                     "GradingResponse",
                     MAPPER.writeValueAsString(response));
             messageClient.confirmMessage(message.getId());
-        }  catch (IOException | RemoteException e) {
+        }  catch (IOException e) {
             throw new RuntimeException("Grading result failed to send!", e);
         }
 

@@ -61,7 +61,7 @@ public class MockUriel {
 
         mockUriel.stubFor(get("/api/v2/contests/slug/bogus")
                 .willReturn(notFound()
-                        .withBody("{\"errorCode\": \"NOT_FOUND\", \"errorName\": \"NOT_FOUND\"}")
+                        .withBody("{\"code\": 404, \"message\": \"NOT_FOUND\"}")
                         .withHeader("Content-Type", "application/json")));
 
         return mockUriel;

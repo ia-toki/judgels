@@ -1,7 +1,6 @@
 package judgels.jerahmeel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.palantir.conjure.java.api.config.service.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import java.nio.file.Path;
@@ -30,12 +29,6 @@ public class JerahmeelModule {
     @JerahmeelBaseDataDir
     Path jerahmeelBaseDataDir() {
         return Paths.get(config.getBaseDataDir());
-    }
-
-    @Provides
-    @Singleton
-    static UserAgent userAgent() {
-        return UserAgent.of(UserAgent.Agent.of("jerahmeel", UserAgent.Agent.DEFAULT_VERSION));
     }
 
     @Provides

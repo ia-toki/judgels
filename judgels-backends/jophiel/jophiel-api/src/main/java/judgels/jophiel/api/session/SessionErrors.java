@@ -1,32 +1,28 @@
 package judgels.jophiel.api.session;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
-import com.palantir.conjure.java.api.errors.ServiceException;
-import com.palantir.logsafe.SafeArg;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ws.rs.core.Response.Status;
+import judgels.service.api.JudgelsServiceException;
 
 public class SessionErrors {
     private SessionErrors() {}
 
-    public static final ErrorType USER_NOT_ACTIVATED =
-            ErrorType.create(ErrorType.Code.PERMISSION_DENIED, "Jophiel:UserNotActivated");
+    public static final String USER_NOT_ACTIVATED = "Jophiel:UserNotActivated";
+    public static final String USER_MAX_CONCURRENT_SESSIONS_EXCEEDED = "Jophiel:UserMaxConcurrentSessionsExceeded";
+    public static final String LOGOUT_DISABLED = "Jophiel:LogoutDisabled";
 
-    public static final ErrorType USER_MAX_CONCURRENT_SESSIONS_EXCEEDED =
-            ErrorType.create(ErrorType.Code.PERMISSION_DENIED, "Jophiel:UserMaxConcurrentSessionsExceeded");
-
-    public static final ErrorType LOGOUT_DISABLED =
-            ErrorType.create(ErrorType.Code.PERMISSION_DENIED, "Jophiel:LogoutDisabled");
-
-    public static ServiceException userNotActivated(String email) {
-        return new ServiceException(USER_NOT_ACTIVATED, SafeArg.of("email", email));
+    public static JudgelsServiceException userNotActivated(String email) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("email", email);
+        return new JudgelsServiceException(Status.FORBIDDEN, USER_NOT_ACTIVATED, args);
     }
 
-    public static ServiceException userMaxConcurrentSessionsExceeded(String username, int maxConcurrentSessions) {
-        return new ServiceException(USER_MAX_CONCURRENT_SESSIONS_EXCEEDED,
-                SafeArg.of("username", username),
-                SafeArg.of("maxConcurrentSessions", Integer.toString(maxConcurrentSessions)));
+    public static JudgelsServiceException userMaxConcurrentSessionsExceeded() {
+        return new JudgelsServiceException(Status.FORBIDDEN, USER_MAX_CONCURRENT_SESSIONS_EXCEEDED);
     }
 
-    public static ServiceException logoutDisabled() {
-        return new ServiceException(LOGOUT_DISABLED);
+    public static JudgelsServiceException logoutDisabled() {
+        return new JudgelsServiceException(Status.FORBIDDEN, LOGOUT_DISABLED);
     }
 }

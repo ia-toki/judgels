@@ -2,10 +2,10 @@ package judgels.service.actor;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.palantir.conjure.java.api.errors.RemoteException;
 import java.time.Duration;
 import java.util.Optional;
 import judgels.jophiel.api.user.me.MyUserService;
+import judgels.service.api.JudgelsServiceException;
 import judgels.service.api.actor.ActorExtractor;
 import judgels.service.api.actor.AuthHeader;
 
@@ -28,8 +28,8 @@ public final class CachingActorExtractor implements ActorExtractor {
     private String extractJidUncached(AuthHeader authHeader) {
         try {
             return myUserService.getMyself(authHeader).getJid();
-        } catch (RemoteException e) {
-            if (e.getStatus() != 401) {
+        } catch (JudgelsServiceException e) {
+            if (e.getCode() != 401) {
                 throw e;
             }
         }

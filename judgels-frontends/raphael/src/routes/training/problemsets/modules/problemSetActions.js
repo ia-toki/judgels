@@ -62,7 +62,7 @@ export function setProblems(problemSetJid, data) {
       await problemSetProblemAPI.setProblems(token, problemSetJid, data);
     } catch (error) {
       if (error instanceof ForbiddenError && error.message === ProblemSetErrors.ContestSlugsNotAllowed) {
-        const unknownSlugs = error.parameters.contestSlugs;
+        const unknownSlugs = error.args.contestSlugs;
         throw new SubmissionError({ problems: 'Contests not found/allowed: ' + unknownSlugs });
       }
       throw error;

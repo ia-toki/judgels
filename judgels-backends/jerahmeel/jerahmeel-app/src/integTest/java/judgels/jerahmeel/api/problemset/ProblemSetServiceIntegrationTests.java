@@ -1,6 +1,5 @@
 package judgels.jerahmeel.api.problemset;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_B_JID;
@@ -15,9 +14,9 @@ import static judgels.jerahmeel.api.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT
 import static judgels.jerahmeel.api.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.time.Instant;
 import java.util.Optional;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
@@ -110,33 +109,37 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
 
         assertThat(problemSet2A.getSlug()).isEqualTo("problem-set-2a");
 
-        assertThatRemoteExceptionThrownBy(() -> problemSetService
+        assertThatThrownBy(() -> problemSetService
                 .createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
                         .slug("problem-set-1")
                         .name("Problem Set 1")
                         .archiveSlug(archiveA.getSlug())
                         .build()))
-                .isGeneratedFromErrorType(SLUG_ALREADY_EXISTS);
+                .hasFieldOrPropertyWithValue("code", 400)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
-        assertThatRemoteExceptionThrownBy(() -> problemSetService
+        assertThatThrownBy(() -> problemSetService
                 .createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
                         .slug("problem-set-3")
                         .name("Problem Set 3")
                         .archiveSlug("bogus")
                         .build()))
-                .isGeneratedFromErrorType(ARCHIVE_SLUG_NOT_FOUND);
+                .hasFieldOrPropertyWithValue("code", 400)
+                .hasMessageContaining(ARCHIVE_SLUG_NOT_FOUND);
 
-        assertThatRemoteExceptionThrownBy(() -> problemSetService
+        assertThatThrownBy(() -> problemSetService
                 .updateProblemSet(ADMIN_HEADER, problemSet2A.getJid(), new ProblemSetUpdateData.Builder()
                         .slug("problem-set-1")
                         .build()))
-                .isGeneratedFromErrorType(SLUG_ALREADY_EXISTS);
+                .hasFieldOrPropertyWithValue("code", 400)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
-        assertThatRemoteExceptionThrownBy(() -> problemSetService
+        assertThatThrownBy(() -> problemSetService
                 .updateProblemSet(ADMIN_HEADER, problemSet2A.getJid(), new ProblemSetUpdateData.Builder()
                         .archiveSlug("bogus")
                         .build()))
-                .isGeneratedFromErrorType(ARCHIVE_SLUG_NOT_FOUND);
+                .hasFieldOrPropertyWithValue("code", 400)
+                .hasMessageContaining(ARCHIVE_SLUG_NOT_FOUND);
 
         ProblemSetsResponse response = problemSetService.getProblemSets(
                 Optional.of(ADMIN_HEADER), Optional.empty(), Optional.empty(), Optional.empty());
@@ -146,13 +149,13 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
 
         // as user
 
-        assertThatRemoteExceptionThrownBy(() -> problemSetService
+        assertThatThrownBy(() -> problemSetService
                 .createProblemSet(USER_HEADER, new ProblemSetCreateData.Builder()
                         .slug("problem-set-3")
                         .name("Problem Set 3")
                         .archiveSlug(archiveA.getSlug())
                         .build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         response = problemSetService.getProblemSets(
                 Optional.of(USER_HEADER), Optional.empty(), Optional.empty(), Optional.empty());
@@ -173,7 +176,7 @@ class ProblemSetServiceIntegrationTests extends AbstractTrainingServiceIntegrati
 
         assertThat(problemSetService.searchProblemSet(CONTEST_1_JID)).isEqualTo(problemSet1);
         assertThat(problemSetService.searchProblemSet(CONTEST_2_JID)).isEqualTo(problemSet2A);
-        assertThatRemoteExceptionThrownBy(() -> problemSetService.searchProblemSet("bogus"))
-                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
+        assertThatThrownBy(() -> problemSetService.searchProblemSet("bogus"))
+                .hasFieldOrPropertyWithValue("code", 404);
     }
 }

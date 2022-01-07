@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.clarification;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
@@ -15,10 +14,10 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.List;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
@@ -106,9 +105,9 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
                 .answer("Yes!")
                 .build();
 
-        assertThatRemoteExceptionThrownBy(() -> clarificationService
+        assertThatThrownBy(() -> clarificationService
                 .answerClarification(SUPERVISOR_HEADER, contest.getJid(), clarificationJid, answer))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         // as manager
 
@@ -150,11 +149,11 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         moduleService.enableModule(MANAGER_HEADER, contest.getJid(), ContestModuleType.REGISTRATION);
 
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> clarificationService.getClarifications(USER_HEADER, contest.getJid(), empty(), empty(), empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(() -> clarificationService.createClarification(
+        assertThatThrownBy(() -> clarificationService.createClarification(
                 USER_HEADER,
                 contest.getJid(),
                 new ContestClarificationData.Builder()
@@ -162,6 +161,6 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
                         .title("Snack")
                         .question("Is snack provided?")
                         .build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 }

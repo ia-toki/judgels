@@ -80,7 +80,7 @@ describe('contestClarificationActions', () => {
           .options(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`)
           .reply(200)
           .put(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`, { answer })
-          .reply(400, { errorName: ContestErrors.ClarificationAlreadyAnswered });
+          .reply(400, { message: ContestErrors.ClarificationAlreadyAnswered });
 
         await expect(
           store.dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, answer))

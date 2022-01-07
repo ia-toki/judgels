@@ -29,7 +29,7 @@ describe('toastMiddleware', () => {
   });
 
   describe('when the action throws other error', () => {
-    const error = new NotFoundError({ errorName: 'error' });
+    const error = new NotFoundError({ message: 'error' });
     const next = async action => {
       throw error;
     };

@@ -1,16 +1,18 @@
 package judgels.uriel.api.contest.group;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
-import com.palantir.conjure.java.api.errors.ServiceException;
-import com.palantir.logsafe.SafeArg;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ws.rs.core.Response;
+import judgels.service.api.JudgelsServiceException;
 
 public class ContestGroupErrors {
     private ContestGroupErrors() {}
 
-    public static final ErrorType SLUG_ALREADY_EXISTS =
-            ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Uriel:ContestGroupSlugAlreadyExists");
+    public static final String SLUG_ALREADY_EXISTS = "Uriel:ContestGroupSlugAlreadyExists";
 
-    public static ServiceException slugAlreadyExists(String slug) {
-        return new ServiceException(SLUG_ALREADY_EXISTS, SafeArg.of("slug", slug));
+    public static JudgelsServiceException slugAlreadyExists(String slug) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("slug", slug);
+        return new JudgelsServiceException(Response.Status.BAD_REQUEST, SLUG_ALREADY_EXISTS, args);
     }
 }

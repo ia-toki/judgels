@@ -1,10 +1,9 @@
 package judgels.jophiel.api.user.me;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.role.JophielRole;
 import judgels.jophiel.api.session.Credentials;
@@ -34,20 +33,20 @@ class MyUserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         AuthHeader authHeader = AuthHeader.of(sessionService.logIn(Credentials.of("charlie", "pass")).getToken());
 
         PasswordUpdateData wrongData = PasswordUpdateData.of("wrongPass", "newPass");
-        assertThatRemoteExceptionThrownBy(() -> myUserService.updateMyPassword(authHeader, wrongData))
-                .isGeneratedFromErrorType(ErrorType.INVALID_ARGUMENT);
+        assertThatThrownBy(() -> myUserService.updateMyPassword(authHeader, wrongData))
+                .hasFieldOrPropertyWithValue("code", 400);
 
         assertThatCode(() -> sessionService.logIn(Credentials.of("charlie", "pass")))
                 .doesNotThrowAnyException();
 
-        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("charlie", "newPass")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+        assertThatThrownBy(() -> sessionService.logIn(Credentials.of("charlie", "newPass")))
+                .hasFieldOrPropertyWithValue("code", 403);
 
         PasswordUpdateData correctData = PasswordUpdateData.of("pass", "newPass");
         myUserService.updateMyPassword(authHeader, correctData);
 
-        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("charlie", "pass")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+        assertThatThrownBy(() -> sessionService.logIn(Credentials.of("charlie", "pass")))
+                .hasFieldOrPropertyWithValue("code", 403);
 
         assertThatCode(() -> sessionService.logIn(Credentials.of("charlie", "newPass")))
                 .doesNotThrowAnyException();

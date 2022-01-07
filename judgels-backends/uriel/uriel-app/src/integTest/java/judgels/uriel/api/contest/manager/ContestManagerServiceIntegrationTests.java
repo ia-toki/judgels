@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.manager;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A;
@@ -9,9 +8,9 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import org.junit.jupiter.api.Test;
@@ -60,12 +59,12 @@ class ContestManagerServiceIntegrationTests extends AbstractContestServiceIntegr
                 new ContestManager.Builder().userJid(USER_B_JID).build());
         assertThat(response.getConfig().getCanManage()).isFalse();
 
-        assertThatRemoteExceptionThrownBy(() -> managerService
+        assertThatThrownBy(() -> managerService
                 .upsertManagers(USER_B_HEADER, contest.getJid(), ImmutableSet.of("userC")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(() -> managerService
+        assertThatThrownBy(() -> managerService
                 .deleteManagers(USER_B_HEADER, contest.getJid(), ImmutableSet.of("userC")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 }

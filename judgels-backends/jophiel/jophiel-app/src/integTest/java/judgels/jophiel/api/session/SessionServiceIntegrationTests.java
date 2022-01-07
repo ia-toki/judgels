@@ -1,11 +1,9 @@
 package judgels.jophiel.api.session;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.Arrays;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
@@ -22,8 +20,8 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
     void login_logout_flow() {
         Credentials userCredentials = Credentials.of("user", "password");
 
-        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(userCredentials))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+        assertThatThrownBy(() -> sessionService.logIn(userCredentials))
+                .hasFieldOrPropertyWithValue("code", 403);
 
         User user = userService.createUser(adminHeader, new UserData.Builder()
                 .username("user")
@@ -31,8 +29,8 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .email("user@domain.com")
                 .build());
 
-        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("user", "wrong")))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+        assertThatThrownBy(() -> sessionService.logIn(Credentials.of("user", "wrong")))
+                .hasFieldOrPropertyWithValue("code", 403);
 
         Session session = sessionService.logIn(userCredentials);
         assertThat(session.getUserJid()).isEqualTo(user.getJid());
@@ -42,9 +40,8 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         sessionService.logOut(AuthHeader.of(session.getToken()));
 
-        assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> userService.getUser(AuthHeader.of(sessionToken), user.getJid()))
-                .withMessageContaining("Judgels:Unauthorized");
+        assertThatThrownBy(() -> userService.getUser(AuthHeader.of(sessionToken), user.getJid()))
+                .hasFieldOrPropertyWithValue("code", 401);
 
         // test login with email
         assertThatCode(() -> sessionService.logIn(Credentials.of("user@domain.com", "password")))
@@ -76,20 +73,18 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(session2.getUserJid()).isEqualTo(userToLogout2.getJid());
         assertThat(session3.getUserJid()).isEqualTo(userToNotLogout.getJid());
 
-        assertThatRemoteExceptionThrownBy(() -> sessionService.batchLogout(
+        assertThatThrownBy(() -> sessionService.batchLogout(
                 AuthHeader.of(session1.getToken()),
                 BatchLogoutData.of(Arrays.asList(session1.getUserJid(), session2.getUserJid()))))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         sessionService.batchLogout(
                 adminHeader, BatchLogoutData.of(Arrays.asList(session1.getUserJid(), session2.getUserJid())));
 
-        assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> userService.getUser(AuthHeader.of(session1.getToken()), userToLogout1.getJid()))
-                .withMessageContaining("Judgels:Unauthorized");
-        assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> userService.getUser(AuthHeader.of(session2.getToken()), userToLogout2.getJid()))
-                .withMessageContaining("Judgels:Unauthorized");
+        assertThatThrownBy(() -> userService.getUser(AuthHeader.of(session1.getToken()), userToLogout1.getJid()))
+                .hasFieldOrPropertyWithValue("code", 401);
+        assertThatThrownBy(() -> userService.getUser(AuthHeader.of(session2.getToken()), userToLogout2.getJid()))
+                .hasFieldOrPropertyWithValue("code", 401);
         assertThat(userService.getUser(AuthHeader.of(session3.getToken()), userToNotLogout.getJid()))
                 .isEqualTo(userToNotLogout);
     }

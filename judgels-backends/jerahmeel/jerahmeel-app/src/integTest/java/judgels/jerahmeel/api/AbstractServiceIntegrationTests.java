@@ -7,7 +7,6 @@ import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
-import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.testing.DropwizardTestSupport;
@@ -85,7 +84,6 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
     protected static <T> T createService(Class<T> serviceClass) {
         return JaxRsClients.create(
                 serviceClass,
-                "http://localhost:" + support.getLocalPort(),
-                UserAgent.of(UserAgent.Agent.of("test", UserAgent.Agent.DEFAULT_VERSION)));
+                "http://localhost:" + support.getLocalPort());
     }
 }

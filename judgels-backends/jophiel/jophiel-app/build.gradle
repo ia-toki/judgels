@@ -29,7 +29,6 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
 
-    integTestImplementation "com.palantir.conjure.java.api:test-utils:$conjureJavaRuntimeApiVersion"
     integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
     integTestImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     integTestImplementation "org.subethamail:subethasmtp-wiser:$wiserVersion"

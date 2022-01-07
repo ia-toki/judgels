@@ -43,7 +43,7 @@ describe('contestActions', () => {
       it('throws SubmissionError', async () => {
         nockUriel()
           .post(`/contests`, params)
-          .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
+          .reply(400, { message: ContestErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(contestActions.createContest(params))).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
@@ -86,7 +86,7 @@ describe('contestActions', () => {
         it('throws SubmissionError', async () => {
           nockUriel()
             .post(`/contests/${contestJid}`, params)
-            .reply(400, { errorName: ContestErrors.SlugAlreadyExists });
+            .reply(400, { message: ContestErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(contestActions.updateContest(contestJid, slug, params))).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })

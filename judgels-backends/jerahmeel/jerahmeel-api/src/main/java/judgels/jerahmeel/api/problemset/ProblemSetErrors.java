@@ -1,34 +1,34 @@
 package judgels.jerahmeel.api.problemset;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
-import com.palantir.conjure.java.api.errors.ServiceException;
-import com.palantir.logsafe.SafeArg;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Response.Status;
+import judgels.service.api.JudgelsServiceException;
 
 public class ProblemSetErrors {
     private ProblemSetErrors() {}
 
-    public static final ErrorType SLUG_ALREADY_EXISTS =
-            ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Jerahmeel:ProblemSetSlugAlreadyExists");
+    public static final String SLUG_ALREADY_EXISTS = "Jerahmeel:ProblemSetSlugAlreadyExists";
+    public static final String ARCHIVE_SLUG_NOT_FOUND = "Jerahmeel:ArchiveSlugNotFound";
+    public static final String CONTEST_SLUGS_NOT_ALLOWED = "Jerahmeel:ContestSlugsNotAllowed";
 
-    public static final ErrorType ARCHIVE_SLUG_NOT_FOUND =
-            ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Jerahmeel:ArchiveSlugNotFound");
-
-    public static final ErrorType CONTEST_SLUGS_NOT_ALLOWED =
-            ErrorType.create(ErrorType.Code.PERMISSION_DENIED, "Jerahmeel:ContestSlugsNotAllowed");
-
-    public static ServiceException slugAlreadyExists(String slug) {
-        return new ServiceException(SLUG_ALREADY_EXISTS, SafeArg.of("slug", slug));
+    public static JudgelsServiceException slugAlreadyExists(String slug) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("slug", slug);
+        return new JudgelsServiceException(Status.BAD_REQUEST, SLUG_ALREADY_EXISTS, args);
     }
 
-    public static ServiceException archiveSlugNotFound(String archiveSlug) {
-        return new ServiceException(ARCHIVE_SLUG_NOT_FOUND, SafeArg.of("archiveSlug", archiveSlug));
+    public static JudgelsServiceException archiveSlugNotFound(String archiveSlug) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("archiveSlug", archiveSlug);
+        return new JudgelsServiceException(Status.BAD_REQUEST, ARCHIVE_SLUG_NOT_FOUND, args);
     }
 
-    public static ServiceException contestSlugsNotAllowed(Set<String> contestSlugs) {
-        return new ServiceException(
-                CONTEST_SLUGS_NOT_ALLOWED,
-                SafeArg.of("contestSlugs", contestSlugs.stream().collect(Collectors.joining(", "))));
+    public static JudgelsServiceException contestSlugsNotAllowed(Set<String> contestSlugs) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("contestSlugs", contestSlugs.stream().collect(Collectors.joining(", ")));
+        return new JudgelsServiceException(Status.FORBIDDEN, CONTEST_SLUGS_NOT_ALLOWED, args);
     }
 }

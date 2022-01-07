@@ -65,8 +65,7 @@ public class SessionResource implements SessionService {
             int maxConcurrentSessionsPerUser = sessionConfiguration.getMaxConcurrentSessionsPerUser();
             if (maxConcurrentSessionsPerUser >= 0) {
                 if (sessionStore.getSessionsByUserJid(user.getJid()).size() >= maxConcurrentSessionsPerUser) {
-                    throw SessionErrors.userMaxConcurrentSessionsExceeded(
-                            user.getUsername(), maxConcurrentSessionsPerUser);
+                    throw SessionErrors.userMaxConcurrentSessionsExceeded();
                 }
             }
         }

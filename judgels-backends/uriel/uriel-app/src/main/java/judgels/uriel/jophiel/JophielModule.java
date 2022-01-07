@@ -1,6 +1,5 @@
 package judgels.uriel.jophiel;
 
-import com.palantir.conjure.java.api.config.service.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -28,37 +27,37 @@ public class JophielModule {
 
     @Provides
     @Singleton
-    UserService userService(UserAgent agent) {
-        return JaxRsClients.create(UserService.class, config.getBaseUrl(), agent);
+    UserService userService() {
+        return JaxRsClients.create(UserService.class, config.getBaseUrl());
     }
 
     @Provides
     @Singleton
-    UserSearchService userSearchService(UserAgent agent) {
-        return JaxRsClients.create(UserSearchService.class, config.getBaseUrl(), agent);
+    UserSearchService userSearchService() {
+        return JaxRsClients.create(UserSearchService.class, config.getBaseUrl());
     }
 
     @Provides
     @Singleton
-    UserRatingService userRatingService(UserAgent agent) {
-        return JaxRsClients.create(UserRatingService.class, config.getBaseUrl(), agent);
+    UserRatingService userRatingService() {
+        return JaxRsClients.create(UserRatingService.class, config.getBaseUrl());
     }
 
     @Provides
     @Singleton
-    ProfileService profileService(UserAgent agent) {
-        return JaxRsClients.create(ProfileService.class, config.getBaseUrl(), agent);
+    ProfileService profileService() {
+        return JaxRsClients.create(ProfileService.class, config.getBaseUrl());
     }
 
     @Provides
     @Singleton
-    MyUserService myService(UserAgent agent) {
-        return JaxRsClients.create(MyUserService.class, config.getBaseUrl(), agent);
+    MyUserService myService() {
+        return JaxRsClients.create(MyUserService.class, config.getBaseUrl());
     }
 
     @Provides
     @Singleton
-    ClientUserService clientUserService(UserAgent agent) {
-        return JaxRsClients.create(ClientUserService.class, config.getBaseUrl(), agent);
+    ClientUserService clientUserService() {
+        return JaxRsClients.create(ClientUserService.class, config.getBaseUrl());
     }
 }

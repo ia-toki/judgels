@@ -2,10 +2,10 @@ package judgels.uriel.contest.clarification;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.palantir.conjure.java.api.errors.ServiceException;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.service.api.JudgelsServiceException;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
@@ -87,10 +87,9 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
 
         try {
             store.answerClarification(contestB.getJid(), clarification3.getJid(), "Overwriting answer 1");
-        } catch (ServiceException err) {
-            assertThat(err.getErrorType().name()).isEqualTo("Uriel:ClarificationAlreadyAnswered");
-            assertThat(err.getParameters().get(0).getName()).isEqualTo("clarificationJid");
-            assertThat(err.getParameters().get(0).getValue()).isEqualTo(clarification3.getJid());
+        } catch (JudgelsServiceException err) {
+            assertThat(err.getMessage()).isEqualTo("Uriel:ClarificationAlreadyAnswered");
+            assertThat(err.getArgs().get("clarificationJid")).isEqualTo(clarification3.getJid());
         }
         ContestClarification answeredClarification3NotUpdated =
                 store.getClarifications(contestB.getJid(), Optional.empty(), Optional.empty()).getPage().get(1);

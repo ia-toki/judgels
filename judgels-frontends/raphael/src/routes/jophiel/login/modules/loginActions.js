@@ -17,7 +17,7 @@ export function logIn(usernameOrEmail, password) {
     } catch (error) {
       if (error instanceof ForbiddenError) {
         if (error.message === SessionErrors.UserNotActivated) {
-          dispatch(replace('/need-activation', { email: error.parameters.email }));
+          dispatch(replace('/need-activation', { email: error.args.email }));
           return;
         } else if (error.message === SessionErrors.UserMaxConcurrentSessionsExceeded) {
           throw new Error('Login failed because you are trying to log in from too many places at once.');

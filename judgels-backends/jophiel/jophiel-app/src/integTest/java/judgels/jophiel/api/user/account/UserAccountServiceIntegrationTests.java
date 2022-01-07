@@ -1,11 +1,10 @@
 package judgels.jophiel.api.user.account;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,8 +38,9 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
 
         String email = readEmail(wiser, 0);
 
-        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(credentials))
-                .isGeneratedFromErrorType(SessionErrors.USER_NOT_ACTIVATED);
+        assertThatThrownBy(() -> sessionService.logIn(credentials))
+                .hasFieldOrPropertyWithValue("code", 403)
+                .hasMessageContaining(SessionErrors.USER_NOT_ACTIVATED);
 
         String emailCode = extractEmailCode(email);
 
@@ -57,8 +57,8 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         wiser.setPort(2500);
         wiser.start();
 
-        assertThatRemoteExceptionThrownBy(() -> accountService.resendActivationEmail("nonexistent"))
-                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
+        assertThatThrownBy(() -> accountService.resendActivationEmail("nonexistent"))
+                .hasFieldOrPropertyWithValue("code", 404);
 
         accountService.registerUser(new UserRegistrationData.Builder()
                 .username("alfa")
@@ -82,8 +82,8 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
 
         assertThatCode(() -> accountService.activateUser(emailCode2)).doesNotThrowAnyException();
 
-        assertThatRemoteExceptionThrownBy(() -> accountService.resendActivationEmail("alfa@domain.com"))
-                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
+        assertThatThrownBy(() -> accountService.resendActivationEmail("alfa@domain.com"))
+                .hasFieldOrPropertyWithValue("code", 404);
 
         wiser.stop();
     }

@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
@@ -11,9 +10,9 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
 import judgels.service.api.actor.AuthHeader;
@@ -74,9 +73,9 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         // as non-viewer
 
         String contestAJid = contestA.getJid();
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> contestService.getContest(of(AuthHeader.of("randomToken")), contestAJid))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         // as viewer
 

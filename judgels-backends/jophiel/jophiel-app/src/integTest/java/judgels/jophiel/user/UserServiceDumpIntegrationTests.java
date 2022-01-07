@@ -1,10 +1,9 @@
 package judgels.jophiel.user;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
@@ -55,16 +54,16 @@ public class UserServiceDumpIntegrationTests extends AbstractServiceIntegrationT
 
     @Test
     void unauthorized_request() {
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> userService.exportUsers(AuthHeader.of("notExist"), new ExportUsersDumpData.Builder().build()))
-                .hasMessageContaining("Judgels:Unauthorized");
+                .hasFieldOrPropertyWithValue("code", 401);
     }
 
     @Test
     void regular_user_is_not_authorized() {
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> userService.exportUsers(userHeader, new ExportUsersDumpData.Builder().build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 
     @Test

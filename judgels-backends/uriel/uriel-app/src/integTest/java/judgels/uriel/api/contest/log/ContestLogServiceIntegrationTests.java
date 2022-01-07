@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.log;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
@@ -15,12 +14,12 @@ import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -151,8 +150,8 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
 
         // as supervisor
 
-        assertThatRemoteExceptionThrownBy(() -> logService
+        assertThatThrownBy(() -> logService
                 .getLogs(SUPERVISOR_HEADER, contest1.getJid(), Optional.empty(), Optional.empty(), Optional.empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 }

@@ -1,6 +1,5 @@
 package judgels.jerahmeel.sandalphon;
 
-import com.palantir.conjure.java.api.config.service.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -33,13 +32,13 @@ public class SandalphonModule {
 
     @Provides
     @Singleton
-    ClientLessonService clientLessonService(UserAgent agent) {
-        return JaxRsClients.create(ClientLessonService.class, config.getBaseUrl(), agent);
+    ClientLessonService clientLessonService() {
+        return JaxRsClients.create(ClientLessonService.class, config.getBaseUrl());
     }
 
     @Provides
     @Singleton
-    ClientProblemService clientProblemService(UserAgent agent) {
-        return JaxRsClients.create(ClientProblemService.class, config.getBaseUrl(), agent);
+    ClientProblemService clientProblemService() {
+        return JaxRsClients.create(ClientProblemService.class, config.getBaseUrl());
     }
 }

@@ -1,13 +1,13 @@
 package org.iatoki.judgels.jophiel;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.conjure.java.api.errors.RemoteException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.play.PlaySession;
 import judgels.jophiel.api.play.PlaySessionErrors;
 import judgels.jophiel.api.play.PlaySessionService;
 import judgels.jophiel.api.session.Credentials;
+import judgels.service.api.JudgelsServiceException;
 import org.iatoki.judgels.jophiel.account.LoginForm;
 import org.iatoki.judgels.jophiel.account.html.loginView;
 import org.iatoki.judgels.play.actor.ActorChecker;
@@ -49,10 +49,10 @@ public final class JophielClientController extends AbstractJophielClientControll
         PlaySession session;
         try {
             session = sessionService.logIn(Credentials.of(data.username, data.password));
-        } catch (RemoteException e) {
-            if (e.getError().errorName().equals(PlaySessionErrors.ROLE_NOT_ALLOWED.name())) {
+        } catch (JudgelsServiceException e) {
+            if (e.getMessage().equals(PlaySessionErrors.ROLE_NOT_ALLOWED)) {
                 form = form.withGlobalError("User role not allowed to log in.");
-            } else if (e.getStatus() == 403) {
+            } else if (e.getCode() == 403) {
                 form = form.withGlobalError("Username or password incorrect.");
             }
             return showLogin(req, form);

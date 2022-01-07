@@ -1,12 +1,11 @@
 package judgels.jerahmeel.api.archive;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.jerahmeel.api.archive.ArchiveErrors.SLUG_ALREADY_EXISTS;
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.Optional;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
 import org.junit.jupiter.api.Test;
@@ -37,20 +36,22 @@ class ArchiveServiceIntegrationServiceTests extends AbstractTrainingServiceInteg
 
         assertThat(archiveB.getSlug()).isEqualTo("archive-b");
 
-        assertThatRemoteExceptionThrownBy(() -> archiveService
+        assertThatThrownBy(() -> archiveService
                 .createArchive(ADMIN_HEADER, new ArchiveCreateData.Builder()
                         .slug("archive-a")
                         .name("A")
                         .category("C")
                         .build()))
-                .isGeneratedFromErrorType(SLUG_ALREADY_EXISTS);
+                .hasFieldOrPropertyWithValue("code", 400)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
 
-        assertThatRemoteExceptionThrownBy(() -> archiveService
+        assertThatThrownBy(() -> archiveService
                 .updateArchive(ADMIN_HEADER, archiveB.getJid(), new ArchiveUpdateData.Builder()
                         .slug("archive-a")
                         .build()))
-                .isGeneratedFromErrorType(SLUG_ALREADY_EXISTS);
+                .hasFieldOrPropertyWithValue("code", 400)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
         ArchivesResponse response = archiveService.getArchives(Optional.of(ADMIN_HEADER));
         assertThat(response.getData()).containsExactly(archiveA, archiveB);
@@ -58,13 +59,13 @@ class ArchiveServiceIntegrationServiceTests extends AbstractTrainingServiceInteg
         // as user
 
 
-        assertThatRemoteExceptionThrownBy(() -> archiveService
+        assertThatThrownBy(() -> archiveService
                 .createArchive(USER_HEADER, new ArchiveCreateData.Builder()
                         .slug("archive-c")
                         .name("Archive C")
                         .category("Category")
                         .build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         response = archiveService.getArchives(Optional.of(USER_HEADER));
         assertThat(response.getData()).containsExactly(archiveA, archiveB);

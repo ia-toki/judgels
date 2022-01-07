@@ -29,7 +29,6 @@ dependencies {
     testImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
 
     integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
-    integTestImplementation "com.palantir.conjure.java.api:test-utils:$conjureJavaRuntimeApiVersion"
     integTestImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 
     integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"

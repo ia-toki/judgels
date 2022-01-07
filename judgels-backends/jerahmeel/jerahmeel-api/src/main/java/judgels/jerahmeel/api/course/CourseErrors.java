@@ -1,16 +1,18 @@
 package judgels.jerahmeel.api.course;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
-import com.palantir.conjure.java.api.errors.ServiceException;
-import com.palantir.logsafe.SafeArg;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ws.rs.core.Response.Status;
+import judgels.service.api.JudgelsServiceException;
 
 public class CourseErrors {
     private CourseErrors() {}
 
-    public static final ErrorType SLUG_ALREADY_EXISTS =
-            ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Jerahmeel:CourseSlugAlreadyExists");
+    public static final String SLUG_ALREADY_EXISTS = "Jerahmeel:CourseSlugAlreadyExists";
 
-    public static ServiceException slugAlreadyExists(String slug) {
-        return new ServiceException(SLUG_ALREADY_EXISTS, SafeArg.of("slug", slug));
+    public static JudgelsServiceException slugAlreadyExists(String slug) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("slug", slug);
+        return new JudgelsServiceException(Status.BAD_REQUEST, SLUG_ALREADY_EXISTS, args);
     }
 }

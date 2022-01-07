@@ -6,11 +6,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
-import com.palantir.conjure.java.api.errors.ServiceException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.service.api.JudgelsServiceException;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
@@ -82,8 +82,8 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
                 .beginTime(Instant.ofEpochSecond(5)).build()).get();
 
         assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-d").build()))
-                .isInstanceOf(ServiceException.class)
-                .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
+                .isInstanceOf(JudgelsServiceException.class)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
         moduleStore.upsertRegistrationModule(contestD.getJid());
         moduleStore.upsertRegistrationModule(contestE.getJid());
@@ -109,16 +109,16 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
         store.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
         assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-a").build()))
-                .isInstanceOf(ServiceException.class)
-                .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
+                .isInstanceOf(JudgelsServiceException.class)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
         store.updateContest(contestA.getJid(), new ContestUpdateData.Builder().name("Contest A").build());
 
         assertThatThrownBy(() -> store.updateContest(
                 contestA.getJid(),
                 new ContestUpdateData.Builder().slug("contest-b").build()))
-                .isInstanceOf(ServiceException.class)
-                .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
+                .isInstanceOf(JudgelsServiceException.class)
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
     }
 
     private List<Contest> getContests(String userJid) {

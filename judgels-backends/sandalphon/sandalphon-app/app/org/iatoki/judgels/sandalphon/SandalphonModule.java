@@ -4,7 +4,6 @@ import akka.actor.ActorSystem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import java.nio.file.Paths;
@@ -46,7 +45,7 @@ public final class SandalphonModule extends AbstractModule {
     public void configure() {
         Config config = ConfigFactory.load();
 
-        GeneralConfig generalConfig = new GeneralConfig(config, "Sandalphon", UserAgent.Agent.DEFAULT_VERSION);
+        GeneralConfig generalConfig = new GeneralConfig(config, "Sandalphon", "0.0");
         bind(GeneralConfig.class).toInstance(generalConfig);
 
         bind(SandalphonConfiguration.class).toInstance(SandalphonProperties.build(config));

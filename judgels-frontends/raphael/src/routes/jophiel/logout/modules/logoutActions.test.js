@@ -52,7 +52,7 @@ describe('logoutActions', () => {
       it('does not log out', async () => {
         nockJophiel()
           .post(`/session/logout`)
-          .reply(403, { errorName: 'Jophiel:LogoutDisabled' });
+          .reply(403, { message: 'Jophiel:LogoutDisabled' });
 
         await expect(store.dispatch(logoutActions.logOut(path))).rejects.toEqual(
           new Error('Logout is currently disabled.')

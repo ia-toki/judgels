@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.announcement;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.DRAFT;
@@ -10,8 +9,8 @@ import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
@@ -91,7 +90,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
         assertThat(config.getCanSupervise()).isTrue();
         assertThat(config.getCanManage()).isFalse();
 
-        assertThatRemoteExceptionThrownBy(() -> announcementService.createAnnouncement(
+        assertThatThrownBy(() -> announcementService.createAnnouncement(
                 SUPERVISOR_HEADER,
                 contest.getJid(),
                 new ContestAnnouncementData.Builder()
@@ -99,9 +98,9 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
                         .content("this is content")
                         .status(PUBLISHED)
                         .build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(() -> announcementService.updateAnnouncement(
+        assertThatThrownBy(() -> announcementService.updateAnnouncement(
                 SUPERVISOR_HEADER,
                 contest.getJid(),
                 announcement2.getJid(),
@@ -110,7 +109,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
                         .content("this is content")
                         .status(PUBLISHED)
                         .build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         // as contestant
 

@@ -20,7 +20,7 @@ export function setProblems(contestJid, data) {
       await contestProblemAPI.setProblems(token, contestJid, data);
     } catch (error) {
       if (error instanceof ForbiddenError && error.message === ContestErrors.ProblemSlugsNotAllowed) {
-        const unknownSlugs = error.parameters.slugs;
+        const unknownSlugs = error.args.slugs;
         throw new SubmissionError({ problems: 'Problems not found/allowed: ' + unknownSlugs });
       }
       throw error;

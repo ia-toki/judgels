@@ -1,6 +1,5 @@
 package judgels.uriel.api.contest.submission.programming;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -28,9 +27,9 @@ import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.AbstractMap;
 import java.util.List;
 import javax.ws.rs.client.Entity;
@@ -139,18 +138,18 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
 
         assertThat(submit(contest.getJid(), USER_BEARER_TOKEN, PROBLEM_1_JID).getStatus()).isEqualTo(403);
 
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> submissionService.getSubmissions(USER_HEADER, contest.getJid(), empty(), empty(), empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         // as guest
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> submissionService.getSubmissionInfo(contest.getJid(), USER_A_JID, PROBLEM_1_JID))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> submissionService.getSubmissionSourceImage(contest.getJid(), USER_A_JID, PROBLEM_1_JID))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
                 .beginTime(NOW.minus(10, HOURS))
@@ -160,9 +159,9 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
         assertThat(info.getId()).isEqualTo(submission.getId());
         assertThat(info.getProfile().getUsername()).isEqualTo(USER_A);
 
-        assertThatRemoteExceptionThrownBy(
+        assertThatThrownBy(
                 () -> submissionService.getSubmissionInfo(contest.getJid(), USER_A_JID, PROBLEM_2_JID))
-                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
+                .hasFieldOrPropertyWithValue("code", 404);
 
         Response response2 = webTarget.path("/api/v2/contests/submissions/programming/image")
                 .queryParam("contestJid", contest.getJid())

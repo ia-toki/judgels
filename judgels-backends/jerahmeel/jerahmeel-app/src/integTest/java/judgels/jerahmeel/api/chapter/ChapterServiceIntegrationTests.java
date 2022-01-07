@@ -1,11 +1,10 @@
 package judgels.jerahmeel.api.chapter;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
 import org.junit.jupiter.api.Test;
 
@@ -34,12 +33,12 @@ class ChapterServiceIntegrationTests extends AbstractTrainingServiceIntegrationT
 
         // as user
 
-        assertThatRemoteExceptionThrownBy(() -> chapterService
+        assertThatThrownBy(() -> chapterService
                 .createChapter(USER_HEADER, new ChapterCreateData.Builder().name("Chapter C").build()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
-        assertThatRemoteExceptionThrownBy(() -> chapterService
+        assertThatThrownBy(() -> chapterService
                 .getChapters(USER_HEADER))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
     }
 }

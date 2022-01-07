@@ -1,6 +1,5 @@
 package judgels.gabriel;
 
-import com.palantir.conjure.java.api.config.service.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import java.nio.file.Path;
@@ -32,12 +31,6 @@ public class GabrielModule {
     @Named("problemsDir")
     Path gradingProblemsDir() {
         return Paths.get(gabrielConfig.getBaseDataDir(), "problems");
-    }
-
-    @Provides
-    @Singleton
-    static UserAgent userAgent() {
-        return UserAgent.of(UserAgent.Agent.of("gabriel", UserAgent.Agent.DEFAULT_VERSION));
     }
 
     @Provides

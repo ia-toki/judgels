@@ -1,17 +1,19 @@
 package judgels.jerahmeel.chapter;
 
-import com.palantir.conjure.java.api.errors.ErrorType;
-import com.palantir.conjure.java.api.errors.ServiceException;
-import com.palantir.logsafe.SafeArg;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ws.rs.core.Response.Status;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.service.api.JudgelsServiceException;
 
 public class ChapterErrors {
     private ChapterErrors() {}
 
-    public static final ErrorType WRONG_PROBLEM_TYPE =
-            ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Uriel:WrongProblemType");
+    public static final String WRONG_PROBLEM_TYPE = "Jerahmeel:WrongProblemType";
 
-    public static ServiceException wrongProblemType(ProblemType problemType) {
-        return new ServiceException(WRONG_PROBLEM_TYPE, SafeArg.of("problemType", problemType));
+    public static JudgelsServiceException wrongProblemType(ProblemType problemType) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("problemType", problemType);
+        return new JudgelsServiceException(Status.BAD_REQUEST, WRONG_PROBLEM_TYPE, args);
     }
 }

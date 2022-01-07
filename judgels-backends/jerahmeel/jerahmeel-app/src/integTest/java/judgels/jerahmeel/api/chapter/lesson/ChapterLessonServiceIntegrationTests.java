@@ -1,6 +1,5 @@
 package judgels.jerahmeel.api.chapter.lesson;
 
-import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.jerahmeel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.LESSON_1_JID;
@@ -8,9 +7,9 @@ import static judgels.jerahmeel.api.mocks.MockSandalphon.LESSON_1_SLUG;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.LESSON_2_JID;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.LESSON_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
-import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.Optional;
 import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
 import judgels.jerahmeel.api.chapter.Chapter;
@@ -47,9 +46,9 @@ class ChapterLessonServiceIntegrationTests extends AbstractTrainingServiceIntegr
 
         // assert user
 
-        assertThatRemoteExceptionThrownBy(() -> chapterLessonService
+        assertThatThrownBy(() -> chapterLessonService
                 .setLessons(USER_HEADER, chapterA.getJid(), ImmutableList.of()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .hasFieldOrPropertyWithValue("code", 403);
 
         response = chapterLessonService.getLessons(Optional.of(USER_HEADER), chapterA.getJid());
 
