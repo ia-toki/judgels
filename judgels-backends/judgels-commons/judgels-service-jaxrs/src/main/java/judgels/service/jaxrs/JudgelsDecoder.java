@@ -4,6 +4,7 @@ import feign.FeignException;
 import feign.Response;
 import feign.codec.Decoder;
 import feign.codec.StringDecoder;
+import feign.optionals.OptionalDecoder;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -12,10 +13,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 public class JudgelsDecoder implements Decoder {
-    private final Decoder jaxRsDecoder;
+    private final Decoder jacksonDecoder;
 
     public JudgelsDecoder(Decoder jaxRsDecoder) {
-        this.jaxRsDecoder = jaxRsDecoder;
+        this.jacksonDecoder = new OptionalDecoder(jaxRsDecoder);
     }
 
     @Override
@@ -29,6 +30,6 @@ public class JudgelsDecoder implements Decoder {
                 }
             }
         }
-        return jaxRsDecoder.decode(response, type);
+        return jacksonDecoder.decode(response, type);
     }
 }

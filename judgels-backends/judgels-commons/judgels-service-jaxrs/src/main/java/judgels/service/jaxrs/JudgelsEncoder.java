@@ -10,10 +10,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 public class JudgelsEncoder implements Encoder {
-    private final Encoder jaxRsEncoder;
+    private final Encoder jacksonEncoder;
 
     public JudgelsEncoder(Encoder jaxRsEncoder) {
-        this.jaxRsEncoder = jaxRsEncoder;
+        this.jacksonEncoder = jaxRsEncoder;
     }
 
     @Override
@@ -28,6 +28,6 @@ public class JudgelsEncoder implements Encoder {
                 }
             }
         }
-        jaxRsEncoder.encode(object, bodyType, template);
+        jacksonEncoder.encode(object, bodyType, template);
     }
 }
