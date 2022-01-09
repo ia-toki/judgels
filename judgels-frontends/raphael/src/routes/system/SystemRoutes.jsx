@@ -1,4 +1,4 @@
-import { User } from '@blueprintjs/icons';
+import { TimelineLineChart, User } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -7,6 +7,7 @@ import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithS
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import UsersPage from './users/UsersPage/UsersPage';
+import RatingsPage from './ratings/RatingsPage/RatingsPage';
 
 function SystemRoutes() {
   const sidebarItems = [
@@ -16,6 +17,13 @@ function SystemRoutes() {
       title: 'Users',
       routeComponent: Route,
       component: UsersPage,
+    },
+    {
+      id: 'ratings',
+      titleIcon: <TimelineLineChart />,
+      title: 'Ratings',
+      routeComponent: Route,
+      component: RatingsPage,
     },
   ];
 

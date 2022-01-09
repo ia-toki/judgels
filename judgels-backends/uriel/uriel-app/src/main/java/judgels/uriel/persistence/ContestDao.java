@@ -1,5 +1,6 @@
 package judgels.uriel.persistence;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.JudgelsDao;
@@ -17,4 +18,5 @@ public interface ContestDao extends JudgelsDao<ContestModel> {
     Page<ContestModel> selectPagedByUserJid(String userJid, SearchOptions searchOptions, SelectionOptions options);
     List<ContestModel> selectAllActiveByUserJid(String userJid, SelectionOptions options);
     List<ContestModel> selectAllPubliclyParticipatedByUserJid(String userJid, SelectionOptions options);
+    List<ContestModel> selectAllPublicAfter(Instant time);
 }

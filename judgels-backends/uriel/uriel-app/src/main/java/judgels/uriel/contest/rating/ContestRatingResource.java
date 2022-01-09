@@ -4,10 +4,10 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingService;
@@ -23,8 +24,10 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.rating.ContestRating;
+import judgels.uriel.api.contest.rating.ContestRatingChanges;
 import judgels.uriel.api.contest.rating.ContestRatingHistoryResponse;
 import judgels.uriel.api.contest.rating.ContestRatingService;
+import judgels.uriel.api.contest.rating.ContestsPendingRatingResponse;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.ContestRoleChecker;
@@ -67,15 +70,53 @@ public class ContestRatingResource implements ContestRatingService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, UserRating> getRatingResult(AuthHeader authHeader, String contestJid) {
+    public ContestsPendingRatingResponse getContestsPendingRating(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
+        Optional<RatingEvent> latestEvent = userRatingService.getLatestRatingEvent();
+        Instant latestTime = latestEvent.isPresent() ? latestEvent.get().getTime() : Instant.MIN;
+
+        List<Contest> contests = contestStore.getPublicContestsAfter(latestTime);
+        Map<String, ContestRatingChanges> ratingChangesMap = contests.stream()
+                .collect(Collectors.toMap(Contest::getJid, this::getRatingChanges));
+
+        return new ContestsPendingRatingResponse.Builder()
+                .data(contests)
+                .ratingChangesMap(ratingChangesMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestRatingHistoryResponse getRatingHistory(String username) {
+        String userJid = checkFound(userClient.translateUsernameToJid(username));
+
+        List<UserRatingEvent> userRatingEvents = userRatingService.getRatingHistory(userJid);
+
+        Set<String> contestJids = userRatingEvents.stream()
+                .map(UserRatingEvent::getEventJid)
+                .collect(Collectors.toSet());
+
+        Map<String, ContestInfo> contestInfosMap = contestStore.getContestInfosByJids(contestJids);
+
+        List<ContestRating> data = userRatingEvents.stream()
+                .map(e -> new ContestRating.Builder()
+                        .contestJid(e.getEventJid())
+                        .rating(e.getRating())
+                        .build())
+                .collect(Collectors.toList());
+
+        return new ContestRatingHistoryResponse.Builder()
+                .data(data)
+                .contestsMap(contestInfosMap)
+                .build();
+    }
+
+    private ContestRatingChanges getRatingChanges(Contest contest) {
         Optional<RawContestScoreboard> raw = scoreboardStore.getScoreboard(contest.getJid(), OFFICIAL);
         if (!raw.isPresent()) {
-            return ImmutableMap.of();
+            return new ContestRatingChanges.Builder().build();
         }
 
         Scoreboard scoreboard = scoreboardBuilder.buildScoreboard(raw.get(), contest, "", true, true);
@@ -105,33 +146,9 @@ public class ContestRatingResource implements ContestRatingService {
         Map<String, UserRating> ratingsMap =
                 ratingComputer.compute(contestantJids, ranksMap, publicRatingsMap, hiddenRatingsMap);
 
-        return ratingsMap.entrySet().stream()
-                .collect(Collectors.toMap(e -> profilesMap.get(e.getKey()).getUsername(), e -> e.getValue()));
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public ContestRatingHistoryResponse getRatingHistory(String username) {
-        String userJid = checkFound(userClient.translateUsernameToJid(username));
-
-        List<UserRatingEvent> userRatingEvents = userRatingService.getRatingHistory(userJid);
-
-        Set<String> contestJids = userRatingEvents.stream()
-                .map(UserRatingEvent::getEventJid)
-                .collect(Collectors.toSet());
-
-        Map<String, ContestInfo> contestInfosMap = contestStore.getContestInfosByJids(contestJids);
-
-        List<ContestRating> data = userRatingEvents.stream()
-                .map(e -> new ContestRating.Builder()
-                        .contestJid(e.getEventJid())
-                        .rating(e.getRating())
-                        .build())
-                .collect(Collectors.toList());
-
-        return new ContestRatingHistoryResponse.Builder()
-                .data(data)
-                .contestsMap(contestInfosMap)
+        return new ContestRatingChanges.Builder()
+                .ratingsMap(ratingsMap)
+                .profilesMap(profilesMap)
                 .build();
     }
 }

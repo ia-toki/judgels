@@ -2,9 +2,11 @@ package judgels.uriel.hibernate;
 
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.isContestantParticipationVisibleAsViewer;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisible;
+import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisibleAsViewer;
 
 import java.time.Clock;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -89,6 +91,15 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
                 .build(), options);
     }
 
+    @Override
+    public List<ContestModel> selectAllPublicAfter(Instant time) {
+        return selectAll(new FilterOptions.Builder<ContestModel>()
+                .addCustomPredicates(isVisibleAsViewer())
+                .addCustomPredicates(isAfter(time))
+                .addCustomPredicates(isEnded(clock))
+                .build());
+    }
+
     static CustomPredicateFilter<ContestModel> hasContestJid(String contestJid) {
         return (cb, cq, root) -> cb.equal(root.get(ContestModel_.jid), contestJid);
     }
@@ -135,6 +146,17 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
             return cb.and(
                     cb.greaterThanOrEqualTo(endTime, cb.literal(beforeCurrentInstantEpoch)),
                     cb.lessThanOrEqualTo(beginTime, cb.literal(currentInstantEpoch)));
+        };
+    }
+
+    // The following predicate is currently not testable because H2 does not have 'unix_timestamp' function.
+    static CustomPredicateFilter<ContestModel> isAfter(Instant time) {
+        return (cb, cq, root) -> {
+            Expression<Long> beginTime = cb.prod(
+                    cb.function("unix_timestamp", Double.class, root.get(ContestModel_.beginTime)),
+                    cb.literal(1000.0)).as(Long.class);
+
+            return cb.greaterThanOrEqualTo(beginTime, cb.literal(time.toEpochMilli()));
         };
     }
 

@@ -4,10 +4,12 @@ import com.google.common.collect.Lists;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.persistence.UserRatingDao;
@@ -55,7 +57,11 @@ public class UserRatingStore {
         });
     }
 
-    public List<UserRatingEvent> getRatingEvents(String userJid) {
+    public Optional<RatingEvent> getLatestRatingEvent() {
+        return ratingEventDao.selectLatest().map(UserRatingStore::fromModel);
+    }
+
+    public List<UserRatingEvent> getUserRatingEvents(String userJid) {
         List<UserRatingModel> ratings = ratingDao.selectAllByUserJid(userJid);
         Map<Instant, UserRatingEventModel> ratingEventsMap =
                 ratingEventDao.selectAllByTimes(
@@ -75,6 +81,13 @@ public class UserRatingStore {
         return new UserRating.Builder()
                 .publicRating(model.publicRating)
                 .hiddenRating(model.hiddenRating)
+                .build();
+    }
+
+    private static RatingEvent fromModel(UserRatingEventModel model) {
+        return new RatingEvent.Builder()
+                .time(model.time)
+                .eventJid(model.eventJid)
                 .build();
     }
 }

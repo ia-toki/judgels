@@ -1,3 +1,14 @@
+import { APP_CONFIG } from '../../../conf';
+import { post } from '../http';
+
+const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-rating`;
+
+export const userRatingAPI = {
+  updateRatings: (token, data) => {
+    return post(`${baseURL}`, token, data);
+  },
+};
+
 export function getRatingName(rating) {
   if (rating === null || rating === undefined) {
     return 'unrated';

@@ -163,6 +163,12 @@ public class ContestStore {
                 ContestStore::fromModel);
     }
 
+    public List<Contest> getPublicContestsAfter(Instant time) {
+        return Lists.transform(
+                contestDao.selectAllPublicAfter(time),
+                ContestStore::fromModel);
+    }
+
     public Contest createContest(ContestCreateData contestCreateData) {
         if (contestDao.selectBySlug(contestCreateData.getSlug()).isPresent()) {
             throw ContestErrors.slugAlreadyExists(contestCreateData.getSlug());
