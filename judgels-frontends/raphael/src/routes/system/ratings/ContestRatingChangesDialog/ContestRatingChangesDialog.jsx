@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { getRatingClass } from '../../../../modules/api/jophiel/userRating';
 
+import './ContestRatingChangesDialog.scss';
+
 export function ContestRatingChangesDialog({ contest, ratingChanges, onClose, onApply, isApplying }) {
   const renderTable = () => {
     const { ratingsMap, profilesMap } = ratingChanges;
