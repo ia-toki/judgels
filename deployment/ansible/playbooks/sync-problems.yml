@@ -1,10 +1,10 @@
-- hosts: sandalphon
-  gather_facts: false
-  tasks:
-    - name: Generate Sandalphon public key
-      openssh_keypair:
-        path: ~/.ssh/id_rsa
-      register: sandalphon_key
+# - hosts: sandalphon
+#   gather_facts: false
+#   tasks:
+#     - name: Generate Sandalphon public key
+#       openssh_keypair:
+#         path: ~/.ssh/id_rsa
+#       register: sandalphon_key
 
 - hosts: gabriel
   gather_facts: false
@@ -17,13 +17,15 @@
       with_inventory_hostnames: sandalphon
 
     - name: Create problems directory
-      file: 
+      file:
         path: /judgels/sandalphon/var/data/problems
         state: directory
 
     - name: Push problems from Sandalphon to Gabriel using rsync
-      synchronize:
-        src: /judgels/sandalphon/var/data/problems/
-        dest: /judgels/sandalphon/var/data/problems
-      delegate_to: "{{ item }}"
-      with_inventory_hostnames: sandalphon
+      include_tasks: sync_problem.yml
+      loop:
+        - JIDPROGxxx
+        - JIDPROGyyy
+      loop_control:
+        loop_var: problemJid
+      tags: always
