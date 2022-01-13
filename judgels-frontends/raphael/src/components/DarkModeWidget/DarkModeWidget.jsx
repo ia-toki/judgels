@@ -1,4 +1,5 @@
 import { Navbar, Switch, Alignment } from '@blueprintjs/core';
+import { Moon } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
 
 import { selectIsDarkMode } from '../../modules/webPrefs/webPrefsSelectors';
@@ -15,7 +16,7 @@ function DarkModeWidget({ isDarkMode, onChangeDarkMode }) {
     <Switch
       className="dark-mode-widget__switch"
       alignIndicator={Alignment.RIGHT}
-      label="dark mode"
+      label={<Moon />}
       checked={isDarkMode}
       onChange={changeDarkMode}
     />
