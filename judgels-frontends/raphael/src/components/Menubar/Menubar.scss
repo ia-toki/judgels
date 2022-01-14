@@ -2,7 +2,7 @@
 
 .menubar {
   width: 100%;
-  height: 45px;
+  height: 40px;
 }
 
 .bp4-light .menubar {
@@ -11,6 +11,10 @@
 
 .bp4-dark .menubar {
   background-color: $dark-gray3;
+}
+
+.menubar__icon {
+  margin-right: 5px;
 }
 
 .menubar__content {
@@ -29,8 +33,8 @@
     padding-left: 20px;
     padding-right: 20px;
     margin-right: 0;
-    line-height: 45px;
-    height: 45px;
+    line-height: 40px;
+    height: 40px;
     color: $primary-color;
   }
 
@@ -41,7 +45,7 @@
   }
 
   .bp4-tab-indicator-wrapper {
-    height: 45px !important;
+    height: 40px !important;
     z-index: 1;
   }
 

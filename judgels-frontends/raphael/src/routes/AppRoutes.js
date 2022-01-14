@@ -1,3 +1,14 @@
+import {
+  Cog,
+  Console,
+  Home,
+  Layers,
+  Manual,
+  PredictiveAnalysis,
+  Projects,
+  TimelineLineChart,
+} from '@blueprintjs/icons';
+
 import { isInPrivateContestsMode, hasJerahmeel } from '../conf';
 import { JophielRole } from '../modules/api/jophiel/role';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
@@ -14,6 +25,7 @@ import LazyRankingRoutes from './ranking/LazyRankingRoutes';
 const appRoutes = [
   {
     id: 'system',
+    icon: <Cog />,
     title: 'System',
     route: {
       path: '/system',
@@ -23,6 +35,7 @@ const appRoutes = [
   },
   {
     id: 'contests',
+    icon: <Console />,
     title: 'Contests',
     route: {
       path: '/contests',
@@ -32,6 +45,7 @@ const appRoutes = [
   },
   {
     id: 'training',
+    icon: <Projects />,
     title: 'Training',
     route: {
       path: '/training',
@@ -41,6 +55,7 @@ const appRoutes = [
   },
   {
     id: 'courses',
+    icon: <PredictiveAnalysis />,
     title: 'Courses',
     route: {
       path: '/courses',
@@ -50,6 +65,7 @@ const appRoutes = [
   },
   {
     id: 'problems',
+    icon: <Manual />,
     title: 'Problems',
     route: {
       path: '/problems',
@@ -59,6 +75,7 @@ const appRoutes = [
   },
   {
     id: 'submissions',
+    icon: <Layers />,
     title: 'Submissions',
     route: {
       path: '/submissions',
@@ -68,6 +85,7 @@ const appRoutes = [
   },
   {
     id: 'ranking',
+    icon: <TimelineLineChart />,
     title: 'Ranking',
     route: {
       path: '/ranking',
@@ -79,6 +97,7 @@ const appRoutes = [
 
 const homeRoute = {
   id: 'home',
+  icon: <Home />,
   title: 'Home',
   route: {
     component: JophielRoutes,
