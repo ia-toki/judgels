@@ -2,9 +2,11 @@
 
 .breadcrumbs {
   width: 100%;
-  ul, ul li {
+  ul,
+  ul li {
     height: 40px;
     line-height: 40px;
+    margin-bottom: 5px;
   }
 }
 
@@ -18,9 +20,9 @@
   }
 }
 
-
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 750px) {
   .breadcrumbs {
-    display: none;
+    visibility: hidden;
+    height: 15px;
   }
 }
