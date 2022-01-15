@@ -1,0 +1,61 @@
+@import '../../../../../../../styles/base';
+
+.course-chapter-sidebar__chapters {
+  font-family: $accent-font;
+  margin-left: -15px;
+  margin-right: -15px;
+
+  .bp4-tree-node-content {
+    align-items: initial;
+    height: inherit;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+  }
+
+  .bp4-tree-node-content:hover {
+    cursor: pointer;
+  }
+
+  .bp4-tree-node-icon {
+    padding-top: 3px;
+  }
+
+  .bp4-tree-node-label {
+    text-overflow: initial;
+    white-space: normal;
+  }
+
+  .bp4-tree-node-selected > .bp4-tree-node-content {
+    color: inherit;
+    background-color: $div-hover-color !important;
+
+    .bp4-tree-node-icon {
+      color: inherit;
+    }
+  }
+
+  li {
+    margin-left: -15px;
+  }
+
+  .progress-tag {
+    margin-bottom: 0;
+  }
+}
+
+.bp4-dark .course-chapter-sidebar__chapters {
+  .bp4-tree-node-selected > .bp4-tree-node-content {
+    color: inherit;
+    background-color: $dark-secondary-background-color !important;
+
+    .bp4-tree-node-icon {
+      color: inherit;
+    }
+  }
+}
