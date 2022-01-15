@@ -5,7 +5,7 @@ import { StaticRouter } from 'react-router';
 
 import { UserRef } from '../UserRef/UserRef';
 
-// CSS definition is in index.scss. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
+import './HtmlText.scss';
 
 export class HtmlText extends Component {
   ref = null;

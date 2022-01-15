@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { withRouter } from 'react-router';
 
-// CSS definition is in index.scss. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
+import './Pagination.scss';
 
 function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
   const getTotalPages = () => {

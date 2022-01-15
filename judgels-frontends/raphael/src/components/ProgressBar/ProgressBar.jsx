@@ -2,6 +2,8 @@ import { Intent, ProgressBar as BlueprintProgressBar } from '@blueprintjs/core';
 
 import { getVerdictIntent } from '../../modules/api/gabriel/verdict';
 
+import './ProgressBar.scss';
+
 export function ProgressBar({ num, denom, verdict }) {
   if (denom === 0) {
     return null;

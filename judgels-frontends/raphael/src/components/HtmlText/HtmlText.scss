@@ -1,0 +1,76 @@
+@import '../../styles/base';
+
+.html-text {
+  line-height: 20px !important;
+
+  h2,
+  h3,
+  h4 {
+    margin-top: 20px;
+    margin-bottom: 10px !important;
+    line-height: 20px !important;
+  }
+
+  ol,
+  ul {
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: inherit;
+    margin-bottom: 10px;
+  }
+
+  td,
+  th {
+    border: solid 1px #cccccc;
+    text-align: left;
+    padding: 5px;
+  }
+
+  th {
+    background-color: #eeeeee;
+    font-weight: bold;
+    color: $text-color;
+  }
+
+  pre {
+    margin-bottom: 10px;
+  }
+
+  .spoiler {
+    margin-top: 5px;
+    background-color: #f8f8f8;
+    padding: 10px;
+    border: 2px dashed #e7e7e7;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: $accent-font;
+    font-weight: bold;
+  }
+
+  .spoiler:hover {
+    background-color: #e7e7e7;
+  }
+
+  .spoiler .spoiler-content {
+    display: none;
+    border-top: 1px solid;
+    margin-top: 5px;
+    padding-top: 15px;
+    font-family: $primary-font;
+    font-style: normal;
+    font-weight: normal;
+  }
+}
+
+.bp4-dark .html-text {
+  .spoiler {
+    background-color: $gray1;
+    border: 2px dashed $gray5;
+  }
+
+  .spoiler:hover {
+    background-color: $dark-gray5;
+  }
+}
