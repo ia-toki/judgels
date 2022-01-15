@@ -36,7 +36,8 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
         {renderProgress()}
       </h4>
       <p className="course-card__subtitle">
-        <Globe /> Bahasa Indonesia&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+        <Globe />
+        &nbsp;&nbsp;Bahasa Indonesia&nbsp;&nbsp;&middot;&nbsp;&nbsp;
         <Tag minimal>Free</Tag>
       </p>
       <hr />

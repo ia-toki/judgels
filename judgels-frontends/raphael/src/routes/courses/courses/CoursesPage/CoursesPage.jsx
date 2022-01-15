@@ -8,6 +8,8 @@ import { LoadingContentCard } from '../../../../components/LoadingContentCard/Lo
 import { CourseCard } from '../CourseCard/CourseCard';
 import * as courseActions from '../modules/courseActions';
 
+import './CoursesPage.scss';
+
 class CoursesPage extends Component {
   state = {
     response: undefined,
@@ -22,7 +24,7 @@ class CoursesPage extends Component {
     const { response } = this.state;
     const curriculumName = response ? response.curriculum.name : '';
 
-    return <Card title={`Courses by ${curriculumName}`}>{this.renderCourses()}</Card>;
+    return <Card title={curriculumName}>{this.renderCourses()}</Card>;
   }
 
   renderCourses = () => {
@@ -47,9 +49,11 @@ class CoursesPage extends Component {
           <HtmlText>{curriculum.description}</HtmlText>
         </Callout>
         <hr />
-        {courses.map(course => (
-          <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
-        ))}
+        <div className="courses">
+          {courses.map(course => (
+            <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
+          ))}
+        </div>
       </>
     );
   };
