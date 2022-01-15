@@ -24,7 +24,11 @@ class CoursesPage extends Component {
     const { response } = this.state;
     const curriculumName = response ? response.curriculum.name : '';
 
-    return <Card title={curriculumName}>{this.renderCourses()}</Card>;
+    return (
+      <Card className="courses-card" title={curriculumName}>
+        {this.renderCourses()}
+      </Card>
+    );
   }
 
   renderCourses = () => {
@@ -45,7 +49,7 @@ class CoursesPage extends Component {
 
     return (
       <>
-        <Callout intent={Intent.NONE} icon={null}>
+        <Callout intent={Intent.PRIMARY} icon={null}>
           <HtmlText>{curriculum.description}</HtmlText>
         </Callout>
         <hr />

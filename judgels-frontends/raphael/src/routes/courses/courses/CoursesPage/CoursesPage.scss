@@ -3,6 +3,12 @@
   margin-right: -10px;
 }
 
+@media only screen and (max-width: 600px) {
+  .courses-card {
+    margin-top: 10px;
+  }
+}
+
 @media only screen and (max-width: 900px) {
   .courses {
     display: block;
