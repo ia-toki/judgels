@@ -7,7 +7,6 @@ import { ScrollToTopOnMount } from '../../../../../../components/ScrollToTopOnMo
 import ContentWithTopbar from '../../../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter, selectCourseChapterName, selectCourseSlug } from '../modules/courseChapterSelectors';
-import CourseChapterSidebar from './CourseChapterSidebar/CourseChapterSidebar';
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
 import ChapterSubmissionRoutes from './submissions/ChapterSubmissionRoutes';
@@ -54,12 +53,11 @@ function SingleCourseChapterRoutes({ chapter, chapterName, courseSlug, match }) 
   ];
 
   const contentWithTopbarProps = {
+    className: 'single-course-chapter-routes',
     contentHeader: (
-      <div className="single-course-chapter-routes__header">
-        <h2>
-          {chapter.alias}. {chapterName}
-        </h2>
-      </div>
+      <h2>
+        {chapter.alias}. {chapterName}
+      </h2>
     ),
     items: topbarItems,
   };
@@ -67,14 +65,7 @@ function SingleCourseChapterRoutes({ chapter, chapterName, courseSlug, match }) 
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <div className="single-course-chapter-routes">
-        <div className="single-course-chapter-routes__sidebar">
-          <CourseChapterSidebar />
-        </div>
-        <div className="single-course-chapter-routes__content">
-          <ContentWithTopbar {...contentWithTopbarProps} />
-        </div>
-      </div>
+      <ContentWithTopbar {...contentWithTopbarProps} />
     </FullPageLayout>
   );
 }

@@ -56,9 +56,15 @@ describe('SingleCourseChapterDataRoute', () => {
     history.push('/courses/basic/chapters/A/');
     await new Promise(resolve => setImmediate(resolve));
 
+    history.push('/courses/basic/chapters/B');
+    await new Promise(resolve => setImmediate(resolve));
+    expect(courseChapterActions.getChapter).toHaveBeenCalledWith('jid123', 'basic', 'B');
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A');
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/B', 'B. Chapter 123');
+
     history.push('/other');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A/');
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/B');
     expect(courseChapterActions.clearChapter).toHaveBeenCalled();
   });
 });

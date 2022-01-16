@@ -1,10 +1,11 @@
+import classNames from 'classnames';
 import { Redirect, Switch, withRouter } from 'react-router';
 
 import { Topbar } from '../Topbar/Topbar';
 
-function ContentAndTopbar({ contentHeader, topbarElement, contentElement }) {
+function ContentAndTopbar({ className, contentHeader, topbarElement, contentElement }) {
   return (
-    <div className="content-with-topbar">
+    <div className={classNames('content-with-topbar', className)}>
       {contentHeader}
       {topbarElement}
       <hr />
@@ -18,7 +19,7 @@ function resolveUrl(parentPath, childPath) {
   return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
 }
 
-function ContentWithTopbar({ match, location, contentHeader, items }) {
+function ContentWithTopbar({ match, location, className, contentHeader, items }) {
   const renderTopbar = () => {
     const topbarItems = items
       .filter(item => !item.disabled)
@@ -69,7 +70,12 @@ function ContentWithTopbar({ match, location, contentHeader, items }) {
   };
 
   return (
-    <ContentAndTopbar contentHeader={contentHeader} topbarElement={renderTopbar()} contentElement={renderContent()} />
+    <ContentAndTopbar
+      className={className}
+      contentHeader={contentHeader}
+      topbarElement={renderTopbar()}
+      contentElement={renderContent()}
+    />
   );
 }
 

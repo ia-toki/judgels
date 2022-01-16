@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import { selectCourse } from '../../../modules/courseSelectors';
+import { selectCourseChapter } from '../modules/courseChapterSelectors';
 import * as courseChapterActions from '../modules/courseChapterActions';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
@@ -14,6 +15,9 @@ class SingleCourseChapterDataRoute extends Component {
   async componentDidUpdate(prevProps) {
     if ((prevProps.course && prevProps.course.jid) !== (this.props.course && this.props.course.jid)) {
       this.props.onPopBreadcrumb(this.props.match.url);
+      await this.refresh();
+    } else if (prevProps.match.url !== this.props.match.url) {
+      this.props.onPopBreadcrumb(prevProps.match.url);
       await this.refresh();
     }
   }
@@ -39,6 +43,7 @@ class SingleCourseChapterDataRoute extends Component {
 
 const mapStateToProps = state => ({
   course: selectCourse(state),
+  courseChapter: selectCourseChapter(state),
 });
 
 const mapDispatchToProps = {

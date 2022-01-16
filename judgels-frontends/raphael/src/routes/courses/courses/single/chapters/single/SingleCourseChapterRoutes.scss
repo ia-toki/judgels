@@ -1,35 +1,14 @@
 .single-course-chapter-routes {
-  display: flex;
-}
-
-.single-course-chapter-routes__header {
-  margin-top: -2px;
-}
-
-.single-course-chapter-routes__sidebar {
-  width: 270px;
-  margin-right: 25px;
-  margin-bottom: 15px;
-}
-
-.single-course-chapter-routes__content {
-  flex-grow: 1;
-  max-width: 865px;
+  h2 {
+    margin-top: -2px;
+  }
 }
 
 @media only screen and (max-width: 750px) {
   .single-course-chapter-routes {
-    display: block;
-  }
-
-  .single-course-chapter-routes__header {
     h2 {
       font-size: 20px !important;
       line-height: 22px !important;
     }
-  }
-
-  .single-course-chapter-routes__sidebar {
-    display: none;
   }
 }

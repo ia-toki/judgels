@@ -1,12 +1,11 @@
-import { Properties } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import CourseChapterSidebar from './CourseChapterSidebar/CourseChapterSidebar';
+import SingleCourseContentRoutes from './SingleCourseContentRoutes';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import CourseChaptersPage from './chapters/CourseChaptersPage/CourseChaptersPage';
 import { selectCourse } from '../modules/courseSelectors';
 
 import './SingleCourseRoutes.scss';
@@ -18,30 +17,17 @@ function SingleCourseRoutes({ match, course }) {
     return <LoadingState large />;
   }
 
-  const sidebarItems = [
-    {
-      id: '@',
-      titleIcon: <Properties />,
-      title: 'Chapters',
-      routeComponent: Route,
-      component: CourseChaptersPage,
-    },
-  ];
-
-  const contentWithSidebarProps = {
-    title: 'Course Menu',
-    items: sidebarItems,
-    contentHeader: (
-      <div className="single-course-routes__header">
-        <h2>{course.name}</h2>
-      </div>
-    ),
-  };
-
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <div className="single-course-routes">
+        <div className="single-course-routes__sidebar">
+          <CourseChapterSidebar />
+        </div>
+        <div className="single-course-routes__content">
+          <SingleCourseContentRoutes />
+        </div>
+      </div>
     </FullPageLayout>
   );
 }
