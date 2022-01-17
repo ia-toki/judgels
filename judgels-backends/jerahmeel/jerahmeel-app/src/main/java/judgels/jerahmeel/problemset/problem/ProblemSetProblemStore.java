@@ -103,7 +103,6 @@ public class ProblemSetProblemStore {
             model.alias = alias;
             model.problemJid = problemJid;
             model.type = type.name();
-            model.status = "VISIBLE";
             return fromModel(problemDao.insert(model), contestJids);
         }
     }

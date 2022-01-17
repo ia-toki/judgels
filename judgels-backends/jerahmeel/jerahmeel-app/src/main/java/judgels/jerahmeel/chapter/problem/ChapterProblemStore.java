@@ -88,7 +88,6 @@ public class ChapterProblemStore {
             model.chapterJid = chapterJid;
             model.alias = alias;
             model.problemJid = problemJid;
-            model.status = "VISIBLE";
             model.type = type.name();
             return fromModel(problemDao.insert(model));
         }

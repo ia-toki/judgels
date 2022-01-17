@@ -66,7 +66,6 @@ public class ChapterLessonStore {
             model.chapterJid = chapterJid;
             model.alias = alias;
             model.lessonJid = lessonJid;
-            model.status = "VISIBLE";
             return fromModel(lessonDao.insert(model));
         }
     }

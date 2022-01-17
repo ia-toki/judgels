@@ -22,4 +22,7 @@
     <include file="migrations/013-add-problem_level.xml"/>
     <include file="migrations/014-remove-user_item.xml"/>
     <include file="migrations/015-remove-role_admin.xml"/>
+    <include file="migrations/016-remove-status-from-chapter_lesson.xml"/>
+    <include file="migrations/017-remove-status-from-chapter_problem.xml"/>
+    <include file="migrations/018-remove-status-from-problem_set_problem.xml"/>
 </databaseChangeLog>

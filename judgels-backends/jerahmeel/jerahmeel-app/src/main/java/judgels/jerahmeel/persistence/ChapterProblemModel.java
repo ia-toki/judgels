@@ -23,7 +23,4 @@ public final class ChapterProblemModel extends Model {
 
     @Column(nullable = false)
     public String type;
-
-    @Column(nullable = false)
-    public String status;
 }

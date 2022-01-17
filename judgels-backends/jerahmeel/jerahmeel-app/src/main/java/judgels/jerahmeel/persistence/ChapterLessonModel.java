@@ -20,7 +20,4 @@ public final class ChapterLessonModel extends Model {
 
     @Column(nullable = false)
     public String alias;
-
-    @Column(nullable = false)
-    public String status;
 }

@@ -23,7 +23,4 @@ public final class ProblemSetProblemModel extends Model {
 
     @Column(nullable = false)
     public String type;
-
-    @Column(nullable = false)
-    public String status;
 }
