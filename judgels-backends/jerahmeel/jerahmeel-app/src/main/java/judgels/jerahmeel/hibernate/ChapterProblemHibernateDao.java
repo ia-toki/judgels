@@ -30,7 +30,6 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     public Optional<ChapterProblemModel> selectByProblemJid(String problemJid) {
         return selectByFilter(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsEq(ChapterProblemModel_.problemJid, problemJid)
-                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .build());
     }
 
@@ -38,7 +37,6 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     public List<ChapterProblemModel> selectAllByProblemJids(Set<String> problemJids) {
         return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsIn(ChapterProblemModel_.problemJid, problemJids)
-                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .build());
     }
 
@@ -47,7 +45,6 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
         return selectByFilter(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
                 .putColumnsEq(ChapterProblemModel_.alias, problemAlias)
-                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .build());
     }
 
@@ -55,7 +52,6 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     public List<ChapterProblemModel> selectAllByChapterJid(String chapterJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .build(), options);
     }
 
@@ -63,7 +59,6 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     public List<ChapterProblemModel> selectAllBundleByChapterJid(String chapterJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .putColumnsEq(ChapterProblemModel_.type, ProblemType.BUNDLE.name())
                 .build(), options);
     }
@@ -72,7 +67,6 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     public List<ChapterProblemModel> selectAllProgrammingByChapterJid(String chapterJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .putColumnsEq(ChapterProblemModel_.type, ProblemType.PROGRAMMING.name())
                 .build(), options);
     }
@@ -97,7 +91,6 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
                 cb.count(root)));
 
         cq.where(
-                cb.equal(root.get(ChapterProblemModel_.status), "VISIBLE"),
                 cb.equal(root.get(ChapterProblemModel_.type), ProblemType.PROGRAMMING.name()),
                 root.get(ChapterProblemModel_.chapterJid).in(chapterJids));
 

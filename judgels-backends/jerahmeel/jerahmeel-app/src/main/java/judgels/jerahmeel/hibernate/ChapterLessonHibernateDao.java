@@ -29,7 +29,6 @@ public class ChapterLessonHibernateDao extends HibernateDao<ChapterLessonModel> 
         return selectByFilter(new FilterOptions.Builder<ChapterLessonModel>()
                 .putColumnsEq(ChapterLessonModel_.chapterJid, chapterJid)
                 .putColumnsEq(ChapterLessonModel_.alias, lessonAlias)
-                .putColumnsEq(ChapterLessonModel_.status, "VISIBLE")
                 .build());
     }
 
@@ -37,7 +36,6 @@ public class ChapterLessonHibernateDao extends HibernateDao<ChapterLessonModel> 
     public List<ChapterLessonModel> selectAllByChapterJid(String chapterJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ChapterLessonModel>()
                 .putColumnsEq(ChapterLessonModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterLessonModel_.status, "VISIBLE")
                 .build(), options);
     }
 }

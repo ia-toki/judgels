@@ -88,7 +88,6 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
                 cb.count(root)));
 
         cq.where(
-                cb.equal(root.get(ProblemSetProblemModel_.status), "VISIBLE"),
                 cb.equal(root.get(ProblemSetProblemModel_.type), ProblemType.PROGRAMMING.name()),
                 root.get(ProblemSetProblemModel_.problemSetJid).in(problemSetJids));
 
