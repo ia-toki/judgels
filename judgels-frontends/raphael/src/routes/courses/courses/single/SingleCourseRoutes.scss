@@ -13,19 +13,21 @@
   max-width: 865px;
 }
 
+.single-course-routes__divider {
+  display: none;
+}
+
 @media only screen and (max-width: 750px) {
   .single-course-routes {
-    display: block;
-  }
-
-  .single-course-routes__header {
-    h2 {
-      font-size: 20px !important;
-      line-height: 22px !important;
-    }
+    flex-direction: column-reverse;
   }
 
   .single-course-routes__sidebar {
-    display: none;
+    width: inherit;
+    margin-right: 0;
+  }
+
+  .single-course-routes__divider {
+    display: block;
   }
 }

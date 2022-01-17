@@ -2,8 +2,6 @@ import { Layers, Manual, ManuallyEnteredData, Presentation } from '@blueprintjs/
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
-import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import ContentWithTopbar from '../../../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter, selectCourseChapterName, selectCourseSlug } from '../modules/courseChapterSelectors';
@@ -62,12 +60,7 @@ function SingleCourseChapterRoutes({ chapter, chapterName, courseSlug, match }) 
     items: topbarItems,
   };
 
-  return (
-    <FullPageLayout>
-      <ScrollToTopOnMount />
-      <ContentWithTopbar {...contentWithTopbarProps} />
-    </FullPageLayout>
-  );
+  return <ContentWithTopbar {...contentWithTopbarProps} />;
 }
 
 const mapStateToProps = state => ({

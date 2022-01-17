@@ -24,6 +24,7 @@ function SingleCourseRoutes({ match, course }) {
         <div className="single-course-routes__sidebar">
           <CourseChapterSidebar />
         </div>
+        <hr className="single-course-routes__divider" />
         <div className="single-course-routes__content">
           <SingleCourseContentRoutes />
         </div>
