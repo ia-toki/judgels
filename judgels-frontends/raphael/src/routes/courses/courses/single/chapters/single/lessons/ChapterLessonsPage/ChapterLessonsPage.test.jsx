@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
@@ -34,7 +33,7 @@ describe('ChapterLessonsPage', () => {
         },
       })
     );
-    chapterLessonActions.redirectToFirstLesson.mockReturnValue(() => Promise.resolve());
+    chapterLessonActions.redirectToLesson.mockReturnValue(() => Promise.resolve());
 
     store = createStore(
       combineReducers({
@@ -49,6 +48,7 @@ describe('ChapterLessonsPage', () => {
         value: { chapterJid: 'chapterJid', alias: 'chapter-1' },
         courseSlug: 'courseSlug',
         name: 'Chapter 1',
+        lessonAliases: lessons.map(lesson => lesson.alias),
       })
     );
     store.dispatch(PutStatementLanguage('en'));
@@ -87,9 +87,9 @@ describe('ChapterLessonsPage', () => {
       await new Promise(resolve => setImmediate(resolve));
       wrapper.update();
 
-      expect(chapterLessonActions.redirectToFirstLesson).toHaveBeenCalledWith(
+      expect(chapterLessonActions.redirectToLesson).toHaveBeenCalledWith(
         '/courses/courseSlug/chapter/chapter-1/lessons',
-        lessons
+        'A'
       );
     });
   });

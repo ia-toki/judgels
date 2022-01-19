@@ -19,12 +19,15 @@ import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterInfo;
 import judgels.jerahmeel.api.chapter.ChapterProgress;
+import judgels.jerahmeel.api.chapter.lesson.ChapterLesson;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
+import judgels.jerahmeel.api.course.chapter.CourseChapterResponse;
 import judgels.jerahmeel.api.course.chapter.CourseChapterService;
 import judgels.jerahmeel.api.course.chapter.CourseChapterUserProgressesData;
 import judgels.jerahmeel.api.course.chapter.CourseChapterUserProgressesResponse;
 import judgels.jerahmeel.api.course.chapter.CourseChaptersResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
+import judgels.jerahmeel.chapter.lesson.ChapterLessonStore;
 import judgels.jerahmeel.course.CourseStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
@@ -38,6 +41,7 @@ public class CourseChapterResource implements CourseChapterService {
     private final CourseStore courseStore;
     private final CourseChapterStore courseChapterStore;
     private final ChapterStore chapterStore;
+    private final ChapterLessonStore chapterLessonStore;
     private final StatsStore statsStore;
     private final UserClient userClient;
 
@@ -48,6 +52,7 @@ public class CourseChapterResource implements CourseChapterService {
             CourseStore courseStore,
             CourseChapterStore courseChapterStore,
             ChapterStore chapterStore,
+            ChapterLessonStore chapterLessonStore,
             StatsStore statsStore,
             UserClient userClient) {
 
@@ -55,6 +60,7 @@ public class CourseChapterResource implements CourseChapterService {
         this.roleChecker = roleChecker;
         this.courseStore = courseStore;
         this.courseChapterStore = courseChapterStore;
+        this.chapterLessonStore = chapterLessonStore;
         this.chapterStore = chapterStore;
         this.statsStore = statsStore;
         this.userClient = userClient;
@@ -96,11 +102,19 @@ public class CourseChapterResource implements CourseChapterService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Chapter getChapter(Optional<AuthHeader> authHeader, String courseJid, String chapterAlias) {
+    public CourseChapterResponse getChapter(Optional<AuthHeader> authHeader, String courseJid, String chapterAlias) {
         checkFound(courseStore.getCourseByJid(courseJid));
 
         CourseChapter courseChapter = checkFound(courseChapterStore.getChapterByAlias(courseJid, chapterAlias));
-        return checkFound(chapterStore.getChapterByJid(courseChapter.getChapterJid()));
+        Chapter chapter = checkFound(chapterStore.getChapterByJid(courseChapter.getChapterJid()));
+        List<String> lessonAliases = Lists.transform(
+                chapterLessonStore.getLessons(chapter.getJid()),
+                ChapterLesson::getAlias);
+        return new CourseChapterResponse.Builder()
+                .jid(chapter.getJid())
+                .name(chapter.getName())
+                .lessonAliases(lessonAliases)
+                .build();
     }
 
     @Override

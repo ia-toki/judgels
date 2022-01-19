@@ -10,7 +10,7 @@ import { consolidateLanguages } from '../../../../../../../../modules/api/sandal
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
-import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
+import { selectCourseChapter, selectCourseChapterLessonAliases } from '../../../modules/courseChapterSelectors';
 import * as chapterLessonActions from '../modules/chapterLessonActions';
 
 export class ChapterLessonsPage extends Component {
@@ -21,11 +21,12 @@ export class ChapterLessonsPage extends Component {
   };
 
   async componentDidMount() {
-    const response = await this.props.onGetLessons(this.props.chapter.chapterJid);
-
-    if (response.data.length === 1) {
-      this.props.onRedirectToFirstLesson(this.props.match.url, response.data);
+    const chapterLessonAliases = this.props.chapterLessonAliases || [];
+    if (chapterLessonAliases.length === 1) {
+      this.props.onRedirectToLesson(this.props.match.url, chapterLessonAliases[0]);
     }
+
+    const response = await this.props.onGetLessons(this.props.chapter.chapterJid);
 
     const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
       response.lessonsMap,
@@ -109,12 +110,13 @@ export class ChapterLessonsPage extends Component {
 const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
+  chapterLessonAliases: selectCourseChapterLessonAliases(state),
   statementLanguage: selectStatementLanguage(state),
 });
 
 const mapDispatchToProps = {
   onGetLessons: chapterLessonActions.getLessons,
-  onRedirectToFirstLesson: chapterLessonActions.redirectToFirstLesson,
+  onRedirectToLesson: chapterLessonActions.redirectToLesson,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterLessonsPage));

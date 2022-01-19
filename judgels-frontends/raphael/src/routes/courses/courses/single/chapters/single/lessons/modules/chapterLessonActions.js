@@ -3,9 +3,9 @@ import { replace } from 'connected-react-router';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { chapterLessonAPI } from '../../../../../../../../modules/api/jerahmeel/chapterLesson';
 
-export function redirectToFirstLesson(baseURL, lessons) {
+export function redirectToLesson(baseURL, lessonAlias) {
   return async dispatch => {
-    dispatch(replace(`${baseURL}/${lessons[0].alias}`));
+    dispatch(replace(`${baseURL}/${lessonAlias}`));
   };
 }
 

@@ -18,6 +18,7 @@ export function getChapter(courseJid, courseSlug, chapterAlias) {
         value: { alias: chapterAlias, chapterJid: chapter.jid },
         courseSlug,
         name: chapter.name,
+        lessonAliases: chapter.lessonAliases,
       })
     );
     return chapter;

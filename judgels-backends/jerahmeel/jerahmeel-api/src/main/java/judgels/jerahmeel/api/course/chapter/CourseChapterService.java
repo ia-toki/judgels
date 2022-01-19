@@ -13,7 +13,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/courses/{courseJid}/chapters")
@@ -36,7 +35,7 @@ public interface CourseChapterService {
     @GET
     @Path("/{chapterAlias}")
     @Produces(APPLICATION_JSON)
-    Chapter getChapter(
+    CourseChapterResponse getChapter(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("courseJid") String courseJid,
             @PathParam("chapterAlias") String chapterAlias);
