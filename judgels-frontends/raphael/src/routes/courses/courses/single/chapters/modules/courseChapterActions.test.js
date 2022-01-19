@@ -53,9 +53,10 @@ describe('courseChapterActions', () => {
 
       expect(store.getActions()).toContainEqual(
         PutCourseChapter({
-          value: { alias: chapterAlias, chapterJid: 'chapterJid' },
-          courseSlug: 'course-1',
+          jid: 'chapterJid',
           name: 'Chapter Name',
+          alias: chapterAlias,
+          courseSlug: 'course-1',
         })
       );
     });

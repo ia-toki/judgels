@@ -24,14 +24,14 @@ class CourseChapterSidebar extends Component {
   }
 
   render() {
-    const { course, courseChapter } = this.props;
+    const { course, chapter } = this.props;
     const { response } = this.state;
     if (!course || !response) {
       return null;
     }
 
-    const { data: chapters, chaptersMap, chapterProgressesMap } = response;
-    const activeChapterJid = courseChapter && courseChapter.chapterJid;
+    const { data: courseChapters, chaptersMap, chapterProgressesMap } = response;
+    const activeChapterJid = chapter && chapter.jid;
 
     let contents = [
       {
@@ -43,16 +43,16 @@ class CourseChapterSidebar extends Component {
     ];
 
     contents = contents.concat(
-      chapters.map(chapter => ({
-        id: chapter.alias,
+      courseChapters.map(courseChapter => ({
+        id: courseChapter.alias,
         label: (
-          <Link to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
-            {chapter.alias}. {chaptersMap[chapter.chapterJid].name}
+          <Link to={`/courses/${course.slug}/chapters/${courseChapter.alias}`}>
+            {courseChapter.alias}. {chaptersMap[courseChapter.chapterJid].name}
           </Link>
         ),
-        secondaryLabel: this.renderProgress(chapterProgressesMap[chapter.chapterJid]),
+        secondaryLabel: this.renderProgress(chapterProgressesMap[courseChapter.chapterJid]),
         icon: <Selection className={Classes.TREE_NODE_ICON} />,
-        isSelected: chapter.chapterJid === activeChapterJid,
+        isSelected: courseChapter.chapterJid === activeChapterJid,
       }))
     );
 
@@ -81,7 +81,7 @@ class CourseChapterSidebar extends Component {
 
 const mapStateToProps = state => ({
   course: selectCourse(state),
-  courseChapter: selectCourseChapter(state),
+  chapter: selectCourseChapter(state),
 });
 
 const mapDispatchToProps = {

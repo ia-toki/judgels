@@ -136,12 +136,7 @@ export class ChapterSubmissionsPage extends Component {
 
   refreshSubmissions = async (problemAlias, page) => {
     const username = this.isUserFilterMine() ? this.props.username : undefined;
-    const response = await this.props.onGetProgrammingSubmissions(
-      this.props.chapter.chapterJid,
-      username,
-      problemAlias,
-      page
-    );
+    const response = await this.props.onGetProgrammingSubmissions(this.props.chapter.jid, username, problemAlias, page);
     this.setState({ response, isFilterLoading: false });
     return response.data;
   };
@@ -157,7 +152,7 @@ export class ChapterSubmissionsPage extends Component {
     const { problemAlias } = filter;
     return (
       <SubmissionFilterWidget
-        problemAliases={problemJids.map(jid => problemAliasesMap[this.props.chapter.chapterJid + '-' + jid])}
+        problemAliases={problemJids.map(jid => problemAliasesMap[this.props.chapter.jid + '-' + jid])}
         problemAlias={problemAlias}
         onFilter={this.onFilter}
         isLoading={!!isFilterLoading}
@@ -179,7 +174,7 @@ export class ChapterSubmissionsPage extends Component {
   onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { problemAlias } = this.state.filter;
-      await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined, problemAlias);
+      await this.props.onRegradeAll(this.props.chapter.jid, undefined, problemAlias);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(problemAlias, queries.page);
     }

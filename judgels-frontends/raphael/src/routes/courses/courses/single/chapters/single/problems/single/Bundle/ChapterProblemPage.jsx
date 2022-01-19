@@ -16,7 +16,7 @@ export class ChapterProblemPage extends Component {
 
   async componentDidMount() {
     const latestSubmissions = await this.props.onGetLatestSubmissions(
-      this.props.chapter.chapterJid,
+      this.props.chapter.jid,
       this.props.worksheet.problem.alias
     );
     this.setState({
@@ -72,7 +72,7 @@ export class ChapterProblemPage extends Component {
 
   createSubmission = async (itemJid, answer) => {
     const { problem } = this.props.worksheet;
-    return await this.props.onCreateSubmission(this.props.chapter.chapterJid, problem.problemJid, itemJid, answer);
+    return await this.props.onCreateSubmission(this.props.chapter.jid, problem.problemJid, itemJid, answer);
   };
 }
 

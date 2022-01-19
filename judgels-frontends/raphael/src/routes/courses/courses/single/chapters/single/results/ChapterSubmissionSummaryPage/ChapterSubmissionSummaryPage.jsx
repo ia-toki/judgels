@@ -26,15 +26,11 @@ class ChapterSubmissionSummaryPage extends Component {
       return;
     }
 
-    const response = await onGetSubmissionSummary(
-      chapter.chapterJid,
-      this.props.match.params.username,
-      this.props.language
-    );
+    const response = await onGetSubmissionSummary(chapter.jid, this.props.match.params.username, this.props.language);
 
     const problemSummaries = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
-      alias: response.problemAliasesMap[chapter.chapterJid + '-' + problemJid] || '-',
+      alias: response.problemAliasesMap[chapter.jid + '-' + problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
       canViewGrading: true,
@@ -92,7 +88,7 @@ class ChapterSubmissionSummaryPage extends Component {
     const { userJids } = this.state.config;
     const userJid = userJids[0];
 
-    await this.props.onRegradeAll(this.props.chapter.chapterJid, userJid, problemJid);
+    await this.props.onRegradeAll(this.props.chapter.jid, userJid, problemJid);
     await this.refreshSubmissions();
   };
 }

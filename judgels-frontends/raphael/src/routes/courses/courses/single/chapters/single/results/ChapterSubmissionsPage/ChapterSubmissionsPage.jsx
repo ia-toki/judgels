@@ -75,9 +75,7 @@ export class ChapterSubmissionsPage extends Component {
               <td>
                 <UserRef profile={profilesMap[item.userJid]} />
               </td>
-              <td className="col-prob">
-                {problemAliasesMap[this.props.chapter.chapterJid + '-' + item.problemJid] || '-'}
-              </td>
+              <td className="col-prob">{problemAliasesMap[this.props.chapter.jid + '-' + item.problemJid] || '-'}</td>
               <td className="col-item-num">{itemNumbersMap[item.itemJid] || '-'}</td>
               <td>
                 <FormattedAnswer answer={item.answer} type={itemTypesMap[item.itemJid]} />
@@ -124,7 +122,7 @@ export class ChapterSubmissionsPage extends Component {
 
   refreshSubmissions = async page => {
     const { chapter, onGetSubmissions } = this.props;
-    const response = await onGetSubmissions(chapter.chapterJid, undefined, undefined, page);
+    const response = await onGetSubmissions(chapter.jid, undefined, undefined, page);
     this.setState({ response });
     return response.data;
   };
@@ -146,7 +144,7 @@ export class ChapterSubmissionsPage extends Component {
 
   onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined);
+      await this.props.onRegradeAll(this.props.chapter.jid, undefined);
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(queries.page);
     }

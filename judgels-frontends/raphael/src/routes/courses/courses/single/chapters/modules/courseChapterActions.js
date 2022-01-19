@@ -15,10 +15,9 @@ export function getChapter(courseJid, courseSlug, chapterAlias) {
     const chapter = await courseChapterAPI.getChapter(token, courseJid, chapterAlias);
     dispatch(
       PutCourseChapter({
-        value: { alias: chapterAlias, chapterJid: chapter.jid },
+        ...chapter,
+        alias: chapterAlias,
         courseSlug,
-        name: chapter.name,
-        lessonAliases: chapter.lessonAliases,
       })
     );
     return chapter;

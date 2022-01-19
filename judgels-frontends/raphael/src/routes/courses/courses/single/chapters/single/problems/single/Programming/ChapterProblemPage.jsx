@@ -6,7 +6,7 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { getGradingLanguageFamily } from '../../../../../../../../../modules/api/gabriel/language.js';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
-import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';
+import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import * as chapterSubmissionActions from '../../../submissions/modules/chapterSubmissionActions';
@@ -16,7 +16,6 @@ export function ChapterProblemPage({
   match,
   course,
   chapter,
-  chapterName,
   worksheet,
   gradingLanguage,
   onCreateSubmission,
@@ -57,11 +56,11 @@ export function ChapterProblemPage({
     onUpdateGradingLanguage(data.gradingLanguage);
 
     sendGAEvent({ category: 'Courses', action: 'Submit course problem', label: course.name });
-    sendGAEvent({ category: 'Courses', action: 'Submit chapter problem', label: chapterName });
+    sendGAEvent({ category: 'Courses', action: 'Submit chapter problem', label: chapter.name });
     sendGAEvent({
       category: 'Courses',
       action: 'Submit problem',
-      label: chapterName + ': ' + match.params.problemAlias,
+      label: chapter.name + ': ' + match.params.problemAlias,
     });
     if (getGradingLanguageFamily(data.gradingLanguage)) {
       sendGAEvent({
@@ -71,7 +70,7 @@ export function ChapterProblemPage({
       });
     }
 
-    return await onCreateSubmission(course.slug, chapter.chapterJid, chapter.alias, problem.problemJid, data);
+    return await onCreateSubmission(course.slug, chapter.jid, chapter.alias, problem.problemJid, data);
   };
 
   return (
@@ -85,7 +84,6 @@ export function ChapterProblemPage({
 const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
-  chapterName: selectCourseChapterName(state),
   gradingLanguage: selectGradingLanguage(state),
 });
 const mapDispatchToProps = {

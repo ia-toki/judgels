@@ -45,10 +45,11 @@ describe('ChapterLessonsPage', () => {
     store.dispatch(PutCourse({ jid: 'courseJid', slug: 'courseSlug' }));
     store.dispatch(
       PutCourseChapter({
-        value: { chapterJid: 'chapterJid', alias: 'chapter-1' },
-        courseSlug: 'courseSlug',
+        jd: 'chapterJid',
         name: 'Chapter 1',
         lessonAliases: lessons.map(lesson => lesson.alias),
+        alias: 'chapter-1',
+        courseSlug: 'courseSlug',
       })
     );
     store.dispatch(PutStatementLanguage('en'));

@@ -42,9 +42,10 @@ describe('ChapterSubmissionPage', () => {
     store.dispatch(PutCourse({ jid: 'courseJid', slug: 'courseSlug' }));
     store.dispatch(
       PutCourseChapter({
-        value: { chapterJid: 'chapterJid', alias: 'chapter-1' },
-        courseSlug: 'courseSlug',
+        jid: 'chapterJid',
         name: 'Chapter 1',
+        alias: 'chapter-1',
+        courseSlug: 'courseSlug',
       })
     );
     store.dispatch(PutStatementLanguage('en'));

@@ -8,7 +8,7 @@ import { LoadingState } from '../../../../../../../../../components/LoadingState
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
-import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';
+import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
@@ -20,7 +20,7 @@ export class ChapterProblemPage extends Component {
 
   async componentDidMount() {
     const response = await this.props.onGetProblemWorksheet(
-      this.props.chapter.chapterJid,
+      this.props.chapter.jid,
       this.props.match.params.problemAlias,
       this.props.statementLanguage
     );
@@ -32,7 +32,7 @@ export class ChapterProblemPage extends Component {
     this.props.onPushBreadcrumb(this.props.match.url, response.problem.alias);
 
     sendGAEvent({ category: 'Courses', action: 'View course problem', label: this.props.course.name });
-    sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: this.props.chapterName });
+    sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: this.props.chapter.name });
     sendGAEvent({
       category: 'Courses',
       action: 'View problem',
@@ -69,7 +69,6 @@ export class ChapterProblemPage extends Component {
 const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
-  chapterName: selectCourseChapterName(state),
   statementLanguage: selectStatementLanguage(state),
 });
 const mapDispatchToProps = {

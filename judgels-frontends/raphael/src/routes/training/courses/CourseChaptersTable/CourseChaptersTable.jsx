@@ -15,10 +15,10 @@ export function CourseChaptersTable({ response: { data, chaptersMap } }) {
   };
 
   const renderRows = () => {
-    const rows = data.map(chapter => (
-      <tr key={chapter.chapterJid}>
-        <td>{chapter.alias}</td>
-        <td>{chaptersMap[chapter.chapterJid] && chaptersMap[chapter.chapterJid].name}</td>
+    const rows = data.map(courseChapter => (
+      <tr key={courseChapter.chapterJid}>
+        <td>{courseChapter.alias}</td>
+        <td>{chaptersMap[courseChapter.chapterJid] && chaptersMap[courseChapter.chapterJid].name}</td>
       </tr>
     ));
 

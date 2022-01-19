@@ -20,7 +20,7 @@ export class ChapterProblemsPage extends Component {
   };
 
   async componentDidMount() {
-    const response = await this.props.onGetProblems(this.props.chapter.chapterJid);
+    const response = await this.props.onGetProblems(this.props.chapter.jid);
     const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
       response.problemsMap,
       this.props.statementLanguage

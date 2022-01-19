@@ -16,7 +16,7 @@ export class ChapterLessonPage extends Component {
 
   async componentDidMount() {
     const response = await this.props.onGetLessonStatement(
-      this.props.chapter.chapterJid,
+      this.props.chapter.jid,
       this.props.match.params.lessonAlias,
       this.props.statementLanguage
     );

@@ -33,9 +33,9 @@ export class CourseChaptersPage extends Component {
       return <LoadingContentCard />;
     }
 
-    const { data: chapters, chaptersMap, chapterProgressesMap } = response;
+    const { data: courseChapters, chaptersMap, chapterProgressesMap } = response;
 
-    if (chapters.length === 0) {
+    if (courseChapters.length === 0) {
       return (
         <p>
           <small>No chapters.</small>
@@ -43,14 +43,14 @@ export class CourseChaptersPage extends Component {
       );
     }
 
-    return chapters.map(chapter => {
+    return courseChapters.map(courseChapter => {
       const props = {
         course: this.props.course,
-        chapter,
-        chapterName: chaptersMap[chapter.chapterJid].name,
-        progress: chapterProgressesMap[chapter.chapterJid],
+        chapter: courseChapter,
+        chapterName: chaptersMap[courseChapter.chapterJid].name,
+        progress: chapterProgressesMap[courseChapter.chapterJid],
       };
-      return <CourseChapterCard key={chapter.chapterJid} {...props} />;
+      return <CourseChapterCard key={courseChapter.chapterJid} {...props} />;
     });
   };
 }
