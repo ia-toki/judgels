@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
