@@ -1,5 +1,5 @@
 import { Classes, Tree } from '@blueprintjs/core';
-import { InfoSign, Selection } from '@blueprintjs/icons';
+import { ChevronDown, Selection } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -37,8 +37,12 @@ class CourseChaptersSidebar extends Component {
     let contents = [
       {
         id: 0,
-        label: <Link to={`/courses/${course.slug}`}>Overview</Link>,
-        icon: <InfoSign className={Classes.TREE_NODE_ICON} />,
+        label: (
+          <Link to={`/courses/${course.slug}`}>
+            <h4>{course.name}</h4>
+          </Link>
+        ),
+        icon: <ChevronDown className={Classes.TREE_NODE_ICON} />,
         isSelected: !activeChapterJid,
       },
     ];
@@ -59,10 +63,8 @@ class CourseChaptersSidebar extends Component {
     );
 
     return (
-      <ContentCard>
-        <h4 className="course-chapter-sidebar__title">{course.name}</h4>
-        <hr />
-        <Tree className="course-chapter-sidebar__chapters" contents={contents} />
+      <ContentCard className="course-chapters-sidebar">
+        <Tree className="course-chapters-sidebar__chapters" contents={contents} />
       </ContentCard>
     );
   }
