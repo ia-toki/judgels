@@ -7,13 +7,14 @@ import { Link } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
+import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { selectCourse } from '../../modules/courseSelectors';
 import { selectCourseChapter } from '../chapters/modules/courseChapterSelectors';
 import * as courseChapterActions from '../chapters/modules/courseChapterActions';
 
-import './CourseChapterSidebar.scss';
+import './CourseChaptersSidebar.scss';
 
-class CourseChapterSidebar extends Component {
+class CourseChaptersSidebar extends Component {
   state = {
     response: undefined,
   };
@@ -48,6 +49,7 @@ class CourseChapterSidebar extends Component {
         label: (
           <Link to={`/courses/${course.slug}/chapters/${courseChapter.alias}`}>
             {courseChapter.alias}. {chaptersMap[courseChapter.chapterJid].name}
+            {this.renderProgressBar(chapterProgressesMap[courseChapter.chapterJid])}
           </Link>
         ),
         secondaryLabel: this.renderProgress(chapterProgressesMap[courseChapter.chapterJid]),
@@ -77,6 +79,13 @@ class CourseChapterSidebar extends Component {
       </ProgressTag>
     );
   };
+
+  renderProgressBar = progress => {
+    if (!progress) {
+      return null;
+    }
+    return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
+  };
 }
 
 const mapStateToProps = state => ({
@@ -88,4 +97,4 @@ const mapDispatchToProps = {
   onGetChapters: courseChapterActions.getChapters,
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CourseChapterSidebar));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CourseChaptersSidebar));

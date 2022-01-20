@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import CourseChapterSidebar from './CourseChapterSidebar/CourseChapterSidebar';
+import CourseChaptersSidebar from './CourseChaptersSidebar/CourseChaptersSidebar';
 import SingleCourseContentRoutes from './SingleCourseContentRoutes';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { selectCourse } from '../modules/courseSelectors';
@@ -22,7 +22,7 @@ function SingleCourseRoutes({ match, course }) {
       <ScrollToTopOnMount />
       <div className="single-course-routes">
         <div className="single-course-routes__sidebar">
-          <CourseChapterSidebar />
+          <CourseChaptersSidebar />
         </div>
         <hr className="single-course-routes__divider" />
         <div className="single-course-routes__content">
