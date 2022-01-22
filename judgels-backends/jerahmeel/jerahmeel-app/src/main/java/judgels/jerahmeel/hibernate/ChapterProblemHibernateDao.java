@@ -1,16 +1,9 @@
 package judgels.jerahmeel.hibernate;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.ChapterProblemModel_;
@@ -72,34 +65,15 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     }
 
     @Override
-    public int selectCountProgrammingByChapterJid(String chapterJid) {
-        return selectAllProgrammingByChapterJid(chapterJid, SelectionOptions.DEFAULT_ALL).size();
+    public List<ChapterProblemModel> selectAllProgrammingByChapterJids(Set<String> chapterJids) {
+        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
+                .putColumnsEq(ChapterProblemModel_.type, ProblemType.PROGRAMMING.name())
+                .putColumnsIn(ChapterProblemModel_.chapterJid, chapterJids)
+                .build());
     }
 
     @Override
-    public Map<String, Long> selectCountProgrammingByChapterJids(Set<String> chapterJids) {
-        if (chapterJids.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
-        Root<ChapterProblemModel> root = cq.from(getEntityClass());
-
-        cq.select(cb.tuple(
-                root.get(ChapterProblemModel_.chapterJid),
-                cb.count(root)));
-
-        cq.where(
-                cb.equal(root.get(ChapterProblemModel_.type), ProblemType.PROGRAMMING.name()),
-                root.get(ChapterProblemModel_.chapterJid).in(chapterJids));
-
-        cq.groupBy(
-                root.get(ChapterProblemModel_.chapterJid));
-
-        return currentSession().createQuery(cq).getResultList()
-                .stream()
-                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
-
+    public int selectCountProgrammingByChapterJid(String chapterJid) {
+        return selectAllProgrammingByChapterJid(chapterJid, SelectionOptions.DEFAULT_ALL).size();
     }
 }

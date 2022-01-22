@@ -39,9 +39,9 @@ public class CourseChapterHibernateDao extends HibernateDao<CourseChapterModel> 
     }
 
     @Override
-    public long selectCountByCourseJid(String courseJid) {
-        return selectCount(new FilterOptions.Builder<CourseChapterModel>()
-                .putColumnsEq(CourseChapterModel_.courseJid, courseJid)
+    public List<CourseChapterModel> selectAllByCourseJids(Set<String> courseJids) {
+        return selectAll(new FilterOptions.Builder<CourseChapterModel>()
+                .putColumnsIn(CourseChapterModel_.courseJid, courseJids)
                 .build());
     }
 

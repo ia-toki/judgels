@@ -1,7 +1,16 @@
 package judgels.jerahmeel.stats;
 
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +30,10 @@ import judgels.jerahmeel.api.problemset.ProblemSetProgress;
 import judgels.jerahmeel.api.stats.UserStats;
 import judgels.jerahmeel.api.stats.UserTopStatsEntry;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
+import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.CourseChapterDao;
+import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
-import judgels.jerahmeel.persistence.StatsUserChapterDao;
-import judgels.jerahmeel.persistence.StatsUserChapterModel;
 import judgels.jerahmeel.persistence.StatsUserCourseDao;
 import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
@@ -40,7 +49,6 @@ public class StatsStore {
     private final ChapterProblemDao chapterProblemDao;
     private final ProblemSetProblemDao problemSetProblemDao;
     private final StatsUserCourseDao statsUserCourseDao;
-    private final StatsUserChapterDao statsUserChapterDao;
     private final StatsUserProblemDao statsUserProblemDao;
     private final StatsUserProblemSetDao statsUserProblemSetDao;
     private final StatsUserDao statsUserDao;
@@ -51,7 +59,6 @@ public class StatsStore {
             ChapterProblemDao chapterProblemDao,
             ProblemSetProblemDao problemSetProblemDao,
             StatsUserCourseDao statsUserCourseDao,
-            StatsUserChapterDao statsUserChapterDao,
             StatsUserProblemDao statsUserProblemDao,
             StatsUserProblemSetDao statsUserProblemSetDao,
             StatsUserDao statsUserDao) {
@@ -60,83 +67,89 @@ public class StatsStore {
         this.chapterProblemDao = chapterProblemDao;
         this.problemSetProblemDao = problemSetProblemDao;
         this.statsUserCourseDao = statsUserCourseDao;
-        this.statsUserChapterDao = statsUserChapterDao;
         this.statsUserProblemDao = statsUserProblemDao;
         this.statsUserProblemSetDao = statsUserProblemSetDao;
         this.statsUserDao = statsUserDao;
     }
 
-    private long totalSolvableChapter(String courseJid) {
-        Set<String> chapterJids = courseChapterDao.selectAllByCourseJid(courseJid, SelectionOptions.DEFAULT_ALL)
-                .stream()
-                .map(courseChapter -> courseChapter.chapterJid)
-                .collect(Collectors.toSet());
-        Map<String, Long> countProgrammingChaptersMap =
-                chapterProblemDao.selectCountProgrammingByChapterJids(chapterJids);
-        return courseChapterDao.selectAllByCourseJid(courseJid, SelectionOptions.DEFAULT_ALL).stream()
-                .filter(courseChapter -> countProgrammingChaptersMap.getOrDefault(courseChapter.chapterJid, 0L) > 0)
-                .count();
-    }
-
     public Map<String, CourseProgress> getCourseProgressesMap(String userJid, Set<String> courseJids) {
-        Map<String, Integer> totalChaptersMap = courseJids.stream().collect(
-                Collectors.toMap(Function.identity(), jid -> (int) courseChapterDao.selectCountByCourseJid(jid)));
-        Map<String, Integer> totalSolvableChaptersMap = courseJids.stream().collect(
-                Collectors.toMap(Function.identity(), jid -> (int) totalSolvableChapter(jid)));
-        Map<String, Integer> solvedChaptersMap =
-                statsUserCourseDao.selectAllByUserJidAndCourseJids(userJid, courseJids).stream()
-                        .collect(Collectors.toMap(m -> m.courseJid, m -> m.progress));
+        List<CourseChapterModel> courseChapters = courseChapterDao.selectAllByCourseJids(courseJids);
+        Set<String> chapterJids = courseChapters.stream().map(m -> m.chapterJid).collect(toSet());
 
-        return courseJids.stream().collect(Collectors.toMap(
+        Map<String, Long> chapterTotalProblemsMap = chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)
+                .stream()
+                .collect(groupingBy(m -> m.chapterJid, counting()));
+
+        Map<String, Long> courseTotalChaptersMap = courseChapters.stream()
+                .collect(groupingBy(m -> m.courseJid, counting()));
+        Map<String, Long> courseTotalSolvableChaptersMap = courseChapters.stream()
+                .filter(m -> chapterTotalProblemsMap.getOrDefault(m.chapterJid, 0L) > 0)
+                .collect(groupingBy(m -> m.courseJid, counting()));
+        Map<String, Integer> courseSolvedChaptersMap = statsUserCourseDao
+                .selectAllByUserJidAndCourseJids(userJid, courseJids)
+                .stream()
+                .collect(toMap(m -> m.courseJid, m -> m.progress));
+
+        return courseJids.stream().collect(toMap(
                 Function.identity(),
                 jid -> new CourseProgress.Builder()
-                        .solvedChapters(solvedChaptersMap.getOrDefault(jid, 0))
-                        .totalChapters(totalChaptersMap.getOrDefault(jid, 0))
-                        .totalSolvableChapters(totalSolvableChaptersMap.getOrDefault(jid, 0))
+                        .solvedChapters(courseSolvedChaptersMap.getOrDefault(jid, 0))
+                        .totalChapters(courseTotalChaptersMap.getOrDefault(jid, 0L).intValue())
+                        .totalSolvableChapters(courseTotalSolvableChaptersMap.getOrDefault(jid, 0L).intValue())
                         .build()));
     }
 
     public Map<String, ChapterProgress> getChapterProgressesMap(String userJid, Set<String> chapterJids) {
-        Map<String, Long> totalProblemsMap = chapterProblemDao.selectCountProgrammingByChapterJids(chapterJids);
-        Map<String, Integer> solvedProblemsMap =
-                statsUserChapterDao.selectAllByUserJidAndChapterJids(userJid, chapterJids).stream()
-                .collect(Collectors.toMap(m -> m.chapterJid, m -> m.progress));
+        Map<String, Integer> totalProblemsMap = getChapterTotalProblemsMap(chapterJids);
+        Map<String, Integer> solvedProblemsMap = getUserChapterSolvedProblemsMap(ImmutableSet.of(userJid), chapterJids)
+                .get(userJid);
 
-        return chapterJids.stream().collect(Collectors.toMap(
+        return chapterJids.stream().collect(toMap(
                 Function.identity(),
                 jid -> new ChapterProgress.Builder()
-                        .solvedProblems(solvedProblemsMap.getOrDefault(jid, 0))
-                        .totalProblems(totalProblemsMap.getOrDefault(jid, 0L).intValue())
+                        .totalProblems(totalProblemsMap.get(jid))
+                        .solvedProblems(solvedProblemsMap.get(jid))
                         .build()));
     }
 
-    public Map<String, Long> getChapterTotalProblemsMap(Set<String> chapterJids) {
-        return chapterProblemDao.selectCountProgrammingByChapterJids(chapterJids);
+    public Map<String, Integer> getChapterTotalProblemsMap(Set<String> chapterJids) {
+        Map<String, Long> totalProblemsMap = chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids).stream()
+                .collect(groupingBy(m -> m.chapterJid, counting()));
+
+        return chapterJids.stream().collect(toMap(
+                Function.identity(),
+                jid -> totalProblemsMap.getOrDefault(jid, 0L).intValue()));
     }
 
-    public Map<String, Map<String, Integer>> getChapterUserSolvedProblemsMap(
+    public Map<String, Map<String, Integer>> getUserChapterSolvedProblemsMap(
             Set<String> userJids,
             Set<String> chapterJids) {
 
-        Map<String, Map<String, Integer>> progressesMap = new HashMap<>();
+        List<ChapterProblemModel> chapterProblems = chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids);
+        Map<String, Set<String>> chapterProblemJidsMap = chapterProblems.stream()
+                .collect(groupingBy(m -> m.chapterJid,  mapping(m -> m.problemJid, toSet())));
 
-        List<StatsUserChapterModel> models =
-                statsUserChapterDao.selectAllByUserJidsAndChapterJids(userJids, chapterJids);
+        Set<String> problemJids = chapterProblems.stream().map(m -> m.problemJid).collect(toSet());
+        Map<String, Set<String>> userSolvedProblemJidsMap = statsUserProblemDao
+                .selectAllByUserJidsAndProblemJids(userJids, problemJids)
+                .stream()
+                .filter(StatsStore::isSolved)
+                .collect(groupingBy(m -> m.userJid, mapping(m -> m.problemJid, toSet())));
 
-        for (StatsUserChapterModel model : models) {
-            progressesMap.putIfAbsent(model.userJid, new HashMap<>());
-            progressesMap.get(model.userJid).put(model.chapterJid, model.progress);
-        }
-
-        return ImmutableMap.copyOf(progressesMap);
+        return userJids.stream().collect(toMap(
+                Function.identity(),
+                userJid -> chapterJids.stream().collect(toMap(
+                        Function.identity(),
+                        chapterJid -> Sets.intersection(
+                                        userSolvedProblemJidsMap.getOrDefault(userJid, emptySet()),
+                                        chapterProblemJidsMap.getOrDefault(chapterJid, emptySet())).size()))));
     }
 
     public Map<String, ProblemProgress> getProblemProgressesMap(String userJid, Set<String> problemJids) {
         List<StatsUserProblemModel> models = statsUserProblemDao.selectAllByUserJidAndProblemJids(userJid, problemJids);
-        Map<String, StatsUserProblemModel> modelsMap =
-                models.stream().collect(Collectors.toMap(m -> m.problemJid, m -> m));
+        Map<String, StatsUserProblemModel> modelsMap = models.stream().collect(toMap(m -> m.problemJid, m -> m));
 
-        return problemJids.stream().collect(Collectors.toMap(
+        return problemJids.stream().collect(toMap(
                 Function.identity(),
                 jid -> new ProblemProgress.Builder()
                         .verdict(Optional.ofNullable(modelsMap.get(jid))
@@ -151,7 +164,7 @@ public class StatsStore {
         Map<String, Long> totalUsersAccepted = statsUserProblemDao.selectCountsAcceptedByProblemJids(problemJids);
         Map<String, Long> totalUsersTried = statsUserProblemDao.selectCountsTriedByProblemJids(problemJids);
 
-        return problemJids.stream().collect(Collectors.toMap(
+        return problemJids.stream().collect(toMap(
                 Function.identity(),
                 jid -> new ProblemStats.Builder()
                         .totalScores(totalScoresMap.getOrDefault(jid, 0L).intValue())
@@ -206,10 +219,9 @@ public class StatsStore {
         Map<String, Long> totalProblemsMap = problemSetProblemDao.selectCountsByProblemSetJids(problemSetJids);
         List<StatsUserProblemSetModel> models =
                 statsUserProblemSetDao.selectAllByUserJidAndProblemSetJids(userJid, problemSetJids);
-        Map<String, StatsUserProblemSetModel> modelsMap =
-                models.stream().collect(Collectors.toMap(m -> m.problemSetJid, m -> m));
+        Map<String, StatsUserProblemSetModel> modelsMap = models.stream().collect(toMap(m -> m.problemSetJid, m -> m));
 
-        return problemSetJids.stream().collect(Collectors.toMap(
+        return problemSetJids.stream().collect(toMap(
                 Function.identity(),
                 jid -> new ProblemSetProgress.Builder()
                         .score(Optional.ofNullable(modelsMap.get(jid)).map(m -> m.score).orElse(0))
@@ -263,5 +275,9 @@ public class StatsStore {
         return statsUserDao.selectPaged(options.build())
                 .mapPage(models -> Lists.transform(models, m ->
                         new UserTopStatsEntry.Builder().userJid(m.userJid).totalScores(m.score).build()));
+    }
+
+    private static boolean isSolved(StatsUserProblemModel m) {
+        return m.time != 0 && m.memory != 0;
     }
 }
