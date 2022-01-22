@@ -81,8 +81,12 @@
   }
 
   .bp4-tab-indicator {
-    background-color: $div-hover-color !important;
+    background-color: $secondary-background-color !important;
     border-left: 3px solid $primary-color;
+  }
+
+  .bp4-tab:hover {
+    background-color: $tertiary-background-color !important;
   }
 
   .bp4-tab[aria-selected='true'] {
@@ -106,5 +110,9 @@
   .bp4-tab-indicator {
     background-color: $dark-secondary-background-color !important;
     border-left: 3px solid $gray3;
+  }
+
+  .bp4-tab:hover {
+    background-color: $dark-tertiary-background-color !important;
   }
 }

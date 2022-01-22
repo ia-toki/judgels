@@ -38,9 +38,13 @@
     color: $primary-color;
   }
 
+  .bp4-tab:hover {
+    background-color: $tertiary-background-color;
+  }
+
   .bp4-tab[aria-selected='true'] {
     font-weight: 600;
-    background-color: $header-color !important;
+    background-color: $secondary-background-color !important;
     color: $text-color;
   }
 
@@ -57,6 +61,15 @@
 .bp4-dark .menubar__content {
   .bp4-tab {
     color: inherit;
+
+    a:hover {
+      color: $dark-text-color;
+    }
+  }
+
+  .bp4-tab:hover {
+    color: $dark-text-color;
+    background-color: $dark-tertiary-background-color;
   }
 
   .bp4-tab[aria-selected='true'] {
