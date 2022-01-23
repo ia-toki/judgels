@@ -2,7 +2,6 @@ package judgels.jophiel.api.user.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
 import java.util.concurrent.TimeUnit;
@@ -18,12 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 
 class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private UserService userService = createService(UserService.class);
-    private UserAccountService accountService = createService(UserAccountService.class);
-    private SessionService sessionService = createService(SessionService.class);
+    private final UserService userService = createService(UserService.class);
+    private final UserAccountService accountService = createService(UserAccountService.class);
+    private final SessionService sessionService = createService(SessionService.class);
 
     @Test
-    void registration_flow() {
+    void register_activate_user() {
         Wiser wiser = new Wiser();
         wiser.setPort(2500);
         wiser.start();
@@ -38,27 +37,24 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
 
         String email = readEmail(wiser, 0);
 
-        assertThatThrownBy(() -> sessionService.logIn(credentials))
-                .hasFieldOrPropertyWithValue("code", 403)
+        assertForbidden(() -> sessionService.logIn(credentials))
                 .hasMessageContaining(SessionErrors.USER_NOT_ACTIVATED);
 
         String emailCode = extractEmailCode(email);
 
         accountService.activateUser(emailCode);
-        assertThatCode(() -> sessionService.logIn(credentials))
-                .doesNotThrowAnyException();
+        assertPermitted(() -> sessionService.logIn(credentials));
 
         wiser.stop();
     }
 
     @Test
-    void resend_activation_flow() {
+    void resend_activation_email() {
         Wiser wiser = new Wiser();
         wiser.setPort(2500);
         wiser.start();
 
-        assertThatThrownBy(() -> accountService.resendActivationEmail("nonexistent"))
-                .hasFieldOrPropertyWithValue("code", 404);
+        assertNotFound(() -> accountService.resendActivationEmail("nonexistent"));
 
         accountService.registerUser(new UserRegistrationData.Builder()
                 .username("alfa")
@@ -68,28 +64,23 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
                 .build());
 
         String email = readEmail(wiser, 0);
-
         String emailCode1 = extractEmailCode(email);
 
         assertThatCode(() -> accountService.resendActivationEmail("alfa@domain.com"))
                 .doesNotThrowAnyException();
 
         email = readEmail(wiser, 1);
-
         String emailCode2 = extractEmailCode(email);
-
         assertThat(emailCode2).isEqualTo(emailCode1);
 
-        assertThatCode(() -> accountService.activateUser(emailCode2)).doesNotThrowAnyException();
-
-        assertThatThrownBy(() -> accountService.resendActivationEmail("alfa@domain.com"))
-                .hasFieldOrPropertyWithValue("code", 404);
+        assertPermitted(() -> accountService.activateUser(emailCode2));
+        assertNotFound(() -> accountService.resendActivationEmail("alfa@domain.com"));
 
         wiser.stop();
     }
 
     @Test
-    void reset_password_flow() {
+    void reset_password() {
         Wiser wiser = new Wiser();
         wiser.setPort(2500);
         wiser.start();
@@ -111,14 +102,19 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         String email = readEmail(wiser, 0);
         String emailCode = extractEmailCode(email);
 
+        accountService.requestToResetPassword("delta@domain.com");
+        String email2 = readEmail(wiser, 1);
+        String emailCode2 = extractEmailCode(email2);
+        assertThat(emailCode2).isEqualTo(emailCode);
+
         accountService.resetPassword(PasswordResetData.of(emailCode, "newPass"));
 
-        readEmail(wiser, 1);
+        readEmail(wiser, 2);
 
         accountService.requestToResetPassword("delta@domain.com");
-        String email2 = readEmail(wiser, 2);
-        String emailCode2 = extractEmailCode(email2);
-        assertThat(emailCode2).isNotEqualTo(emailCode);
+        String email3 = readEmail(wiser, 3);
+        String emailCode3 = extractEmailCode(email3);
+        assertThat(emailCode3).isNotEqualTo(emailCode2);
 
         wiser.stop();
     }

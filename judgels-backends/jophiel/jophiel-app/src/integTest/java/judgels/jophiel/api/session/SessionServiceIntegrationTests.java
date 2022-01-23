@@ -1,7 +1,6 @@
 package judgels.jophiel.api.session;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
@@ -13,24 +12,18 @@ import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 
 class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private SessionService sessionService = createService(SessionService.class);
-    private UserService userService = createService(UserService.class);
+    private final SessionService sessionService = createService(SessionService.class);
+    private final UserService userService = createService(UserService.class);
 
     @Test
-    void login_logout_flow() {
-        Credentials userCredentials = Credentials.of("user", "password");
+    void login_logout() {
+        Credentials userCredentials = Credentials.of("andi", "pass");
 
-        assertThatThrownBy(() -> sessionService.logIn(userCredentials))
-                .hasFieldOrPropertyWithValue("code", 403);
+        assertForbidden(() -> sessionService.logIn(userCredentials));
 
-        User user = userService.createUser(adminHeader, new UserData.Builder()
-                .username("user")
-                .password("password")
-                .email("user@domain.com")
-                .build());
+        User user = createUser("andi");
 
-        assertThatThrownBy(() -> sessionService.logIn(Credentials.of("user", "wrong")))
-                .hasFieldOrPropertyWithValue("code", 403);
+        assertForbidden(() -> sessionService.logIn(Credentials.of("andi", "wrong")));
 
         Session session = sessionService.logIn(userCredentials);
         assertThat(session.getUserJid()).isEqualTo(user.getJid());
@@ -40,12 +33,10 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         sessionService.logOut(AuthHeader.of(session.getToken()));
 
-        assertThatThrownBy(() -> userService.getUser(AuthHeader.of(sessionToken), user.getJid()))
-                .hasFieldOrPropertyWithValue("code", 401);
+        assertUnauthorized(() -> userService.getUser(AuthHeader.of(sessionToken), user.getJid()));
 
         // test login with email
-        assertThatCode(() -> sessionService.logIn(Credentials.of("user@domain.com", "password")))
-                .doesNotThrowAnyException();
+        assertPermitted(() -> sessionService.logIn(Credentials.of(user.getEmail(), "pass")));
     }
 
     @Test

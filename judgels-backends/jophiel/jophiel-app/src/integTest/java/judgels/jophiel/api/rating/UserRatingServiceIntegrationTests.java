@@ -5,8 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Instant;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
@@ -15,22 +13,12 @@ import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import org.junit.jupiter.api.Test;
 
 public class UserRatingServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private UserService userService = createService(UserService.class);
-    private UserRatingService userRatingService = createService(UserRatingService.class);
+    private final UserRatingService userRatingService = createService(UserRatingService.class);
 
     @Test
-    void end_to_end_flow() {
-        User andi = userService.createUser(adminHeader, new UserData.Builder()
-                .username("andi")
-                .password("andi-pass")
-                .email("andi@domain.com")
-                .build());
-
-        User budi = userService.createUser(adminHeader, new UserData.Builder()
-                .username("budi")
-                .password("budi-pass")
-                .email("budi@domain.com")
-                .build());
+    void update_ratings() {
+        User andi = createUser("andi");
+        User budi = createUser("budi");
 
         Instant firstTime = Instant.ofEpochSecond(10);
         Instant secondTime = Instant.ofEpochSecond(100);

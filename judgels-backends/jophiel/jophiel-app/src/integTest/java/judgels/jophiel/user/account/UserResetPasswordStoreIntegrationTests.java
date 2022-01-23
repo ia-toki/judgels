@@ -29,22 +29,6 @@ class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void generate_find_consume_code() {
-        assertThat(store.consumeEmailCode("code", Duration.ofHours(1))).isEmpty();
-
-        store.generateEmailCode("userJid2", Duration.ofHours(1));
-
-        String code = store.generateEmailCode(USER_JID, Duration.ofHours(1));
-        assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).contains(USER_JID);
-
-        clock.tick(Duration.ofSeconds(1));
-
-        assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).isEmpty();
-        String newCode = store.generateEmailCode(USER_JID, Duration.ofHours(1));
-        assertThat(newCode).isNotEqualTo(code);
-    }
-
-    @Test
     void same_code_is_returned_if_not_expired() {
         String code1 = store.generateEmailCode(USER_JID, Duration.ofHours(1));
         clock.tick(Duration.ofSeconds(1));

@@ -2,6 +2,7 @@ package judgels.jophiel.api.user;
 
 import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -17,18 +18,41 @@ import judgels.jophiel.api.user.search.UserSearchService;
 import org.junit.jupiter.api.Test;
 
 class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private UserService userService = createService(UserService.class);
-    private UserInfoService userInfoService = createService(UserInfoService.class);
-    private UserSearchService userSearchService = createService(UserSearchService.class);
-    private SessionService sessionService = createService(SessionService.class);
+    private final UserService userService = createService(UserService.class);
+    private final UserInfoService userInfoService = createService(UserInfoService.class);
+    private final UserSearchService userSearchService = createService(UserSearchService.class);
+    private final SessionService sessionService = createService(SessionService.class);
 
     @Test
-    void end_to_end_flow() {
+    void create_user() {
         User nano = userService.createUser(adminHeader, new UserData.Builder()
                 .username("nano")
                 .password("pass")
                 .email("nano@domain.com")
                 .build());
+
+        assertThat(nano.getUsername()).isEqualTo("nano");
+        assertThat(nano.getEmail()).isEqualTo("nano@domain.com");
+
+        // duplicate username
+        assertThatThrownBy(() -> userService.createUser(adminHeader, new UserData.Builder()
+                .username("nano")
+                .password("pass")
+                .email("other@domain2.com")
+                .build()))
+                .hasFieldOrPropertyWithValue("code", 500); // TODO(fushar): should be 400
+
+        // duplicate email
+        assertThatThrownBy(() -> userService.createUser(adminHeader, new UserData.Builder()
+                .username("other")
+                .password("pass")
+                .email("nano@domain.com")
+                .build()))
+                .hasFieldOrPropertyWithValue("code", 500); // TODO(fushar): should be 400
+
+        assertNotFound(() -> userService.getUser(adminHeader, "bogus"));
+        assertThat(userService.getUser(adminHeader, nano.getJid())).isEqualTo(nano);
+
         User nani = userService.createUser(adminHeader, new UserData.Builder()
                 .username("nani")
                 .password("pass")
@@ -44,7 +68,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     }
 
     @Test
-    void user_batch_create() {
+    void create_users() {
         List<UserData> data = ImmutableList.of(
                 new UserData.Builder()
                         .username("dina")
@@ -72,7 +96,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     }
 
     @Test
-    void user_batch_upsert() throws IOException {
+    void upsert_users() throws IOException {
         UsersUpsertResponse response = userService.upsertUsers(adminHeader, "country,name,email,username,password\n"
                 + "ID,Andi Indo,andi@judgels.com,andi,123\r\n"
                 + "TH,Budi Thai,budi@judgels.com,budi,456\n");
