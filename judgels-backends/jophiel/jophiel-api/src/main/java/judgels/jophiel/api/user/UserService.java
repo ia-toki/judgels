@@ -5,7 +5,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -39,12 +38,6 @@ public interface UserService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     UsersDump exportUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ExportUsersDumpData users);
-
-    @POST
-    @Path("/batch-create")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    List<User> createUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<UserData> data);
 
     @PUT
     @Path("/batch-upsert")

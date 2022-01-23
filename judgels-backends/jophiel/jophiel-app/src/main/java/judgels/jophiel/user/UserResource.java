@@ -10,7 +10,6 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.io.StringReader;
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -90,15 +89,6 @@ public class UserResource implements UserService {
         checkAllowed(roleChecker.canAdminister(actorJid));
 
         return userStore.createUser(data);
-    }
-
-    @Override
-    @UnitOfWork
-    public List<User> createUsers(AuthHeader authHeader, List<UserData> data) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAdminister(actorJid));
-
-        return userStore.createUsers(data);
     }
 
     @Override

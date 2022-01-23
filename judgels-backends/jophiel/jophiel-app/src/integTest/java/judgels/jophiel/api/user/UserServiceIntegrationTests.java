@@ -4,10 +4,8 @@ import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
@@ -65,34 +63,6 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(response.getData().getPage()).contains(nani, nano);
         assertThat(response.getLastSessionTimesMap()).containsKeys(nano.getJid());
         assertThat(response.getLastSessionTimesMap()).doesNotContainKeys(nani.getJid());
-    }
-
-    @Test
-    void create_users() {
-        List<UserData> data = ImmutableList.of(
-                new UserData.Builder()
-                        .username("dina")
-                        .password("pass")
-                        .email("dina@domain.com")
-                        .build(),
-                new UserData.Builder()
-                        .username("dino")
-                        .password("pass")
-                        .email("dino@domain.com")
-                        .build()
-        );
-        List<User> users = userService.createUsers(adminHeader, data);
-
-        assertThat(users.size()).isEqualTo(2);
-
-        User dina = users.get(0);
-        User dino = users.get(1);
-
-        assertThat(dina.getUsername()).isEqualTo("dina");
-        assertThat(dino.getUsername()).isEqualTo("dino");
-
-        UsersResponse response = userService.getUsers(adminHeader, empty(), empty(), empty());
-        assertThat(response.getData().getPage()).contains(dina, dino);
     }
 
     @Test
