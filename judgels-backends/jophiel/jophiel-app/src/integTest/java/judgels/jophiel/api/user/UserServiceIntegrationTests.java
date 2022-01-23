@@ -97,37 +97,62 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @Test
     void upsert_users() throws IOException {
+        // create
         UsersUpsertResponse response = userService.upsertUsers(adminHeader, "country,name,email,username,password\n"
                 + "ID,Andi Indo,andi@judgels.com,andi,123\r\n"
                 + "TH,Budi Thai,budi@judgels.com,budi,456\n");
         assertThat(response.getCreatedUsernames()).containsExactly("andi", "budi");
         assertThat(response.getUpdatedUsernames()).isEmpty();
 
+        // update + create
         response = userService.upsertUsers(adminHeader, "country,name,email,username,password\r\n"
                 + "TH,Budi Thai 2,budi2@judgels.com,budi,333\n"
                 + "MY,Caca Malay,caca@judgels.com,caca,777\n");
         assertThat(response.getCreatedUsernames()).containsExactly("caca");
         assertThat(response.getUpdatedUsernames()).containsExactly("budi");
 
+        // update only password
+        response = userService.upsertUsers(adminHeader, "username,password\r\n"
+                + "caca,778\n");
+        assertThat(response.getUpdatedUsernames()).containsExactly("caca");
+
+        // create with fixed jid
+        response = userService.upsertUsers(adminHeader, "jid,email,username,password\r\n"
+                + "JID123,dudi@judgels.com,dudi,888\n");
+        assertThat(response.getCreatedUsernames()).containsExactly("dudi");
+
+        // update without password
+        response = userService.upsertUsers(adminHeader, "username,email\r\n"
+                + "dudi,dudidudi@judgels.com\n");
+        assertThat(response.getUpdatedUsernames()).containsExactly("dudi");
+
         Map<String, String> usernameToJid =
-                userSearchService.translateUsernamesToJids(ImmutableSet.of("andi", "budi", "caca"));
+                userSearchService.translateUsernamesToJids(ImmutableSet.of("andi", "budi", "caca", "dudi"));
 
         User andi = userService.getUser(adminHeader, usernameToJid.get("andi"));
         assertThat(andi.getEmail()).isEqualTo("andi@judgels.com");
         UserInfo andiInfo = userInfoService.getInfo(adminHeader, andi.getJid());
         assertThat(andiInfo.getCountry()).contains("ID");
         assertThat(andiInfo.getName()).contains("Andi Indo");
+        assertPermitted(() -> sessionService.logIn(Credentials.of("andi", "123")));
 
         User budi = userService.getUser(adminHeader, usernameToJid.get("budi"));
         assertThat(budi.getEmail()).isEqualTo("budi2@judgels.com");
         UserInfo budiInfo = userInfoService.getInfo(adminHeader, budi.getJid());
         assertThat(budiInfo.getCountry()).contains("TH");
         assertThat(budiInfo.getName()).contains("Budi Thai 2");
+        assertPermitted(() -> sessionService.logIn(Credentials.of("budi", "333")));
 
         User caca = userService.getUser(adminHeader, usernameToJid.get("caca"));
         assertThat(caca.getEmail()).isEqualTo("caca@judgels.com");
         UserInfo cacaInfo = userInfoService.getInfo(adminHeader, caca.getJid());
         assertThat(cacaInfo.getCountry()).contains("MY");
         assertThat(cacaInfo.getName()).contains("Caca Malay");
+        assertPermitted(() -> sessionService.logIn(Credentials.of("caca", "778")));
+
+        User dudi = userService.getUser(adminHeader, usernameToJid.get("dudi"));
+        assertThat(dudi.getJid()).isEqualTo("JID123");
+        assertThat(dudi.getEmail()).isEqualTo("dudidudi@judgels.com");
+        assertPermitted(() -> sessionService.logIn(Credentials.of("dudi", "888")));
     }
 }

@@ -139,13 +139,8 @@ public class UserResource implements UserService {
             String username = line[headerMap.get("username")];
 
             User user;
-            UserData userData = new UserData.Builder()
-                    .username(username)
-                    .password(line[headerMap.get("password")])
-                    .email(line[headerMap.get("email")])
-                    .build();
-
             Optional<User> existingUser;
+            UserInfo existingInfo;
             Optional<String> jid = getCsvValue(headerMap, line, "jid");
             if (jid.isPresent()) {
                 existingUser = userStore.getUserByJid(jid.get());
@@ -154,19 +149,33 @@ public class UserResource implements UserService {
             }
 
             if (existingUser.isPresent()) {
-                user = userStore.updateUser(existingUser.get().getJid(), userData).get();
+                UserUpdateData data = new UserUpdateData.Builder()
+                        .username(username)
+                        .password(getCsvValue(headerMap, line, "password"))
+                        .email(getCsvValue(headerMap, line, "email"))
+                        .build();
+
+                user = userStore.updateUser(existingUser.get().getJid(), data).get();
                 updatedUsernames.add(username);
+                existingInfo = infoStore.getInfo(user.getJid());
             } else {
+                UserData data = new UserData.Builder()
+                        .username(username)
+                        .password(getCsvValue(headerMap, line, "password"))
+                        .email(line[headerMap.get("email")])
+                        .build();
+
                 user = jid.isPresent()
-                        ? userStore.createUserWithJid(jid.get(), userData)
-                        : userStore.createUser(userData);
+                        ? userStore.createUserWithJid(jid.get(), data)
+                        : userStore.createUser(data);
                 createdUsernames.add(username);
+                existingInfo = new UserInfo.Builder().build();
             }
 
-            infoStore.upsertInfo(user.getJid(), new UserInfo.Builder()
-                    .name(getCsvValue(headerMap, line, "name"))
-                    .country(getCsvValue(headerMap, line, "country"))
-                    .build());
+            UserInfo.Builder info = new UserInfo.Builder().from(existingInfo);
+            getCsvValue(headerMap, line, "name").ifPresent(info::name);
+            getCsvValue(headerMap, line, "country").ifPresent(info::country);
+            infoStore.upsertInfo(user.getJid(), info.build());
         }
 
         return new UsersUpsertResponse.Builder()

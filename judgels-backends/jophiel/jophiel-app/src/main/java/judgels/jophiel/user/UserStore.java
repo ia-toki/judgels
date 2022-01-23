@@ -111,9 +111,9 @@ public class UserStore {
         return models.mapPage(p -> Lists.transform(p, UserStore::fromModel));
     }
 
-    public Optional<User> updateUser(String userJid, UserData userData) {
+    public Optional<User> updateUser(String userJid, UserUpdateData data) {
         return userDao.selectByJid(userJid).map(model -> {
-            toModel(userData, model);
+            toModel(data, model);
             return fromModel(userDao.updateByJid(userJid, model));
         });
     }
@@ -128,9 +128,8 @@ public class UserStore {
 
     public void updateUserPassword(String userJid, String newPassword) {
         userDao.selectByJid(userJid).ifPresent(model -> {
-            updateUser(userJid, new UserData.Builder()
+            updateUser(userJid, new UserUpdateData.Builder()
                     .username(model.username)
-                    .email(model.email)
                     .password(newPassword)
                     .build());
         });
@@ -170,9 +169,18 @@ public class UserStore {
     private static void toModel(UserData data, UserModel model) {
         model.username = data.getUsername();
         model.email = data.getEmail();
+        setPassword(model, data.getPassword());
+    }
 
-        if (data.getPassword().isPresent()) {
-            model.password = hashPassword(data.getPassword().get());
+    private static void toModel(UserUpdateData data, UserModel model) {
+        model.username = data.getUsername();
+        data.getEmail().ifPresent(email -> model.email = email);
+        data.getPassword().ifPresent(password -> setPassword(model, data.getPassword()));
+    }
+
+    private static void setPassword(UserModel model, Optional<String> password) {
+        if (password.isPresent()) {
+            model.password = hashPassword(password.get());
         } else {
             model.password = "";
         }
