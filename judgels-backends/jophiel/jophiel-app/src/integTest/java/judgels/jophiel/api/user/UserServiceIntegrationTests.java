@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.util.Map;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
+import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.api.user.info.UserInfoService;
 import judgels.jophiel.api.user.search.UserSearchService;
+import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 
 class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
@@ -104,25 +106,51 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         UserInfo andiInfo = userInfoService.getInfo(adminHeader, andi.getJid());
         assertThat(andiInfo.getCountry()).contains("ID");
         assertThat(andiInfo.getName()).contains("Andi Indo");
-        assertPermitted(() -> sessionService.logIn(Credentials.of("andi", "123")));
+        Session andiSession = sessionService.logIn(Credentials.of("andi", "123"));
 
         User budi = userService.getUser(adminHeader, usernameToJid.get("budi"));
         assertThat(budi.getEmail()).isEqualTo("budi2@judgels.com");
         UserInfo budiInfo = userInfoService.getInfo(adminHeader, budi.getJid());
         assertThat(budiInfo.getCountry()).contains("TH");
         assertThat(budiInfo.getName()).contains("Budi Thai 2");
-        assertPermitted(() -> sessionService.logIn(Credentials.of("budi", "333")));
+        Session budiSession = sessionService.logIn(Credentials.of("budi", "333"));
 
         User caca = userService.getUser(adminHeader, usernameToJid.get("caca"));
         assertThat(caca.getEmail()).isEqualTo("caca@judgels.com");
         UserInfo cacaInfo = userInfoService.getInfo(adminHeader, caca.getJid());
         assertThat(cacaInfo.getCountry()).contains("MY");
         assertThat(cacaInfo.getName()).contains("Caca Malay");
-        assertPermitted(() -> sessionService.logIn(Credentials.of("caca", "778")));
+        Session cacaSession = sessionService.logIn(Credentials.of("caca", "778"));
 
         User dudi = userService.getUser(adminHeader, usernameToJid.get("dudi"));
         assertThat(dudi.getJid()).isEqualTo("JID123");
         assertThat(dudi.getEmail()).isEqualTo("dudidudi@judgels.com");
-        assertPermitted(() -> sessionService.logIn(Credentials.of("dudi", "888")));
+        Session dudiSession = sessionService.logIn(Credentials.of("dudi", "888"));
+
+        // update non-passwords, still logged in
+        response = userService.upsertUsers(adminHeader, "username,country\r\n"
+                + "andi,SG\n"
+                + "budi,SG\n"
+                + "caca,SG\n"
+                + "dudi,SG\n");
+        assertThat(response.getUpdatedUsernames()).containsExactly("andi", "budi", "caca", "dudi");
+
+        assertPermitted(() -> userService.getUser(AuthHeader.of(andiSession.getToken()), andi.getJid()));
+        assertPermitted(() -> userService.getUser(AuthHeader.of(budiSession.getToken()), budi.getJid()));
+        assertPermitted(() -> userService.getUser(AuthHeader.of(cacaSession.getToken()), caca.getJid()));
+        assertPermitted(() -> userService.getUser(AuthHeader.of(dudiSession.getToken()), dudi.getJid()));
+
+        // update passwords, logged out
+        response = userService.upsertUsers(adminHeader, "username,password\r\n"
+                + "andi,111\n"
+                + "budi,222\n"
+                + "caca,333\n"
+                + "dudi,444\n");
+        assertThat(response.getUpdatedUsernames()).containsExactly("andi", "budi", "caca", "dudi");
+
+        assertUnauthorized(() -> userService.getUser(AuthHeader.of(andiSession.getToken()), andi.getJid()));
+        assertUnauthorized(() -> userService.getUser(AuthHeader.of(budiSession.getToken()), budi.getJid()));
+        assertUnauthorized(() -> userService.getUser(AuthHeader.of(cacaSession.getToken()), caca.getJid()));
+        assertUnauthorized(() -> userService.getUser(AuthHeader.of(dudiSession.getToken()), dudi.getJid()));
     }
 }

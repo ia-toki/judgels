@@ -166,6 +166,10 @@ public class UserResource implements UserService {
             getCsvValue(headerMap, line, "name").ifPresent(info::name);
             getCsvValue(headerMap, line, "country").ifPresent(info::country);
             infoStore.upsertInfo(user.getJid(), info.build());
+
+            if (headerMap.containsKey("password")) {
+                sessionStore.deleteSessionsByUserJid(user.getJid());
+            }
         }
 
         return new UsersUpsertResponse.Builder()

@@ -1,13 +1,11 @@
 package judgels.jophiel.session;
 
-import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.ForbiddenException;
-import judgels.jophiel.api.session.BatchLogoutData;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.GoogleCredentials;
 import judgels.jophiel.api.session.Session;
@@ -92,16 +90,5 @@ public class SessionResource implements SessionService {
 
         sessionStore.deleteSessionByToken(authHeader.getBearerToken());
         actorChecker.clear();
-    }
-
-    @Override
-    @UnitOfWork
-    public void batchLogout(AuthHeader authHeader, BatchLogoutData data) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAdminister(actorJid));
-
-        for (String userJid : data.getUserJids()) {
-            sessionStore.deleteSessionsByUserJid(userJid);
-        }
     }
 }
