@@ -28,12 +28,8 @@ public class UserRatingServiceIntegrationTests extends AbstractServiceIntegratio
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(firstTime)
                 .eventJid("open-contest-1-jid")
-                .putRatingsMap(
-                        andi.getJid(),
-                        new UserRating.Builder().publicRating(2000).hiddenRating(1000).build())
-                .putRatingsMap(
-                        budi.getJid(),
-                        new UserRating.Builder().publicRating(10).hiddenRating(20).build())
+                .putRatingsMap(andi.getJid(), UserRating.of(2000, 1000))
+                .putRatingsMap(budi.getJid(), UserRating.of(10, 20))
                 .build());
 
         assertThat(userRatingService.getLatestRatingEvent()).contains(new RatingEvent.Builder()
@@ -44,9 +40,7 @@ public class UserRatingServiceIntegrationTests extends AbstractServiceIntegratio
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(secondTime)
                 .eventJid("open-contest-2-jid")
-                .putRatingsMap(
-                        andi.getJid(),
-                        new UserRating.Builder().publicRating(3000).hiddenRating(1500).build())
+                .putRatingsMap(andi.getJid(), UserRating.of(3000, 1500))
                 .build());
 
         assertThat(userRatingService.getLatestRatingEvent()).contains(new RatingEvent.Builder()
@@ -58,19 +52,19 @@ public class UserRatingServiceIntegrationTests extends AbstractServiceIntegratio
                 new UserRatingEvent.Builder()
                         .time(firstTime)
                         .eventJid("open-contest-1-jid")
-                        .rating(new UserRating.Builder().publicRating(2000).hiddenRating(1000).build())
+                        .rating(UserRating.of(2000, 1000))
                         .build(),
                 new UserRatingEvent.Builder()
                         .time(secondTime)
                         .eventJid("open-contest-2-jid")
-                        .rating(new UserRating.Builder().publicRating(3000).hiddenRating(1500).build())
+                        .rating(UserRating.of(3000, 1500))
                         .build());
 
         assertThat(userRatingService.getRatingHistory(budi.getJid())).containsOnly(
                 new UserRatingEvent.Builder()
                         .time(firstTime)
                         .eventJid("open-contest-1-jid")
-                        .rating(new UserRating.Builder().publicRating(10).hiddenRating(20).build())
+                        .rating(UserRating.of(10, 20))
                         .build());
     }
 }

@@ -11,5 +11,9 @@ public interface UserRating {
     int getPublicRating();
     int getHiddenRating();
 
+    static UserRating of(int publicRating, int hiddenRating) {
+        return new UserRating.Builder().publicRating(publicRating).hiddenRating(hiddenRating).build();
+    }
+
     class Builder extends ImmutableUserRating.Builder {}
 }
