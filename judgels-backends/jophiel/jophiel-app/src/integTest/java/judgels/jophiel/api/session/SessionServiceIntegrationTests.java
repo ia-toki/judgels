@@ -26,7 +26,11 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(session.getUserJid()).isEqualTo(user.getJid());
 
         String sessionToken = session.getToken();
+        assertThat(sessionToken).isNotEmpty();
         assertThat(userService.getUser(AuthHeader.of(sessionToken), user.getJid())).isEqualTo(user);
+
+        String anotherToken = sessionService.logIn(userCredentials).getToken();
+        assertThat(sessionToken).isNotEqualTo(anotherToken);
 
         sessionService.logOut(AuthHeader.of(session.getToken()));
 
