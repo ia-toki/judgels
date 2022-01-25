@@ -63,8 +63,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     public List<StatsUserProblemModel> selectAllAcceptedByProblemJid(String problemJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
                 .putColumnsEq(StatsUserProblemModel_.problemJid, problemJid)
-                .addCustomPredicates((cb, cq, root) -> cb.notEqual(root.get(StatsUserProblemModel_.time), 0))
-                .addCustomPredicates((cb, cq, root) -> cb.notEqual(root.get(StatsUserProblemModel_.memory), 0))
+                .putColumnsEq(StatsUserProblemModel_.verdict, Verdict.ACCEPTED.getCode())
                 .build(), options);
     }
 

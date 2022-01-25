@@ -133,7 +133,7 @@ public class StatsStore {
         Map<String, Set<String>> userSolvedProblemJidsMap = statsUserProblemDao
                 .selectAllByUserJidsAndProblemJids(userJids, problemJids)
                 .stream()
-                .filter(StatsStore::isSolved)
+                .filter(m -> m.verdict.equals(Verdict.ACCEPTED.getCode()))
                 .collect(groupingBy(m -> m.userJid, mapping(m -> m.problemJid, toSet())));
 
         return userJids.stream().collect(toMap(
@@ -275,9 +275,5 @@ public class StatsStore {
         return statsUserDao.selectPaged(options.build())
                 .mapPage(models -> Lists.transform(models, m ->
                         new UserTopStatsEntry.Builder().userJid(m.userJid).totalScores(m.score).build()));
-    }
-
-    private static boolean isSolved(StatsUserProblemModel m) {
-        return m.time != 0 && m.memory != 0;
     }
 }

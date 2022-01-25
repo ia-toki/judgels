@@ -151,7 +151,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         assertCourseProgress(course.getJid(), 0, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
-        submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 100, 32000);
+        submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 0, 32000);
 
         assertCourseProgress(course.getJid(), 1, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
