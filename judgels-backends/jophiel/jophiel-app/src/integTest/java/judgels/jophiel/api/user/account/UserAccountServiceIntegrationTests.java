@@ -1,7 +1,6 @@
 package judgels.jophiel.api.user.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
 
 import java.util.concurrent.TimeUnit;
@@ -35,14 +34,17 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
                 .build());
         Credentials credentials = Credentials.of("beta", "pass");
 
-        String email = readEmail(wiser, 0);
-
+        // log in before activation
         assertForbidden(() -> sessionService.logIn(credentials))
                 .hasMessageContaining(SessionErrors.USER_NOT_ACTIVATED);
 
+        // read activation email
+        String email = readEmail(wiser, 0);
         String emailCode = extractEmailCode(email);
 
         accountService.activateUser(emailCode);
+
+        // log in after activation
         assertPermitted(() -> sessionService.logIn(credentials));
 
         wiser.stop();
@@ -54,6 +56,7 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         wiser.setPort(2500);
         wiser.start();
 
+        // resend activation email with nonexistent code
         assertNotFound(() -> accountService.resendActivationEmail("nonexistent"));
 
         accountService.registerUser(new UserRegistrationData.Builder()
@@ -66,14 +69,17 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         String email = readEmail(wiser, 0);
         String emailCode1 = extractEmailCode(email);
 
-        assertThatCode(() -> accountService.resendActivationEmail("alfa@domain.com"))
-                .doesNotThrowAnyException();
+        // resend activation email
+        assertPermitted(() -> accountService.resendActivationEmail("alfa@domain.com"));
 
         email = readEmail(wiser, 1);
         String emailCode2 = extractEmailCode(email);
         assertThat(emailCode2).isEqualTo(emailCode1);
 
+        // log in after activation
         assertPermitted(() -> accountService.activateUser(emailCode2));
+
+        // resend activation email with expired code
         assertNotFound(() -> accountService.resendActivationEmail("alfa@domain.com"));
 
         wiser.stop();
@@ -85,8 +91,8 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         wiser.setPort(2500);
         wiser.start();
 
-        assertThatCode(() -> accountService.requestToResetPassword("delta@domain.com"))
-                .doesNotThrowAnyException();
+        // allow requesting to reset random email in order not to leak info
+        assertPermitted(() -> accountService.requestToResetPassword("delta@domain.com"));
 
         userService.createUser(adminHeader, new UserData.Builder()
                 .username("delta")
@@ -96,24 +102,33 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
 
         accountService.requestToResetPassword("delta@domain.com");
 
-        assertThatCode(() -> sessionService.logIn(Credentials.of("delta", "pass")))
-                .doesNotThrowAnyException();
+        // can still log in if password is not actually reset
+        assertPermitted(() -> sessionService.logIn(Credentials.of("delta", "pass")));
 
         String email = readEmail(wiser, 0);
         String emailCode = extractEmailCode(email);
 
+        // request to reset password again
         accountService.requestToResetPassword("delta@domain.com");
+
         String email2 = readEmail(wiser, 1);
         String emailCode2 = extractEmailCode(email2);
+
+        // assert that code is the same (not expired yet)
         assertThat(emailCode2).isEqualTo(emailCode);
 
+        // reset the password
         accountService.resetPassword(PasswordResetData.of(emailCode, "newPass"));
 
         readEmail(wiser, 2);
 
+        // request to reset password again
         accountService.requestToResetPassword("delta@domain.com");
+
         String email3 = readEmail(wiser, 3);
         String emailCode3 = extractEmailCode(email3);
+
+        // assert that previous code has expired and a new one is generated
         assertThat(emailCode3).isNotEqualTo(emailCode2);
 
         wiser.stop();

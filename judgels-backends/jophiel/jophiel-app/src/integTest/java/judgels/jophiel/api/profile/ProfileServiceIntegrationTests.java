@@ -33,6 +33,8 @@ public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTe
                 + "andi,Andi,ID\n"
                 + "caca,Caca,SG\n");
 
+        // basic profiles without ratings
+
         BasicProfile andiBasicProfile = profileService.getBasicProfile(andi.getJid());
         assertThat(andiBasicProfile).isEqualTo(new BasicProfile.Builder()
                 .username("andi")
@@ -45,6 +47,8 @@ public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTe
                 .username("budi")
                 .build());
 
+        // profiles without ratings
+
         Set<String> userJids = ImmutableSet.of(andi.getJid(), budi.getJid());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
         assertThat(profilesMap).isEqualTo(ImmutableMap.of(
@@ -52,8 +56,6 @@ public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTe
                 budi.getJid(), new Profile.Builder().username("budi").build()));
 
         Instant firstTime = Instant.ofEpochSecond(10);
-        Instant secondTime = Instant.ofEpochSecond(100);
-
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(firstTime)
                 .eventJid("contest-1-jid")
@@ -61,12 +63,15 @@ public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTe
                 .putRatingsMap(budi.getJid(), UserRating.of(1800, 1700))
                 .build());
 
+        Instant secondTime = Instant.ofEpochSecond(100);
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(secondTime)
                 .eventJid("contest-2-jid")
                 .putRatingsMap(andi.getJid(), UserRating.of(2100, 1500))
                 .putRatingsMap(budi.getJid(), UserRating.of(2700, 1800))
                 .build());
+
+        // profiles with ratings after first time but before second time
 
         profilesMap = profileService.getProfiles(userJids, Instant.ofEpochSecond(80));
         assertThat(profilesMap).isEqualTo(ImmutableMap.of(
@@ -80,6 +85,8 @@ public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTe
                         .rating(UserRating.of(1800, 1700))
                         .build()));
 
+        // profiles with latest ratings
+
         profilesMap = profileService.getProfiles(userJids);
         assertThat(profilesMap).isEqualTo(ImmutableMap.of(
                 andi.getJid(), new Profile.Builder()
@@ -91,6 +98,8 @@ public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTe
                         .username("budi")
                         .rating(UserRating.of(2700, 1800))
                         .build()));
+
+        // basic profiles with latest ratings
 
         andiBasicProfile = profileService.getBasicProfile(andi.getJid());
         assertThat(andiBasicProfile).isEqualTo(new BasicProfile.Builder()
@@ -105,6 +114,8 @@ public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTe
                 .username("budi")
                 .rating(UserRating.of(2700, 1800))
                 .build());
+
+        // top rated profiles
 
         List<Profile> topProfiles = profileService.getTopRatedProfiles(empty(), empty()).getPage();
         assertThat(topProfiles).containsExactly(

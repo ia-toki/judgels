@@ -12,7 +12,11 @@ class UserInfoServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @Test
     void update_info() {
-        UserInfo info = new UserInfo.Builder()
+        UserInfo info = new UserInfo.Builder().build();
+        infoService.updateInfo(adminHeader, user.getJid(), info);
+        assertThat(infoService.getInfo(adminHeader, user.getJid())).isEqualTo(info);
+
+        info = new UserInfo.Builder()
                 .name("Alpha")
                 .gender("MALE")
                 .country("id")
@@ -23,9 +27,11 @@ class UserInfoServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .institutionProvince("province")
                 .institutionCity("town")
                 .build();
-
         infoService.updateInfo(adminHeader, user.getJid(), info);
+        assertThat(infoService.getInfo(adminHeader, user.getJid())).isEqualTo(info);
 
+        info = new UserInfo.Builder().build();
+        infoService.updateInfo(adminHeader, user.getJid(), info);
         assertThat(infoService.getInfo(adminHeader, user.getJid())).isEqualTo(info);
     }
 }

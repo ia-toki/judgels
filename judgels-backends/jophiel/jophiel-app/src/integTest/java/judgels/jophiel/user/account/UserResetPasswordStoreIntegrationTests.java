@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserResetPasswordModel.class})
-class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
+public class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private TestClock clock;

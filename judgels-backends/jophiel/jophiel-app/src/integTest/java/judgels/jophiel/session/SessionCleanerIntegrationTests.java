@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {SessionModel.class})
-class SessionCleanerIntegrationTests extends AbstractIntegrationTests {
+public class SessionCleanerIntegrationTests extends AbstractIntegrationTests {
     private TestClock clock;
     private SessionStore store;
     private SessionCleaner cleaner;

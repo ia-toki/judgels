@@ -20,11 +20,9 @@ public class UserRatingServiceIntegrationTests extends AbstractServiceIntegratio
         User andi = createUser("andi");
         User budi = createUser("budi");
 
-        Instant firstTime = Instant.ofEpochSecond(10);
-        Instant secondTime = Instant.ofEpochSecond(100);
-
         assertThat(userRatingService.getLatestRatingEvent()).isEmpty();
 
+        Instant firstTime = Instant.ofEpochSecond(10);
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(firstTime)
                 .eventJid("open-contest-1-jid")
@@ -37,6 +35,7 @@ public class UserRatingServiceIntegrationTests extends AbstractServiceIntegratio
                 .eventJid("open-contest-1-jid")
                 .build());
 
+        Instant secondTime = Instant.ofEpochSecond(100);
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(secondTime)
                 .eventJid("open-contest-2-jid")
