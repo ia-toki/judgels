@@ -1,10 +1,8 @@
 package judgels.jophiel.hibernate;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.persistence.UserDao;
@@ -39,11 +37,9 @@ public class UserHibernateDao extends JudgelsHibernateDao<UserModel> implements 
     }
 
     @Override
-    public Map<String, UserModel> selectAllByUsernames(Set<String> usernames) {
+    public List<UserModel> selectAllByUsernames(Set<String> usernames) {
         return selectAll(new FilterOptions.Builder<UserModel>()
                 .putColumnsIn(UserModel_.username, usernames)
-                .build())
-                .stream()
-                .collect(Collectors.toMap(m -> m.jid, m -> m));
+                .build());
     }
 }

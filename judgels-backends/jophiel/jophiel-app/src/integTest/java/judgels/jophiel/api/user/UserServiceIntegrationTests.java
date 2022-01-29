@@ -4,6 +4,7 @@ import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.Map;
@@ -24,7 +25,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private final SessionService sessionService = createService(SessionService.class);
 
     @Test
-    void create_user() {
+    void create_get_export_users() {
         User nano = userService.createUser(adminHeader, new UserData.Builder()
                 .username("nano")
                 .password("pass")
@@ -65,6 +66,11 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(response.getData().getPage()).contains(nani, nano);
         assertThat(response.getLastSessionTimesMap()).containsKeys(nano.getJid());
         assertThat(response.getLastSessionTimesMap()).doesNotContainKeys(nani.getJid());
+
+        String exportedCsv = userService.exportUsers(adminHeader, ImmutableList.of("nani", "nano", "bogus"));
+        assertThat(exportedCsv).isEqualTo(String.format("jid,username,email\n"
+                + "%s,nani,nani@domain.com\n"
+                + "%s,nano,nano@domain.com\n", nani.getJid(), nano.getJid()));
     }
 
     @Test

@@ -9,7 +9,9 @@ import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,8 +22,6 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.UsersResponse;
 import judgels.jophiel.api.user.UsersUpsertResponse;
-import judgels.jophiel.api.user.dump.ExportUsersDumpData;
-import judgels.jophiel.api.user.dump.UsersDump;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.info.UserInfoStore;
@@ -30,6 +30,7 @@ import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import liquibase.util.csv.CSVReader;
+import liquibase.util.csv.CSVWriter;
 
 public class UserResource implements UserService {
     private final ActorChecker actorChecker;
@@ -93,15 +94,24 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public UsersDump exportUsers(AuthHeader authHeader, ExportUsersDumpData users) {
+    public String exportUsers(AuthHeader authHeader, List<String> usernames) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        return new UsersDump.Builder()
-                .users(ImmutableList.copyOf(
-                        userStore.getUsersByUsername(ImmutableSet.copyOf(users.getUsernames())).values())
-                )
-                .build();
+        Map<String, User> usersMap = userStore.getUsersByUsername(ImmutableSet.copyOf(usernames));
+        List<User> users = usernames.stream()
+                .filter(usersMap::containsKey)
+                .map(usersMap::get)
+                .collect(Collectors.toList());
+
+        StringWriter csv = new StringWriter();
+        CSVWriter writer = new CSVWriter(csv);
+
+        writer.writeNext(new String[]{"jid", "username", "email"}, false);
+        for (User user : users) {
+            writer.writeNext(new String[]{user.getJid(), user.getUsername(), user.getEmail()}, false);
+        }
+        return csv.toString();
     }
 
     @Override

@@ -2,6 +2,7 @@ package judgels.jophiel.api.user;
 
 import static java.util.Optional.empty;
 
+import com.google.common.collect.ImmutableList;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.service.api.actor.AuthHeader;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -33,6 +34,12 @@ class UserServicePermissionIntegrationTests extends AbstractServiceIntegrationTe
     }
 
     @Test
+    void export_users() {
+        assertPermitted(exportUsers(adminHeader));
+        assertForbidden(exportUsers(userHeader));
+    }
+
+    @Test
     void upsert_users() {
         assertPermitted(upsertUsers(adminHeader));
         assertForbidden(upsertUsers(userHeader));
@@ -52,6 +59,10 @@ class UserServicePermissionIntegrationTests extends AbstractServiceIntegrationTe
 
     private ThrowingCallable getUsers(AuthHeader authHeader) {
         return () -> userService.getUsers(authHeader, empty(), empty(), empty());
+    }
+
+    private ThrowingCallable exportUsers(AuthHeader authHeader) {
+        return () -> userService.exportUsers(authHeader, ImmutableList.of());
     }
 
     private ThrowingCallable upsertUsers(AuthHeader authHeader) {

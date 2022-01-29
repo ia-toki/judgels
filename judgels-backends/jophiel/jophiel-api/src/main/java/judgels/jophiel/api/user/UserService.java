@@ -5,6 +5,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,8 +16,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.jophiel.api.user.dump.ExportUsersDumpData;
-import judgels.jophiel.api.user.dump.UsersDump;
 import judgels.persistence.api.OrderDir;
 import judgels.service.api.actor.AuthHeader;
 
@@ -34,10 +33,10 @@ public interface UserService {
     User createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserData data);
 
     @POST
-    @Path("/export")
+    @Path("/batch-get")
     @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    UsersDump exportUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ExportUsersDumpData users);
+    @Produces(TEXT_PLAIN)
+    String exportUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<String> usernames);
 
     @PUT
     @Path("/batch-upsert")
