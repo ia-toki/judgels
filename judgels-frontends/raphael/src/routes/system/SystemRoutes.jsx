@@ -1,6 +1,7 @@
 import { TimelineLineChart, User } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
+import { isTLX } from '../../conf';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
@@ -18,13 +19,17 @@ function SystemRoutes() {
       routeComponent: Route,
       component: UsersPage,
     },
-    {
-      id: 'ratings',
-      titleIcon: <TimelineLineChart />,
-      title: 'Ratings',
-      routeComponent: Route,
-      component: RatingsPage,
-    },
+    ...(isTLX()
+      ? [
+          {
+            id: 'ratings',
+            titleIcon: <TimelineLineChart />,
+            title: 'Ratings',
+            routeComponent: Route,
+            component: RatingsPage,
+          },
+        ]
+      : []),
   ];
 
   const contentWithSidebarProps = {
