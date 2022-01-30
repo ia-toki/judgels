@@ -1,9 +1,10 @@
 import { Intent } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 
-import { APP_CONFIG, Mode } from '../../../conf';
+import { APP_CONFIG, isTLX } from '../../../conf';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
+import { HtmlText } from '../../../components/HtmlText/HtmlText';
 import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
 
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
@@ -11,7 +12,6 @@ import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsW
 import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersWidget';
 
 import './HomePage.scss';
-import { HtmlText } from '../../../components/HtmlText/HtmlText';
 
 function HomePage({ isLoggedIn }) {
   const renderBanner = () => {
@@ -31,7 +31,7 @@ function HomePage({ isLoggedIn }) {
             </div>
           </div>
           <div className="home-banner__buttons">
-            {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
+            {isTLX() && (
               <ButtonLink to="/register" intent={Intent.PRIMARY} large className="home-banner__button-register">
                 Register and start training for free
               </ButtonLink>
@@ -52,8 +52,8 @@ function HomePage({ isLoggedIn }) {
           <ActiveContestsWidget />
         </div>
         <div className="home-widget-row__one-third">
-          {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && <TopRatingsWidget />}
-          {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && APP_CONFIG.apiUrls.jerahmeel && <TopScorersWidget />}
+          {isTLX() && <TopRatingsWidget />}
+          {isTLX() && <TopScorersWidget />}
         </div>
         <div className="clearfix" />
       </div>

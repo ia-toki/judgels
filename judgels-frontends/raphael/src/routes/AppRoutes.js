@@ -9,7 +9,7 @@ import {
   TimelineLineChart,
 } from '@blueprintjs/icons';
 
-import { isInPrivateContestsMode, hasJerahmeel } from '../conf';
+import { isTLX } from '../conf';
 import { JophielRole } from '../modules/api/jophiel/role';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 
@@ -51,7 +51,7 @@ const appRoutes = [
       path: '/training',
       component: LazyTrainingRoutes,
     },
-    visible: role => hasJerahmeel() && role.jerahmeel === JerahmeelRole.Admin,
+    visible: role => isTLX() && role.jerahmeel === JerahmeelRole.Admin,
   },
   {
     id: 'courses',
@@ -61,7 +61,7 @@ const appRoutes = [
       path: '/courses',
       component: LazyCoursesRoutes,
     },
-    visible: () => !isInPrivateContestsMode(),
+    visible: () => isTLX(),
   },
   {
     id: 'problems',
@@ -71,7 +71,7 @@ const appRoutes = [
       path: '/problems',
       component: LazyProblemsRoutes,
     },
-    visible: () => !isInPrivateContestsMode(),
+    visible: () => isTLX(),
   },
   {
     id: 'submissions',
@@ -81,7 +81,7 @@ const appRoutes = [
       path: '/submissions',
       component: LazySubmissionsRoutes,
     },
-    visible: () => !isInPrivateContestsMode(),
+    visible: () => isTLX(),
   },
   {
     id: 'ranking',
@@ -91,7 +91,7 @@ const appRoutes = [
       path: '/ranking',
       component: LazyRankingRoutes,
     },
-    visible: () => !isInPrivateContestsMode(),
+    visible: () => isTLX(),
   },
 ];
 
@@ -105,7 +105,7 @@ const homeRoute = {
 };
 
 export function preloadRoutes() {
-  if (isInPrivateContestsMode()) {
+  if (!isTLX()) {
     ContestsRoutesPromise();
   }
 }

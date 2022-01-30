@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';
 
-import { APP_CONFIG, Mode } from '../../../../conf';
+import { isTLX } from '../../../../conf';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../components/forms/validations';
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
@@ -30,7 +30,7 @@ export default function LoginForm({ onSubmit }) {
         <form onSubmit={handleSubmit}>
           <Field component={FormTextInput} {...usernameOrEmailField} />
           <Field component={FormTextInput} {...passwordField} />
-          {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
+          {isTLX() && (
             <p className="form-login__actions-forgot-password">
               <Link to="/forgot-password">Forgot your password?</Link>
             </p>
@@ -40,7 +40,7 @@ export default function LoginForm({ onSubmit }) {
 
           <div className="form-login__actions">
             <Button type="submit" text="Log in" intent={Intent.PRIMARY} loading={submitting} />
-            {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
+            {isTLX() && (
               <p className="form-login__actions-register">
                 Don't have account? <Link to="/register">Register now</Link>
               </p>

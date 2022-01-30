@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
 
-import { hasJerahmeel } from '../../../../conf';
+import { isTLX } from '../../../../conf';
 import { BadRequestError, NotFoundError, RemoteError } from '../../../../modules/api/error';
 import { SubmissionError } from '../../../../modules/form/submissionError';
 import { contestAPI, ContestErrors } from '../../../../modules/api/uriel/contest';
@@ -100,7 +100,7 @@ export function updateContestDescription(contestJid, description) {
 
 export function searchProblemSet(contestJid) {
   return async () => {
-    if (!hasJerahmeel()) {
+    if (!isTLX()) {
       return await Promise.resolve(null);
     }
     try {

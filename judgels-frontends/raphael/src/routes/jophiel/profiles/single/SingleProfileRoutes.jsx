@@ -2,7 +2,7 @@ import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
-import { APP_CONFIG, Mode } from '../../../../conf';
+import { isTLX } from '../../../../conf';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -32,9 +32,8 @@ function SingleProfileRoutes({ userJid, username }) {
       routeComponent: Route,
       component: ContestHistoryPage,
     },
-    ...(APP_CONFIG.mode === Mode.PRIVATE_CONTESTS
-      ? []
-      : [
+    ...(isTLX()
+      ? [
           {
             id: 'submission-history',
             titleIcon: <Layers />,
@@ -42,7 +41,8 @@ function SingleProfileRoutes({ userJid, username }) {
             routeComponent: Route,
             component: SubmissionHistoryPage,
           },
-        ]),
+        ]
+      : []),
   ];
 
   const contentWithSidebarProps = {

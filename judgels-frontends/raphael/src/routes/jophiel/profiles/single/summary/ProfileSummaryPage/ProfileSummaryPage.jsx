@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { APP_CONFIG, Mode } from '../../../../../../conf';
+import { isTLX } from '../../../../../../conf';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
@@ -57,7 +57,7 @@ class ProfileSummaryPage extends Component {
 
   renderProblemStats = () => {
     const { userStats } = this.state;
-    if (APP_CONFIG.mode === Mode.PRIVATE_CONTESTS) {
+    if (!isTLX()) {
       return null;
     }
     if (!userStats) {
@@ -68,7 +68,7 @@ class ProfileSummaryPage extends Component {
   };
 
   getUserStats = username => {
-    if (APP_CONFIG.mode === Mode.PRIVATE_CONTESTS) {
+    if (!isTLX()) {
       return Promise.resolve(null);
     }
     return this.props.onGetUserStats(username);

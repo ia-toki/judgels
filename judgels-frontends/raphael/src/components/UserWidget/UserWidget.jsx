@@ -4,7 +4,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { APP_CONFIG, Mode } from '../../conf';
+import { isTLX } from '../../conf';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
 import { selectUserProfile, selectIsUserWebConfigLoaded } from '../../routes/jophiel/modules/userWebSelectors';
@@ -51,7 +51,7 @@ export class UserWidget extends PureComponent {
         <MenuItem className="widget-user__menu-helper" icon={<User />} text={profile.username} disabled />
         <MenuDivider className="widget-user__menu-helper" />
         <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
-        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && <MenuItemLink text="My account" to="/account" />}
+        {isTLX() && <MenuItemLink text="My account" to="/account" />}
         <MenuItemLink text="Log out" to="/logout" />
       </Menu>
     );
@@ -94,7 +94,7 @@ export class UserWidget extends PureComponent {
             Log in
           </Link>
         </div>
-        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
+        {isTLX() && (
           <div className="widget-user__link">
             <Link data-key="register" to="/register">
               Register
@@ -110,7 +110,7 @@ export class UserWidget extends PureComponent {
     const menu = (
       <Menu className="widget-user__menu">
         <MenuItemLink text="Log in" to="/login" />
-        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && <MenuItemLink text="Register" to="/register" />}
+        {isTLX() && <MenuItemLink text="Register" to="/register" />}
       </Menu>
     );
 

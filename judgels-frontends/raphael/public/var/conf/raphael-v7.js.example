@@ -1,4 +1,5 @@
 window.conf = {
+  mode: 'JUDGELS',
   name: 'Judgels',
   slogan: 'Judgment Angels',
   apiUrls: {

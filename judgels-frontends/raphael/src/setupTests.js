@@ -10,6 +10,7 @@ nock.disableNetConnect();
 ReactDOM.createPortal = el => el;
 
 window.conf = {
+  mode: 'TLX',
   name: 'Judgels',
   slogan: 'Judgment Angels',
   apiUrls: {

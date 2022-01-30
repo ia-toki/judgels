@@ -1,4 +1,4 @@
-import { APP_CONFIG, Mode } from '../../conf';
+import { isTLX } from '../../conf';
 
 import './TimeanddateLink.scss';
 
@@ -14,7 +14,7 @@ export function TimeanddateLink({ time, message, children }) {
     window.open(`https://www.timeanddate.com/worldclock/fixedtime.html?msg=${encodeURIComponent(message)}&iso=${date}`);
   };
 
-  if (APP_CONFIG.mode === Mode.PRIVATE_CONTESTS) {
+  if (!isTLX()) {
     return children;
   }
   return (
