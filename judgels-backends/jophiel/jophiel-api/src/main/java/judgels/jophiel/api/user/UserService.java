@@ -11,7 +11,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -38,7 +37,7 @@ public interface UserService {
     @Produces(TEXT_PLAIN)
     String exportUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<String> usernames);
 
-    @PUT
+    @POST
     @Path("/batch-upsert")
     @Consumes(TEXT_PLAIN)
     @Produces(APPLICATION_JSON)
