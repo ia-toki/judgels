@@ -1,5 +1,7 @@
 package judgels.uriel.api;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
@@ -25,6 +27,8 @@ import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileConfiguration;
 import judgels.uriel.submission.programming.SubmissionConfiguration;
+import org.assertj.core.api.AbstractThrowableAssert;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.h2.Driver;
@@ -83,5 +87,29 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
         return JaxRsClients.create(
                 serviceClass,
                 "http://localhost:" + support.getLocalPort());
+    }
+
+    protected static void assertPermitted(ThrowingCallable callable) {
+        assertThatCode(callable).doesNotThrowAnyException();
+    }
+
+    protected static AbstractThrowableAssert<?, ? extends Throwable> assertBadRequest(ThrowingCallable callable) {
+        return assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 400);
+    }
+
+    protected static void assertUnauthorized(ThrowingCallable callable) {
+        assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 401);
+    }
+
+    protected static AbstractThrowableAssert<?, ? extends Throwable> assertForbidden(ThrowingCallable callable) {
+        return assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 403);
+    }
+
+    protected static void assertNotFound(ThrowingCallable callable) {
+        assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 404);
+    }
+
+    protected static String randomString() {
+        return "string" + (Math.random() * 1000000000);
     }
 }

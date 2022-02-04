@@ -2,65 +2,130 @@ package judgels.uriel.api.contest;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static judgels.uriel.api.contest.ContestErrors.SLUG_ALREADY_EXISTS;
+import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
+import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
-import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
 import org.junit.jupiter.api.Test;
 
 class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
-    private ContestService contestService = createService(ContestService.class);
+    private final ContestService contestService = createService(ContestService.class);
 
     @Test
-    void end_to_end_flow() {
-        // as admin
+    void create_update_get_contest() {
+        assertNotFound(() -> contestService.getContest(of(ADMIN_HEADER), "bogus"));
+        assertNotFound(() -> contestService.getContestBySlug(of(ADMIN_HEADER), "bogus"));
+        assertNotFound(() -> contestService.getContestDescription(of(ADMIN_HEADER), "bogus"));
 
-        Contest contestA = createContestWithRoles("contest-a");
-        Contest contestB = createContestWithRoles("contest-b");
+        Contest contest = contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
+                .slug("contest")
+                .build());
 
-        // as manager
+        assertThat(contest.getSlug()).isEqualTo("contest");
+        assertThat(contest.getName()).isEqualTo("contest");
+        assertThat(contest.getStyle()).isEqualTo(ContestStyle.ICPC);
+        assertThat(contest.getBeginTime()).isAfter(Instant.now());
+        assertThat(contestService.getContest(of(ADMIN_HEADER), contest.getJid())).isEqualTo(contest);
+        assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), contest.getSlug())).isEqualTo(contest);
 
-        contestA = contestService.updateContest(MANAGER_HEADER, contestA.getJid(), new ContestUpdateData.Builder()
-                .name("Judgels Open Contest A")
-                .slug("contest-a")
-                .style(ContestStyle.ICPC)
+        ContestDescription description = contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid());
+        assertThat(description.getDescription()).isEmpty();
+
+        assertBadRequest(() -> contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
+                .slug("contest")
+                .build()))
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
+
+        contest = contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+                .name("Judgels Open Contest")
+                .slug("contest-new")
+                .style(ContestStyle.IOI)
                 .beginTime(Instant.ofEpochSecond(42))
                 .duration(Duration.ofHours(5))
                 .build());
-        contestService.updateContestDescription(MANAGER_HEADER, contestA.getJid(), new ContestDescription.Builder()
-                .description("This is contest A")
-                .build());
+
+        assertThat(contest.getSlug()).isEqualTo("contest-new");
+        assertThat(contest.getName()).isEqualTo("Judgels Open Contest");
+        assertThat(contest.getStyle()).isEqualTo(ContestStyle.IOI);
+        assertThat(contest.getBeginTime()).isEqualTo(Instant.ofEpochSecond(42));
+        assertThat(contest.getDuration()).isEqualTo(Duration.ofHours(5));
+        assertThat(contestService.getContest(of(ADMIN_HEADER), contest.getJid())).isEqualTo(contest);
+
+        assertBadRequest(() ->
+                contestService.updateContest(ADMIN_HEADER, createContest().getJid(), new ContestUpdateData.Builder()
+                        .slug("contest-new")
+                        .build()))
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
+
+        description = contestService.updateContestDescription(
+                ADMIN_HEADER,
+                contest.getJid(),
+                new ContestDescription.Builder()
+                        .description("This is open contest")
+                        .build());
+        assertThat(description.getDescription()).contains("This is open contest");
+        assertThat(contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid())).isEqualTo(description);
+    }
+
+    @Test
+    void get_contests() {
+        Contest contestA = createContest();
+        Contest contestB = createContest();
+        Contest contestC = createContest();
+        createContest();
+
+        enableModule(contestC, HIDDEN);
 
         // as admin
 
-        contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-testing").build());
-        contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-random").build());
-
         ContestsResponse response = contestService.getContests(of(ADMIN_HEADER), empty(), empty());
-        assertThat(response.getData().getPage().size()).isEqualTo(4);
+        assertThat(response.getData().getPage().size()).isGreaterThan(3);
+        assertThat(response.getData().getPage()).contains(contestA, contestB, contestC);
         assertThat(response.getConfig().getCanAdminister()).isTrue();
 
         // as manager
 
-        contestantService.upsertContestants(MANAGER_HEADER, contestA.getJid(), ImmutableSet.of(USER_A));
-        contestantService.upsertContestants(MANAGER_HEADER, contestB.getJid(), ImmutableSet.of(USER_A, USER_B));
+        managerService.upsertManagers(ADMIN_HEADER, contestA.getJid(), ImmutableSet.of(MANAGER));
+        managerService.upsertManagers(ADMIN_HEADER, contestB.getJid(), ImmutableSet.of(MANAGER));
+        managerService.upsertManagers(ADMIN_HEADER, contestC.getJid(), ImmutableSet.of(MANAGER));
 
         response = contestService.getContests(of(MANAGER_HEADER), empty(), empty());
-        assertThat(response.getData().getPage()).containsOnly(contestB, contestA);
+        assertThat(response.getData().getPage()).containsOnly(contestC, contestB, contestA);
+        assertThat(response.getConfig().getCanAdminister()).isFalse();
+
+        // as supervisor
+
+        supervisorService.upsertSupervisors(ADMIN_HEADER, contestB.getJid(), new ContestSupervisorUpsertData.Builder()
+                .addUsernames(SUPERVISOR)
+                .build());
+        supervisorService.upsertSupervisors(ADMIN_HEADER, contestC.getJid(), new ContestSupervisorUpsertData.Builder()
+                .addUsernames(SUPERVISOR)
+                .build());
+
+        response = contestService.getContests(of(SUPERVISOR_HEADER), empty(), empty());
+        assertThat(response.getData().getPage()).containsOnly(contestB);
         assertThat(response.getConfig().getCanAdminister()).isFalse();
 
         // as contestant
+
+        contestantService.upsertContestants(ADMIN_HEADER, contestA.getJid(), ImmutableSet.of(USER_A));
+        contestantService.upsertContestants(ADMIN_HEADER, contestB.getJid(), ImmutableSet.of(USER_A, USER_B));
+        contestantService.upsertContestants(ADMIN_HEADER, contestC.getJid(), ImmutableSet.of(USER_A, USER_B));
 
         response = contestService.getContests(of(USER_A_HEADER), empty(), empty());
         assertThat(response.getData().getPage()).containsOnly(contestB, contestA);
@@ -70,31 +135,35 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         assertThat(response.getData().getPage()).containsOnly(contestB);
         assertThat(response.getConfig().getCanAdminister()).isFalse();
 
-        // as non-viewer
+        // as user
 
-        String contestAJid = contestA.getJid();
-        assertThatThrownBy(
-                () -> contestService.getContest(of(AuthHeader.of("randomToken")), contestAJid))
-                .hasFieldOrPropertyWithValue("code", 403);
+        response = contestService.getContests(of(USER_HEADER), empty(), empty());
+        assertThat(response.getData().getPage()).isEmpty();
+        assertThat(response.getConfig().getCanAdminister()).isFalse();
 
-        // as viewer
+        // as guest
 
-        moduleService.enableModule(MANAGER_HEADER, contestA.getJid(), ContestModuleType.REGISTRATION);
-        moduleService.enableModule(MANAGER_HEADER, contestB.getJid(), ContestModuleType.REGISTRATION);
+        response = contestService.getContests(empty(), empty(), empty());
+        assertThat(response.getData().getPage()).isEmpty();
+        assertThat(response.getConfig().getCanAdminister()).isFalse();
 
-        contestA = contestService.getContest(of(USER_HEADER), contestA.getJid());
-        assertThat(contestService.getContestBySlug(of(USER_HEADER), contestA.getSlug())).isEqualTo(contestA);
+        enableModule(contestA, REGISTRATION);
 
-        assertThat(contestA.getSlug()).isEqualTo("contest-a");
-        assertThat(contestA.getName()).isEqualTo("Judgels Open Contest A");
-        assertThat(contestA.getStyle()).isEqualTo(ContestStyle.ICPC);
-        assertThat(contestA.getBeginTime()).isEqualTo(Instant.ofEpochSecond(42));
-        assertThat(contestA.getDuration()).isEqualTo(Duration.ofHours(5));
+        // as user
 
-        ContestDescription descriptionA = contestService.getContestDescription(of(USER_HEADER), contestA.getJid());
-        assertThat(descriptionA.getDescription()).isEqualTo("This is contest A");
+        response = contestService.getContests(of(USER_HEADER), empty(), empty());
+        assertThat(response.getData().getPage()).containsOnly(contestA);
+        assertThat(response.getConfig().getCanAdminister()).isFalse();
 
-        assertThat(contestService.getContest(of(USER_HEADER), contestB.getJid())).isEqualTo(contestB);
-        assertThat(contestService.getContestBySlug(of(USER_HEADER), "" + contestB.getId())).isEqualTo(contestB);
+        // as guest
+
+        response = contestService.getContests(empty(), empty(), empty());
+        assertThat(response.getData().getPage()).containsOnly(contestA);
+        assertThat(response.getConfig().getCanAdminister()).isFalse();
+    }
+
+    @Test
+    void get_active_contests() {
+        // TODO(fushar): cannot be implemented yet as unix_timestamp function is not available in H2 :(
     }
 }

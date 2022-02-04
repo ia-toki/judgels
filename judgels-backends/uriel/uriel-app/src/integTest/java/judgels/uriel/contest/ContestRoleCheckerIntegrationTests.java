@@ -106,36 +106,6 @@ class ContestRoleCheckerIntegrationTests extends AbstractContestRoleCheckerInteg
     }
 
     @Test
-    void reset() {
-        assertThat(checker.canResetVirtual(ADMIN, contestA)).isTrue();
-        assertThat(checker.canResetVirtual(ADMIN, contestB)).isTrue();
-        assertThat(checker.canResetVirtual(ADMIN, contestC)).isTrue();
-
-        assertThat(checker.canResetVirtual(USER, contestA)).isFalse();
-        assertThat(checker.canResetVirtual(USER, contestB)).isFalse();
-        assertThat(checker.canResetVirtual(USER, contestC)).isFalse();
-
-        assertThat(checker.canResetVirtual(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canResetVirtual(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canResetVirtual(CONTESTANT, contestC)).isFalse();
-
-        assertThat(checker.canResetVirtual(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canResetVirtual(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canResetVirtual(SUPERVISOR, contestC)).isFalse();
-
-        assertThat(checker.canResetVirtual(MANAGER, contestA)).isFalse();
-        assertThat(checker.canResetVirtual(MANAGER, contestB)).isTrue();
-        assertThat(checker.canResetVirtual(MANAGER, contestC)).isFalse();
-    }
-
-    @Test
-    void start_virtual() {
-        assertThat(checker.canStartVirtual(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canStartVirtual(CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canStartVirtual(ANOTHER_CONTESTANT, contestBStarted)).isFalse();
-    }
-
-    @Test
     void get_role() {
         assertThat(checker.getRole(USER, contestB)).isEqualTo(ContestRole.NONE);
         assertThat(checker.getRole(CONTESTANT, contestB)).isEqualTo(ContestRole.CONTESTANT);
