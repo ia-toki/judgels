@@ -10,12 +10,15 @@ import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.USER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
@@ -24,6 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.service.api.actor.AuthHeader;
+import judgels.uriel.api.contest.role.ContestRole;
 import org.junit.jupiter.api.Test;
 
 class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
@@ -106,18 +110,18 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
     void get_contests() {
         Contest contestA = buildContest()
                 .managers(MANAGER)
-                .contestants(USER_A)
+                .contestants(USER_A, USER)
                 .build();
         Contest contestB = buildContest()
                 .managers(MANAGER)
-                .supervisors(SUPERVISOR)
+                .supervisors(SUPERVISOR, USER)
                 .contestants(USER_A, USER_B)
                 .build();
         Contest contestC = buildContest()
                 .modules(HIDDEN)
-                .managers(MANAGER)
+                .managers(MANAGER, USER)
                 .supervisors(SUPERVISOR)
-                .contestants(USER_A, USER_B)
+                .contestants(USER_A, USER_B, USER)
                 .build();
         Contest contestD = buildContest()
                 .modules(REGISTRATION)
@@ -147,6 +151,21 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
             assertThat(response.getData().getPage()).hasSameElementsAs(contestsMap.get(authHeader));
             assertThat(response.getConfig().getCanAdminister()).isEqualTo(canAdministerMap.get(authHeader));
         }
+
+        ContestsResponse response = contestService.getContests(of(USER_HEADER), empty(), empty());
+        assertThat(response.getRolesMap()).isEqualTo(ImmutableMap.of(
+                contestA.getJid(), ContestRole.CONTESTANT,
+                contestB.getJid(), ContestRole.SUPERVISOR,
+                contestC.getJid(), ContestRole.MANAGER,
+                contestD.getJid(), ContestRole.NONE));
+
+        response = contestService.getContests(of(ADMIN_HEADER), empty(), empty());
+        assertThat(response.getRolesMap()).isEqualTo(ImmutableMap.of(
+                contestA.getJid(), ContestRole.ADMIN,
+                contestB.getJid(), ContestRole.ADMIN,
+                contestC.getJid(), ContestRole.ADMIN,
+                contestD.getJid(), ContestRole.ADMIN,
+                contestE.getJid(), ContestRole.ADMIN));
     }
 
     @Test
