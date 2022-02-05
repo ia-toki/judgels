@@ -62,16 +62,16 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         return contest;
     }
 
-    protected void beginContest(Contest contest) {
-        contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+    protected Contest beginContest(Contest contest) {
+        return contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
                 .beginTime(Instant.now())
                 .build());
     }
 
-    protected void endContest(Contest contest) {
-        contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+    protected Contest endContest(Contest contest) {
+        return contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
                 .beginTime(Instant.now().minus(Duration.ofHours(3)))
-                .duration(Duration.ofHours(2))
+                .duration(Duration.ofHours(3).minus(Duration.ofSeconds(1)))
                 .build());
     }
 
@@ -95,12 +95,14 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         return contest;
     }
 
-    protected void enableModule(Contest contest, ContestModuleType type) {
+    protected Contest enableModule(Contest contest, ContestModuleType type) {
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), type);
+        return contest;
     }
 
-    protected void disableModule(Contest contest, ContestModuleType type) {
+    protected Contest disableModule(Contest contest, ContestModuleType type) {
         moduleService.disableModule(ADMIN_HEADER, contest.getJid(), type);
+        return contest;
     }
 
     protected ContestBuilder buildContest() {

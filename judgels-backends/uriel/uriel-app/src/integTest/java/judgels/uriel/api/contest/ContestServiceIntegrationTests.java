@@ -18,14 +18,15 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.role.ContestRole;
 import org.junit.jupiter.api.Test;
@@ -107,49 +108,52 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
     }
 
     @Test
-    void get_contests() {
+    void get_contests_and_active_contests() {
+        // contests will start in the future, considered as active
+
         Contest contestA = buildContest()
+                .beginTime(Instant.now().plus(Duration.ofSeconds(10)))
                 .managers(MANAGER)
                 .contestants(USER_A, USER)
                 .build();
         Contest contestB = buildContest()
+                .beginTime(Instant.now().plus(Duration.ofSeconds(9)))
                 .managers(MANAGER)
                 .supervisors(SUPERVISOR, USER)
                 .contestants(USER_A, USER_B)
                 .build();
         Contest contestC = buildContest()
+                .beginTime(Instant.now().plus(Duration.ofSeconds(8)))
                 .modules(HIDDEN)
                 .managers(MANAGER, USER)
                 .supervisors(SUPERVISOR)
                 .contestants(USER_A, USER_B, USER)
                 .build();
         Contest contestD = buildContest()
+                .beginTime(Instant.now().plus(Duration.ofSeconds(7)))
                 .modules(REGISTRATION)
                 .managers(MANAGER)
                 .supervisors(SUPERVISOR)
                 .build();
-        Contest contestE = createContest();
+        Contest contestE = buildContest()
+                .beginTime(Instant.now().plus(Duration.ofSeconds(6)))
+                .build();
 
-        Map<Optional<AuthHeader>, Set<Contest>> contestsMap = new LinkedHashMap<>();
-        contestsMap.put(of(ADMIN_HEADER), ImmutableSet.of(contestA, contestB, contestC, contestD, contestE));
-        contestsMap.put(of(MANAGER_HEADER), ImmutableSet.of(contestA, contestB, contestC, contestD));
-        contestsMap.put(of(SUPERVISOR_HEADER), ImmutableSet.of(contestB, contestD));
-        contestsMap.put(of(USER_A_HEADER), ImmutableSet.of(contestA, contestB, contestD));
-        contestsMap.put(of(USER_B_HEADER), ImmutableSet.of(contestB, contestD));
-        contestsMap.put(empty(), ImmutableSet.of(contestD));
-
-        Map<Optional<AuthHeader>, Boolean> canAdministerMap = new LinkedHashMap<>();
-        canAdministerMap.put(of(ADMIN_HEADER), true);
-        canAdministerMap.put(of(MANAGER_HEADER), false);
-        canAdministerMap.put(of(SUPERVISOR_HEADER), false);
-        canAdministerMap.put(of(USER_A_HEADER), false);
-        canAdministerMap.put(of(USER_B_HEADER), false);
-        canAdministerMap.put(empty(), false);
+        Map<Optional<AuthHeader>, List<Contest>> contestsMap = new LinkedHashMap<>();
+        contestsMap.put(of(ADMIN_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
+        contestsMap.put(of(MANAGER_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD));
+        contestsMap.put(of(SUPERVISOR_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(USER_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
+        contestsMap.put(of(USER_B_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(empty(), ImmutableList.of(contestD));
 
         for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {
             ContestsResponse response = contestService.getContests(authHeader, empty(), empty());
-            assertThat(response.getData().getPage()).hasSameElementsAs(contestsMap.get(authHeader));
-            assertThat(response.getConfig().getCanAdminister()).isEqualTo(canAdministerMap.get(authHeader));
+            assertThat(response.getData().getPage()).containsExactlyElementsOf(contestsMap.get(authHeader));
+            assertThat(response.getConfig().getCanAdminister()).isEqualTo(authHeader.equals(of(ADMIN_HEADER)));
+
+            ActiveContestsResponse activeResponse = contestService.getActiveContests(authHeader);
+            assertThat(activeResponse.getData()).containsExactlyElementsOf(Lists.reverse(contestsMap.get(authHeader)));
         }
 
         ContestsResponse response = contestService.getContests(of(USER_HEADER), empty(), empty());
@@ -159,6 +163,9 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 contestC.getJid(), ContestRole.MANAGER,
                 contestD.getJid(), ContestRole.NONE));
 
+        ActiveContestsResponse activeResponse = contestService.getActiveContests(of(USER_HEADER));
+        assertThat(activeResponse.getRolesMap()).isEqualTo(response.getRolesMap());
+
         response = contestService.getContests(of(ADMIN_HEADER), empty(), empty());
         assertThat(response.getRolesMap()).isEqualTo(ImmutableMap.of(
                 contestA.getJid(), ContestRole.ADMIN,
@@ -166,10 +173,41 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 contestC.getJid(), ContestRole.ADMIN,
                 contestD.getJid(), ContestRole.ADMIN,
                 contestE.getJid(), ContestRole.ADMIN));
-    }
 
-    @Test
-    void get_active_contests() {
-        // TODO(fushar): cannot be implemented yet as unix_timestamp function is not available in H2 :(
+        activeResponse = contestService.getActiveContests(of(ADMIN_HEADER));
+        assertThat(activeResponse.getRolesMap()).isEqualTo(response.getRolesMap());
+
+        // contests are now running, considered as active
+
+        contestA = beginContest(contestA);
+        contestB = beginContest(contestB);
+        contestC = beginContest(contestC);
+        contestD = beginContest(contestD);
+        contestE = beginContest(contestE);
+
+        contestsMap.put(of(ADMIN_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
+        contestsMap.put(of(MANAGER_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD));
+        contestsMap.put(of(SUPERVISOR_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(USER_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
+        contestsMap.put(of(USER_B_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(empty(), ImmutableList.of(contestD));
+
+        for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {
+            activeResponse = contestService.getActiveContests(authHeader);
+            assertThat(activeResponse.getData()).containsExactlyElementsOf(contestsMap.get(authHeader));
+        }
+
+        // contests have ended, considered as inactive
+
+        endContest(contestA);
+        endContest(contestB);
+        endContest(contestC);
+        endContest(contestD);
+        endContest(contestE);
+
+        for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {
+            activeResponse = contestService.getActiveContests(authHeader);
+            assertThat(activeResponse.getData()).isEmpty();
+        }
     }
 }

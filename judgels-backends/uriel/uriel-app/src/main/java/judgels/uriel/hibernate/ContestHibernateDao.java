@@ -20,6 +20,7 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
+import judgels.persistence.hibernate.OpaqueLiteralExpression;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
@@ -104,16 +105,14 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         return (cb, cq, root) -> cb.equal(root.get(ContestModel_.jid), contestJid);
     }
 
-    // The following predicate is currently not testable because H2 does not have 'unix_timestamp' function.
     static CustomPredicateFilter<ContestModel> isActive(Clock clock) {
         return (cb, cq, root) -> {
-            long currentInstantEpoch = clock.instant().toEpochMilli();
-            Expression<Long> beginTime = cb.prod(
-                    cb.function("unix_timestamp", Double.class, root.get(ContestModel_.beginTime)),
-                    cb.literal(1000.0)).as(Long.class);
-            Expression<Long> endTime = cb.sum(beginTime, root.get(ContestModel_.duration));
+            Expression<Instant> endTime = cb.function("timestampadd", Instant.class,
+                    new OpaqueLiteralExpression(cb, "second"),
+                    cb.quot(root.get(ContestModel_.duration), 1000.0),
+                    root.get(ContestModel_.beginTime));
 
-            return cb.greaterThanOrEqualTo(endTime, cb.literal(currentInstantEpoch));
+            return cb.greaterThanOrEqualTo(endTime, cb.literal(clock.instant()));
         };
     }
 
