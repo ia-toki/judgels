@@ -11,6 +11,9 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.manager.ContestManagerService;
@@ -98,5 +101,82 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
 
     protected void disableModule(Contest contest, ContestModuleType type) {
         moduleService.disableModule(ADMIN_HEADER, contest.getJid(), type);
+    }
+
+    protected ContestBuilder buildContest() {
+        return new ContestBuilder();
+    }
+
+    protected class ContestBuilder {
+        Optional<Instant> beginTime = Optional.empty();
+        Optional<Duration> duration = Optional.empty();
+
+        Set<ContestModuleType> modules = Collections.emptySet();
+        Set<String> managers = Collections.emptySet();
+        Set<String> supervisors = Collections.emptySet();
+        Set<String> contestants = Collections.emptySet();
+
+        public ContestBuilder beginTime(Instant instant) {
+            this.beginTime = Optional.of(instant);
+            return this;
+        }
+
+        public ContestBuilder duration(Duration duration) {
+            this.duration = Optional.of(duration);
+            return this;
+        }
+
+        public ContestBuilder modules(ContestModuleType... types) {
+            this.modules = ImmutableSet.copyOf(types);
+            return this;
+        }
+
+        public ContestBuilder managers(String... usernames) {
+            this.managers = ImmutableSet.copyOf(usernames);
+            return this;
+        }
+
+        public ContestBuilder supervisors(String... usernames) {
+            this.supervisors = ImmutableSet.copyOf(usernames);
+            return this;
+        }
+
+        public ContestBuilder contestants(String... usernames) {
+            this.contestants = ImmutableSet.copyOf(usernames);
+            return this;
+        }
+
+        public Contest build() {
+            Contest contest = createContest();
+
+            if (beginTime.isPresent() || duration.isPresent()) {
+                ContestUpdateData data = new ContestUpdateData.Builder()
+                        .beginTime(beginTime)
+                        .duration(duration)
+                        .build();
+                contest = contestService.updateContest(ADMIN_HEADER, contest.getJid(), data);
+            }
+
+            for (ContestModuleType module : modules) {
+                moduleService.enableModule(ADMIN_HEADER, contest.getJid(), module);
+            }
+
+            if (!managers.isEmpty()) {
+                managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), managers);
+            }
+
+            if (!supervisors.isEmpty()) {
+                ContestSupervisorUpsertData data = new ContestSupervisorUpsertData.Builder()
+                        .usernames(supervisors)
+                        .build();
+                supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), data);
+            }
+
+            if (!contestants.isEmpty()) {
+                contestantService.upsertContestants(ADMIN_HEADER, contest.getJid(), contestants);
+            }
+
+            return contest;
+        }
     }
 }

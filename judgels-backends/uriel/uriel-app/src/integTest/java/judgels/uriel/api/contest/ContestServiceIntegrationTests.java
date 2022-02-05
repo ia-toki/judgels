@@ -14,13 +14,16 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_A;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
-import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 
 class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
@@ -93,82 +96,54 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
 
     @Test
     void get_contests() {
-        Contest contestA = createContest();
-        Contest contestB = createContest();
-        Contest contestC = createContest();
+        Contest contestA = buildContest()
+                .managers(MANAGER)
+                .contestants(USER_A)
+                .build();
+        Contest contestB = buildContest()
+                .managers(MANAGER)
+                .supervisors(SUPERVISOR)
+                .contestants(USER_A, USER_B)
+                .build();
+        Contest contestC = buildContest()
+                .modules(HIDDEN)
+                .managers(MANAGER)
+                .supervisors(SUPERVISOR)
+                .contestants(USER_A, USER_B)
+                .build();
+        Contest contestD = buildContest()
+                .modules(REGISTRATION)
+                .managers(MANAGER)
+                .supervisors(SUPERVISOR)
+                .build();
         createContest();
-
-        enableModule(contestC, HIDDEN);
 
         // as admin
 
         ContestsResponse response = contestService.getContests(of(ADMIN_HEADER), empty(), empty());
-        assertThat(response.getData().getPage().size()).isGreaterThan(3);
-        assertThat(response.getData().getPage()).contains(contestA, contestB, contestC);
+        assertThat(response.getData().getPage().size()).isGreaterThan(4);
+        assertThat(response.getData().getPage()).contains(contestA, contestB, contestC, contestD);
         assertThat(response.getConfig().getCanAdminister()).isTrue();
 
-        // as manager
+        Map<Optional<AuthHeader>, Set<Contest>> contestsMap = ImmutableMap.of(
+                of(MANAGER_HEADER), ImmutableSet.of(contestA, contestB, contestC, contestD),
+                of(SUPERVISOR_HEADER), ImmutableSet.of(contestB, contestD),
+                of(USER_A_HEADER), ImmutableSet.of(contestA, contestB, contestD),
+                of(USER_B_HEADER), ImmutableSet.of(contestB, contestD),
+                empty(), ImmutableSet.of(contestD));
 
-        managerService.upsertManagers(ADMIN_HEADER, contestA.getJid(), ImmutableSet.of(MANAGER));
-        managerService.upsertManagers(ADMIN_HEADER, contestB.getJid(), ImmutableSet.of(MANAGER));
-        managerService.upsertManagers(ADMIN_HEADER, contestC.getJid(), ImmutableSet.of(MANAGER));
+        Map<Optional<AuthHeader>, Boolean> canAdministerMap = ImmutableMap.of(
+                of(MANAGER_HEADER), false,
+                of(SUPERVISOR_HEADER), false,
+                of(USER_A_HEADER), false,
+                of(USER_B_HEADER), false,
+                empty(), false);
 
-        response = contestService.getContests(of(MANAGER_HEADER), empty(), empty());
-        assertThat(response.getData().getPage()).containsOnly(contestC, contestB, contestA);
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
-
-        // as supervisor
-
-        supervisorService.upsertSupervisors(ADMIN_HEADER, contestB.getJid(), new ContestSupervisorUpsertData.Builder()
-                .addUsernames(SUPERVISOR)
-                .build());
-        supervisorService.upsertSupervisors(ADMIN_HEADER, contestC.getJid(), new ContestSupervisorUpsertData.Builder()
-                .addUsernames(SUPERVISOR)
-                .build());
-
-        response = contestService.getContests(of(SUPERVISOR_HEADER), empty(), empty());
-        assertThat(response.getData().getPage()).containsOnly(contestB);
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
-
-        // as contestant
-
-        contestantService.upsertContestants(ADMIN_HEADER, contestA.getJid(), ImmutableSet.of(USER_A));
-        contestantService.upsertContestants(ADMIN_HEADER, contestB.getJid(), ImmutableSet.of(USER_A, USER_B));
-        contestantService.upsertContestants(ADMIN_HEADER, contestC.getJid(), ImmutableSet.of(USER_A, USER_B));
-
-        response = contestService.getContests(of(USER_A_HEADER), empty(), empty());
-        assertThat(response.getData().getPage()).containsOnly(contestB, contestA);
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
-
-        response = contestService.getContests(of(USER_B_HEADER), empty(), empty());
-        assertThat(response.getData().getPage()).containsOnly(contestB);
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
-
-        // as user
-
-        response = contestService.getContests(of(USER_HEADER), empty(), empty());
-        assertThat(response.getData().getPage()).isEmpty();
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
-
-        // as guest
-
-        response = contestService.getContests(empty(), empty(), empty());
-        assertThat(response.getData().getPage()).isEmpty();
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
-
-        enableModule(contestA, REGISTRATION);
-
-        // as user
-
-        response = contestService.getContests(of(USER_HEADER), empty(), empty());
-        assertThat(response.getData().getPage()).containsOnly(contestA);
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
-
-        // as guest
-
-        response = contestService.getContests(empty(), empty(), empty());
-        assertThat(response.getData().getPage()).containsOnly(contestA);
-        assertThat(response.getConfig().getCanAdminister()).isFalse();
+        for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {
+            response = contestService.getContests(authHeader, empty(), empty());
+            assertThat(response.getData().getPage()).hasSameElementsAs(contestsMap.get(authHeader));
+            assertThat(response.getConfig().getCanAdminister()).isEqualTo(canAdministerMap.get(authHeader));
+        }
     }
 
     @Test
