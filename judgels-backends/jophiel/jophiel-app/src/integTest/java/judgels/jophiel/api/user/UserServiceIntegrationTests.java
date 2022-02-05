@@ -35,22 +35,6 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(nano.getUsername()).isEqualTo("nano");
         assertThat(nano.getEmail()).isEqualTo("nano@domain.com");
 
-        // duplicate username
-        assertThatThrownBy(() -> userService.createUser(adminHeader, new UserData.Builder()
-                .username("nano")
-                .password("pass")
-                .email("other@domain2.com")
-                .build()))
-                .hasFieldOrPropertyWithValue("code", 500); // TODO(fushar): should be 400
-
-        // duplicate email
-        assertThatThrownBy(() -> userService.createUser(adminHeader, new UserData.Builder()
-                .username("other")
-                .password("pass")
-                .email("nano@domain.com")
-                .build()))
-                .hasFieldOrPropertyWithValue("code", 500); // TODO(fushar): should be 400
-
         assertNotFound(() -> userService.getUser(adminHeader, "bogus"));
         assertThat(userService.getUser(adminHeader, nano.getJid())).isEqualTo(nano);
 
@@ -71,6 +55,31 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(exportedCsv).isEqualTo(String.format("jid,username,email\n"
                 + "%s,nani,nani@domain.com\n"
                 + "%s,nano,nano@domain.com\n", nani.getJid(), nano.getJid()));
+    }
+
+    @Test
+    void create_user__bad_request() {
+        userService.createUser(adminHeader, new UserData.Builder()
+                .username("xaxa")
+                .password("pass")
+                .email("xaxa@domain.com")
+                .build());
+
+        // duplicate username
+        assertThatThrownBy(() -> userService.createUser(adminHeader, new UserData.Builder()
+                .username("xaxa")
+                .password("pass")
+                .email("other@domain2.com")
+                .build()))
+                .hasFieldOrPropertyWithValue("code", 500); // TODO(fushar): should be 400
+
+        // duplicate email
+        assertThatThrownBy(() -> userService.createUser(adminHeader, new UserData.Builder()
+                .username("xixi")
+                .password("pass")
+                .email("xaxa@domain.com")
+                .build()))
+                .hasFieldOrPropertyWithValue("code", 500); // TODO(fushar): should be 400
     }
 
     @Test

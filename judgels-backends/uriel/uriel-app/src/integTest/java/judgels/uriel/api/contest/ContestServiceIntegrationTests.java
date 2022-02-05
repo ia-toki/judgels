@@ -46,11 +46,6 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         ContestDescription description = contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid());
         assertThat(description.getDescription()).isEmpty();
 
-        assertBadRequest(() -> contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
-                .slug("contest")
-                .build()))
-                .hasMessageContaining(SLUG_ALREADY_EXISTS);
-
         contest = contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
                 .name("Judgels Open Contest")
                 .slug("contest-new")
@@ -66,12 +61,6 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         assertThat(contest.getDuration()).isEqualTo(Duration.ofHours(5));
         assertThat(contestService.getContest(of(ADMIN_HEADER), contest.getJid())).isEqualTo(contest);
 
-        assertBadRequest(() ->
-                contestService.updateContest(ADMIN_HEADER, createContest().getJid(), new ContestUpdateData.Builder()
-                        .slug("contest-new")
-                        .build()))
-                .hasMessageContaining(SLUG_ALREADY_EXISTS);
-
         description = contestService.updateContestDescription(
                 ADMIN_HEADER,
                 contest.getJid(),
@@ -80,6 +69,26 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                         .build());
         assertThat(description.getDescription()).contains("This is open contest");
         assertThat(contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid())).isEqualTo(description);
+    }
+
+    @Test
+    void create_contest__bad_request() {
+        createContest("contest");
+        assertBadRequest(() -> contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
+                .slug("contest")
+                .build()))
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
+    }
+
+    @Test
+    void update_contest__bad_request() {
+        createContest("contest-a");
+        Contest contestB = createContest("contest-b");
+        assertBadRequest(() ->
+                contestService.updateContest(ADMIN_HEADER, contestB.getJid(), new ContestUpdateData.Builder()
+                        .slug("contest-a")
+                        .build()))
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
     }
 
     @Test
