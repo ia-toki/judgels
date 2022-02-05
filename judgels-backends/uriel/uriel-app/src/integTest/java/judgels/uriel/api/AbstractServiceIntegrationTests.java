@@ -3,8 +3,10 @@ package judgels.uriel.api;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
+import static org.hibernate.cfg.AvailableSettings.DRIVER;
 import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
+import static org.hibernate.cfg.AvailableSettings.URL;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.MoreFiles;
@@ -32,8 +34,13 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.h2.Driver;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 
 public abstract class AbstractServiceIntegrationTests extends AbstractIntegrationTests {
@@ -75,6 +82,22 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
     static void afterAll() throws IOException {
         support.after();
         MoreFiles.deleteRecursively(baseDataDir, RecursiveDeleteOption.ALLOW_INSECURE);
+    }
+
+    @AfterEach
+    void afterEach() {
+        Configuration config = new Configuration();
+        config.setProperty(DIALECT, H2Dialect.class.getName());
+        config.setProperty(DRIVER, Driver.class.getName());
+        config.setProperty(URL, "jdbc:h2:mem:./" + URIEL_JDBC_SUFFIX);
+        config.setProperty(GENERATE_STATISTICS, "false");
+
+        SessionFactory sessionFactory = config.buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction txn = session.beginTransaction();
+        session.createNativeQuery("delete from uriel_contest").executeUpdate();
+        txn.commit();
+        session.close();
     }
 
     protected static WebTarget createWebTarget() {

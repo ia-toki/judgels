@@ -16,10 +16,10 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -46,9 +46,6 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         assertThat(contestService.getContest(of(ADMIN_HEADER), contest.getJid())).isEqualTo(contest);
         assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), contest.getSlug())).isEqualTo(contest);
 
-        ContestDescription description = contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid());
-        assertThat(description.getDescription()).isEmpty();
-
         contest = contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
                 .name("Judgels Open Contest")
                 .slug("contest-new")
@@ -63,6 +60,16 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         assertThat(contest.getBeginTime()).isEqualTo(Instant.ofEpochSecond(42));
         assertThat(contest.getDuration()).isEqualTo(Duration.ofHours(5));
         assertThat(contestService.getContest(of(ADMIN_HEADER), contest.getJid())).isEqualTo(contest);
+    }
+
+    @Test
+    void update_get_contest_description() {
+        assertNotFound(() -> contestService.getContestDescription(of(ADMIN_HEADER), "bogus"));
+
+        Contest contest = createContest();
+
+        ContestDescription description = contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid());
+        assertThat(description.getDescription()).isEmpty();
 
         description = contestService.updateContestDescription(
                 ADMIN_HEADER,
@@ -70,6 +77,7 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 new ContestDescription.Builder()
                         .description("This is open contest")
                         .build());
+
         assertThat(description.getDescription()).contains("This is open contest");
         assertThat(contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid())).isEqualTo(description);
     }
@@ -116,31 +124,26 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 .managers(MANAGER)
                 .supervisors(SUPERVISOR)
                 .build();
-        createContest();
+        Contest contestE = createContest();
 
-        // as admin
+        Map<Optional<AuthHeader>, Set<Contest>> contestsMap = new LinkedHashMap<>();
+        contestsMap.put(of(ADMIN_HEADER), ImmutableSet.of(contestA, contestB, contestC, contestD, contestE));
+        contestsMap.put(of(MANAGER_HEADER), ImmutableSet.of(contestA, contestB, contestC, contestD));
+        contestsMap.put(of(SUPERVISOR_HEADER), ImmutableSet.of(contestB, contestD));
+        contestsMap.put(of(USER_A_HEADER), ImmutableSet.of(contestA, contestB, contestD));
+        contestsMap.put(of(USER_B_HEADER), ImmutableSet.of(contestB, contestD));
+        contestsMap.put(empty(), ImmutableSet.of(contestD));
 
-        ContestsResponse response = contestService.getContests(of(ADMIN_HEADER), empty(), empty());
-        assertThat(response.getData().getPage().size()).isGreaterThan(4);
-        assertThat(response.getData().getPage()).contains(contestA, contestB, contestC, contestD);
-        assertThat(response.getConfig().getCanAdminister()).isTrue();
-
-        Map<Optional<AuthHeader>, Set<Contest>> contestsMap = ImmutableMap.of(
-                of(MANAGER_HEADER), ImmutableSet.of(contestA, contestB, contestC, contestD),
-                of(SUPERVISOR_HEADER), ImmutableSet.of(contestB, contestD),
-                of(USER_A_HEADER), ImmutableSet.of(contestA, contestB, contestD),
-                of(USER_B_HEADER), ImmutableSet.of(contestB, contestD),
-                empty(), ImmutableSet.of(contestD));
-
-        Map<Optional<AuthHeader>, Boolean> canAdministerMap = ImmutableMap.of(
-                of(MANAGER_HEADER), false,
-                of(SUPERVISOR_HEADER), false,
-                of(USER_A_HEADER), false,
-                of(USER_B_HEADER), false,
-                empty(), false);
+        Map<Optional<AuthHeader>, Boolean> canAdministerMap = new LinkedHashMap<>();
+        canAdministerMap.put(of(ADMIN_HEADER), true);
+        canAdministerMap.put(of(MANAGER_HEADER), false);
+        canAdministerMap.put(of(SUPERVISOR_HEADER), false);
+        canAdministerMap.put(of(USER_A_HEADER), false);
+        canAdministerMap.put(of(USER_B_HEADER), false);
+        canAdministerMap.put(empty(), false);
 
         for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {
-            response = contestService.getContests(authHeader, empty(), empty());
+            ContestsResponse response = contestService.getContests(authHeader, empty(), empty());
             assertThat(response.getData().getPage()).hasSameElementsAs(contestsMap.get(authHeader));
             assertThat(response.getConfig().getCanAdminister()).isEqualTo(canAdministerMap.get(authHeader));
         }
