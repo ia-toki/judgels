@@ -21,6 +21,7 @@ import judgels.uriel.api.contest.module.ContestModuleService;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorService;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
+import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -76,13 +77,11 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     }
 
     protected Contest createContestWithRoles() {
-        Contest contest = createContest();
-        managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(MANAGER));
-        supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), new ContestSupervisorUpsertData.Builder()
-                .addUsernames(SUPERVISOR)
-                .build());
-        contestantService.upsertContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(CONTESTANT));
-        return contest;
+        return buildContest()
+                .managers(MANAGER)
+                .supervisors(SUPERVISOR)
+                .contestants(CONTESTANT)
+                .build();
     }
 
     protected Contest createContestWithRoles(String slug) {
@@ -103,6 +102,13 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     protected Contest disableModule(Contest contest, ContestModuleType type) {
         moduleService.disableModule(ADMIN_HEADER, contest.getJid(), type);
         return contest;
+    }
+
+    protected void upsertSupervisorWithPermission(Contest contest, SupervisorManagementPermission permission) {
+        supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), new ContestSupervisorUpsertData.Builder()
+                .addUsernames(SUPERVISOR)
+                .addManagementPermissions(permission)
+                .build());
     }
 
     protected ContestBuilder buildContest() {
