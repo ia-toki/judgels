@@ -21,15 +21,23 @@ import java.util.Optional;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private final ContestAnnouncementService announcementService = createService(ContestAnnouncementService.class);
 
+    private Contest contest;
+
+    @BeforeEach
+    void before() {
+        contest = createContestWithRoles();
+        beginContest(contest);
+        enableModule(contest, REGISTRATION);
+    }
+
     @Test
     void create_update_announcement() {
-        Contest contest = beginContest(createContestWithRoles());
-
         ContestAnnouncement announcement = announcementService.createAnnouncement(
                 MANAGER_HEADER,
                 contest.getJid(),
@@ -62,13 +70,9 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
 
     @Test
     void get_announcements() {
-        Contest contest = createContestWithRoles();
-        beginContest(contest);
-        enableModule(contest, REGISTRATION);
-
-        ContestAnnouncement announcement1 = createAnnouncement(contest, PUBLISHED);
-        ContestAnnouncement announcement2 = createAnnouncement(contest, DRAFT);
-        ContestAnnouncement announcement3 = createAnnouncement(contest, PUBLISHED);
+        ContestAnnouncement announcement1 = createAnnouncement(PUBLISHED);
+        ContestAnnouncement announcement2 = createAnnouncement(DRAFT);
+        ContestAnnouncement announcement3 = createAnnouncement(PUBLISHED);
 
         Map<Optional<AuthHeader>, List<ContestAnnouncement>> announcementsMap = new LinkedHashMap<>();
         announcementsMap.put(of(ADMIN_HEADER), ImmutableList.of(announcement3, announcement2, announcement1));
@@ -104,7 +108,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
         }
     }
 
-    private ContestAnnouncement createAnnouncement(Contest contest, ContestAnnouncementStatus status) {
+    private ContestAnnouncement createAnnouncement(ContestAnnouncementStatus status) {
         return announcementService.createAnnouncement(
                 MANAGER_HEADER,
                 contest.getJid(),

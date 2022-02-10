@@ -25,7 +25,7 @@ class ContestAnnouncementServicePermissionIntegrationTests extends AbstractConte
     private Contest contest;
 
     @BeforeEach
-    void beforeEach() {
+    void before() {
         contest = createContestWithRoles();
         contest = beginContest(contest);
     }

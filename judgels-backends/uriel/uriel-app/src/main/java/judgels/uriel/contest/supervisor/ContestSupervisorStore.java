@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
@@ -23,6 +24,7 @@ import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
+@Singleton
 public class ContestSupervisorStore {
     private static final int PAGE_SIZE = 250;
 
