@@ -34,7 +34,11 @@ public class MockJophiel {
     public static final String ADMIN_BEARER_TOKEN = "adminToken";
     public static final String MANAGER_BEARER_TOKEN = "managerToken";
     public static final String SUPERVISOR_BEARER_TOKEN = "supervisorToken";
+    public static final String SUPERVISOR_A_BEARER_TOKEN = "supervisorAToken";
+    public static final String SUPERVISOR_B_BEARER_TOKEN = "supervisorBToken";
     public static final String CONTESTANT_BEARER_TOKEN = "contestantToken";
+    public static final String CONTESTANT_A_BEARER_TOKEN = "contestantAToken";
+    public static final String CONTESTANT_B_BEARER_TOKEN = "contestantBToken";
     public static final String USER_BEARER_TOKEN = "userToken";
     public static final String USER_A_BEARER_TOKEN = "userAToken";
     public static final String USER_B_BEARER_TOKEN = "userBToken";
@@ -44,7 +48,11 @@ public class MockJophiel {
             ADMIN_BEARER_TOKEN,
             MANAGER_BEARER_TOKEN,
             SUPERVISOR_BEARER_TOKEN,
+            SUPERVISOR_A_BEARER_TOKEN,
+            SUPERVISOR_B_BEARER_TOKEN,
             CONTESTANT_BEARER_TOKEN,
+            CONTESTANT_A_BEARER_TOKEN,
+            CONTESTANT_B_BEARER_TOKEN,
             USER_BEARER_TOKEN,
             USER_A_BEARER_TOKEN,
             USER_B_BEARER_TOKEN
@@ -54,7 +62,11 @@ public class MockJophiel {
     public static final AuthHeader ADMIN_HEADER = AuthHeader.of(ADMIN_BEARER_TOKEN);
     public static final AuthHeader MANAGER_HEADER = AuthHeader.of(MANAGER_BEARER_TOKEN);
     public static final AuthHeader SUPERVISOR_HEADER = AuthHeader.of(SUPERVISOR_BEARER_TOKEN);
+    public static final AuthHeader SUPERVISOR_A_HEADER = AuthHeader.of(SUPERVISOR_A_BEARER_TOKEN);
+    public static final AuthHeader SUPERVISOR_B_HEADER = AuthHeader.of(SUPERVISOR_B_BEARER_TOKEN);
     public static final AuthHeader CONTESTANT_HEADER = AuthHeader.of(CONTESTANT_BEARER_TOKEN);
+    public static final AuthHeader CONTESTANT_A_HEADER = AuthHeader.of(CONTESTANT_A_BEARER_TOKEN);
+    public static final AuthHeader CONTESTANT_B_HEADER = AuthHeader.of(CONTESTANT_B_BEARER_TOKEN);
     public static final AuthHeader USER_HEADER = AuthHeader.of(USER_BEARER_TOKEN);
     public static final AuthHeader USER_A_HEADER = AuthHeader.of(USER_A_BEARER_TOKEN);
     public static final AuthHeader USER_B_HEADER = AuthHeader.of(USER_B_BEARER_TOKEN);
@@ -63,7 +75,11 @@ public class MockJophiel {
     public static final String ADMIN = "admin";
     public static final String MANAGER = "manager";
     public static final String SUPERVISOR = "supervisor";
+    public static final String SUPERVISOR_A = "supervisorA";
+    public static final String SUPERVISOR_B = "supervisorB";
     public static final String CONTESTANT = "contestant";
+    public static final String CONTESTANT_A = "contestantA";
+    public static final String CONTESTANT_B = "contestantB";
     public static final String USER = "user";
     public static final String USER_A = "userA";
     public static final String USER_B = "userB";
@@ -73,7 +89,11 @@ public class MockJophiel {
             ADMIN,
             MANAGER,
             SUPERVISOR,
+            SUPERVISOR_A,
+            SUPERVISOR_B,
             CONTESTANT,
+            CONTESTANT_A,
+            CONTESTANT_B,
             USER,
             USER_A,
             USER_B
@@ -83,7 +103,11 @@ public class MockJophiel {
     public static final String ADMIN_JID = "adminJid";
     public static final String MANAGER_JID = "managerJid";
     public static final String SUPERVISOR_JID = "supervisorJid";
+    public static final String SUPERVISOR_A_JID = "supervisorAJid";
+    public static final String SUPERVISOR_B_JID = "supervisorBJid";
     public static final String CONTESTANT_JID = "contestantJid";
+    public static final String CONTESTANT_A_JID = "contestantAJid";
+    public static final String CONTESTANT_B_JID = "contestantBJid";
     public static final String USER_JID = "userJid";
     public static final String USER_A_JID = "userAJid";
     public static final String USER_B_JID = "userBJid";
@@ -93,7 +117,11 @@ public class MockJophiel {
             ADMIN_JID,
             MANAGER_JID,
             SUPERVISOR_JID,
+            SUPERVISOR_A_JID,
+            SUPERVISOR_B_JID,
             CONTESTANT_JID,
+            CONTESTANT_A_JID,
+            CONTESTANT_B_JID,
             USER_JID,
             USER_A_JID,
             USER_B_JID
@@ -147,7 +175,19 @@ public class MockJophiel {
         mockJophiel.stubFor(get("/api/v2/client/users/" + SUPERVISOR_JID + "/role")
                 .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
 
+        mockJophiel.stubFor(get("/api/v2/client/users/" + SUPERVISOR_A_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + SUPERVISOR_B_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
         mockJophiel.stubFor(get("/api/v2/client/users/" + CONTESTANT_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + CONTESTANT_A_JID + "/role")
+                .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
+
+        mockJophiel.stubFor(get("/api/v2/client/users/" + CONTESTANT_B_JID + "/role")
                 .willReturn(okForJson(ImmutableMap.of("jophiel", "USER"))));
 
         mockJophiel.stubFor(get("/api/v2/client/users/" + USER_JID + "/role")

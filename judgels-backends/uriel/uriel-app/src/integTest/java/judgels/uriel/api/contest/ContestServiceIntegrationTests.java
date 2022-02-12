@@ -6,15 +6,15 @@ import static judgels.uriel.api.contest.ContestErrors.SLUG_ALREADY_EXISTS;
 import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A;
+import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B;
+import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_A;
-import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_B;
-import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -114,20 +114,20 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         Contest contestA = buildContest()
                 .beginTime(Instant.now().plus(Duration.ofSeconds(10)))
                 .managers(MANAGER)
-                .contestants(USER_A, USER)
+                .contestants(CONTESTANT_A, USER)
                 .build();
         Contest contestB = buildContest()
                 .beginTime(Instant.now().plus(Duration.ofSeconds(9)))
                 .managers(MANAGER)
                 .supervisors(SUPERVISOR, USER)
-                .contestants(USER_A, USER_B)
+                .contestants(CONTESTANT_A, CONTESTANT_B)
                 .build();
         Contest contestC = buildContest()
                 .beginTime(Instant.now().plus(Duration.ofSeconds(8)))
                 .modules(HIDDEN)
                 .managers(MANAGER, USER)
                 .supervisors(SUPERVISOR)
-                .contestants(USER_A, USER_B, USER)
+                .contestants(CONTESTANT_A, CONTESTANT_B, USER)
                 .build();
         Contest contestD = buildContest()
                 .beginTime(Instant.now().plus(Duration.ofSeconds(7)))
@@ -143,8 +143,8 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         contestsMap.put(of(ADMIN_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
         contestsMap.put(of(MANAGER_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD));
         contestsMap.put(of(SUPERVISOR_HEADER), ImmutableList.of(contestB, contestD));
-        contestsMap.put(of(USER_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
-        contestsMap.put(of(USER_B_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(CONTESTANT_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
+        contestsMap.put(of(CONTESTANT_B_HEADER), ImmutableList.of(contestB, contestD));
         contestsMap.put(empty(), ImmutableList.of(contestD));
 
         for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {
@@ -188,8 +188,8 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         contestsMap.put(of(ADMIN_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
         contestsMap.put(of(MANAGER_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD));
         contestsMap.put(of(SUPERVISOR_HEADER), ImmutableList.of(contestB, contestD));
-        contestsMap.put(of(USER_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
-        contestsMap.put(of(USER_B_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(CONTESTANT_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
+        contestsMap.put(of(CONTESTANT_B_HEADER), ImmutableList.of(contestB, contestD));
         contestsMap.put(empty(), ImmutableList.of(contestD));
 
         for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {

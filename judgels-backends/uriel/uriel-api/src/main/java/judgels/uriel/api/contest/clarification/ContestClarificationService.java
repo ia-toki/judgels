@@ -39,7 +39,8 @@ public interface ContestClarificationService {
     @PUT
     @Path("/{clarificationJid}/answer")
     @Consumes(APPLICATION_JSON)
-    void answerClarification(
+    @Produces(APPLICATION_JSON)
+    ContestClarification answerClarification(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("clarificationJid") String clarificationJid,

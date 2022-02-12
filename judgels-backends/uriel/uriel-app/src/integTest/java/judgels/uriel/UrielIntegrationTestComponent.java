@@ -9,8 +9,6 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.uriel.contest.ContestGroupStore;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
-import judgels.uriel.contest.clarification.ContestClarificationStore;
 import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.editorial.ContestEditorialRoleChecker;
@@ -42,7 +40,6 @@ public interface UrielIntegrationTestComponent {
     RoleChecker roleChecker();
     ContestStore contestStore();
     ContestModuleStore contestModuleStore();
-    ContestClarificationStore contestClarificationStore();
     ContestContestantStore contestContestantStore();
     ContestGroupStore contestGroupStore();
     ContestGroupContestStore contestGroupContestStore();
@@ -52,7 +49,6 @@ public interface UrielIntegrationTestComponent {
     ContestSupervisorStore contestSupervisorStore();
 
     ContestRoleChecker contestRoleChecker();
-    ContestClarificationRoleChecker contestClarificationRoleChecker();
     ContestContestantRoleChecker contestContestantRoleChecker();
     ContestFileRoleChecker contestFileRoleChecker();
     ContestProblemRoleChecker contestProblemRoleChecker();

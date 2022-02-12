@@ -145,7 +145,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
     @Override
     @UnitOfWork
-    public void answerClarification(
+    public ContestClarification answerClarification(
             AuthHeader authHeader,
             String contestJid,
             String clarificationJid,
@@ -161,5 +161,7 @@ public class ContestClarificationResource implements ContestClarificationService
                 data.getAnswer()));
 
         contestLogger.log(contestJid, "ANSWER_CLARIFICATION", clarificationJid, clarification.getTopicJid());
+
+        return clarification;
     }
 }

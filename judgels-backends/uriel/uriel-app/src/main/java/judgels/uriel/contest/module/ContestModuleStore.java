@@ -237,10 +237,6 @@ public class ContestModuleStore {
                 .orElse(new BundleStyleModuleConfig.Builder().build());
     }
 
-    public void upsertClarificationModule(String contestJid) {
-        upsertModule(contestJid, CLARIFICATION, Collections.emptyMap());
-    }
-
     public void upsertClarificationTimeLimitModule(String contestJid, ClarificationTimeLimitModuleConfig config) {
         upsertModule(contestJid, CLARIFICATION_TIME_LIMIT, config);
     }

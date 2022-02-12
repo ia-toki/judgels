@@ -8,10 +8,15 @@ import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
@@ -19,6 +24,10 @@ import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.manager.ContestManagerService;
 import judgels.uriel.api.contest.module.ContestModuleService;
 import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.module.ContestModulesConfig;
+import judgels.uriel.api.contest.problem.ContestProblemData;
+import judgels.uriel.api.contest.problem.ContestProblemService;
+import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorService;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
@@ -34,6 +43,7 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     protected ContestManagerService managerService = createService(ContestManagerService.class);
     protected ContestSupervisorService supervisorService = createService(ContestSupervisorService.class);
     protected ContestContestantService contestantService = createService(ContestContestantService.class);
+    protected ContestProblemService problemService = createService(ContestProblemService.class);
 
     @BeforeAll
     static void setUpMocks() {
@@ -77,10 +87,7 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     }
 
     protected Contest createContestWithRoles() {
-        return buildContest()
-                .managers(MANAGER)
-                .supervisors(SUPERVISOR)
-                .contestants(CONTESTANT)
+        return buildContestWithRoles()
                 .build();
     }
 
@@ -99,20 +106,26 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         return contest;
     }
 
+    protected Contest enableModule(Contest contest, ContestModuleType type, ContestModulesConfig config) {
+        moduleService.enableModule(ADMIN_HEADER, contest.getJid(), type);
+        moduleService.upsertConfig(ADMIN_HEADER, contest.getJid(), config);
+        return contest;
+    }
+
     protected Contest disableModule(Contest contest, ContestModuleType type) {
         moduleService.disableModule(ADMIN_HEADER, contest.getJid(), type);
         return contest;
     }
 
-    protected void upsertSupervisorWithPermission(Contest contest, SupervisorManagementPermission permission) {
-        supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), new ContestSupervisorUpsertData.Builder()
-                .addUsernames(SUPERVISOR)
-                .addManagementPermissions(permission)
-                .build());
-    }
-
     protected ContestBuilder buildContest() {
         return new ContestBuilder();
+    }
+
+    protected ContestBuilder buildContestWithRoles() {
+        return new ContestBuilder()
+                .managers(MANAGER)
+                .supervisors(SUPERVISOR)
+                .contestants(CONTESTANT);
     }
 
     protected class ContestBuilder {
@@ -122,7 +135,9 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         Set<ContestModuleType> modules = Collections.emptySet();
         Set<String> managers = Collections.emptySet();
         Set<String> supervisors = Collections.emptySet();
+        Map<String, SupervisorManagementPermission> supervisorsWithManagementPermissions = Collections.emptyMap();
         Set<String> contestants = Collections.emptySet();
+        List<String> problems = Collections.emptyList();
 
         public ContestBuilder beginTime(Instant instant) {
             this.beginTime = Optional.of(instant);
@@ -131,6 +146,11 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
 
         public ContestBuilder duration(Duration duration) {
             this.duration = Optional.of(duration);
+            return this;
+        }
+
+        public ContestBuilder begun() {
+            this.beginTime = Optional.of(Instant.now().minus(Duration.ofSeconds(1)));
             return this;
         }
 
@@ -149,8 +169,20 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
             return this;
         }
 
+        public ContestBuilder supervisorWithManagementPermissions(
+                String supervisor,
+                SupervisorManagementPermission permission) {
+            this.supervisorsWithManagementPermissions = ImmutableMap.of(supervisor, permission);
+            return this;
+        }
+
         public ContestBuilder contestants(String... usernames) {
             this.contestants = ImmutableSet.copyOf(usernames);
+            return this;
+        }
+
+        public ContestBuilder problems(String... aliasAndSlugs) {
+            this.problems = ImmutableList.copyOf(aliasAndSlugs);
             return this;
         }
 
@@ -180,8 +212,30 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                 supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), data);
             }
 
+            if (!supervisorsWithManagementPermissions.isEmpty()) {
+                for (String supervisor : supervisorsWithManagementPermissions.keySet()) {
+                    ContestSupervisorUpsertData data = new ContestSupervisorUpsertData.Builder()
+                            .addUsernames(supervisor)
+                            .addManagementPermissions(supervisorsWithManagementPermissions.get(supervisor))
+                            .build();
+                    supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), data);
+                }
+            }
+
             if (!contestants.isEmpty()) {
                 contestantService.upsertContestants(ADMIN_HEADER, contest.getJid(), contestants);
+            }
+
+            if (!problems.isEmpty()) {
+                List<ContestProblemData> data = new ArrayList<>();
+                for (int i = 0; i < problems.size(); i += 2) {
+                    data.add(new ContestProblemData.Builder()
+                            .alias(problems.get(i))
+                            .slug(problems.get(i + 1))
+                            .status(ContestProblemStatus.OPEN)
+                            .build());
+                }
+                problemService.setProblems(ADMIN_HEADER, contest.getJid(), data);
             }
 
             return contest;
