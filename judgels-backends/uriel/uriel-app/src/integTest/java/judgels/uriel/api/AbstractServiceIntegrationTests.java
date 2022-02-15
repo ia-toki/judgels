@@ -132,6 +132,30 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
         assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 404);
     }
 
+    protected ThrowingCallable callAll(ThrowingCallable... callables) {
+        return () -> {
+            Throwable throwable = null;
+            int throwables = 0;
+
+            for (ThrowingCallable callable : callables) {
+                try {
+                    callable.call();
+                } catch (Throwable t) {
+                    throwables++;
+                    throwable = t;
+                }
+            }
+
+            if (throwables != 0 && throwables != callables.length) {
+                throw new IllegalStateException();
+            }
+
+            if (throwable != null) {
+                throw throwable;
+            }
+        };
+    }
+
     protected static String randomString() {
         return "string" + (Math.random() * 1000000000);
     }

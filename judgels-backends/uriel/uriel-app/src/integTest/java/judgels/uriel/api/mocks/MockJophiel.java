@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.ws.rs.core.HttpHeaders;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.user.rating.UserRating;
 import judgels.service.api.actor.AuthHeader;
 
 public class MockJophiel {
@@ -126,6 +127,10 @@ public class MockJophiel {
             USER_A_JID,
             USER_B_JID
     };
+
+    private static final Map<String, UserRating> RATINGS = ImmutableMap.of(
+            USER_A_JID, UserRating.of(2000, 2000),
+            USER_B_JID, UserRating.of(1000, 1000));
 
     public static final int JOPHIEL_PORT = 9001;
 
@@ -277,7 +282,11 @@ public class MockJophiel {
             Map<String, Profile> res = new HashMap<>();
             for (int i = 0; i < TOKENS.length; i++) {
                 if (userJids.contains(JIDS[i])) {
-                    res.put(JIDS[i], new Profile.Builder().username(USERNAMES[i]).build());
+                    Profile.Builder profile = new Profile.Builder().username(USERNAMES[i]);
+                    if (RATINGS.containsKey(JIDS[i])) {
+                        profile.rating(RATINGS.get(JIDS[i]));
+                    }
+                    res.put(JIDS[i], profile.build());
                 }
             }
 

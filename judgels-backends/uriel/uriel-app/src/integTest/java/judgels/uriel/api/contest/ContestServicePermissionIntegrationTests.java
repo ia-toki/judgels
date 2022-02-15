@@ -111,21 +111,21 @@ class ContestServicePermissionIntegrationTests extends AbstractContestServiceInt
     }
 
     private ThrowingCallable getContest(Optional<AuthHeader> authHeader) {
-        return () -> {
-            contestService.getContest(authHeader, contest.getJid());
-            contestService.getContestBySlug(authHeader, contest.getSlug());
-            contestService.getContestDescription(authHeader, contest.getJid());
-        };
+        return callAll(
+                () -> contestService.getContest(authHeader, contest.getJid()),
+                () -> contestService.getContestBySlug(authHeader, contest.getSlug()),
+                () -> contestService.getContestDescription(authHeader, contest.getJid()));
     }
 
     private ThrowingCallable updateContest(AuthHeader authHeader) {
-        return () -> {
-            contestService.updateContest(authHeader, contest.getJid(), new ContestUpdateData.Builder().build());
-            contestService.updateContestDescription(authHeader, contest.getJid(), new ContestDescription.Builder()
-                    .description("description")
-                    .build());
-            contestService.resetVirtualContest(authHeader, contest.getJid());
-        };
+        ContestUpdateData data = new ContestUpdateData.Builder().build();
+        ContestDescription description = new ContestDescription.Builder()
+                .description("description")
+                .build();
+        return callAll(
+                () -> contestService.updateContest(authHeader, contest.getJid(), data),
+                () -> contestService.updateContestDescription(authHeader, contest.getJid(), description),
+                () -> contestService.resetVirtualContest(authHeader, contest.getJid()));
     }
 
     private ThrowingCallable startVirtualContest(AuthHeader authHeader) {
