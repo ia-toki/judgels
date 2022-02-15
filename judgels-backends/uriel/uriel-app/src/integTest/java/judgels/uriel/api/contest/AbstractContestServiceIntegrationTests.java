@@ -154,6 +154,11 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
             return this;
         }
 
+        public ContestBuilder ended() {
+            this.beginTime = Optional.of(Instant.now().minus(Duration.ofHours(10)));
+            return this;
+        }
+
         public ContestBuilder modules(ContestModuleType... types) {
             this.modules = ImmutableSet.copyOf(types);
             return this;
