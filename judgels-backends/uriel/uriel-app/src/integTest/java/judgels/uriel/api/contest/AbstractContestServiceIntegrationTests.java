@@ -3,6 +3,7 @@ package judgels.uriel.api.contest;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
+import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
 import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.manager.ContestManagerService;
@@ -202,19 +204,18 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                 contest = contestService.updateContest(ADMIN_HEADER, contest.getJid(), data);
             }
 
-            for (ContestModuleType module : modules) {
-                moduleService.enableModule(ADMIN_HEADER, contest.getJid(), module);
-            }
+            AuthHeader managerHeader = ADMIN_HEADER;
 
             if (!managers.isEmpty()) {
                 managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), managers);
+                managerHeader = MANAGER_HEADER;
             }
 
             if (!supervisors.isEmpty()) {
                 ContestSupervisorUpsertData data = new ContestSupervisorUpsertData.Builder()
                         .usernames(supervisors)
                         .build();
-                supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), data);
+                supervisorService.upsertSupervisors(managerHeader, contest.getJid(), data);
             }
 
             if (!supervisorsWithManagementPermissions.isEmpty()) {
@@ -223,12 +224,12 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                             .addUsernames(supervisor)
                             .addManagementPermissions(supervisorsWithManagementPermissions.get(supervisor))
                             .build();
-                    supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), data);
+                    supervisorService.upsertSupervisors(managerHeader, contest.getJid(), data);
                 }
             }
 
             if (!contestants.isEmpty()) {
-                contestantService.upsertContestants(ADMIN_HEADER, contest.getJid(), contestants);
+                contestantService.upsertContestants(managerHeader, contest.getJid(), contestants);
             }
 
             if (!problems.isEmpty()) {
@@ -240,7 +241,11 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                             .status(ContestProblemStatus.OPEN)
                             .build());
                 }
-                problemService.setProblems(ADMIN_HEADER, contest.getJid(), data);
+                problemService.setProblems(managerHeader, contest.getJid(), data);
+            }
+
+            for (ContestModuleType module : modules) {
+                moduleService.enableModule(managerHeader, contest.getJid(), module);
             }
 
             return contest;
