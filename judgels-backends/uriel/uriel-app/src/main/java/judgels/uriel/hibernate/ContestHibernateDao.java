@@ -116,46 +116,41 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         };
     }
 
-    // The following predicate is currently not testable because H2 does not have 'unix_timestamp' function.
     static CustomPredicateFilter<ContestModel> isEnded(Clock clock) {
         return (cb, cq, root) -> {
-            long currentInstantEpoch = clock.instant().toEpochMilli();
-            Expression<Long> beginTime = cb.prod(
-                    cb.function("unix_timestamp", Double.class, root.get(ContestModel_.beginTime)),
-                    cb.literal(1000.0)).as(Long.class);
-            Expression<Long> endTime = cb.sum(beginTime, root.get(ContestModel_.duration));
+            Expression<Instant> endTime = cb.function("timestampadd", Instant.class,
+                    new OpaqueLiteralExpression(cb, "second"),
+                    cb.quot(root.get(ContestModel_.duration), 1000.0),
+                    root.get(ContestModel_.beginTime));
 
-            return cb.lessThan(endTime, cb.literal(currentInstantEpoch));
+            return cb.lessThan(endTime, cb.literal(clock.instant()));
         };
     }
 
-    // The following predicate is currently not testable because H2 does not have 'unix_timestamp' function.
     static CustomPredicateFilter<ContestModel> isRunning(Clock clock) {
         return (cb, cq, root) -> {
-            long currentInstantEpoch = clock.instant().toEpochMilli();
+            Instant currentInstant = clock.instant();
 
             // This is so that the scoreboard updater can update submissions near end time.
-            long beforeCurrentInstantEpoch = clock.instant().minus(Duration.ofSeconds(30)).toEpochMilli();
+            Instant beforeCurrentInstant = currentInstant.minus(Duration.ofSeconds(30));
 
-            Expression<Long> beginTime = cb.prod(
-                    cb.function("unix_timestamp", Double.class, root.get(ContestModel_.beginTime)),
-                    cb.literal(1000.0)).as(Long.class);
-            Expression<Long> endTime = cb.sum(beginTime, root.get(ContestModel_.duration));
+            Expression<Instant> beginTime = root.get(ContestModel_.beginTime);
+            Expression<Instant> endTime = cb.function("timestampadd", Instant.class,
+                    new OpaqueLiteralExpression(cb, "second"),
+                    cb.quot(root.get(ContestModel_.duration), 1000.0),
+                    beginTime);
 
             return cb.and(
-                    cb.greaterThanOrEqualTo(endTime, cb.literal(beforeCurrentInstantEpoch)),
-                    cb.lessThanOrEqualTo(beginTime, cb.literal(currentInstantEpoch)));
+                    cb.greaterThanOrEqualTo(endTime, cb.literal(beforeCurrentInstant)),
+                    cb.lessThanOrEqualTo(beginTime, cb.literal(currentInstant)));
         };
     }
 
-    // The following predicate is currently not testable because H2 does not have 'unix_timestamp' function.
     static CustomPredicateFilter<ContestModel> isAfter(Instant time) {
         return (cb, cq, root) -> {
-            Expression<Long> beginTime = cb.prod(
-                    cb.function("unix_timestamp", Double.class, root.get(ContestModel_.beginTime)),
-                    cb.literal(1000.0)).as(Long.class);
+            Expression<Instant> beginTime = root.get(ContestModel_.beginTime);
 
-            return cb.greaterThanOrEqualTo(beginTime, cb.literal(time.toEpochMilli()));
+            return cb.greaterThanOrEqualTo(beginTime, cb.literal(time));
         };
     }
 
