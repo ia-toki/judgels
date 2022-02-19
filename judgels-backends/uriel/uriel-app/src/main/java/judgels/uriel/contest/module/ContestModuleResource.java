@@ -85,7 +85,7 @@ public class ContestModuleResource implements ContestModuleService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        checkAllowed(contestRoleChecker.canView(actorJid, contest));
+        checkAllowed(contestRoleChecker.canSupervise(actorJid, contest));
         ContestModulesConfig config = moduleStore.getConfig(contest.getJid(), contest.getStyle());
         if (config.getEditorial().isPresent()) {
             config = new ContestModulesConfig.Builder()

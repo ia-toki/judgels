@@ -1,5 +1,6 @@
 package judgels.uriel.api.contest.module;
 
+import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
@@ -32,12 +33,24 @@ class ContestModuleServicePermissionIntegrationTests extends AbstractContestServ
     }
 
     @Test
-    void get_modules_get_config() {
-        assertPermitted(getModulesGetConfig(ADMIN_HEADER));
-        assertPermitted(getModulesGetConfig(MANAGER_HEADER));
-        assertPermitted(getModulesGetConfig(SUPERVISOR_HEADER));
-        assertPermitted(getModulesGetConfig(CONTESTANT_HEADER));
-        assertForbidden(getModulesGetConfig(USER_HEADER));
+    void get_modules() {
+        assertPermitted(getModules(ADMIN_HEADER));
+        assertPermitted(getModules(MANAGER_HEADER));
+        assertPermitted(getModules(SUPERVISOR_HEADER));
+        assertPermitted(getModules(CONTESTANT_HEADER));
+        assertForbidden(getModules(USER_HEADER));
+
+        enableModule(contest, REGISTRATION);
+        assertPermitted(getModules(USER_HEADER));
+    }
+
+    @Test
+    void get_config() {
+        assertPermitted(getConfig(ADMIN_HEADER));
+        assertPermitted(getConfig(MANAGER_HEADER));
+        assertPermitted(getConfig(SUPERVISOR_HEADER));
+        assertForbidden(getConfig(CONTESTANT_HEADER));
+        assertForbidden(getConfig(USER_HEADER));
     }
 
     private ThrowingCallable enableDisableModuleUpsertConfig(AuthHeader authHeader) {
@@ -48,9 +61,11 @@ class ContestModuleServicePermissionIntegrationTests extends AbstractContestServ
                         .build()));
     }
 
-    private ThrowingCallable getModulesGetConfig(AuthHeader authHeader) {
-        return callAll(
-                () -> moduleService.getModules(authHeader, contest.getJid()),
-                () -> moduleService.getConfig(authHeader, contest.getJid()));
+    private ThrowingCallable getModules(AuthHeader authHeader) {
+        return () -> moduleService.getModules(authHeader, contest.getJid());
+    }
+
+    private ThrowingCallable getConfig(AuthHeader authHeader) {
+        return () -> moduleService.getConfig(authHeader, contest.getJid());
     }
 }
