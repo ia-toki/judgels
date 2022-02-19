@@ -21,7 +21,7 @@ class ContestManagerServicePermissionIntegrationTests extends AbstractContestSer
 
     @BeforeEach
     void before() {
-        contest = buildContestWithRoles().build();
+        contest = createContestWithRoles();
     }
 
     @Test

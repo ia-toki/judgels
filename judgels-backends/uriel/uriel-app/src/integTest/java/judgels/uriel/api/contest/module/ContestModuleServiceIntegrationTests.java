@@ -1,25 +1,27 @@
 package judgels.uriel.api.contest.module;
 
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
-import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.Duration;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ContestModuleServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+    private Contest contest;
+
+    @BeforeEach
+    void before() {
+        contest = createContestWithRoles();
+    }
+
     @Test
-    void end_to_end_flow() {
-        Contest contest = createContestWithRoles("contest");
-
-        // as manager
-
+    void enable_disable_get_modules() {
         moduleService.enableModule(MANAGER_HEADER, contest.getJid(), REGISTRATION);
         moduleService.enableModule(MANAGER_HEADER, contest.getJid(), CLARIFICATION);
 
@@ -29,27 +31,23 @@ class ContestModuleServiceIntegrationTests extends AbstractContestServiceIntegra
         moduleService.disableModule(MANAGER_HEADER, contest.getJid(), REGISTRATION);
         moduleService.enableModule(MANAGER_HEADER, contest.getJid(), VIRTUAL);
 
-        assertThat(moduleService.getModules(MANAGER_HEADER, contest.getJid())).containsOnly(CLARIFICATION, VIRTUAL);
+        assertThat(moduleService.getModules(MANAGER_HEADER, contest.getJid()))
+                .containsOnly(CLARIFICATION, VIRTUAL);
+    }
+
+    @Test
+    void upsert_get_config() {
+        moduleService.enableModule(MANAGER_HEADER, contest.getJid(), VIRTUAL);
 
         ContestModulesConfig config = moduleService.getConfig(MANAGER_HEADER, contest.getJid());
         assertThat(config.getVirtual()).isPresent();
 
+        config = new ContestModulesConfig.Builder()
+                .from(config)
+                .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(3)).build())
+                .build();
+
         moduleService.upsertConfig(MANAGER_HEADER, contest.getJid(), config);
-
-        // as supervisor
-
-        assertThat(moduleService.getModules(SUPERVISOR_HEADER, contest.getJid())).containsOnly(CLARIFICATION, VIRTUAL);
-
-        ContestModulesConfig config2 = moduleService.getConfig(SUPERVISOR_HEADER, contest.getJid());
-        assertThat(config2.getVirtual()).isPresent();
-
-        assertThatThrownBy(() -> moduleService.enableModule(SUPERVISOR_HEADER, contest.getJid(), FILE))
-                .hasFieldOrPropertyWithValue("code", 403);
-
-        assertThatThrownBy(() -> moduleService.disableModule(SUPERVISOR_HEADER, contest.getJid(), FILE))
-                .hasFieldOrPropertyWithValue("code", 403);
-
-        assertThatThrownBy(() -> moduleService.upsertConfig(SUPERVISOR_HEADER, contest.getJid(), config))
-                .hasFieldOrPropertyWithValue("code", 403);
+        assertThat(moduleService.getConfig(MANAGER_HEADER, contest.getJid())).isEqualTo(config);
     }
 }
