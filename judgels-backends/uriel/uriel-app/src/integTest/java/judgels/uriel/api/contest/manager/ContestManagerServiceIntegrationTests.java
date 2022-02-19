@@ -2,69 +2,63 @@ package judgels.uriel.api.contest.manager;
 
 import static java.util.Optional.empty;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
+import static judgels.uriel.api.mocks.MockJophiel.USER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B;
-import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ContestManagerServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+    private Contest contest;
+
+    @BeforeEach
+    void before() {
+        contest = buildContestWithRoles().build();
+    }
+
     @Test
-    void end_to_end_flow() {
-        Contest contest = createContest("contest");
+    void upsert_delete_get_managers() {
+        ContestManagersUpsertResponse upsertResponse = managerService
+                .upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER, USER_A, "bogus"));
 
-        // as admin
-
-        ContestManagersUpsertResponse upsertResponse =
-                managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A));
-        assertThat(upsertResponse.getInsertedManagerProfilesMap()).containsOnlyKeys(USER_A);
+        assertThat(upsertResponse.getInsertedManagerProfilesMap()).containsOnlyKeys(USER, USER_A);
         assertThat(upsertResponse.getAlreadyManagerProfilesMap()).isEmpty();
 
         upsertResponse = managerService
-                .upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, USER_B, "userC"));
+                .upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, USER_B));
 
         assertThat(upsertResponse.getInsertedManagerProfilesMap()).containsOnlyKeys(USER_B);
-        assertThat(upsertResponse.getInsertedManagerProfilesMap().get(USER_B).getUsername()).isEqualTo(USER_B);
         assertThat(upsertResponse.getAlreadyManagerProfilesMap()).containsOnlyKeys(USER_A);
-        assertThat(upsertResponse.getAlreadyManagerProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);
 
-        ContestManagersResponse response =
-                managerService.getManagers(ADMIN_HEADER, contest.getJid(), empty());
-        assertThat(response.getData().getPage()).containsOnly(
-                new ContestManager.Builder().userJid(USER_A_JID).build(),
-                new ContestManager.Builder().userJid(USER_B_JID).build());
-        assertThat(response.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
-        assertThat(response.getConfig().getCanManage()).isTrue();
+        ContestManagersDeleteResponse deleteResponse = managerService
+                .deleteManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER, USER_B, "bogus"));
 
-        ContestManagersDeleteResponse deleteResponse =
-                managerService.deleteManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, "userC"));
-        assertThat(deleteResponse.getDeletedManagerProfilesMap()).containsOnlyKeys(USER_A);
-        assertThat(deleteResponse.getDeletedManagerProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);
+        assertThat(deleteResponse.getDeletedManagerProfilesMap()).containsOnlyKeys(USER, USER_B);
 
-        response = managerService.getManagers(ADMIN_HEADER, contest.getJid(), empty());
-        assertThat(response.getData().getPage()).containsOnly(
-                new ContestManager.Builder().userJid(USER_B_JID).build());
+        Map<AuthHeader, Boolean> canManageMap = new LinkedHashMap<>();
+        canManageMap.put(ADMIN_HEADER, true);
+        canManageMap.put(MANAGER_HEADER, false);
 
-        // as manager
+        for (AuthHeader authHeader : canManageMap.keySet()) {
+            ContestManagersResponse response =
+                    managerService.getManagers(authHeader, contest.getJid(), empty());
 
-        response = managerService.getManagers(USER_B_HEADER, contest.getJid(), empty());
-        assertThat(response.getData().getPage()).containsOnly(
-                new ContestManager.Builder().userJid(USER_B_JID).build());
-        assertThat(response.getConfig().getCanManage()).isFalse();
-
-        assertThatThrownBy(() -> managerService
-                .upsertManagers(USER_B_HEADER, contest.getJid(), ImmutableSet.of("userC")))
-                .hasFieldOrPropertyWithValue("code", 403);
-
-        assertThatThrownBy(() -> managerService
-                .deleteManagers(USER_B_HEADER, contest.getJid(), ImmutableSet.of("userC")))
-                .hasFieldOrPropertyWithValue("code", 403);
+            assertThat(response.getData().getPage()).containsOnly(
+                    new ContestManager.Builder().userJid(MANAGER_JID).build(),
+                    new ContestManager.Builder().userJid(USER_A_JID).build());
+            assertThat(response.getProfilesMap()).containsOnlyKeys(MANAGER_JID, USER_A_JID);
+            assertThat(response.getConfig().getCanManage()).isEqualTo(canManageMap.get(authHeader));
+        }
     }
 }
