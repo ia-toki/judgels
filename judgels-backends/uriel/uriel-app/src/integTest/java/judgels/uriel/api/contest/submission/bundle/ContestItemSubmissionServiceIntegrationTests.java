@@ -22,30 +22,27 @@ import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.sandalphon.api.submission.bundle.Verdict;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.problem.ContestProblemData;
-import judgels.uriel.api.contest.problem.ContestProblemService;
-import judgels.uriel.api.contest.problem.ContestProblemStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private static final String PROBLEM_3_ALIAS = "B";
-    private ContestProblemService problemService = createService(ContestProblemService.class);
-    private ContestItemSubmissionService submissionService = createService(ContestItemSubmissionService.class);
+    private final ContestItemSubmissionService submissionService = createService(ContestItemSubmissionService.class);
+
+    private Contest contest;
+
+    @BeforeEach
+    void before() {
+        contest = buildContestWithRoles()
+                .begun()
+                .problems(PROBLEM_3_ALIAS, PROBLEM_3_SLUG)
+                .build();
+    }
 
     // CHECKSTYLE.OFF: MethodLengthCheck
     @Test
     // CHECKSTYLE.ON: MethodLengthCheck
-    void end_to_end_flow() {
-        Contest contest = createContestWithRoles("contest");
-
-        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
-                new ContestProblemData.Builder()
-                        .alias(PROBLEM_3_ALIAS)
-                        .slug(PROBLEM_3_SLUG)
-                        .status(ContestProblemStatus.OPEN)
-                        .submissionsLimit(0)
-                        .build()));
-
+    void submit_get_submissions() {
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ItemSubmissionData.Builder()
                 .containerJid(contest.getJid())
                 .problemJid(PROBLEM_3_JID)

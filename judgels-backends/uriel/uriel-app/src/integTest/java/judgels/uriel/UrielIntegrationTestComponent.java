@@ -2,7 +2,6 @@ package judgels.uriel;
 
 import dagger.Component;
 import javax.inject.Singleton;
-import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -13,11 +12,9 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.group.ContestGroupContestStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
-import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
-import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.jophiel.JophielModule;
@@ -32,8 +29,6 @@ import judgels.uriel.role.RoleChecker;
         UrielHibernateDaoModule.class})
 @Singleton
 public interface UrielIntegrationTestComponent {
-    SubmissionStore submissionStore();
-
     RoleChecker roleChecker();
     ContestStore contestStore();
     ContestModuleStore contestModuleStore();
@@ -46,7 +41,5 @@ public interface UrielIntegrationTestComponent {
     ContestSupervisorStore contestSupervisorStore();
 
     ContestRoleChecker contestRoleChecker();
-    ContestProblemRoleChecker contestProblemRoleChecker();
     ContestScoreboardRoleChecker contestScoreboardRoleChecker();
-    ContestSubmissionRoleChecker contestSubmissionRoleChecker();
 }

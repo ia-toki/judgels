@@ -1,10 +1,16 @@
 package judgels.uriel.api.contest.problem;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
+import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
@@ -18,7 +24,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemStatement;
@@ -31,51 +39,36 @@ import judgels.sandalphon.api.problem.bundle.StatementItemConfig;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
+import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet;
+import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
-    private ContestProblemService problemService = createService(ContestProblemService.class);
+    private Contest contest;
+
+    @BeforeEach
+    void before() {
+        contest = buildContestWithRoles()
+                .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.PROBLEM)
+                .supervisors(SUPERVISOR_B)
+                .begun()
+                .modules(REGISTRATION)
+                .build();
+    }
 
     @Test
-    void end_to_end_flow() {
-        Contest contest = createContestWithRoles("contest");
-
-        // as manager
+    void set_get_problems() {
         problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
                         .status(OPEN)
                         .build()));
-
-        List<ContestProblemData> data = ImmutableList.of(
-                new ContestProblemData.Builder()
-                        .alias("A")
-                        .slug(PROBLEM_1_SLUG)
-                        .status(OPEN)
-                        .submissionsLimit(10)
-                        .points(11)
-                        .build(),
-                new ContestProblemData.Builder()
-                        .alias("B")
-                        .slug("unknown-slug")
-                        .status(OPEN)
-                        .points(11)
-                        .build(),
-                new ContestProblemData.Builder()
-                        .alias("C")
-                        .slug(PROBLEM_2_SLUG)
-                        .status(ContestProblemStatus.CLOSED)
-                        .points(11)
-                        .build());
-
-        assertThatThrownBy(() -> problemService.setProblems(MANAGER_HEADER, contest.getJid(), data))
-                .hasFieldOrPropertyWithValue("code", 403)
-                .hasMessageContaining(ContestErrors.PROBLEM_SLUGS_NOT_ALLOWED);
 
         problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
@@ -97,46 +90,72 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .status(ContestProblemStatus.OPEN)
                         .build()));
 
-        ContestProblemsResponse response = problemService.getProblems(of(MANAGER_HEADER), contest.getJid());
-        assertThat(response.getData()).containsOnly(
-                new ContestProblem.Builder()
+        Map<Optional<AuthHeader>, Boolean> canManageMap = new LinkedHashMap<>();
+        canManageMap.put(of(ADMIN_HEADER), true);
+        canManageMap.put(of(MANAGER_HEADER), true);
+        canManageMap.put(of(SUPERVISOR_A_HEADER), true);
+        canManageMap.put(of(SUPERVISOR_B_HEADER), false);
+        canManageMap.put(of(CONTESTANT_HEADER), false);
+        canManageMap.put(of(USER_HEADER), false);
+        canManageMap.put(empty(), false);
+
+        for (Optional<AuthHeader> authHeader : canManageMap.keySet()) {
+            ContestProblemsResponse response = problemService.getProblems(authHeader, contest.getJid());
+            assertThat(response.getData()).containsOnly(
+                    new ContestProblem.Builder()
+                            .alias("A")
+                            .problemJid(PROBLEM_1_JID)
+                            .status(OPEN)
+                            .submissionsLimit(10)
+                            .points(11)
+                            .build(),
+                    new ContestProblem.Builder()
+                            .alias("C")
+                            .problemJid(PROBLEM_2_JID)
+                            .status(ContestProblemStatus.CLOSED)
+                            .points(23)
+                            .build(),
+                    new ContestProblem.Builder()
+                            .alias("D")
+                            .problemJid(PROBLEM_3_JID)
+                            .status(ContestProblemStatus.OPEN)
+                            .build());
+            assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).contains(PROBLEM_1_SLUG);
+            assertThat(response.getTotalSubmissionsMap()).containsOnlyKeys(PROBLEM_1_JID, PROBLEM_2_JID, PROBLEM_3_JID);
+            assertThat(response.getConfig().getCanManage()).isEqualTo(canManageMap.get(authHeader));
+        }
+    }
+
+    @Test
+    void set_problems__forbidden() {
+        List<ContestProblemData> data = ImmutableList.of(
+                new ContestProblemData.Builder()
                         .alias("A")
-                        .problemJid(PROBLEM_1_JID)
+                        .slug(PROBLEM_1_SLUG)
+                        .status(OPEN)
+                        .build(),
+                new ContestProblemData.Builder()
+                        .alias("B")
+                        .slug("unknown-slug")
+                        .status(OPEN)
+                        .points(11)
+                        .build());
+
+        assertThatThrownBy(() -> problemService.setProblems(MANAGER_HEADER, contest.getJid(), data))
+                .hasFieldOrPropertyWithValue("code", 403)
+                .hasMessageContaining(ContestErrors.PROBLEM_SLUGS_NOT_ALLOWED);
+    }
+
+    @Test
+    void get_programming_problem_worksheet() {
+        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+                new ContestProblemData.Builder()
+                        .alias("A")
+                        .slug(PROBLEM_1_SLUG)
                         .status(OPEN)
                         .submissionsLimit(10)
                         .points(11)
-                        .build(),
-                new ContestProblem.Builder()
-                        .alias("C")
-                        .problemJid(PROBLEM_2_JID)
-                        .status(ContestProblemStatus.CLOSED)
-                        .points(23)
-                        .build(),
-                new ContestProblem.Builder()
-                        .alias("D")
-                        .problemJid(PROBLEM_3_JID)
-                        .status(ContestProblemStatus.OPEN)
-                        .build());
-        assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).contains(PROBLEM_1_SLUG);
-        assertThat(response.getTotalSubmissionsMap()).containsOnlyKeys(PROBLEM_1_JID, PROBLEM_2_JID, PROBLEM_3_JID);
-        assertThat(response.getConfig().getCanManage()).isTrue();
-
-        // as supervisor
-
-        assertThatThrownBy(() -> problemService
-                .setProblems(SUPERVISOR_HEADER, contest.getJid(), data))
-                .hasFieldOrPropertyWithValue("code", 403);
-
-        response = problemService.getProblems(of(SUPERVISOR_HEADER), contest.getJid());
-        assertThat(response.getConfig().getCanManage()).isFalse();
-        assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).isEmpty();
-
-        test_get_programming_problem_worksheet(contest);
-        test_get_bundle_problem_worksheet(contest);
-    }
-
-    private void test_get_programming_problem_worksheet(Contest contest) {
-        // as contestant
+                        .build()));
 
         ContestProblemWorksheet worksheet = problemService.getProgrammingProblemWorksheet(
                 of(CONTESTANT_HEADER),
@@ -172,19 +191,25 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .reasonNotAllowedToSubmit(Optional.empty())
                         .build())
                 .build());
-
-        // as non-contestant
-
-        assertThatThrownBy(() -> problemService.getProgrammingProblemWorksheet(
-                of(USER_HEADER),
-                contest.getJid(),
-                "A",
-                Optional.empty()))
-                .hasFieldOrPropertyWithValue("code", 403);
     }
 
-    private void test_get_bundle_problem_worksheet(Contest contest) {
+    @Test
+    void get_bundle_problem_worksheet() {
+        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+                new ContestProblemData.Builder()
+                        .alias("D")
+                        .slug(PROBLEM_3_SLUG)
+                        .status(OPEN)
+                        .build()));
+
         judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet worksheet =
+                problemService.getBundleProblemWorksheet(
+                        of(CONTESTANT_HEADER),
+                        contest.getJid(),
+                        "D",
+                        Optional.empty());
+
+        assertThat(worksheet).isEqualTo(
                 new judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet.Builder()
                         .defaultLanguage("en")
                         .languages(ImmutableSet.of("en"))
@@ -283,25 +308,6 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                                 )
                                 .reasonNotAllowedToSubmit(Optional.empty())
                                 .build())
-                        .build();
-
-        // as contestant
-
-        judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet bw = problemService.getBundleProblemWorksheet(
-                of(CONTESTANT_HEADER),
-                contest.getJid(),
-                "D",
-                Optional.empty());
-        assertThat(bw).isEqualTo(worksheet);
-
-        // as non-contestant
-
-        assertThatThrownBy(() -> problemService.getBundleProblemWorksheet(
-                of(USER_HEADER),
-                contest.getJid(),
-                "D",
-                Optional.empty()))
-                .hasFieldOrPropertyWithValue("code", 403);
+                        .build());
     }
-
 }
