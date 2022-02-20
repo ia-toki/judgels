@@ -13,7 +13,6 @@ import judgels.uriel.contest.group.ContestGroupContestStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
@@ -41,5 +40,4 @@ public interface UrielIntegrationTestComponent {
     ContestSupervisorStore contestSupervisorStore();
 
     ContestRoleChecker contestRoleChecker();
-    ContestScoreboardRoleChecker contestScoreboardRoleChecker();
 }

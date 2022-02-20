@@ -133,6 +133,7 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     protected class ContestBuilder {
         Optional<Instant> beginTime = Optional.empty();
         Optional<Duration> duration = Optional.empty();
+        Optional<ContestStyle> style = Optional.empty();
 
         Set<ContestModuleType> modules = Collections.emptySet();
         Set<String> managers = Collections.emptySet();
@@ -148,6 +149,11 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
 
         public ContestBuilder duration(Duration duration) {
             this.duration = Optional.of(duration);
+            return this;
+        }
+
+        public ContestBuilder style(ContestStyle style) {
+            this.style = Optional.of(style);
             return this;
         }
 
@@ -196,8 +202,9 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         public Contest build() {
             Contest contest = createContest();
 
-            if (beginTime.isPresent() || duration.isPresent()) {
+            if (beginTime.isPresent() || duration.isPresent() || style.isPresent()) {
                 ContestUpdateData data = new ContestUpdateData.Builder()
+                        .style(style)
                         .beginTime(beginTime)
                         .duration(duration)
                         .build();
