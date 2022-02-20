@@ -61,10 +61,10 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
     @BeforeEach
     void before() {
         contest = buildContestWithRoles()
+                .begun()
                 .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.SUBMISSION)
                 .supervisors(SUPERVISOR_B)
                 .contestants(CONTESTANT_A, CONTESTANT_B)
-                .begun()
                 .problems(
                         "A", PROBLEM_1_SLUG,
                         "B", PROBLEM_2_SLUG)

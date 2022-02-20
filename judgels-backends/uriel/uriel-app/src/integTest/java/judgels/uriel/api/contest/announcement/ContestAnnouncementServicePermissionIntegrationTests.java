@@ -5,9 +5,7 @@ import static java.util.Optional.of;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.PUBLISHED;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
@@ -31,12 +29,10 @@ class ContestAnnouncementServicePermissionIntegrationTests extends AbstractConte
 
     @BeforeEach
     void before() {
-        contest = buildContest()
-                .managers(MANAGER)
+        contest = buildContestWithRoles()
+                .begun()
                 .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.ANNOUNCEMENT)
                 .supervisors(SUPERVISOR_B)
-                .contestants(CONTESTANT)
-                .begun()
                 .build();
     }
 

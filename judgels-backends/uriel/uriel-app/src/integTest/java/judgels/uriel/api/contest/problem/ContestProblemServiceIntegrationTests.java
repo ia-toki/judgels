@@ -54,9 +54,9 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
     @BeforeEach
     void before() {
         contest = buildContestWithRoles()
+                .begun()
                 .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.PROBLEM)
                 .supervisors(SUPERVISOR_B)
-                .begun()
                 .modules(REGISTRATION)
                 .build();
     }

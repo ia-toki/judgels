@@ -9,7 +9,6 @@ import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
@@ -38,12 +37,11 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
 
     @BeforeEach
     void before() {
-        contest = buildContest()
-                .managers(MANAGER)
+        contest = buildContestWithRoles()
+                .begun()
                 .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.ANNOUNCEMENT)
                 .supervisors(SUPERVISOR_B)
                 .contestants(CONTESTANT_A, CONTESTANT_B)
-                .begun()
                 .modules(REGISTRATION)
                 .build();
     }

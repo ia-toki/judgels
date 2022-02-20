@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest.log;
 
 import static java.util.Optional.empty;
+import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
@@ -11,7 +12,6 @@ import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.module.ContestModuleType;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class ContestLogServicePermissionIntegrationTests extends AbstractContestService
         contest = buildContestWithRoles()
                 .begun()
                 .problems("A", PROBLEM_1_SLUG)
-                .modules(ContestModuleType.CLARIFICATION)
+                .modules(CLARIFICATION)
                 .build();
     }
 

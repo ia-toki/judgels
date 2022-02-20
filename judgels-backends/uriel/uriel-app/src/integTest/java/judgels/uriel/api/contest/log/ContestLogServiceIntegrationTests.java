@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest.log;
 
 import static java.util.Optional.empty;
+import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_JID;
@@ -23,7 +24,6 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.clarification.ContestClarification;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationService;
-import judgels.uriel.api.contest.module.ContestModuleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,7 @@ class ContestLogServiceIntegrationTests extends AbstractContestServiceIntegratio
         contest1 = buildContestWithRoles()
                 .begun()
                 .problems("A", PROBLEM_1_SLUG)
-                .modules(ContestModuleType.CLARIFICATION)
+                .modules(CLARIFICATION)
                 .build();
     }
 

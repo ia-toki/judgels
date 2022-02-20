@@ -5,9 +5,7 @@ import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
@@ -35,11 +33,9 @@ class ContestClarificationServicePermissionIntegrationTests extends AbstractCont
 
     @BeforeEach
     void before() {
-        contest = buildContest()
-                .managers(MANAGER)
+        contest = buildContestWithRoles()
                 .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.CLARIFICATION)
                 .supervisors(SUPERVISOR_B)
-                .contestants(CONTESTANT)
                 .build();
     }
 

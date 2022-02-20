@@ -93,16 +93,6 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                 .build();
     }
 
-    protected Contest createContestWithRoles(String slug) {
-        Contest contest = createContest(slug);
-        managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(MANAGER));
-        supervisorService.upsertSupervisors(ADMIN_HEADER, contest.getJid(), new ContestSupervisorUpsertData.Builder()
-                .addUsernames(SUPERVISOR)
-                .build());
-        contestantService.upsertContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(CONTESTANT));
-        return contest;
-    }
-
     protected Contest enableModule(Contest contest, ContestModuleType type) {
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), type);
         return contest;

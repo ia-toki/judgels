@@ -6,10 +6,8 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
@@ -44,10 +42,8 @@ class ContestFileServicePermissionIntegrationTests extends AbstractContestServic
     @BeforeEach
     void before() {
         contest = buildContestWithRoles()
-                .managers(MANAGER)
                 .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.FILE)
                 .supervisors(SUPERVISOR_B)
-                .contestants(CONTESTANT)
                 .build();
     }
 

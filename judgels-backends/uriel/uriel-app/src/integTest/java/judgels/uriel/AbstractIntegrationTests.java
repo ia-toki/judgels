@@ -17,17 +17,6 @@ public abstract class AbstractIntegrationTests {
 
     protected static UrielIntegrationTestComponent createComponent(
             SessionFactory sessionFactory,
-            ActorProvider actorProvider) {
-
-        return createComponent(sessionFactory, Clock.systemUTC(), actorProvider);
-    }
-
-    protected static UrielIntegrationTestComponent createComponent(SessionFactory sessionFactory, Clock clock) {
-        return createComponent(sessionFactory, clock, new TestActorProvider());
-    }
-
-    protected static UrielIntegrationTestComponent createComponent(
-            SessionFactory sessionFactory,
             Clock clock,
             ActorProvider actorProvider) {
 

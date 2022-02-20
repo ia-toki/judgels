@@ -6,18 +6,10 @@ import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.uriel.contest.ContestGroupStore;
-import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.group.ContestGroupContestStore;
-import judgels.uriel.contest.manager.ContestManagerStore;
-import judgels.uriel.contest.module.ContestModuleStore;
-import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
-import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.jophiel.JophielModule;
-import judgels.uriel.role.RoleChecker;
 
 @Component(modules = {
         JudgelsModule.class,
@@ -28,16 +20,7 @@ import judgels.uriel.role.RoleChecker;
         UrielHibernateDaoModule.class})
 @Singleton
 public interface UrielIntegrationTestComponent {
-    RoleChecker roleChecker();
     ContestStore contestStore();
-    ContestModuleStore contestModuleStore();
-    ContestContestantStore contestContestantStore();
     ContestGroupStore contestGroupStore();
     ContestGroupContestStore contestGroupContestStore();
-    ContestManagerStore contestManagerStore();
-    ContestProblemStore contestProblemStore();
-    ContestScoreboardStore contestScoreboardStore();
-    ContestSupervisorStore contestSupervisorStore();
-
-    ContestRoleChecker contestRoleChecker();
 }

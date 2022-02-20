@@ -120,10 +120,6 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
         return assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 400);
     }
 
-    protected static void assertUnauthorized(ThrowingCallable callable) {
-        assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 401);
-    }
-
     protected static AbstractThrowableAssert<?, ? extends Throwable> assertForbidden(ThrowingCallable callable) {
         return assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 403);
     }

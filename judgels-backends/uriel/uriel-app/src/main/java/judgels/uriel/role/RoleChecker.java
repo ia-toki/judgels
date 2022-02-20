@@ -2,9 +2,7 @@ package judgels.uriel.role;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.google.common.annotations.VisibleForTesting;
 import java.time.Duration;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.client.user.ClientUserService;
@@ -32,11 +30,6 @@ public class RoleChecker {
         UserRole role = userRoleCache.get(userJid);
         return role.getJophiel() == JophielRole.SUPERADMIN
                 || role.getUriel().orElse("").equals(UrielRole.ADMIN.name());
-    }
-
-    @VisibleForTesting
-    void setRoles(Map<String, UserRole> rolesMap) {
-        userRoleCache.putAll(rolesMap);
     }
 
     private UserRole getRoleUncached(String userJid) {
