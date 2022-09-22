@@ -38,19 +38,13 @@ function Menubar({ match, location, items, homeRoute }) {
         <Tabs id="menubar" renderActiveTabPanelOnly animate={false} selectedTabId={selectedTabId}>
           {homeRoute ? (
             <Tab key={homeRoute.id} id={homeRoute.id}>
-              <Link to={resolveUrl(homeRoute.id)}>
-                <span className="menubar__icon">{homeRoute.icon}</span>
-                {homeRoute.title}
-              </Link>
+              <Link to={resolveUrl(homeRoute.id)}>{homeRoute.title}</Link>
             </Tab>
           ) : null}
           {items.map(item => {
             return (
               <Tab key={item.id} id={item.id}>
-                <Link to={resolveUrl(item.id)}>
-                  <span className="menubar__icon">{item.icon}</span>
-                  {item.title}
-                </Link>
+                <Link to={resolveUrl(item.id)}>{item.title}</Link>
               </Tab>
             );
           })}
