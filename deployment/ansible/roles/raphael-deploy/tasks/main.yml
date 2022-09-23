@@ -11,7 +11,7 @@
   - name: Generate raphael config
     template:
       src: "{{ playbook_dir }}/../conf/raphael.js.j2"
-      dest: /judgels/raphael/var/conf/raphael-v7.js
+      dest: /judgels/raphael/var/conf/raphael-v8.js
       mode: '0644'
 
   - name: Pull raphael image
