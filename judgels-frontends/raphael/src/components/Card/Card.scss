@@ -25,3 +25,7 @@
   margin-bottom: 10px;
   overflow-x: auto;
 }
+
+.bp4-dark .card__title {
+  background-color: $dark-blue-secondary-background-color !important;
+}
