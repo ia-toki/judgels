@@ -3,12 +3,12 @@ import { Form, Field } from 'react-final-form';
 
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
-import { Required } from '../../../../components/forms/validations';
+import { composeValidators, Required, Username } from '../../../../components/forms/validations';
 
 const usernameField = {
   name: 'username',
   label: 'Username',
-  validate: Required,
+  validate: composeValidators(Required, Username),
   autoFocus: true,
 };
 
