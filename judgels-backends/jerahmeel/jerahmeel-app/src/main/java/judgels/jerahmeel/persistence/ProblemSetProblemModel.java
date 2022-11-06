@@ -10,6 +10,7 @@ import judgels.persistence.Model;
 @Entity(name = "jerahmeel_problem_set_problem")
 @Table(indexes = {
         @Index(columnList = "problemSetJid,problemJid", unique = true),
+        @Index(columnList = "problemJid"),
         @Index(columnList = "problemSetJid,alias", unique = true)})
 public final class ProblemSetProblemModel extends Model {
     @Column(nullable = false)
