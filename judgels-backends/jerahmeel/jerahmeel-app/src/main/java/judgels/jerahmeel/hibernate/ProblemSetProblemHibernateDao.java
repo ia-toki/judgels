@@ -131,7 +131,7 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
                 + "ON a.problemJid=s.problemJid "
                 + "WHERE type='PROGRAMMING' "
                 + "AND %s "
-                + "GROUP BY a.problemJid "
+                + "GROUP BY a.problemSetJid, a.problemJid "
                 + "ORDER BY SUM(s.score) %s, COUNT(s.userJid) %s";
 
         String where = "1=1";
