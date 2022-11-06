@@ -45,8 +45,9 @@ public class ProblemSetProblemStore {
                                 Collectors.toList())));
     }
 
-    public Optional<ProblemSetProblem> getProblem(String problemJid) {
-        return problemDao.selectByProblemJid(problemJid).map(m -> fromModel(m, getContestJids(m.problemJid)));
+    public Optional<ProblemSetProblem> getProblem(String problemSetJid, String problemJid) {
+        return problemDao.selectByProblemSetJidAndProblemJid(problemSetJid, problemJid)
+                .map(m -> fromModel(m, getContestJids(m.problemJid)));
     }
 
     public Optional<ProblemSetProblem> getProblemByAlias(String problemSetJid, String problemAlias) {
@@ -92,7 +93,8 @@ public class ProblemSetProblemStore {
 
         upsertProblemContests(problemJid, contestJids);
 
-        Optional<ProblemSetProblemModel> maybeModel = problemDao.selectByProblemJid(problemJid);
+        Optional<ProblemSetProblemModel> maybeModel =
+                problemDao.selectByProblemSetJidAndProblemJid(problemSetJid, problemJid);
         if (maybeModel.isPresent()) {
             ProblemSetProblemModel model = maybeModel.get();
             model.alias = alias;

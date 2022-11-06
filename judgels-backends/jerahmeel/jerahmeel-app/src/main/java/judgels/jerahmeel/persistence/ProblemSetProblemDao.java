@@ -9,8 +9,9 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
 public interface ProblemSetProblemDao extends Dao<ProblemSetProblemModel> {
-    Optional<ProblemSetProblemModel> selectByProblemJid(String problemJid);
+    List<ProblemSetProblemModel> selectAllByProblemJid(String problemJid);
     List<ProblemSetProblemModel> selectAllByProblemJids(Set<String> problemJids);
+    Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(String problemSetJid, String problemJid);
     Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(String problemSetJid, String problemAlias);
     List<ProblemSetProblemModel> selectAllByProblemSetJid(String problemSetJid, SelectionOptions options);
     List<ProblemSetProblemModel> selectAllByProblemSetJids(Set<String> problemSetJids, SelectionOptions options);

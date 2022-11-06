@@ -1,6 +1,7 @@
 package judgels.jerahmeel.submission.programming;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.gabriel.api.GradingResultDetails;
@@ -71,9 +72,9 @@ public class StatsProcessor implements SubmissionConsumer {
     @UnitOfWork
     public void accept(Submission submission) {
         Optional<ChapterProblemModel> cm = chapterProblemDao.selectByProblemJid(submission.getProblemJid());
-        Optional<ProblemSetProblemModel> pm = problemSetProblemDao.selectByProblemJid(submission.getProblemJid());
+        List<ProblemSetProblemModel> pms = problemSetProblemDao.selectAllByProblemJid(submission.getProblemJid());
 
-        if (!cm.isPresent() && !pm.isPresent()) {
+        if (!cm.isPresent() && pms.isEmpty()) {
             return;
         }
 
@@ -88,8 +89,8 @@ public class StatsProcessor implements SubmissionConsumer {
             }
         }
 
-        if (pm.isPresent()) {
-            processProblemSetStats(submission,  pm.get().problemSetJid, res.scoreDiff);
+        for (ProblemSetProblemModel pm : pms) {
+            processProblemSetStats(submission,  pm.problemSetJid, res.scoreDiff);
         }
 
         processUserStats(submission, res.scoreDiff);

@@ -91,9 +91,8 @@ public class ProblemSetStore {
 
     private ProblemSet getProblemSetByContestJidUncached(String contestJid) {
         for (ProblemContestModel pcm : problemContestDao.selectAllByContestJid(contestJid)) {
-            Optional<ProblemSetProblemModel> pspm = problemSetProblemDao.selectByProblemJid(pcm.problemJid);
-            if (pspm.isPresent()) {
-                Optional<ProblemSetModel> m = problemSetDao.selectByJid(pspm.get().problemSetJid);
+            for (ProblemSetProblemModel pspm : problemSetProblemDao.selectAllByProblemJid(pcm.problemJid)) {
+                Optional<ProblemSetModel> m = problemSetDao.selectByJid(pspm.problemSetJid);
                 if (m.isPresent()) {
                     return fromModel(m.get());
                 }

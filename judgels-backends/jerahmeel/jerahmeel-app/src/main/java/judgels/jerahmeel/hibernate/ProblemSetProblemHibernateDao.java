@@ -33,8 +33,8 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
     }
 
     @Override
-    public Optional<ProblemSetProblemModel> selectByProblemJid(String problemJid) {
-        return selectByFilter(new FilterOptions.Builder<ProblemSetProblemModel>()
+    public List<ProblemSetProblemModel> selectAllByProblemJid(String problemJid) {
+        return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
                 .putColumnsEq(ProblemSetProblemModel_.problemJid, problemJid)
                 .build());
     }
@@ -43,6 +43,17 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
     public List<ProblemSetProblemModel> selectAllByProblemJids(Set<String> problemJids) {
         return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
                 .putColumnsIn(ProblemSetProblemModel_.problemJid, problemJids)
+                .build());
+    }
+
+    @Override
+    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(
+            String problemSetJid,
+            String problemJid) {
+
+        return selectByFilter(new FilterOptions.Builder<ProblemSetProblemModel>()
+                .putColumnsEq(ProblemSetProblemModel_.problemSetJid, problemSetJid)
+                .putColumnsEq(ProblemSetProblemModel_.problemJid, problemJid)
                 .build());
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="fushar" id="remove-unique-index-from-problem_set_problem-1">
+        <dropUniqueConstraint catalogName="judgels"
+                             schemaName="judgels"
+                             tableName="jerahmeel_problem_set_problem"
+                             constraintName="problemJid"
+        />
+    </changeSet>
+    <changeSet author="fushar" id="remove-unique-index-from-problem_set_problem-2">
+        <addUniqueConstraint catalogName="judgels"
+                              schemaName="judgels"
+                              tableName="jerahmeel_problem_set_problem"
+                              columnNames="problemSetJid, problemJid"/>
+    </changeSet>
+</databaseChangeLog>

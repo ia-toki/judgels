@@ -25,4 +25,5 @@
     <include file="migrations/016-remove-status-from-chapter_lesson.xml"/>
     <include file="migrations/017-remove-status-from-chapter_problem.xml"/>
     <include file="migrations/018-remove-status-from-problem_set_problem.xml"/>
+    <include file="migrations/019-remove-unique-index-from-problem_set_problem.xml"/>
 </databaseChangeLog>

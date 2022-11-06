@@ -189,7 +189,8 @@ public class SubmissionResource implements SubmissionService {
         String problemAlias;
         if (SubmissionUtils.isProblemSet(submission.getContainerJid())) {
             ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(submission.getContainerJid()));
-            ProblemSetProblem problem = checkFound(problemSetProblemStore.getProblem(submission.getProblemJid()));
+            ProblemSetProblem problem = checkFound(
+                    problemSetProblemStore.getProblem(problemSet.getJid(), submission.getProblemJid()));
             containerName = problemSet.getName();
             problemAlias = problem.getAlias();
         } else {
