@@ -2,17 +2,11 @@ package judgels.jerahmeel.hibernate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel_;
@@ -21,7 +15,6 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
-import judgels.sandalphon.api.problem.ProblemType;
 import org.hibernate.query.Query;
 
 public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProblemModel>
@@ -82,33 +75,6 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
         return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
                 .putColumnsIn(ProblemSetProblemModel_.problemSetJid, problemSetJids)
                 .build(), options);
-    }
-
-    @Override
-    public Map<String, Long> selectCountsByProblemSetJids(Set<String> problemSetJids) {
-        if (problemSetJids.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
-        Root<ProblemSetProblemModel> root = cq.from(getEntityClass());
-
-        cq.select(cb.tuple(
-                root.get(ProblemSetProblemModel_.problemSetJid),
-                cb.count(root)));
-
-        cq.where(
-                cb.equal(root.get(ProblemSetProblemModel_.type), ProblemType.PROGRAMMING.name()),
-                root.get(ProblemSetProblemModel_.problemSetJid).in(problemSetJids));
-
-        cq.groupBy(
-                root.get(ProblemSetProblemModel_.problemSetJid));
-
-        return currentSession().createQuery(cq).getResultList()
-                .stream()
-                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
-
     }
 
     @Override

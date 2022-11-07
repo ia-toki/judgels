@@ -6,10 +6,12 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
+import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.HashMap;
 import java.util.List;
@@ -34,15 +36,15 @@ import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
+import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.StatsUserCourseDao;
 import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
-import judgels.jerahmeel.persistence.StatsUserProblemSetDao;
-import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.sandalphon.api.problem.ProblemType;
 
 public class StatsStore {
     private final CourseChapterDao courseChapterDao;
@@ -50,7 +52,6 @@ public class StatsStore {
     private final ProblemSetProblemDao problemSetProblemDao;
     private final StatsUserCourseDao statsUserCourseDao;
     private final StatsUserProblemDao statsUserProblemDao;
-    private final StatsUserProblemSetDao statsUserProblemSetDao;
     private final StatsUserDao statsUserDao;
 
     @Inject
@@ -60,7 +61,6 @@ public class StatsStore {
             ProblemSetProblemDao problemSetProblemDao,
             StatsUserCourseDao statsUserCourseDao,
             StatsUserProblemDao statsUserProblemDao,
-            StatsUserProblemSetDao statsUserProblemSetDao,
             StatsUserDao statsUserDao) {
 
         this.courseChapterDao = courseChapterDao;
@@ -68,7 +68,6 @@ public class StatsStore {
         this.problemSetProblemDao = problemSetProblemDao;
         this.statsUserCourseDao = statsUserCourseDao;
         this.statsUserProblemDao = statsUserProblemDao;
-        this.statsUserProblemSetDao = statsUserProblemSetDao;
         this.statsUserDao = statsUserDao;
     }
 
@@ -216,17 +215,34 @@ public class StatsStore {
     }
 
     public Map<String, ProblemSetProgress> getProblemSetProgressesMap(String userJid, Set<String> problemSetJids) {
-        Map<String, Long> totalProblemsMap = problemSetProblemDao.selectCountsByProblemSetJids(problemSetJids);
-        List<StatsUserProblemSetModel> models =
-                statsUserProblemSetDao.selectAllByUserJidAndProblemSetJids(userJid, problemSetJids);
-        Map<String, StatsUserProblemSetModel> modelsMap = models.stream().collect(toMap(m -> m.problemSetJid, m -> m));
+        Map<String, Set<String>> problemJidsMap = Maps.newHashMap();
+        Set<String> problemJids = Sets.newHashSet();
 
-        return problemSetJids.stream().collect(toMap(
-                Function.identity(),
-                jid -> new ProblemSetProgress.Builder()
-                        .score(Optional.ofNullable(modelsMap.get(jid)).map(m -> m.score).orElse(0))
-                        .totalProblems(totalProblemsMap.getOrDefault(jid, 0L).intValue())
-                        .build()));
+        for (ProblemSetProblemModel m : problemSetProblemDao.selectAllByProblemSetJids(problemSetJids, DEFAULT_ALL)) {
+            if (m.type.equals(ProblemType.PROGRAMMING.name())) {
+                problemJidsMap.putIfAbsent(m.problemSetJid, Sets.newHashSet());
+                problemJidsMap.get(m.problemSetJid).add(m.problemJid);
+                problemJids.add(m.problemJid);
+            }
+        }
+
+        Map<String, Integer> scoresMap = Maps.newHashMap();
+        for (StatsUserProblemModel m : statsUserProblemDao.selectAllByUserJidAndProblemJids(userJid, problemJids)) {
+            scoresMap.put(m.problemJid, m.score);
+        }
+
+        Map<String, ProblemSetProgress> progressesMap = Maps.newHashMap();
+        for (String problemSetJid : problemSetJids) {
+            int scores = 0;
+            for (String problemJid : problemJidsMap.getOrDefault(problemSetJid, emptySet())) {
+                scores += scoresMap.getOrDefault(problemJid, 0);
+            }
+            progressesMap.put(problemSetJid, new ProblemSetProgress.Builder()
+                    .score(scores)
+                    .totalProblems(problemJidsMap.getOrDefault(problemSetJid, emptySet()).size())
+                    .build());
+        }
+        return ImmutableMap.copyOf(progressesMap);
     }
 
     public Map<String, Map<String, ProblemProgress>> getUserProblemProgressesMap(
