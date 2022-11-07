@@ -24,8 +24,6 @@ import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserModel;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
-import judgels.jerahmeel.persistence.StatsUserProblemSetDao;
-import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionConsumer;
@@ -39,10 +37,9 @@ public class StatsProcessor implements SubmissionConsumer {
     private final StatsUserChapterDao statsUserChapterDao;
     private final StatsUserCourseDao statsUserCourseDao;
     private final StatsUserProblemDao statsUserProblemDao;
-    private final StatsUserProblemSetDao statsUserProblemSetDao;
 
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    class ProblemStatsResult {
+    static class ProblemStatsResult {
         int scoreDiff;
         boolean becomesAccepted;
     }
@@ -55,8 +52,7 @@ public class StatsProcessor implements SubmissionConsumer {
             StatsUserDao statsUserDao,
             StatsUserChapterDao statsUserChapterDao,
             StatsUserCourseDao statsUserCourseDao,
-            StatsUserProblemDao statsUserProblemDao,
-            StatsUserProblemSetDao statsUserProblemSetDao) {
+            StatsUserProblemDao statsUserProblemDao) {
 
         this.courseChapterDao = courseChapterDao;
         this.chapterProblemDao = chapterProblemDao;
@@ -65,7 +61,6 @@ public class StatsProcessor implements SubmissionConsumer {
         this.statsUserChapterDao = statsUserChapterDao;
         this.statsUserCourseDao = statsUserCourseDao;
         this.statsUserProblemDao = statsUserProblemDao;
-        this.statsUserProblemSetDao = statsUserProblemSetDao;
     }
 
     @Override
@@ -87,10 +82,6 @@ public class StatsProcessor implements SubmissionConsumer {
             if (processChapterStats(submission, cm.get().chapterJid, res.becomesAccepted)) {
                 processCourseStats(submission, cm.get().chapterJid);
             }
-        }
-
-        for (ProblemSetProblemModel pm : pms) {
-            processProblemSetStats(submission,  pm.problemSetJid, res.scoreDiff);
         }
 
         processUserStats(submission, res.scoreDiff);
@@ -230,23 +221,6 @@ public class StatsProcessor implements SubmissionConsumer {
             model.courseJid = courseJid;
             model.progress = 1;
             statsUserCourseDao.insert(model);
-        }
-    }
-
-    private void processProblemSetStats(Submission s, String problemSetJid, int scoreDiff) {
-        Optional<StatsUserProblemSetModel> maybeModel =
-                statsUserProblemSetDao.selectByUserJidAndProblemSetJid(s.getUserJid(), problemSetJid);
-
-        if (maybeModel.isPresent()) {
-            StatsUserProblemSetModel model = maybeModel.get();
-            model.score += scoreDiff;
-            statsUserProblemSetDao.update(model);
-        } else {
-            StatsUserProblemSetModel model = new StatsUserProblemSetModel();
-            model.userJid = s.getUserJid();
-            model.problemSetJid = problemSetJid;
-            model.score = scoreDiff;
-            statsUserProblemSetDao.insert(model);
         }
     }
 

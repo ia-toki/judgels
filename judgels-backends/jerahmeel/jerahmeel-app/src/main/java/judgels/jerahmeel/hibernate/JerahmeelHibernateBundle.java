@@ -21,7 +21,6 @@ import judgels.jerahmeel.persistence.StatsUserChapterModel;
 import judgels.jerahmeel.persistence.StatsUserCourseModel;
 import judgels.jerahmeel.persistence.StatsUserModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
-import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
 
 public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicationConfiguration> {
     public JerahmeelHibernateBundle() {
@@ -43,8 +42,7 @@ public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicati
                 StatsUserModel.class,
                 StatsUserChapterModel.class,
                 StatsUserCourseModel.class,
-                StatsUserProblemModel.class,
-                StatsUserProblemSetModel.class
+                StatsUserProblemModel.class
         );
     }
 

@@ -60,7 +60,6 @@ import judgels.jerahmeel.persistence.StatsUserChapterModel;
 import judgels.jerahmeel.persistence.StatsUserCourseModel;
 import judgels.jerahmeel.persistence.StatsUserModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
-import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.stats.StatsStore;
@@ -83,8 +82,7 @@ import org.junit.jupiter.api.Test;
         StatsUserModel.class,
         StatsUserChapterModel.class,
         StatsUserCourseModel.class,
-        StatsUserProblemModel.class,
-        StatsUserProblemSetModel.class})
+        StatsUserProblemModel.class})
 class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_JID_1 = "JIDUSER-1";
     private static final String USER_JID_2 = "JIDUSER-2";

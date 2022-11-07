@@ -20,7 +20,6 @@ import judgels.jerahmeel.persistence.StatsUserChapterDao;
 import judgels.jerahmeel.persistence.StatsUserCourseDao;
 import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
-import judgels.jerahmeel.persistence.StatsUserProblemSetDao;
 
 @Module
 public class JerahmeelHibernateDaoModule {
@@ -113,11 +112,6 @@ public class JerahmeelHibernateDaoModule {
 
     @Provides
     static StatsUserProblemDao statsUserProblemDao(StatsUserProblemHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    static StatsUserProblemSetDao statsUserProblemSetDao(StatsUserProblemSetHibernateDao dao) {
         return dao;
     }
 }
