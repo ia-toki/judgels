@@ -1,4 +1,19 @@
+@import '../../../../../../styles/base';
+
 .single-problemset-problem-routes__title {
   margin-bottom: 20px;
   line-height: 20px !important;
+}
+
+.single-problemset-problem-routes__title--link {
+  color: inherit !important;
+
+  &:hover {
+    text-decoration: none;
+    color: $primary-color !important;
+  }
+}
+
+.single-problemset-problem-routes__title--chevron {
+  color: $dark-secondary-background-color !important;
 }

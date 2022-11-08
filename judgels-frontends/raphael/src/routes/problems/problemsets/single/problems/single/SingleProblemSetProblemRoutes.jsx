@@ -1,8 +1,9 @@
 import { Button } from '@blueprintjs/core';
-import { ChevronLeft, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
+import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
@@ -77,9 +78,13 @@ function SingleProblemSetProblemRoutes({ match, problemSet, problem, onClickBack
     ),
     contentHeader: (
       <h3 className="single-problemset-problem-routes__title">
-        {problemSet.name}
-        <>&nbsp;&mdash;&nbsp;</>
-        Problem {problem.alias}
+        <Link className="single-problemset-problem-routes__title--link" to={`/problems/${problemSet.slug}`}>
+          {problemSet.name}
+        </Link>
+        &nbsp;
+        <ChevronRight className="single-problemset-problem-routes__title--chevron" size={20} />
+        &nbsp;
+        {problem.alias}
       </h3>
     ),
     stickyWidget1: ProblemReportWidget,
