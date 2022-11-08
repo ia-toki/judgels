@@ -81,13 +81,6 @@ describe('CoursesPage', () => {
     });
 
     it('shows the courses', () => {
-      expect(
-        wrapper
-          .find('.html-text')
-          .first()
-          .text()
-      ).toEqual('This is curriculum');
-
       const cards = wrapper.find('div.content-card');
       expect(
         cards.map(card => [card.find('h4').text(), card.find('a').props().href, card.find('.html-text').text()])

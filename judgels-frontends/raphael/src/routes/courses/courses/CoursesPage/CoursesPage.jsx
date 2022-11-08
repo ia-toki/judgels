@@ -2,7 +2,6 @@ import { Callout, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from '../../../../components/Card/Card';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { CourseCard } from '../CourseCard/CourseCard';
@@ -21,17 +20,6 @@ class CoursesPage extends Component {
   }
 
   render() {
-    const { response } = this.state;
-    const curriculumName = response ? response.curriculum.name : '';
-
-    return (
-      <Card className="courses-card" title={curriculumName}>
-        {this.renderCourses()}
-      </Card>
-    );
-  }
-
-  renderCourses = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingContentCard />;
@@ -60,7 +48,7 @@ class CoursesPage extends Component {
         </div>
       </>
     );
-  };
+  }
 }
 
 const mapDispatchToProps = {

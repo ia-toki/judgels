@@ -39,6 +39,7 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
         <Globe />
         &nbsp;&nbsp;Bahasa Indonesia&nbsp;&nbsp;&middot;&nbsp;&nbsp;
         <Tag minimal>Free</Tag>
+        &nbsp;&nbsp;&middot;&nbsp;&nbsp;Ikatan Alumni TOKI
       </p>
       <hr />
       {description && (
