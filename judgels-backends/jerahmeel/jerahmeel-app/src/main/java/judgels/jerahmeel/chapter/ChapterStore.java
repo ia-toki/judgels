@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.HashMap;
 import java.util.List;
@@ -85,17 +86,22 @@ public class ChapterStore {
         Set<String> courseJids = chapters.stream().map(c -> c.courseJid).collect(Collectors.toSet());
         Map<String, CourseModel> coursesMap = courseDao.selectByJids(courseJids);
 
-        ImmutableMap.Builder<String, List<String>> paths = ImmutableMap.builder();
+        ImmutableMap.Builder<String, List<String>> pathsMap = ImmutableMap.builder();
         for (String chapterJid : chapterJids) {
             CourseChapterModel m = chapterToCourseChapterMap.get(chapterJid);
             if (m != null) {
                 CourseModel cm = coursesMap.get(m.courseJid);
                 if (cm != null) {
-                    paths.put(chapterJid, ImmutableList.of(cm.slug, m.alias));
+                    pathsMap.put(chapterJid, ImmutableList.of(cm.slug, m.alias));
                 }
             }
         }
-        return paths.build();
+        return pathsMap.build();
+    }
+
+    public Optional<List<String>> getChapterPathByJid(String chapterJid) {
+        Map<String, List<String>> pathsMap = getChapterPathsByJids(ImmutableSet.of(chapterJid));
+        return Optional.ofNullable(pathsMap.get(chapterJid));
     }
 
     public Chapter createChapter(ChapterCreateData data) {

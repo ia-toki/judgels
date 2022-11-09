@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { VerdictTag } from '../../../../../../components/VerdictTag/VerdictTag';
 import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { constructContainerUrl } from '../../../../../../modules/api/jerahmeel/submission';
 import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
 
 import '../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
@@ -72,17 +73,6 @@ export function SubmissionsTable({
     ));
 
     return <tbody>{rows}</tbody>;
-  };
-
-  const constructContainerUrl = subpaths => {
-    if (!subpaths) {
-      return '';
-    }
-    if (subpaths.length === 2) {
-      return `/courses/${subpaths[0]}/chapters/${subpaths[1]}/problems`;
-    } else {
-      return `/problems/${subpaths[0]}`;
-    }
   };
 
   return (

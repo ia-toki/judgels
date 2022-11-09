@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { constructContainerUrl } from '../../../../modules/api/jerahmeel/submission';
 import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSelectors';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as submissionActions from '../../modules/submissionActions';
@@ -15,15 +16,20 @@ export class SubmissionPage extends Component {
     profile: undefined,
     problemName: undefined,
     problemAlias: undefined,
+    containerPath: undefined,
     containerName: undefined,
     sourceImageUrl: undefined,
   };
 
   async componentDidMount() {
-    const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
-      +this.props.match.params.submissionId,
-      this.props.statementLanguage
-    );
+    const {
+      data,
+      profile,
+      problemName,
+      problemAlias,
+      containerPath,
+      containerName,
+    } = await this.props.onGetSubmissionWithSource(+this.props.match.params.submissionId, this.props.statementLanguage);
     const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
     this.props.onPushBreadcrumb(this.props.match.url, 'Submission #' + data.submission.id);
     this.setState({
@@ -31,6 +37,7 @@ export class SubmissionPage extends Component {
       profile,
       problemName,
       problemAlias,
+      containerPath,
       containerName,
       sourceImageUrl,
     });
@@ -51,7 +58,15 @@ export class SubmissionPage extends Component {
   }
 
   renderSubmission = () => {
-    const { submissionWithSource, profile, problemAlias, problemName, containerName, sourceImageUrl } = this.state;
+    const {
+      submissionWithSource,
+      profile,
+      problemAlias,
+      problemName,
+      containerPath,
+      containerName,
+      sourceImageUrl,
+    } = this.state;
 
     if (!submissionWithSource) {
       return <LoadingState />;
@@ -63,8 +78,9 @@ export class SubmissionPage extends Component {
         source={submissionWithSource.source}
         sourceImageUrl={sourceImageUrl}
         profile={profile}
-        problemAlias={problemAlias}
         problemName={problemName}
+        problemAlias={problemAlias}
+        problemUrl={`${constructContainerUrl(containerPath)}/${problemAlias}`}
         containerTitle="Archive"
         containerName={containerName}
       />

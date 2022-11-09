@@ -185,17 +185,22 @@ public class SubmissionResource implements SubmissionService {
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
 
+        String containerJid = submission.getContainerJid();
+        String problemJid = submission.getProblemJid();
+
+        List<String> containerPath;
         String containerName;
         String problemAlias;
-        if (SubmissionUtils.isProblemSet(submission.getContainerJid())) {
-            ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(submission.getContainerJid()));
-            ProblemSetProblem problem = checkFound(
-                    problemSetProblemStore.getProblem(problemSet.getJid(), submission.getProblemJid()));
+        if (SubmissionUtils.isProblemSet(containerJid)) {
+            ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(containerJid));
+            ProblemSetProblem problem = checkFound(problemSetProblemStore.getProblem(problemSet.getJid(), problemJid));
+            containerPath = checkFound(problemSetStore.getProblemSetPathByJid(containerJid));
             containerName = problemSet.getName();
             problemAlias = problem.getAlias();
         } else {
-            Chapter chapter = checkFound(chapterStore.getChapterByJid(submission.getContainerJid()));
-            ChapterProblem problem = checkFound(chapterProblemStore.getProblem(submission.getProblemJid()));
+            Chapter chapter = checkFound(chapterStore.getChapterByJid(containerJid));
+            ChapterProblem problem = checkFound(chapterProblemStore.getProblem(problemJid));
+            containerPath = checkFound(chapterStore.getChapterPathByJid(containerJid));
             containerName = chapter.getName();
             problemAlias = problem.getAlias();
         }
@@ -223,6 +228,7 @@ public class SubmissionResource implements SubmissionService {
                 .profile(profile)
                 .problemAlias(problemAlias)
                 .problemName(SandalphonUtils.getProblemName(problem, language))
+                .containerPath(containerPath)
                 .containerName(containerName)
                 .build();
     }
