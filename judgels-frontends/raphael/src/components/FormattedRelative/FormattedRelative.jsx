@@ -39,13 +39,13 @@ export function FormattedRelative({ value }) {
   } else if (diff >= oneMinute) {
     const minutes = Math.floor(diff / oneMinute);
     if (minutes > 0) {
-      res = [...res, minutes + ' minute' + (minutes > 1 ? 's' : '')];
+      res = [...res, minutes + ' min' + (minutes > 1 ? 's' : '')];
       diff = diff % oneMinute;
     }
   } else {
     const seconds = Math.floor(diff / oneSecond);
     if (seconds > 0) {
-      res = [...res, seconds + ' second' + (seconds > 1 ? 's' : '')];
+      res = [...res, seconds + ' sec' + (seconds > 1 ? 's' : '')];
     }
   }
 
