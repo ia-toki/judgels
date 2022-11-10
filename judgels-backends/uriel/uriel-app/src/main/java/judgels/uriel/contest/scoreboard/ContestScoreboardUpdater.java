@@ -26,6 +26,7 @@ import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
+import judgels.uriel.api.contest.module.ExternalScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
@@ -138,43 +139,54 @@ public class ContestScoreboardUpdater {
         Map<ContestScoreboardType, Scoreboard> scoreboards = new HashMap<>();
         Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents = new HashMap<>();
 
-        updateScoreboard(
-                contest,
-                processor,
-                state,
-                Optional.ofNullable(incrementalMark.getIncrementalContents().get(OFFICIAL)),
-                styleModuleConfig,
-                contestants,
-                profilesMap,
-                programmingSubmissions,
-                bundleItemSubmissions,
-                Optional.empty(),
-                OFFICIAL,
-                scoreboards,
-                incrementalContents);
+        for (ContestScoreboardType type : new ContestScoreboardType[]{OFFICIAL, FROZEN}) {
+            Optional<Instant> freezeTime = Optional.empty();
+            if (type == FROZEN) {
+                if (!contestModulesConfig.getFrozenScoreboard().isPresent()) {
+                    continue;
+                }
+                Duration duration = contestModulesConfig.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
+                freezeTime = Optional.of(contest.getEndTime().minus(duration));
+            }
 
-        if (contestModulesConfig.getFrozenScoreboard().isPresent()) {
-            Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
-            Instant freezeTime = contest.getEndTime().minus(freezeDuration);
+            Optional<ScoreboardIncrementalContent> incrementalContent = Optional.ofNullable(
+                    incrementalMark.getIncrementalContents().get(type));
 
-            updateScoreboard(
+            ScoreboardProcessResult result = processor.process(
                     contest,
-                    processor,
                     state,
-                    Optional.ofNullable(incrementalMark.getIncrementalContents().get(FROZEN)),
+                    incrementalContent,
                     styleModuleConfig,
                     contestants,
                     profilesMap,
                     programmingSubmissions,
                     bundleItemSubmissions,
-                    Optional.of(freezeTime),
-                    FROZEN,
-                    scoreboards,
-                    incrementalContents);
+                    freezeTime);
+
+            Scoreboard scoreboard = processor.create(state, result.getEntries());
+
+            String scoreboardJson;
+            try {
+                scoreboardJson = objectMapper.writeValueAsString(scoreboard);
+            }  catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            scoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+                    .scoreboard(scoreboardJson)
+                    .type(type)
+                    .build());
+
+            scoreboards.put(type, scoreboard);
+            incrementalContents.put(type, result.getIncrementalContent());
         }
 
         if (contestTimer.hasEnded(contest)) {
-            updateContestantFinalRanks(contest.getJid(), scoreboards.get(OFFICIAL));
+            for (ScoreboardEntry e : scoreboards.get(OFFICIAL).getContent().getEntries()) {
+                if (e.hasSubmission()) {
+                    contestantStore.updateContestantFinalRank(contest.getJid(), e.getContestantJid(), e.getRank());
+                }
+            }
         }
 
         scoreboardIncrementalMarker.setMark(
@@ -183,64 +195,14 @@ public class ContestScoreboardUpdater {
                 incrementalMark.getTimestamp(),
                 incrementalContents);
 
-        contestModulesConfig.getExternalScoreboard().ifPresent(config -> {
+        if (contestModulesConfig.getExternalScoreboard().isPresent()) {
+            ExternalScoreboardModuleConfig config = contestModulesConfig.getExternalScoreboard().get();
             scoreboardPusher.pushScoreboard(
                     config.getReceiverUrl(),
                     config.getReceiverSecret(),
                     contest.getJid(),
                     contest.getStyle(),
                     scoreboards);
-        });
-    }
-
-    private void updateScoreboard(
-            Contest contest,
-            ScoreboardProcessor processor,
-            ScoreboardState state,
-            Optional<ScoreboardIncrementalContent> incrementalContent,
-            StyleModuleConfig styleModuleConfig,
-            Set<ContestContestant> contestants,
-            Map<String, Profile> profilesMap,
-            List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions,
-            Optional<Instant> freezeTime,
-            ContestScoreboardType type,
-            Map<ContestScoreboardType, Scoreboard> scoreboards,
-            Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents) {
-
-        ScoreboardProcessResult result = processor.process(
-                contest,
-                state,
-                incrementalContent,
-                styleModuleConfig,
-                contestants,
-                profilesMap,
-                programmingSubmissions,
-                bundleItemSubmissions,
-                freezeTime);
-        Scoreboard scoreboard = processor.create(state, result.getEntries());
-
-        String scoreboardJson;
-        try {
-            scoreboardJson = objectMapper.writeValueAsString(scoreboard);
-        }  catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        scoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
-                .scoreboard(scoreboardJson)
-                .type(type)
-                .build());
-
-        scoreboards.put(type, scoreboard);
-        incrementalContents.put(type, result.getIncrementalContent());
-    }
-
-    private void updateContestantFinalRanks(String contestJid, Scoreboard scoreboard) {
-        for (ScoreboardEntry entry : scoreboard.getContent().getEntries()) {
-            if (entry.hasSubmission()) {
-                contestantStore.updateContestantFinalRank(contestJid, entry.getContestantJid(), entry.getRank());
-            }
         }
     }
 }
