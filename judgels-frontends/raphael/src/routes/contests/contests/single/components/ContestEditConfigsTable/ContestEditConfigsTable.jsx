@@ -185,6 +185,23 @@ export function ContestEditConfigsTable({ config }) {
     );
   };
 
+  const renderMergedScoreboardConfig = ({ previousContestJid }) => {
+    const rows = [
+      {
+        key: 'previousContestJid',
+        title: 'Previous contest JID',
+        value: previousContestJid,
+      },
+    ];
+    return (
+      <div className="contest-edit-configs-table__config">
+        <h4>Merged scoreboard config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
+      </div>
+    );
+  };
+
   const renderExternalScoreboardConfig = ({ receiverUrl, receiverSecret }) => {
     const rows = [
       {
@@ -244,6 +261,7 @@ export function ContestEditConfigsTable({ config }) {
       {config.division && renderDivisionConfig(config.division)}
       {config.scoreboard && renderScoreboardConfig(config.scoreboard)}
       {config.frozenScoreboard && renderFrozenScoreboardConfig(config.frozenScoreboard)}
+      {config.mergedScoreboard && renderMergedScoreboardConfig(config.mergedScoreboard)}
       {config.externalScoreboard && renderExternalScoreboardConfig(config.externalScoreboard)}
       {config.virtual && renderVirtualConfig(config.virtual)}
       {config.editorial && renderEditorialConfig(config.editorial, config.profilesMap)}

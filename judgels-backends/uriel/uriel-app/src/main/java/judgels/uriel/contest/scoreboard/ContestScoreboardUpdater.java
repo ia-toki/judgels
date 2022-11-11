@@ -87,7 +87,24 @@ public class ContestScoreboardUpdater {
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
         StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contest.getJid(), contest.getStyle());
 
-        List<ContestProblem> problems = problemStore.getProblems(contest.getJid());
+        Optional<String> previousContestJid = contestModulesConfig.getMergedScoreboard()
+                .flatMap(c -> c.getPreviousContestJid());
+
+        List<ContestProblem> problems = Lists.newArrayList();
+        Map<String, ContestContestant> contestantsMap = new HashMap<>();
+
+        if (previousContestJid.isPresent()) {
+            problems.addAll(problemStore.getProblems(previousContestJid.get()));
+            for (ContestContestant contestant : contestantStore.getApprovedContestants(previousContestJid.get())) {
+                contestantsMap.put(contestant.getUserJid(), contestant);
+            }
+        }
+
+        problems.addAll(problemStore.getProblems(contest.getJid()));
+        for (ContestContestant contestant : contestantStore.getApprovedContestants(contest.getJid())) {
+            contestantsMap.put(contestant.getUserJid(), contestant);
+        }
+
         List<String> problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         List<String> problemAliases = Lists.transform(problems, ContestProblem::getAlias);
@@ -95,7 +112,7 @@ public class ContestScoreboardUpdater {
                 ? Optional.of(Lists.transform(problems, p -> p.getPoints().orElse(0)))
                 : Optional.empty();
 
-        Set<ContestContestant> contestants = contestantStore.getApprovedContestants(contest.getJid());
+        Set<ContestContestant> contestants = ImmutableSet.copyOf(contestantsMap.values());
         Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(contestantJidsSet, contest.getBeginTime());
 
@@ -121,15 +138,29 @@ public class ContestScoreboardUpdater {
 
         boolean withGradingDetails = processor.requiresGradingDetails(styleModuleConfig);
         long lastSubmissionId = incrementalMark.getLastSubmissionId();
-        List<Submission> programmingSubmissions = programmingSubmissionStore
-                .getSubmissionsForScoreboard(contest.getJid(), withGradingDetails, lastSubmissionId)
+
+        List<Submission> programmingSubmissions = Lists.newArrayList();
+        List<ItemSubmission> bundleItemSubmissions = Lists.newArrayList();
+
+        if (previousContestJid.isPresent() && lastSubmissionId == 0) {
+            programmingSubmissions.addAll(programmingSubmissionStore
+                    .getSubmissionsForScoreboard(previousContestJid.get(), withGradingDetails, 0));
+            bundleItemSubmissions.addAll(bundleItemSubmissionStore
+                    .getSubmissionsForScoreboard(previousContestJid.get()));
+        }
+
+        programmingSubmissions.addAll(programmingSubmissionStore
+                .getSubmissionsForScoreboard(contest.getJid(), withGradingDetails, lastSubmissionId));
+        bundleItemSubmissions.addAll(bundleItemSubmissionStore
+                .getSubmissionsForScoreboard(contest.getJid()));
+
+        programmingSubmissions = programmingSubmissions
                 .stream()
                 .filter(s -> s.getLatestGrading().isPresent())
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))
                 .filter(s -> contestantJidsSet.contains(s.getUserJid()))
                 .collect(toList());
-        List<ItemSubmission> bundleItemSubmissions = bundleItemSubmissionStore
-                .getSubmissionsForScoreboard(contest.getJid())
+        bundleItemSubmissions = bundleItemSubmissions
                 .stream()
                 .filter(s -> s.getGrading().isPresent())
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))

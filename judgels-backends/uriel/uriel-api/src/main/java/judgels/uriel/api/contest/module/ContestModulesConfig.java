@@ -25,6 +25,7 @@ public interface ContestModulesConfig {
     Optional<EditorialModuleConfig> getEditorial();
     Optional<ExternalScoreboardModuleConfig> getExternalScoreboard();
     Optional<FrozenScoreboardModuleConfig> getFrozenScoreboard();
+    Optional<MergedScoreboardModuleConfig> getMergedScoreboard();
     Optional<VirtualModuleConfig> getVirtual();
 
     Map<String, Profile> getProfilesMap();

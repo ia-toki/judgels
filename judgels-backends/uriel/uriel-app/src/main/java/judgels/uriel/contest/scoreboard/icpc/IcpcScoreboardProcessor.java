@@ -30,8 +30,6 @@ import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardProblemState;
-import judgels.uriel.api.contest.scoreboard.Scoreboard;
-import judgels.uriel.api.contest.scoreboard.ScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardEntryComparator;
@@ -57,14 +55,6 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                         .entries(Lists.transform(entries, e -> (IcpcScoreboardEntry) e))
                         .build())
                 .build();
-    }
-
-    @Override
-    public ScoreboardContent combineContents(
-            StyleModuleConfig styleModuleConfig,
-            List<Scoreboard> scoreboards,
-            Map<String, Profile> profilesMap) {
-        return null;
     }
 
     @Override

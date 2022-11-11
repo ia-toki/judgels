@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -49,7 +51,7 @@ public class ContestScoreboardBuilder {
 
         Scoreboard scoreboard = processor.parse(mapper, raw.getScoreboard());
         scoreboard = filterContestantJidsIfNecessary(scoreboard, processor, contest, userJid, canSupervise);
-        scoreboard = filterProblemJidsIfNecessary(scoreboard, processor, contest, showAllProblems);
+        scoreboard = filterProblemJidsIfNecessary(scoreboard, processor, contest, showAllProblems, canSupervise);
 
         return scoreboard;
     }
@@ -99,17 +101,29 @@ public class ContestScoreboardBuilder {
             Scoreboard scoreboard,
             ScoreboardProcessor processor,
             Contest contest,
-            boolean showAllProblems) {
+            boolean showAllProblems,
+            boolean canSupervise) {
 
         if (showAllProblems || contest.getStyle() != ContestStyle.IOI) {
             return scoreboard;
         }
 
-        Set<String> openProblemJids = ImmutableSet.copyOf(problemStore.getOpenProblemJids(contest.getJid()));
+        boolean isIncognito = moduleStore.getScoreboardModuleConfig(contest.getJid()).getIsIncognitoScoreboard();
+        Optional<String> previousContestJid = moduleStore.getMergedScoreboardModuleConfig(contest.getJid())
+                .flatMap(c -> c.getPreviousContestJid());
+
+        Set<String> openProblemJids = new HashSet<>();
+        openProblemJids.addAll(problemStore.getOpenProblemJids(contest.getJid()));
+
+        if (previousContestJid.isPresent() && (canSupervise || !isIncognito)) {
+            openProblemJids.addAll(problemStore.getOpenProblemJids(previousContestJid.get()));
+        }
+
         if (openProblemJids.size() != scoreboard.getState().getProblemJids().size()) {
             IoiStyleModuleConfig config = moduleStore.getIoiStyleModuleConfig(contest.getJid());
             IoiScoreboardProcessor ioiProcessor = (IoiScoreboardProcessor) processor;
-            return ioiProcessor.filterProblemJids((IoiScoreboard) scoreboard, openProblemJids, config);
+            IoiScoreboard ioiScoreboard = (IoiScoreboard) scoreboard;
+            return ioiProcessor.filterProblemJids(ioiScoreboard, ImmutableSet.copyOf(openProblemJids), config);
         }
         return scoreboard;
     }

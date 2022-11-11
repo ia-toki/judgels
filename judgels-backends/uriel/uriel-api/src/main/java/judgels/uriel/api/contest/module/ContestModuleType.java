@@ -8,6 +8,7 @@ public enum ContestModuleType {
     EXTERNAL_SCOREBOARD,
     FILE,
     FROZEN_SCOREBOARD,
+    MERGED_SCOREBOARD,
     HIDDEN,
     PAUSE,
     REGISTRATION,

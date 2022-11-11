@@ -42,6 +42,7 @@ describe('ContestEditModulesTab', () => {
       'Division',
       'Editorial',
       'Freezable scoreboard',
+      'Merged scoreboard',
       'External scoreboard',
       'Virtual contest',
       'Paused',

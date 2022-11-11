@@ -10,6 +10,7 @@ import static judgels.uriel.api.contest.module.ContestModuleType.EXTERNAL_SCOREB
 import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
+import static judgels.uriel.api.contest.module.ContestModuleType.MERGED_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.SCOREBOARD;
@@ -46,6 +47,7 @@ import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
+import judgels.uriel.api.contest.module.MergedScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.ModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -66,6 +68,7 @@ public class ContestModuleStore {
                     .put(EDITORIAL, EditorialModuleConfig.DEFAULT)
                     .put(EXTERNAL_SCOREBOARD, ExternalScoreboardModuleConfig.DEFAULT)
                     .put(FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.DEFAULT)
+                    .put(MERGED_SCOREBOARD, MergedScoreboardModuleConfig.DEFAULT)
                     .put(SCOREBOARD, ScoreboardModuleConfig.DEFAULT)
                     .put(VIRTUAL, VirtualModuleConfig.DEFAULT)
                     .build());
@@ -140,6 +143,7 @@ public class ContestModuleStore {
                 .editorial(getEditorialModuleConfig(contestJid))
                 .externalScoreboard(getExternalScoreboardModuleConfig(contestJid))
                 .frozenScoreboard(getFrozenScoreboardModuleConfig(contestJid))
+                .mergedScoreboard(getMergedScoreboardModuleConfig(contestJid))
                 .virtual(getVirtualModuleConfig(contestJid));
 
         if (contestStyle == ContestStyle.TROC) {
@@ -173,6 +177,7 @@ public class ContestModuleStore {
         config.getEditorial().ifPresent(c -> upsertEditorialModule(contestJid, c));
         config.getExternalScoreboard().ifPresent(c -> upsertExternalScoreboardModule(contestJid, c));
         config.getFrozenScoreboard().ifPresent(c -> upsertFrozenScoreboardModule(contestJid, c));
+        config.getMergedScoreboard().ifPresent(c -> upsertMergedScoreboardModule(contestJid, c));
         config.getVirtual().ifPresent(c -> upsertVirtualModule(contestJid, c));
     }
 
@@ -261,6 +266,10 @@ public class ContestModuleStore {
         upsertModule(contestJid, FROZEN_SCOREBOARD, config);
     }
 
+    public void upsertMergedScoreboardModule(String contestJid, MergedScoreboardModuleConfig config) {
+        upsertModule(contestJid, MERGED_SCOREBOARD, config);
+    }
+
     public void upsertHiddenModule(String contestJid) {
         upsertModule(contestJid, HIDDEN, Collections.emptyMap());
     }
@@ -315,6 +324,10 @@ public class ContestModuleStore {
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
+    }
+
+    public Optional<MergedScoreboardModuleConfig> getMergedScoreboardModuleConfig(String contestJid) {
+        return getModuleConfig(contestJid, MERGED_SCOREBOARD, MergedScoreboardModuleConfig.class);
     }
 
     public boolean hasHiddenModule(String contestJid) {

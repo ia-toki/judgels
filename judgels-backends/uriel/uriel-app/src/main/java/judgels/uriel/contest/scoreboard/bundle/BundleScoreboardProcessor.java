@@ -22,8 +22,6 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardEntry;
-import judgels.uriel.api.contest.scoreboard.Scoreboard;
-import judgels.uriel.api.contest.scoreboard.ScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardIncrementalContent;
@@ -48,14 +46,6 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                         .entries(Lists.transform(entries, e -> (BundleScoreboardEntry) e))
                         .build())
                 .build();
-    }
-
-    @Override
-    public ScoreboardContent combineContents(
-            StyleModuleConfig styleModuleConfig,
-            List<Scoreboard> scoreboards,
-            Map<String, Profile> profilesMap) {
-        return null;
     }
 
     @Override

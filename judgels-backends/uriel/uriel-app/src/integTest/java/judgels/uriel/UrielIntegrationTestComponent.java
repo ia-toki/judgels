@@ -5,9 +5,7 @@ import javax.inject.Singleton;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
-import judgels.uriel.contest.ContestGroupStore;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.contest.group.ContestGroupContestStore;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.jophiel.JophielModule;
 
@@ -21,6 +19,4 @@ import judgels.uriel.jophiel.JophielModule;
 @Singleton
 public interface UrielIntegrationTestComponent {
     ContestStore contestStore();
-    ContestGroupStore contestGroupStore();
-    ContestGroupContestStore contestGroupContestStore();
 }

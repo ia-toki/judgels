@@ -66,6 +66,7 @@ class ContestEditConfigsTab extends Component {
         division,
         editorial,
         frozenScoreboard,
+        mergedScoreboard,
         externalScoreboard,
         virtual,
       } = config;
@@ -131,6 +132,12 @@ class ContestEditConfigsTab extends Component {
           frozenScoreboardIsOfficialAllowed: frozenScoreboard.isOfficialScoreboardAllowed,
         };
       }
+      if (mergedScoreboard) {
+        initialValues = {
+          ...initialValues,
+          mergedScoreboardPreviousContestJid: mergedScoreboard.previousContestJid,
+        };
+      }
       if (externalScoreboard) {
         initialValues = {
           ...initialValues,
@@ -161,6 +168,7 @@ class ContestEditConfigsTab extends Component {
       division,
       editorial,
       frozenScoreboard,
+      mergedScoreboard,
       externalScoreboard,
       virtual,
     } = this.state.config;
@@ -243,6 +251,14 @@ class ContestEditConfigsTab extends Component {
         frozenScoreboard: {
           scoreboardFreezeTime: parseDuration(data.frozenScoreboardFreezeTime),
           isOfficialScoreboardAllowed: data.frozenScoreboardIsOfficialAllowed,
+        },
+      };
+    }
+    if (mergedScoreboard) {
+      config = {
+        ...config,
+        mergedScoreboard: {
+          previousContestJid: data.mergedScoreboardPreviousContestJid,
         },
       };
     }

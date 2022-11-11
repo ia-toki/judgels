@@ -55,6 +55,9 @@ describe('ContestEditConfigsTab', () => {
             scoreboardFreezeTime: parseDuration('1h'),
             isOfficialScoreboardAllowed: false,
           },
+          mergedScoreboard: {
+            previousContestJid: 'JIDCONT00000',
+          },
           externalScoreboard: {
             receiverUrl: 'http://external.scoreboard',
             receiverSecret: 'the_secret',
@@ -94,6 +97,10 @@ describe('ContestEditConfigsTab', () => {
         frozenScoreboardIsOfficialAllowed.getDOMNode().checked = true;
         frozenScoreboardIsOfficialAllowed.simulate('change');
 
+        const mergedScoreboardPreviousContestJid = wrapper.find('input[name="mergedScoreboardPreviousContestJid"]');
+        mergedScoreboardPreviousContestJid.getDOMNode().value = 'JIDCONT12345';
+        mergedScoreboardPreviousContestJid.simulate('input');
+
         const externalScoreboardReceiverUrl = wrapper.find('input[name="externalScoreboardReceiverUrl"]');
         externalScoreboardReceiverUrl.getDOMNode().value = 'http://new.external.scoreboard';
         externalScoreboardReceiverUrl.simulate('input');
@@ -130,6 +137,9 @@ describe('ContestEditConfigsTab', () => {
           frozenScoreboard: {
             isOfficialScoreboardAllowed: true,
             scoreboardFreezeTime: 3900000,
+          },
+          mergedScoreboard: {
+            previousContestJid: 'JIDCONT12345',
           },
           externalScoreboard: {
             receiverUrl: 'http://new.external.scoreboard',

@@ -279,6 +279,26 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     );
   };
 
+  const renderMergedScoreboardForm = () => {
+    const mergedScoreboardPreviousContestJidField = {
+      name: 'mergedScoreboardPreviousContestJid',
+      label: 'Previous contest JID',
+      validate: Required,
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
+    return (
+      <div className="contest-edit-configs-form__config">
+        <h4>Merged scoreboard config</h4>
+        <HTMLTable striped>
+          <tbody>
+            <Field component={FormTableTextInput} {...mergedScoreboardPreviousContestJidField} />
+          </tbody>
+        </HTMLTable>
+      </div>
+    );
+  };
+
   const renderExternalScoreboardForm = () => {
     const externalScoreboardReceiverUrlField = {
       name: 'externalScoreboardReceiverUrl',
@@ -339,6 +359,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
           {config.division && renderDivisionForm()}
           {renderScoreboardForm()}
           {config.frozenScoreboard && renderFrozenScoreboardForm()}
+          {config.mergedScoreboard && renderMergedScoreboardForm()}
           {config.externalScoreboard && renderExternalScoreboardForm()}
           {config.virtual && renderVirtualForm()}
           {config.editorial && renderEditorialForm()}

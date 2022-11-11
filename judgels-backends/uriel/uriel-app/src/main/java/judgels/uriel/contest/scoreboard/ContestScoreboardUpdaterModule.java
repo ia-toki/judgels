@@ -10,12 +10,9 @@ import javax.inject.Singleton;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.uriel.contest.ContestGroupStore;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.contestant.ContestContestantStore;
-import judgels.uriel.contest.group.ContestGroupContestStore;
-import judgels.uriel.contest.group.ContestGroupScoreboardStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 
@@ -29,9 +26,7 @@ public class ContestScoreboardUpdaterModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             LifecycleEnvironment lifecycleEnvironment,
             ContestStore contestStore,
-            ContestGroupStore contestGroupStore,
-            ContestScoreboardUpdater contestScoreboardUpdater,
-            ContestGroupScoreboardUpdater contestGroupScoreboardUpdater) {
+            ContestScoreboardUpdater contestScoreboardUpdater) {
 
         ExecutorService executorService =
                 lifecycleEnvironment.executorService("contest-scoreboard-updater-%d")
@@ -43,16 +38,12 @@ public class ContestScoreboardUpdaterModule {
                 ContestScoreboardPoller.class,
                 new Class<?>[] {
                         ContestStore.class,
-                        ContestGroupStore.class,
                         ExecutorService.class,
-                        ContestScoreboardUpdater.class,
-                        ContestGroupScoreboardUpdater.class},
+                        ContestScoreboardUpdater.class},
                 new Object[] {
                         contestStore,
-                        contestGroupStore,
                         executorService,
-                        contestScoreboardUpdater,
-                        contestGroupScoreboardUpdater});
+                        contestScoreboardUpdater});
     }
 
     @Provides
@@ -97,44 +88,6 @@ public class ContestScoreboardUpdaterModule {
                         programmingSubmissionStore,
                         bundleItemSubmissionStore,
                         scoreboardIncrementalMarker,
-                        scoreboardProcessorRegistry,
-                        scoreboardPusher,
-                        profileService});
-    }
-
-    @Provides
-    @Singleton
-    static ContestGroupScoreboardUpdater contestGroupScoreboardUpdater(
-            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            ObjectMapper objectMapper,
-            ContestStore contestStore,
-            ContestModuleStore moduleStore,
-            ContestScoreboardStore scoreboardStore,
-            ContestGroupContestStore groupContestStore,
-            ContestGroupScoreboardStore groupScoreboardStore,
-            ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            ContestScoreboardPusher scoreboardPusher,
-            ProfileService profileService) {
-
-        return unitOfWorkAwareProxyFactory.create(
-                ContestGroupScoreboardUpdater.class,
-                new Class<?>[] {
-                        ObjectMapper.class,
-                        ContestStore.class,
-                        ContestModuleStore.class,
-                        ContestScoreboardStore.class,
-                        ContestGroupContestStore.class,
-                        ContestGroupScoreboardStore.class,
-                        ScoreboardProcessorRegistry.class,
-                        ContestScoreboardPusher.class,
-                        ProfileService.class},
-                new Object[] {
-                        objectMapper,
-                        contestStore,
-                        moduleStore,
-                        scoreboardStore,
-                        groupContestStore,
-                        groupScoreboardStore,
                         scoreboardProcessorRegistry,
                         scoreboardPusher,
                         profileService});

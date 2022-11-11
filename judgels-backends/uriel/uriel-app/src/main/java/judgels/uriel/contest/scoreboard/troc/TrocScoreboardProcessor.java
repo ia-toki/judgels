@@ -26,8 +26,6 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.module.TrocStyleModuleConfig;
-import judgels.uriel.api.contest.scoreboard.Scoreboard;
-import judgels.uriel.api.contest.scoreboard.ScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.api.contest.scoreboard.TrocScoreboard;
@@ -57,14 +55,6 @@ public class TrocScoreboardProcessor implements ScoreboardProcessor {
                         .entries(Lists.transform(entries, e -> (TrocScoreboardEntry) e))
                         .build())
                 .build();
-    }
-
-    @Override
-    public ScoreboardContent combineContents(
-            StyleModuleConfig styleModuleConfig,
-            List<Scoreboard> scoreboards,
-            Map<String, Profile> profilesMap) {
-        return null;
     }
 
     @Override
