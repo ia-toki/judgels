@@ -77,6 +77,10 @@ public class ProblemClient {
         return clientProblemService.getProblemJidsByTags(sandalphonClientAuthHeader, tags);
     }
 
+    public void setProblemVisibilityTagsByJids(Map<String, Boolean> problemVisibilitiesMap) {
+        clientProblemService.setProblemVisibilityTagsByJids(sandalphonClientAuthHeader, problemVisibilitiesMap);
+    }
+
     public ProblemInfo getProblem(String problemJid) {
         return problemCache.get(problemJid);
     }

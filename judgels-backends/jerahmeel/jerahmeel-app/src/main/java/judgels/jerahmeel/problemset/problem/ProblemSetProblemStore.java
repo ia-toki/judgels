@@ -1,13 +1,16 @@
 package judgels.jerahmeel.problemset.problem;
 
+import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
+
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
@@ -62,26 +65,43 @@ public class ProblemSetProblemStore {
                 .collect(Collectors.toMap(m -> m.problemSetJid + "-" + m.problemJid, m -> m.alias));
     }
 
-    public Set<ProblemSetProblem> setProblems(String problemSetJid, List<ProblemSetProblem> data) {
-        Map<String, ProblemSetProblem> setProblems = data.stream().collect(
-                Collectors.toMap(ProblemSetProblem::getProblemJid, Function.identity()));
-        for (ProblemSetProblemModel model : problemDao.selectAllByProblemSetJid(problemSetJid, createOptions())) {
-            ProblemSetProblem existingProblem = setProblems.get(model.problemJid);
-            if (existingProblem == null || !existingProblem.getAlias().equals(model.alias)) {
-                problemDao.delete(model);
-            }
+    public Map<String, Boolean> setProblems(String problemSetJid, List<ProblemSetProblem> data) {
+        Set<String> affectedProblemJids = new HashSet<>();
+
+        Map<String, ProblemSetProblem> problemsToSet = new HashMap<>();
+        for (ProblemSetProblem p : data) {
+            problemsToSet.put(p.getProblemJid(), p);
+            affectedProblemJids.add(p.getProblemJid());
         }
 
-        ImmutableSet.Builder<ProblemSetProblem> problems = ImmutableSet.builder();
+        List<ProblemSetProblemModel> existingProblems = problemDao.selectAllByProblemSetJid(problemSetJid, DEFAULT_ALL);
+        for (ProblemSetProblemModel model : existingProblems) {
+            ProblemSetProblem problemToSet = problemsToSet.get(model.problemJid);
+            if (problemToSet == null || !problemToSet.getAlias().equals(model.alias)) {
+                problemDao.delete(model);
+            }
+            affectedProblemJids.add(model.problemJid);
+        }
+
         for (ProblemSetProblem problem : data) {
-            problems.add(upsertProblem(
+            upsertProblem(
                     problemSetJid,
                     problem.getAlias(),
                     problem.getProblemJid(),
                     problem.getType(),
-                    problem.getContestJids()));
+                    problem.getContestJids());
         }
-        return problems.build();
+
+        Set<String> visibleProblemJids = problemDao.selectAllByProblemJids(affectedProblemJids)
+                .stream()
+                .map(m -> m.problemJid)
+                .collect(Collectors.toSet());
+
+        ImmutableMap.Builder<String, Boolean> problemVisibilitiesMap = ImmutableMap.builder();
+        for (String problemJid : affectedProblemJids) {
+            problemVisibilitiesMap.put(problemJid, visibleProblemJids.contains(problemJid));
+        }
+        return problemVisibilitiesMap.build();
     }
 
     public ProblemSetProblem upsertProblem(
@@ -126,7 +146,7 @@ public class ProblemSetProblemStore {
     }
 
     private static SelectionOptions createOptions() {
-        return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
+        return new SelectionOptions.Builder().from(DEFAULT_ALL)
                 .orderBy("alias")
                 .orderDir(OrderDir.ASC)
                 .build();

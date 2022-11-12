@@ -214,6 +214,8 @@ POST        /api/v2/client/problems/editorial/jids                              
 POST        /api/v2/client/problems/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.translateAllowedSlugToJids(req: Request)
 +nocsrf
 POST        /api/v2/client/problems/tags                                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemJidsByTags(req: Request)
++nocsrf
+POST        /api/v2/client/problems/tags/visibility                                 org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.setProblemVisibilityTagsByJids(req: Request)
 
 GET         /api/v2/client/lessons/:lessonJid                                       org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLesson(req: Request, lessonJid)
 GET         /api/v2/client/lessons/:lessonJid/statement                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLessonStatement(req: Request, lessonJid)

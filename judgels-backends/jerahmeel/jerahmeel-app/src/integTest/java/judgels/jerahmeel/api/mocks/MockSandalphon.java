@@ -4,6 +4,7 @@ import static com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder.o
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -99,6 +100,10 @@ public class MockSandalphon {
         mockSandalphon.stubFor(post("/api/v2/client/problems/metadata/jids")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
                 .willReturn(okForJson(ImmutableMap.of())));
+
+        mockSandalphon.stubFor(post("/api/v2/client/problems/tags/visibility")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(ok()));
 
         mockSandalphon.stubFor(post("/api/v2/client/lessons/jids")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))

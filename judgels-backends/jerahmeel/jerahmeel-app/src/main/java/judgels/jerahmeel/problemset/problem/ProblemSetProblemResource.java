@@ -120,7 +120,8 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                         .build())
                 .collect(Collectors.toList());
 
-        problemStore.setProblems(problemSetJid, setData);
+        Map<String, Boolean> problemVisibilitiesMap = problemStore.setProblems(problemSetJid, setData);
+        problemClient.setProblemVisibilityTagsByJids(problemVisibilitiesMap);
     }
 
     @Override

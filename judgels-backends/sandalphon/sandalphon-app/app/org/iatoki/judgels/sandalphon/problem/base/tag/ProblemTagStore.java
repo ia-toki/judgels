@@ -6,6 +6,7 @@ import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.ENABLED;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -63,13 +64,27 @@ public class ProblemTagStore {
         }
     }
 
+    public void updateVisibilityTag(String problemJid, boolean isPublic) {
+        Set<String> curTags = getTags(problemJid);
+        Set<String> tagsToAdd = new HashSet<>();
+        Set<String> tagsToRemove = new HashSet<>();
+
+        removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
+        removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-public");
+
+        if (isPublic) {
+            upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-public");
+        } else {
+            upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
+        }
+
+        applyTagUpdates(problemJid, tagsToAdd, tagsToRemove);
+    }
+
     public void refreshDerivedTags(String problemJid) {
-        Set<String> curTags = problemTagDao.selectAllByProblemJid(problemJid)
-                .stream()
-                .map(m -> m.tag)
-                .collect(Collectors.toSet());
-        Set<String> tagsToAdd = Sets.newHashSet();
-        Set<String> tagsToRemove = Sets.newHashSet();
+        Set<String> curTags = getTags(problemJid);
+        Set<String> tagsToAdd = new HashSet<>();
+        Set<String> tagsToRemove = new HashSet<>();
 
         removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
         removeTag(curTags, tagsToAdd, tagsToRemove, "visibility-public");
@@ -139,15 +154,7 @@ public class ProblemTagStore {
             }
         }
 
-        for (String tag : tagsToAdd) {
-            ProblemTagModel m = new ProblemTagModel();
-            m.problemJid = problemJid;
-            m.tag = tag;
-            problemTagDao.insert(m);
-        }
-        for (String tag : tagsToRemove) {
-            problemTagDao.selectByProblemJidAndTag(problemJid, tag).ifPresent(problemTagDao::delete);
-        }
+        applyTagUpdates(problemJid, tagsToAdd, tagsToRemove);
     }
 
     public Set<String> filterProblemJidsByTags(Set<String> initialProblemJids, Set<String> tags) {
@@ -199,6 +206,13 @@ public class ProblemTagStore {
         return Sets.intersection(problemJids, allowedProblemJids);
     }
 
+    private Set<String> getTags(String problemJid) {
+        return problemTagDao.selectAllByProblemJid(problemJid)
+                .stream()
+                .map(m -> m.tag)
+                .collect(Collectors.toSet());
+    }
+
     private void upsertTag(Set<String> curTags, Set<String> tagsToAdd, Set<String> tagsToRemove, String tag) {
         if (tagsToRemove.contains(tag)) {
             tagsToRemove.remove(tag);
@@ -212,6 +226,18 @@ public class ProblemTagStore {
             tagsToAdd.remove(tag);
         } else if (curTags.contains(tag)) {
             tagsToRemove.add(tag);
+        }
+    }
+
+    private void applyTagUpdates(String problemJid, Set<String> tagsToAdd, Set<String> tagsToRemove) {
+        for (String tag : tagsToAdd) {
+            ProblemTagModel m = new ProblemTagModel();
+            m.problemJid = problemJid;
+            m.tag = tag;
+            problemTagDao.insert(m);
+        }
+        for (String tag : tagsToRemove) {
+            problemTagDao.selectByProblemJidAndTag(problemJid, tag).ifPresent(problemTagDao::delete);
         }
     }
 

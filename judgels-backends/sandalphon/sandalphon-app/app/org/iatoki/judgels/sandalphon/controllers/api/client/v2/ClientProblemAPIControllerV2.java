@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -240,6 +241,15 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
         Set<String> problemJids = problemTagStore.filterProblemJidsByTags(null, tags);
         return okAsJson(req, problemJids);
+    }
+
+    @Transactional
+    public Result setProblemVisibilityTagsByJids(Http.Request req) {
+        for (Iterator<Map.Entry<String, JsonNode>> it = req.body().asJson().fields(); it.hasNext(); ) {
+            Map.Entry<String, JsonNode> node = it.next();
+            problemTagStore.updateVisibilityTag(node.getKey(), node.getValue().booleanValue());
+        }
+        return ok();
     }
 
     @Transactional(readOnly = true)

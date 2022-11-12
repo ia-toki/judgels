@@ -107,6 +107,13 @@ public interface ClientProblemService {
     @Produces(APPLICATION_JSON)
     Set<String> getProblemJidsByTags(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, Set<String> tags);
 
+    @POST
+    @Path("/tags/visibility")
+    @Consumes(APPLICATION_JSON)
+    void setProblemVisibilityTagsByJids(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            Map<String, Boolean> problemVisibilitiesMap);
+
     @GET
     @Path("/public-tag-counts")
     @Produces(APPLICATION_JSON)
