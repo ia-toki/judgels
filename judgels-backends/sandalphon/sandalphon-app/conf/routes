@@ -224,7 +224,6 @@ POST        /api/v2/client/lessons/allowed-slug-to-jid                          
 
 # Public API v2
 
-POST        /api/v2/problems/refresh-derived-tags                                   org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.refreshProblemDerivedTags(req: Request, lastProblemId: Long, limit: Long)
 GET         /api/v2/problems/:problemJid/render/:mediaFilename                      org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderStatementMedia(req: Request, problemJid, mediaFilename)
 GET         /api/v2/problems/:problemJid/editorials/render/:mediaFilename           org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicProblemAPIControllerV2.renderEditorialMedia(req: Request, problemJid, mediaFilename)
 GET         /api/v2/lessons/:lessonJid/render/:mediaFilename                        org.iatoki.judgels.sandalphon.controllers.api.pub.v2.PublicLessonAPIControllerV2.renderMedia(req: Request, lessonJid, mediaFilename)

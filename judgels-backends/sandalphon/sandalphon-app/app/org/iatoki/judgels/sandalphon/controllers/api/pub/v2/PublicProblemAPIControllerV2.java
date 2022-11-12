@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
-import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import play.db.jpa.Transactional;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -14,22 +13,14 @@ import play.mvc.Result;
 @Singleton
 public class PublicProblemAPIControllerV2 extends AbstractJudgelsAPIController {
     private final ProblemStore problemStore;
-    private final ProblemTagStore problemTagStore;
 
     @Inject
     public PublicProblemAPIControllerV2(
             ObjectMapper mapper,
-            ProblemStore problemStore,
-            ProblemTagStore problemTagStore) {
+            ProblemStore problemStore) {
 
         super(mapper);
         this.problemStore = problemStore;
-        this.problemTagStore = problemTagStore;
-    }
-
-    @Transactional
-    public Result refreshProblemDerivedTags(Http.Request req, long lastProblemId, long limit) {
-        return okAsJson(req, problemTagStore.refreshProblemDerivedTags(lastProblemId, limit));
     }
 
     @Transactional(readOnly = true)
