@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -29,7 +30,6 @@ import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
-import judgles.jophiel.user.UserClient;
 
 public class ContestContestantResource implements ContestContestantService {
     private final ActorChecker actorChecker;

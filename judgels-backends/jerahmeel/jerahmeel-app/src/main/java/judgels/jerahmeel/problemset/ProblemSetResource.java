@@ -32,10 +32,10 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgles.jophiel.user.UserClient;
 
 public class ProblemSetResource implements ProblemSetService {
     private final ActorChecker actorChecker;

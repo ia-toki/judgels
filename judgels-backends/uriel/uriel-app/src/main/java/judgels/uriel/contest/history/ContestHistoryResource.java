@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingService;
+import judgels.jophiel.user.UserClient;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.history.ContestHistoryEvent;
@@ -18,7 +19,6 @@ import judgels.uriel.api.contest.history.ContestHistoryResponse;
 import judgels.uriel.api.contest.history.ContestHistoryService;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
-import judgles.jophiel.user.UserClient;
 
 public class ContestHistoryResource implements ContestHistoryService {
     private final UserClient userClient;

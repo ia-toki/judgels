@@ -13,8 +13,8 @@ import judgels.jerahmeel.api.stats.UserStatsService;
 import judgels.jerahmeel.api.stats.UserTopStatsEntry;
 import judgels.jerahmeel.api.stats.UserTopStatsResponse;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
-import judgles.jophiel.user.UserClient;
 
 public class UserStatsResource implements UserStatsService {
     private final StatsStore statsStore;

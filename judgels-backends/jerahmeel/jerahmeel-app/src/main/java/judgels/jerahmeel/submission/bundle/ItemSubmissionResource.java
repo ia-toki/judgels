@@ -27,6 +27,7 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
@@ -40,7 +41,6 @@ import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgles.jophiel.user.UserClient;
 
 public class ItemSubmissionResource implements ItemSubmissionService {
     private final ActorChecker actorChecker;

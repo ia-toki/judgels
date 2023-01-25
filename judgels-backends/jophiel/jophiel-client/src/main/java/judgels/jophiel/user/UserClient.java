@@ -1,4 +1,4 @@
-package judgles.jophiel.user;
+package judgels.jophiel.user;
 
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
@@ -28,7 +29,6 @@ import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgles.jophiel.user.UserClient;
 
 public class ContestClarificationResource implements ContestClarificationService {
     private final ActorChecker actorChecker;

@@ -30,9 +30,9 @@ import judgels.jerahmeel.chapter.lesson.ChapterLessonStore;
 import judgels.jerahmeel.course.CourseStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
+import judgels.jophiel.user.UserClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgles.jophiel.user.UserClient;
 
 public class CourseChapterResource implements CourseChapterService {
     private final ActorChecker actorChecker;

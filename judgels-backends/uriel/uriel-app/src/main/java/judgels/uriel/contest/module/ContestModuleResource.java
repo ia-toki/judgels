@@ -6,6 +6,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Set;
 import javax.inject.Inject;
+import judgels.jophiel.user.UserClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -15,7 +16,6 @@ import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
-import judgles.jophiel.user.UserClient;
 
 public class ContestModuleResource implements ContestModuleService {
     private final ActorChecker actorChecker;

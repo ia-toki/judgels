@@ -31,6 +31,7 @@ import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jerahmeel.uriel.ContestClient;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.user.UserClient;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemMetadata;
@@ -39,7 +40,6 @@ import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.ContestInfo;
-import judgles.jophiel.user.UserClient;
 
 public class ProblemSetProblemResource implements ProblemSetProblemService {
     private final ActorChecker actorChecker;

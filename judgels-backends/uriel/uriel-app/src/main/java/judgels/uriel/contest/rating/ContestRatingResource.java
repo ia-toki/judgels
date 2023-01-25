@@ -19,6 +19,7 @@ import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingService;
+import judgels.jophiel.user.UserClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -35,7 +36,6 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.RawContestScoreboard;
-import judgles.jophiel.user.UserClient;
 
 public class ContestRatingResource implements ContestRatingService {
     private final ActorChecker actorChecker;
