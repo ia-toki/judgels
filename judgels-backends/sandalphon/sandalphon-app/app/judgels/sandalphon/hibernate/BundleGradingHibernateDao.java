@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.bundle.grading;
+package judgels.sandalphon.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -12,6 +12,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
+import judgels.sandalphon.persistence.BundleGradingDao;
+import judgels.sandalphon.persistence.BundleGradingModel;
+import judgels.sandalphon.persistence.BundleGradingModel_;
 
 @Singleton
 public final class BundleGradingHibernateDao extends JudgelsHibernateDao<BundleGradingModel> implements BundleGradingDao {
@@ -22,7 +25,7 @@ public final class BundleGradingHibernateDao extends JudgelsHibernateDao<BundleG
     }
 
     @Override
-    public Map<String, List<BundleGradingModel>> getBySubmissionJids(List<String> submissionJids) {
+    public Map<String, List<judgels.sandalphon.persistence.BundleGradingModel>> getBySubmissionJids(List<String> submissionJids) {
         if (submissionJids.isEmpty()) {
             return ImmutableMap.of();
         }

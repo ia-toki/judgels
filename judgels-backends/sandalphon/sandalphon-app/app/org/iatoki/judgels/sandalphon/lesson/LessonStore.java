@@ -25,13 +25,16 @@ import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
+import judgels.sandalphon.persistence.LessonDao;
+import judgels.sandalphon.persistence.LessonModel;
+import judgels.sandalphon.persistence.LessonModel_;
+import judgels.sandalphon.persistence.LessonPartnerDao;
+import judgels.sandalphon.persistence.LessonPartnerModel;
+import judgels.sandalphon.persistence.LessonPartnerModel_;
 import org.iatoki.judgels.Git;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerDao;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerModel_;
 
 public final class LessonStore {
     private final ObjectMapper mapper;

@@ -1,10 +1,8 @@
-package org.iatoki.judgels.sandalphon.lesson;
+package judgels.sandalphon.persistence;
 
-import com.google.inject.ImplementedBy;
 import java.util.List;
 import judgels.persistence.JudgelsDao;
 
-@ImplementedBy(LessonHibernateDao.class)
 public interface LessonDao extends JudgelsDao<LessonModel> {
 
     List<String> getJidsByAuthorJid(String authorJid);

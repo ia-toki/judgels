@@ -1,9 +1,8 @@
-package org.iatoki.judgels.sandalphon.problem.programming.submission;
+package judgels.sandalphon.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
-import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
 
 @Entity(name = "sandalphon_programming_submission")
 @Table(indexes = {

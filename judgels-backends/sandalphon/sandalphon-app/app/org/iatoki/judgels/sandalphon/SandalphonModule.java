@@ -15,6 +15,26 @@ import judgels.fs.local.LocalFileSystem;
 import judgels.messaging.MessageClient;
 import judgels.persistence.ActorProvider;
 import judgels.sandalphon.SandalphonConfiguration;
+import judgels.sandalphon.hibernate.BundleGradingHibernateDao;
+import judgels.sandalphon.hibernate.BundleSubmissionHibernateDao;
+import judgels.sandalphon.hibernate.LessonHibernateDao;
+import judgels.sandalphon.hibernate.LessonPartnerHibernateDao;
+import judgels.sandalphon.hibernate.ProblemHibernateDao;
+import judgels.sandalphon.hibernate.ProblemPartnerHibernateDao;
+import judgels.sandalphon.hibernate.ProblemSetterHibernateDao;
+import judgels.sandalphon.hibernate.ProblemTagHibernateDao;
+import judgels.sandalphon.hibernate.ProgrammingGradingHibernateDao;
+import judgels.sandalphon.hibernate.ProgrammingSubmissionHibernateDao;
+import judgels.sandalphon.persistence.BundleGradingDao;
+import judgels.sandalphon.persistence.BundleSubmissionDao;
+import judgels.sandalphon.persistence.LessonDao;
+import judgels.sandalphon.persistence.LessonPartnerDao;
+import judgels.sandalphon.persistence.ProblemDao;
+import judgels.sandalphon.persistence.ProblemPartnerDao;
+import judgels.sandalphon.persistence.ProblemSetterDao;
+import judgels.sandalphon.persistence.ProblemTagDao;
+import judgels.sandalphon.persistence.ProgrammingGradingDao;
+import judgels.sandalphon.persistence.ProgrammingSubmissionDao;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
@@ -34,8 +54,6 @@ import org.iatoki.judgels.sandalphon.problem.base.ProblemGit;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponsePoller;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponseProcessor;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.ProgrammingGradingDao;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionDao;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.SubmissionRegrader;
 import play.db.jpa.JPAApi;
 
@@ -57,6 +75,17 @@ public final class SandalphonModule extends AbstractModule {
         bind(SessionFactory.class).to(PlaySessionFactory.class);
         bind(ActorProvider.class).to(JudgelsActorProvider.class);
         bind(Clock.class).toInstance(Clock.systemUTC());
+
+        bind(BundleGradingDao.class).to(BundleGradingHibernateDao.class);
+        bind(BundleSubmissionDao.class).to(BundleSubmissionHibernateDao.class);
+        bind(LessonDao.class).to(LessonHibernateDao.class);
+        bind(LessonPartnerDao.class).to(LessonPartnerHibernateDao.class);
+        bind(ProblemDao.class).to(ProblemHibernateDao.class);
+        bind(ProblemPartnerDao.class).to(ProblemPartnerHibernateDao.class);
+        bind(ProblemSetterDao.class).to(ProblemSetterHibernateDao.class);
+        bind(ProblemTagDao.class).to(ProblemTagHibernateDao.class);
+        bind(ProgrammingGradingDao.class).to(ProgrammingGradingHibernateDao.class);
+        bind(ProgrammingSubmissionDao.class).to(ProgrammingSubmissionHibernateDao.class);
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base;
+package judgels.sandalphon.hibernate;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -9,6 +9,9 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
+import judgels.sandalphon.persistence.ProblemSetterDao;
+import judgels.sandalphon.persistence.ProblemSetterModel;
+import judgels.sandalphon.persistence.ProblemSetterModel_;
 
 @Singleton
 public class ProblemSetterHibernateDao extends UnmodifiableHibernateDao<ProblemSetterModel> implements

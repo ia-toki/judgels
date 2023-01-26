@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.lesson;
+package judgels.sandalphon.hibernate;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -8,12 +8,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
+import judgels.sandalphon.persistence.ProblemDao;
+import judgels.sandalphon.persistence.ProblemModel;
+import judgels.sandalphon.persistence.ProblemModel_;
 
 @Singleton
-public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> implements LessonDao {
+public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel> implements ProblemDao {
 
     @Inject
-    public LessonHibernateDao(HibernateDaoData data) {
+    public ProblemHibernateDao(HibernateDaoData data) {
         super(data);
     }
 
@@ -21,22 +24,22 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
     public List<String> getJidsByAuthorJid(String authorJid) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<String> query = cb.createQuery(String.class);
-        Root<LessonModel> root = query.from(getEntityClass());
+        Root<ProblemModel> root = query.from(getEntityClass());
 
         query
-                .select(root.get(LessonModel_.jid))
-                .where(cb.equal(root.get(LessonModel_.createdBy), authorJid));
+                .select(root.get(ProblemModel_.jid))
+                .where(cb.equal(root.get(ProblemModel_.createdBy), authorJid));
 
         return currentSession().createQuery(query).getResultList();
     }
 
     @Override
-    public LessonModel findBySlug(String slug) {
+    public ProblemModel findBySlug(String slug) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<LessonModel> query = cb.createQuery(LessonModel.class);
-        Root<LessonModel> root = query.from(getEntityClass());
+        CriteriaQuery<ProblemModel> query = cb.createQuery(ProblemModel.class);
+        Root<ProblemModel> root = query.from(getEntityClass());
 
-        query.where(cb.equal(root.get(LessonModel_.slug), slug));
+        query.where(cb.equal(root.get(ProblemModel_.slug), slug));
 
         return currentSession().createQuery(query).getSingleResult();
     }
@@ -45,11 +48,11 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
     public boolean existsBySlug(String slug) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<LessonModel> root = query.from(getEntityClass());
+        Root<ProblemModel> root = query.from(getEntityClass());
 
         query
                 .select(cb.count(root))
-                .where(cb.equal(root.get(LessonModel_.slug), slug));
+                .where(cb.equal(root.get(ProblemModel_.slug), slug));
 
         return currentSession().createQuery(query).getSingleResult() > 0;
     }

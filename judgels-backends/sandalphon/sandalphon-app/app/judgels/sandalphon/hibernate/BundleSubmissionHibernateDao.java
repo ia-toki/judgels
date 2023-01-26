@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.bundle.submission;
+package judgels.sandalphon.hibernate;
 
 import java.time.Instant;
 import java.util.List;
@@ -10,6 +10,8 @@ import javax.persistence.criteria.Root;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
+import judgels.sandalphon.persistence.BundleSubmissionDao;
+import judgels.sandalphon.persistence.BundleSubmissionModel;
 
 @Singleton
 public final class BundleSubmissionHibernateDao extends JudgelsHibernateDao<BundleSubmissionModel> implements BundleSubmissionDao {

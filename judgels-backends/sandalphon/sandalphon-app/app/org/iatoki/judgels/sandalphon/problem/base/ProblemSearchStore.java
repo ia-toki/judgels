@@ -10,7 +10,10 @@ import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.problem.Problem;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
+import judgels.sandalphon.persistence.ProblemDao;
+import judgels.sandalphon.persistence.ProblemModel;
+import judgels.sandalphon.persistence.ProblemModel_;
+import judgels.sandalphon.persistence.ProblemPartnerDao;
 import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTagStore;
 
 public class ProblemSearchStore {

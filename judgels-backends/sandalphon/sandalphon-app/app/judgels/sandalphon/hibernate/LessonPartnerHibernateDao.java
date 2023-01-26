@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.lesson.partner;
+package judgels.sandalphon.hibernate;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -8,6 +8,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.sandalphon.persistence.LessonPartnerDao;
+import judgels.sandalphon.persistence.LessonPartnerModel;
+import judgels.sandalphon.persistence.LessonPartnerModel_;
 
 @Singleton
 public final class LessonPartnerHibernateDao extends HibernateDao<LessonPartnerModel> implements LessonPartnerDao {

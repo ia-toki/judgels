@@ -22,9 +22,12 @@ import judgels.sandalphon.api.submission.bundle.BundleGrading;
 import judgels.sandalphon.api.submission.bundle.BundleGradingResult;
 import judgels.sandalphon.api.submission.bundle.BundleSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingDao;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingModel;
-import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleGradingModel_;
+import judgels.sandalphon.persistence.BundleGradingDao;
+import judgels.sandalphon.persistence.BundleGradingModel;
+import judgels.sandalphon.persistence.BundleGradingModel_;
+import judgels.sandalphon.persistence.BundleSubmissionDao;
+import judgels.sandalphon.persistence.BundleSubmissionModel;
+import judgels.sandalphon.persistence.BundleSubmissionModel_;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
 import play.data.DynamicForm;
 

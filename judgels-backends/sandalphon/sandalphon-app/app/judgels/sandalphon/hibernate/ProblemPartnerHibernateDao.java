@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base.partner;
+package judgels.sandalphon.hibernate;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -8,6 +8,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.sandalphon.persistence.ProblemPartnerDao;
+import judgels.sandalphon.persistence.ProblemPartnerModel;
+import judgels.sandalphon.persistence.ProblemPartnerModel_;
 
 @Singleton
 public final class ProblemPartnerHibernateDao extends HibernateDao<ProblemPartnerModel> implements ProblemPartnerDao {

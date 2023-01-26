@@ -1,10 +1,8 @@
-package org.iatoki.judgels.sandalphon.problem.base;
+package judgels.sandalphon.persistence;
 
-import com.google.inject.ImplementedBy;
 import java.util.List;
 import judgels.persistence.JudgelsDao;
 
-@ImplementedBy(ProblemHibernateDao.class)
 public interface ProblemDao extends JudgelsDao<ProblemModel> {
 
     List<String> getJidsByAuthorJid(String authorJid);

@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base.partner;
+package judgels.sandalphon.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

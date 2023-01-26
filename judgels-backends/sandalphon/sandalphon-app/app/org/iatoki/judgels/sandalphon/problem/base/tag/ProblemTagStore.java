@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.gabriel.api.GradingConfig;
+import judgels.sandalphon.persistence.ProblemTagDao;
+import judgels.sandalphon.persistence.ProblemTagModel;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 

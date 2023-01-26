@@ -1,8 +1,9 @@
-package org.iatoki.judgels.sandalphon.problem.programming.grading;
+package judgels.sandalphon.hibernate;
 
 import javax.inject.Inject;
 import judgels.persistence.hibernate.HibernateDaoData;
-import judgels.sandalphon.hibernate.AbstractProgrammingGradingHibernateDao;
+import judgels.sandalphon.persistence.ProgrammingGradingDao;
+import judgels.sandalphon.persistence.ProgrammingGradingModel;
 
 public class ProgrammingGradingHibernateDao
         extends AbstractProgrammingGradingHibernateDao<ProgrammingGradingModel>

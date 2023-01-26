@@ -30,12 +30,16 @@ import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.partner.ProblemPartner;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
+import judgels.sandalphon.persistence.ProblemDao;
+import judgels.sandalphon.persistence.ProblemModel;
+import judgels.sandalphon.persistence.ProblemPartnerDao;
+import judgels.sandalphon.persistence.ProblemPartnerModel;
+import judgels.sandalphon.persistence.ProblemPartnerModel_;
+import judgels.sandalphon.persistence.ProblemSetterDao;
+import judgels.sandalphon.persistence.ProblemSetterModel;
 import org.iatoki.judgels.Git;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerDao;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerModel_;
 
 public class ProblemStore extends AbstractProblemStore {
     private final ObjectMapper mapper;

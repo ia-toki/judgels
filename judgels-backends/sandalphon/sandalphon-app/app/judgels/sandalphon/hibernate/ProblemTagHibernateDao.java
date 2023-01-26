@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base.tag;
+package judgels.sandalphon.hibernate;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,9 @@ import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
+import judgels.sandalphon.persistence.ProblemTagDao;
+import judgels.sandalphon.persistence.ProblemTagModel;
+import judgels.sandalphon.persistence.ProblemTagModel_;
 
 @Singleton
 public class ProblemTagHibernateDao extends UnmodifiableHibernateDao<ProblemTagModel> implements ProblemTagDao {
