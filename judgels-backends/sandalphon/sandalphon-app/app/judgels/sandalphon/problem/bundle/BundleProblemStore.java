@@ -1,11 +1,11 @@
-package org.iatoki.judgels.sandalphon.problem.bundle;
+package judgels.sandalphon.problem.bundle;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.sandalphon.api.problem.bundle.BundleItemsConfig;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
+import judgels.sandalphon.problem.base.ProblemFs;
 
 public final class BundleProblemStore extends AbstractBundleProblemStore {
     private final ObjectMapper mapper;

@@ -1,4 +1,4 @@
-package org.iatoki.judgels;
+package judgels.sandalphon;
 
 import java.util.Date;
 

@@ -1,6 +1,6 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
-import static org.iatoki.judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
+import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,9 +13,9 @@ import judgels.jophiel.api.client.user.ClientUserService;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.sandalphon.api.lesson.LessonStatement;
+import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.lesson.LessonStore;
 import play.db.jpa.Transactional;
 import play.mvc.Http;
 import play.mvc.Result;

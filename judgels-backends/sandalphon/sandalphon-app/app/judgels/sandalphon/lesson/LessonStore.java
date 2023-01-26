@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.lesson;
+package judgels.sandalphon.lesson;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +21,8 @@ import judgels.persistence.FilterOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.sandalphon.Git;
+import judgels.sandalphon.GitCommit;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
@@ -31,10 +33,7 @@ import judgels.sandalphon.persistence.LessonModel_;
 import judgels.sandalphon.persistence.LessonPartnerDao;
 import judgels.sandalphon.persistence.LessonPartnerModel;
 import judgels.sandalphon.persistence.LessonPartnerModel_;
-import org.iatoki.judgels.Git;
-import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.sandalphon.SandalphonProperties;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 
 public final class LessonStore {
     private final ObjectMapper mapper;
@@ -433,11 +432,11 @@ public final class LessonStore {
     }
 
     private static Path getOriginDirPath(String lessonJid) {
-        return Paths.get(SandalphonProperties.getInstance().getBaseLessonsDirKey(), lessonJid);
+        return Paths.get("lessons", lessonJid);
     }
 
     private static Path getClonesDirPath(String lessonJid) {
-        return Paths.get(SandalphonProperties.getInstance().getBaseLessonClonesDirKey(), lessonJid);
+        return Paths.get("lesson-clones", lessonJid);
     }
 
     private static Path getCloneDirPath(String userJid, String lessonJid) {

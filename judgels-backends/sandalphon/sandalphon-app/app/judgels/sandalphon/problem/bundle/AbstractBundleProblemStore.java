@@ -1,9 +1,9 @@
-package org.iatoki.judgels.sandalphon.problem.bundle;
+package judgels.sandalphon.problem.bundle;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Path;
 import judgels.fs.FileSystem;
-import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemStore;
+import judgels.sandalphon.problem.base.AbstractProblemStore;
 
 public abstract class AbstractBundleProblemStore extends AbstractProblemStore {
     protected AbstractBundleProblemStore(ObjectMapper mapper, FileSystem fs) {

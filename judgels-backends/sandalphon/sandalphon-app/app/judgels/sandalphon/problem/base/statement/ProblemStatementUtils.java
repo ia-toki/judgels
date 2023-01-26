@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base.statement;
+package judgels.sandalphon.problem.base.statement;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;

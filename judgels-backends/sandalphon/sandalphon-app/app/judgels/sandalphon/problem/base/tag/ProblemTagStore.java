@@ -1,7 +1,7 @@
-package org.iatoki.judgels.sandalphon.problem.base.tag;
+package judgels.sandalphon.problem.base.tag;
 
-import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.DISABLED;
-import static org.iatoki.judgels.sandalphon.StatementLanguageStatus.ENABLED;
+import static judgels.sandalphon.resource.StatementLanguageStatus.DISABLED;
+import static judgels.sandalphon.resource.StatementLanguageStatus.ENABLED;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -14,8 +14,8 @@ import javax.inject.Inject;
 import judgels.gabriel.api.GradingConfig;
 import judgels.sandalphon.persistence.ProblemTagDao;
 import judgels.sandalphon.persistence.ProblemTagModel;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemStore;
+import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 
 public class ProblemTagStore {
     private final ProblemTagDao problemTagDao;

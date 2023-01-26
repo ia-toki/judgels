@@ -1,6 +1,6 @@
 @(switchLanguageUri: String, allowedLanguages: List[String], currentLanguage: String, content: Html)
 
-@import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry
+@import judgels.sandalphon.resource.WorldLanguageRegistry
 
 <div class="small pull-left">
     Current language: <span class="label label-default">@WorldLanguageRegistry.getInstance.getDisplayLanguage(currentLanguage)</span>

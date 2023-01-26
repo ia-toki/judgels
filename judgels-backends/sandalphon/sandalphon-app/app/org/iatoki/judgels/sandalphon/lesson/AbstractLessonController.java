@@ -2,9 +2,10 @@ package org.iatoki.judgels.sandalphon.lesson;
 
 import java.util.Map;
 import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.version.html.versionLocalChangesWarningLayout;
 import play.mvc.Http;
 import play.mvc.Result;

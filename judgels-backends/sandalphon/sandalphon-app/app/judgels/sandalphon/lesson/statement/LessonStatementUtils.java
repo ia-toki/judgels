@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.lesson.statement;
+package judgels.sandalphon.lesson.statement;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;

@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.role.RoleChecker;
 import play.mvc.Http;
 

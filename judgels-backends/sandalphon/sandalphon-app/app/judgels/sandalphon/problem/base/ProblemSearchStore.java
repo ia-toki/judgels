@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base;
+package judgels.sandalphon.problem.base;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -14,7 +14,7 @@ import judgels.sandalphon.persistence.ProblemDao;
 import judgels.sandalphon.persistence.ProblemModel;
 import judgels.sandalphon.persistence.ProblemModel_;
 import judgels.sandalphon.persistence.ProblemPartnerDao;
-import org.iatoki.judgels.sandalphon.problem.base.tag.ProblemTagStore;
+import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 
 public class ProblemSearchStore {
     private final ProblemDao problemDao;

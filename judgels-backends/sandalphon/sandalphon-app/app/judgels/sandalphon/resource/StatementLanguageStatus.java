@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon;
+package judgels.sandalphon.resource;
 
 public enum StatementLanguageStatus {
 

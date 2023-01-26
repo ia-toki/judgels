@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.programming;
+package judgels.sandalphon.problem.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
@@ -15,8 +15,8 @@ import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
-import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemStore;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemFs;
+import judgels.sandalphon.problem.base.AbstractProblemStore;
+import judgels.sandalphon.problem.base.ProblemFs;
 
 public final class ProgrammingProblemStore extends AbstractProblemStore {
     private final ObjectMapper mapper;

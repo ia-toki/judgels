@@ -1,4 +1,4 @@
-package org.iatoki.judgels;
+package judgels.sandalphon;
 
 import com.google.common.collect.ImmutableList;
 import java.io.File;

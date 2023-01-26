@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base.tag;
+package judgels.sandalphon.problem.base.tag;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;

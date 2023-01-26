@@ -9,7 +9,7 @@ import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.submission.bundle.BundleAnswer;
 import judgels.sandalphon.api.submission.bundle.BundleGradingResult;
 import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.ProblemStore;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapter;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapters;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemHasScore;

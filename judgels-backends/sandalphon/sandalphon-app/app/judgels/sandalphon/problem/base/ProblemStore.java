@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.problem.base;
+package judgels.sandalphon.problem.base;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +22,8 @@ import judgels.persistence.JidGenerator;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.sandalphon.Git;
+import judgels.sandalphon.GitCommit;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemEditorial;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
@@ -37,9 +39,7 @@ import judgels.sandalphon.persistence.ProblemPartnerModel;
 import judgels.sandalphon.persistence.ProblemPartnerModel_;
 import judgels.sandalphon.persistence.ProblemSetterDao;
 import judgels.sandalphon.persistence.ProblemSetterModel;
-import org.iatoki.judgels.Git;
-import org.iatoki.judgels.GitCommit;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 
 public class ProblemStore extends AbstractProblemStore {
     private final ObjectMapper mapper;

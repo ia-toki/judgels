@@ -1,11 +1,10 @@
-package org.iatoki.judgels.sandalphon.problem.base;
+package judgels.sandalphon.problem.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import judgels.fs.FileSystem;
-import org.iatoki.judgels.sandalphon.SandalphonProperties;
 
 public abstract class AbstractProblemStore {
     private final ObjectMapper mapper;
@@ -17,11 +16,11 @@ public abstract class AbstractProblemStore {
     }
 
     protected Path getOriginDirPath(String problemJid) {
-        return Paths.get(SandalphonProperties.getInstance().getBaseProblemsDirKey(), problemJid);
+        return Paths.get("problems", problemJid);
     }
 
     protected Path getClonesDirPath(String problemJid) {
-        return Paths.get(SandalphonProperties.getInstance().getBaseProblemClonesDirKey(), problemJid);
+        return Paths.get("problem-clones", problemJid);
     }
 
     protected Path getCloneDirPath(String userJid, String problemJid) {

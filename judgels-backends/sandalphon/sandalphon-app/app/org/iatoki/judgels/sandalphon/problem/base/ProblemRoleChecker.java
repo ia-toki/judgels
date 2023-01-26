@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.role.RoleChecker;
 import play.mvc.Http;
 

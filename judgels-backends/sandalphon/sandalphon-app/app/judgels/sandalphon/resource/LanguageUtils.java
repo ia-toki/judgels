@@ -1,4 +1,4 @@
-package org.iatoki.judgels.sandalphon.resource;
+package judgels.sandalphon.resource;
 
 public class LanguageUtils {
     private LanguageUtils() {}
