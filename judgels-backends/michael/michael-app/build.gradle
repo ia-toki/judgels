@@ -1,0 +1,29 @@
+apply from: '../../gradle/java.gradle'
+apply from: '../../gradle/integTest.gradle'
+
+dependencies {
+    implementation project(':judgels-commons:judgels-fs')
+    implementation project(':judgels-commons:judgels-recaptcha')
+    implementation project(':judgels-commons:judgels-service-jaxrs')
+    implementation project(':judgels-commons:judgels-service-persistence')
+
+    implementation project(':jophiel:jophiel-app')
+
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
+    implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
+    compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    integTestRuntimeOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+
+    integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}

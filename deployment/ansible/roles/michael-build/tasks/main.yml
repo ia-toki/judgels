@@ -1,0 +1,11 @@
+- block:
+    - name: Build michael image and push it to GitHub container registry
+      docker_image:
+        source: build
+        force_source: yes
+        name: ghcr.io/ia-toki/judgels/michael
+        push: yes
+        build:
+          path: "{{ playbook_dir }}/../../../judgels-backends/michael/michael-dist"
+          args:
+            VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

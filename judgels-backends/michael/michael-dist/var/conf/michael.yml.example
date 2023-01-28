@@ -1,0 +1,102 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9101
+  adminConnectors:
+    - type: http
+      port: 9111
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/michael-request.log
+      archivedLogFilenamePattern: var/log/michael-request-%d.log.gz
+      archivedFileCount: 14
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost/judgels?useSSL=false
+  user: judgels
+  password: judgels
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate.generate_statistics: false
+    hibernate.query.plan_cache_max_size: 64
+    hibernate.query.plan_parameter_metadata_max_size: 32
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/michael.log
+      archivedLogFilenamePattern: var/log/michael-%d.log.gz
+      archivedFileCount: 14
+
+  loggers:
+    org.hibernate.type.BasicTypeRegistry:
+      level: OFF
+
+webSecurity:
+  cors:
+    allowedOrigins: "*"
+
+jophiel:
+  baseDataDir: var/data
+
+  mailer:
+    host: smtp.mailtrap.io
+    port: 2525
+    useSsl: false
+    username: xxx
+    password: xxx
+    sender: noreply@jophiel.judgels
+
+#  recaptcha:
+#    siteKey: xxx
+#    secretKey: xxx
+
+#  aws:
+#    accessKey: xxx
+#    secretKey: xxx
+#    s3BucketRegionId: ap-southeast-1
+#    cloudFrontBaseUrl: https://xxx.cloudfront.net
+
+  userAvatar:
+    fs:
+      type: local
+#   fs:
+#     type: aws
+#     s3BucketName: judgels-jophiel-avatars
+
+  userRegistration:
+    enabled: true
+    useRecaptcha: false
+    activationEmailTemplate:
+      subject: Activate your account
+      body: |
+        <p>Dear {{username}},</p>
+        <p><a href="http://localhost:3000/activate/{{emailCode}}">Click here</a> to activate your account.</p>
+
+  userResetPassword:
+    enabled: true
+    requestEmailTemplate:
+      subject: Someone requested to reset your password
+      body: |
+        <p>Dear {{username}},</p>
+        <p><a href="http://localhost:3000/reset-password/{{emailCode}}">Click here</a> to reset your password.</p>
+    resetEmailTemplate:
+      subject: Your password has been reset
+      body: |
+        <p>Dear {{username}},</p>
+        <p>Your password has been reset.</p>
+
+  superadminCreator:
+    initialPassword: superadmin
+
+  session:
+    maxConcurrentSessionsPerUser: -1
+    disableLogout: false
+
+  web:
+    announcements: []

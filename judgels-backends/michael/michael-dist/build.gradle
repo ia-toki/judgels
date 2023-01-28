@@ -1,0 +1,23 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    runtimeOnly project(':michael:michael-app')
+}
+
+application {
+    mainClassName 'judgels.michael.MichaelApplication'
+}
+
+run {
+    args = [ 'server', 'var/conf/michael.yml' ]
+}
+
+distributions.main {
+    contents {
+        from('var') {
+            into 'var'
+        }
+    }
+}

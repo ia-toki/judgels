@@ -1,0 +1,5 @@
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - name: michael-build

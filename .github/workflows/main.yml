@@ -141,6 +141,10 @@ jobs:
         if: steps.changed-files.outputs.gabriel == '1'
         run: ./deployment/scripts/build_gabriel.sh
 
+      - name: Build Michael
+        if: steps.changed-files.outputs.michael == '1'
+        run: ./deployment/scripts/build_michael.sh
+
       - name: Set up Node
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/setup-node@v1.4.4
