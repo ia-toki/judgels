@@ -1,0 +1,125 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9101
+  adminConnectors:
+    - type: http
+      port: 9111
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/michael-request.log
+      archivedLogFilenamePattern: var/log/michael-request-%d.log.gz
+      archivedFileCount: 14
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://{{ db_host }}/judgels{{ db_options }}
+  user: {{ db_username }}
+  password: {{ db_password }}
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate.generate_statistics: false
+    hibernate.query.plan_cache_max_size: 64
+    hibernate.query.plan_parameter_metadata_max_size: 32
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/michael.log
+      archivedLogFilenamePattern: var/log/michael-%d.log.gz
+      archivedFileCount: 14
+
+  loggers:
+    org.hibernate.type.BasicTypeRegistry:
+      level: OFF
+
+webSecurity:
+  cors:
+    allowedOrigins: {{ judgels_scheme }}://{{ raphael_url }}
+    allowCredentials: true
+
+jophiel:
+  baseDataDir: /judgels/michael/var/data
+
+  auth:
+{% if jophiel_auth_google_clientId is defined %}
+    google:
+      clientId: {{ jophiel_auth_google_clientId }}
+{% endif %}
+
+{% if jophiel_mailer_host is defined %}
+  mailer:
+    host: {{ jophiel_mailer_host }}
+    port: {{ jophiel_mailer_port }}
+    useSsl: {{ jophiel_mailer_useSsl }}
+    username: {{ jophiel_mailer_username }}
+    password: {{ jophiel_mailer_password }}
+    sender: {{ jophiel_mailer_sender }}
+{% endif %}
+
+{% if recaptcha_siteKey is defined %}
+  recaptcha:
+    siteKey: {{ recaptcha_siteKey }}
+    secretKey: {{ recaptcha_secretKey }}
+{% endif %}
+
+{% if jophiel_aws_accessKey is defined %}
+  aws:
+    accessKey: {{ jophiel_aws_accessKey }}
+    secretKey: {{ jophiel_aws_secretKey }}
+    s3BucketRegionId: {{ jophiel_aws_s3BucketRegionId }}
+    cloudFrontBaseUrl: {{ jophiel_aws_cloudFrontBaseUrl }}
+{% endif %}
+
+  userAvatar:
+    fs:
+      type: {{ jophiel_userAvatar_fs_type }}
+{% if jophiel_userAvatar_fs_type != 'local' %}
+      s3BucketName: {{ jophiel_userAvatar_fs_s3BucketName }}
+{% endif %}
+
+  userRegistration:
+    enabled: {{ jophiel_userRegistration_enabled }}
+{% if jophiel_userRegistration_enabled %}
+    useRecaptcha: {{ jophiel_userRegistration_useRecaptcha }}
+    activationEmailTemplate:
+      subject: {{ jophiel_userRegistration_activationEmailTemplate_subject }}
+      body: {{ jophiel_userRegistration_activationEmailTemplate_body }}
+{% else %}
+    useRecaptcha: false
+    activationEmailTemplate:
+      subject: UNUSED
+      body: UNUSED
+{% endif %}
+
+  userResetPassword:
+    enabled: {{ jophiel_userResetPassword_enabled }}
+{% if jophiel_userResetPassword_enabled %}
+    requestEmailTemplate:
+      subject: {{ jophiel_userResetPassword_requestEmailTemplate_subject }}
+      body: {{ jophiel_userResetPassword_requestEmailTemplate_body }}
+    resetEmailTemplate:
+      subject: {{ jophiel_userResetPassword_resetEmailTemplate_subject }}
+      body: {{ jophiel_userResetPassword_resetEmailTemplate_body }}
+{% else %}
+    requestEmailTemplate:
+      subject: UNUSED
+      body: UNUSED
+    resetEmailTemplate:
+      subject: UNUSED
+      body: UNUSED
+{% endif %}
+
+  superadminCreator:
+    initialPassword: {{ jophiel_superadminCreator_initialPassword }}
+
+  session:
+    maxConcurrentSessionsPerUser: {{ jophiel_session_maxConcurrentSessionsPerUser }}
+    disableLogout: {{ jophiel_session_disableLogout }}
+
+  web:
+    announcements: []

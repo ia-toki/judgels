@@ -1,0 +1,44 @@
+- block:
+  - name: Create michael container mount volume
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/michael/var
+      - /judgels/michael/var/conf
+      - /judgels/michael/var/data
+
+  - name: Generate michael config
+    template:
+      src: "{{ playbook_dir }}/../conf/michael.yml.j2"
+      dest: /judgels/michael/var/conf/michael.yml
+      mode: '0644'
+
+  - name: Pull michael image
+    docker_image:
+      name: ghcr.io/ia-toki/judgels/michael
+      tag: "{{ judgels_version | default('latest', true) }}"
+      source: pull
+      force_source: yes
+
+  - name: Run a michael container
+    docker_container:
+      name: michael
+      image: "ghcr.io/ia-toki/judgels/michael:{{ judgels_version | default('latest', true) }}"
+      restart: yes
+      restart_policy: always
+      log_driver: json-file
+      log_options:
+        max-size: 256m
+        max-file: "2"
+      network_mode: host
+      volumes:
+        - "/judgels/michael/var:/judgels/michael/var"
+
+  - name: Allow michael traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: "9101"
+      proto: tcp
+      comment: judgels michael
