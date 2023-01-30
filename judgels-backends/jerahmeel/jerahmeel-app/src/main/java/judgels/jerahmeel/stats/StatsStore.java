@@ -3,7 +3,6 @@ package judgels.jerahmeel.stats;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
@@ -11,9 +10,9 @@ import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,62 +99,85 @@ public class StatsStore {
 
     public Map<String, ChapterProgress> getChapterProgressesMap(String userJid, Set<String> chapterJids) {
         Map<String, Integer> totalProblemsMap = getChapterTotalProblemsMap(chapterJids);
-        Map<String, Integer> solvedProblemsMap = getUserChapterSolvedProblemsMap(ImmutableSet.of(userJid), chapterJids)
-                .get(userJid);
+        Map<String, Integer> solvedProblemsMap = getUserChapterSolvedProblemsMap(ImmutableSet.of(userJid), chapterJids).get(userJid);
 
-        return chapterJids.stream().collect(toMap(
-                Function.identity(),
-                jid -> new ChapterProgress.Builder()
-                        .totalProblems(totalProblemsMap.get(jid))
-                        .solvedProblems(solvedProblemsMap.get(jid))
-                        .build()));
+        Map<String, ChapterProgress> chapterProgressesMap = new HashMap<>();
+        for (String chapterJid : chapterJids) {
+            chapterProgressesMap.put(chapterJid, new ChapterProgress.Builder()
+                    .totalProblems(totalProblemsMap.get(chapterJid))
+                    .solvedProblems(solvedProblemsMap.get(chapterJid))
+                    .build());
+        }
+        return ImmutableMap.copyOf(chapterProgressesMap);
     }
 
     public Map<String, Integer> getChapterTotalProblemsMap(Set<String> chapterJids) {
-        Map<String, Long> totalProblemsMap = chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids).stream()
-                .collect(groupingBy(m -> m.chapterJid, counting()));
-
-        return chapterJids.stream().collect(toMap(
-                Function.identity(),
-                jid -> totalProblemsMap.getOrDefault(jid, 0L).intValue()));
+        Map<String, Integer> totalProblemsMap = new HashMap<>();
+        for (String chapterJid : chapterJids) {
+            totalProblemsMap.put(chapterJid, 0);
+        }
+        for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)) {
+            totalProblemsMap.put(model.chapterJid, 1 + totalProblemsMap.get(model.chapterJid));
+        }
+        return ImmutableMap.copyOf(totalProblemsMap);
     }
 
     public Map<String, Map<String, Integer>> getUserChapterSolvedProblemsMap(
             Set<String> userJids,
             Set<String> chapterJids) {
 
-        List<ChapterProblemModel> chapterProblems = chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids);
-        Map<String, Set<String>> chapterProblemJidsMap = chapterProblems.stream()
-                .collect(groupingBy(m -> m.chapterJid,  mapping(m -> m.problemJid, toSet())));
+        Map<String, Set<String>> chapterProblemJidsMap = new HashMap<>();
+        for (String chapterJid : chapterJids) {
+            chapterProblemJidsMap.put(chapterJid, new HashSet<>());
+        }
+        Set<String> problemJids = new HashSet<>();
+        for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)) {
+            chapterProblemJidsMap.get(model.chapterJid).add(model.problemJid);
+            problemJids.add(model.problemJid);
+        }
 
-        Set<String> problemJids = chapterProblems.stream().map(m -> m.problemJid).collect(toSet());
-        Map<String, Set<String>> userSolvedProblemJidsMap = statsUserProblemDao
-                .selectAllByUserJidsAndProblemJids(userJids, problemJids)
-                .stream()
-                .filter(m -> m.verdict.equals(Verdict.ACCEPTED.getCode()))
-                .collect(groupingBy(m -> m.userJid, mapping(m -> m.problemJid, toSet())));
+        Map<String, Set<String>> userSolvedProblemJidsMap = new HashMap<>();
+        for (String userJid : userJids) {
+            userSolvedProblemJidsMap.put(userJid, new HashSet<>());
+        }
+        for (StatsUserProblemModel model : statsUserProblemDao.selectAllByUserJidsAndProblemJids(userJids, problemJids)) {
+            if (model.verdict.equals(Verdict.ACCEPTED.getCode())) {
+                userSolvedProblemJidsMap.get(model.userJid).add(model.problemJid);
+            }
+        }
 
-        return userJids.stream().collect(toMap(
-                Function.identity(),
-                userJid -> chapterJids.stream().collect(toMap(
-                        Function.identity(),
-                        chapterJid -> Sets.intersection(
-                                        userSolvedProblemJidsMap.getOrDefault(userJid, emptySet()),
-                                        chapterProblemJidsMap.getOrDefault(chapterJid, emptySet())).size()))));
+        Map<String, Map<String, Integer>> userChapterSolvedProblemsMap = new HashMap<>();
+        for (String userJid : userJids) {
+            userChapterSolvedProblemsMap.put(userJid, new HashMap<>());
+            for (String chapterJid : chapterJids) {
+                userChapterSolvedProblemsMap.get(userJid).put(chapterJid, Sets.intersection(
+                        userSolvedProblemJidsMap.get(userJid),
+                        chapterProblemJidsMap.get(chapterJid)).size());
+            }
+        }
+        return ImmutableMap.copyOf(userChapterSolvedProblemsMap);
     }
 
     public Map<String, ProblemProgress> getProblemProgressesMap(String userJid, Set<String> problemJids) {
-        List<StatsUserProblemModel> models = statsUserProblemDao.selectAllByUserJidAndProblemJids(userJid, problemJids);
-        Map<String, StatsUserProblemModel> modelsMap = models.stream().collect(toMap(m -> m.problemJid, m -> m));
+        Map<String, String> verdictsMap = new HashMap<>();
+        Map<String, Integer> scoresMap = new HashMap<>();
+        for (String problemJid : problemJids) {
+            verdictsMap.put(problemJid, Verdict.PENDING.getCode());
+            scoresMap.put(problemJid, 0);
+        }
+        for (StatsUserProblemModel model : statsUserProblemDao.selectAllByUserJidAndProblemJids(userJid, problemJids)) {
+            verdictsMap.put(model.problemJid, model.verdict);
+            scoresMap.put(model.problemJid, model.score);
+        }
 
-        return problemJids.stream().collect(toMap(
-                Function.identity(),
-                jid -> new ProblemProgress.Builder()
-                        .verdict(Optional.ofNullable(modelsMap.get(jid))
-                                .map(m -> m.verdict).orElse(Verdict.PENDING.getCode()))
-                        .score(Optional.ofNullable(modelsMap.get(jid))
-                                .map(m -> m.score).orElse(0))
-                        .build()));
+        Map<String, ProblemProgress> progressesMap = new HashMap<>();
+        for (String problemJid : problemJids) {
+            progressesMap.put(problemJid, new ProblemProgress.Builder()
+                    .verdict(verdictsMap.get(problemJid))
+                    .score(scoresMap.get(problemJid))
+                    .build());
+        }
+        return ImmutableMap.copyOf(progressesMap);
     }
 
     public Map<String, ProblemStats> getProblemStatsMap(Set<String> problemJids) {
@@ -163,13 +185,15 @@ public class StatsStore {
         Map<String, Long> totalUsersAccepted = statsUserProblemDao.selectCountsAcceptedByProblemJids(problemJids);
         Map<String, Long> totalUsersTried = statsUserProblemDao.selectCountsTriedByProblemJids(problemJids);
 
-        return problemJids.stream().collect(toMap(
-                Function.identity(),
-                jid -> new ProblemStats.Builder()
-                        .totalScores(totalScoresMap.getOrDefault(jid, 0L).intValue())
-                        .totalUsersAccepted(totalUsersAccepted.getOrDefault(jid, 0L).intValue())
-                        .totalUsersTried(totalUsersTried.getOrDefault(jid, 0L).intValue())
-                        .build()));
+        Map<String, ProblemStats> problemStatsMap = new HashMap<>();
+        for (String problemJid : problemJids) {
+            problemStatsMap.put(problemJid, new ProblemStats.Builder()
+                    .totalScores(totalScoresMap.getOrDefault(problemJid, 0L).intValue())
+                    .totalUsersAccepted(totalUsersAccepted.getOrDefault(problemJid, 0L).intValue())
+                    .totalUsersTried(totalUsersTried.getOrDefault(problemJid, 0L).intValue())
+                    .build());
+        }
+        return ImmutableMap.copyOf(problemStatsMap);
     }
 
     public ProblemTopStats getProblemTopStats(String problemJid) {
@@ -215,23 +239,22 @@ public class StatsStore {
     }
 
     public Map<String, ProblemSetProgress> getProblemSetProgressesMap(String userJid, Set<String> problemSetJids) {
-        Map<String, Set<String>> problemJidsMap = Maps.newHashMap();
-        Set<String> problemJids = Sets.newHashSet();
-
+        Map<String, Set<String>> problemJidsMap = new HashMap<>();
+        Set<String> problemJids = new HashSet<>();
         for (ProblemSetProblemModel m : problemSetProblemDao.selectAllByProblemSetJids(problemSetJids, DEFAULT_ALL)) {
             if (m.type.equals(ProblemType.PROGRAMMING.name())) {
-                problemJidsMap.putIfAbsent(m.problemSetJid, Sets.newHashSet());
+                problemJidsMap.putIfAbsent(m.problemSetJid, new HashSet<>());
                 problemJidsMap.get(m.problemSetJid).add(m.problemJid);
                 problemJids.add(m.problemJid);
             }
         }
 
-        Map<String, Integer> scoresMap = Maps.newHashMap();
+        Map<String, Integer> scoresMap = new HashMap<>();
         for (StatsUserProblemModel m : statsUserProblemDao.selectAllByUserJidAndProblemJids(userJid, problemJids)) {
             scoresMap.put(m.problemJid, m.score);
         }
 
-        Map<String, ProblemSetProgress> progressesMap = Maps.newHashMap();
+        Map<String, ProblemSetProgress> progressesMap = new HashMap<>();
         for (String problemSetJid : problemSetJids) {
             int scores = 0;
             for (String problemJid : problemJidsMap.getOrDefault(problemSetJid, emptySet())) {
@@ -245,18 +268,12 @@ public class StatsStore {
         return ImmutableMap.copyOf(progressesMap);
     }
 
-    public Map<String, Map<String, ProblemProgress>> getUserProblemProgressesMap(
-            Set<String> userJids,
-            Set<String> problemJids) {
-
-        List<StatsUserProblemModel> models =
-                statsUserProblemDao.selectAllByUserJidsAndProblemJids(userJids, problemJids);
-
+    public Map<String, Map<String, ProblemProgress>> getUserProblemProgressesMap(Set<String> userJids, Set<String> problemJids) {
         Map<String, Map<String, ProblemProgress>> progressesMap = new HashMap<>();
         for (String userJid : userJids) {
             progressesMap.put(userJid, new HashMap<>());
         }
-        for (StatsUserProblemModel m : models) {
+        for (StatsUserProblemModel m : statsUserProblemDao.selectAllByUserJidsAndProblemJids(userJids, problemJids)) {
             progressesMap.get(m.userJid).put(m.problemJid, new ProblemProgress.Builder()
                     .verdict(m.verdict)
                     .score(m.score)
