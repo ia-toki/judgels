@@ -10,5 +10,5 @@ rm -rf dist/build && mv build dist/
 
 cd ../../deployment/ansible
 
-bash -c "ansible --version"
-bash -c "ansible-playbook playbooks/build-raphael.yml"
+ansible --version 0</dev/null |& cat -
+ansible-playbook playbooks/build-raphael.yml 0</dev/null |& cat -
