@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.gabriel.api.Verdict;
@@ -88,13 +87,36 @@ public class StatsStore {
                 .stream()
                 .collect(toMap(m -> m.courseJid, m -> m.progress));
 
-        return courseJids.stream().collect(toMap(
-                Function.identity(),
-                jid -> new CourseProgress.Builder()
-                        .solvedChapters(courseSolvedChaptersMap.getOrDefault(jid, 0))
-                        .totalChapters(courseTotalChaptersMap.getOrDefault(jid, 0L).intValue())
-                        .totalSolvableChapters(courseTotalSolvableChaptersMap.getOrDefault(jid, 0L).intValue())
-                        .build()));
+        Map<String, CourseProgress> progressesMap = new HashMap<>();
+        for (String courseJid : courseJids) {
+            Set<String> chapterJids2 = new HashSet<>();
+            for (CourseChapterModel model : courseChapters) {
+                if (model.courseJid.equals(courseJid)) {
+                    chapterJids2.add(model.chapterJid);
+                }
+            }
+
+            Set<String> problemJids = new HashSet<>();
+            for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids2)) {
+                problemJids.add(model.problemJid);
+            }
+
+            int solvedProblems = 0;
+            for (StatsUserProblemModel model : statsUserProblemDao.selectAllByUserJidAndProblemJids(userJid, problemJids)) {
+                if (model.verdict.equals(Verdict.ACCEPTED.getCode())) {
+                    solvedProblems++;
+                }
+            }
+
+            progressesMap.put(courseJid, new CourseProgress.Builder()
+                    .solvedChapters(courseSolvedChaptersMap.getOrDefault(courseJid, 0))
+                    .totalChapters(courseTotalChaptersMap.getOrDefault(courseJid, 0L).intValue())
+                    .totalSolvableChapters(courseTotalSolvableChaptersMap.getOrDefault(courseJid, 0L).intValue())
+                    .solvedProblems(solvedProblems)
+                    .totalProblems(problemJids.size())
+                    .build());
+        }
+        return ImmutableMap.copyOf(progressesMap);
     }
 
     public Map<String, ChapterProgress> getChapterProgressesMap(String userJid, Set<String> chapterJids) {

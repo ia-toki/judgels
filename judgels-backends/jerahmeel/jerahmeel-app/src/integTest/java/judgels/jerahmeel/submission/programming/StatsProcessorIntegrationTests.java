@@ -136,37 +136,37 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
 
         submit(USER_JID_1, "randomJid", "randomJid", ACCEPTED, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 3, 2);
+        assertCourseProgress(course.getJid(), 0, 3, 2, 0, 3);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 20, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 3, 2);
+        assertCourseProgress(course.getJid(), 0, 3, 2, 0, 3);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 70, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 3, 2);
+        assertCourseProgress(course.getJid(), 0, 3, 2, 0, 3);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 0, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 3, 2);
+        assertCourseProgress(course.getJid(), 1, 3, 2, 1, 3);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 50, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 3, 2);
+        assertCourseProgress(course.getJid(), 1, 3, 2, 1, 3);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_2, ACCEPTED, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 3, 2);
+        assertCourseProgress(course.getJid(), 1, 3, 2, 2, 3);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 1, 2);
 
         submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_3, OK, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 2, 3, 2);
+        assertCourseProgress(course.getJid(), 2, 3, 2, 3, 3);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 2);
     }
 
@@ -366,13 +366,15 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 .build());
     }
 
-    private void assertCourseProgress(String courseJid, int solved, int total, int totalSolvable) {
+    private void assertCourseProgress(String courseJid, int solved, int total, int totalSolvable, int solvedProblems, int totalProblems) {
         assertThat(statsStore.getCourseProgressesMap(USER_JID_1, ImmutableSet.of(courseJid)))
                 .isEqualTo(ImmutableMap.of(
                         courseJid, new CourseProgress.Builder()
                                 .solvedChapters(solved)
                                 .totalChapters(total)
                                 .totalSolvableChapters(totalSolvable)
+                                .solvedProblems(solvedProblems)
+                                .totalProblems(totalProblems)
                                 .build()));
     }
 

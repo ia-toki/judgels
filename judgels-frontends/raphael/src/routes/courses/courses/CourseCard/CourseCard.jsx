@@ -9,15 +9,15 @@ import './CourseCard.scss';
 
 export function CourseCard({ course: { slug, name, description }, progress }) {
   const renderProgress = () => {
-    if (!progress || progress.totalChapters === 0) {
+    if (!progress || progress.totalProblems === 0) {
       return null;
     }
 
-    const { solvedChapters, totalSolvableChapters } = progress;
+    const { solvedProblems, totalProblems } = progress;
 
     return (
-      <ProgressTag num={solvedChapters} denom={totalSolvableChapters}>
-        {solvedChapters} / {totalSolvableChapters} completed
+      <ProgressTag num={solvedProblems} denom={totalProblems}>
+        {solvedProblems} / {totalProblems} problems completed
       </ProgressTag>
     );
   };
@@ -26,7 +26,7 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
     if (!progress) {
       return null;
     }
-    return <ProgressBar num={progress.solvedChapters} denom={progress.totalSolvableChapters} />;
+    return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
   };
 
   return (

@@ -24,9 +24,8 @@ describe('CoursesPage', () => {
         },
         courseProgressesMap: {
           courseJid1: {
-            solvedChapters: 2,
-            totalChapters: 5,
-            totalSolvableChapters: 6,
+            solvedProblems: 2,
+            totalProblems: 6,
           },
         },
       })
@@ -85,7 +84,7 @@ describe('CoursesPage', () => {
       expect(
         cards.map(card => [card.find('h4').text(), card.find('a').props().href, card.find('.html-text').text()])
       ).toEqual([
-        ['Course 12 / 6 completed', '/courses/course-1', 'This is course 1'],
+        ['Course 12 / 6 problems completed', '/courses/course-1', 'This is course 1'],
         ['Course 2', '/courses/course-2', 'This is course 2'],
       ]);
     });
