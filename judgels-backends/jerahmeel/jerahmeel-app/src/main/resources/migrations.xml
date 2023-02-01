@@ -28,4 +28,7 @@
     <include file="migrations/019-remove-unique-index-from-problem_set_problem.xml"/>
     <include file="migrations/020-rename-unique-index-in-problem_set_problem.xml"/>
     <include file="migrations/021-add-index-problem-jid-to-problem_set_problem.xml"/>
+    <include file="migrations/022-remove-stats_user_problem_set.xml"/>
+    <include file="migrations/023-remove-stats_user_chapter.xml"/>
+    <include file="migrations/024-remove-stats_user_course.xml"/>
 </databaseChangeLog>
