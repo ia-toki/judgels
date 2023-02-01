@@ -35,6 +35,9 @@
       network_mode: host
       volumes:
         - "/judgels/michael/var:/judgels/michael/var"
+      env:
+        JAVA_OPTS: "-Xmx{{ michael_xmx }}"
+        MICHAEL_DIST_OPTS: "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/michael/var/log"
 
   - name: Allow michael traffic through the firewall
     ufw:
