@@ -40,6 +40,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Test Michael
+        if: steps.changed-files.outputs.michael == '1'
+        run: ./judgels-backends/gradlew -p judgels-backends/michael check
+
       - name: Test Jophiel
         if: steps.changed-files.outputs.jophiel == '1'
         run: ./judgels-backends/gradlew -p judgels-backends/jophiel check
@@ -121,6 +125,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Build Michael
+        if: steps.changed-files.outputs.michael == '1'
+        run: ./deployment/scripts/build_michael.sh
+
       - name: Build Jophiel
         if: steps.changed-files.outputs.jophiel == '1'
         run: ./deployment/scripts/build_jophiel.sh
@@ -140,10 +148,6 @@ jobs:
       - name: Build Gabriel
         if: steps.changed-files.outputs.gabriel == '1'
         run: ./deployment/scripts/build_gabriel.sh
-
-      - name: Build Michael
-        if: steps.changed-files.outputs.michael == '1'
-        run: ./deployment/scripts/build_michael.sh
 
       - name: Set up Node
         if: steps.changed-files.outputs.yarn == '1'

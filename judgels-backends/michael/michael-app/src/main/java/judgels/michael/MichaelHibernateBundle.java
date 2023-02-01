@@ -29,6 +29,7 @@ import judgels.uriel.persistence.ContestSupervisorModel;
 public class MichaelHibernateBundle extends HibernateBundle<MichaelApplicationConfiguration> {
     public MichaelHibernateBundle() {
         super(
+                // Jophiel
                 PlaySessionModel.class,
                 SessionModel.class,
                 UserModel.class,
@@ -38,6 +39,8 @@ public class MichaelHibernateBundle extends HibernateBundle<MichaelApplicationCo
                 UserRegistrationEmailModel.class,
                 UserResetPasswordModel.class,
                 UserRoleModel.class,
+
+                // Uriel
                 ContestModel.class,
                 ContestAnnouncementModel.class,
                 ContestBundleItemSubmissionModel.class,
