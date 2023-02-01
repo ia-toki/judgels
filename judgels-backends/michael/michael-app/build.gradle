@@ -3,11 +3,16 @@ apply from: '../../gradle/integTest.gradle'
 
 dependencies {
     implementation project(':judgels-commons:judgels-fs')
+    implementation project(':judgels-commons:judgels-messaging')
     implementation project(':judgels-commons:judgels-recaptcha')
     implementation project(':judgels-commons:judgels-service-jaxrs')
     implementation project(':judgels-commons:judgels-service-persistence')
 
     implementation project(':jophiel:jophiel-app')
+    implementation project(':jophiel:jophiel-client')
+    implementation project(':sandalphon:sandalphon-client')
+    implementation project(':uriel:uriel-app')
+    implementation project(':gabriel:gabriel-api')
 
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"

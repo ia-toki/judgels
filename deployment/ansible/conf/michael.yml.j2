@@ -123,3 +123,48 @@ jophiel:
 
   web:
     announcements: []
+
+uriel:
+  baseDataDir: /judgels/michael/var/data
+
+  jophiel:
+    baseUrl: http://localhost:9101
+
+  sandalphon:
+    baseUrl: {{ judgels_scheme }}://{{ sandalphon_url }}
+    clientJid: JIDSACL-uriel
+    clientSecret: {{ sandalphon_uriel_secret }}
+
+  gabriel:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: uriel-grading-response
+
+{% if rabbitmq_host is defined %}
+  rabbitmq:
+    host: {{ rabbitmq_host }}
+    port: 5672
+    username: {{ rabbitmq_username }}
+    password: {{ rabbitmq_password }}
+    virtualHost: "/"
+{% endif %}
+
+{% if uriel_aws_accessKey is defined %}
+  aws:
+    accessKey: {{ uriel_aws_accessKey }}
+    secretKey: {{ uriel_aws_secretKey }}
+    s3BucketRegionId: {{ uriel_aws_s3BucketRegionId }}
+{% endif %}
+
+  submission:
+    fs:
+      type: {{ uriel_submission_fs_type }}
+{% if uriel_submission_fs_type != 'local' %}
+      s3BucketName: {{ uriel_submission_fs_s3BucketName }}
+{% endif %}
+
+  file:
+    fs:
+      type: {{ uriel_file_fs_type }}
+{% if uriel_file_fs_type != 'local' %}
+      s3BucketName: {{ uriel_file_fs_s3BucketName }}
+{% endif %}

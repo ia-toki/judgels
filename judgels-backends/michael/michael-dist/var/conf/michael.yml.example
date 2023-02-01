@@ -100,3 +100,38 @@ jophiel:
 
   web:
     announcements: []
+
+uriel:
+  baseDataDir: var/data
+
+  jophiel:
+    baseUrl: http://localhost:9101
+
+  sandalphon:
+    baseUrl: http://localhost:9002
+    clientJid: JIDSACL-uriel-local
+    clientSecret: sandalphon-local
+
+  gabriel:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: uriel-grading-response
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: "/"
+
+  aws:
+    accessKey: xxx
+    secretKey: xxx
+    s3BucketRegionId: ap-southeast-1
+
+  submission:
+    fs:
+      type: local
+
+  file:
+    fs:
+      type: local
