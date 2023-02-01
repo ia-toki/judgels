@@ -9,6 +9,10 @@ import io.dropwizard.setup.Environment;
 import java.nio.file.Paths;
 import java.time.Duration;
 import judgels.fs.aws.AwsModule;
+import judgels.jerahmeel.DaggerJerahmeelComponent;
+import judgels.jerahmeel.JerahmeelComponent;
+import judgels.jerahmeel.JerahmeelConfiguration;
+import judgels.jerahmeel.JerahmeelModule;
 import judgels.jophiel.DaggerJophielComponent;
 import judgels.jophiel.JophielComponent;
 import judgels.jophiel.JophielConfiguration;
@@ -61,6 +65,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
 
         runJophiel(config.getJophielConfig(), env, component.scheduler());
         runUriel(config.getUrielConfig(), env, component.scheduler());
+        runJerahmeel(config.getJerahmeelConfig(), env, component.scheduler());
     }
 
     private void runJophiel(JophielConfiguration config, Environment env, JudgelsScheduler scheduler) {
@@ -149,8 +154,48 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
 
         if (config.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
-                    "grading-response-poller",
+                    "uriel-grading-response-poller",
                     component.gradingResponsePoller());
         }
+    }
+
+    private void runJerahmeel(JerahmeelConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        JerahmeelComponent component = DaggerJerahmeelComponent.builder()
+                .awsModule(new AwsModule(config.getAwsConfig()))
+                .jophielModule(new judgels.jerahmeel.jophiel.JophielModule(config.getJophielConfig()))
+                .judgelsApplicationModule(new JudgelsApplicationModule(env))
+                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
+                .sandalphonModule(new judgels.jerahmeel.sandalphon.SandalphonModule(config.getSandalphonConfig()))
+                .urielModule(new judgels.jerahmeel.uriel.UrielModule(config.getUrielConfig()))
+                .gabrielModule(new judgels.jerahmeel.gabriel.GabrielModule(config.getGabrielConfig()))
+                .messagingModule(new judgels.jerahmeel.messaging.MessagingModule(config.getRabbitMQConfig()))
+                .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
+                        config.getSubmissionConfig(),
+                        config.getStatsConfig()))
+                .jerahmeelModule(new JerahmeelModule(config))
+                .build();
+
+        env.jersey().register(component.archiveResource());
+        env.jersey().register(component.curriculumResource());
+        env.jersey().register(component.courseResource());
+        env.jersey().register(component.chapterResource());
+        env.jersey().register(component.courseChapterResource());
+        env.jersey().register(component.chapterLessonResource());
+        env.jersey().register(component.chapterProblemResource());
+        env.jersey().register(component.problemResource());
+        env.jersey().register(component.problemSetResource());
+        env.jersey().register(component.problemSetProblemResource());
+        env.jersey().register(component.itemSubmissionResource());
+        env.jersey().register(component.submissionResource());
+        env.jersey().register(component.userStatsResource());
+
+        if (config.getRabbitMQConfig().isPresent()) {
+            scheduler.scheduleOnce(
+                    "jerahmeel-grading-response-poller",
+                    component.gradingResponsePoller());
+        }
+
+        env.admin().addTask(component.problemSetStatsTask());
+        env.admin().addTask(component.contestStatsTask());
     }
 }

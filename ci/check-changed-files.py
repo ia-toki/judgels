@@ -49,7 +49,7 @@ MODULES = OrderedDict([
     (':jerahmeel', {':jerahmeel:jerahmeel-app', ':jerahmeel:jerahmeel-api', ':jerahmeel:jerahmeel-dist'}),
 
     (':michael:michael-app', set()),
-    (':michael', {':michael:michael-app', ':jophiel', ':uriel'}),
+    (':michael', {':michael:michael-app', ':jophiel', ':uriel', ':jerahmeel'}),
 
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})
