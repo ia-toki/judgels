@@ -1,10 +1,6 @@
 package judgels.jerahmeel.stats;
 
 import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
 
 import com.google.common.collect.ImmutableMap;
@@ -35,7 +31,6 @@ import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
-import judgels.jerahmeel.persistence.StatsUserCourseDao;
 import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
@@ -48,7 +43,6 @@ public class StatsStore {
     private final CourseChapterDao courseChapterDao;
     private final ChapterProblemDao chapterProblemDao;
     private final ProblemSetProblemDao problemSetProblemDao;
-    private final StatsUserCourseDao statsUserCourseDao;
     private final StatsUserProblemDao statsUserProblemDao;
     private final StatsUserDao statsUserDao;
 
@@ -57,47 +51,26 @@ public class StatsStore {
             CourseChapterDao courseChapterDao,
             ChapterProblemDao chapterProblemDao,
             ProblemSetProblemDao problemSetProblemDao,
-            StatsUserCourseDao statsUserCourseDao,
             StatsUserProblemDao statsUserProblemDao,
             StatsUserDao statsUserDao) {
 
         this.courseChapterDao = courseChapterDao;
         this.chapterProblemDao = chapterProblemDao;
         this.problemSetProblemDao = problemSetProblemDao;
-        this.statsUserCourseDao = statsUserCourseDao;
         this.statsUserProblemDao = statsUserProblemDao;
         this.statsUserDao = statsUserDao;
     }
 
     public Map<String, CourseProgress> getCourseProgressesMap(String userJid, Set<String> courseJids) {
-        List<CourseChapterModel> courseChapters = courseChapterDao.selectAllByCourseJids(courseJids);
-        Set<String> chapterJids = courseChapters.stream().map(m -> m.chapterJid).collect(toSet());
-
-        Map<String, Long> chapterTotalProblemsMap = chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)
-                .stream()
-                .collect(groupingBy(m -> m.chapterJid, counting()));
-
-        Map<String, Long> courseTotalChaptersMap = courseChapters.stream()
-                .collect(groupingBy(m -> m.courseJid, counting()));
-        Map<String, Long> courseTotalSolvableChaptersMap = courseChapters.stream()
-                .filter(m -> chapterTotalProblemsMap.getOrDefault(m.chapterJid, 0L) > 0)
-                .collect(groupingBy(m -> m.courseJid, counting()));
-        Map<String, Integer> courseSolvedChaptersMap = statsUserCourseDao
-                .selectAllByUserJidAndCourseJids(userJid, courseJids)
-                .stream()
-                .collect(toMap(m -> m.courseJid, m -> m.progress));
-
         Map<String, CourseProgress> progressesMap = new HashMap<>();
         for (String courseJid : courseJids) {
-            Set<String> chapterJids2 = new HashSet<>();
-            for (CourseChapterModel model : courseChapters) {
-                if (model.courseJid.equals(courseJid)) {
-                    chapterJids2.add(model.chapterJid);
-                }
+            Set<String> chapterJids = new HashSet<>();
+            for (CourseChapterModel model : courseChapterDao.selectAllByCourseJid(courseJid, DEFAULT_ALL)) {
+                chapterJids.add(model.chapterJid);
             }
 
             Set<String> problemJids = new HashSet<>();
-            for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids2)) {
+            for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)) {
                 problemJids.add(model.problemJid);
             }
 
@@ -109,9 +82,6 @@ public class StatsStore {
             }
 
             progressesMap.put(courseJid, new CourseProgress.Builder()
-                    .solvedChapters(courseSolvedChaptersMap.getOrDefault(courseJid, 0))
-                    .totalChapters(courseTotalChaptersMap.getOrDefault(courseJid, 0L).intValue())
-                    .totalSolvableChapters(courseTotalSolvableChaptersMap.getOrDefault(courseJid, 0L).intValue())
                     .solvedProblems(solvedProblems)
                     .totalProblems(problemJids.size())
                     .build());

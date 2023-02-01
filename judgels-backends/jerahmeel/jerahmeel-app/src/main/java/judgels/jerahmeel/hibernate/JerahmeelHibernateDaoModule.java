@@ -16,8 +16,6 @@ import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
-import judgels.jerahmeel.persistence.StatsUserChapterDao;
-import judgels.jerahmeel.persistence.StatsUserCourseDao;
 import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 
@@ -97,16 +95,6 @@ public class JerahmeelHibernateDaoModule {
 
     @Provides
     static StatsUserDao statsUserDao(StatsUserHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    static StatsUserChapterDao statsUserChapterDao(StatsUserChapterHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    static StatsUserCourseDao statsUserCourseDao(StatsUserCourseHibernateDao dao) {
         return dao;
     }
 

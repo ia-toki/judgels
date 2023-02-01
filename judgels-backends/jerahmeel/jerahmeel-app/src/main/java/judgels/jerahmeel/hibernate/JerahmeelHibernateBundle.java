@@ -17,8 +17,6 @@ import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.ProgrammingGradingModel;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionModel;
-import judgels.jerahmeel.persistence.StatsUserChapterModel;
-import judgels.jerahmeel.persistence.StatsUserCourseModel;
 import judgels.jerahmeel.persistence.StatsUserModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 
@@ -40,8 +38,6 @@ public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicati
                 ProblemSetModel.class,
                 ProblemSetProblemModel.class,
                 StatsUserModel.class,
-                StatsUserChapterModel.class,
-                StatsUserCourseModel.class,
                 StatsUserProblemModel.class
         );
     }

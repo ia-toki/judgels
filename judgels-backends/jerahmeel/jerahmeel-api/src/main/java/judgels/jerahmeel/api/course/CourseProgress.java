@@ -6,9 +6,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableCourseProgress.class)
 public interface CourseProgress {
-    int getSolvedChapters();
-    int getTotalChapters();
-    int getTotalSolvableChapters();
     int getSolvedProblems();
     int getTotalProblems();
 
