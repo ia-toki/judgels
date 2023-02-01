@@ -197,6 +197,13 @@ jobs:
         name: Check changed files
         run: python3 ci/check-changed-files.py | bash
 
+      - name: Deploy Michael
+        if: steps.changed-files.outputs.michael == '1'
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add deployment/ansible/dist/deployment_rsa
+          ./deployment/scripts/deploy_michael.sh
+
       - name: Deploy Jophiel
         if: steps.changed-files.outputs.jophiel == '1'
         run: |
