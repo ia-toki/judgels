@@ -5,7 +5,7 @@ dependencies {
     implementation project(':judgels-commons:judgels-fs')
     implementation project(':judgels-commons:judgels-messaging')
     implementation project(':judgels-commons:judgels-recaptcha')
-    implementation project(':judgels-commons:judgels-service-jaxrs')
+    implementation project(':judgels-commons:judgels-service-core')
     implementation project(':judgels-commons:judgels-service-persistence')
 
     implementation project(':jophiel:jophiel-app')

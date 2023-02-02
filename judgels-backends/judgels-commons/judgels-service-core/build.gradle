@@ -1,12 +1,20 @@
 apply from: '../../gradle/java.gradle'
 
 dependencies {
-    api project(':judgels-commons:judgels-service-jaxrs')
+    api project(':judgels-commons:judgels-service-api')
 
     api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     api "com.google.dagger:dagger:$daggerVersion"
     api "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
     api "io.dropwizard:dropwizard-core:$dropwizardVersion"
+
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+    implementation "io.github.openfeign:feign-core:$feignVersion"
+    implementation "io.github.openfeign:feign-jackson:$feignVersion"
+    implementation "io.github.openfeign:feign-jaxrs:$feignVersion"
+    implementation "io.github.openfeign:feign-okhttp:$feignVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
