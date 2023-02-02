@@ -3,8 +3,8 @@
         "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
-<!-- IMPORTANT ECLIPSE NOTE: If you change this file, you must restart Eclipse
- for your changes to take effect in its Checkstyle integration. -->
+<!-- Source: https://github.com/palantir/sls-packaging/blob/develop/.baseline/checkstyle/checkstyle-suppressions.xml -->
+
 <suppressions>
     <!-- Suppress test classes -->
     <suppress files="[/\\]src[/\\].*[Tt]est[/\\](java|groovy)[/\\]" checks="AnnotationUseStyle" />

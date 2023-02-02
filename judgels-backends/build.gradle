@@ -5,7 +5,6 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
         classpath "com.palantir.sls-packaging:gradle-sls-packaging:$gradleSlsPackagingVersion"
     }
 }
@@ -23,15 +22,8 @@ allprojects {
     version '0.0.0'
 }
 
-apply plugin: 'com.palantir.baseline-config'
-
-dependencies {
-    baseline "com.palantir.baseline:gradle-baseline-java-config:$gradleBaselineVersion@zip"
-}
-
 subprojects {
-    apply plugin: 'com.palantir.baseline-checkstyle'
-    apply plugin: 'com.palantir.baseline-idea'
+    apply plugin: 'checkstyle'
 
     configurations.each {
         it.resolutionStrategy {

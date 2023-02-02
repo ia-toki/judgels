@@ -4,10 +4,7 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
-    Palantir Baseline Checkstyle configuration.
-    Authors: Robert Fink, Brian Worth, Merrick Zoubeiri, and many other contributors. Based in part on http://checkstyle.sourceforge.net/google_style.html
-    Please keep checks alphabetized with one exception: "relaxed" checks are grouped together at the bottom for easier disabling.
-    Check-specific comments reference documents internal to Palantir and can be safely ignored or removed.
+    Source: https://github.com/palantir/sls-packaging/blob/develop/.baseline/checkstyle/checkstyle.xml
  -->
 
 <module name="Checker">
@@ -36,19 +33,14 @@
         <property name="message" value="Two consecutive blank lines are not permitted."/>
     </module>
     <module name="SuppressionFilter"> <!-- baseline-gradle: README.md -->
-        <property name="file" value="${config_loc}/checkstyle-suppressions.xml"/>
-    </module>
-    <module name="SuppressionFilter"> <!-- baseline-gradle: README.md -->
-        <!-- custom-suppressions.xml allows users to specify suppresions that will not be overriden by baselineUpdateConfig -->
-        <property name="file" value="${config_loc}/custom-suppressions.xml"/>
-        <property name="optional" value="true"/>
+        <property name="file" value="${config_loc}/suppressions.xml"/>
     </module>
     <module name="SuppressWarningsFilter"/> <!-- baseline-gradle: README.md -->
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
     <module name="TreeWalker">
-        <module name="SuppressionCommentFilter"/> <!-- baseline-gradle: README.md -->
+        <module name="SuppressionCommentFilter"/>
         <module name="SuppressionCommentFilter">
             <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
             <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)"/>
@@ -397,6 +389,7 @@
             <property name="scope" value="public"/>
             <property name="allowMissingParamTags" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
+            <property name="allowMissingThrowsTags" value="true"/>
             <property name="allowedAnnotations" value="Override, Test"/>
         </module>
         <module name="JavadocStyle"/> <!-- Java Style Guide: Javadoc -->
