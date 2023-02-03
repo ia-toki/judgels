@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    runtimeOnly project(':jerahmeel:jerahmeel-app')
+    runtimeOnly project(':michael:jerahmeel-app')
 }
 
 distribution {

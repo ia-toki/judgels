@@ -8,12 +8,12 @@ dependencies {
     implementation project(':judgels-commons:judgels-service-core')
     implementation project(':judgels-commons:judgels-service-persistence')
 
-    implementation project(':jophiel:jophiel-app')
-    implementation project(':jophiel:jophiel-client')
+    implementation project(':michael:jophiel-app')
+    implementation project(':michael:jophiel-client')
     implementation project(':sandalphon:sandalphon-client')
-    implementation project(':uriel:uriel-app')
-    implementation project(':uriel:uriel-api')
-    implementation project(':jerahmeel:jerahmeel-app')
+    implementation project(':michael:uriel-app')
+    implementation project(':michael:uriel-api')
+    implementation project(':michael:jerahmeel-app')
     implementation project(':gabriel:gabriel-api')
 
     implementation "com.google.dagger:dagger:$daggerVersion"

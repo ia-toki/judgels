@@ -2,8 +2,8 @@ apply from: '../../gradle/java.gradle'
 apply from: '../../gradle/integTest.gradle'
 
 dependencies {
-    implementation project(':uriel:uriel-api')
-    implementation project(':jophiel:jophiel-client')
+    implementation project(':michael:jerahmeel-api')
+    implementation project(':michael:jophiel-client')
     implementation project(':sandalphon:sandalphon-client')
     implementation project(':judgels-commons:judgels-messaging')
 

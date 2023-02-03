@@ -19,7 +19,7 @@ public class JerahmeelApplicationConfigurationTests {
 
     @Test
     void jerahmeel_yml_deserializes() {
-        File urielYml = Paths.get("..", "jerahmeel-dist", "var", "conf", "jerahmeel.yml.example").toFile();
+        File urielYml = Paths.get("..", "..", "jerahmeel", "jerahmeel-dist", "var", "conf", "jerahmeel.yml.example").toFile();
         assertThatCode(() -> factory.build(urielYml))
                 .doesNotThrowAnyException();
     }

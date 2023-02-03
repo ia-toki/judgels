@@ -2,7 +2,7 @@ apply from: '../../gradle/java.gradle'
 apply from: '../../gradle/integTest.gradle'
 
 dependencies {
-    implementation project(':jophiel:jophiel-api')
+    implementation project(':michael:jophiel-api')
     implementation project(':judgels-commons:judgels-fs')
     implementation project(':judgels-commons:judgels-persistence-core')
     implementation project(':judgels-commons:judgels-recaptcha')

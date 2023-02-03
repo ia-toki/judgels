@@ -46,7 +46,7 @@ jobs:
 
       - name: Test Jophiel
         if: steps.changed-files.outputs.jophiel == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/jophiel check
+        run: ./judgels-backends/gradlew -p judgels-backends :michael:jophiel-app:check
 
       - name: Test Sandalphon
         if: steps.changed-files.outputs.sandalphon == '1'
@@ -54,11 +54,11 @@ jobs:
 
       - name: Test Uriel
         if: steps.changed-files.outputs.uriel == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/uriel check
+        run: ./judgels-backends/gradlew -p judgels-backends :michael:uriel-app:check
 
       - name: Test Jerahmeel
         if: steps.changed-files.outputs.jerahmeel == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/jerahmeel check
+        run: ./judgels-backends/gradlew -p judgels-backends :michael:jerahmeel-app:check
 
       - name: Test Gabriel
         if: steps.changed-files.outputs.gabriel == '1'

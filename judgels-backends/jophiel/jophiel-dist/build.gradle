@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    runtimeOnly project(':jophiel:jophiel-app')
+    runtimeOnly project(':michael:jophiel-app')
 }
 
 distribution {

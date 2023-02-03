@@ -1,4 +1,4 @@
-package judgels.uriel;
+package judgels.jophiel;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -11,16 +11,16 @@ import java.nio.file.Paths;
 import javax.validation.Validator;
 import org.junit.jupiter.api.Test;
 
-class UrielApplicationConfigurationTests {
+class JophielApplicationConfigurationTests {
     private final ObjectMapper objectMapper = Jackson.newObjectMapper();
     private final Validator validator = Validators.newValidator();
-    private final YamlConfigurationFactory<UrielApplicationConfiguration> factory =
-            new YamlConfigurationFactory<>(UrielApplicationConfiguration.class, validator, objectMapper, "dw");
+    private final YamlConfigurationFactory<JophielApplicationConfiguration> factory =
+            new YamlConfigurationFactory<>(JophielApplicationConfiguration.class, validator, objectMapper, "dw");
 
     @Test
-    void uriel_yml_deserializes() {
-        File urielYml = Paths.get("..", "uriel-dist", "var", "conf", "uriel.yml.example").toFile();
-        assertThatCode(() -> factory.build(urielYml))
+    void jophiel_yml_deserializes() {
+        File jophielYml = Paths.get("..", "..", "jophiel", "jophiel-dist", "var", "conf", "jophiel.yml.example").toFile();
+        assertThatCode(() -> factory.build(jophielYml))
                 .doesNotThrowAnyException();
     }
 }

@@ -20,7 +20,7 @@ runPlay {
 }
 
 dependencies {
-    implementation project(':jophiel:jophiel-client')
+    implementation project(':michael:jophiel-client')
     implementation project(':sandalphon:sandalphon-client')
     implementation project(':gabriel:gabriel-engines')
 
