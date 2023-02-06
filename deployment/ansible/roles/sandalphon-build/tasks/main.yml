@@ -6,6 +6,6 @@
       name: ghcr.io/ia-toki/judgels/sandalphon
       push: yes
       build:
-        path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-app"
+        path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-play-app"
         args:
           VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

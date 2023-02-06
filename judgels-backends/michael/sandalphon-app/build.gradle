@@ -1,0 +1,21 @@
+apply from: '../../gradle/java.gradle'
+
+dependencies {
+    implementation project(':michael:jophiel-client')
+    implementation project(':michael:sandalphon-client')
+    implementation project(':gabriel:gabriel-engines')
+
+    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "commons-io:commons-io:2.4"
+    implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
+    implementation "org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r"
+    implementation ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
+        exclude group: "joda-time", module: "joda-time"
+    }
+    implementation 'javax.inject:javax.inject:1'
+
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+}

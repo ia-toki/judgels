@@ -1,0 +1,23 @@
+apply from: '../../gradle/java.gradle'
+
+dependencies {
+    api project(':michael:sandalphon-api')
+    api project(':judgels-commons:judgels-fs')
+    api project(':judgels-commons:judgels-persistence-core')
+    api project(':judgels-commons:judgels-service-persistence')
+    api project(':judgels-commons:judgels-messaging')
+
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+
+    compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}

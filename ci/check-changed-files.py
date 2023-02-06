@@ -19,11 +19,20 @@ MODULES = OrderedDict([
     (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api'}),
     (':judgels-commons:judgels-service-persistence', {':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-service-core'}),
 
+    (':jophiel:jophiel-dist', set()),
+    (':uriel:uriel-dist', set()),
+    (':jerahmeel:jerahmeel-dist', set()),
+
     (':michael:jophiel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
     (':michael:jophiel-app', {':michael:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-recaptcha', ':judgels-commons:judgels-service-persistence'}),
     (':michael:jophiel-client', {':michael:jophiel-api'}),
-    (':jophiel:jophiel-dist', set()),
-    (':jophiel', {':michael:jophiel-app', ':michael:jophiel-client', ':michael:jophiel-api', ':jophiel:jophiel-dist'}),
+    (':michael:sandalphon-api', {':michael:jophiel-api', ':gabriel:gabriel-api'}),
+    (':michael:sandalphon-client', {':michael:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':judgels-commons:judgels-messaging'}),
+    (':michael:sandalphon-app', {':michael:sandalphon-client', ':michael:jophiel-client', ':gabriel:gabriel-engines'}),
+    (':michael:uriel-api', {':michael:sandalphon-api'}),
+    (':michael:uriel-app', {':michael:uriel-api', ':michael:jophiel-client', ':michael:sandalphon-client', ':judgels-commons:judgels-messaging'}),
+    (':michael:jerahmeel-api', {':michael:sandalphon-api'}),
+    (':michael:jerahmeel-app', {':michael:jerahmeel-api', ':michael:jophiel-client', ':michael:sandalphon-client', ':judgels-commons:judgels-messaging'}),
 
     (':gabriel:gabriel-api', set()),
     (':gabriel:gabriel-engine-api', {':gabriel:gabriel-api'}),
@@ -32,23 +41,15 @@ MODULES = OrderedDict([
     (':gabriel:gabriel-dist', set()),
     (':gabriel', {':gabriel:gabriel-app', ':gabriel:gabriel-dist', ':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
 
-    (':sandalphon:sandalphon-api', {':michael:jophiel-api', ':gabriel:gabriel-api'}),
-    (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':judgels-commons:judgels-messaging'}),
-    (':sandalphon:sandalphon-app', {':sandalphon:sandalphon-client', ':michael:jophiel-client', ':gabriel:gabriel-engines'}),
-    (':sandalphon', {':sandalphon:sandalphon-app', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client'}),
-
-    (':michael:uriel-api', {':sandalphon:sandalphon-api'}),
-    (':michael:uriel-app', {':michael:uriel-api', ':michael:jophiel-client', ':sandalphon:sandalphon-client', ':judgels-commons:judgels-messaging'}),
-    (':uriel:uriel-dist', set()),
-    (':uriel', {':michael:uriel-app', ':michael:uriel-api', ':uriel:uriel-dist'}),
-
-    (':michael:jerahmeel-api', {':sandalphon:sandalphon-api'}),
-    (':michael:jerahmeel-app', {':michael:jerahmeel-api', ':michael:jophiel-client', ':sandalphon:sandalphon-client', ':judgels-commons:judgels-messaging'}),
-    (':jerahmeel:jerahmeel-dist', set()),
-    (':jerahmeel', {':michael:jerahmeel-app', ':michael:jerahmeel-api', ':jerahmeel:jerahmeel-dist'}),
+    (':sandalphon:sandalphon-play-app', {':michael:sandalphon-app', ':michael:sandalphon-client', ':michael:jophiel-client', ':gabriel:gabriel-engines'}),
+    (':sandalphon', {':sandalphon:sandalphon-play-app'}),
 
     (':michael:michael-app', set()),
-    (':michael', {':michael:michael-app', ':jophiel', ':uriel', ':jerahmeel'}),
+    (':michael', {':michael:michael-app', ':michael:sandalphon-app', ':jophiel', ':uriel', ':jerahmeel'}),
+
+    (':jophiel', {':michael:jophiel-app', ':michael:jophiel-client', ':michael:jophiel-api', ':jophiel:jophiel-dist'}),
+    (':uriel', {':michael:uriel-app', ':michael:uriel-api', ':uriel:uriel-dist'}),
+    (':jerahmeel', {':michael:jerahmeel-app', ':michael:jerahmeel-api', ':jerahmeel:jerahmeel-dist'}),
 
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})

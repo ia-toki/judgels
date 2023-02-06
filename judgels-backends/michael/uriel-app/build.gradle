@@ -4,7 +4,7 @@ apply from: '../../gradle/integTest.gradle'
 dependencies {
     implementation project(':michael:uriel-api')
     implementation project(':michael:jophiel-client')
-    implementation project(':sandalphon:sandalphon-client')
+    implementation project(':michael:sandalphon-client')
     implementation project(':judgels-commons:judgels-messaging')
 
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"

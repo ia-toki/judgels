@@ -1,0 +1,92 @@
+plugins {
+    id 'idea'
+    id 'java-library'
+    id 'org.gradle.playframework'
+}
+
+apply from: '../gradle/play.gradle'
+apply plugin: judgels.play.PlayWebJarsPlugin
+
+sourceSets.main {
+    twirl {
+        defaultImports = org.gradle.playframework.sourcesets.TwirlImports.JAVA
+    }
+}
+
+runPlay {
+    task run(type: JavaExec, dependsOn: it) {}
+
+    httpPort = 9002
+}
+
+dependencies {
+    implementation project(':michael:jophiel-client')
+    implementation project(':michael:sandalphon-app')
+    implementation project(':michael:sandalphon-client')
+    implementation project(':gabriel:gabriel-engines')
+    implementation project(':judgels-commons:judgels-fs')
+
+    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "com.typesafe:config:1.3.0"
+    implementation "commons-io:commons-io:2.4"
+    implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
+    implementation "org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r"
+    implementation ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
+        exclude group: "joda-time", module: "joda-time"
+    }
+
+    implementation "com.typesafe.play:play-guice_${scalaVersion}:${playVersion}"
+    implementation "com.typesafe.play:play-iteratees_${scalaVersion}:2.6.1"
+    implementation "com.typesafe.play:play-iteratees-reactive-streams_${scalaVersion}:2.6.1"
+    implementation "com.typesafe.play:play-java_${scalaVersion}:${playVersion}"
+    implementation "com.typesafe.play:play-java-forms_${scalaVersion}:${playVersion}"
+    implementation "com.typesafe.play:play-java-jdbc_${scalaVersion}:${playVersion}"
+    implementation "com.typesafe.play:play-jdbc-evolutions_${scalaVersion}:${playVersion}"
+    implementation "com.typesafe.play:play-ws_${scalaVersion}:${playVersion}"
+    implementation ("com.typesafe.play:play-java-jpa_${scalaVersion}:${playVersion}") {
+        exclude group: 'org.hibernate.javax.persistence', module: 'hibernate-jpa-2.0-implementation'
+    }
+    implementation "com.typesafe.play:filters-helpers_${scalaVersion}:${playVersion}"
+
+    implementation ("com.adrianhurt:play-bootstrap_${scalaVersion}:1.6.1-P27-B3") {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    implementation 'com.googlecode.htmlcompressor:htmlcompressor:1.4'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'mysql:mysql-connector-java:5.1.47'
+    implementation "org.hibernate:hibernate-entitymanager:$hibernateVersion"
+
+    webJar 'org.webjars.bower:roboto-fontface:0.7.0'
+    webJar 'org.webjars.bower:open-sans:1.1.0'
+    webJar ('org.webjars:bootstrap:3.3.4') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    webJar 'org.webjars:jquery:2.1.4'
+    webJar ('org.webjars:jquery-ui:1.11.4') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    webJar 'org.webjars:less:2.5.0'
+    webJar 'org.webjars:requirejs:2.1.18'
+    webJar 'org.webjars:momentjs:2.10.3'
+    webJar 'org.webjars:ckeditor:4.5.3'
+    webJar ('org.webjars:select2:4.0.0-2') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    webJar ('org.webjars:Eonasdan-bootstrap-datetimepicker:4.7.14') {
+        exclude group: 'org.webjars', module: 'bootstrap'
+    }
+    webJar 'org.webjars.npm:katex:0.11.0'
+
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+}
+
+task copyWebJarFonts(type: Copy, dependsOn: extractPlayWebJars) {
+    from extractPlayWebJars.outputDirectory.dir("lib/bootstrap/fonts")
+
+    into "public/lib/fonts"
+}
+
+createPlayAssetsJar.dependsOn(copyWebJarFonts)

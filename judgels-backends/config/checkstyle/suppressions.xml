@@ -16,12 +16,12 @@
     <suppress files="[/\\]src[/\\].*[Tt]est[/\\](java|groovy)[/\\]" id="BanSystemErr" />
 
     <suppress files="routes.java" checks="." />
-    <suppress files="[\\/]sandalphon-app[\\/]" checks="LineLength" />
-    <suppress files="[\\/]sandalphon-app[\\/]" checks="VisibilityModifier" />
-    <suppress files="[\\/]sandalphon-app[\\/]" checks="AbbreviationAsWordInName" />
-    <suppress files="[\\/]sandalphon-app[\\/]" checks="StaticVariableName" />
-    <suppress files="[\\/]sandalphon-app[\\/]" checks="RegexpSinglelineJava" />
-    <suppress files="[\\/]sandalphon-app[\\/]" checks="SummaryJavadoc" />
+    <suppress files="[\\/]sandalphon-play-app[\\/]" checks="LineLength" />
+    <suppress files="[\\/]sandalphon-play-app[\\/]" checks="VisibilityModifier" />
+    <suppress files="[\\/]sandalphon-play-app[\\/]" checks="AbbreviationAsWordInName" />
+    <suppress files="[\\/]sandalphon-play-app[\\/]" checks="StaticVariableName" />
+    <suppress files="[\\/]sandalphon-play-app[\\/]" checks="RegexpSinglelineJava" />
+    <suppress files="[\\/]sandalphon-play-app[\\/]" checks="SummaryJavadoc" />
 
     <!-- JavadocStyle enforces existence of package-info.java package-level Javadoc; we consider this a bug. -->
     <suppress files="package-info.java" checks="JavadocStyle" />

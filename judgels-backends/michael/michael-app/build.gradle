@@ -10,7 +10,8 @@ dependencies {
 
     implementation project(':michael:jophiel-app')
     implementation project(':michael:jophiel-client')
-    implementation project(':sandalphon:sandalphon-client')
+    implementation project(':michael:sandalphon-app')
+    implementation project(':michael:sandalphon-client')
     implementation project(':michael:uriel-app')
     implementation project(':michael:uriel-api')
     implementation project(':michael:jerahmeel-app')
