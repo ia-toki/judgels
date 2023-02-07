@@ -5,6 +5,7 @@ dependencies {
     implementation project(':michael:sandalphon-client')
     implementation project(':gabriel:gabriel-engines')
 
+    implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.guava:guava:$guavaVersion"
     implementation "commons-io:commons-io:2.4"
     implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
@@ -14,8 +15,10 @@ dependencies {
     }
     implementation 'javax.inject:javax.inject:1'
 
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
 }

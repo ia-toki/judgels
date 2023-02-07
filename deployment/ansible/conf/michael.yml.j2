@@ -124,6 +124,39 @@ jophiel:
   web:
     announcements: []
 
+sandalphon:
+  baseDataDir: /judgels/michael/var/data
+
+  clients:
+{% if sandalphon_uriel_secret is defined %}
+    - jid: JIDSACL-uriel
+      secret: {{ sandalphon_uriel_secret }}
+{% endif %}
+{% if sandalphon_jerahmeel_secret is defined %}
+    - jid: JIDSACL-jerahmeel
+      secret: {{ sandalphon_jerahmeel_secret }}
+{% endif %}
+{% if sandalphon_gabriel_secret is defined %}
+    - jid: JIDSACL-gabriel
+      secret: {{ sandalphon_gabriel_secret }}
+{% endif %}
+
+  jophiel:
+    baseUrl: http://localhost:9101
+  
+  gabriel:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: sandalphon-grading-response
+  
+{% if rabbitmq_host is defined %}
+  rabbitmq:
+    host: {{ rabbitmq_host }}
+    port: 5672
+    username: {{ rabbitmq_username }}
+    password: {{ rabbitmq_password }}
+    virtualHost: "/"
+{% endif %}
+
 uriel:
   baseDataDir: /judgels/michael/var/data
 

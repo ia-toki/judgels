@@ -26,6 +26,10 @@ import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
+import judgels.sandalphon.DaggerSandalphonComponent;
+import judgels.sandalphon.SandalphonComponent;
+import judgels.sandalphon.SandalphonConfiguration;
+import judgels.sandalphon.SandalphonModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -64,6 +68,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.pingResource());
 
         runJophiel(config.getJophielConfig(), env, component.scheduler());
+        runSandalphon(config.getSandalphonConfig(), env, component.scheduler());
         runUriel(config.getUrielConfig(), env, component.scheduler());
         runJerahmeel(config.getJerahmeelConfig(), env, component.scheduler());
     }
@@ -109,6 +114,16 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
                 "session-cleaner",
                 component.sessionCleaner(),
                 Duration.ofDays(1));
+    }
+
+    private void runSandalphon(SandalphonConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        SandalphonComponent component = DaggerSandalphonComponent.builder()
+                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
+                .sandalphonModule(new SandalphonModule(config))
+                .build();
+
+        env.jersey().register(component.problemResource());
+        env.jersey().register(component.lessonResource());
     }
 
     private void runUriel(UrielConfiguration config, Environment env, JudgelsScheduler scheduler) {

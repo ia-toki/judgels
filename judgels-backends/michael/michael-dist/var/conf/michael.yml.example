@@ -101,6 +101,24 @@ jophiel:
   web:
     announcements: []
 
+sandalphon:
+  baseDataDir: var/data
+
+  clients:
+    - jid: JIDSACL-uriel-local
+      secret: sandalphon-local
+    - jid: JIDSACL-gabriel-local
+      secret: sandalphon-local
+    - jid: JIDSACL-jerahmeel-local
+      secret: sandalphon-local
+
+  jophiel:
+    baseUrl: http://localhost:9101
+
+  gabriel:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: sandalphon-grading-response
+
 uriel:
   baseDataDir: var/data
 

@@ -27,6 +27,14 @@ import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.jophiel.persistence.UserRoleModel;
 import judgels.jophiel.play.PlaySessionModel;
+import judgels.sandalphon.persistence.BundleGradingModel;
+import judgels.sandalphon.persistence.BundleSubmissionModel;
+import judgels.sandalphon.persistence.LessonModel;
+import judgels.sandalphon.persistence.LessonPartnerModel;
+import judgels.sandalphon.persistence.ProblemModel;
+import judgels.sandalphon.persistence.ProblemPartnerModel;
+import judgels.sandalphon.persistence.ProblemSetterModel;
+import judgels.sandalphon.persistence.ProblemTagModel;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 import judgels.uriel.persistence.ContestBundleItemSubmissionModel;
 import judgels.uriel.persistence.ContestClarificationModel;
@@ -55,6 +63,18 @@ public class MichaelHibernateBundle extends HibernateBundle<MichaelApplicationCo
                 UserRegistrationEmailModel.class,
                 UserResetPasswordModel.class,
                 UserRoleModel.class,
+
+                // Sandalphon
+                BundleGradingModel.class,
+                BundleSubmissionModel.class,
+                LessonModel.class,
+                LessonPartnerModel.class,
+                ProblemModel.class,
+                ProblemPartnerModel.class,
+                ProblemSetterModel.class,
+                ProblemTagModel.class,
+                ProgrammingGradingModel.class,
+                ProgrammingSubmissionModel.class,
 
                 // Uriel
                 ContestModel.class,
