@@ -29,6 +29,8 @@ dependencies {
     implementation ('org.webjars:bootstrap:3.3.4') {
         exclude group: 'org.webjars', module: 'jquery'
     }
+    implementation 'org.webjars.bower:open-sans:1.1.0'
+    implementation 'org.webjars.bower:roboto-fontface:0.7.0'
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"

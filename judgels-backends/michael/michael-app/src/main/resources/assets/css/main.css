@@ -1,0 +1,20 @@
+:root {
+  --primary-font: 'Open Sans', sans-serif;
+  --accent-font: 'Roboto', sans-serif;
+  --primary-font-size: 14px;
+  --brand-primary-color: #337ab7;
+  --primary-color: #43A047;
+  --accent-color: #cccccc;
+  --content-color: #ffffff;
+  --background-color: #eeeeee;
+  --button-color: #2c3031;
+  --primary-font-color: #000000;
+  --accent-font-color: #FFFFFF;
+}
+
+body {
+  color: var(--primary-font-color);
+  font-family: var(--primary-font);
+  font-size: var(--primary-font-size);
+  background-color: var(--background-color);
+}
