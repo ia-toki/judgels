@@ -2,6 +2,8 @@ package judgels.michael;
 
 import com.palantir.websecurity.WebSecurityBundle;
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.bundles.webjars.WebJarBundle;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -53,8 +55,11 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         JudgelsObjectMappers.configure(bootstrap.getObjectMapper());
 
         bootstrap.addBundle(hibernateBundle);
+        bootstrap.addBundle(new AssetsBundle());
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new MichaelMigrationsBundle());
+        bootstrap.addBundle(new MichaelViewBundle());
+        bootstrap.addBundle(new WebJarBundle());
         bootstrap.addBundle(new WebSecurityBundle());
     }
 
@@ -66,6 +71,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
         env.jersey().register(component.pingResource());
+        env.jersey().register(component.loginResource());
 
         runJophiel(config.getJophielConfig(), env, component.scheduler());
         runSandalphon(config.getSandalphonConfig(), env, component.scheduler());

@@ -19,9 +19,16 @@ dependencies {
 
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
+    implementation "io.dropwizard:dropwizard-assets:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-views-freemarker:$dropwizardVersion"
+
+    implementation "io.dropwizard-bundles:dropwizard-webjars-bundle:$dropwizardWebJarsBundleVersion"
+    implementation ('org.webjars:bootstrap:3.3.4') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
