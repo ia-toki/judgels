@@ -9,6 +9,7 @@
       <link rel="stylesheet" href="/webjars/roboto-fontface/css/roboto/roboto-fontface.css">
       <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
       <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="shortcut icon" type="image/ico" href="/assets/images/favicon.ico">
     </head>
     <body>
       <div class="container-fluid">

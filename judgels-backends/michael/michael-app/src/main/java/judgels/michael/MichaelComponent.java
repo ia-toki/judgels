@@ -6,7 +6,9 @@ import judgels.michael.login.LoginResource;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsScheduler;
 
-@Component(modules = JudgelsApplicationModule.class)
+@Component(modules = {
+        JudgelsApplicationModule.class,
+        MichaelModule.class})
 @Singleton
 public interface MichaelComponent {
     PingResource pingResource();

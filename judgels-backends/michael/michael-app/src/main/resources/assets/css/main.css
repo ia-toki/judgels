@@ -12,9 +12,67 @@
   --accent-font-color: #FFFFFF;
 }
 
+h2 {
+  font-family: var(--accent-font);
+}
+
 body {
   color: var(--primary-font-color);
   font-family: var(--primary-font);
   font-size: var(--primary-font-size);
   background-color: var(--background-color);
+}
+
+body .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+header {
+  color: var(--accent-font-color);
+  background-color: var(--primary-color);
+  -webkit-box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
+  -moz-box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
+  box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
+}
+
+header .logo {
+  margin: 5px 0;
+  height: 35px;
+}
+
+header .title {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 15px;
+}
+
+header .title h1 {
+  margin: 0;
+  padding: 0;
+  font-family: var(--primary-font);
+  font-size: 22px;
+  color: var(--accent-font-color);
+  line-height: 35px;
+}
+
+header .row {
+  margin: 0;
+}
+
+header .title a:hover {
+  text-decoration: none;
+}
+
+.primary-content {
+  background-color: var(--content-color);
+  min-height: 624px;
+  border: 1px solid var(--accent-color);
+  margin-top: 15px;
+}
+
+.content {
+  padding-top: 15px;
+  width: 100%;
+  margin: 0;
 }

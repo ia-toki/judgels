@@ -6,17 +6,21 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import judgels.michael.BaseResource;
+import judgels.michael.MichaelConfiguration;
 import judgels.michael.template.HtmlTemplate;
 
 @Path("/login")
 @Produces(MediaType.TEXT_HTML)
-public class LoginResource {
+public class LoginResource extends BaseResource {
     @Inject
-    public LoginResource() {}
+    public LoginResource(MichaelConfiguration config) {
+        super(config);
+    }
 
     @GET
     public View logIn() {
-        HtmlTemplate template = new HtmlTemplate();
+        HtmlTemplate template = newTemplate();
         template.setTitle("Log in");
         return new LoginView(template);
     }

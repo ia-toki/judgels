@@ -3,7 +3,7 @@
 <@template.layout>
   <div class="row login-content">
     <div class="col-md-12">
-      Log in
+      Login form here
     </div>
   </div>
 </@template.layout>

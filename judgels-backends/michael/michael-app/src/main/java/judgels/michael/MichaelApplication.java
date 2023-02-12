@@ -67,6 +67,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
     public void run(MichaelApplicationConfiguration config, Environment env) {
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
+                .michaelModule(new MichaelModule(config.getMichaelConfig()))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
