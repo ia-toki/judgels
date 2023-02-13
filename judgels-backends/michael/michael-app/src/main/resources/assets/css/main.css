@@ -16,6 +16,18 @@ h2 {
   font-family: var(--accent-font);
 }
 
+h3 {
+  font-family: var(--accent-font);
+  font-weight: bold;
+  font-size: 18px;
+}
+
+h4 {
+  font-family: var(--accent-font);
+  font-weight: bold;
+  font-size: 16px;
+}
+
 body {
   color: var(--primary-font-color);
   font-family: var(--primary-font);
@@ -62,6 +74,18 @@ header .row {
 
 header .title a:hover {
   text-decoration: none;
+}
+
+.form-horizontal .control-label{
+  text-align: left;
+}
+
+.control-label {
+  font-weight: 400;
+}
+
+input[type="text"], input[type="password"], textarea {
+  color: var(--primary-font-color);
 }
 
 .primary-content {

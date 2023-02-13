@@ -1,9 +1,15 @@
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 
+<#import "/judgels/michael/template/form/forms.ftl" as forms>
+
 <@template.layout>
   <div class="row login-content">
     <div class="col-md-12">
-      Login form here
+      <@forms.form>
+        <@forms.text name="username" label="Username" required=true/>
+        <@forms.password name="password" label="Password" required=true/>
+        <@forms.submit>Log in</@forms.submit>
+      </@forms.form>
     </div>
   </div>
 </@template.layout>
