@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import judgels.sandalphon.api.lesson.Lesson;
-import judgels.sandalphon.resource.ResourceUtils;
+import judgels.service.ServiceUtils;
 
 @Path("/api/v2/lessons/{lessonJid}")
 public class LessonResource {
@@ -31,6 +31,6 @@ public class LessonResource {
         Lesson lesson = lessonStore.findLessonByJid(lessonJid);
         String mediaUrl = lessonStore.getStatementMediaFileURL(null, lesson.getJid(), mediaFilename);
 
-        return ResourceUtils.okAsImage(ifModifiedSince, mediaUrl);
+        return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }
 }

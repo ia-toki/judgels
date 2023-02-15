@@ -5,7 +5,6 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_DISPOSITION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 
-import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,12 +13,12 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -153,7 +152,7 @@ public class ServiceUtils {
         if (ifModifiedSince.isPresent()) {
             try {
                 Date lastModified = sdf.parse(ifModifiedSince.get());
-                if (imageFile.lastModified() <= lastModified.getTime()) {
+                if (imageFile.lastModified() - lastModified.getTime() < 1000) {
                     return Response.notModified().build();
                 }
             } catch (ParseException e2) {
@@ -166,15 +165,8 @@ public class ServiceUtils {
         response.header(LAST_MODIFIED, sdf.format(new Date(imageFile.lastModified())));
 
         try {
-            BufferedImage img = ImageIO.read(imageFile);
-            if (img == null) {
-                response.header(CONTENT_TYPE, URLConnection.guessContentTypeFromName(imageFile.getName()));
-                response.entity(Files.toByteArray(imageFile));
-                return response.build();
-            }
-
             String type = Files.getFileExtension(imageFile.getAbsolutePath());
-            return buildImageResponse(response, img, type);
+            return buildImageResponse(response, new FileInputStream(imageFile), type);
         } catch (IOException e2) {
             return Response.serverError().build();
         }
@@ -190,7 +182,7 @@ public class ServiceUtils {
         if (ifModifiedSince.isPresent()) {
             try {
                 Date lastModified = sdf.parse(ifModifiedSince.get());
-                if (lastModifiedStream.getTime() <= lastModified.getTime()) {
+                if (lastModifiedStream.getTime() - lastModified.getTime() < 1000) {
                     return Response.notModified().build();
                 }
             } catch (ParseException e2) {
@@ -202,31 +194,26 @@ public class ServiceUtils {
         response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
         response.header(LAST_MODIFIED, lastModifiedStream);
 
-        try {
-            BufferedImage img = ImageIO.read(stream);
-            if (img == null) {
-                response.header(CONTENT_TYPE, "image/" + type);
-                response.entity(ByteStreams.toByteArray(stream));
-                return response.build();
-            }
-
-            return buildImageResponse(response, img, type);
-        } catch (IOException e2) {
-            return Response.serverError().build();
-        }
+        return buildImageResponse(response, stream, type);
     }
 
     private static Response buildImageResponse(Response.ResponseBuilder response, BufferedImage img, String type) {
-        try {
-            response.header(CONTENT_TYPE, "image/" + type);
+        response.header(CONTENT_TYPE, "image/" + type);
 
+        try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(img, type, baos);
             response.entity(baos.toByteArray());
-
-            return response.build();
-        } catch (IOException e2) {
+        } catch (IOException e) {
             return Response.serverError().build();
         }
+
+        return response.build();
+    }
+
+    private static Response buildImageResponse(Response.ResponseBuilder response, InputStream stream, String type) {
+        response.header(CONTENT_TYPE, "image/" + type);
+        response.entity(stream);
+        return response.build();
     }
 }

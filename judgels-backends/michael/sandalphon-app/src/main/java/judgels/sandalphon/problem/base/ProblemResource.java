@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.resource.ResourceUtils;
+import judgels.service.ServiceUtils;
 
 @Path("/api/v2/problems/{problemJid}")
 public class ProblemResource {
@@ -31,7 +31,7 @@ public class ProblemResource {
         Problem problem = problemStore.findProblemByJid(problemJid);
         String mediaUrl = problemStore.getStatementMediaFileURL(null, problem.getJid(), mediaFilename);
 
-        return ResourceUtils.okAsImage(ifModifiedSince, mediaUrl);
+        return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }
 
     @GET
@@ -45,6 +45,6 @@ public class ProblemResource {
         Problem problem = problemStore.findProblemByJid(problemJid);
         String mediaUrl = problemStore.getEditorialMediaFileURL(null, problem.getJid(), mediaFilename);
 
-        return ResourceUtils.okAsImage(ifModifiedSince, mediaUrl);
+        return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }
 }
