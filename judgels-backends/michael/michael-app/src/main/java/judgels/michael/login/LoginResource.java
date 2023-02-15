@@ -5,6 +5,7 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -28,6 +29,8 @@ import judgels.michael.template.HtmlTemplate;
 @Path("/login")
 @Produces(MediaType.TEXT_HTML)
 public class LoginResource extends BaseResource {
+    private static final URI POST_LOGIN_URI = URI.create("/problems");
+
     private final SessionStore sessionStore;
     private final UserStore userStore;
     private final UserRegistrationEmailStore userRegistrationEmailStore;
@@ -46,7 +49,14 @@ public class LoginResource extends BaseResource {
     }
 
     @GET
-    public Response logIn() {
+    @UnitOfWork(readOnly = true)
+    public Response logIn(@CookieParam("JOPHIEL_TOKEN") String token) {
+        if (token != null) {
+            if (sessionStore.getSessionByToken(token).isPresent()) {
+                return Response.seeOther(POST_LOGIN_URI).build();
+            }
+        }
+
         HtmlTemplate template = newTemplate();
         return renderLogIn(template);
     }
@@ -74,7 +84,7 @@ public class LoginResource extends BaseResource {
 
         Session session = sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
         return Response
-                .seeOther(URI.create("/problems"))
+                .seeOther(POST_LOGIN_URI)
                 .cookie(new NewCookie(
                         "JOPHIEL_TOKEN",
                         session.getToken(),
