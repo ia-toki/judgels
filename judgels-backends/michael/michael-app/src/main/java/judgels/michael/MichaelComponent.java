@@ -26,6 +26,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 @Singleton
 public interface MichaelComponent {
     PingResource pingResource();
+    IndexResource indexResource();
     LoginResource loginResource();
     LogoutResource logoutResource();
     ProblemResource problemResource();
