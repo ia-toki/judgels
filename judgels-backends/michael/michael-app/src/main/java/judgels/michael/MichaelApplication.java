@@ -65,16 +65,27 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
 
     @Override
     public void run(MichaelApplicationConfiguration config, Environment env) {
+        JophielConfiguration jophielConfig = config.getJophielConfig();
+
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
+                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .michaelModule(new MichaelModule(config.getMichaelConfig()))
+
+                // Jophiel
+                .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
+                .userAvatarModule(new UserAvatarModule(
+                        Paths.get(jophielConfig.getBaseDataDir()),
+                        jophielConfig.getUserAvatarConfig()))
                 .build();
+
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
         env.jersey().register(component.pingResource());
         env.jersey().register(component.loginResource());
+        env.jersey().register(component.problemResource());
 
-        runJophiel(config.getJophielConfig(), env, component.scheduler());
+        runJophiel(jophielConfig, env, component.scheduler());
         runSandalphon(config.getSandalphonConfig(), env, component.scheduler());
         runUriel(config.getUrielConfig(), env, component.scheduler());
         runJerahmeel(config.getJerahmeelConfig(), env, component.scheduler());
