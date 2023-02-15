@@ -7,14 +7,21 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import judgels.michael.BaseResource;
+import judgels.michael.MichaelConfiguration;
 import judgels.michael.actor.ActorChecker;
+import judgels.michael.template.HtmlTemplate;
 
 @Path("/problems")
-public class ProblemResource {
+public class ProblemResource extends BaseResource {
     private final ActorChecker actorChecker;
 
     @Inject
-    public ProblemResource(ActorChecker actorChecker) {
+    public ProblemResource(
+            MichaelConfiguration config,
+            ActorChecker actorChecker) {
+
+        super(config);
         this.actorChecker = actorChecker;
     }
 
@@ -23,6 +30,7 @@ public class ProblemResource {
     public Response listProblems(@Context HttpServletRequest req) {
         String actorJid = actorChecker.check(req);
 
-        return Response.ok(actorJid).build();
+        HtmlTemplate template = newTemplate();
+        return renderView(new ListProblemsView(template));
     }
 }

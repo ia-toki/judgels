@@ -3,6 +3,7 @@ package judgels.michael.template;
 public class HtmlTemplate {
     private final String name;
 
+    private boolean singleColumn = false;
     private String title = "";
     private String globalFormErrorMessage = "";
 
@@ -12,6 +13,14 @@ public class HtmlTemplate {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isSingleColumn() {
+        return singleColumn;
+    }
+
+    public void setSingleColumn() {
+        this.singleColumn = true;
     }
 
     public String getTitle() {

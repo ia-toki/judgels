@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.role.UserRoleStore;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
@@ -31,7 +30,6 @@ import judgels.michael.template.HtmlTemplate;
 public class LoginResource extends BaseResource {
     private final SessionStore sessionStore;
     private final UserStore userStore;
-    private final UserRoleStore userRoleStore;
     private final UserRegistrationEmailStore userRegistrationEmailStore;
 
     @Inject
@@ -39,13 +37,11 @@ public class LoginResource extends BaseResource {
             MichaelConfiguration config,
             SessionStore sessionStore,
             UserStore userStore,
-            UserRoleStore userRoleStore,
             UserRegistrationEmailStore userRegistrationEmailStore) {
 
         super(config);
         this.sessionStore = sessionStore;
         this.userStore = userStore;
-        this.userRoleStore = userRoleStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
     }
 
@@ -92,6 +88,7 @@ public class LoginResource extends BaseResource {
     }
 
     private Response renderLogIn(HtmlTemplate template) {
+        template.setSingleColumn();
         template.setTitle("Log in");
         return renderView(new LoginView(template));
     }

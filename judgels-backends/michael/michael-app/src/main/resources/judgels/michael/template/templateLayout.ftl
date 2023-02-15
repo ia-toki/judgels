@@ -12,7 +12,7 @@
   <@base.layout title=vars.title>
     <@header.view name=vars.name/>
     <main class="container">
-      <@column.layout>
+      <@column.layout singleColumn=vars.singleColumn>
         <@content.layout>
           <@title.view title=vars.title/>
           <@globalFormError.view message=vars.globalFormErrorMessage/>
