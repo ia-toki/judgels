@@ -1,4 +1,4 @@
-package judgels.michael.login;
+package judgels.michael.index;
 
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;

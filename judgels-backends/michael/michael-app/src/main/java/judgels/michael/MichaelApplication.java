@@ -83,8 +83,6 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
         env.jersey().register(component.pingResource());
         env.jersey().register(component.indexResource());
-        env.jersey().register(component.loginResource());
-        env.jersey().register(component.logoutResource());
         env.jersey().register(component.problemResource());
 
         runJophiel(jophielConfig, env, component.scheduler());

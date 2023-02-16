@@ -1,8 +1,9 @@
-package judgels.michael.login;
+package judgels.michael.index;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.net.URI;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.CookieParam;
@@ -10,9 +11,8 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -26,9 +26,8 @@ import judgels.michael.BaseResource;
 import judgels.michael.MichaelConfiguration;
 import judgels.michael.template.HtmlTemplate;
 
-@Path("/login")
-@Produces(MediaType.TEXT_HTML)
-public class LoginResource extends BaseResource {
+@Path("/")
+public class IndexResource extends BaseResource {
     private static final URI POST_LOGIN_URI = URI.create("/problems");
 
     private final SessionStore sessionStore;
@@ -36,7 +35,7 @@ public class LoginResource extends BaseResource {
     private final UserRegistrationEmailStore userRegistrationEmailStore;
 
     @Inject
-    public LoginResource(
+    public IndexResource(
             MichaelConfiguration config,
             SessionStore sessionStore,
             UserStore userStore,
@@ -49,6 +48,12 @@ public class LoginResource extends BaseResource {
     }
 
     @GET
+    public Response index() {
+        return Response.seeOther(URI.create("/login")).build();
+    }
+
+    @GET
+    @Path("/login")
     @UnitOfWork(readOnly = true)
     public Response logIn(@CookieParam("JOPHIEL_TOKEN") String token) {
         if (token != null) {
@@ -62,6 +67,7 @@ public class LoginResource extends BaseResource {
     }
 
     @POST
+    @Path("/login")
     @UnitOfWork
     public Response postLogIn(
             @Context UriInfo uriInfo,
@@ -92,6 +98,26 @@ public class LoginResource extends BaseResource {
                         uriInfo.getBaseUri().getHost(),
                         null,
                         (int) Duration.ofDays(7).getSeconds(),
+                        false,
+                        true))
+                .build();
+    }
+
+    @GET
+    @Path("/logout")
+    @UnitOfWork(readOnly = true)
+    public Response logOut(@CookieParam("JOPHIEL_TOKEN") String token, @Context UriInfo uriInfo) {
+        sessionStore.deleteSessionByToken(token);
+        return Response.seeOther(URI.create("/login"))
+                .cookie(new NewCookie(
+                        "JOPHIEL_TOKEN",
+                        "expired",
+                        "/",
+                        uriInfo.getBaseUri().getHost(),
+                        Cookie.DEFAULT_VERSION,
+                        null,
+                        (int) Duration.ofDays(7).getSeconds(),
+                        new Date(0),
                         false,
                         true))
                 .build();
