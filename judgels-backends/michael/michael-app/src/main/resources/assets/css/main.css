@@ -3,7 +3,7 @@
   --accent-font: 'Roboto', sans-serif;
   --primary-font-size: 14px;
   --brand-primary-color: #337ab7;
-  --primary-color: #43A047;
+  --primary-color: #0c5174;
   --accent-color: #cccccc;
   --content-color: #ffffff;
   --background-color: #eeeeee;
@@ -41,6 +41,7 @@ body .container-fluid {
 }
 
 header {
+  height: 50px;
   color: var(--accent-font-color);
   background-color: var(--primary-color);
   -webkit-box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
@@ -48,9 +49,13 @@ header {
   box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
 }
 
+header .row {
+  margin: 0;
+}
+
 header .logo {
   margin: 5px 0;
-  height: 35px;
+  height: 40px;
 }
 
 header .title {
@@ -63,17 +68,38 @@ header .title h1 {
   margin: 0;
   padding: 0;
   font-family: var(--primary-font);
-  font-size: 22px;
+  font-size: 26px;
+  font-weight: bold;
   color: var(--accent-font-color);
-  line-height: 35px;
-}
-
-header .row {
-  margin: 0;
+  line-height: 40px;
 }
 
 header .title a:hover {
   text-decoration: none;
+}
+
+header .subtitle {
+  line-height: 50px;
+  margin-left: 10px;
+}
+
+header .avatar-username {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+header .avatar-logout {
+  font-size: 10px;
+  color: var(--accent-font-color);
+}
+
+header .avatar-image img {
+  height: 40px;
+  width: 40px;
+  margin-top: 5px;
+  margin-right: 10px;
+  border-radius: 50%;
 }
 
 .form-horizontal .control-label{

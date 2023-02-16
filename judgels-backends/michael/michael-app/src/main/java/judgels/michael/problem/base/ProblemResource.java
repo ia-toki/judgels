@@ -9,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.michael.BaseResource;
 import judgels.michael.MichaelConfiguration;
+import judgels.michael.actor.Actor;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
 
@@ -28,9 +29,9 @@ public class ProblemResource extends BaseResource {
     @GET
     @UnitOfWork(readOnly = true)
     public Response listProblems(@Context HttpServletRequest req) {
-        String actorJid = actorChecker.check(req);
+        Actor actor = actorChecker.check(req);
+        HtmlTemplate template = newTemplate(actor);
 
-        HtmlTemplate template = newTemplate();
         return renderView(new ListProblemsView(template));
     }
 }
