@@ -28,21 +28,21 @@ public class SandalphonModule {
     @Provides
     @Singleton
     @ProblemFs
-    static FileSystem problemFs(SandalphonConfiguration config) {
+    FileSystem problemFs() {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
     }
 
     @Provides
     @Singleton
     @SubmissionFs
-    static FileSystem submissionFs(SandalphonConfiguration config) {
+    FileSystem submissionFs() {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir(), "submissions"));
     }
 
     @Provides
     @Singleton
     @LessonFs
-    static FileSystem lessonFs(SandalphonConfiguration config) {
+    FileSystem lessonFs() {
         return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
     }
 

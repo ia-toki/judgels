@@ -189,3 +189,24 @@ input[type="text"], input[type="password"], textarea {
   min-height: 624px;
   border: 1px solid var(--accent-color);
 }
+
+th {
+  font-family: var(--accent-font);
+  font-weight: bold;
+}
+
+.table-col-id {
+  width: 50px;
+}
+
+.table-col-actions {
+  width: 50px;
+}
+
+.table-col-updated-at {
+  width: 160px;
+}
+
+.table-col-item-actions {
+  width: 80px;
+}

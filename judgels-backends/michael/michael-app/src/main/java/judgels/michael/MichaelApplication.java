@@ -66,6 +66,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
     @Override
     public void run(MichaelApplicationConfiguration config, Environment env) {
         JophielConfiguration jophielConfig = config.getJophielConfig();
+        SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
@@ -77,8 +78,11 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
                 .userAvatarModule(new UserAvatarModule(
                         Paths.get(jophielConfig.getBaseDataDir()),
                         jophielConfig.getUserAvatarConfig()))
-                .build();
 
+                // Sandalphon
+                .sandalphonModule(new SandalphonModule(sandalphonConfig))
+
+                .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
         env.jersey().register(component.pingResource());
@@ -86,7 +90,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.problemResource());
 
         runJophiel(jophielConfig, env, component.scheduler());
-        runSandalphon(config.getSandalphonConfig(), env, component.scheduler());
+        runSandalphon(sandalphonConfig, env, component.scheduler());
         runUriel(config.getUrielConfig(), env, component.scheduler());
         runJerahmeel(config.getJerahmeelConfig(), env, component.scheduler());
     }

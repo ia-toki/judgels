@@ -15,6 +15,7 @@ dependencies {
     implementation project(':michael:uriel-app')
     implementation project(':michael:uriel-api')
     implementation project(':michael:jerahmeel-app')
+    implementation project(':gabriel:gabriel-engines')
     implementation project(':gabriel:gabriel-api')
 
     implementation "com.google.dagger:dagger:$daggerVersion"
