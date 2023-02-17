@@ -174,6 +174,10 @@ input[type="text"], input[type="password"], textarea {
   border: 1px solid var(--accent-color);
 }
 
+.menus > .nav > li.active > .menu-arrow {
+    background: var(--brand-primary-color) center center no-repeat !important;
+}
+
 .content {
   padding-top: 15px;
   width: 100%;

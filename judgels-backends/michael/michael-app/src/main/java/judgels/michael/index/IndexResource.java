@@ -125,6 +125,6 @@ public class IndexResource extends BaseResource {
 
     private Response renderLogIn(HtmlTemplate template) {
         template.setTitle("Log in");
-        return renderView(new LoginView(template));
+        return Response.ok(new LoginView(template)).build();
     }
 }

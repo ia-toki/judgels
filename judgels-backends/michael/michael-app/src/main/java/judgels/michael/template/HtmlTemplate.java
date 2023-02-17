@@ -11,6 +11,7 @@ public class HtmlTemplate {
     private String avatarUrl = "";
     private String globalFormErrorMessage = "";
     private List<InternalLink> sidebarMenus = new ArrayList<>();
+    private String activeSidebarMenu = "";
 
     public HtmlTemplate(String name) {
         this.name = name;
@@ -58,5 +59,13 @@ public class HtmlTemplate {
 
     public void addSidebarMenu(String label, String target) {
         sidebarMenus.add(new InternalLink(label, target));
+    }
+
+    public String getActiveSidebarMenu() {
+        return activeSidebarMenu;
+    }
+
+    public void setActiveSidebarMenu(String activeSidebarMenu) {
+        this.activeSidebarMenu = activeSidebarMenu;
     }
 }

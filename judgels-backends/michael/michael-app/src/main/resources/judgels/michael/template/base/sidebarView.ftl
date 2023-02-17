@@ -1,9 +1,12 @@
-<#macro view menus>
+<#macro view menus activeMenu>
   <div class="sidebar clearfix">
     <nav class="menus">
       <ul class="nav nav-stacked">
         <#list menus as menu>
-          <li role="presentation"><a href="${menu.target}">${menu.label}</a><div class="menu-arrow">&gt;</div></li>
+          <li class="${(menu.target == activeMenu)?then("active", "")}">
+            <a href="${menu.target}">${menu.label}</a>
+            <div class="menu-arrow">&gt;</div>
+          </li>
         </#list>
       </ul>
     </nav>
