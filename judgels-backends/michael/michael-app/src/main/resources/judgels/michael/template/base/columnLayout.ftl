@@ -1,16 +1,14 @@
-<#macro layout singleColumn>
+<#import "sidebarView.ftl" as sidebar>
+
+<#macro layout sidebarMenus>
   <div class="row content">
-    <#if singleColumn>
-      <div class="row content">
-        <div class="col-md-offset-3 col-md-6">
-          <#nested>
-        </div>
+    <#if sidebarMenus?size == 0>
+      <div class="col-md-offset-3 col-md-6">
+        <#nested>
       </div>
     <#else>
       <div class="col-md-3">
-        <div class="sidebar clearfix">
-          sidebar here
-        </div>
+        <@sidebar.view menus=sidebarMenus/>
       </div>
       <div class="col-md-9">
         <#nested>

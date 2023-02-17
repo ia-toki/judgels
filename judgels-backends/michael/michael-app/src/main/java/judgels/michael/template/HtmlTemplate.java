@@ -1,13 +1,16 @@
 package judgels.michael.template;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HtmlTemplate {
     private final String name;
 
-    private boolean singleColumn = false;
     private String title = "";
     private String username = "";
     private String avatarUrl = "";
     private String globalFormErrorMessage = "";
+    private List<InternalLink> sidebarMenus = new ArrayList<>();
 
     public HtmlTemplate(String name) {
         this.name = name;
@@ -15,14 +18,6 @@ public class HtmlTemplate {
 
     public String getName() {
         return name;
-    }
-
-    public boolean isSingleColumn() {
-        return singleColumn;
-    }
-
-    public void setSingleColumn() {
-        this.singleColumn = true;
     }
 
     public String getTitle() {
@@ -55,5 +50,13 @@ public class HtmlTemplate {
 
     public void setGlobalFormErrorMessage(String globalFormErrorMessage) {
         this.globalFormErrorMessage = globalFormErrorMessage;
+    }
+
+    public List<InternalLink> getSidebarMenus() {
+        return sidebarMenus;
+    }
+
+    public void addSidebarMenu(String label, String target) {
+        sidebarMenus.add(new InternalLink(label, target));
     }
 }

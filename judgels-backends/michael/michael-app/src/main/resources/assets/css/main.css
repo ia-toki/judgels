@@ -114,15 +114,74 @@ input[type="text"], input[type="password"], textarea {
   color: var(--primary-font-color);
 }
 
-.primary-content {
+.menus > .nav > li > ul {
+  margin-left: 278px;
+  margin-top: -54px;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.menus > .nav > li > ul > li {
+  position: relative;
+}
+
+.menus > .nav li a {
+  display: block;
   background-color: var(--content-color);
-  min-height: 624px;
+  color: var(--primary-font-color);
+  font-size: 16px;
+  margin-bottom: 5px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   border: 1px solid var(--accent-color);
-  margin-top: 15px;
+}
+
+.menus > .nav li.active {
+  background-color: transparent;
+  background-image: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menus > .nav li > a:hover, .menus > .nav li > a:focus {
+  color: var(--brand-primary-color);
+  background-color: lighten(var(--accent-color), 10%);
+  text-decoration: none;
+}
+
+.menus > .nav li.active {
+  text-shadow: none;
+}
+
+.menus > .nav li.active a {
+  color: var(--brand-primary-color);
+}
+
+.menu-arrow {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  line-height: 27px;
+  font-size: 22px;
+  text-align: center;
+  color: var(--accent-color);
+  background: var(--content-color) center center no-repeat;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid var(--accent-color);
 }
 
 .content {
   padding-top: 15px;
   width: 100%;
   margin: 0;
+}
+
+.primary-content {
+  background-color: var(--content-color);
+  min-height: 624px;
+  border: 1px solid var(--accent-color);
 }

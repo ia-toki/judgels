@@ -20,6 +20,7 @@ public abstract class BaseResource {
         HtmlTemplate template = newTemplate();
         template.setUsername(actor.getUsername());
         template.setAvatarUrl(actor.getAvatarUrl());
+        template.addSidebarMenu("Problems", "/problems");
         return template;
     }
 
