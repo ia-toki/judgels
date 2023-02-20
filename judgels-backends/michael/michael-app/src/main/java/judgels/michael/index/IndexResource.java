@@ -23,29 +23,17 @@ import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.michael.BaseResource;
-import judgels.michael.MichaelConfiguration;
 import judgels.michael.template.HtmlTemplate;
 
 @Path("/")
 public class IndexResource extends BaseResource {
     private static final URI POST_LOGIN_URI = URI.create("/problems");
 
-    private final SessionStore sessionStore;
-    private final UserStore userStore;
-    private final UserRegistrationEmailStore userRegistrationEmailStore;
+    @Inject protected SessionStore sessionStore;
+    @Inject protected UserStore userStore;
+    @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
 
-    @Inject
-    public IndexResource(
-            MichaelConfiguration config,
-            SessionStore sessionStore,
-            UserStore userStore,
-            UserRegistrationEmailStore userRegistrationEmailStore) {
-
-        super(config);
-        this.sessionStore = sessionStore;
-        this.userStore = userStore;
-        this.userRegistrationEmailStore = userRegistrationEmailStore;
-    }
+    @Inject public IndexResource() {}
 
     @GET
     public Response index() {

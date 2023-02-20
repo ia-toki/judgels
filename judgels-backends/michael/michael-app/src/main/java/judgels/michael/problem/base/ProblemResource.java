@@ -15,7 +15,6 @@ import javax.ws.rs.core.Context;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.profile.ProfileStore;
-import judgels.michael.MichaelConfiguration;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
@@ -25,25 +24,12 @@ import judgels.sandalphon.role.RoleChecker;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final ProblemSearchStore problemSearchStore;
-    private final ProfileStore profileStore;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected ProblemSearchStore problemSearchStore;
+    @Inject protected ProfileStore profileStore;
 
-    @Inject
-    public ProblemResource(
-            MichaelConfiguration config,
-            ActorChecker actorChecker,
-            RoleChecker roleChecker,
-            ProblemSearchStore problemSearchStore,
-            ProfileStore profileStore) {
-
-        super(config);
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.problemSearchStore = problemSearchStore;
-        this.profileStore = profileStore;
-    }
+    @Inject public ProblemResource() {}
 
     @GET
     @UnitOfWork(readOnly = true)

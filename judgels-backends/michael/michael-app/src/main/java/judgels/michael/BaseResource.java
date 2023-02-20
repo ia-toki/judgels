@@ -1,14 +1,11 @@
 package judgels.michael;
 
+import javax.inject.Inject;
 import judgels.jophiel.api.actor.Actor;
 import judgels.michael.template.HtmlTemplate;
 
 public abstract class BaseResource {
-    private final MichaelConfiguration config;
-
-    public BaseResource(MichaelConfiguration config) {
-        this.config = config;
-    }
+    @Inject protected MichaelConfiguration config;
 
     public HtmlTemplate newTemplate() {
         return new HtmlTemplate(config.getName());
