@@ -7,19 +7,24 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import judgels.jophiel.api.actor.Actor;
+import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.role.UserRoleStore;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.UserStore;
 
 public class ActorChecker {
     private final SessionStore sessionStore;
     private final UserStore userStore;
+    private final UserRoleStore userRoleStore;
 
     @Inject
-    public ActorChecker(SessionStore sessionStore, UserStore userStore) {
+    public ActorChecker(SessionStore sessionStore, UserStore userStore, UserRoleStore userRoleStore) {
         this.sessionStore = sessionStore;
         this.userStore = userStore;
+        this.userRoleStore = userRoleStore;
     }
 
     public Actor check(HttpServletRequest req) {
@@ -32,9 +37,11 @@ public class ActorChecker {
                         String userJid = session.get().getUserJid();
                         Optional<User> user = userStore.getUserByJid(userJid);
                         if (user.isPresent()) {
+                            UserRole role = userRoleStore.getRole(userJid);
                             return new Actor.Builder()
                                     .userJid(userJid)
                                     .username(user.get().getUsername())
+                                    .role(role)
                                     .avatarUrl("/api/v2/users/" + userJid + "/avatar")
                                     .build();
                         }

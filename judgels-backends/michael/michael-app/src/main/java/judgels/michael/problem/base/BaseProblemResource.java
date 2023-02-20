@@ -1,8 +1,8 @@
 package judgels.michael.problem.base;
 
+import judgels.jophiel.api.actor.Actor;
 import judgels.michael.BaseResource;
 import judgels.michael.MichaelConfiguration;
-import judgels.michael.actor.Actor;
 import judgels.michael.template.HtmlTemplate;
 
 public abstract class BaseProblemResource extends BaseResource {

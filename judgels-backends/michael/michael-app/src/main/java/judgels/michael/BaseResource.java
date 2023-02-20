@@ -1,6 +1,6 @@
 package judgels.michael;
 
-import judgels.michael.actor.Actor;
+import judgels.jophiel.api.actor.Actor;
 import judgels.michael.template.HtmlTemplate;
 
 public abstract class BaseResource {
