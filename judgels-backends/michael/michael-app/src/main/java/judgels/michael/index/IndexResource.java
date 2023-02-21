@@ -6,8 +6,8 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.CookieParam;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -23,6 +23,7 @@ import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.michael.BaseResource;
+import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 
 @Path("/")
@@ -50,30 +51,21 @@ public class IndexResource extends BaseResource {
             }
         }
 
-        HtmlTemplate template = newTemplate();
-        return renderLogIn(template);
+        return renderLogIn(new LoginForm());
     }
 
     @POST
     @Path("/login")
     @UnitOfWork
-    public Response postLogIn(
-            @Context UriInfo uriInfo,
-            @FormParam("username") String username,
-            @FormParam("password") String password) {
-
-        HtmlTemplate template = newTemplate();
-
-        Optional<User> maybeUser = userStore.getUserByUsernameAndPassword(username, password);
+    public Response postLogIn(@Context UriInfo uriInfo, @BeanParam LoginForm form) {
+        Optional<User> maybeUser = userStore.getUserByUsernameAndPassword(form.getUsername(), form.getPassword());
         if (!maybeUser.isPresent()) {
-            template.setGlobalFormErrorMessage("Username or password incorrect.");
-            return renderLogIn(template);
+            return renderLogIn(form.withGlobalError("Username or password incorrect."));
         }
 
         User user = maybeUser.get();
         if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
-            template.setGlobalFormErrorMessage("Username or password incorrect.");
-            return renderLogIn(template);
+            return renderLogIn(form.withGlobalError("Username or password incorrect."));
         }
 
         Session session = sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
@@ -111,8 +103,9 @@ public class IndexResource extends BaseResource {
                 .build();
     }
 
-    private Response renderLogIn(HtmlTemplate template) {
+    private Response renderLogIn(HtmlForm form) {
+        HtmlTemplate template = newTemplate();
         template.setTitle("Log in");
-        return Response.ok(new LoginView(template)).build();
+        return Response.ok(new LoginView(template, form)).build();
     }
 }

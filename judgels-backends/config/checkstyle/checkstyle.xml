@@ -368,6 +368,7 @@
         <module name="UpperEll"/> <!-- Java Style Guide: Numeric Literals -->
         <module name="VisibilityModifier"> <!-- Java Coding Guidelines: Minimize mutability -->
             <property name="protectedAllowed" value="true"/>
+            <property name="packageAllowed" value="true"/>
         </module>
         <module name="WhitespaceAfter"/> <!-- Java Style Guide: Horizontal whitespace -->
         <module name="WhitespaceAround"> <!-- Java Style Guide: Horizontal whitespace -->

@@ -6,14 +6,24 @@ import java.time.Instant;
 
 public abstract class TemplateView extends View {
     private final HtmlTemplate template;
+    private HtmlForm form;
 
     public TemplateView(String templateName, HtmlTemplate template) {
         super(templateName);
         this.template = template;
     }
 
+    public TemplateView(String templateName, HtmlTemplate template, HtmlForm form) {
+        this(templateName, template);
+        this.form = form;
+    }
+
     public HtmlTemplate getVars() {
         return template;
+    }
+
+    public HtmlForm getForm() {
+        return form;
     }
 
     public String getDurationFromNow(Instant instant) {

@@ -4,11 +4,11 @@
   </form>
 </#macro>
 
-<#macro text name label required=false>
+<#macro text name label required=false value="">
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
-      <input type="text" id="${name}" name="${name}" class="form-control" ${required?then("required", "")}>
+      <input type="text" id="${name}" name="${name}" class="form-control" ${required?then("required", "")} value="${value}">
     </div>
   </div>
 </#macro>

@@ -9,7 +9,6 @@ public class HtmlTemplate {
     private String title = "";
     private String username = "";
     private String avatarUrl = "";
-    private String globalFormErrorMessage = "";
     private List<InternalLink> sidebarMenus = new ArrayList<>();
     private String activeSidebarMenu = "";
 
@@ -43,14 +42,6 @@ public class HtmlTemplate {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public String getGlobalFormErrorMessage() {
-        return globalFormErrorMessage;
-    }
-
-    public void setGlobalFormErrorMessage(String globalFormErrorMessage) {
-        this.globalFormErrorMessage = globalFormErrorMessage;
     }
 
     public List<InternalLink> getSidebarMenus() {
