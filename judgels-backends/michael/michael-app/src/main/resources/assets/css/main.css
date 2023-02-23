@@ -190,6 +190,19 @@ input[type="text"], input[type="password"], textarea {
   border: 1px solid var(--accent-color);
 }
 
+.inline-headers h2, .inline-headers h3, .inline-headers h4, .inline-headers h5, .inline-headers h6 {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.inline-headers .btn {
+  margin-bottom: 10px;
+}
+
+.inline-headers .btn:first-of-type {
+  margin-left: 10px;
+}
+
 th {
   font-family: var(--accent-font);
   font-weight: bold;

@@ -14,6 +14,7 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.role.UserRoleStore;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.UserStore;
+import judgels.service.actor.PerRequestActorProvider;
 
 public class ActorChecker {
     private final SessionStore sessionStore;
@@ -37,6 +38,7 @@ public class ActorChecker {
                         String userJid = session.get().getUserJid();
                         Optional<User> user = userStore.getUserByJid(userJid);
                         if (user.isPresent()) {
+                            PerRequestActorProvider.setJid(userJid);
                             UserRole role = userRoleStore.getRole(userJid);
                             return new Actor.Builder()
                                     .userJid(userJid)

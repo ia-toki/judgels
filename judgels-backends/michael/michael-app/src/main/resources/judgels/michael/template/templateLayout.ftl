@@ -14,7 +14,7 @@
     <main class="container">
       <@column.layout sidebarMenus=vars.sidebarMenus activeSidebarMenu=vars.activeSidebarMenu>
         <@content.layout>
-          <@title.view title=vars.title/>
+          <@title.view title=vars.title buttons=vars.mainButtons/>
           <@globalFormError.view message=(form.globalError)!""/>
           <#nested>
         </@content.layout>

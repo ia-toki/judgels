@@ -58,7 +58,7 @@ public class IndexResource extends BaseResource {
     @Path("/login")
     @UnitOfWork
     public Response postLogIn(@Context UriInfo uriInfo, @BeanParam LoginForm form) {
-        Optional<User> maybeUser = userStore.getUserByUsernameAndPassword(form.getUsername(), form.getPassword());
+        Optional<User> maybeUser = userStore.getUserByUsernameAndPassword(form.username, form.password);
         if (!maybeUser.isPresent()) {
             return renderLogIn(form.withGlobalError("Username or password incorrect."));
         }
@@ -106,6 +106,6 @@ public class IndexResource extends BaseResource {
     private Response renderLogIn(HtmlForm form) {
         HtmlTemplate template = newTemplate();
         template.setTitle("Log in");
-        return Response.ok(new LoginView(template, form)).build();
+        return Response.ok(new LoginView(template, (LoginForm) form)).build();
     }
 }

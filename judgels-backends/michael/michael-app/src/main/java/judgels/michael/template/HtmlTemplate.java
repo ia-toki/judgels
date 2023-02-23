@@ -11,6 +11,7 @@ public class HtmlTemplate {
     private String avatarUrl = "";
     private List<InternalLink> sidebarMenus = new ArrayList<>();
     private String activeSidebarMenu = "";
+    private List<InternalLink> mainButtons = new ArrayList<>();
 
     public HtmlTemplate(String name) {
         this.name = name;
@@ -58,5 +59,13 @@ public class HtmlTemplate {
 
     public void setActiveSidebarMenu(String activeSidebarMenu) {
         this.activeSidebarMenu = activeSidebarMenu;
+    }
+
+    public void addMainButton(String label, String target) {
+        mainButtons.add(new InternalLink(label, target));
+    }
+
+    public List<InternalLink> getMainButtons() {
+        return mainButtons;
     }
 }
