@@ -2,6 +2,7 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/table/tableLayout.ftl" as table>
+<#import "/judgels/michael/template/table/paginationView.ftl" as pagination>
 
 <@template.layout>
   <@table.layout>
@@ -24,4 +25,5 @@
       </#list>
     </tbody>
   </@table.layout>
+  <@pagination.view page=problems/>
 </@template.layout>

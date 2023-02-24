@@ -12,9 +12,11 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
@@ -52,12 +54,15 @@ public class ProblemResource extends BaseProblemResource {
 
     @GET
     @UnitOfWork(readOnly = true)
-    public View listProblems(@Context HttpServletRequest req) {
+    public View listProblems(
+            @Context HttpServletRequest req,
+            @QueryParam("pageIndex") @DefaultValue("1") int pageIndex) {
+
         Actor actor = actorChecker.check(req);
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Problem> problems = problemSearchStore.searchProblems(1, "updatedAt", "desc", "", null, actor.getUserJid(), isAdmin);
+        Page<Problem> problems = problemSearchStore.searchProblems(pageIndex, "updatedAt", "desc", "", null, actor.getUserJid(), isAdmin);
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
