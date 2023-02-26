@@ -1,10 +1,10 @@
 <#function newPageLink newPageIndex filterString="">
   <#local res = []>
   <#if (newPageIndex > 1)>
-    <#local res += ["pageIndex=${newPageIndex}"]>
+    <#local res += ["page=${newPageIndex}"]>
   </#if>
   <#if filterString?has_content>
-    <#local res += ["filterString=${filterString}"]>
+    <#local res += ["filter=${filterString}"]>
   </#if>
   <#return "?" + res?join("&")>
 </#function>

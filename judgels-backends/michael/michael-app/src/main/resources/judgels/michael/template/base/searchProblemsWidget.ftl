@@ -4,7 +4,7 @@
       <form method="GET" action="/problems">
         <div class="form-group">
           <label>Slug / additional note</label>
-          <input type="search" class="form-control" name="filterString" value="${data.filterString}">
+          <input type="search" class="form-control" name="filter" value="${data.filterString}">
         </div>
       </form>
     </div>

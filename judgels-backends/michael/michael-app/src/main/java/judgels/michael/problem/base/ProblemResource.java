@@ -57,8 +57,8 @@ public class ProblemResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View listProblems(
             @Context HttpServletRequest req,
-            @QueryParam("pageIndex") @DefaultValue("1") int pageIndex,
-            @QueryParam("filterString") @DefaultValue("") String filterString) {
+            @QueryParam("page") @DefaultValue("1") int pageIndex,
+            @QueryParam("filter") @DefaultValue("") String filterString) {
 
         Actor actor = actorChecker.check(req);
         boolean isAdmin = roleChecker.isAdmin(actor);
