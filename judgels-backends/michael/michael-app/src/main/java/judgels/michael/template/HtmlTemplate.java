@@ -11,6 +11,7 @@ public class HtmlTemplate {
     private String avatarUrl = "";
     private List<InternalLink> sidebarMenus = new ArrayList<>();
     private String activeSidebarMenu = "";
+    private List<InternalLink> mainTabs = new ArrayList<>();
     private List<InternalLink> mainButtons = new ArrayList<>();
     private SearchProblemsWidget searchProblemsWidget = new SearchProblemsWidget(0, "");
     private boolean hasSearchProblemsWidget;
@@ -61,6 +62,14 @@ public class HtmlTemplate {
 
     public void setActiveSidebarMenu(String activeSidebarMenu) {
         this.activeSidebarMenu = activeSidebarMenu;
+    }
+
+    public void addMainTab(String label, String target) {
+        mainTabs.add(new InternalLink(label, target));
+    }
+
+    public List<InternalLink> getMainTabs() {
+        return mainTabs;
     }
 
     public void addMainButton(String label, String target) {

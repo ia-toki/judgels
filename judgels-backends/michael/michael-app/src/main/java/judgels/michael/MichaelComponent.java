@@ -7,6 +7,7 @@ import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.michael.index.IndexResource;
 import judgels.michael.problem.base.ProblemResource;
+import judgels.michael.problem.programming.ProgrammingProblemStatementResource;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsApplicationModule;
@@ -35,6 +36,7 @@ public interface MichaelComponent {
     PingResource pingResource();
     IndexResource indexResource();
     ProblemResource problemResource();
+    ProgrammingProblemStatementResource programmingProblemResource();
 
     JudgelsScheduler scheduler();
 }

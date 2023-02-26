@@ -68,7 +68,7 @@ public class ProblemResource extends BaseProblemResource {
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
-        HtmlTemplate template = newTemplate(actor);
+        HtmlTemplate template = newProblemsTemplate(actor);
         template.setTitle("Problems");
         if (isWriter) {
             template.addMainButton("Create", "/problems/new");
@@ -129,7 +129,7 @@ public class ProblemResource extends BaseProblemResource {
     }
 
     private View renderCreateProblem(Actor actor, HtmlForm form) {
-        HtmlTemplate template = newTemplate(actor);
+        HtmlTemplate template = newProblemsTemplate(actor);
         template.setTitle("Create problem");
         return new CreateProblemView(template, (CreateProblemForm) form);
     }
