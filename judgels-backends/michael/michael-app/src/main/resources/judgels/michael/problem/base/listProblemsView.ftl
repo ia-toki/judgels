@@ -10,8 +10,8 @@
       <tr>
         <th class="table-col-id">ID</th>
         <th>Slug</th>
-        <th>Creator</th>
-        <th>Last updated</th>
+        <th>Created by</th>
+        <th>Last updated at</th>
       </tr>
     </thead>
     <tbody>
