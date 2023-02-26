@@ -25,5 +25,5 @@
       </#list>
     </tbody>
   </@table.layout>
-  <@pagination.view page=problems/>
+  <@pagination.view page=problems filterString=filterString/>
 </@template.layout>

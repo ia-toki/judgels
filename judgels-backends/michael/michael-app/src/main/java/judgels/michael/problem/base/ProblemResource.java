@@ -25,6 +25,7 @@ import judgels.jophiel.profile.ProfileStore;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
+import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
@@ -56,13 +57,14 @@ public class ProblemResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View listProblems(
             @Context HttpServletRequest req,
-            @QueryParam("pageIndex") @DefaultValue("1") int pageIndex) {
+            @QueryParam("pageIndex") @DefaultValue("1") int pageIndex,
+            @QueryParam("filterString") @DefaultValue("") String filterString) {
 
         Actor actor = actorChecker.check(req);
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Problem> problems = problemSearchStore.searchProblems(pageIndex, "updatedAt", "desc", "", null, actor.getUserJid(), isAdmin);
+        Page<Problem> problems = problemSearchStore.searchProblems(pageIndex, "updatedAt", "desc", filterString, null, actor.getUserJid(), isAdmin);
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
@@ -71,7 +73,8 @@ public class ProblemResource extends BaseProblemResource {
         if (isWriter) {
             template.addMainButton("Create", "/problems/new");
         }
-        return new ListProblemsView(template, problems, profilesMap);
+        template.setSearchProblemsWidget(new SearchProblemsWidget(pageIndex, filterString));
+        return new ListProblemsView(template, problems, filterString, profilesMap);
     }
 
     @GET

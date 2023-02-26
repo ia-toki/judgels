@@ -1,6 +1,7 @@
 <#import "sidebarView.ftl" as sidebar>
+<#import "searchProblemsWidget.ftl" as searchProblems>
 
-<#macro layout sidebarMenus activeSidebarMenu>
+<#macro layout sidebarMenus activeSidebarMenu searchProblemsWidget hasSearchProblemsWidget>
   <div class="row content">
     <#if sidebarMenus?size == 0>
       <div class="col-md-offset-3 col-md-6">
@@ -9,6 +10,9 @@
     <#else>
       <div class="col-md-3">
         <@sidebar.view menus=sidebarMenus activeMenu=activeSidebarMenu/>
+        <#if hasSearchProblemsWidget>
+          <@searchProblems.widget data=searchProblemsWidget/>
+        </#if>
       </div>
       <div class="col-md-9">
         <#nested>

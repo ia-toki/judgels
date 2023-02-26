@@ -9,16 +9,22 @@ import judgels.sandalphon.api.problem.Problem;
 
 public class ListProblemsView extends TemplateView {
     private final Page<Problem> problems;
+    private final String filterString;
     private final Map<String, Profile> profilesMap;
 
-    public ListProblemsView(HtmlTemplate template, Page<Problem> problems, Map<String, Profile> profilesMap) {
+    public ListProblemsView(HtmlTemplate template, Page<Problem> problems, String filterString, Map<String, Profile> profilesMap) {
         super("listProblemsView.ftl", template);
         this.problems = problems;
+        this.filterString = filterString;
         this.profilesMap = profilesMap;
     }
 
     public Page<Problem> getProblems() {
         return problems;
+    }
+
+    public String getFilterString() {
+        return filterString;
     }
 
     public Map<String, Profile> getProfilesMap() {
