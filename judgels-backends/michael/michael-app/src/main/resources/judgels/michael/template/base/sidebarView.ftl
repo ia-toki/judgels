@@ -3,7 +3,7 @@
     <nav class="menus">
       <ul class="nav nav-stacked">
         <#list menus as menu>
-          <li class="${(menu.target == activeMenu)?then("active", "")}">
+          <li class="${(menu.key == activeMenu)?then("active", "")}">
             <a href="${menu.target}">${menu.label}</a>
             <div class="menu-arrow">&gt;</div>
           </li>

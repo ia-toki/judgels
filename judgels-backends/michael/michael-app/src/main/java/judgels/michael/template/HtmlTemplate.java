@@ -55,8 +55,8 @@ public class HtmlTemplate {
         return sidebarMenus;
     }
 
-    public void addSidebarMenu(String label, String target) {
-        sidebarMenus.add(new InternalLink(label, target));
+    public void addSidebarMenu(String key, String label, String target) {
+        sidebarMenus.add(new InternalLink(key, label, target));
     }
 
     public String getActiveSidebarMenu() {
@@ -67,8 +67,8 @@ public class HtmlTemplate {
         this.activeSidebarMenu = activeSidebarMenu;
     }
 
-    public void addMainTab(String label, String target) {
-        mainTabs.add(new InternalLink(label, target));
+    public void addMainTab(String key, String label, String target) {
+        mainTabs.add(new InternalLink(key, label, target));
     }
 
     public List<InternalLink> getMainTabs() {
@@ -91,8 +91,8 @@ public class HtmlTemplate {
         return mainButtons;
     }
 
-    public void addSecondaryTab(String label, String target) {
-        secondaryTabs.add(new InternalLink(label, target));
+    public void addSecondaryTab(String key, String label, String target) {
+        secondaryTabs.add(new InternalLink(key, label, target));
     }
 
     public List<InternalLink> getSecondaryTabs() {

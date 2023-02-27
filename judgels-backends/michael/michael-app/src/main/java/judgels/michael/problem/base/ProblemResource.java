@@ -141,14 +141,14 @@ public class ProblemResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
 
         HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
-        template.setActiveSecondaryTab("/problems/" + problem.getId());
+        template.setActiveSecondaryTab("view");
         return new ViewProblemView(template);
     }
 
     private HtmlTemplate newProblemGeneralTemplate(Actor actor, Problem problem) {
         HtmlTemplate template = newProblemTemplate(actor, problem);
-        template.setActiveMainTab("/problems/" + problem.getId());
-        template.addSecondaryTab("View", "/problems/" + problem.getId());
+        template.setActiveMainTab("general");
+        template.addSecondaryTab("view", "View", "/problems/" + problem.getId());
         return template;
     }
 

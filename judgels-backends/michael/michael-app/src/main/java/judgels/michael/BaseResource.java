@@ -15,8 +15,8 @@ public abstract class BaseResource {
         HtmlTemplate template = newTemplate();
         template.setUsername(actor.getUsername());
         template.setAvatarUrl(actor.getAvatarUrl());
-        template.addSidebarMenu("Problems", "/problems");
-        template.addSidebarMenu("Lessons", "/lessons");
+        template.addSidebarMenu("problems", "Problems", "/problems");
+        template.addSidebarMenu("lessons", "Lessons", "/lessons");
         return template;
     }
 }

@@ -5,7 +5,7 @@
 
   <ul class="nav nav-tabs">
     <#list tabs as tab>
-      <li class="${(tab.target == activeTab)?then("active", "")}">
+      <li class="${(tab.key == activeTab)?then("active", "")}">
         <a href="${tab.target}">${tab.label}</a>
       </li>
     </#list>

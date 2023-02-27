@@ -7,7 +7,7 @@
     <div class="container-fluid">
       <ul class="nav navbar-nav">
         <#list tabs as tab>
-          <li class="${(tab.target == activeTab)?then("active", "")}">
+          <li class="${(tab.key == activeTab)?then("active", "")}">
             <a href="${tab.target}">${tab.label}</a>
           </li>
         </#list>
