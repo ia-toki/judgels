@@ -4,6 +4,7 @@
 <#import "base/columnLayout.ftl" as column>
 <#import "content/contentLayout.ftl" as content>
 <#import "content/mainTabsView.ftl" as mainTabs>
+<#import "content/secondaryTabsView.ftl" as secondaryTabs>
 <#import "content/titleView.ftl" as title>
 <#import "form/globalFormErrorView.ftl" as globalFormError>
 
@@ -21,7 +22,8 @@
       >
         <@content.layout>
           <@title.view title=vars.title buttons=vars.mainButtons/>
-          <@mainTabs.view tabs=vars.mainTabs/>
+          <@mainTabs.view tabs=vars.mainTabs activeTab=vars.activeMainTab/>
+          <@secondaryTabs.view tabs=vars.secondaryTabs activeTab=vars.activeSecondaryTab/>
           <@globalFormError.view message=(form.globalError)!""/>
           <#nested>
         </@content.layout>

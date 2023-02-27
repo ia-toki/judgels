@@ -12,7 +12,10 @@ public class HtmlTemplate {
     private List<InternalLink> sidebarMenus = new ArrayList<>();
     private String activeSidebarMenu = "";
     private List<InternalLink> mainTabs = new ArrayList<>();
+    private String activeMainTab = "";
     private List<InternalLink> mainButtons = new ArrayList<>();
+    private List<InternalLink> secondaryTabs = new ArrayList<>();
+    private String activeSecondaryTab = "";
     private SearchProblemsWidget searchProblemsWidget = new SearchProblemsWidget(0, "");
     private boolean hasSearchProblemsWidget;
 
@@ -72,12 +75,36 @@ public class HtmlTemplate {
         return mainTabs;
     }
 
+    public void setActiveMainTab(String activeMainTab) {
+        this.activeMainTab = activeMainTab;
+    }
+
+    public String getActiveMainTab() {
+        return activeMainTab;
+    }
+
     public void addMainButton(String label, String target) {
         mainButtons.add(new InternalLink(label, target));
     }
 
     public List<InternalLink> getMainButtons() {
         return mainButtons;
+    }
+
+    public void addSecondaryTab(String label, String target) {
+        secondaryTabs.add(new InternalLink(label, target));
+    }
+
+    public List<InternalLink> getSecondaryTabs() {
+        return secondaryTabs;
+    }
+
+    public void setActiveSecondaryTab(String activeSecondaryTab) {
+        this.activeSecondaryTab = activeSecondaryTab;
+    }
+
+    public String getActiveSecondaryTab() {
+        return activeSecondaryTab;
     }
 
     public SearchProblemsWidget getSearchProblemsWidget() {

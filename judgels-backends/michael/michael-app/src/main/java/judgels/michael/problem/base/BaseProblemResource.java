@@ -14,17 +14,15 @@ public abstract class BaseProblemResource extends BaseResource {
 
     protected HtmlTemplate newProblemTemplate(Actor actor, Problem problem) {
         HtmlTemplate template = this.newProblemsTemplate(actor);
-        setTitle(template, problem);
-        setTabs(template, problem);
+        template.setTitle("#" + problem.getId() + ": " + problem.getSlug());
+        template.addMainTab("General", "/problems/" + problem.getId());
+        template.addMainTab("Statements", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
         return template;
     }
 
-    private void setTitle(HtmlTemplate template, Problem problem) {
-        template.setTitle("#" + problem.getId() + ": " + problem.getSlug());
-    }
-
-    private void setTabs(HtmlTemplate template, Problem problem) {
-        template.addMainTab("General", "/problems/" + problem.getId());
-        template.addMainTab("Statements", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
+    protected HtmlTemplate newProblemStatementTemplate(Actor actor, Problem problem) {
+        HtmlTemplate template = newProblemTemplate(actor, problem);
+        template.setActiveMainTab("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
+        return template;
     }
 }

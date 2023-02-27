@@ -1,4 +1,4 @@
-<#macro view tabs>
+<#macro view tabs activeTab>
   <#if tabs?size == 0>
     <#return>
   </#if>
@@ -7,7 +7,9 @@
     <div class="container-fluid">
       <ul class="nav navbar-nav">
         <#list tabs as tab>
-          <li><a href="${tab.target}">${tab.label}</a></li>
+          <li class="${(tab.target == activeTab)?then("active", "")}">
+            <a href="${tab.target}">${tab.label}</a>
+          </li>
         </#list>
       </ul>
     </div>

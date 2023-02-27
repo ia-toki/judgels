@@ -32,7 +32,7 @@ public class ProgrammingProblemStatementResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        HtmlTemplate template = newProblemTemplate(actor, problem);
+        HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         return new ViewStatementView(template, problem);
     }
 }

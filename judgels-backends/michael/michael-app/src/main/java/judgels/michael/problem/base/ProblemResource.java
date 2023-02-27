@@ -2,6 +2,7 @@ package judgels.michael.problem.base;
 
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
@@ -16,6 +17,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -126,6 +128,28 @@ public class ProblemResource extends BaseProblemResource {
         return Response
                 .seeOther(URI.create("/problems/" + problem.getId()))
                 .build();
+    }
+
+    @GET
+    @Path("/{problemId}")
+    @UnitOfWork(readOnly = true)
+    public View viewProblem(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+
+        HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
+        template.setActiveSecondaryTab("/problems/" + problem.getId());
+        return new ViewProblemView(template);
+    }
+
+    private HtmlTemplate newProblemGeneralTemplate(Actor actor, Problem problem) {
+        HtmlTemplate template = newProblemTemplate(actor, problem);
+        template.setActiveMainTab("/problems/" + problem.getId());
+        template.addSecondaryTab("View", "/problems/" + problem.getId());
+        return template;
     }
 
     private View renderCreateProblem(Actor actor, HtmlForm form) {
