@@ -4,7 +4,7 @@
   </form>
 </#macro>
 
-<#macro text name label required=false value="" pattern="" title="">
+<#macro text name label required=false value="" pattern="" title="" help="">
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
@@ -14,6 +14,9 @@
         <#if pattern?has_content>pattern="${pattern}"</#if>
         <#if title?has_content>title="${title}"</#if>
       >
+      <#if help?has_content>
+        <span class="help-block">${help}</span>
+      </#if>
     </div>
   </div>
 </#macro>

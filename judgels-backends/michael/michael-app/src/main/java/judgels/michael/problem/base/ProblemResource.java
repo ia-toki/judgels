@@ -4,12 +4,18 @@ import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.net.URI;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
@@ -24,14 +30,17 @@ import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.profile.ProfileStore;
+import judgels.jophiel.user.UserStore;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.problem.base.ProblemRoleChecker;
 import judgels.sandalphon.problem.base.ProblemSearchStore;
 import judgels.sandalphon.problem.base.ProblemStore;
 import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
@@ -46,11 +55,13 @@ import judgels.sandalphon.role.RoleChecker;
 public class ProblemResource extends BaseProblemResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected RoleChecker roleChecker;
+    @Inject protected ProblemRoleChecker problemRoleChecker;
     @Inject protected ProblemStore problemStore;
     @Inject protected BundleProblemStore bundleProblemStore;
     @Inject protected ProgrammingProblemStore programmingProblemStore;
     @Inject protected ProblemSearchStore problemSearchStore;
     @Inject protected ProblemTagStore problemTagStore;
+    @Inject protected UserStore userStore;
     @Inject protected ProfileStore profileStore;
 
     @Inject public ProblemResource() {}
@@ -139,16 +150,130 @@ public class ProblemResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
+
+        Profile profile = profileStore.getProfile(Instant.now(), problem.getAuthorJid());
+
+        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), setters.values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toSet()));
+
+        String writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
+        String developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
+        String testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
+        String editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
 
         HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
-        return new ViewProblemView(template);
+        return new ViewProblemView(template, problem, profile, writerUsernames, developerUsernames, testerUsernames, editorialistUsernames);
+    }
+
+    @GET
+    @Path("/{problemId}/edit")
+    @UnitOfWork(readOnly = true)
+    public View editProblem(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+
+        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), setters.values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toSet()));
+
+        EditProblemForm form = new EditProblemForm();
+        form.slug = problem.getSlug();
+        form.additionalNote = problem.getAdditionalNote();
+        form.writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
+        form.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
+        form.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
+        form.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
+
+        return renderEditProblem(actor, problem, form);
+    }
+
+    @POST
+    @Path("/{problemId}/edit")
+    @UnitOfWork
+    public Response postEditProblem(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @BeanParam EditProblemForm form) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+
+        if (!problem.getSlug().equals(form.slug) && problemStore.problemExistsBySlug(form.slug)) {
+            return Response.ok(renderEditProblem(actor, problem, form.withGlobalError("Slug already exists."))).build();
+        }
+
+        problemStore.updateProblem(problem.getJid(), form.slug, form.additionalNote);
+
+        Set<String> usernames = new HashSet<>();
+        usernames.addAll(Arrays.asList(form.writerUsernames.split(",")));
+        usernames.addAll(Arrays.asList(form.developerUsernames.split(",")));
+        usernames.addAll(Arrays.asList(form.testerUsernames.split(",")));
+        usernames.addAll(Arrays.asList(form.editorialistUsernames.split(",")));
+        Map<String, String> jidsMap = userStore.translateUsernamesToJids(usernames);
+
+        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.WRITER, form.writerUsernames, setters, jidsMap);
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.DEVELOPER, form.developerUsernames, setters, jidsMap);
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.TESTER, form.testerUsernames, setters, jidsMap);
+        updateProblemSetters(problem.getJid(), ProblemSetterRole.EDITORIALIST, form.editorialistUsernames, setters, jidsMap);
+
+        return Response
+                .seeOther(URI.create("/problems/" + problem.getId()))
+                .build();
+    }
+
+    private String userJidsToUsernames(List<String> userJids, Map<String, Profile> profilesMap) {
+        if (userJids == null) {
+            return "";
+        }
+        return userJids.stream()
+                .filter(profilesMap::containsKey)
+                .map(profilesMap::get)
+                .map(Profile::getUsername)
+                .collect(Collectors.joining(","));
+    }
+
+    private List<String> usernamesToUserJids(String usernames, Map<String, String> jidsMap) {
+        if (usernames == null) {
+            return ImmutableList.of();
+        }
+        return Lists.newArrayList(usernames.split(","))
+                .stream()
+                .filter(jidsMap::containsKey)
+                .map(jidsMap::get)
+                .collect(Collectors.toList());
+    }
+
+    private void updateProblemSetters(
+            String problemJid,
+            ProblemSetterRole role,
+            String usernames,
+            Map<ProblemSetterRole, List<String>> setters,
+            Map<String, String> jidsMap) {
+
+        List<String> userJids = usernamesToUserJids(usernames, jidsMap);
+        if (!userJids.equals(setters.getOrDefault(role, ImmutableList.of()))) {
+            problemStore.updateProblemSettersByProblemJidAndRole(problemJid, role, userJids);
+        }
     }
 
     private HtmlTemplate newProblemGeneralTemplate(Actor actor, Problem problem) {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("general");
         template.addSecondaryTab("view", "View", "/problems/" + problem.getId());
+        template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/edit");
         return template;
     }
 
@@ -156,5 +281,11 @@ public class ProblemResource extends BaseProblemResource {
         HtmlTemplate template = newProblemsTemplate(actor);
         template.setTitle("Create problem");
         return new CreateProblemView(template, (CreateProblemForm) form);
+    }
+
+    private View renderEditProblem(Actor actor, Problem problem, HtmlForm form) {
+        HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
+        template.setActiveSecondaryTab("edit");
+        return new EditProblemView(template, (EditProblemForm) form);
     }
 }

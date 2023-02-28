@@ -33,6 +33,10 @@ public class ProfileStore {
         this.ratingStore = ratingStore;
     }
 
+    public Profile getProfile(Instant time, String userJid) {
+        return getProfiles(time, ImmutableSet.of(userJid)).get(userJid);
+    }
+
     public Map<String, Profile> getProfiles(Instant time, Set<String> userJids) {
         Map<String, UserInfo> infos = infoStore.getInfos(userJids);
         Map<String, UserRating> ratings = ratingStore.getRatings(time, userJids);

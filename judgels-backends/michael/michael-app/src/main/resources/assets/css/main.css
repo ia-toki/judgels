@@ -211,6 +211,10 @@ input[type="text"], input[type="password"], textarea {
   margin-left: 10px;
 }
 
+.nav-tabs > li > a {
+  color: #555;
+}
+
 th {
   font-family: var(--accent-font);
   font-weight: bold;
