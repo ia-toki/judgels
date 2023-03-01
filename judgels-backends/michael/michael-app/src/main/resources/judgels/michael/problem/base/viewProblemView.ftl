@@ -16,7 +16,12 @@
         <td>Created by</td><td>${profile.username}</td>
       </tr>
       <tr>
-        <td>Additional note</td><td>${problem.additionalNote}</td>
+        <td>Additional note</td>
+        <td>
+          <#noautoesc>
+            ${problem.additionalNote?esc?markup_string?replace("\r\n", "<br>")?replace("\n", "<br>")}
+          </#noautoesc>
+        </td>
       </tr>
     </tbody>
   </table>
