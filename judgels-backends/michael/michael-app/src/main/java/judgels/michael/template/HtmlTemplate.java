@@ -1,6 +1,7 @@
 package judgels.michael.template;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HtmlTemplate {
@@ -16,7 +17,7 @@ public class HtmlTemplate {
     private List<InternalLink> mainButtons = new ArrayList<>();
     private List<InternalLink> secondaryTabs = new ArrayList<>();
     private String activeSecondaryTab = "";
-    private SearchProblemsWidget searchProblemsWidget = new SearchProblemsWidget(0, "");
+    private SearchProblemsWidget searchProblemsWidget = new SearchProblemsWidget(0, "", new ArrayList<>(), new HashMap<>());
     private boolean hasSearchProblemsWidget;
 
     public HtmlTemplate(String name) {

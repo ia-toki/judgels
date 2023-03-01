@@ -1,5 +1,7 @@
 package judgels.michael.problem.base;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
@@ -21,6 +23,9 @@ public class EditProblemForm extends HtmlForm {
 
     @FormParam("editorialistUsernames")
     String editorialistUsernames;
+
+    @FormParam("tags")
+    Set<String> tags = new HashSet<>();
 
     public String getSlug() {
         return slug;
@@ -44,5 +49,9 @@ public class EditProblemForm extends HtmlForm {
 
     public String getEditorialistUsernames() {
         return editorialistUsernames;
+    }
+
+    public Set<String> getTags() {
+        return tags;
     }
 }

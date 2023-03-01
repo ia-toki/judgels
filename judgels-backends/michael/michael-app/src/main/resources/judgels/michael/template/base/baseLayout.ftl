@@ -10,6 +10,7 @@
       <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
       <link rel="stylesheet" href="/assets/css/main.css">
       <link rel="shortcut icon" type="image/ico" href="/assets/images/favicon.ico">
+      <script src="/webjars/jquery/jquery.min.js"></script>
     </head>
     <body>
       <div class="container-fluid">

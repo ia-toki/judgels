@@ -29,5 +29,5 @@
       </#list>
     </tbody>
   </@table.layout>
-  <@pagination.view page=problems filterString=filterString/>
+  <@pagination.view page=problems filterString=filterString tags=tags/>
 </@template.layout>

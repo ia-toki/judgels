@@ -71,23 +71,25 @@ public class ProblemResource extends BaseProblemResource {
     public View listProblems(
             @Context HttpServletRequest req,
             @QueryParam("page") @DefaultValue("1") int pageIndex,
-            @QueryParam("filter") @DefaultValue("") String filterString) {
+            @QueryParam("filter") @DefaultValue("") String filterString,
+            @QueryParam("tags") List<String> tags) {
 
         Actor actor = actorChecker.check(req);
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Problem> problems = problemSearchStore.searchProblems(pageIndex, "updatedAt", "desc", filterString, null, actor.getUserJid(), isAdmin);
+        Page<Problem> problems = problemSearchStore.searchProblems(pageIndex, "updatedAt", "desc", filterString, tags, actor.getUserJid(), isAdmin);
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Integer> tagCounts = problemTagStore.getTagCounts(isAdmin);
 
         HtmlTemplate template = newProblemsTemplate(actor);
         template.setTitle("Problems");
         if (isWriter) {
             template.addMainButton("Create", "/problems/new");
         }
-        template.setSearchProblemsWidget(new SearchProblemsWidget(pageIndex, filterString));
-        return new ListProblemsView(template, problems, filterString, profilesMap);
+        template.setSearchProblemsWidget(new SearchProblemsWidget(pageIndex, filterString, tags, tagCounts));
+        return new ListProblemsView(template, problems, filterString, profilesMap, tags);
     }
 
     @GET
@@ -165,9 +167,11 @@ public class ProblemResource extends BaseProblemResource {
         String testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
         String editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
 
+        List<String> tags = problemTagStore.findTopicTags(problem.getJid()).stream().sorted().collect(Collectors.toList());
+
         HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
-        return new ViewProblemView(template, problem, profile, writerUsernames, developerUsernames, testerUsernames, editorialistUsernames);
+        return new ViewProblemView(template, problem, profile, writerUsernames, developerUsernames, testerUsernames, editorialistUsernames, tags);
     }
 
     @GET
@@ -194,6 +198,7 @@ public class ProblemResource extends BaseProblemResource {
         form.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
         form.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
         form.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
+        form.tags = problemTagStore.findTopicTags(problem.getJid());
 
         return renderEditProblem(actor, problem, form);
     }
@@ -228,6 +233,8 @@ public class ProblemResource extends BaseProblemResource {
         updateProblemSetters(problem.getJid(), ProblemSetterRole.DEVELOPER, form.developerUsernames, setters, jidsMap);
         updateProblemSetters(problem.getJid(), ProblemSetterRole.TESTER, form.testerUsernames, setters, jidsMap);
         updateProblemSetters(problem.getJid(), ProblemSetterRole.EDITORIALIST, form.editorialistUsernames, setters, jidsMap);
+
+        problemTagStore.updateTopicTags(problem.getJid(), form.tags);
 
         return Response
                 .seeOther(URI.create("/problems/" + problem.getId()))

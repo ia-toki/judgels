@@ -38,4 +38,24 @@
      </tr>
    </tbody>
   </table>
+
+  <h3>Tags</h3>
+  <#if tags?size == 0>
+    <p>(none)</p>
+  <#else>
+    <#list tags as tag>
+      <#assign tagName=tag[("topic-"?length)..]>
+      <div class="checkbox" <#if tagName?contains(": ")>style="margin-left: 20px"</#if>>
+        <label>
+          <input
+            type="checkbox"
+            class="problemTag"
+            disabled
+            checked
+          >
+          <#if tagName?contains(": ")>${tagName?split(": ")[1]}<#else>${tagName}</#if>
+        </label>
+      </div>
+    </#list>
+  </#if>
 </@template.layout>

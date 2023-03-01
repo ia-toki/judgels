@@ -215,6 +215,11 @@ input[type="text"], input[type="password"], textarea {
   color: #555;
 }
 
+.tag-separator {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
 th {
   font-family: var(--accent-font);
   font-weight: bold;

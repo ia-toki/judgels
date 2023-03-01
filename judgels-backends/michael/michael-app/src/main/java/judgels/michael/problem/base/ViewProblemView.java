@@ -1,5 +1,6 @@
 package judgels.michael.problem.base;
 
+import java.util.List;
 import judgels.jophiel.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
@@ -12,6 +13,7 @@ public class ViewProblemView extends TemplateView {
     private final String developerUsernames;
     private final String testerUsernames;
     private final String editorialistUsernames;
+    private final List<String> tags;
 
     public ViewProblemView(
             HtmlTemplate template,
@@ -20,7 +22,8 @@ public class ViewProblemView extends TemplateView {
             String writerUsernames,
             String developerUsernames,
             String testerUsernames,
-            String editorialistUsernames) {
+            String editorialistUsernames,
+            List<String> tags) {
 
         super("viewProblemView.ftl", template);
         this.problem = problem;
@@ -29,6 +32,7 @@ public class ViewProblemView extends TemplateView {
         this.developerUsernames = developerUsernames;
         this.testerUsernames = testerUsernames;
         this.editorialistUsernames = editorialistUsernames;
+        this.tags = tags;
     }
 
     public Problem getProblem() {
@@ -53,5 +57,9 @@ public class ViewProblemView extends TemplateView {
 
     public String getEditorialistUsernames() {
         return editorialistUsernames;
+    }
+
+    public List<String> getTags() {
+        return tags;
     }
 }
