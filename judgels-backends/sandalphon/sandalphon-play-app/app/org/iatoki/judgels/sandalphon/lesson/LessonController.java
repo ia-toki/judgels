@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.lesson;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -104,16 +103,11 @@ public final class LessonController extends AbstractLessonController {
 
         LessonCreateForm lessonCreateData = lessonCreateForm.get();
 
-        Lesson lesson;
-        try {
-            lesson = lessonStore.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode);
-            lessonStore.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
-                    .title(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode))
-                    .text(LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode))
-                    .build());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Lesson lesson = lessonStore.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode);
+        lessonStore.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
+                .title(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode))
+                .text(LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode))
+                .build());
 
         lessonStore.initRepository(actorJid, lesson.getJid());
 

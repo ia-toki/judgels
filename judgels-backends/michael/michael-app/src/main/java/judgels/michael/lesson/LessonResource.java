@@ -1,27 +1,36 @@
 package judgels.michael.lesson;
 
 import static java.util.stream.Collectors.toSet;
+import static judgels.service.ServiceUtils.checkAllowed;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
+import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.profile.ProfileStore;
 import judgels.michael.actor.ActorChecker;
+import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementUtils;
+import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import judgels.sandalphon.role.RoleChecker;
 
 @Path("/lessons")
@@ -54,5 +63,48 @@ public class LessonResource extends BaseLessonResource {
             template.addMainButton("Create", "/lessons/new");
         }
         return new ListLessonsView(template, lessons, filterString, profilesMap);
+    }
+
+    @GET
+    @Path("/new")
+    @UnitOfWork(readOnly = true)
+    public View createLesson(@Context HttpServletRequest req) {
+        Actor actor = actorChecker.check(req);
+        checkAllowed(roleChecker.isWriter(actor));
+
+        CreateLessonForm form = new CreateLessonForm();
+        form.initialLanguage = "en-US";
+
+        return renderCreateLesson(actor, form);
+    }
+
+    @POST
+    @Path("/new")
+    @UnitOfWork
+    public Response postCreateLesson(@Context HttpServletRequest req, @BeanParam CreateLessonForm form) {
+        Actor actor = actorChecker.check(req);
+        checkAllowed(roleChecker.isWriter(actor));
+
+        if (lessonStore.lessonExistsBySlug(form.slug)) {
+            return Response.ok(renderCreateLesson(actor, form.withGlobalError("Slug already exists."))).build();
+        }
+
+        Lesson lesson = lessonStore.createLesson(form.slug, form.additionalNote, form.initialLanguage);
+        lessonStore.updateStatement(null, lesson.getJid(), form.initialLanguage, new LessonStatement.Builder()
+                .title(ProblemStatementUtils.getDefaultTitle(form.initialLanguage))
+                .text(LessonStatementUtils.getDefaultText(form.initialLanguage))
+                .build());
+
+        lessonStore.initRepository(actor.getUserJid(), lesson.getJid());
+
+        return Response
+                .seeOther(URI.create("/lessons/" + lesson.getId()))
+                .build();
+    }
+
+    private View renderCreateLesson(Actor actor, HtmlForm form) {
+        HtmlTemplate template = newLessonsTemplate(actor);
+        template.setTitle("New lesson");
+        return new CreateLessonView(template, (CreateLessonForm) form);
     }
 }

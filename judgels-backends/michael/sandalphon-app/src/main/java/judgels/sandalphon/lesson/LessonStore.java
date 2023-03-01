@@ -263,7 +263,7 @@ public final class LessonStore {
         return titlesByLanguageBuilder.build();
     }
 
-    public void updateStatement(String userJid, String lessonJid, String languageCode, LessonStatement statement) throws IOException {
+    public void updateStatement(String userJid, String lessonJid, String languageCode, LessonStatement statement) {
         LessonModel lessonModel = lessonDao.findByJid(lessonJid);
         lessonFs.writeToFile(getStatementTitleFilePath(userJid, lessonModel.jid, languageCode), statement.getTitle());
         lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonModel.jid, languageCode), statement.getText());

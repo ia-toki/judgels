@@ -111,16 +111,11 @@ public class LessonStatementController extends AbstractLessonController {
 
         lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
-        try {
-            UpdateStatementForm updateStatementData = updateStatementForm.get();
-            lessonStore.updateStatement(actorJid, lesson.getJid(), language, new LessonStatement.Builder()
+        UpdateStatementForm updateStatementData = updateStatementForm.get();
+        lessonStore.updateStatement(actorJid, lesson.getJid(), language, new LessonStatement.Builder()
                     .title(updateStatementData.title)
                     .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                     .build());
-        } catch (IOException e) {
-            Set<String> allowedLanguages = lessonRoleChecker.getAllowedLanguagesToUpdate(req, lesson);
-            return showEditStatement(req, language, updateStatementForm.withGlobalError("Error updating statement."), lesson, allowedLanguages);
-        }
 
         return redirect(routes.LessonStatementController.editStatement(lesson.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));
