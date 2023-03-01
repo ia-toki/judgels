@@ -6,10 +6,10 @@
 
 <@template.layout>
   <@forms.form>
-    <@forms.text name="slug" label="Slug" value=form.slug required=true pattern="[a-z0-9]+(-[a-z0-9]+)*" title="Slug can only consist of alphanumerics and dashes"/>
-    <@forms.select name="gradingEngine" label="Grading engine" options=gradingEngines value="Batch"/>
-    <@forms.textarea name="additionalNote" label="Additional note" value=form.additionalNote/>
-    <@forms.select name="initialLanguage" label="Initial language" options=languages value="en-US"/>
+    <@forms.text form=form name="slug" label="Slug" required=true pattern="[a-z0-9]+(-[a-z0-9]+)*" title="Slug can only consist of alphanumerics and dashes"/>
+    <@forms.select form=form name="gradingEngine" label="Grading engine" options=gradingEngines/>
+    <@forms.textarea form=form name="additionalNote" label="Additional note"/>
+    <@forms.select form=form name="initialLanguage" label="Initial language" options=languages/>
     <@forms.submit>Create</@forms.submit>
   </@forms.form>
 </@template.layout>

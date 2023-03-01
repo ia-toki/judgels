@@ -7,14 +7,14 @@
 <@template.layout>
   <@forms.form>
     <h3>Info</h3>
-    <@forms.text name="slug" label="Slug" value=form.slug required=true pattern="[a-z0-9]+(-[a-z0-9]+)*" title="Slug can only consist of alphanumerics and dashes"/>
-    <@forms.textarea name="additionalNote" label="Additional note" value=form.additionalNote/>
+    <@forms.text form=form name="slug" label="Slug" required=true pattern="[a-z0-9]+(-[a-z0-9]+)*" title="Slug can only consist of alphanumerics and dashes"/>
+    <@forms.textarea form=form name="additionalNote" label="Additional note"/>
 
     <h3>Metadata</h3>
-    <@forms.text name="writerUsernames" label="Writers" value=form.writerUsernames help="List of comma-separated usernames."/>
-    <@forms.text name="developerUsernames" label="Developers" value=form.developerUsernames help="List of comma-separated usernames. Fill only if different from writers."/>
-    <@forms.text name="testerUsernames" label="Testers" value=form.testerUsernames help="List of comma-separated usernames."/>
-    <@forms.text name="editorialistUsernames" label="Editorialists" value=form.editorialistUsernames help="List of comma-separated usernames."/>
+    <@forms.text form=form name="writerUsernames" label="Writers" help="List of comma-separated usernames."/>
+    <@forms.text form=form name="developerUsernames" label="Developers" help="List of comma-separated usernames. Fill only if different from writers."/>
+    <@forms.text form=form name="testerUsernames" label="Testers" help="List of comma-separated usernames."/>
+    <@forms.text form=form name="editorialistUsernames" label="Editorialists" help="List of comma-separated usernames."/>
 
     <h3>Tags</h3>
     <#list topicTags as tag>

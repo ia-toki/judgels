@@ -99,7 +99,11 @@ public class ProblemResource extends BaseProblemResource {
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
-        return renderCreateProblem(actor, new CreateProblemForm());
+        CreateProblemForm form = new CreateProblemForm();
+        form.gradingEngine = "Batch";
+        form.initialLanguage = "en-US";
+
+        return renderCreateProblem(actor, form);
     }
 
     @POST

@@ -4,12 +4,13 @@
   </form>
 </#macro>
 
-<#macro text name label required=false value="" pattern="" title="" help="">
+<#macro text name label form={} required=false pattern="" title="" help="">
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
       <input
-        type="text" id="${name}" name="${name}" class="form-control" value="${value}"
+        type="text" id="${name}" name="${name}" class="form-control"
+        <#if form[name]??>value="${form[name]}"</#if>
         <#if required>required</#if>
         <#if pattern?has_content>pattern="${pattern}"</#if>
         <#if title?has_content>title="${title}"</#if>
@@ -30,24 +31,24 @@
   </div>
 </#macro>
 
-<#macro select name label options value>
+<#macro select name label options form={}>
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
       <select id="${name}" name="${name}" class="form-control">
         <#list options as k, v>
-          <option value="${k}" ${(k == value)?then("selected", "")}>${v}</option>
+          <option value="${k}" ${(k == form[name]!"")?then("selected", "")}>${v}</option>
         </#list>
       </select>
     </div>
   </div>
 </#macro>
 
-<#macro textarea name label value="">
+<#macro textarea name label form={}>
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
-      <textarea id="${name}" name="${name}" class="form-control">${value}</textarea>
+      <textarea id="${name}" name="${name}" class="form-control">${form[name]!""}</textarea>
     </div>
   </div>
 </#macro>
