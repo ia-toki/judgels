@@ -198,16 +198,20 @@ input[type="text"], input[type="password"], textarea {
   border: 1px solid var(--accent-color);
 }
 
-.inline-headers h2, .inline-headers h3, .inline-headers h4, .inline-headers h5, .inline-headers h6 {
+.title-inline {
+  margin-bottom: 10px;
+}
+
+.title-inline h2, .title-inline h3, .title-inline h4, .title-inline h5, .title-inline h6 {
   display: inline-block;
   vertical-align: baseline;
 }
 
-.inline-headers .btn {
+.title-inline .btn {
   margin-bottom: 10px;
 }
 
-.inline-headers .btn:first-of-type {
+.title-inline .btn:first-of-type {
   margin-left: 10px;
 }
 
