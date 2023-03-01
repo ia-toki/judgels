@@ -286,7 +286,7 @@ public class ProblemResource extends BaseProblemResource {
 
     private View renderCreateProblem(Actor actor, HtmlForm form) {
         HtmlTemplate template = newProblemsTemplate(actor);
-        template.setTitle("Create problem");
+        template.setTitle("New problem");
         return new CreateProblemView(template, (CreateProblemForm) form);
     }
 
