@@ -48,7 +48,7 @@
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
-      <textarea id="${name}" name="${name}" class="form-control">${form[name]!""}</textarea>
+      <textarea rows="5" id="${name}" name="${name}" class="form-control">${form[name]!""}</textarea>
     </div>
   </div>
 </#macro>
