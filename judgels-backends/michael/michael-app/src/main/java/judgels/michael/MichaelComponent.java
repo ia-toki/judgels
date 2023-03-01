@@ -6,6 +6,7 @@ import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.michael.index.IndexResource;
+import judgels.michael.lesson.LessonResource;
 import judgels.michael.problem.base.ProblemResource;
 import judgels.michael.problem.programming.ProgrammingProblemStatementResource;
 import judgels.sandalphon.SandalphonModule;
@@ -37,6 +38,7 @@ public interface MichaelComponent {
     IndexResource indexResource();
     ProblemResource problemResource();
     ProgrammingProblemStatementResource programmingProblemResource();
+    LessonResource lessonResource();
 
     JudgelsScheduler scheduler();
 }
