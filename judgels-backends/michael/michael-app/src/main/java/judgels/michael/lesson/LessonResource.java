@@ -25,6 +25,7 @@ import judgels.jophiel.profile.ProfileStore;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
+import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
@@ -62,6 +63,7 @@ public class LessonResource extends BaseLessonResource {
         if (isWriter) {
             template.addMainButton("Create", "/lessons/new");
         }
+        template.setSearchLessonsWidget(new SearchLessonsWidget(pageIndex, filterString));
         return new ListLessonsView(template, lessons, filterString, profilesMap);
     }
 

@@ -18,7 +18,9 @@ public class HtmlTemplate {
     private List<InternalLink> secondaryTabs = new ArrayList<>();
     private String activeSecondaryTab = "";
     private SearchProblemsWidget searchProblemsWidget = new SearchProblemsWidget(0, "", new ArrayList<>(), new HashMap<>());
+    private SearchLessonsWidget searchLessonsWidget = new SearchLessonsWidget(0, "");
     private boolean hasSearchProblemsWidget;
+    private boolean hasSearchLessonsWidget;
 
     public HtmlTemplate(String name) {
         this.name = name;
@@ -119,5 +121,18 @@ public class HtmlTemplate {
 
     public boolean isHasSearchProblemsWidget() {
         return hasSearchProblemsWidget;
+    }
+
+    public SearchLessonsWidget getSearchLessonsWidget() {
+        return searchLessonsWidget;
+    }
+
+    public void setSearchLessonsWidget(SearchLessonsWidget searchLessonsWidget) {
+        this.searchLessonsWidget = searchLessonsWidget;
+        this.hasSearchLessonsWidget = true;
+    }
+
+    public boolean isHasSearchLessonsWidget() {
+        return hasSearchLessonsWidget;
     }
 }
