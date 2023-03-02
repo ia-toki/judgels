@@ -2,6 +2,7 @@ package judgels.michael.lesson;
 
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
@@ -16,6 +17,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -29,6 +31,7 @@ import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
+import judgels.sandalphon.lesson.LessonRoleChecker;
 import judgels.sandalphon.lesson.LessonStore;
 import judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
@@ -38,6 +41,7 @@ import judgels.sandalphon.role.RoleChecker;
 public class LessonResource extends BaseLessonResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected RoleChecker roleChecker;
+    @Inject protected LessonRoleChecker lessonRoleChecker;
     @Inject protected LessonStore lessonStore;
     @Inject protected ProfileStore profileStore;
 
@@ -104,9 +108,82 @@ public class LessonResource extends BaseLessonResource {
                 .build();
     }
 
+    @GET
+    @Path("/{lessonId}")
+    @UnitOfWork(readOnly = true)
+    public View viewLesson(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canView(actor, lesson));
+
+        Profile profile = profileStore.getProfile(Instant.now(), lesson.getAuthorJid());
+
+        HtmlTemplate template = newLessonGeneralTemplate(actor, lesson);
+        template.setActiveSecondaryTab("view");
+        return new ViewLessonView(template, lesson, profile);
+    }
+
+    @GET
+    @Path("/{lessonId}/edit")
+    @UnitOfWork(readOnly = true)
+    public View editLesson(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+
+        EditLessonForm form = new EditLessonForm();
+        form.slug = lesson.getSlug();
+        form.additionalNote = lesson.getAdditionalNote();
+
+        return renderEditLesson(actor, lesson, form);
+    }
+
+    @POST
+    @Path("/{lessonId}/edit")
+    @UnitOfWork
+    public Response postEditLesson(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId,
+            @BeanParam EditLessonForm form) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+
+        if (!lesson.getSlug().equals(form.slug) && lessonStore.lessonExistsBySlug(form.slug)) {
+            return Response.ok(renderEditLesson(actor, lesson, form.withGlobalError("Slug already exists."))).build();
+        }
+
+        lessonStore.updateLesson(lesson.getJid(), form.slug, form.additionalNote);
+
+        return Response
+                .seeOther(URI.create("/lessons/" + lesson.getId()))
+                .build();
+    }
+
+    private HtmlTemplate newLessonGeneralTemplate(Actor actor, Lesson lesson) {
+        HtmlTemplate template = newLessonTemplate(actor, lesson);
+        template.setActiveMainTab("general");
+        template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId());
+        template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/edit");
+        return template;
+    }
+
     private View renderCreateLesson(Actor actor, HtmlForm form) {
         HtmlTemplate template = newLessonsTemplate(actor);
         template.setTitle("New lesson");
         return new CreateLessonView(template, (CreateLessonForm) form);
+    }
+
+    private View renderEditLesson(Actor actor, Lesson lesson, HtmlForm form) {
+        HtmlTemplate template = newLessonGeneralTemplate(actor, lesson);
+        template.setActiveSecondaryTab("edit");
+        return new EditLessonView(template, (EditLessonForm) form);
     }
 }
