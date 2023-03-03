@@ -5,14 +5,14 @@
       state: directory
       mode: "0777"
     with_items:
-      - /judgels/sandalphon/var
-      - /judgels/sandalphon/var/conf
-      - /judgels/sandalphon/var/data
+      - /judgels/michael/var
+      - /judgels/michael/var/conf
+      - /judgels/michael/var/data
 
   - name: Generate sandalphon config
     template:
       src: "{{ playbook_dir }}/../conf/sandalphon.conf.j2"
-      dest: /judgels/sandalphon/var/conf/sandalphon.conf
+      dest: /judgels/michael/var/conf/sandalphon.conf
       mode: '0644'
 
   - name: Pull sandalphon image
@@ -34,10 +34,10 @@
         max-file: "2"
       network_mode: host
       volumes:
-        - "/judgels/sandalphon/var:/judgels/sandalphon/var"
+        - "/judgels/michael/var:/judgels/michael/var"
       env:
         JAVA_OPTS: "-Xmx{{ sandalphon_xmx }}"
-        MAIN_OPTS: "-Dhttp.port=9002 -Dconfig.file=/judgels/sandalphon/var/conf/sandalphon.conf -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/sandalphon/var/log"
+        MAIN_OPTS: "-Dhttp.port=9002 -Dconfig.file=/judgels/michael/var/conf/sandalphon.conf -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/michael/var/log"
 
   - name: Allow sandalphon traffic through the firewall
     ufw:

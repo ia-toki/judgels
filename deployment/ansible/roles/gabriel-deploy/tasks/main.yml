@@ -42,4 +42,4 @@
       network_mode: host
       volumes:
         - "/judgels/gabriel/var:/judgels/gabriel/var"
-        - "/judgels/sandalphon/var:/judgels/sandalphon/var"
+        - "/judgels/michael/var:/judgels/michael/var"

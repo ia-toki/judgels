@@ -2,7 +2,7 @@
   - name: Generate sandalphon config
     template:
       src: "{{ playbook_dir }}/../conf/sandalphon.conf.j2"
-      dest: /judgels/sandalphon/var/conf/sandalphon.conf
+      dest: /judgels/michael/var/conf/sandalphon.conf
       mode: '0644'
 
   - name: Restart sandalphon
