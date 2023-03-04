@@ -42,6 +42,7 @@ import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.UrielModule;
 import judgels.uriel.file.FileModule;
+import org.eclipse.jetty.server.session.SessionHandler;
 
 public class MichaelApplication extends Application<MichaelApplicationConfiguration> {
     private final HibernateBundle<MichaelApplicationConfiguration> hibernateBundle = new MichaelHibernateBundle();
@@ -83,6 +84,8 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
                 .sandalphonModule(new SandalphonModule(sandalphonConfig))
 
                 .build();
+
+        env.servlets().setSessionHandler(new SessionHandler());
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
         env.jersey().register(component.pingResource());

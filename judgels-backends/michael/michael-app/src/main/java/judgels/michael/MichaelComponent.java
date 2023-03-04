@@ -8,7 +8,7 @@ import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.michael.index.IndexResource;
 import judgels.michael.lesson.LessonResource;
 import judgels.michael.problem.base.ProblemResource;
-import judgels.michael.problem.programming.ProgrammingProblemStatementResource;
+import judgels.michael.problem.programming.statement.ProgrammingProblemStatementResource;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsApplicationModule;

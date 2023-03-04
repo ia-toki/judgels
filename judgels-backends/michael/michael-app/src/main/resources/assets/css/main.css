@@ -224,6 +224,86 @@ input[type="text"], input[type="password"], textarea {
   margin-bottom: 10px;
 }
 
+.content-text.scrollable {
+  height: 600px;
+  padding: 15px;
+  overflow-y: scroll;
+}
+
+.content-text table {
+  margin-bottom: 10px;
+}
+
+.content-text table, .content-text th, .content-text td {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.content-text th, .content-text td {
+  padding: 5px;
+}
+
+.content-text th {
+  font-family: var(--accent-font);
+  font-weight: bold;
+  background-color: #EEEEEE;
+}
+
+.content-text em {
+  font-style: italic;
+}
+
+.content-text strong {
+  font-family: var(--accent-font);
+}
+
+.content-text ol li, .content-text ul li {
+  margin-left: 25px;
+}
+
+.content-text ol.breadcrumb li {
+  margin-left: 0;
+}
+
+.content-text html, .content-text body {
+  height: 100%;
+  min-height: 100%;
+}
+
+.content-text blockquote {
+  font-size: var(--primary-font-size);
+}
+
+.content-text .spoiler {
+  margin-top: 5px;
+  background-color: #f8f8f8;
+  padding: 10px;
+  border: 2px dashed #e7e7e7;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--accent-font);
+  font-weight: bold;
+}
+
+.content-text .spoiler:hover {
+  background-color: #e7e7e7;
+}
+
+.content-text .spoiler .spoiler-content {
+  display: none;
+  border-top: 1px solid var(--primary-font-color);
+  margin-top: 5px;
+  padding-top: 15px;
+  font-family: var(--primary-font);
+  font-style: normal;
+  font-weight: normal;
+}
+
+.content-text embed {
+  width: 100%;
+  min-height: 800px;
+}
+
 th {
   font-family: var(--accent-font);
   font-weight: bold;

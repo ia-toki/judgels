@@ -38,4 +38,5 @@ public class ProblemRoleChecker {
     private boolean isPartnerOrAbove(Actor actor, Problem problem) {
         return isAuthorOrAbove(actor, problem) || isPartner(actor, problem);
     }
+
 }

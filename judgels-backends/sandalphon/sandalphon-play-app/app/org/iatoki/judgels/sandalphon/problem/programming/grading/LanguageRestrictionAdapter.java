@@ -31,7 +31,7 @@ public final class LanguageRestrictionAdapter {
     }
 
     public static Set<String> getFinalAllowedLanguageNames(List<LanguageRestriction> languageRestrictions) {
-        Set<String> result = Sets.newHashSet(GradingLanguageRegistry.getInstance().getVisibleNamesMap().keySet());
+        Set<String> result = Sets.newHashSet(GradingLanguageRegistry.getInstance().getVisibleLanguages().keySet());
 
         for (LanguageRestriction languageRestriction : languageRestrictions) {
             if (!languageRestriction.isAllowedAll()) {

@@ -31,7 +31,6 @@ import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.profile.ProfileStore;
 import judgels.jophiel.user.UserStore;
-import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
@@ -40,23 +39,16 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.problem.base.ProblemRoleChecker;
 import judgels.sandalphon.problem.base.ProblemSearchStore;
-import judgels.sandalphon.problem.base.ProblemStore;
 import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import judgels.sandalphon.problem.bundle.BundleProblemStore;
 import judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
-import judgels.sandalphon.role.RoleChecker;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {
-    @Inject protected ActorChecker actorChecker;
-    @Inject protected RoleChecker roleChecker;
-    @Inject protected ProblemRoleChecker problemRoleChecker;
-    @Inject protected ProblemStore problemStore;
     @Inject protected BundleProblemStore bundleProblemStore;
     @Inject protected ProgrammingProblemStore programmingProblemStore;
     @Inject protected ProblemSearchStore problemSearchStore;
@@ -109,7 +101,10 @@ public class ProblemResource extends BaseProblemResource {
     @POST
     @Path("/new")
     @UnitOfWork
-    public Response postCreateProblem(@Context HttpServletRequest req, @BeanParam CreateProblemForm form) {
+    public Response postCreateProblem(
+            @Context HttpServletRequest req,
+            @BeanParam CreateProblemForm form) {
+
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
@@ -142,8 +137,9 @@ public class ProblemResource extends BaseProblemResource {
 
         problemStore.initRepository(actor.getUserJid(), problem.getJid());
 
+        req.getSession().setAttribute("statementLanguage", form.initialLanguage);
         return Response
-                .seeOther(URI.create("/problems/" + problem.getId()))
+                .seeOther(URI.create("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements"))
                 .build();
     }
 

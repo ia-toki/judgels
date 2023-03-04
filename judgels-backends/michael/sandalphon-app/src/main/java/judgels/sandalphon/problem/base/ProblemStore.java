@@ -212,6 +212,15 @@ public class ProblemStore extends AbstractProblemStore {
         }
     }
 
+    public Set<String> getStatementEnabledLanguages(String userJid, String problemJid) {
+        return getStatementAvailableLanguages(userJid, problemJid)
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue() == StatementLanguageStatus.ENABLED)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet());
+    }
+
     public void addStatementLanguage(String userJid, String problemJid, String language) {
         Map<String, StatementLanguageStatus> availableLanguages = getStatementAvailableLanguages(userJid, problemJid);
         availableLanguages.put(language, StatementLanguageStatus.ENABLED);

@@ -1,11 +1,27 @@
 package judgels.michael.problem.base;
 
+import java.util.Set;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import judgels.jophiel.api.actor.Actor;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.problem.base.ProblemRoleChecker;
+import judgels.sandalphon.problem.base.ProblemStore;
 
 public abstract class BaseProblemResource extends BaseResource {
+    @Inject protected ProblemStore problemStore;
+    @Inject protected ProblemRoleChecker problemRoleChecker;
+
+    protected String resolveStatementLanguage(HttpServletRequest req, Actor actor, Problem problem, Set<String> enabledLanguages) {
+        String language = (String) req.getSession().getAttribute("statementLanguage");
+        if (language == null || !enabledLanguages.contains(language)) {
+            return problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+        }
+        return language;
+    }
+
     protected HtmlTemplate newProblemsTemplate(Actor actor) {
         HtmlTemplate template = super.newTemplate(actor);
         template.setActiveSidebarMenu("problems");
@@ -23,6 +39,8 @@ public abstract class BaseProblemResource extends BaseResource {
     protected HtmlTemplate newProblemStatementTemplate(Actor actor, Problem problem) {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("statements");
+        template.addSecondaryTab("view", "View", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
+        template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements/edit");
         return template;
     }
 }

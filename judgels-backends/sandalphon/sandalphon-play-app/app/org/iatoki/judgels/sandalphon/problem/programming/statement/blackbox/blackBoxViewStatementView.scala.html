@@ -64,7 +64,7 @@
                 <label for="language" class="col-sm-3 control-label">Language</label>
                 <div class="col-sm-9">
                     <select name="language">
-                    @for((k, v) <- GradingLanguageRegistry.getInstance().getVisibleNamesMap) {
+                    @for((k, v) <- GradingLanguageRegistry.getInstance().getVisibleLanguages) {
                         @if(allowedGradingLanguageNames.contains(k)) {
                             <option value="@k">@v</option>
                         }

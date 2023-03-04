@@ -25,7 +25,7 @@
                   </label>
               </div>
 
-              @for((k, v) <- GradingLanguageRegistry.getInstance().getVisibleNamesMap) {
+              @for((k, v) <- GradingLanguageRegistry.getInstance().getVisibleLanguages) {
                   <div class="checkbox">
                       <label>
                           <input type="checkbox" class="allowedLanguageName" name="allowedLanguageNames[@k]" value="@k" @if(languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value.isPresent && languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value.get.equals(k)){ checked="checked" }> @v

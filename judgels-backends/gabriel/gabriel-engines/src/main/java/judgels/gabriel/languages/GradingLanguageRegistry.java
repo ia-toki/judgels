@@ -68,11 +68,11 @@ public class GradingLanguageRegistry {
         return language;
     }
 
-    public Map<String, String> getNamesMap() {
+    public Map<String, String> getLanguages() {
         return LANGUAGE_NAMES_BY_SIMPLE_NAME;
     }
 
-    public Map<String, String> getVisibleNamesMap() {
+    public Map<String, String> getVisibleLanguages() {
         return VISIBLE_LANGUAGE_NAMES_BY_SIMPLE_NAME;
     }
 

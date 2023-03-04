@@ -133,7 +133,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
         checkAllowed(problemRoleChecker.isAllowedToSubmit(req, problem));
 
         Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of((int) pageIndex));
-        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
+        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getLanguages();
 
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);

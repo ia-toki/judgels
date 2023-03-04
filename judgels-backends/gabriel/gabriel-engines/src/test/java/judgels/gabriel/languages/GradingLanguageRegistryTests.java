@@ -13,7 +13,7 @@ class GradingLanguageRegistryTests {
 
     @Test
     void getNamesMap() {
-        assertThat(GradingLanguageRegistry.getInstance().getNamesMap()).containsEntry("Cpp", "C++");
-        assertThat(GradingLanguageRegistry.getInstance().getNamesMap()).containsEntry("C", "C");
+        assertThat(GradingLanguageRegistry.getInstance().getLanguages()).containsEntry("Cpp", "C++");
+        assertThat(GradingLanguageRegistry.getInstance().getLanguages()).containsEntry("C", "C");
     }
 }
