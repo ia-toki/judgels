@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
@@ -209,6 +210,15 @@ public final class LessonStore {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Set<String> getEnabledLanguages(String userJid, String lessonJid) {
+        return getAvailableLanguages(userJid, lessonJid)
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue() == StatementLanguageStatus.ENABLED)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet());
     }
 
     public void addLanguage(String userJid, String lessonJid, String language) {

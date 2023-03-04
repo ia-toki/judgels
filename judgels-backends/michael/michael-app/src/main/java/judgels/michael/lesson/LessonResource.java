@@ -24,25 +24,17 @@ import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.profile.ProfileStore;
-import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
-import judgels.sandalphon.lesson.LessonRoleChecker;
-import judgels.sandalphon.lesson.LessonStore;
 import judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
-import judgels.sandalphon.role.RoleChecker;
 
 @Path("/lessons")
 public class LessonResource extends BaseLessonResource {
-    @Inject protected ActorChecker actorChecker;
-    @Inject protected RoleChecker roleChecker;
-    @Inject protected LessonRoleChecker lessonRoleChecker;
-    @Inject protected LessonStore lessonStore;
     @Inject protected ProfileStore profileStore;
 
     @Inject public LessonResource() {}
@@ -104,7 +96,7 @@ public class LessonResource extends BaseLessonResource {
         lessonStore.initRepository(actor.getUserJid(), lesson.getJid());
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId()))
+                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements"))
                 .build();
     }
 
