@@ -6,6 +6,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +21,12 @@ import judgels.jophiel.api.actor.Actor;
 import judgels.michael.problem.base.BaseProblemResource;
 import judgels.michael.resource.EditStatementForm;
 import judgels.michael.resource.EditStatementView;
+import judgels.michael.resource.ListStatementLanguagesView;
 import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 
 @Path("/problems/{problemId}/statements")
 public class ProblemStatementResource extends BaseProblemResource {
@@ -75,6 +78,25 @@ public class ProblemStatementResource extends BaseProblemResource {
         return Response
                 .seeOther(URI.create("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements"))
                 .build();
+    }
+
+    @GET
+    @Path("/languages")
+    @UnitOfWork(readOnly = true)
+    public View listStatementLanguages(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+
+        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getStatementAvailableLanguages(actor.getUserJid(), problem.getJid());
+        String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+
+        HtmlTemplate template = newProblemStatementTemplate(actor, problem);
+        template.setActiveSecondaryTab("languages");
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
     }
 
     private View renderEditStatement(Actor actor, Problem problem, HtmlForm form, String language, Set<String> enabledLanguages) {

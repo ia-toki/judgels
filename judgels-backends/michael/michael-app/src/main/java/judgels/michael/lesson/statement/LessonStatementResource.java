@@ -6,6 +6,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +21,12 @@ import judgels.jophiel.api.actor.Actor;
 import judgels.michael.lesson.BaseLessonResource;
 import judgels.michael.resource.EditStatementForm;
 import judgels.michael.resource.EditStatementView;
+import judgels.michael.resource.ListStatementLanguagesView;
 import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
+import judgels.sandalphon.resource.StatementLanguageStatus;
 
 @Path("/lessons/{lessonId}/statements")
 public class LessonStatementResource extends BaseLessonResource {
@@ -94,6 +97,26 @@ public class LessonStatementResource extends BaseLessonResource {
         return Response
                 .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements"))
                 .build();
+    }
+
+    @GET
+    @Path("/languages")
+    @UnitOfWork(readOnly = true)
+    public View listStatementLanguages(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+
+        Map<String, StatementLanguageStatus>
+                availableLanguages = lessonStore.getAvailableLanguages(actor.getUserJid(), lesson.getJid());
+        String defaultLanguage = lessonStore.getDefaultLanguage(actor.getUserJid(), lesson.getJid());
+
+        HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
+        template.setActiveSecondaryTab("languages");
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
     }
 
     private View renderEditStatement(Actor actor, Lesson lesson, HtmlForm form, String language, Set<String> enabledLanguages) {
