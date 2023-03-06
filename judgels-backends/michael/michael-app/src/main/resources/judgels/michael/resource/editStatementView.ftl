@@ -1,9 +1,9 @@
-<#-- @ftlvariable type="judgels.michael.problem.base.statement.EditStatementView" -->
+<#-- @ftlvariable type="judgels.michael.resource.EditStatementView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/verticalForms.ftl" as forms>
-<#import "/judgels/michael/resource/ckeditorView.ftl" as ckeditor>
-<#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
+<#import "ckeditorView.ftl" as ckeditor>
+<#import "switchLanguageView.ftl" as switchLanguage>
 
 <@template.layout>
   <@ckeditor.view/>

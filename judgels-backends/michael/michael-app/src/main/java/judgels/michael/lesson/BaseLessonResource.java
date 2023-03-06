@@ -32,6 +32,7 @@ public class BaseLessonResource extends BaseResource {
         HtmlTemplate template = this.newLessonsTemplate(actor);
         template.setTitle("#" + lesson.getId() + ": " + lesson.getSlug());
         template.addMainTab("general", "General", "/lessons/" + lesson.getId());
+        template.addMainTab("statements", "Statements", "/lessons/" + lesson.getId() + "/statements");
         return template;
     }
 
