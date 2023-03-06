@@ -2,10 +2,10 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 
-<#import "/judgels/michael/resource/statement/statementLanguageSelectionView.ftl" as statementLanguageSelection>
+<#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
 
 <@template.layout>
-  <@statementLanguageSelection.view languages=enabledLanguages language=language/>
+  <@switchLanguage.view languages=enabledLanguages language=language/>
 
   <#if reasonNotAllowedToSubmit?has_content>
     <div class="alert alert-danger">${reasonNotAllowedToSubmit}</div>
