@@ -9,6 +9,7 @@ import judgels.michael.index.IndexResource;
 import judgels.michael.lesson.LessonResource;
 import judgels.michael.lesson.statement.LessonStatementResource;
 import judgels.michael.problem.base.ProblemResource;
+import judgels.michael.problem.base.statement.ProblemStatementResource;
 import judgels.michael.problem.programming.statement.ProgrammingProblemStatementResource;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
@@ -38,6 +39,7 @@ public interface MichaelComponent {
     PingResource pingResource();
     IndexResource indexResource();
     ProblemResource problemResource();
+    ProblemStatementResource problemStatementResource();
     ProgrammingProblemStatementResource programmingProblemResource();
     LessonResource lessonResource();
     LessonStatementResource lessonStatementResource();

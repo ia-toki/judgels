@@ -1,4 +1,4 @@
-<#import "/judgels/michael/template/form/forms.ftl" as forms>
+<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 
 <#macro widget data>
   <div class="widget clearfix">

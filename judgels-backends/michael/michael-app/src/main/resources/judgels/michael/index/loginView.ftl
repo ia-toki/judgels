@@ -1,5 +1,5 @@
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/forms.ftl" as forms>
+<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 
 <@template.layout>
   <div class="row login-content">

@@ -40,7 +40,7 @@ public abstract class BaseProblemResource extends BaseResource {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("statements");
         template.addSecondaryTab("view", "View", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
-        template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements/edit");
+        template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/statements/edit");
         return template;
     }
 }

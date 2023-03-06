@@ -1,4 +1,4 @@
-<#import "/judgels/michael/template/form/forms.ftl" as forms>
+<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 
 <#macro checkboxView tag text tags tagCounts>
   <div class="checkbox">
