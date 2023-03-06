@@ -60,7 +60,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new MichaelMigrationsBundle());
         bootstrap.addBundle(new MichaelViewBundle());
-        bootstrap.addBundle(new WebJarBundle("org.webjars.bower"));
+        bootstrap.addBundle(new WebJarBundle("org.webjars.bower", "org.webjars.npm"));
         bootstrap.addBundle(new WebSecurityBundle());
     }
 

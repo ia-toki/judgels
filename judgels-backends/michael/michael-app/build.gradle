@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.webjars:jquery:2.1.4'
     implementation 'org.webjars.bower:open-sans:1.1.0'
     implementation 'org.webjars.bower:roboto-fontface:0.7.0'
+    implementation 'org.webjars.npm:katex:0.16.4'
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
