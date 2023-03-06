@@ -1,7 +1,6 @@
-<#-- @ftlvariable type="judgels.michael.problem.programming.statement.ViewStatementView" -->
+<#-- @ftlvariable type="judgels.michael.lesson.statement.ViewStatementView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-
 <#import "/judgels/michael/resource/katexView.ftl" as katex>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
 

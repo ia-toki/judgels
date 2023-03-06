@@ -1,7 +1,6 @@
-<#-- @ftlvariable type="judgels.michael.problem.base.CreateLessonView" -->
+<#-- @ftlvariable type="judgels.michael.lesson.CreateLessonView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-
 <#import "/judgels/michael/template/form/forms.ftl" as forms>
 
 <@template.layout>

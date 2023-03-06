@@ -1,4 +1,4 @@
-<#-- @ftlvariable type="judgels.michael.template.problem.base.ListProblemsView" -->
+<#-- @ftlvariable type="judgels.michael.problem.base.ListProblemsView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/table/tableLayout.ftl" as table>

@@ -1,4 +1,4 @@
-<#-- @ftlvariable type="judgels.michael.template.lesson.ListLesonsView" -->
+<#-- @ftlvariable type="judgels.michael.lesson.ListLessonsView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/table/tableLayout.ftl" as table>

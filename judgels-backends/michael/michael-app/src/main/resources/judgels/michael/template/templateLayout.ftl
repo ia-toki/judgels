@@ -7,7 +7,6 @@
 <#import "content/secondaryTabsView.ftl" as secondaryTabs>
 <#import "content/titleView.ftl" as title>
 <#import "form/globalFormErrorView.ftl" as globalFormError>
-
 <#import "base/headerView.ftl" as header>
 
 <#macro layout>
