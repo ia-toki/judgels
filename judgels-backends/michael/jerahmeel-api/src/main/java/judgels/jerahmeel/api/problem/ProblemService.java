@@ -21,9 +21,4 @@ public interface ProblemService {
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("tags") Set<String> tags,
             @QueryParam("page") Optional<Integer> page);
-
-    @GET
-    @Path("/tags")
-    @Produces(APPLICATION_JSON)
-    ProblemTagsResponse getProblemTags();
 }
