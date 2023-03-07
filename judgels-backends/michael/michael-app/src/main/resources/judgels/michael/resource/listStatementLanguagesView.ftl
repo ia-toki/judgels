@@ -3,8 +3,6 @@
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/table/tableLayout.ftl" as table>
 <#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
-<#import "ckeditorView.ftl" as ckeditor>
-<#import "switchLanguageView.ftl" as switchLanguage>
 
 <@template.layout>
   <h3>Add language</h3>
