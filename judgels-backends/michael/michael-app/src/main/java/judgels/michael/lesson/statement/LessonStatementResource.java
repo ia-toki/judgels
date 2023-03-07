@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -27,6 +28,7 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.resource.StatementLanguageStatus;
+import judgels.sandalphon.resource.WorldLanguageRegistry;
 
 @Path("/lessons/{lessonId}/statements")
 public class LessonStatementResource extends BaseLessonResource {
@@ -117,6 +119,30 @@ public class LessonStatementResource extends BaseLessonResource {
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("languages");
         return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
+    }
+
+    @POST
+    @Path("/languages")
+    @UnitOfWork(readOnly = true)
+    public Response postAddStatementLanguage(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId,
+            @FormParam("language") String language) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
+        lessonStore.addLanguage(actor.getUserJid(), lesson.getJid(), language);
+
+        return Response
+                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .build();
     }
 
     private View renderEditStatement(Actor actor, Lesson lesson, HtmlForm form, String language, Set<String> enabledLanguages) {
