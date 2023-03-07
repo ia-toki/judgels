@@ -110,6 +110,10 @@ header .avatar-image img {
   font-weight: 400;
 }
 
+.form-inline label {
+  margin-bottom: 0;
+}
+
 input[type="text"], input[type="password"], textarea {
   color: var(--primary-font-color);
 }

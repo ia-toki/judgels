@@ -2,25 +2,16 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/table/tableLayout.ftl" as table>
-<#import "/judgels/michael/template/form/verticalForms.ftl" as forms>
+<#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
 <#import "ckeditorView.ftl" as ckeditor>
 <#import "switchLanguageView.ftl" as switchLanguage>
 
 <@template.layout>
   <h3>Add language</h3>
-
-  <form class="form-inline" method="POST">
-    <label for="language"><span class="small">Language</span></label>
-    <div class="form-group">
-      <select id="language" name="language">
-        <#list languages as k, v>
-          <option value="${k}">${v}</option>
-        </#list>
-      </select>
-    </div>
-
-    <button type="submit" class="btn btn-primary btn-xs">Add</button>
-  </form>
+  <@forms.form>
+    <@forms.select name="language" label="Language" options=languages/>
+    <@forms.submit>Add</@forms.submit>
+  </@forms.form>
 
   <h3>Available languages</h3>
 
