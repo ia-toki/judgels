@@ -118,7 +118,7 @@ public class LessonStatementResource extends BaseLessonResource {
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
+        return new ListStatementLanguagesView(template, req.getRequestURI(), availableLanguages, defaultLanguage);
     }
 
     @POST
@@ -139,6 +139,78 @@ public class LessonStatementResource extends BaseLessonResource {
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
         lessonStore.addLanguage(actor.getUserJid(), lesson.getJid(), language);
+
+        return Response
+                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .build();
+    }
+
+    @GET
+    @Path("/languages/{language}/enable")
+    @UnitOfWork(readOnly = true)
+    public Response enableStatementLanguage(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId,
+            @PathParam("language") String language) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
+        lessonStore.enableLanguage(actor.getUserJid(), lesson.getJid(), language);
+
+        return Response
+                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .build();
+    }
+
+    @GET
+    @Path("/languages/{language}/disable")
+    @UnitOfWork(readOnly = true)
+    public Response disableStatementLanguage(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId,
+            @PathParam("language") String language) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
+        lessonStore.disableLanguage(actor.getUserJid(), lesson.getJid(), language);
+
+        return Response
+                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .build();
+    }
+
+    @GET
+    @Path("/languages/{language}/makeDefault")
+    @UnitOfWork(readOnly = true)
+    public Response makeStatementLanguageDefault(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId,
+            @PathParam("language") String language) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
+        lessonStore.makeDefaultLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return Response
                 .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))

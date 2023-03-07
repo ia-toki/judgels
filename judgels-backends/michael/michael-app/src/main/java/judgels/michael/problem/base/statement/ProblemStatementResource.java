@@ -98,7 +98,7 @@ public class ProblemStatementResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
+        return new ListStatementLanguagesView(template, req.getRequestURI(), availableLanguages, defaultLanguage);
     }
 
     @POST
@@ -119,6 +119,78 @@ public class ProblemStatementResource extends BaseProblemResource {
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         problemStore.addStatementLanguage(actor.getUserJid(), problem.getJid(), language);
+
+        return Response
+                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
+                .build();
+    }
+
+    @GET
+    @Path("/languages/{language}/enable")
+    @UnitOfWork(readOnly = true)
+    public Response enableStatementLanguage(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("language") String language) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        problemStore.enableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
+
+        return Response
+                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
+                .build();
+    }
+
+    @GET
+    @Path("/languages/{language}/disable")
+    @UnitOfWork(readOnly = true)
+    public Response disableStatementLanguage(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("language") String language) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        problemStore.disableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
+
+        return Response
+                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
+                .build();
+    }
+
+    @GET
+    @Path("/languages/{language}/makeDefault")
+    @UnitOfWork(readOnly = true)
+    public Response makeStatementLanguageDefault(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("language") String language) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+
+        if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        problemStore.makeStatementDefaultLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return Response
                 .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
