@@ -2,11 +2,10 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/verticalForms.ftl" as forms>
-<#import "ckeditorView.ftl" as ckeditor>
 <#import "switchLanguageView.ftl" as switchLanguage>
 
 <@template.layout>
-  <@ckeditor.view/>
+  <#include "ckeditor.ftl">
   <@switchLanguage.view languages=enabledLanguages language=language/>
 
   <@forms.form>

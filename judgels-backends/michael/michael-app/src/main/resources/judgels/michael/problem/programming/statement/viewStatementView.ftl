@@ -1,11 +1,10 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.statement.ViewStatementView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/resource/katexView.ftl" as katex>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
 
 <@template.layout>
-  <@katex.view/>
+  <#include "/judgels/michael/resource/katex.ftl">
   <@switchLanguage.view languages=enabledLanguages language=language/>
 
   <#if reasonNotAllowedToSubmit?has_content>

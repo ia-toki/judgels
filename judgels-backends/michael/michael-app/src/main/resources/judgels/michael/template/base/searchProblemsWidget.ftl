@@ -79,6 +79,6 @@
       </form>
     </div>
 
-    <script><#include "/judgels/michael/problem/base/problemTags.js"></script>
+    <script><#include "problemTags.js"></script>
   </div>
 </#macro>

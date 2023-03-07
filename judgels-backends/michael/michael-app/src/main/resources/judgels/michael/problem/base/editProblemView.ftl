@@ -35,5 +35,5 @@
     <@forms.submit>Update</@forms.submit>
   </@forms.form>
 
-  <script><#include "/judgels/michael/problem/base/problemTags.js"></script>
+  <script><#include "/judgels/michael/template/base/problemTags.js"></script>
 </@template.layout>
