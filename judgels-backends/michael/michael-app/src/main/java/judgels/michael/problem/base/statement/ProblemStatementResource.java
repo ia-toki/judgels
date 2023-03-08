@@ -200,6 +200,6 @@ public class ProblemStatementResource extends BaseProblemResource {
     private View renderEditStatement(Actor actor, Problem problem, HtmlForm form, String language, Set<String> enabledLanguages) {
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, (EditStatementForm) form, language, enabledLanguages);
+        return new EditStatementView(template, (EditStatementForm) form, "/problems", language, enabledLanguages);
     }
 }

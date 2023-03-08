@@ -17,8 +17,10 @@ public abstract class BaseProblemResource extends BaseResource {
     protected String resolveStatementLanguage(HttpServletRequest req, Actor actor, Problem problem, Set<String> enabledLanguages) {
         String language = (String) req.getSession().getAttribute("statementLanguage");
         if (language == null || !enabledLanguages.contains(language)) {
-            return problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+            language = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
         }
+
+        setCurrentStatementLanguage(req, language);
         return language;
     }
 

@@ -9,11 +9,13 @@ import io.dropwizard.views.View;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -95,9 +97,21 @@ public class LessonResource extends BaseLessonResource {
 
         lessonStore.initRepository(actor.getUserJid(), lesson.getJid());
 
+        setCurrentStatementLanguage(req, form.initialLanguage);
         return Response
                 .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements"))
                 .build();
+    }
+
+    @POST
+    @Path("/switchLanguage")
+    public Response switchLanguage(
+            @Context HttpServletRequest req,
+            @FormParam("language") String language) {
+
+        setCurrentStatementLanguage(req, language);
+        String referer = Optional.ofNullable(req.getHeader("Referer")).orElse("");
+        return Response.seeOther(URI.create(referer)).build();
     }
 
     @GET

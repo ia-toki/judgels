@@ -17,8 +17,10 @@ public class BaseLessonResource extends BaseResource {
     protected String resolveStatementLanguage(HttpServletRequest req, Actor actor, Lesson lesson, Set<String> enabledLanguages) {
         String language = (String) req.getSession().getAttribute("statementLanguage");
         if (language == null || !enabledLanguages.contains(language)) {
-            return lessonStore.getDefaultLanguage(actor.getUserJid(), lesson.getJid());
+            language = lessonStore.getDefaultLanguage(actor.getUserJid(), lesson.getJid());
         }
+
+        setCurrentStatementLanguage(req, language);
         return language;
     }
 

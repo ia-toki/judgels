@@ -1,6 +1,7 @@
 package judgels.michael;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import judgels.jophiel.api.actor.Actor;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
@@ -10,6 +11,10 @@ public abstract class BaseResource {
     @Inject protected MichaelConfiguration config;
     @Inject protected ActorChecker actorChecker;
     @Inject protected RoleChecker roleChecker;
+
+    protected void setCurrentStatementLanguage(HttpServletRequest req, String language) {
+        req.getSession().setAttribute("statementLanguage", language);
+    }
 
     protected HtmlTemplate newTemplate() {
         return new HtmlTemplate(config.getName());
