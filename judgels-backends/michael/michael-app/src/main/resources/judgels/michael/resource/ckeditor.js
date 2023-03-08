@@ -19,5 +19,5 @@ document.addEventListener('DOMContentLoaded', function() {
   CKEDITOR.config.height = 600;
   CKEDITOR.config.extraAllowedContent = 'iframe embed';
   CKEDITOR.config.disallowedContent = 'script; *[on*]';
-  $('.ckeditor').ckeditor();
+  CKEDITOR.config.removePlugins = 'exportpdf';
 }, false);
