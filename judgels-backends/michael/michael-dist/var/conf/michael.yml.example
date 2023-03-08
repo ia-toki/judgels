@@ -41,6 +41,9 @@ webSecurity:
   cors:
     allowedOrigins: "*"
 
+michael:
+  name: Judgels
+
 jophiel:
   baseDataDir: var/data
 
