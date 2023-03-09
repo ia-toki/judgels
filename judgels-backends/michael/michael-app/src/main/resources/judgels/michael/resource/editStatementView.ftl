@@ -14,9 +14,7 @@
     <#include "statementManualButtons.html">
     <div></div>
     <div class="form-group">
-      <textarea class="ckeditor" name="text">
-        ${form.text}
-      </textarea>
+      <textarea class="ckeditor" name="text">${form.text}</textarea>
     </div>
     <@forms.submit>Update</@forms.submit>
   </@forms.form>
