@@ -254,6 +254,6 @@ ij_java_wrap_comments = false
 ij_java_wrap_first_method_in_call_chain = false
 ij_java_wrap_long_lines = false
 
-[{*.ftl, *.css, *.js, *.yml, *.yaml}]
+[{*.ftl, *.html, *.css, *.js, *.yml, *.yaml}]
 indent_size = 2
 tab_width = 2

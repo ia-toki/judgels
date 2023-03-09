@@ -1,0 +1,97 @@
+<div class="modal fade" id="statement-formatting-help-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Formatting manual</h3>
+      </div>
+      <div class="modal-body statement-help-modal-body">
+        <h4>Inserting PDF</h4>
+        <ul>
+          <li>Upload the PDF as a media file.</li>
+          <li>Switch to Source mode.</li>
+          <li>Add it as <code>&lt;embed src="render/&lt;filename&gt;" type="application/pdf"&gt;&lt;/embed&gt;</code>.</li>
+        </ul>
+        <hr />
+        <h4>Inserting image</h4>
+        <ul>
+          <li>Upload the image as a media file.</li>
+          <li>Switch to Source mode.</li>
+          <li>Add it as <code>render/&lt;filename&gt;</code>.</li>
+        </ul>
+        <hr />
+        <h4>Inserting spoiler</h4>
+        <ul>
+          <li>Switch to Source mode.</li>
+          <li>Add it as:</li>
+          <li><pre>
+&lt;div class="spoiler"&gt;Spoiler title
+    &lt;div class="spoiler-content"&gt;
+        Spoiler content
+    &lt;/div&gt;
+&lt;/div&gt;</pre></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="statement-latex-help-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">LaTeX manual</h3>
+      </div>
+      <div class="modal-body statement-help-modal-body">
+        <p>LaTeX rendering is powered by <a href="https://katex.org">KaTeX</a>.</p>
+
+        <hr />
+        <h4>Syntax</h4>
+        <table class="table table-bordered">
+          <tr>
+            <td width="60%"><code>Inline formula: $A \le B_i \le C^2$</code></td>
+            <td><p>Inline formula: $A \le B_i \le C^2$</p></td>
+          </tr>
+          <tr>
+            <td>
+              <code>Block formula: \[A \le B_i \le C^2\]</code>
+              <br />
+              (The entire formula must be in the same line.)
+            </td>
+            <td><p>Block formula: \[A \le B_i \le C^2\]</p></td>
+          </tr>
+        </table>
+
+        <h4>Examples</h4>
+        <table class="table table-bordered">
+          <tr>
+            <td width="60%"><code>$1 + \frac{22}{7} + \displaystyle\frac{22}{7}$</code></td>
+            <td><p>$1 + \frac{22}{7} + \displaystyle\frac{22}{7}$</p></td>
+          </tr>
+          <tr>
+            <td><code>$\begin{bmatrix} 0 & 1 & 1 \\ 1 & 0 & 1 \\ 1 & 0 & 0 \end{bmatrix}$</code></td>
+            <td><p>$\begin{bmatrix} 0 & 1 & 1 \\ 1 & 0 & 1 \\ 1 & 0 & 0 \end{bmatrix}$</p></td>
+          </tr>
+          <tr>
+            <td><code>$A = (B \times C) \bmod M$</code></td>
+            <td><p>$A = (B \times C) \bmod M$</p></td>
+          </tr>
+          <tr>
+            <td><code>\[\begin{aligned} A & = 1 + 1 \\ & = 2 \end{aligned}\]</code></td>
+            <td><p>\[\begin{aligned} A & = 1 + 1 \\ & = 2 \end{aligned}\]</p></td>
+          </tr>
+          <tr>
+            <td><code>\[A = \max \begin{cases} B & (\text{case } 1) \\ C + 1 & (\text{case } 2)\end{cases}\]</code></td>
+            <td><p>\[A = \max \begin{cases} B & (\text{case } 1) \\ C + 1 & (\text{case } 2)\end{cases}\]</p></td>
+          </tr>
+
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

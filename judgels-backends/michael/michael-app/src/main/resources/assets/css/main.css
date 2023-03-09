@@ -328,3 +328,15 @@ th {
 .table-col-item-actions {
   width: 80px;
 }
+
+.statement-help-modal-body, .statement-help-modal-body pre {
+  font-size: 12px;
+}
+
+.statement-help-modal-body ol, .statement-help-modal-body ul {
+  margin-left: 20px;
+}
+
+.statement-help-modal-body, .statement-help-modal-body p {
+  margin: 0;
+}

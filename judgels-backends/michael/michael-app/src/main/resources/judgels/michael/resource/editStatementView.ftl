@@ -11,6 +11,7 @@
   <@forms.form>
     <@forms.text form=form name="title" label="Title" required=true/>
     <label class="control-label">Text</label>
+    <#include "statementManualButtons.html">
     <div></div>
     <div class="form-group">
       <textarea class="ckeditor" name="text">
@@ -19,4 +20,6 @@
     </div>
     <@forms.submit>Update</@forms.submit>
   </@forms.form>
+  <#include "katex.ftl">
+  <#include "statementManualBody.html">
 </@template.layout>

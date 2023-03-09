@@ -11,6 +11,7 @@
       <link rel="stylesheet" href="/assets/css/main.css">
       <link rel="shortcut icon" type="image/ico" href="/assets/images/favicon.ico">
       <script src="/webjars/jquery/jquery.min.js"></script>
+      <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
       <div class="container-fluid">
