@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -278,16 +279,12 @@ public class ProblemStore extends AbstractProblemStore {
         problemFs.writeToFile(getStatementTextFilePath(userJid, problemJid, language), statement.getText());
     }
 
-    public void uploadStatementMediaFile(String userJid, String problemJid, File mediaFile, String filename) {
+    public void uploadStatementMediaFile(String userJid, String problemJid, InputStream mediaFile, String filename) {
         Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
-        try {
-            problemFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        problemFs.uploadPublicFile(mediaDirPath.resolve(filename), mediaFile);
     }
 
-    public void uploadStatementMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) {
+    public void uploadStatementMediaFileZipped(String userJid, String problemJid, InputStream mediaFileZipped) {
         Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
         problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
     }
@@ -369,7 +366,7 @@ public class ProblemStore extends AbstractProblemStore {
         }
     }
 
-    public void uploadEditorialMediaFileZipped(String userJid, String problemJid, File mediaFileZipped) {
+    public void uploadEditorialMediaFileZipped(String userJid, String problemJid, InputStream mediaFileZipped) {
         Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
         problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
     }

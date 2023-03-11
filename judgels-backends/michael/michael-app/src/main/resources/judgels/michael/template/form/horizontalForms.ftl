@@ -4,6 +4,12 @@
   </form>
 </#macro>
 
+<#macro multipartForm>
+  <form method="POST" class="form-horizontal" enctype="multipart/form-data">
+    <#nested>
+  </form>
+</#macro>
+
 <#macro text name label form={} required=false pattern="" title="" help="">
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
@@ -49,6 +55,15 @@
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
       <textarea rows="5" id="${name}" name="${name}" class="form-control">${form[name]!""}</textarea>
+    </div>
+  </div>
+</#macro>
+
+<#macro file name label form={} required=false>
+  <div class="form-group">
+    <label class="control-label col-md-3" for="${name}">${label}</label>
+    <div class="col-md-9">
+      <input type="file" id="${name}" name="${name}" class="form-control">
     </div>
   </div>
 </#macro>

@@ -59,7 +59,7 @@ public class UserAvatarIntegrationTestModule {
         }
 
         @Override
-        public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {}
+        public void uploadZippedFiles(Path dirPath, InputStream content, boolean includeDirectory) {}
 
         @Override
         public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {

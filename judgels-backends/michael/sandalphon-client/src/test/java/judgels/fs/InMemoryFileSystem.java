@@ -64,7 +64,7 @@ public class InMemoryFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {
+    public void uploadZippedFiles(Path dirPath, InputStream content, boolean includeDirectory) {
         throw new UnsupportedOperationException();
     }
 

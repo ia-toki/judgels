@@ -4,6 +4,8 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -123,7 +125,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadStatementMediaFiles(Http.Request req, long problemId) {
+    public Result postUploadStatementMediaFiles(Http.Request req, long problemId) throws FileNotFoundException {
         String actorJid = getUserJid(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUploadStatementResources(req, problem));
@@ -135,7 +137,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadStatementMediaFile(actorJid, problem.getJid(), mediaFile, file.getFilename());
+            problemStore.uploadStatementMediaFile(actorJid, problem.getJid(), new FileInputStream(mediaFile), file.getFilename());
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
         }
@@ -144,7 +146,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), mediaFile);
+            problemStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), new FileInputStream(mediaFile));
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
         }

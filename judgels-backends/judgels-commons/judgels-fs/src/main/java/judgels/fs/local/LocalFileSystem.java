@@ -75,7 +75,8 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void uploadPublicFile(Path filePath, InputStream content) {
         try {
-            writeByteArrayToFile(filePath, ByteStreams.toByteArray(content));
+            MoreFiles.createParentDirectories(baseDir.resolve(filePath));
+            Files.copy(content, baseDir.resolve(filePath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -97,13 +98,13 @@ public final class LocalFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {
+    public void uploadZippedFiles(Path dirPath, InputStream content, boolean includeDirectory) {
         try {
             File destDir = baseDir.resolve(dirPath).toFile();
             byte[] buffer = new byte[4096];
             int entries = 0;
             long total = 0;
-            try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zippedFiles))) {
+            try (ZipInputStream zis = new ZipInputStream(content)) {
                 ZipEntry ze = zis.getNextEntry();
                 while (ze != null) {
                     String filename = ze.getName();

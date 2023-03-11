@@ -43,6 +43,7 @@ public abstract class BaseProblemResource extends BaseResource {
         template.setActiveMainTab("statements");
         template.addSecondaryTab("view", "View", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
         template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/statements/edit");
+        template.addSecondaryTab("media", "Media", "/problems/" + problem.getId() + "/statements/media");
         template.addSecondaryTab("languages", "Languages", "/problems/" + problem.getId() + "/statements/languages");
         return template;
     }

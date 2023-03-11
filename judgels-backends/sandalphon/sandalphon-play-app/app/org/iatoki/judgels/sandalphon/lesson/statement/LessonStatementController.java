@@ -5,6 +5,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +151,7 @@ public class LessonStatementController extends AbstractLessonController {
             lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
             try {
-                lessonStore.uploadStatementMediaFile(actorJid, lesson.getJid(), mediaFile, file.getFilename());
+                lessonStore.uploadStatementMediaFile(actorJid, lesson.getJid(), new FileInputStream(mediaFile), file.getFilename());
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);
@@ -168,7 +169,7 @@ public class LessonStatementController extends AbstractLessonController {
             lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
             try {
-                lessonStore.uploadStatementMediaFileZipped(actorJid, lesson.getJid(), mediaFile);
+                lessonStore.uploadStatementMediaFileZipped(actorJid, lesson.getJid(), new FileInputStream(mediaFile));
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);

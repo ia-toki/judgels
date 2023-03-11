@@ -4,6 +4,8 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -200,7 +202,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadGradingTestDataFiles(Http.Request req, long problemId) {
+    public Result postUploadGradingTestDataFiles(Http.Request req, long problemId) throws FileNotFoundException {
         String actorJid = getUserJid(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
@@ -223,7 +225,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File testDataFile = file.getRef().path().toFile();
-            programmingProblemStore.uploadGradingTestDataFileZipped(actorJid, problem.getJid(), testDataFile);
+            programmingProblemStore.uploadGradingTestDataFileZipped(actorJid, problem.getJid(), new FileInputStream(testDataFile));
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
         }
@@ -246,7 +248,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadGradingHelperFiles(Http.Request req, long problemId) {
+    public Result postUploadGradingHelperFiles(Http.Request req, long problemId) throws FileNotFoundException {
         String actorJid = getUserJid(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageGrading(req, problem));
@@ -269,7 +271,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File helperFile = file.getRef().path().toFile();
-            programmingProblemStore.uploadGradingHelperFileZipped(actorJid, problem.getJid(), helperFile);
+            programmingProblemStore.uploadGradingHelperFileZipped(actorJid, problem.getJid(), new FileInputStream(helperFile));
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
         }

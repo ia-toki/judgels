@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -279,13 +278,13 @@ public final class LessonStore {
         lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonModel.jid, languageCode), statement.getText());
     }
 
-    public void uploadStatementMediaFile(String userJid, String lessonJid, File mediaFile, String filename) throws IOException {
+    public void uploadStatementMediaFile(String userJid, String lessonJid, InputStream mediaFile, String filename) throws IOException {
         LessonModel lessonModel = lessonDao.findByJid(lessonJid);
         Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
-        lessonFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
+        lessonFs.uploadPublicFile(mediaDirPath.resolve(filename), mediaFile);
     }
 
-    public void uploadStatementMediaFileZipped(String userJid, String lessonJid, File mediaFileZipped) throws IOException {
+    public void uploadStatementMediaFileZipped(String userJid, String lessonJid, InputStream mediaFileZipped) throws IOException {
         LessonModel lessonModel = lessonDao.findByJid(lessonJid);
         Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
         lessonFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);

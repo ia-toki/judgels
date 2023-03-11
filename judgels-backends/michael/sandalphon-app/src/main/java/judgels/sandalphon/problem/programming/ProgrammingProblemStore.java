@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.Date;
@@ -104,7 +105,7 @@ public final class ProgrammingProblemStore extends AbstractProblemStore {
         updateGradingLastUpdateTime(userJid, problemJid);
     }
 
-    public void uploadGradingTestDataFileZipped(String userJid, String problemJid, File testDataFileZipped) {
+    public void uploadGradingTestDataFileZipped(String userJid, String problemJid, InputStream testDataFileZipped) {
         problemFs.uploadZippedFiles(getGradingTestDataDirPath(userJid, problemJid), testDataFileZipped, false);
 
         updateGradingLastUpdateTime(userJid, problemJid);
@@ -120,7 +121,7 @@ public final class ProgrammingProblemStore extends AbstractProblemStore {
         updateGradingLastUpdateTime(userJid, problemJid);
     }
 
-    public void uploadGradingHelperFileZipped(String userJid, String problemJid, File helperFileZipped) {
+    public void uploadGradingHelperFileZipped(String userJid, String problemJid, InputStream helperFileZipped) {
         problemFs.uploadZippedFiles(getGradingHelpersDirPath(userJid, problemJid), helperFileZipped, false);
 
         updateGradingLastUpdateTime(userJid, problemJid);

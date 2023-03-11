@@ -1,6 +1,8 @@
 package judgels.gabriel.helpers;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import judgels.fs.FileSystem;
@@ -29,8 +31,8 @@ public class OutputOnlyEvaluator implements Evaluator {
         this.evaluationDir = evaluationDir;
 
         try {
-            fs.uploadZippedFiles(Paths.get(""), sourceFile, false);
-        } catch (RuntimeException e) {
+            fs.uploadZippedFiles(Paths.get(""), new FileInputStream(sourceFile), false);
+        } catch (RuntimeException | FileNotFoundException e) {
             throw new PreparationException(e);
         }
 

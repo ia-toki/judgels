@@ -4,6 +4,8 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -167,7 +169,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
 
     @Transactional
     @RequireCSRFCheck
-    public Result postUploadEditorialMediaFiles(Http.Request req, long problemId) {
+    public Result postUploadEditorialMediaFiles(Http.Request req, long problemId) throws FileNotFoundException {
         String actorJid = getUserJid(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToUploadStatementResources(req, problem));
@@ -188,7 +190,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadEditorialMediaFileZipped(actorJid, problem.getJid(), mediaFile);
+            problemStore.uploadEditorialMediaFileZipped(actorJid, problem.getJid(), new FileInputStream(mediaFile));
 
             return redirect(routes.ProblemEditorialController.listEditorialMediaFiles(problem.getId()));
         }

@@ -15,7 +15,7 @@ public interface FileSystem {
     String getPublicFileUrl(Path filePath);
     void uploadPrivateFile(Path filePath, InputStream content);
     String getPrivateFileUrl(Path filePath);
-    void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory);
+    void uploadZippedFiles(Path dirPath, InputStream content, boolean includeDirectory);
     List<FileInfo> listDirectoriesInDirectory(Path dirPath);
     List<FileInfo> listFilesInDirectory(Path dirPath);
     void writeByteArrayToFile(Path filePath, byte[] content);

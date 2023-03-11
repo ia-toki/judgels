@@ -69,4 +69,17 @@ public abstract class TemplateView extends View {
             return "in " + res;
         }
     }
+
+    public String getFormattedFileSize(long bytes) {
+        long oneKb = 1024;
+        long oneMb = 1024 * oneKb;
+
+        if (bytes >= oneMb) {
+            return bytes / oneMb + " MB";
+        }
+        if (bytes >= oneKb) {
+            return bytes / oneKb + " KB";
+        }
+        return bytes + " bytes";
+    }
 }

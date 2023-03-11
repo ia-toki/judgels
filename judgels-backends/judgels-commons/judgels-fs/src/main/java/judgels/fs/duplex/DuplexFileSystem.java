@@ -66,8 +66,8 @@ public final class DuplexFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {
-        local.uploadZippedFiles(dirPath, zippedFiles, includeDirectory);
+    public void uploadZippedFiles(Path dirPath, InputStream content, boolean includeDirectory) {
+        local.uploadZippedFiles(dirPath, content, includeDirectory);
     }
 
     @Override
