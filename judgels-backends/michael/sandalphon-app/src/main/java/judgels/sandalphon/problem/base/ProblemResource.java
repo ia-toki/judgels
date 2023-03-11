@@ -23,7 +23,7 @@ public class ProblemResource {
     @GET
     @Path("/render/{mediaFilename}")
     @UnitOfWork
-    public Response renderStatementImage(
+    public Response renderStatementMediaFile(
             @HeaderParam("If-Modified-Since") Optional<String> ifModifiedSince,
             @PathParam("problemJid") String problemJid,
             @PathParam("mediaFilename") String mediaFilename) {

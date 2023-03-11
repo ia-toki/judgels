@@ -11,6 +11,7 @@ import judgels.michael.lesson.statement.LessonStatementResource;
 import judgels.michael.problem.base.ProblemResource;
 import judgels.michael.problem.base.statement.ProblemStatementResource;
 import judgels.michael.problem.programming.statement.ProgrammingProblemStatementResource;
+import judgels.michael.problem.render.ProblemStatementRenderResources;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsApplicationModule;
@@ -40,6 +41,8 @@ public interface MichaelComponent {
     IndexResource indexResource();
     ProblemResource problemResource();
     ProblemStatementResource problemStatementResource();
+    ProblemStatementRenderResources.InEditProblemStatement problemStatementRenderResourceInEditProblemStatement();
+    ProblemStatementRenderResources.InViewProgrammingProblemStatement problemStatementRenderResourceInViewProgrammingProblemStatement();
     ProgrammingProblemStatementResource programmingProblemResource();
     LessonResource lessonResource();
     LessonStatementResource lessonStatementResource();
