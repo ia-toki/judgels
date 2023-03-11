@@ -26,7 +26,7 @@ public abstract class TemplateView extends View {
         return form;
     }
 
-    public String getDurationFromNow(Instant instant) {
+    public String getFormattedDurationFromNow(Instant instant) {
         long duration = Duration.between(instant, Instant.now()).getSeconds();
 
         long oneSecond = 1;

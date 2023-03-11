@@ -21,7 +21,7 @@
           <td>${lesson.id}</td>
           <td>${lesson.slug}</td>
           <td>${profilesMap[lesson.authorJid].username}</td>
-          <td>${getDurationFromNow(lesson.lastUpdateTime)}</td>
+          <td>${getFormattedDurationFromNow(lesson.lastUpdateTime)}</td>
           <td class="text-center">
             <a type="button" class="btn btn-primary btn-xs" href="/lessons/${lesson.id}/statements">Manage</a>
           </td>

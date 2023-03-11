@@ -21,7 +21,7 @@
           <td>${problem.id}</td>
           <td>${problem.slug}</td>
           <td>${profilesMap[problem.authorJid].username}</td>
-          <td>${getDurationFromNow(problem.lastUpdateTime)}</td>
+          <td>${getFormattedDurationFromNow(problem.lastUpdateTime)}</td>
           <td class="text-center">
             <a type="button" class="btn btn-primary btn-xs" href="/problems/${problem.type?lower_case}/${problem.id}/statements">Manage</a>
           </td>

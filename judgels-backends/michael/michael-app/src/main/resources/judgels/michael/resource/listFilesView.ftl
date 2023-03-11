@@ -31,7 +31,7 @@
       <#list files as file>
         <tr>
           <td>${file.name}</td>
-          <td>${getDurationFromNow(file.lastModifiedTime)}</td>
+          <td>${getFormattedDurationFromNow(file.lastModifiedTime)}</td>
           <td>${getFormattedFileSize(file.size)}</td>
           <td class="text-center"><a href="${currentUrl}/${file.name}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
         </tr>
