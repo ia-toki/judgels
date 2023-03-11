@@ -278,13 +278,13 @@ public final class LessonStore {
         lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonModel.jid, languageCode), statement.getText());
     }
 
-    public void uploadStatementMediaFile(String userJid, String lessonJid, InputStream mediaFile, String filename) throws IOException {
+    public void uploadStatementMediaFile(String userJid, String lessonJid, InputStream mediaFile, String filename) {
         LessonModel lessonModel = lessonDao.findByJid(lessonJid);
         Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
         lessonFs.uploadPublicFile(mediaDirPath.resolve(filename), mediaFile);
     }
 
-    public void uploadStatementMediaFileZipped(String userJid, String lessonJid, InputStream mediaFileZipped) throws IOException {
+    public void uploadStatementMediaFileZipped(String userJid, String lessonJid, InputStream mediaFileZipped) {
         LessonModel lessonModel = lessonDao.findByJid(lessonJid);
         Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
         lessonFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);

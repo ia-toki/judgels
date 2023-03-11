@@ -43,6 +43,7 @@ public class BaseLessonResource extends BaseResource {
         template.setActiveMainTab("statements");
         template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId() + "/statements");
         template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/statements/edit");
+        template.addSecondaryTab("media", "Media", "/lessons/" + lesson.getId() + "/statements/media");
         template.addSecondaryTab("languages", "Languages", "/lessons/" + lesson.getId() + "/statements/languages");
         return template;
     }
