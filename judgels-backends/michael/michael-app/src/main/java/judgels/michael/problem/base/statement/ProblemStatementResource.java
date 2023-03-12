@@ -87,7 +87,7 @@ public class ProblemStatementResource extends BaseProblemResource {
                 .build());
 
         return Response
-                .seeOther(URI.create("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements"))
+                .seeOther(URI.create("/problems/" + problem.getType().name().toLowerCase() + "/" + problemId + "/statements"))
                 .build();
     }
 
@@ -133,7 +133,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         }
 
         return Response
-                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/media"))
+                .seeOther(URI.create("/problems/" + problemId + "/statements/media"))
                 .build();
     }
 
@@ -192,7 +192,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         problemStore.addStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
+                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
                 .build();
     }
 
@@ -216,7 +216,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         problemStore.enableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
+                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
                 .build();
     }
 
@@ -240,7 +240,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         problemStore.disableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
+                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
                 .build();
     }
 
@@ -264,7 +264,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         problemStore.makeStatementDefaultLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/problems/" + problem.getId() + "/statements/languages"))
+                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
                 .build();
     }
 

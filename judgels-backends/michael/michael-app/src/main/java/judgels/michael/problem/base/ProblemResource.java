@@ -250,7 +250,7 @@ public class ProblemResource extends BaseProblemResource {
         problemTagStore.updateTopicTags(problem.getJid(), form.tags);
 
         return Response
-                .seeOther(URI.create("/problems/" + problem.getId()))
+                .seeOther(URI.create("/problems/" + problemId))
                 .build();
     }
 

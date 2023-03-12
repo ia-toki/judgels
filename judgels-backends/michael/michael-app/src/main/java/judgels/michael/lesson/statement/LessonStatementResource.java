@@ -106,7 +106,7 @@ public class LessonStatementResource extends BaseLessonResource {
                 .build());
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements"))
+                .seeOther(URI.create("/lessons/" + lessonId + "/statements"))
                 .build();
     }
 
@@ -152,7 +152,7 @@ public class LessonStatementResource extends BaseLessonResource {
         }
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/media"))
+                .seeOther(URI.create("/lessons/" + lessonId + "/statements/media"))
                 .build();
     }
 
@@ -212,7 +212,7 @@ public class LessonStatementResource extends BaseLessonResource {
         lessonStore.addLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
                 .build();
     }
 
@@ -236,7 +236,7 @@ public class LessonStatementResource extends BaseLessonResource {
         lessonStore.enableLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
                 .build();
     }
 
@@ -260,7 +260,7 @@ public class LessonStatementResource extends BaseLessonResource {
         lessonStore.disableLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
                 .build();
     }
 
@@ -284,7 +284,7 @@ public class LessonStatementResource extends BaseLessonResource {
         lessonStore.makeDefaultLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId() + "/statements/languages"))
+                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
                 .build();
     }
 

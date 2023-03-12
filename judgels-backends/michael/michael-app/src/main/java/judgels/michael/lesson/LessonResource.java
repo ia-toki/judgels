@@ -169,7 +169,7 @@ public class LessonResource extends BaseLessonResource {
         lessonStore.updateLesson(lesson.getJid(), form.slug, form.additionalNote);
 
         return Response
-                .seeOther(URI.create("/lessons/" + lesson.getId()))
+                .seeOther(URI.create("/lessons/" + lessonId))
                 .build();
     }
 
