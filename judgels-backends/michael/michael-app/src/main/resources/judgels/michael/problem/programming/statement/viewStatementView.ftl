@@ -5,7 +5,7 @@
 
 <@template.layout>
   <#include "/judgels/michael/resource/katex.ftl">
-  <@switchLanguage.view baseUrl="/problems" languages=enabledLanguages language=language/>
+  <@switchLanguage.view basePath="/problems" languages=enabledLanguages language=language/>
 
   <#if reasonNotAllowedToSubmit?has_content>
     <div class="alert alert-danger">${reasonNotAllowedToSubmit}</div>

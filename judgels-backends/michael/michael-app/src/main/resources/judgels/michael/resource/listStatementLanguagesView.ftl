@@ -30,12 +30,12 @@
           <#if status == "ENABLED">
             <td>
               <#if lang != defaultLanguage>
-                <a href="${baseUrl}/${lang}/disable" type="button" class="btn btn-primary btn-xs">Disable</a>
-                <a href="${baseUrl}/${lang}/makeDefault" type="button" class="btn btn-primary btn-xs">Make default</a>
+                <a href="${basePath}/${lang}/disable" type="button" class="btn btn-primary btn-xs">Disable</a>
+                <a href="${basePath}/${lang}/makeDefault" type="button" class="btn btn-primary btn-xs">Make default</a>
               </#if>
             </td>
           <#else>
-            <td><a href="${baseUrl}/${lang}/enable" type="button" class="btn btn-primary btn-xs">Enable</a></td>
+            <td><a href="${basePath}/${lang}/enable" type="button" class="btn btn-primary btn-xs">Enable</a></td>
           </#if>
         </tr>
       </#list>

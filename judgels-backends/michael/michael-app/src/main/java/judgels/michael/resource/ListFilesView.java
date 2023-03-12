@@ -6,17 +6,17 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 
 public class ListFilesView extends TemplateView {
-    private final String currentUrl;
+    private final String currentPath;
     private final List<FileInfo> files;
 
-    public ListFilesView(HtmlTemplate template, String currentUrl, List<FileInfo> files) {
+    public ListFilesView(HtmlTemplate template, String currentPath, List<FileInfo> files) {
         super("listFilesView.ftl", template);
-        this.currentUrl = currentUrl;
+        this.currentPath = currentPath;
         this.files = files;
     }
 
-    public String getCurrentUrl() {
-        return currentUrl;
+    public String getCurrentPath() {
+        return currentPath;
     }
 
     public List<FileInfo> getFiles() {

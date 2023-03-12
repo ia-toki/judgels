@@ -33,7 +33,7 @@
           <td>${file.name}</td>
           <td>${getFormattedDurationFromNow(file.lastModifiedTime)}</td>
           <td>${getFormattedFileSize(file.size)}</td>
-          <td class="text-center"><a href="${currentUrl}/${file.name}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
+          <td class="text-center"><a href="${currentPath}/${file.name}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
         </tr>
       </#list>
     </tbody>
