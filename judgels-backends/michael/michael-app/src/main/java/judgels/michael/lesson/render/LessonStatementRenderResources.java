@@ -19,7 +19,6 @@ import judgels.service.ServiceUtils;
 
 public abstract class LessonStatementRenderResources extends BaseLessonResource {
     @GET
-    @Path("/{mediaFilename}")
     @UnitOfWork(readOnly = true)
     public Response renderStatementMediaFile(
             @Context HttpServletRequest req,
@@ -34,13 +33,17 @@ public abstract class LessonStatementRenderResources extends BaseLessonResource 
         return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
     }
 
-    @Path("/lessons/{lessonId}/statements/render")
+    // page path: /lessons/{lessonId}/statements/edit
+    // media file path: render/{mediaFilename}
+    @Path("/lessons/{lessonId}/statements/render/{mediaFilename}")
     public static class InEditLessonStatement extends LessonStatementRenderResources {
         @Inject
         public InEditLessonStatement() {}
     }
 
-    @Path("/lessons/{lessonId}/render")
+    // page path: /lessons/{lessonId}/statements
+    // media file path: render/{mediaFilename}
+    @Path("/lessons/{lessonId}/render/{mediaFilename}")
     public static class InViewLessonStatement extends LessonStatementRenderResources {
         @Inject public InViewLessonStatement() {}
     }

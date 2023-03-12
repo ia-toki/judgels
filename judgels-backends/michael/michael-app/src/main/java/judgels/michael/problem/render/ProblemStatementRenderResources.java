@@ -19,7 +19,6 @@ import judgels.service.ServiceUtils;
 
 public abstract class ProblemStatementRenderResources extends BaseProblemResource {
     @GET
-    @Path("/{mediaFilename}")
     @UnitOfWork(readOnly = true)
     public Response renderStatementMediaFile(
             @Context HttpServletRequest req,
@@ -34,12 +33,16 @@ public abstract class ProblemStatementRenderResources extends BaseProblemResourc
         return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
     }
 
-    @Path("/problems/{problemId}/statements/render")
+    // page path: /problems/{problemId}/statements/edit
+    // media file path: render/{mediaFilename}
+    @Path("/problems/{problemId}/statements/render/{mediaFilename}")
     public static class InEditProblemStatement extends ProblemStatementRenderResources {
         @Inject public InEditProblemStatement() {}
     }
 
-    @Path("/problems/programming/{problemId}/render")
+    // page path: /problems/programming/{problemId}/statements
+    // media file path: render/{mediaFilename}
+    @Path("/problems/programming/{problemId}/render/{mediaFilename}")
     public static class InViewProgrammingProblemStatement extends ProblemStatementRenderResources {
         @Inject public InViewProgrammingProblemStatement() {}
     }
