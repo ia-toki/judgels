@@ -13,6 +13,7 @@ import judgels.michael.problem.base.ProblemResource;
 import judgels.michael.problem.base.editorial.ProblemEditorialResource;
 import judgels.michael.problem.base.statement.ProblemStatementResource;
 import judgels.michael.problem.programming.statement.ProgrammingProblemStatementResource;
+import judgels.michael.problem.render.ProblemEditorialRenderResources;
 import judgels.michael.problem.render.ProblemStatementRenderResources;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
@@ -46,6 +47,8 @@ public interface MichaelComponent {
     ProblemStatementRenderResources.InEditProblemStatement problemStatementRenderResourceInEditProblemStatement();
     ProblemStatementRenderResources.InViewProgrammingProblemStatement problemStatementRenderResourceInViewProgrammingProblemStatement();
     ProblemEditorialResource problemEditorialResource();
+    ProblemEditorialRenderResources.InEditProblemEditorial problemEditorialRenderResourceInEditProblemEditorial();
+    ProblemEditorialRenderResources.InViewProblemEditorial problemEditorialRenderResourceInViewProblemEditorial();
     ProgrammingProblemStatementResource programmingProblemResource();
     LessonResource lessonResource();
     LessonStatementResource lessonStatementResource();

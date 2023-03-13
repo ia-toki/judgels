@@ -181,7 +181,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadEditorialMediaFile(actorJid, problem.getJid(), mediaFile, file.getFilename());
+            problemStore.uploadEditorialMediaFile(actorJid, problem.getJid(), new FileInputStream(mediaFile), file.getFilename());
 
             return redirect(routes.ProblemEditorialController.listEditorialMediaFiles(problem.getId()));
         }

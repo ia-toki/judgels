@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -366,13 +364,9 @@ public class ProblemStore extends AbstractProblemStore {
         problemFs.writeToFile(getEditorialTextFilePath(userJid, problemJid, language), editorial.getText());
     }
 
-    public void uploadEditorialMediaFile(String userJid, String problemJid, File mediaFile, String filename) {
+    public void uploadEditorialMediaFile(String userJid, String problemJid, InputStream mediaFile, String filename) {
         Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
-        try {
-            problemFs.uploadPublicFile(mediaDirPath.resolve(filename), new FileInputStream(mediaFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        problemFs.uploadPublicFile(mediaDirPath.resolve(filename), mediaFile);
     }
 
     public void uploadEditorialMediaFileZipped(String userJid, String problemJid, InputStream mediaFileZipped) {

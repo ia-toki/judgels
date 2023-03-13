@@ -65,7 +65,13 @@ public abstract class BaseProblemResource extends BaseResource {
         if (hasEditorial) {
             template.addSecondaryTab("view", "View", "/problems/" + problem.getId() + "/editorials");
             template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/editorials/edit");
+            template.addSecondaryTab("media", "Media", "/problems/" + problem.getId() + "/editorials/media");
+            template.addSecondaryTab("languages", "Languages", "/problems/" + problem.getId() + "/editorials/languages");
         }
         return template;
+    }
+
+    protected HtmlTemplate newProblemEditorialTemplate(Actor actor, Problem problem) {
+        return newProblemEditorialTemplate(actor, problem, true);
     }
 }

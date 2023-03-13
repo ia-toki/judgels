@@ -37,7 +37,7 @@ public class ProblemResource {
     @GET
     @Path("/editorials/render/{mediaFilename}")
     @UnitOfWork
-    public Response renderEditorialImage(
+    public Response renderEditorialMediaFile(
             @HeaderParam("If-Modified-Since") Optional<String> ifModifiedSince,
             @PathParam("problemJid") String problemJid,
             @PathParam("mediaFilename") String mediaFilename) {
