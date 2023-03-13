@@ -7,7 +7,6 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +28,6 @@ import judgels.michael.resource.EditStatementForm;
 import judgels.michael.resource.EditStatementView;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.resource.ListStatementLanguagesView;
-import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
@@ -62,7 +60,9 @@ public class ProblemStatementResource extends BaseProblemResource {
         form.title = statement.getTitle();
         form.text = statement.getText();
 
-        return renderEditStatement(actor, problem, form, language, enabledLanguages);
+        HtmlTemplate template = newProblemStatementTemplate(actor, problem);
+        template.setActiveSecondaryTab("edit");
+        return new EditStatementView(template, form, "/problems", language, enabledLanguages);
     }
 
     @POST
@@ -86,9 +86,7 @@ public class ProblemStatementResource extends BaseProblemResource {
                 .text(form.text)
                 .build());
 
-        return Response
-                .seeOther(URI.create("/problems/" + problem.getType().name().toLowerCase() + "/" + problemId + "/statements"))
-                .build();
+        return redirect("/problems/" + problem.getType().name().toLowerCase() + "/" + problemId + "/statements");
     }
 
     @GET
@@ -132,9 +130,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             problemStore.uploadStatementMediaFileZipped(actor.getUserJid(), problem.getJid(), fileZippedStream);
         }
 
-        return Response
-                .seeOther(URI.create("/problems/" + problemId + "/statements/media"))
-                .build();
+        return redirect("/problems/" + problemId + "/statements/media");
     }
 
     @GET
@@ -185,15 +181,13 @@ public class ProblemStatementResource extends BaseProblemResource {
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         problemStore.addStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
-                .build();
+        return redirect("/problems/" + problemId + "/statements/languages");
     }
 
     @GET
@@ -209,15 +203,13 @@ public class ProblemStatementResource extends BaseProblemResource {
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         problemStore.enableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
-                .build();
+        return redirect("/problems/" + problemId + "/statements/languages");
     }
 
     @GET
@@ -233,15 +225,13 @@ public class ProblemStatementResource extends BaseProblemResource {
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         problemStore.disableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
-                .build();
+        return redirect("/problems/" + problemId + "/statements/languages");
     }
 
     @GET
@@ -257,20 +247,12 @@ public class ProblemStatementResource extends BaseProblemResource {
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         problemStore.makeStatementDefaultLanguage(actor.getUserJid(), problem.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/problems/" + problemId + "/statements/languages"))
-                .build();
-    }
-
-    private View renderEditStatement(Actor actor, Problem problem, HtmlForm form, String language, Set<String> enabledLanguages) {
-        HtmlTemplate template = newProblemStatementTemplate(actor, problem);
-        template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, (EditStatementForm) form, "/problems", language, enabledLanguages);
+        return redirect("/problems/" + problemId + "/statements/languages");
     }
 }

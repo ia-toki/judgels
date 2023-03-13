@@ -5,7 +5,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.net.URI;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +19,6 @@ import judgels.jophiel.api.actor.Actor;
 import judgels.michael.problem.base.BaseProblemResource;
 import judgels.michael.resource.EditStatementForm;
 import judgels.michael.resource.EditStatementView;
-import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemEditorial;
@@ -43,7 +41,9 @@ public class ProblemEditorialResource extends BaseProblemResource {
         if (!problemStore.hasEditorial(actor.getUserJid(), problem.getJid())) {
             CreateEditorialForm form = new CreateEditorialForm();
             form.initialLanguage = "en-US";
-            return renderCreateEditorial(actor, problem, form);
+
+            HtmlTemplate template = newProblemEditorialTemplate(actor, problem, false);
+            return new CreateEditorialView(template, form);
         }
 
         Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
@@ -71,9 +71,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         problemStore.initEditorials(actor.getUserJid(), problem.getJid(), form.initialLanguage);
 
         setCurrentStatementLanguage(req, form.initialLanguage);
-        return Response
-                .seeOther(URI.create("/problems/" + problemId + "/editorials/edit"))
-                .build();
+        return redirect("/problems/" + problemId + "/editorials/edit");
     }
 
     @GET
@@ -94,7 +92,9 @@ public class ProblemEditorialResource extends BaseProblemResource {
         EditStatementForm form = new EditStatementForm();
         form.text = editorial.getText();
 
-        return renderEditEditorial(actor, problem, form, language, enabledLanguages);
+        HtmlTemplate template = newProblemEditorialTemplate(actor, problem, true);
+        template.setActiveSecondaryTab("edit");
+        return new EditStatementView(template, form, "/problems", language, enabledLanguages);
     }
 
     @POST
@@ -117,19 +117,6 @@ public class ProblemEditorialResource extends BaseProblemResource {
                 .text(form.text)
                 .build());
 
-        return Response
-                .seeOther(URI.create("/problems/" + problemId + "/editorials"))
-                .build();
-    }
-
-    private View renderCreateEditorial(Actor actor, Problem problem, HtmlForm form) {
-        HtmlTemplate template = newProblemEditorialTemplate(actor, problem, false);
-        return new CreateEditorialView(template, (CreateEditorialForm) form);
-    }
-
-    private View renderEditEditorial(Actor actor, Problem problem, HtmlForm form, String language, Set<String> enabledLanguages) {
-        HtmlTemplate template = newProblemEditorialTemplate(actor, problem, true);
-        template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, (EditStatementForm) form, "/problems", language, enabledLanguages);
+        return redirect("/problems/" + problemId + "/editorials");
     }
 }

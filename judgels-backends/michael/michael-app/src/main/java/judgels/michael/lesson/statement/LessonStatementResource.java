@@ -7,7 +7,6 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +28,6 @@ import judgels.michael.resource.EditStatementForm;
 import judgels.michael.resource.EditStatementView;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.resource.ListStatementLanguagesView;
-import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
@@ -81,7 +79,9 @@ public class LessonStatementResource extends BaseLessonResource {
         form.title = statement.getTitle();
         form.text = statement.getText();
 
-        return renderEditStatement(actor, lesson, form, language, enabledLanguages);
+        HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
+        template.setActiveSecondaryTab("edit");
+        return new EditStatementView(template, form, "/lessons", language, enabledLanguages);
     }
 
     @POST
@@ -105,9 +105,7 @@ public class LessonStatementResource extends BaseLessonResource {
                 .text(form.text)
                 .build());
 
-        return Response
-                .seeOther(URI.create("/lessons/" + lessonId + "/statements"))
-                .build();
+        return redirect("/lessons/" + lessonId + "/statements");
     }
 
     @GET
@@ -151,9 +149,7 @@ public class LessonStatementResource extends BaseLessonResource {
             lessonStore.uploadStatementMediaFileZipped(actor.getUserJid(), lesson.getJid(), fileZippedStream);
         }
 
-        return Response
-                .seeOther(URI.create("/lessons/" + lessonId + "/statements/media"))
-                .build();
+        return redirect("/lessons/" + lessonId + "/statements/media");
     }
 
     @GET
@@ -205,15 +201,13 @@ public class LessonStatementResource extends BaseLessonResource {
         checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
         lessonStore.addLanguage(actor.getUserJid(), lesson.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
-                .build();
+        return redirect("/lessons/" + lessonId + "/statements/languages");
     }
 
     @GET
@@ -229,15 +223,13 @@ public class LessonStatementResource extends BaseLessonResource {
         checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
         lessonStore.enableLanguage(actor.getUserJid(), lesson.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
-                .build();
+        return redirect("/lessons/" + lessonId + "/statements/languages");
     }
 
     @GET
@@ -253,15 +245,13 @@ public class LessonStatementResource extends BaseLessonResource {
         checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
         lessonStore.disableLanguage(actor.getUserJid(), lesson.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
-                .build();
+        return redirect("/lessons/" + lessonId + "/statements/languages");
     }
 
     @GET
@@ -277,20 +267,12 @@ public class LessonStatementResource extends BaseLessonResource {
         checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return badRequest();
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
         lessonStore.makeDefaultLanguage(actor.getUserJid(), lesson.getJid(), language);
 
-        return Response
-                .seeOther(URI.create("/lessons/" + lessonId + "/statements/languages"))
-                .build();
-    }
-
-    private View renderEditStatement(Actor actor, Lesson lesson, HtmlForm form, String language, Set<String> enabledLanguages) {
-        HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
-        template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, (EditStatementForm) form, "/lessons", language, enabledLanguages);
+        return redirect("/lessons/" + lessonId + "/statements/languages");
     }
 }

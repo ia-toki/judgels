@@ -1,6 +1,7 @@
 package judgels.michael.index;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import io.dropwizard.jersey.sessions.Flash;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Date;
@@ -23,12 +24,11 @@ import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.michael.BaseResource;
-import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 
 @Path("/")
 public class IndexResource extends BaseResource {
-    private static final URI POST_LOGIN_URI = URI.create("/problems");
+    private static final String POST_LOGIN_URL = "/problems";
 
     @Inject protected SessionStore sessionStore;
     @Inject protected UserStore userStore;
@@ -44,33 +44,41 @@ public class IndexResource extends BaseResource {
     @GET
     @Path("/login")
     @UnitOfWork(readOnly = true)
-    public Response logIn(@CookieParam("JOPHIEL_TOKEN") String token) {
+    public Response logIn(@CookieParam("JOPHIEL_TOKEN") String token, LoginForm form) {
         if (token != null) {
             if (sessionStore.getSessionByToken(token).isPresent()) {
-                return Response.seeOther(POST_LOGIN_URI).build();
+                return redirect(POST_LOGIN_URL);
             }
         }
 
-        return renderLogIn(new LoginForm());
+        HtmlTemplate template = newTemplate();
+        template.setTitle("Log in");
+        return Response.ok(new LoginView(template, form)).build();
     }
 
     @POST
     @Path("/login")
     @UnitOfWork
-    public Response postLogIn(@Context UriInfo uriInfo, @BeanParam LoginForm form) {
+    public Response postLogIn(
+            @Context UriInfo uriInfo,
+            @io.dropwizard.jersey.sessions.Session Flash<String> flash,
+            @BeanParam LoginForm form) {
+
         Optional<User> maybeUser = userStore.getUserByUsernameAndPassword(form.username, form.password);
         if (!maybeUser.isPresent()) {
-            return renderLogIn(form.withGlobalError("Username or password incorrect."));
+            form.globalError = "Username or password incorrect.";
+            return logIn(null, form);
         }
 
         User user = maybeUser.get();
         if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
-            return renderLogIn(form.withGlobalError("Username or password incorrect."));
+            form.globalError = "Username or password incorrect.";
+            return logIn(null, form);
         }
 
         Session session = sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
         return Response
-                .seeOther(POST_LOGIN_URI)
+                .seeOther(URI.create(POST_LOGIN_URL))
                 .cookie(new NewCookie(
                         "JOPHIEL_TOKEN",
                         session.getToken(),
@@ -101,11 +109,5 @@ public class IndexResource extends BaseResource {
                         false,
                         true))
                 .build();
-    }
-
-    private Response renderLogIn(HtmlForm form) {
-        HtmlTemplate template = newTemplate();
-        template.setTitle("Log in");
-        return Response.ok(new LoginView(template, (LoginForm) form)).build();
     }
 }

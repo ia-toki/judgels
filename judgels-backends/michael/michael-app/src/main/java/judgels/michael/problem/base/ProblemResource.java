@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.net.URI;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -33,7 +32,6 @@ import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.profile.ProfileStore;
 import judgels.jophiel.user.UserStore;
-import judgels.michael.template.HtmlForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
@@ -89,29 +87,31 @@ public class ProblemResource extends BaseProblemResource {
     @GET
     @Path("/new")
     @UnitOfWork(readOnly = true)
-    public View createProblem(@Context HttpServletRequest req) {
+    public View createProblem(@Context HttpServletRequest req, CreateProblemForm form) {
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
-        CreateProblemForm form = new CreateProblemForm();
-        form.gradingEngine = "Batch";
-        form.initialLanguage = "en-US";
+        if (form == null) {
+            form = new CreateProblemForm();
+            form.gradingEngine = "Batch";
+            form.initialLanguage = "en-US";
+        }
 
-        return renderCreateProblem(actor, form);
+        HtmlTemplate template = newProblemsTemplate(actor);
+        template.setTitle("New problem");
+        return new CreateProblemView(template, form);
     }
 
     @POST
     @Path("/new")
     @UnitOfWork
-    public Response postCreateProblem(
-            @Context HttpServletRequest req,
-            @BeanParam CreateProblemForm form) {
-
+    public Response postCreateProblem(@Context HttpServletRequest req, @BeanParam CreateProblemForm form) {
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
         if (problemStore.problemExistsBySlug(form.slug)) {
-            return Response.ok(renderCreateProblem(actor, form.withGlobalError("Slug already exists."))).build();
+            form.globalError = "Slug already exists.";
+            return view(createProblem(req, form));
         }
 
         ProblemType type;
@@ -140,9 +140,7 @@ public class ProblemResource extends BaseProblemResource {
         problemStore.initRepository(actor.getUserJid(), problem.getJid());
 
         setCurrentStatementLanguage(req, form.initialLanguage);
-        return Response
-                .seeOther(URI.create("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements"))
-                .build();
+        return redirect("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
     }
 
     @POST
@@ -153,7 +151,7 @@ public class ProblemResource extends BaseProblemResource {
 
         setCurrentStatementLanguage(req, language);
         String referer = Optional.ofNullable(req.getHeader("Referer")).orElse("");
-        return Response.seeOther(URI.create(referer)).build();
+        return redirect(referer);
     }
 
     @GET
@@ -192,7 +190,8 @@ public class ProblemResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View editProblem(
             @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
+            @PathParam("problemId") int problemId,
+            EditProblemForm form) {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
@@ -204,16 +203,20 @@ public class ProblemResource extends BaseProblemResource {
                 .flatMap(List::stream)
                 .collect(Collectors.toSet()));
 
-        EditProblemForm form = new EditProblemForm();
-        form.slug = problem.getSlug();
-        form.additionalNote = problem.getAdditionalNote();
-        form.writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
-        form.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
-        form.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
-        form.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
-        form.tags = problemTagStore.findTopicTags(problem.getJid());
+        if (form == null) {
+            form = new EditProblemForm();
+            form.slug = problem.getSlug();
+            form.additionalNote = problem.getAdditionalNote();
+            form.writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
+            form.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
+            form.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
+            form.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
+            form.tags = problemTagStore.findTopicTags(problem.getJid());
+        }
 
-        return renderEditProblem(actor, problem, form);
+        HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
+        template.setActiveSecondaryTab("edit");
+        return new EditProblemView(template, form);
     }
 
     @POST
@@ -229,7 +232,8 @@ public class ProblemResource extends BaseProblemResource {
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
 
         if (!problem.getSlug().equals(form.slug) && problemStore.problemExistsBySlug(form.slug)) {
-            return Response.ok(renderEditProblem(actor, problem, form.withGlobalError("Slug already exists."))).build();
+            form.globalError = "Slug already exists.";
+            return view(editProblem(req, problemId, form));
         }
 
         problemStore.updateProblem(problem.getJid(), form.slug, form.additionalNote);
@@ -249,9 +253,7 @@ public class ProblemResource extends BaseProblemResource {
 
         problemTagStore.updateTopicTags(problem.getJid(), form.tags);
 
-        return Response
-                .seeOther(URI.create("/problems/" + problemId))
-                .build();
+        return redirect("/problems/" + problemId);
     }
 
     private String userJidsToUsernames(List<String> userJids, Map<String, Profile> profilesMap) {
@@ -295,17 +297,5 @@ public class ProblemResource extends BaseProblemResource {
         template.addSecondaryTab("view", "View", "/problems/" + problem.getId());
         template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/edit");
         return template;
-    }
-
-    private View renderCreateProblem(Actor actor, HtmlForm form) {
-        HtmlTemplate template = newProblemsTemplate(actor);
-        template.setTitle("New problem");
-        return new CreateProblemView(template, (CreateProblemForm) form);
-    }
-
-    private View renderEditProblem(Actor actor, Problem problem, HtmlForm form) {
-        HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
-        template.setActiveSecondaryTab("edit");
-        return new EditProblemView(template, (EditProblemForm) form);
     }
 }
