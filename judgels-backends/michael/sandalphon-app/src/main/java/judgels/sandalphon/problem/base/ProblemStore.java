@@ -315,6 +315,15 @@ public class ProblemStore extends AbstractProblemStore {
                 .collect(Collectors.toSet());
     }
 
+    public Set<String> getEditorialEnabledLanguages(String userJid, String problemJid) {
+        return getEditorialAvailableLanguages(userJid, problemJid)
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue() == StatementLanguageStatus.ENABLED)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet());
+    }
+
     public void addEditorialLanguage(String userJid, String problemJid, String language) {
         Map<String, StatementLanguageStatus> availableLanguages = getEditorialAvailableLanguages(userJid, problemJid);
         availableLanguages.put(language, StatementLanguageStatus.ENABLED);

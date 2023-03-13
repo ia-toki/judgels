@@ -24,6 +24,16 @@ public abstract class BaseProblemResource extends BaseResource {
         return language;
     }
 
+    protected String resolveEditorialLanguage(HttpServletRequest req, Actor actor, Problem problem, Set<String> enabledLanguages) {
+        String language = (String) req.getSession().getAttribute("statementLanguage");
+        if (language == null || !enabledLanguages.contains(language)) {
+            language = problemStore.getEditorialDefaultLanguage(actor.getUserJid(), problem.getJid());
+        }
+
+        setCurrentStatementLanguage(req, language);
+        return language;
+    }
+
     protected HtmlTemplate newProblemsTemplate(Actor actor) {
         HtmlTemplate template = super.newTemplate(actor);
         template.setActiveSidebarMenu("problems");
@@ -35,6 +45,7 @@ public abstract class BaseProblemResource extends BaseResource {
         template.setTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.addMainTab("general", "General", "/problems/" + problem.getId());
         template.addMainTab("statements", "Statements", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
+        template.addMainTab("editorials", "Editorials", "/problems/" + problem.getId() + "/editorials");
         return template;
     }
 
@@ -45,6 +56,16 @@ public abstract class BaseProblemResource extends BaseResource {
         template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/statements/edit");
         template.addSecondaryTab("media", "Media", "/problems/" + problem.getId() + "/statements/media");
         template.addSecondaryTab("languages", "Languages", "/problems/" + problem.getId() + "/statements/languages");
+        return template;
+    }
+
+    protected HtmlTemplate newProblemEditorialTemplate(Actor actor, Problem problem, boolean hasEditorial) {
+        HtmlTemplate template = newProblemTemplate(actor, problem);
+        template.setActiveMainTab("editorials");
+        if (hasEditorial) {
+            template.addSecondaryTab("view", "View", "/problems/" + problem.getId() + "/editorials");
+            template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/editorials/edit");
+        }
         return template;
     }
 }

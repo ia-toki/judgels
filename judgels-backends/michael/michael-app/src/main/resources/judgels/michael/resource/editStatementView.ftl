@@ -9,7 +9,9 @@
   <@switchLanguage.view basePath=basePath languages=enabledLanguages language=language/>
 
   <@forms.form>
-    <@forms.text form=form name="title" label="Title" required=true/>
+    <#if form.title?has_content>
+      <@forms.text form=form name="title" label="Title" required=true/>
+    </#if>
     <label class="control-label">Text</label>
     <#include "statementManualButtons.html">
     <div></div>
