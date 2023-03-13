@@ -56,6 +56,6 @@ public class ProgrammingProblemStatementResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
-        return new ViewStatementView(template, problem, statement, language, enabledLanguages, gradingConfig, gradingEngine, allowedGradingLanguages, reasonNotAllowedToSubmit);
+        return new ViewStatementView(template, statement, language, enabledLanguages, gradingConfig, gradingEngine, allowedGradingLanguages, reasonNotAllowedToSubmit);
     }
 }

@@ -59,7 +59,7 @@ public class LessonStatementResource extends BaseLessonResource {
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("view");
-        return new ViewStatementView(template, lesson, statement, language, enabledLanguages);
+        return new ViewStatementView(template, statement, language, enabledLanguages);
     }
 
     @GET

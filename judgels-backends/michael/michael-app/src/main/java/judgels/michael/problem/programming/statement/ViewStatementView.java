@@ -6,12 +6,10 @@ import java.util.Set;
 import judgels.gabriel.api.GradingConfig;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 
 public class ViewStatementView extends TemplateView {
-    private final Problem problem;
     private final ProblemStatement statement;
     private final String language;
     private final Set<String> enabledLanguages;
@@ -22,7 +20,6 @@ public class ViewStatementView extends TemplateView {
 
     public ViewStatementView(
             HtmlTemplate template,
-            Problem problem,
             ProblemStatement statement,
             String language,
             Set<String> enabledLanguages,
@@ -32,7 +29,6 @@ public class ViewStatementView extends TemplateView {
             String reasonNotAllowedToSubmit) {
 
         super("viewStatementView.ftl", template);
-        this.problem = problem;
         this.statement = statement;
         this.language = language;
         this.enabledLanguages = enabledLanguages;
@@ -40,10 +36,6 @@ public class ViewStatementView extends TemplateView {
         this.gradingEngine = gradingEngine;
         this.allowedGradingLanguages = allowedGradingLanguages;
         this.reasonNotAllowedToSubmit = reasonNotAllowedToSubmit;
-    }
-
-    public Problem getProblem() {
-        return problem;
     }
 
     public ProblemStatement getStatement() {
