@@ -173,7 +173,7 @@ public class LessonStatementResource extends BaseLessonResource {
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, req.getRequestURI(), availableLanguages, defaultLanguage);
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
     }
 
     @POST

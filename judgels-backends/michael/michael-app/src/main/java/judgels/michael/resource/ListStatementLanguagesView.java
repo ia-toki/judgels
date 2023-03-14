@@ -7,24 +7,17 @@ import judgels.sandalphon.resource.StatementLanguageStatus;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 
 public class ListStatementLanguagesView extends TemplateView {
-    private final String basePath;
     private final Map<String, StatementLanguageStatus> availableLanguages;
     private final String defaultLanguage;
 
     public ListStatementLanguagesView(
             HtmlTemplate template,
-            String basePath,
             Map<String, StatementLanguageStatus> availableLanguages,
             String defaultLanguage) {
 
         super("listStatementLanguagesView.ftl", template);
-        this.basePath = basePath;
         this.availableLanguages = availableLanguages;
         this.defaultLanguage = defaultLanguage;
-    }
-
-    public String getBasePath() {
-        return basePath;
     }
 
     public Map<String, StatementLanguageStatus> getAvailableLanguages() {

@@ -199,7 +199,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, req.getRequestURI(), availableLanguages, defaultLanguage);
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
     }
 
     @POST

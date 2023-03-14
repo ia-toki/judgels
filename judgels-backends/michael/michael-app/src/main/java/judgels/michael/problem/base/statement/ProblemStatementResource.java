@@ -156,7 +156,7 @@ public class ProblemStatementResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, req.getRequestURI(), availableLanguages, defaultLanguage);
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
     }
 
     @POST
