@@ -10,5 +10,4 @@
       </li>
     </#list>
   </ul>
-  <br>
 </#macro>

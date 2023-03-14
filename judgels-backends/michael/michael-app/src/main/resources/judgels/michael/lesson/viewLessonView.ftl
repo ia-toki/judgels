@@ -3,6 +3,7 @@
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 
 <@template.layout>
+  <h3>Info</h3>
   <table class="table">
     <tbody>
       <tr>

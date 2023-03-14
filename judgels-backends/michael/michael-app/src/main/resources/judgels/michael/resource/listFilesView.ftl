@@ -14,9 +14,8 @@
     <@forms.file name="fileZipped" label="Upload zipped file"/>
     <@forms.submit>Upload</@forms.submit>
   </@forms.multipartForm>
-
+  <hr>
   <h3>Files</h3>
-
   <@table.layout>
     <thead>
       <tr>

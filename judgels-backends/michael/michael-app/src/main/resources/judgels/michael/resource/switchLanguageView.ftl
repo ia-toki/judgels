@@ -1,6 +1,7 @@
 <#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
 
 <#macro view languages language>
+  <br>
   <div class="small pull-left">
     Current language: <span class="label label-default">${languages[language]}</span>
   </div>

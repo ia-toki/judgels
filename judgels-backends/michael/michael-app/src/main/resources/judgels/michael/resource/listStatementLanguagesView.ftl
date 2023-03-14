@@ -10,9 +10,8 @@
     <@forms.select name="language" label="Language" options=languages/>
     <@forms.submit>Add</@forms.submit>
   </@forms.form>
-
+  <hr>
   <h3>Available languages</h3>
-
   <@table.layout>
     <thead>
       <tr>
