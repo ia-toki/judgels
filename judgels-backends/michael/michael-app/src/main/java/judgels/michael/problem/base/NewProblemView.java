@@ -7,9 +7,9 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 
-public class CreateProblemView extends TemplateView {
-    public CreateProblemView(HtmlTemplate template, CreateProblemForm form) {
-        super("createProblemView.ftl", template, form);
+public class NewProblemView extends TemplateView {
+    public NewProblemView(HtmlTemplate template, NewProblemForm form) {
+        super("newProblemView.ftl", template, form);
     }
 
     public Map<String, String> getLanguages() {

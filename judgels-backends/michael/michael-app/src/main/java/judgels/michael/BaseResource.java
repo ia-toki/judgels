@@ -19,7 +19,7 @@ public abstract class BaseResource {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    protected Response view(View v) {
+    protected Response ok(View v) {
         return Response.ok(v).build();
     }
 

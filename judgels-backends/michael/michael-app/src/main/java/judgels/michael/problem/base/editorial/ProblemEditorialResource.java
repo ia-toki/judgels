@@ -44,20 +44,17 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @GET
     @Path("")
     @UnitOfWork(readOnly = true)
-    public View viewEditorial(
-             @Context HttpServletRequest req,
-             @PathParam("problemId") int problemId) {
-
+    public View viewEditorial(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canView(actor, problem));
 
         if (!problemStore.hasEditorial(actor.getUserJid(), problem.getJid())) {
-            CreateEditorialForm form = new CreateEditorialForm();
+            NewEditorialForm form = new NewEditorialForm();
             form.initialLanguage = "en-US";
 
             HtmlTemplate template = newProblemEditorialTemplate(actor, problem, false);
-            return new CreateEditorialView(template, form);
+            return new NewEditorialView(template, form);
         }
 
         Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
@@ -72,10 +69,10 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @POST
     @Path("")
     @UnitOfWork
-    public Response postCreateEditorial(
+    public Response createEditorial(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
-            @BeanParam CreateEditorialForm form) {
+            @BeanParam NewEditorialForm form) {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
@@ -91,10 +88,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @GET
     @Path("/edit")
     @UnitOfWork(readOnly = true)
-    public View editEditorial(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View editEditorial(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
@@ -114,7 +108,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @POST
     @Path("/edit")
     @UnitOfWork
-    public Response postEditEditorial(
+    public Response updateEditorial(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
             @BeanParam EditStatementForm form) {
@@ -137,10 +131,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @GET
     @Path("/media")
     @UnitOfWork(readOnly = true)
-    public View listEditorialMediaFiles(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View listEditorialMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
@@ -156,7 +147,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @Path("/media")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
-    public Response postUploadEditorialMediaFiles(
+    public Response uploadEditorialMediaFiles(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
             @FormDataParam("file") InputStream fileStream,
@@ -197,10 +188,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @GET
     @Path("/languages")
     @UnitOfWork(readOnly = true)
-    public View listEditorialLanguages(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View listEditorialLanguages(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
@@ -217,7 +205,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @POST
     @Path("/languages")
     @UnitOfWork(readOnly = true)
-    public Response postAddEditorialLanguage(
+    public Response addEditorialLanguage(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
             @FormParam("language") String language) {

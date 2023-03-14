@@ -5,9 +5,9 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 
-public class CreateLessonView extends TemplateView {
-    public CreateLessonView(HtmlTemplate template, CreateLessonForm form) {
-        super("createLessonView.ftl", template, form);
+public class NewLessonView extends TemplateView {
+    public NewLessonView(HtmlTemplate template, NewLessonForm form) {
+        super("newLessonView.ftl", template, form);
     }
 
     public Map<String, String> getLanguages() {

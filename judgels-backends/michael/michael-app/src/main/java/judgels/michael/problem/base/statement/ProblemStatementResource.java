@@ -44,10 +44,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @GET
     @Path("/edit")
     @UnitOfWork(readOnly = true)
-    public View editStatement(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View editStatement(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
@@ -68,7 +65,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @POST
     @Path("/edit")
     @UnitOfWork
-    public Response postEditStatement(
+    public Response updateStatement(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
             @BeanParam EditStatementForm form) {
@@ -92,10 +89,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @GET
     @Path("/media")
     @UnitOfWork(readOnly = true)
-    public View listStatementMediaFiles(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View listStatementMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
@@ -111,7 +105,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @Path("/media")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
-    public Response postUploadStatementMediaFiles(
+    public Response uploadStatementMediaFiles(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
             @FormDataParam("file") InputStream fileStream,
@@ -152,10 +146,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @GET
     @Path("/languages")
     @UnitOfWork(readOnly = true)
-    public View listStatementLanguages(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View listStatementLanguages(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
@@ -171,7 +162,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @POST
     @Path("/languages")
     @UnitOfWork(readOnly = true)
-    public Response postAddStatementLanguage(
+    public Response addStatementLanguage(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
             @FormParam("language") String language) {

@@ -3,7 +3,7 @@ package judgels.michael.problem.base;
 import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
-public class CreateProblemForm extends HtmlForm {
+public class NewProblemForm extends HtmlForm {
     @FormParam("slug")
     String slug;
 

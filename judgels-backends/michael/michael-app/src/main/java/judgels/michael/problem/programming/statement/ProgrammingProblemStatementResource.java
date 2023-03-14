@@ -30,10 +30,7 @@ public class ProgrammingProblemStatementResource extends BaseProblemResource {
 
     @GET
     @UnitOfWork(readOnly = true)
-    public View viewStatement(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View viewStatement(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canView(actor, problem));

@@ -87,31 +87,33 @@ public class ProblemResource extends BaseProblemResource {
     @GET
     @Path("/new")
     @UnitOfWork(readOnly = true)
-    public View createProblem(@Context HttpServletRequest req, CreateProblemForm form) {
+    public View newProblem(@Context HttpServletRequest req) {
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
-        if (form == null) {
-            form = new CreateProblemForm();
-            form.gradingEngine = "Batch";
-            form.initialLanguage = "en-US";
-        }
+        NewProblemForm form = new NewProblemForm();
+        form.gradingEngine = "Batch";
+        form.initialLanguage = "en-US";
 
+        return renderNewProblem(actor, form);
+    }
+
+    private View renderNewProblem(Actor actor, NewProblemForm form) {
         HtmlTemplate template = newProblemsTemplate(actor);
         template.setTitle("New problem");
-        return new CreateProblemView(template, form);
+        return new NewProblemView(template, form);
     }
 
     @POST
     @Path("/new")
     @UnitOfWork
-    public Response postCreateProblem(@Context HttpServletRequest req, @BeanParam CreateProblemForm form) {
+    public Response createProblem(@Context HttpServletRequest req, @BeanParam NewProblemForm form) {
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
         if (problemStore.problemExistsBySlug(form.slug)) {
             form.globalError = "Slug already exists.";
-            return view(createProblem(req, form));
+            return ok(renderNewProblem(actor, form));
         }
 
         ProblemType type;
@@ -145,10 +147,7 @@ public class ProblemResource extends BaseProblemResource {
 
     @POST
     @Path("/switchLanguage")
-    public Response switchLanguage(
-            @Context HttpServletRequest req,
-            @FormParam("language") String language) {
-
+    public Response switchLanguage(@Context HttpServletRequest req, @FormParam("language") String language) {
         setCurrentStatementLanguage(req, language);
         String referer = Optional.ofNullable(req.getHeader("Referer")).orElse("");
         return redirect(referer);
@@ -157,10 +156,7 @@ public class ProblemResource extends BaseProblemResource {
     @GET
     @Path("/{problemId}")
     @UnitOfWork(readOnly = true)
-    public View viewProblem(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
-
+    public View viewProblem(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canView(actor, problem));
@@ -188,11 +184,7 @@ public class ProblemResource extends BaseProblemResource {
     @GET
     @Path("/{problemId}/edit")
     @UnitOfWork(readOnly = true)
-    public View editProblem(
-            @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId,
-            EditProblemForm form) {
-
+    public View editProblem(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.canEdit(actor, problem));
@@ -203,17 +195,19 @@ public class ProblemResource extends BaseProblemResource {
                 .flatMap(List::stream)
                 .collect(Collectors.toSet()));
 
-        if (form == null) {
-            form = new EditProblemForm();
-            form.slug = problem.getSlug();
-            form.additionalNote = problem.getAdditionalNote();
-            form.writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
-            form.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
-            form.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
-            form.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
-            form.tags = problemTagStore.findTopicTags(problem.getJid());
-        }
+        EditProblemForm form = new EditProblemForm();
+        form.slug = problem.getSlug();
+        form.additionalNote = problem.getAdditionalNote();
+        form.writerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.WRITER), profilesMap);
+        form.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
+        form.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
+        form.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
+        form.tags = problemTagStore.findTopicTags(problem.getJid());
 
+        return renderEditProblem(actor, problem, form);
+    }
+
+    private View renderEditProblem(Actor actor, Problem problem, EditProblemForm form) {
         HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
         template.setActiveSecondaryTab("edit");
         return new EditProblemView(template, form);
@@ -222,7 +216,7 @@ public class ProblemResource extends BaseProblemResource {
     @POST
     @Path("/{problemId}/edit")
     @UnitOfWork
-    public Response postEditProblem(
+    public Response updateProblem(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
             @BeanParam EditProblemForm form) {
@@ -233,7 +227,7 @@ public class ProblemResource extends BaseProblemResource {
 
         if (!problem.getSlug().equals(form.slug) && problemStore.problemExistsBySlug(form.slug)) {
             form.globalError = "Slug already exists.";
-            return view(editProblem(req, problemId, form));
+            return ok(renderEditProblem(actor, problem, form));
         }
 
         problemStore.updateProblem(problem.getJid(), form.slug, form.additionalNote);

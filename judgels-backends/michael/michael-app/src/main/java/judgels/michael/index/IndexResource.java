@@ -1,7 +1,7 @@
 package judgels.michael.index;
 
 import io.dropwizard.hibernate.UnitOfWork;
-import io.dropwizard.jersey.sessions.Flash;
+import io.dropwizard.views.View;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Date;
@@ -44,36 +44,35 @@ public class IndexResource extends BaseResource {
     @GET
     @Path("/login")
     @UnitOfWork(readOnly = true)
-    public Response logIn(@CookieParam("JOPHIEL_TOKEN") String token, LoginForm form) {
+    public Response login(@CookieParam("JOPHIEL_TOKEN") String token) {
         if (token != null) {
             if (sessionStore.getSessionByToken(token).isPresent()) {
                 return redirect(POST_LOGIN_URL);
             }
         }
+        return ok(renderLogin(new LoginForm()));
+    }
 
+    private View renderLogin(LoginForm form) {
         HtmlTemplate template = newTemplate();
         template.setTitle("Log in");
-        return Response.ok(new LoginView(template, form)).build();
+        return new LoginView(template, form);
     }
 
     @POST
     @Path("/login")
     @UnitOfWork
-    public Response postLogIn(
-            @Context UriInfo uriInfo,
-            @io.dropwizard.jersey.sessions.Session Flash<String> flash,
-            @BeanParam LoginForm form) {
-
+    public Response logIn(@Context UriInfo uriInfo, @BeanParam LoginForm form) {
         Optional<User> maybeUser = userStore.getUserByUsernameAndPassword(form.username, form.password);
         if (!maybeUser.isPresent()) {
             form.globalError = "Username or password incorrect.";
-            return logIn(null, form);
+            return ok(renderLogin(form));
         }
 
         User user = maybeUser.get();
         if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
             form.globalError = "Username or password incorrect.";
-            return logIn(null, form);
+            return ok(renderLogin(form));
         }
 
         Session session = sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());

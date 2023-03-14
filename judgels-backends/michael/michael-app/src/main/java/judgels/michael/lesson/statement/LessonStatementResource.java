@@ -43,10 +43,7 @@ public class LessonStatementResource extends BaseLessonResource {
 
     @GET
     @UnitOfWork(readOnly = true)
-    public View viewStatement(
-            @Context HttpServletRequest req,
-            @PathParam("lessonId") int lessonId) {
-
+    public View viewStatement(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.canView(actor, lesson));
@@ -63,10 +60,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @GET
     @Path("/edit")
     @UnitOfWork(readOnly = true)
-    public View editStatement(
-            @Context HttpServletRequest req,
-            @PathParam("lessonId") int lessonId) {
-
+    public View editStatement(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.canView(actor, lesson));
@@ -87,7 +81,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @POST
     @Path("/edit")
     @UnitOfWork
-    public Response postEditStatement(
+    public Response updateStatement(
             @Context HttpServletRequest req,
             @PathParam("lessonId") int lessonId,
             @BeanParam EditStatementForm form) {
@@ -111,10 +105,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @GET
     @Path("/media")
     @UnitOfWork(readOnly = true)
-    public View listStatementMediaFiles(
-            @Context HttpServletRequest req,
-            @PathParam("lessonId") int lessonId) {
-
+    public View listStatementMediaFiles(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
@@ -130,7 +121,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @Path("/media")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
-    public Response postUploadStatementMediaFiles(
+    public Response uploadStatementMediaFiles(
             @Context HttpServletRequest req,
             @PathParam("lessonId") int lessonId,
             @FormDataParam("file") InputStream fileStream,
@@ -171,10 +162,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @GET
     @Path("/languages")
     @UnitOfWork(readOnly = true)
-    public View listStatementLanguages(
-            @Context HttpServletRequest req,
-            @PathParam("lessonId") int lessonId) {
-
+    public View listStatementLanguages(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
@@ -191,7 +179,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @POST
     @Path("/languages")
     @UnitOfWork(readOnly = true)
-    public Response postAddStatementLanguage(
+    public Response addStatementLanguage(
             @Context HttpServletRequest req,
             @PathParam("lessonId") int lessonId,
             @FormParam("language") String language) {

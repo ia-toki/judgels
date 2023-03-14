@@ -66,30 +66,32 @@ public class LessonResource extends BaseLessonResource {
     @GET
     @Path("/new")
     @UnitOfWork(readOnly = true)
-    public View createLesson(@Context HttpServletRequest req, CreateLessonForm form) {
+    public View newLesson(@Context HttpServletRequest req) {
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
-        if (form == null) {
-            form = new CreateLessonForm();
-            form.initialLanguage = "en-US";
-        }
+        NewLessonForm form = new NewLessonForm();
+        form.initialLanguage = "en-US";
 
+        return renderNewLesson(actor, form);
+    }
+
+    public View renderNewLesson(Actor actor, NewLessonForm form) {
         HtmlTemplate template = newLessonsTemplate(actor);
         template.setTitle("New lesson");
-        return new CreateLessonView(template, form);
+        return new NewLessonView(template, form);
     }
 
     @POST
     @Path("/new")
     @UnitOfWork
-    public Response postCreateLesson(@Context HttpServletRequest req, @BeanParam CreateLessonForm form) {
+    public Response createLesson(@Context HttpServletRequest req, @BeanParam NewLessonForm form) {
         Actor actor = actorChecker.check(req);
         checkAllowed(roleChecker.isWriter(actor));
 
         if (lessonStore.lessonExistsBySlug(form.slug)) {
             form.globalError = "Slug already exists.";
-            return view(createLesson(req, form));
+            return ok(renderNewLesson(actor, form));
         }
 
         Lesson lesson = lessonStore.createLesson(form.slug, form.additionalNote, form.initialLanguage);
@@ -106,10 +108,7 @@ public class LessonResource extends BaseLessonResource {
 
     @POST
     @Path("/switchLanguage")
-    public Response switchLanguage(
-            @Context HttpServletRequest req,
-            @FormParam("language") String language) {
-
+    public Response switchLanguage(@Context HttpServletRequest req, @FormParam("language") String language) {
         setCurrentStatementLanguage(req, language);
         String referer = Optional.ofNullable(req.getHeader("Referer")).orElse("");
         return redirect(referer);
@@ -118,10 +117,7 @@ public class LessonResource extends BaseLessonResource {
     @GET
     @Path("/{lessonId}")
     @UnitOfWork(readOnly = true)
-    public View viewLesson(
-            @Context HttpServletRequest req,
-            @PathParam("lessonId") int lessonId) {
-
+    public View viewLesson(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.canView(actor, lesson));
@@ -136,21 +132,19 @@ public class LessonResource extends BaseLessonResource {
     @GET
     @Path("/{lessonId}/edit")
     @UnitOfWork(readOnly = true)
-    public View editLesson(
-            @Context HttpServletRequest req,
-            @PathParam("lessonId") int lessonId,
-            EditLessonForm form) {
-
+    public View editLesson(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
-        if (form == null) {
-            form = new EditLessonForm();
-            form.slug = lesson.getSlug();
-            form.additionalNote = lesson.getAdditionalNote();
-        }
+        EditLessonForm form = new EditLessonForm();
+        form.slug = lesson.getSlug();
+        form.additionalNote = lesson.getAdditionalNote();
 
+        return renderEditLesson(actor, lesson, form);
+    }
+
+    private View renderEditLesson(Actor actor, Lesson lesson, EditLessonForm form) {
         HtmlTemplate template = newLessonGeneralTemplate(actor, lesson);
         template.setActiveSecondaryTab("edit");
         return new EditLessonView(template, form);
@@ -159,7 +153,7 @@ public class LessonResource extends BaseLessonResource {
     @POST
     @Path("/{lessonId}/edit")
     @UnitOfWork
-    public Response postEditLesson(
+    public Response updateLesson(
             @Context HttpServletRequest req,
             @PathParam("lessonId") int lessonId,
             @BeanParam EditLessonForm form) {
@@ -170,7 +164,7 @@ public class LessonResource extends BaseLessonResource {
 
         if (!lesson.getSlug().equals(form.slug) && lessonStore.lessonExistsBySlug(form.slug)) {
             form.globalError = "Slug already exists.";
-            return view(editLesson(req, lessonId, form));
+            return ok(renderEditLesson(actor, lesson, form));
         }
 
         lessonStore.updateLesson(lesson.getJid(), form.slug, form.additionalNote);

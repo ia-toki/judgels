@@ -5,9 +5,9 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 
-public class CreateEditorialView extends TemplateView {
-    public CreateEditorialView(HtmlTemplate template, CreateEditorialForm form) {
-        super("createEditorialView.ftl", template, form);
+public class NewEditorialView extends TemplateView {
+    public NewEditorialView(HtmlTemplate template, NewEditorialForm form) {
+        super("newEditorialView.ftl", template, form);
     }
 
     public Map<String, String> getLanguages() {

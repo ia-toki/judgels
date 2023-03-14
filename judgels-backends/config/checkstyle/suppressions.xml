@@ -16,7 +16,6 @@
     <suppress files="[/\\]src[/\\].*[Tt]est[/\\](java|groovy)[/\\]" id="BanSystemErr" />
 
 
-    <suppress files="[\\/]michael-app[\\/]" checks="ParameterAssignment" />
     <suppress files="[\\/]michael-app[\\/]" checks="VisibilityModifier" />
 
     <suppress files="routes.java" checks="." />
