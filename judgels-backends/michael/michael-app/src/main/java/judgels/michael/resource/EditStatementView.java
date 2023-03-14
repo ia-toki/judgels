@@ -8,25 +8,18 @@ import judgels.michael.template.TemplateView;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 
 public class EditStatementView extends TemplateView {
-    private final String basePath;
     private final String language;
     private final Set<String> enabledLanguages;
 
     public EditStatementView(
             HtmlTemplate template,
             EditStatementForm form,
-            String basePath,
             String language,
             Set<String> enabledLanguages) {
 
         super("editStatementView.ftl", template, form);
-        this.basePath = basePath;
         this.language = language;
         this.enabledLanguages = enabledLanguages;
-    }
-
-    public String getBasePath() {
-        return basePath;
     }
 
     public String getLanguage() {

@@ -7,8 +7,10 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.CookieParam;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -108,5 +110,13 @@ public class IndexResource extends BaseResource {
                         false,
                         true))
                 .build();
+    }
+
+    @POST
+    @Path("/switchLanguage")
+    public Response switchLanguage(@Context HttpServletRequest req, @FormParam("language") String language) {
+        setCurrentStatementLanguage(req, language);
+        String referer = Optional.ofNullable(req.getHeader("Referer")).orElse("");
+        return redirect(referer);
     }
 }

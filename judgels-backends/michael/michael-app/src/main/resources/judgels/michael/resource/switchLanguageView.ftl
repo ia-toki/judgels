@@ -1,12 +1,12 @@
 <#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
 
-<#macro view basePath languages language>
+<#macro view languages language>
   <div class="small pull-left">
     Current language: <span class="label label-default">${languages[language]}</span>
   </div>
 
   <div class="pull-right">
-    <@forms.form action="${basePath}/switchLanguage">
+    <@forms.form action="/switchLanguage">
       <label for="language"><span class="small">Switch to</span></label>
       <div class="form-group">
         <select id="language" name="language">

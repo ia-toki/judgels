@@ -13,14 +13,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -143,14 +141,6 @@ public class ProblemResource extends BaseProblemResource {
 
         setCurrentStatementLanguage(req, form.initialLanguage);
         return redirect("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
-    }
-
-    @POST
-    @Path("/switchLanguage")
-    public Response switchLanguage(@Context HttpServletRequest req, @FormParam("language") String language) {
-        setCurrentStatementLanguage(req, language);
-        String referer = Optional.ofNullable(req.getHeader("Referer")).orElse("");
-        return redirect(referer);
     }
 
     @GET

@@ -75,7 +75,7 @@ public class LessonStatementResource extends BaseLessonResource {
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, form, "/lessons", language, enabledLanguages);
+        return new EditStatementView(template, form, language, enabledLanguages);
     }
 
     @POST

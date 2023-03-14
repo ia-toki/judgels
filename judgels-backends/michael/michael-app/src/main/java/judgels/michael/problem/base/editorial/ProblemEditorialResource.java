@@ -102,7 +102,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, form, "/problems", language, enabledLanguages);
+        return new EditStatementView(template, form, language, enabledLanguages);
     }
 
     @POST

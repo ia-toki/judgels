@@ -6,7 +6,7 @@
 
 <@template.layout>
   <#include "ckeditor.ftl">
-  <@switchLanguage.view basePath=basePath languages=enabledLanguages language=language/>
+  <@switchLanguage.view languages=enabledLanguages language=language/>
 
   <@forms.form>
     <#if form.title?has_content>

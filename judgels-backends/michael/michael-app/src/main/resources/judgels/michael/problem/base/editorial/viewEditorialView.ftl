@@ -5,7 +5,7 @@
 
 <@template.layout>
   <#include "/judgels/michael/resource/katex.ftl">
-  <@switchLanguage.view basePath="/lessons" languages=enabledLanguages language=language/>
+  <@switchLanguage.view languages=enabledLanguages language=language/>
 
   <div class="content-text">
     ${editorial.text?no_esc}
