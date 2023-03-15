@@ -4,6 +4,8 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import judgels.jophiel.api.actor.Actor;
+import judgels.jophiel.profile.ProfileStore;
+import judgels.jophiel.user.UserStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
@@ -13,6 +15,8 @@ import judgels.sandalphon.problem.base.ProblemStore;
 public abstract class BaseProblemResource extends BaseResource {
     @Inject protected ProblemStore problemStore;
     @Inject protected ProblemRoleChecker problemRoleChecker;
+    @Inject protected UserStore userStore;
+    @Inject protected ProfileStore profileStore;
 
     protected String resolveStatementLanguage(HttpServletRequest req, Actor actor, Problem problem, Set<String> enabledLanguages) {
         String language = (String) req.getSession().getAttribute("statementLanguage");
@@ -45,6 +49,7 @@ public abstract class BaseProblemResource extends BaseResource {
         template.setTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.addMainTab("general", "General", "/problems/" + problem.getId());
         template.addMainTab("statements", "Statements", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
+        template.addMainTab("partners", "Partners", "/problems/" + problem.getId() + "/partners");
         template.addMainTab("editorials", "Editorials", "/problems/" + problem.getId() + "/editorials");
         return template;
     }

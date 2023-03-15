@@ -28,8 +28,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.profile.ProfileStore;
-import judgels.jophiel.user.UserStore;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
@@ -51,8 +49,6 @@ public class ProblemResource extends BaseProblemResource {
     @Inject protected ProgrammingProblemStore programmingProblemStore;
     @Inject protected ProblemSearchStore problemSearchStore;
     @Inject protected ProblemTagStore problemTagStore;
-    @Inject protected UserStore userStore;
-    @Inject protected ProfileStore profileStore;
 
     @Inject public ProblemResource() {}
 

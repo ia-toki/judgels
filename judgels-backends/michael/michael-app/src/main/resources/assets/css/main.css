@@ -329,6 +329,11 @@ th {
   width: 80px;
 }
 
+.table-col-permissions {
+  width: 100px;
+}
+
+
 .statement-help-modal-body, .statement-help-modal-body pre {
   font-size: 12px;
 }

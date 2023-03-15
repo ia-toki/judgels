@@ -1,11 +1,13 @@
 package judgels.sandalphon.hibernate;
 
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.sandalphon.persistence.ProblemPartnerDao;
@@ -56,5 +58,20 @@ public final class ProblemPartnerHibernateDao extends HibernateDao<ProblemPartne
                 .where(cb.equal(root.get(ProblemPartnerModel_.userJid), partnerJid));
 
         return currentSession().createQuery(query).getResultList();
+    }
+
+    @Override
+    public Optional<ProblemPartnerModel> selectByProblemJidAndUserJid(String problemJid, String userJid) {
+        return selectByFilter(new FilterOptions.Builder<ProblemPartnerModel>()
+                .putColumnsEq(ProblemPartnerModel_.problemJid, problemJid)
+                .putColumnsEq(ProblemPartnerModel_.userJid, userJid)
+                .build());
+    }
+
+    @Override
+    public List<ProblemPartnerModel> selectAllByProblemJid(String problemJid) {
+        return selectAll(new FilterOptions.Builder<ProblemPartnerModel>()
+                .putColumnsEq(ProblemPartnerModel_.problemJid, problemJid)
+                .build());
     }
 }

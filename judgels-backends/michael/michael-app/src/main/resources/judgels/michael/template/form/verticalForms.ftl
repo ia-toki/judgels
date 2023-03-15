@@ -15,6 +15,12 @@
   </div>
 </#macro>
 
+<#macro textarea name form={}>
+  <div class="form-group">
+    <textarea rows="10" id="${name}" name="${name}" class="form-control">${form[name]!""}</textarea>
+  </div>
+</#macro>
+
 <#macro submit>
   <div class="form-group">
     <button type="submit" class="btn btn-primary">

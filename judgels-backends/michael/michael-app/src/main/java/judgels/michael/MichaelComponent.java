@@ -11,6 +11,7 @@ import judgels.michael.lesson.render.LessonStatementRenderResources;
 import judgels.michael.lesson.statement.LessonStatementResource;
 import judgels.michael.problem.base.ProblemResource;
 import judgels.michael.problem.base.editorial.ProblemEditorialResource;
+import judgels.michael.problem.base.partner.ProblemPartnerResource;
 import judgels.michael.problem.base.statement.ProblemStatementResource;
 import judgels.michael.problem.programming.statement.ProgrammingProblemStatementResource;
 import judgels.michael.problem.render.ProblemEditorialRenderResources;
@@ -46,6 +47,7 @@ public interface MichaelComponent {
     ProblemStatementResource problemStatementResource();
     ProblemStatementRenderResources.InEditProblemStatement problemStatementRenderResourceInEditProblemStatement();
     ProblemStatementRenderResources.InViewProgrammingProblemStatement problemStatementRenderResourceInViewProgrammingProblemStatement();
+    ProblemPartnerResource problemPartnerResource();
     ProblemEditorialResource problemEditorialResource();
     ProblemEditorialRenderResources.InEditProblemEditorial problemEditorialRenderResourceInEditProblemEditorial();
     ProblemEditorialRenderResources.InViewProblemEditorial problemEditorialRenderResourceInViewProblemEditorial();
