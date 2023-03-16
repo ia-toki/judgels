@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.sandalphon.api.problem.partner.PartnerPermission;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
-import judgels.sandalphon.api.problem.partner.ProblemPartnerV2;
+import judgels.sandalphon.api.resource.Partner;
+import judgels.sandalphon.api.resource.PartnerPermission;
 import judgels.sandalphon.persistence.ProblemPartnerDao;
 import judgels.sandalphon.persistence.ProblemPartnerModel;
 
@@ -27,29 +27,29 @@ public class ProblemPartnerStore {
         this.mapper = mapper;
     }
 
-    public List<ProblemPartnerV2> getPartners(String problemJid) {
+    public List<Partner> getPartners(String problemJid) {
         return Lists.transform(partnerDao.selectAllByProblemJid(problemJid), this::fromModel);
     }
 
-    public void setPartners(String problemJid, List<ProblemPartnerV2> partners) {
-        Map<String, ProblemPartnerV2> partnersByUserJid = new HashMap<>();
-        for (ProblemPartnerV2 partner : partners) {
+    public void setPartners(String problemJid, List<Partner> partners) {
+        Map<String, Partner> partnersByUserJid = new HashMap<>();
+        for (Partner partner : partners) {
             partnersByUserJid.put(partner.getUserJid(), partner);
         }
 
         for (ProblemPartnerModel model : partnerDao.selectAllByProblemJid(problemJid)) {
-            ProblemPartnerV2 existingPartner = partnersByUserJid.get(model.userJid);
+            Partner existingPartner = partnersByUserJid.get(model.userJid);
             if (existingPartner == null) {
                 partnerDao.delete(model);
             }
         }
 
-        for (ProblemPartnerV2 partner : partners) {
+        for (Partner partner : partners) {
             upsertPartner(problemJid, partner);
         }
     }
 
-    private void upsertPartner(String problemJid, ProblemPartnerV2 partner) {
+    private void upsertPartner(String problemJid, Partner partner) {
         Optional<ProblemPartnerModel> maybeModel = partnerDao.selectByProblemJidAndUserJid(problemJid, partner.getUserJid());
         if (maybeModel.isPresent()) {
             ProblemPartnerModel model = maybeModel.get();
@@ -93,14 +93,14 @@ public class ProblemPartnerStore {
         }
     }
 
-    private ProblemPartnerV2 fromModel(ProblemPartnerModel model) {
+    private Partner fromModel(ProblemPartnerModel model) {
         ProblemPartnerConfig config;
         try {
             config = mapper.readValue(model.baseConfig, ProblemPartnerConfig.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new ProblemPartnerV2.Builder()
+        return new Partner.Builder()
                 .userJid(model.userJid)
                 .permission(config.getIsAllowedToUpdateProblem() ? PartnerPermission.UPDATE : PartnerPermission.VIEW)
                 .build();

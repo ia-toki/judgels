@@ -103,6 +103,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.lessonStatementResource());
         env.jersey().register(component.lessonStatementRenderResourceInEditLessonStatement());
         env.jersey().register(component.lessonStatementRenderResourceInViewLessonStatement());
+        env.jersey().register(component.lessonPartnerResource());
 
         runJophiel(jophielConfig, env, component.scheduler());
         runSandalphon(sandalphonConfig, env, component.scheduler());

@@ -1,4 +1,4 @@
-package judgels.sandalphon.api.problem.partner;
+package judgels.sandalphon.api.resource;
 
 public enum PartnerPermission {
     VIEW,

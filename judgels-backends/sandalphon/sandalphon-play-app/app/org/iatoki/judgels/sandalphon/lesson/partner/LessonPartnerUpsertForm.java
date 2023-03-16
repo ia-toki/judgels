@@ -15,7 +15,7 @@ public final class LessonPartnerUpsertForm {
 
     public boolean isAllowedToManageLessonClients;
 
-    public boolean isAllowedToUpdateLesson() {
+    public boolean getIsAllowedToUpdateLesson() {
         return isAllowedToUpdateLesson;
     }
 

@@ -4,6 +4,8 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import judgels.jophiel.api.actor.Actor;
+import judgels.jophiel.profile.ProfileStore;
+import judgels.jophiel.user.UserStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.lesson.Lesson;
@@ -13,6 +15,8 @@ import judgels.sandalphon.lesson.LessonStore;
 public class BaseLessonResource extends BaseResource {
     @Inject protected LessonStore lessonStore;
     @Inject protected LessonRoleChecker lessonRoleChecker;
+    @Inject protected UserStore userStore;
+    @Inject protected ProfileStore profileStore;
 
     protected String resolveStatementLanguage(HttpServletRequest req, Actor actor, Lesson lesson, Set<String> enabledLanguages) {
         String language = (String) req.getSession().getAttribute("statementLanguage");
@@ -35,6 +39,7 @@ public class BaseLessonResource extends BaseResource {
         template.setTitle("#" + lesson.getId() + ": " + lesson.getSlug());
         template.addMainTab("general", "General", "/lessons/" + lesson.getId());
         template.addMainTab("statements", "Statements", "/lessons/" + lesson.getId() + "/statements");
+        template.addMainTab("partners", "Partners", "/lessons/" + lesson.getId() + "/partners");
         return template;
     }
 

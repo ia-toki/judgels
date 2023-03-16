@@ -1,4 +1,4 @@
-package judgels.michael.problem.base.partner;
+package judgels.michael.resource;
 
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;

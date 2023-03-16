@@ -1,4 +1,4 @@
-package judgels.michael.problem.base.partner;
+package judgels.michael.lesson.partner;
 
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
@@ -22,37 +22,37 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
-import judgels.michael.problem.base.BaseProblemResource;
+import judgels.michael.lesson.BaseLessonResource;
 import judgels.michael.resource.EditPartnersForm;
 import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;
 import judgels.michael.resource.PartnerUtils;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.resource.Partner;
-import judgels.sandalphon.problem.base.partner.ProblemPartnerStore;
+import judgels.sandalphon.lesson.partner.LessonPartnerStore;
 
-@Path("/problems/{problemId}/partners")
-public class ProblemPartnerResource extends BaseProblemResource {
-    @Inject protected ProblemPartnerStore partnerStore;
+@Path("/lessons/{lessonId}/partners")
+public class LessonPartnerResource extends BaseLessonResource {
+    @Inject protected LessonPartnerStore partnerStore;
 
-    @Inject public ProblemPartnerResource() {}
+    @Inject public LessonPartnerResource() {}
 
     @GET
     @UnitOfWork(readOnly = true)
     public View listPartners(
             @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId) {
+            @PathParam("lessonId") int lessonId) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
-        List<Partner> partners = partnerStore.getPartners(problem.getJid());
+        List<Partner> partners = partnerStore.getPartners(lesson.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
-        HtmlTemplate template = newProblemPartnerTemplate(actor, problem);
+        HtmlTemplate template = newLessonPartnerTemplate(actor, lesson);
         template.setActiveSecondaryTab("view");
         return new ListPartnersView(template, partners, profilesMap);
     }
@@ -60,19 +60,19 @@ public class ProblemPartnerResource extends BaseProblemResource {
     @GET
     @Path("/edit")
     @UnitOfWork(readOnly = true)
-    public View editPartners(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+    public View editPartners(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
-        List<Partner> partners = partnerStore.getPartners(problem.getJid());
+        List<Partner> partners = partnerStore.getPartners(lesson.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
         EditPartnersForm form = new EditPartnersForm();
         form.csv = PartnerUtils.partnersToCsv(partners, profilesMap);
 
-        return renderEditPartners(actor, problem, form);
+        return renderEditPartners(actor, lesson, form);
     }
 
     @POST
@@ -80,35 +80,35 @@ public class ProblemPartnerResource extends BaseProblemResource {
     @UnitOfWork
     public Response updatePartners(
             @Context HttpServletRequest req,
-            @PathParam("problemId") int problemId,
+            @PathParam("lessonId") int lessonId,
             @BeanParam EditPartnersForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
 
         Optional<List<Partner>> partners = PartnerUtils.csvToPartners(form.csv, userStore);
         if (!partners.isPresent()) {
             form.globalError = "Invalid CSV format.";
-            return ok(renderEditPartners(actor, problem, form));
+            return ok(renderEditPartners(actor, lesson, form));
         }
 
-        partnerStore.setPartners(problem.getJid(), partners.get());
+        partnerStore.setPartners(lesson.getJid(), partners.get());
 
-        return redirect("/problems/" + problemId + "/partners");
+        return redirect("/lessons/" + lessonId + "/partners");
     }
 
-    private View renderEditPartners(Actor actor, Problem problem, EditPartnersForm form) {
-        HtmlTemplate template = newProblemPartnerTemplate(actor, problem);
+    private View renderEditPartners(Actor actor, Lesson lesson, EditPartnersForm form) {
+        HtmlTemplate template = newLessonPartnerTemplate(actor, lesson);
         template.setActiveSecondaryTab("edit");
         return new EditPartnersView(template, form);
     }
 
-    private HtmlTemplate newProblemPartnerTemplate(Actor actor, Problem problem) {
-        HtmlTemplate template = newProblemTemplate(actor, problem);
+    private HtmlTemplate newLessonPartnerTemplate(Actor actor, Lesson lesson) {
+        HtmlTemplate template = newLessonTemplate(actor, lesson);
         template.setActiveMainTab("partners");
-        template.addSecondaryTab("view", "View", "/problems/" + problem.getId() + "/partners");
-        template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/partners/edit");
+        template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId() + "/partners");
+        template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/partners/edit");
         return template;
     }
 }
