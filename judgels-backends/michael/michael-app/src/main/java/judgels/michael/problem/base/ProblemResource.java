@@ -72,7 +72,7 @@ public class ProblemResource extends BaseProblemResource {
         HtmlTemplate template = newProblemsTemplate(actor);
         template.setTitle("Problems");
         if (isWriter) {
-            template.addMainButton("Create", "/problems/new");
+            template.addMainButton("New problem", "/problems/new");
         }
         template.setSearchProblemsWidget(new SearchProblemsWidget(pageIndex, filterString, tags, tagCounts));
         return new ListProblemsView(template, problems, filterString, profilesMap, tags);

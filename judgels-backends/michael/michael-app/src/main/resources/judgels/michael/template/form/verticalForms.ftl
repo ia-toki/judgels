@@ -15,9 +15,9 @@
   </div>
 </#macro>
 
-<#macro textarea name form={}>
+<#macro csv name form={}>
   <div class="form-group">
-    <textarea rows="10" id="${name}" name="${name}" class="form-control">${form[name]!""}</textarea>
+    <textarea rows="10" id="${name}" name="${name}" class="form-control" autofocus>${form[name]!""}</textarea>
   </div>
 </#macro>
 

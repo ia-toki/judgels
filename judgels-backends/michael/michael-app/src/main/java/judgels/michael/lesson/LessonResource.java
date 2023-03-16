@@ -55,7 +55,7 @@ public class LessonResource extends BaseLessonResource {
         HtmlTemplate template = newLessonsTemplate(actor);
         template.setTitle("Lessons");
         if (isWriter) {
-            template.addMainButton("Create", "/lessons/new");
+            template.addMainButton("New lesson", "/lessons/new");
         }
         template.setSearchLessonsWidget(new SearchLessonsWidget(pageIndex, filterString));
         return new ListLessonsView(template, lessons, filterString, profilesMap);

@@ -16,7 +16,7 @@ caca,UPDATE</pre>
   <hr>
   <p>One user per line, max 100 users:</p>
   <@forms.form>
-    <@forms.textarea form=form name="csv"/>
+    <@forms.csv form=form name="csv"/>
     <@forms.submit>Update</@forms.submit>
   </@forms.form>
 </@template.layout>
