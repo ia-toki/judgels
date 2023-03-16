@@ -54,7 +54,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
             form.initialLanguage = "en-US";
 
             HtmlTemplate template = newProblemEditorialTemplate(actor, problem, false);
-            return new NewEditorialView(template, form);
+            return new NewEditorialView(template, form, problemRoleChecker.canEdit(actor, problem));
         }
 
         Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());

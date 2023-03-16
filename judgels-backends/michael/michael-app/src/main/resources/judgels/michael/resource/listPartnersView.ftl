@@ -5,20 +5,24 @@
 
 <@template.layout>
   <h3>Partners</h3>
-  <@table.layout>
-    <thead>
-      <tr>
-        <th>User</th>
-        <th class="table-col-permissions">Permission</th>
-      </tr>
-    </thead>
-    <tbody>
-      <#list partners as partner>
+  <#if partners?size == 0>
+    <p>No partners.</p>
+  <#else>
+    <@table.layout>
+      <thead>
         <tr>
-          <td>${profilesMap[partner.userJid].username}</td>
-          <td>${partner.permission}</td>
+          <th>User</th>
+          <th class="table-col-permissions">Permission</th>
         </tr>
-      </#list>
-    </tbody>
-  </@table.layout>
+      </thead>
+      <tbody>
+        <#list partners as partner>
+          <tr>
+            <td>${profilesMap[partner.userJid].username}</td>
+            <td>${partner.permission}</td>
+          </tr>
+        </#list>
+      </tbody>
+    </@table.layout>
+  </#if>
 </@template.layout>
