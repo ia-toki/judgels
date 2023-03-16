@@ -62,6 +62,8 @@ public abstract class BaseProblemResource extends BaseResource {
         template.addSecondaryTab("view", "View", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
         if (problemRoleChecker.canEdit(actor, problem)) {
             template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/statements/edit");
+        } else {
+            template.addSecondaryTab("edit", "Source", "/problems/" + problem.getId() + "/statements/edit");
         }
         template.addSecondaryTab("media", "Media", "/problems/" + problem.getId() + "/statements/media");
         template.addSecondaryTab("languages", "Languages", "/problems/" + problem.getId() + "/statements/languages");
@@ -75,6 +77,8 @@ public abstract class BaseProblemResource extends BaseResource {
             template.addSecondaryTab("view", "View", "/problems/" + problem.getId() + "/editorials");
             if (problemRoleChecker.canEdit(actor, problem)) {
                 template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/editorials/edit");
+            } else {
+                template.addSecondaryTab("edit", "Source", "/problems/" + problem.getId() + "/editorials/edit");
             }
             template.addSecondaryTab("media", "Media", "/problems/" + problem.getId() + "/editorials/media");
             template.addSecondaryTab("languages", "Languages", "/problems/" + problem.getId() + "/editorials/languages");

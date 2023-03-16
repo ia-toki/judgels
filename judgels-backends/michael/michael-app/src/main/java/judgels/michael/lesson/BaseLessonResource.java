@@ -51,6 +51,8 @@ public class BaseLessonResource extends BaseResource {
         template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId() + "/statements");
         if (lessonRoleChecker.canEdit(actor, lesson)) {
             template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/statements/edit");
+        } else {
+            template.addSecondaryTab("edit", "Source", "/lessons/" + lesson.getId() + "/statements/edit");
         }
         template.addSecondaryTab("media", "Media", "/lessons/" + lesson.getId() + "/statements/media");
         template.addSecondaryTab("languages", "Languages", "/lessons/" + lesson.getId() + "/statements/languages");

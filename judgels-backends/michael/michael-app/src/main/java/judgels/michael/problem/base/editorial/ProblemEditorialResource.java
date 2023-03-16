@@ -91,7 +91,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     public View editEditorial(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveEditorialLanguage(req, actor, problem, enabledLanguages);
@@ -102,7 +102,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, form, language, enabledLanguages);
+        return new EditStatementView(template, form, language, enabledLanguages, problemRoleChecker.canEdit(actor, problem));
     }
 
     @POST

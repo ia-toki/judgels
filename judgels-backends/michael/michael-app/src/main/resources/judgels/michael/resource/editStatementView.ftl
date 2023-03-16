@@ -10,7 +10,7 @@
 
   <@forms.form>
     <#if form.title?has_content>
-      <@forms.text form=form name="title" label="Title" required=true/>
+      <@forms.text form=form name="title" label="Title" required=true disabled=!canEdit/>
     </#if>
     <label class="control-label">Text</label>
     <#include "statementManualButtons.html">
@@ -18,7 +18,9 @@
     <div class="form-group">
       <textarea class="ckeditor" name="text">${form.text}</textarea>
     </div>
-    <@forms.submit>Update</@forms.submit>
+    <#if canEdit>
+      <@forms.submit>Update</@forms.submit>
+    </#if>
   </@forms.form>
   <#include "katex.ftl">
   <#include "statementManualBody.html">

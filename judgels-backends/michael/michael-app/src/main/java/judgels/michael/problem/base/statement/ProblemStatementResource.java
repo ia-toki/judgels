@@ -47,7 +47,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     public View editStatement(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
@@ -59,7 +59,7 @@ public class ProblemStatementResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, form, language, enabledLanguages);
+        return new EditStatementView(template, form, language, enabledLanguages, problemRoleChecker.canEdit(actor, problem));
     }
 
     @POST

@@ -10,16 +10,19 @@ import judgels.sandalphon.resource.WorldLanguageRegistry;
 public class EditStatementView extends TemplateView {
     private final String language;
     private final Set<String> enabledLanguages;
+    private final boolean canEdit;
 
     public EditStatementView(
             HtmlTemplate template,
             EditStatementForm form,
             String language,
-            Set<String> enabledLanguages) {
+            Set<String> enabledLanguages,
+            boolean canEdit) {
 
         super("editStatementView.ftl", template, form);
         this.language = language;
         this.enabledLanguages = enabledLanguages;
+        this.canEdit = canEdit;
     }
 
     public String getLanguage() {
@@ -32,5 +35,9 @@ public class EditStatementView extends TemplateView {
             languages.put(lang, WorldLanguageRegistry.getInstance().getLanguages().get(lang));
         }
         return languages;
+    }
+
+    public boolean getCanEdit() {
+        return canEdit;
     }
 }

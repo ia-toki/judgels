@@ -63,7 +63,7 @@ public class LessonStatementResource extends BaseLessonResource {
     public View editStatement(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+        checkAllowed(lessonRoleChecker.canView(actor, lesson));
 
         Set<String> enabledLanguages = lessonStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
         String language = resolveStatementLanguage(req, actor, lesson, enabledLanguages);
@@ -75,7 +75,7 @@ public class LessonStatementResource extends BaseLessonResource {
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, form, language, enabledLanguages);
+        return new EditStatementView(template, form, language, enabledLanguages, lessonRoleChecker.canEdit(actor, lesson));
     }
 
     @POST
