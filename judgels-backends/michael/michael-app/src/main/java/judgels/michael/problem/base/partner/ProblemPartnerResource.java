@@ -46,7 +46,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.isAuthor(actor, problem));
 
         List<Partner> partners = partnerStore.getPartners(problem.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
@@ -63,7 +63,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
     public View editPartners(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.isAuthor(actor, problem));
 
         List<Partner> partners = partnerStore.getPartners(problem.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
@@ -85,7 +85,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.isAuthor(actor, problem));
 
         Optional<List<Partner>> partners = PartnerUtils.csvToPartners(form.csv, userStore);
         if (!partners.isPresent()) {

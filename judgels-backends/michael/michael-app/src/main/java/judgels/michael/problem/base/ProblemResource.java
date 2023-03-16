@@ -275,7 +275,9 @@ public class ProblemResource extends BaseProblemResource {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("general");
         template.addSecondaryTab("view", "View", "/problems/" + problem.getId());
-        template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/edit");
+        if (problemRoleChecker.canEdit(actor, problem)) {
+            template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/edit");
+        }
         return template;
     }
 }

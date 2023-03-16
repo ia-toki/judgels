@@ -5,16 +5,18 @@
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 
 <@template.layout>
-  <h3>Upload new</h3>
-  <@forms.multipartForm>
-    <@forms.file name="file" label="Upload single file"/>
-    <@forms.submit>Upload</@forms.submit>
-  </@forms.multipartForm>
-  <@forms.multipartForm>
-    <@forms.file name="fileZipped" label="Upload zipped file"/>
-    <@forms.submit>Upload</@forms.submit>
-  </@forms.multipartForm>
-  <hr>
+  <#if canEdit>
+    <h3>Upload new</h3>
+    <@forms.multipartForm>
+      <@forms.file name="file" label="Upload single file"/>
+      <@forms.submit>Upload</@forms.submit>
+    </@forms.multipartForm>
+    <@forms.multipartForm>
+      <@forms.file name="fileZipped" label="Upload zipped file"/>
+      <@forms.submit>Upload</@forms.submit>
+    </@forms.multipartForm>
+    <hr>
+  </#if>
   <h3>Files</h3>
   <@table.layout>
     <thead>

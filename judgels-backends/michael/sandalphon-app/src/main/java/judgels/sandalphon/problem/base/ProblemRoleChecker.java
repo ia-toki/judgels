@@ -1,29 +1,35 @@
 package judgels.sandalphon.problem.base;
 
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.actor.Actor;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.resource.Partner;
+import judgels.sandalphon.api.resource.PartnerPermission;
+import judgels.sandalphon.problem.base.partner.ProblemPartnerStore;
 import judgels.sandalphon.role.RoleChecker;
 
 public class ProblemRoleChecker {
     private final RoleChecker roleChecker;
-    private final ProblemStore problemStore;
+    private final ProblemPartnerStore partnerStore;
 
     @Inject
-    public ProblemRoleChecker(RoleChecker roleChecker, ProblemStore problemStore) {
+    public ProblemRoleChecker(RoleChecker roleChecker, ProblemPartnerStore partnerStore) {
         this.roleChecker = roleChecker;
-        this.problemStore = problemStore;
+        this.partnerStore = partnerStore;
     }
 
     public boolean canView(Actor actor, Problem problem) {
-        return isPartnerOrAbove(actor, problem);
+        return isAuthorOrAbove(actor, problem)
+                || isPartner(actor, problem);
     }
 
     public boolean canEdit(Actor actor, Problem problem) {
-        return isAuthorOrAbove(actor, problem);
+        return isAuthorOrAbove(actor, problem)
+                || isPartnerWithUpdatePermission(actor, problem);
     }
 
-    private boolean isAuthor(Actor actor, Problem problem) {
+    public boolean isAuthor(Actor actor, Problem problem) {
         return problem.getAuthorJid().equals(actor.getUserJid());
     }
 
@@ -32,11 +38,12 @@ public class ProblemRoleChecker {
     }
 
     private boolean isPartner(Actor actor, Problem problem) {
-        return problemStore.isUserPartnerForProblem(problem.getJid(), actor.getUserJid());
+        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actor.getUserJid());
+        return partner.isPresent();
     }
 
-    private boolean isPartnerOrAbove(Actor actor, Problem problem) {
-        return isAuthorOrAbove(actor, problem) || isPartner(actor, problem);
+    private boolean isPartnerWithUpdatePermission(Actor actor, Problem problem) {
+        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actor.getUserJid());
+        return partner.isPresent() && partner.get().getPermission() == PartnerPermission.UPDATE;
     }
-
 }

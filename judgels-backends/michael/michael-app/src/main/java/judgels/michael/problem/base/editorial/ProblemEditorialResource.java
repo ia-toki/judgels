@@ -134,13 +134,13 @@ public class ProblemEditorialResource extends BaseProblemResource {
     public View listEditorialMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         List<FileInfo> mediaFiles = problemStore.getEditorialMediaFiles(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("media");
-        return new ListFilesView(template, req.getRequestURI(), mediaFiles);
+        return new ListFilesView(template, req.getRequestURI(), mediaFiles, problemRoleChecker.canEdit(actor, problem));
     }
 
     @POST
@@ -179,7 +179,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         String mediaUrl = problemStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
         return ServiceUtils.buildDownloadResponse(mediaUrl);
@@ -191,7 +191,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     public View listEditorialLanguages(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         Map<String, StatementLanguageStatus>
                 availableLanguages = problemStore.getEditorialAvailableLanguages(actor.getUserJid(), problem.getJid());
@@ -199,7 +199,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage, problemRoleChecker.canEdit(actor, problem));
     }
 
     @POST

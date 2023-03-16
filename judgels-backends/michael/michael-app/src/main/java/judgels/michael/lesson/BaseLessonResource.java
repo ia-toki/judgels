@@ -39,7 +39,9 @@ public class BaseLessonResource extends BaseResource {
         template.setTitle("#" + lesson.getId() + ": " + lesson.getSlug());
         template.addMainTab("general", "General", "/lessons/" + lesson.getId());
         template.addMainTab("statements", "Statements", "/lessons/" + lesson.getId() + "/statements");
-        template.addMainTab("partners", "Partners", "/lessons/" + lesson.getId() + "/partners");
+        if (lessonRoleChecker.isAuthor(actor, lesson)) {
+            template.addMainTab("partners", "Partners", "/lessons/" + lesson.getId() + "/partners");
+        }
         return template;
     }
 
@@ -47,7 +49,9 @@ public class BaseLessonResource extends BaseResource {
         HtmlTemplate template = newLessonTemplate(actor, lesson);
         template.setActiveMainTab("statements");
         template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId() + "/statements");
-        template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/statements/edit");
+        if (lessonRoleChecker.canEdit(actor, lesson)) {
+            template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/statements/edit");
+        }
         template.addSecondaryTab("media", "Media", "/lessons/" + lesson.getId() + "/statements/media");
         template.addSecondaryTab("languages", "Languages", "/lessons/" + lesson.getId() + "/statements/languages");
         return template;

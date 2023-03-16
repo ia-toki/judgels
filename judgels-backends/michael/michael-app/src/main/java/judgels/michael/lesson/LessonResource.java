@@ -166,7 +166,9 @@ public class LessonResource extends BaseLessonResource {
         HtmlTemplate template = newLessonTemplate(actor, lesson);
         template.setActiveMainTab("general");
         template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId());
-        template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/edit");
+        if (lessonRoleChecker.canEdit(actor, lesson)) {
+            template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/edit");
+        }
         return template;
     }
 }

@@ -92,13 +92,13 @@ public class ProblemStatementResource extends BaseProblemResource {
     public View listStatementMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("media");
-        return new ListFilesView(template, req.getRequestURI(), mediaFiles);
+        return new ListFilesView(template, req.getRequestURI(), mediaFiles, problemRoleChecker.canEdit(actor, problem));
     }
 
     @POST
@@ -137,7 +137,7 @@ public class ProblemStatementResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         String mediaUrl = problemStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
         return ServiceUtils.buildDownloadResponse(mediaUrl);
@@ -149,14 +149,14 @@ public class ProblemStatementResource extends BaseProblemResource {
     public View listStatementLanguages(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(problemRoleChecker.canView(actor, problem));
 
         Map<String, StatementLanguageStatus> availableLanguages = problemStore.getStatementAvailableLanguages(actor.getUserJid(), problem.getJid());
         String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage);
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage, problemRoleChecker.canEdit(actor, problem));
     }
 
     @POST

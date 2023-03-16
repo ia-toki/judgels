@@ -5,12 +5,14 @@
 <#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
 
 <@template.layout>
-  <h3>Add language</h3>
-  <@forms.form>
-    <@forms.select name="language" label="Language" options=languages/>
-    <@forms.submit>Add</@forms.submit>
-  </@forms.form>
-  <hr>
+  <#if canEdit>
+    <h3>Add language</h3>
+    <@forms.form>
+      <@forms.select name="language" label="Language" options=languages/>
+      <@forms.submit>Add</@forms.submit>
+    </@forms.form>
+    <hr>
+  </#if>
   <h3>Available languages</h3>
   <@table.layout>
     <thead>
@@ -28,13 +30,17 @@
           <td>${status} <#if lang == defaultLanguage>(DEFAULT)</#if></td>
           <#if status == "ENABLED">
             <td>
-              <#if lang != defaultLanguage>
+              <#if canEdit && lang != defaultLanguage>
                 <a href="languages/${lang}/disable" type="button" class="btn btn-primary btn-xs">Disable</a>
                 <a href="languages/${lang}/makeDefault" type="button" class="btn btn-primary btn-xs">Make default</a>
               </#if>
             </td>
           <#else>
-            <td><a href="languages/${lang}/enable" type="button" class="btn btn-primary btn-xs">Enable</a></td>
+            <td>
+              <#if canEdit>
+                <a href="languages/${lang}/enable" type="button" class="btn btn-primary btn-xs">Enable</a>
+              </#if>
+            </td>
           </#if>
         </tr>
       </#list>

@@ -9,15 +9,18 @@ import judgels.sandalphon.resource.WorldLanguageRegistry;
 public class ListStatementLanguagesView extends TemplateView {
     private final Map<String, StatementLanguageStatus> availableLanguages;
     private final String defaultLanguage;
+    private final boolean canEdit;
 
     public ListStatementLanguagesView(
             HtmlTemplate template,
             Map<String, StatementLanguageStatus> availableLanguages,
-            String defaultLanguage) {
+            String defaultLanguage,
+            boolean canEdit) {
 
         super("listStatementLanguagesView.ftl", template);
         this.availableLanguages = availableLanguages;
         this.defaultLanguage = defaultLanguage;
+        this.canEdit = canEdit;
     }
 
     public Map<String, StatementLanguageStatus> getAvailableLanguages() {
@@ -30,5 +33,9 @@ public class ListStatementLanguagesView extends TemplateView {
 
     public Map<String, String> getLanguages() {
         return WorldLanguageRegistry.getInstance().getLanguages();
+    }
+
+    public boolean getCanEdit() {
+        return canEdit;
     }
 }

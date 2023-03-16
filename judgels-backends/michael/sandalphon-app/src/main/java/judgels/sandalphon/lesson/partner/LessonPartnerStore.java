@@ -26,6 +26,10 @@ public class LessonPartnerStore {
         this.mapper = mapper;
     }
 
+    public Optional<Partner> getPartner(String lessonJid, String userJid) {
+        return partnerDao.selectByLessonJidAndUserJid(lessonJid, userJid).map(this::fromModel);
+    }
+
     public List<Partner> getPartners(String lessonJid) {
         return Lists.transform(partnerDao.selectAllByLessonJid(lessonJid), this::fromModel);
     }
