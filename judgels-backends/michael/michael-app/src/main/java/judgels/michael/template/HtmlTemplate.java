@@ -12,6 +12,7 @@ public class HtmlTemplate {
     private String avatarUrl = "";
     private List<InternalLink> sidebarMenus = new ArrayList<>();
     private String activeSidebarMenu = "";
+    private String mainWarningHtml = "";
     private List<InternalLink> mainTabs = new ArrayList<>();
     private String activeMainTab = "";
     private List<InternalLink> mainButtons = new ArrayList<>();
@@ -68,6 +69,14 @@ public class HtmlTemplate {
 
     public void setActiveSidebarMenu(String activeSidebarMenu) {
         this.activeSidebarMenu = activeSidebarMenu;
+    }
+
+    public String getMainWarningHtml() {
+        return mainWarningHtml;
+    }
+
+    public void setMainWarningHtml(String mainWarningHtml) {
+        this.mainWarningHtml = mainWarningHtml;
     }
 
     public void addMainTab(String key, String label, String target) {

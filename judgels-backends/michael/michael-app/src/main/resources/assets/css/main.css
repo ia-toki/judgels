@@ -333,6 +333,9 @@ th {
   width: 100px;
 }
 
+.panel-heading {
+    font-family: var(--accent-font);
+}
 
 .statement-help-modal-body, .statement-help-modal-body pre {
   font-size: 12px;

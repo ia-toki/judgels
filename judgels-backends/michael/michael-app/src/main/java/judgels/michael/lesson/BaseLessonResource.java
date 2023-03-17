@@ -42,6 +42,14 @@ public class BaseLessonResource extends BaseResource {
         if (lessonRoleChecker.isAuthor(actor, lesson)) {
             template.addMainTab("partners", "Partners", "/lessons/" + lesson.getId() + "/partners");
         }
+        if (lessonRoleChecker.canEdit(actor, lesson)) {
+            template.addMainTab("versions", "Versions", "/lessons/" + lesson.getId() + "/versions");
+        }
+
+        if (lessonStore.userCloneExists(actor.getUserJid(), lesson.getJid())) {
+            template.setMainWarningHtml("Warning: you have <a href=\"/lessons/" + lesson.getId() + "/versions\">uncommitted changes</a> for this lesson!");
+        }
+
         return template;
     }
 

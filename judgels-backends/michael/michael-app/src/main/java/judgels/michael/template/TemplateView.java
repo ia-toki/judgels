@@ -3,6 +3,7 @@ package judgels.michael.template;
 import io.dropwizard.views.View;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 
 public abstract class TemplateView extends View {
     private final HtmlTemplate template;
@@ -68,6 +69,10 @@ public abstract class TemplateView extends View {
         } else {
             return "in " + res;
         }
+    }
+
+    public String getFormattedDurationFromNow(Date date) {
+        return getFormattedDurationFromNow(date.toInstant());
     }
 
     public String getFormattedFileSize(long bytes) {

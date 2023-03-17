@@ -10,10 +10,12 @@ import judgels.michael.lesson.LessonResource;
 import judgels.michael.lesson.partner.LessonPartnerResource;
 import judgels.michael.lesson.render.LessonStatementRenderResources;
 import judgels.michael.lesson.statement.LessonStatementResource;
+import judgels.michael.lesson.version.LessonVersionResource;
 import judgels.michael.problem.base.ProblemResource;
 import judgels.michael.problem.base.editorial.ProblemEditorialResource;
 import judgels.michael.problem.base.partner.ProblemPartnerResource;
 import judgels.michael.problem.base.statement.ProblemStatementResource;
+import judgels.michael.problem.base.version.ProblemVersionResource;
 import judgels.michael.problem.programming.statement.ProgrammingProblemStatementResource;
 import judgels.michael.problem.render.ProblemEditorialRenderResources;
 import judgels.michael.problem.render.ProblemStatementRenderResources;
@@ -52,12 +54,14 @@ public interface MichaelComponent {
     ProblemEditorialResource problemEditorialResource();
     ProblemEditorialRenderResources.InEditProblemEditorial problemEditorialRenderResourceInEditProblemEditorial();
     ProblemEditorialRenderResources.InViewProblemEditorial problemEditorialRenderResourceInViewProblemEditorial();
+    ProblemVersionResource problemVersionResource();
     ProgrammingProblemStatementResource programmingProblemResource();
     LessonResource lessonResource();
     LessonStatementResource lessonStatementResource();
     LessonStatementRenderResources.InEditLessonStatement lessonStatementRenderResourceInEditLessonStatement();
     LessonStatementRenderResources.InViewLessonStatement lessonStatementRenderResourceInViewLessonStatement();
     LessonPartnerResource lessonPartnerResource();
+    LessonVersionResource lessonVersionResource();
 
     JudgelsScheduler scheduler();
 }

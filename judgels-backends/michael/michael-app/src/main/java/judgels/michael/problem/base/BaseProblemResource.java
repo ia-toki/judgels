@@ -53,6 +53,14 @@ public abstract class BaseProblemResource extends BaseResource {
             template.addMainTab("partners", "Partners", "/problems/" + problem.getId() + "/partners");
         }
         template.addMainTab("editorials", "Editorials", "/problems/" + problem.getId() + "/editorials");
+        if (problemRoleChecker.canEdit(actor, problem)) {
+            template.addMainTab("versions", "Versions", "/problems/" + problem.getId() + "/versions");
+        }
+
+        if (problemStore.userCloneExists(actor.getUserJid(), problem.getJid())) {
+            template.setMainWarningHtml("Warning: you have <a href=\"/problems/" + problem.getId() + "/versions\">uncommitted changes</a> for this problem!");
+        }
+
         return template;
     }
 
