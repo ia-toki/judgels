@@ -3,7 +3,6 @@
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 
 <@template.layout>
-  <br>
   <#list versions as version>
     <div class="panel panel-default">
       <div class="panel-heading">
