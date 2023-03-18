@@ -33,7 +33,7 @@ public class ProgrammingProblemStatementResource extends BaseProblemResource {
     public View viewStatement(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);

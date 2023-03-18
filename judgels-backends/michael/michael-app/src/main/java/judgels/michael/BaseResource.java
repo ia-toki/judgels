@@ -8,12 +8,10 @@ import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.role.RoleChecker;
 
 public abstract class BaseResource {
     @Inject protected MichaelConfiguration config;
     @Inject protected ActorChecker actorChecker;
-    @Inject protected RoleChecker roleChecker;
 
     protected Response badRequest() {
         return Response.status(Response.Status.BAD_REQUEST).build();

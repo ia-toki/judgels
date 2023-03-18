@@ -33,7 +33,7 @@ import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 
 @Path("/problems/{problemId}/versions")
 public class ProblemVersionResource extends BaseProblemResource {
-    @Inject protected ProblemTagStore problemTagStore;
+    @Inject protected ProblemTagStore tagStore;
 
     @Inject public ProblemVersionResource() {}
 
@@ -42,7 +42,7 @@ public class ProblemVersionResource extends BaseProblemResource {
     public View viewVersionLocalChanges(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         CommitVersionForm form = new CommitVersionForm();
 
@@ -66,7 +66,7 @@ public class ProblemVersionResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         String localChangesError = null;
         if (problemStore.fetchUserClone(actor.getUserJid(), problem.getJid())) {
@@ -83,7 +83,7 @@ public class ProblemVersionResource extends BaseProblemResource {
         }
 
         problemStore.discardUserClone(actor.getUserJid(), problem.getJid());
-        problemTagStore.refreshDerivedTags(problem.getJid());
+        tagStore.refreshDerivedTags(problem.getJid());
 
         return redirect("/problems/" + problemId + "/versions");
     }
@@ -94,7 +94,7 @@ public class ProblemVersionResource extends BaseProblemResource {
     public View listVersionHistory(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         List<GitCommit> versions = problemStore.getVersions(actor.getUserJid(), problem.getJid());
 
@@ -118,7 +118,7 @@ public class ProblemVersionResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         problemStore.restore(problem.getJid(), versionHash);
 
@@ -131,7 +131,7 @@ public class ProblemVersionResource extends BaseProblemResource {
     public Response rebaseVersionLocalChanges(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         problemStore.fetchUserClone(actor.getUserJid(), problem.getJid());
         if (!problemStore.updateUserClone(actor.getUserJid(), problem.getJid())) {
@@ -152,7 +152,7 @@ public class ProblemVersionResource extends BaseProblemResource {
     public Response discardVersionLocalChanges(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         problemStore.discardUserClone(actor.getUserJid(), problem.getJid());
 

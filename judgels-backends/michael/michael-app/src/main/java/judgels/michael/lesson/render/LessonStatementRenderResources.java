@@ -27,7 +27,7 @@ public abstract class LessonStatementRenderResources extends BaseLessonResource 
 
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.canView(actor, lesson));
+        checkAllowed(roleChecker.canView(actor, lesson));
 
         String mediaUrl = lessonStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), mediaFilename);
         return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());

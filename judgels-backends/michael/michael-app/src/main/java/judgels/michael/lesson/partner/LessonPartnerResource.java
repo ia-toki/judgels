@@ -46,7 +46,7 @@ public class LessonPartnerResource extends BaseLessonResource {
 
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.isAuthor(actor, lesson));
+        checkAllowed(roleChecker.isAuthor(actor, lesson));
 
         List<Partner> partners = partnerStore.getPartners(lesson.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
@@ -63,7 +63,7 @@ public class LessonPartnerResource extends BaseLessonResource {
     public View editPartners(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.isAuthor(actor, lesson));
+        checkAllowed(roleChecker.isAuthor(actor, lesson));
 
         List<Partner> partners = partnerStore.getPartners(lesson.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
@@ -85,7 +85,7 @@ public class LessonPartnerResource extends BaseLessonResource {
 
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.isAuthor(actor, lesson));
+        checkAllowed(roleChecker.isAuthor(actor, lesson));
 
         Optional<List<Partner>> partners = PartnerUtils.csvToPartners(form.csv, userStore);
         if (!partners.isPresent()) {

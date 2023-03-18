@@ -19,6 +19,14 @@ public class ProblemRoleChecker {
         this.partnerStore = partnerStore;
     }
 
+    public boolean isAdmin(Actor actor) {
+        return roleChecker.isAdmin(actor);
+    }
+
+    public boolean isWriter(Actor actor) {
+        return roleChecker.isWriter(actor);
+    }
+
     public boolean canView(Actor actor, Problem problem) {
         return isAuthorOrAbove(actor, problem)
                 || isPartner(actor, problem);

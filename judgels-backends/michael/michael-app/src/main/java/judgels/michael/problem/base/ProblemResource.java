@@ -47,8 +47,8 @@ import judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatem
 public class ProblemResource extends BaseProblemResource {
     @Inject protected BundleProblemStore bundleProblemStore;
     @Inject protected ProgrammingProblemStore programmingProblemStore;
-    @Inject protected ProblemSearchStore problemSearchStore;
-    @Inject protected ProblemTagStore problemTagStore;
+    @Inject protected ProblemSearchStore searchStore;
+    @Inject protected ProblemTagStore tagStore;
 
     @Inject public ProblemResource() {}
 
@@ -64,10 +64,10 @@ public class ProblemResource extends BaseProblemResource {
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Problem> problems = problemSearchStore.searchProblems(pageIndex, "updatedAt", "desc", filterString, tags, actor.getUserJid(), isAdmin);
+        Page<Problem> problems = searchStore.searchProblems(pageIndex, "updatedAt", "desc", filterString, tags, actor.getUserJid(), isAdmin);
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
-        Map<String, Integer> tagCounts = problemTagStore.getTagCounts(isAdmin);
+        Map<String, Integer> tagCounts = tagStore.getTagCounts(isAdmin);
 
         HtmlTemplate template = newProblemsTemplate(actor);
         template.setTitle("Problems");
@@ -130,7 +130,7 @@ public class ProblemResource extends BaseProblemResource {
             bundleProblemStore.initBundleProblem(problem.getJid());
         } else {
             programmingProblemStore.initProgrammingProblem(problem.getJid(), form.gradingEngine);
-            problemTagStore.refreshDerivedTags(problem.getJid());
+            tagStore.refreshDerivedTags(problem.getJid());
         }
 
         problemStore.initRepository(actor.getUserJid(), problem.getJid());
@@ -145,7 +145,7 @@ public class ProblemResource extends BaseProblemResource {
     public View viewProblem(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         Profile profile = profileStore.getProfile(Instant.now(), problem.getAuthorJid());
 
@@ -160,7 +160,7 @@ public class ProblemResource extends BaseProblemResource {
         String testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
         String editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
 
-        List<String> tags = problemTagStore.findTopicTags(problem.getJid()).stream().sorted().collect(Collectors.toList());
+        List<String> tags = tagStore.findTopicTags(problem.getJid()).stream().sorted().collect(Collectors.toList());
 
         HtmlTemplate template = newProblemGeneralTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
@@ -173,7 +173,7 @@ public class ProblemResource extends BaseProblemResource {
     public View editProblem(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), setters.values()
@@ -188,7 +188,7 @@ public class ProblemResource extends BaseProblemResource {
         form.developerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.DEVELOPER), profilesMap);
         form.testerUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.TESTER), profilesMap);
         form.editorialistUsernames = userJidsToUsernames(setters.get(ProblemSetterRole.EDITORIALIST), profilesMap);
-        form.tags = problemTagStore.findTopicTags(problem.getJid());
+        form.tags = tagStore.findTopicTags(problem.getJid());
 
         return renderEditProblem(actor, problem, form);
     }
@@ -209,7 +209,7 @@ public class ProblemResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!problem.getSlug().equals(form.slug) && problemStore.problemExistsBySlug(form.slug)) {
             form.globalError = "Slug already exists.";
@@ -231,7 +231,7 @@ public class ProblemResource extends BaseProblemResource {
         updateProblemSetters(problem.getJid(), ProblemSetterRole.TESTER, form.testerUsernames, setters, jidsMap);
         updateProblemSetters(problem.getJid(), ProblemSetterRole.EDITORIALIST, form.editorialistUsernames, setters, jidsMap);
 
-        problemTagStore.updateTopicTags(problem.getJid(), form.tags);
+        tagStore.updateTopicTags(problem.getJid(), form.tags);
 
         return redirect("/problems/" + problemId);
     }
@@ -275,7 +275,7 @@ public class ProblemResource extends BaseProblemResource {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("general");
         template.addSecondaryTab("view", "View", "/problems/" + problem.getId());
-        if (problemRoleChecker.canEdit(actor, problem)) {
+        if (roleChecker.canEdit(actor, problem)) {
             template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/edit");
         }
         return template;

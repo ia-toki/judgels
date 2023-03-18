@@ -14,7 +14,7 @@ import judgels.sandalphon.lesson.LessonStore;
 
 public class BaseLessonResource extends BaseResource {
     @Inject protected LessonStore lessonStore;
-    @Inject protected LessonRoleChecker lessonRoleChecker;
+    @Inject protected LessonRoleChecker roleChecker;
     @Inject protected UserStore userStore;
     @Inject protected ProfileStore profileStore;
 
@@ -39,10 +39,10 @@ public class BaseLessonResource extends BaseResource {
         template.setTitle("#" + lesson.getId() + ": " + lesson.getSlug());
         template.addMainTab("general", "General", "/lessons/" + lesson.getId());
         template.addMainTab("statements", "Statements", "/lessons/" + lesson.getId() + "/statements");
-        if (lessonRoleChecker.isAuthor(actor, lesson)) {
+        if (roleChecker.isAuthor(actor, lesson)) {
             template.addMainTab("partners", "Partners", "/lessons/" + lesson.getId() + "/partners");
         }
-        if (lessonRoleChecker.canEdit(actor, lesson)) {
+        if (roleChecker.canEdit(actor, lesson)) {
             template.addMainTab("versions", "Versions", "/lessons/" + lesson.getId() + "/versions");
         }
 
@@ -57,7 +57,7 @@ public class BaseLessonResource extends BaseResource {
         HtmlTemplate template = newLessonTemplate(actor, lesson);
         template.setActiveMainTab("statements");
         template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId() + "/statements");
-        if (lessonRoleChecker.canEdit(actor, lesson)) {
+        if (roleChecker.canEdit(actor, lesson)) {
             template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/statements/edit");
         } else {
             template.addSecondaryTab("edit", "Source", "/lessons/" + lesson.getId() + "/statements/edit");

@@ -47,14 +47,14 @@ public class ProblemEditorialResource extends BaseProblemResource {
     public View viewEditorial(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         if (!problemStore.hasEditorial(actor.getUserJid(), problem.getJid())) {
             NewEditorialForm form = new NewEditorialForm();
             form.initialLanguage = "en-US";
 
             HtmlTemplate template = newProblemEditorialTemplate(actor, problem, false);
-            return new NewEditorialView(template, form, problemRoleChecker.canEdit(actor, problem));
+            return new NewEditorialView(template, form, roleChecker.canEdit(actor, problem));
         }
 
         Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
@@ -76,7 +76,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         problemStore.initEditorials(actor.getUserJid(), problem.getJid(), form.initialLanguage);
@@ -91,7 +91,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     public View editEditorial(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveEditorialLanguage(req, actor, problem, enabledLanguages);
@@ -102,7 +102,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("edit");
-        return new EditStatementView(template, form, language, enabledLanguages, problemRoleChecker.canEdit(actor, problem));
+        return new EditStatementView(template, form, language, enabledLanguages, roleChecker.canEdit(actor, problem));
     }
 
     @POST
@@ -115,7 +115,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveEditorialLanguage(req, actor, problem, enabledLanguages);
@@ -134,13 +134,13 @@ public class ProblemEditorialResource extends BaseProblemResource {
     public View listEditorialMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         List<FileInfo> mediaFiles = problemStore.getEditorialMediaFiles(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("media");
-        return new ListFilesView(template, req.getRequestURI(), mediaFiles, problemRoleChecker.canEdit(actor, problem));
+        return new ListFilesView(template, req.getRequestURI(), mediaFiles, roleChecker.canEdit(actor, problem));
     }
 
     @POST
@@ -156,7 +156,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (fileStream != null) {
             problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
@@ -179,7 +179,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = problemStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
         return ServiceUtils.buildDownloadResponse(mediaUrl);
@@ -191,7 +191,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
     public View listEditorialLanguages(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         Map<String, StatementLanguageStatus>
                 availableLanguages = problemStore.getEditorialAvailableLanguages(actor.getUserJid(), problem.getJid());
@@ -199,7 +199,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
-        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage, problemRoleChecker.canEdit(actor, problem));
+        return new ListStatementLanguagesView(template, availableLanguages, defaultLanguage, roleChecker.canEdit(actor, problem));
     }
 
     @POST
@@ -212,7 +212,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
             return badRequest();
@@ -234,7 +234,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
             return badRequest();
@@ -256,7 +256,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
             return badRequest();
@@ -278,7 +278,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
             return badRequest();

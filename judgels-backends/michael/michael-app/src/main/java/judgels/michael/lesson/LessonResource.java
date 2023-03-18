@@ -22,7 +22,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.profile.ProfileStore;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
@@ -33,8 +32,6 @@ import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 
 @Path("/lessons")
 public class LessonResource extends BaseLessonResource {
-    @Inject protected ProfileStore profileStore;
-
     @Inject public LessonResource() {}
 
     @GET
@@ -110,7 +107,7 @@ public class LessonResource extends BaseLessonResource {
     public View viewLesson(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.canView(actor, lesson));
+        checkAllowed(roleChecker.canView(actor, lesson));
 
         Profile profile = profileStore.getProfile(Instant.now(), lesson.getAuthorJid());
 
@@ -125,7 +122,7 @@ public class LessonResource extends BaseLessonResource {
     public View editLesson(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+        checkAllowed(roleChecker.canEdit(actor, lesson));
 
         EditLessonForm form = new EditLessonForm();
         form.slug = lesson.getSlug();
@@ -150,7 +147,7 @@ public class LessonResource extends BaseLessonResource {
 
         Actor actor = actorChecker.check(req);
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        checkAllowed(lessonRoleChecker.canEdit(actor, lesson));
+        checkAllowed(roleChecker.canEdit(actor, lesson));
 
         if (!lesson.getSlug().equals(form.slug) && lessonStore.lessonExistsBySlug(form.slug)) {
             form.globalError = "Slug already exists.";
@@ -166,7 +163,7 @@ public class LessonResource extends BaseLessonResource {
         HtmlTemplate template = newLessonTemplate(actor, lesson);
         template.setActiveMainTab("general");
         template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId());
-        if (lessonRoleChecker.canEdit(actor, lesson)) {
+        if (roleChecker.canEdit(actor, lesson)) {
             template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/edit");
         }
         return template;

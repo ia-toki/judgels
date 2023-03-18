@@ -14,7 +14,7 @@ import judgels.sandalphon.problem.base.ProblemStore;
 
 public abstract class BaseProblemResource extends BaseResource {
     @Inject protected ProblemStore problemStore;
-    @Inject protected ProblemRoleChecker problemRoleChecker;
+    @Inject protected ProblemRoleChecker roleChecker;
     @Inject protected UserStore userStore;
     @Inject protected ProfileStore profileStore;
 
@@ -49,11 +49,11 @@ public abstract class BaseProblemResource extends BaseResource {
         template.setTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.addMainTab("general", "General", "/problems/" + problem.getId());
         template.addMainTab("statements", "Statements", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
-        if (problemRoleChecker.isAuthor(actor, problem)) {
+        if (roleChecker.isAuthor(actor, problem)) {
             template.addMainTab("partners", "Partners", "/problems/" + problem.getId() + "/partners");
         }
         template.addMainTab("editorials", "Editorials", "/problems/" + problem.getId() + "/editorials");
-        if (problemRoleChecker.canEdit(actor, problem)) {
+        if (roleChecker.canEdit(actor, problem)) {
             template.addMainTab("versions", "Versions", "/problems/" + problem.getId() + "/versions");
         }
 
@@ -68,7 +68,7 @@ public abstract class BaseProblemResource extends BaseResource {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("statements");
         template.addSecondaryTab("view", "View", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
-        if (problemRoleChecker.canEdit(actor, problem)) {
+        if (roleChecker.canEdit(actor, problem)) {
             template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/statements/edit");
         } else {
             template.addSecondaryTab("edit", "Source", "/problems/" + problem.getId() + "/statements/edit");
@@ -83,7 +83,7 @@ public abstract class BaseProblemResource extends BaseResource {
         template.setActiveMainTab("editorials");
         if (hasEditorial) {
             template.addSecondaryTab("view", "View", "/problems/" + problem.getId() + "/editorials");
-            if (problemRoleChecker.canEdit(actor, problem)) {
+            if (roleChecker.canEdit(actor, problem)) {
                 template.addSecondaryTab("edit", "Edit", "/problems/" + problem.getId() + "/editorials/edit");
             } else {
                 template.addSecondaryTab("edit", "Source", "/problems/" + problem.getId() + "/editorials/edit");

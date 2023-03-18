@@ -19,6 +19,14 @@ public class LessonRoleChecker {
         this.partnerStore = partnerStore;
     }
 
+    public boolean isAdmin(Actor actor) {
+        return roleChecker.isAdmin(actor);
+    }
+
+    public boolean isWriter(Actor actor) {
+        return roleChecker.isWriter(actor);
+    }
+
     public boolean canView(Actor actor, Lesson lesson) {
         return isAuthorOrAbove(actor, lesson)
                 || isPartner(actor, lesson);

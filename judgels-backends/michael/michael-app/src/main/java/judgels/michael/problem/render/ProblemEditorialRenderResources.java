@@ -27,7 +27,7 @@ public abstract class ProblemEditorialRenderResources extends BaseProblemResourc
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(problemRoleChecker.canView(actor, problem));
+        checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = problemStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
         return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
