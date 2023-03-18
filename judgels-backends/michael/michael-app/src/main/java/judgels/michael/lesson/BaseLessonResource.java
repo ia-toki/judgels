@@ -52,18 +52,4 @@ public class BaseLessonResource extends BaseResource {
 
         return template;
     }
-
-    protected HtmlTemplate newLessonStatementTemplate(Actor actor, Lesson lesson) {
-        HtmlTemplate template = newLessonTemplate(actor, lesson);
-        template.setActiveMainTab("statements");
-        template.addSecondaryTab("view", "View", "/lessons/" + lesson.getId() + "/statements");
-        if (roleChecker.canEdit(actor, lesson)) {
-            template.addSecondaryTab("edit", "Edit", "/lessons/" + lesson.getId() + "/statements/edit");
-        } else {
-            template.addSecondaryTab("edit", "Source", "/lessons/" + lesson.getId() + "/statements/edit");
-        }
-        template.addSecondaryTab("media", "Media", "/lessons/" + lesson.getId() + "/statements/media");
-        template.addSecondaryTab("languages", "Languages", "/lessons/" + lesson.getId() + "/statements/languages");
-        return template;
-    }
 }

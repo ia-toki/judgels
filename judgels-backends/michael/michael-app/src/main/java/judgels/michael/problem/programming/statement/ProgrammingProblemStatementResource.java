@@ -15,17 +15,14 @@ import javax.ws.rs.core.Context;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.jophiel.api.actor.Actor;
-import judgels.michael.problem.base.BaseProblemResource;
+import judgels.michael.problem.programming.BaseProgrammingProblemResource;
 import judgels.michael.problem.programming.grading.LanguageRestrictionAdapter;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 
 @Path("/problems/programming/{problemId}/statements")
-public class ProgrammingProblemStatementResource extends BaseProblemResource {
-    @Inject protected ProgrammingProblemStore programmingProblemStore;
-
+public class ProgrammingProblemStatementResource extends BaseProgrammingProblemResource {
     @Inject public ProgrammingProblemStatementResource() {}
 
     @GET
