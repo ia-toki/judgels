@@ -20,8 +20,8 @@
     <hr>
     <h3>Modify local changes</h3>
     <div class="form-group">
-      <a type="button" href="versions/rebase" class="btn btn-primary">Rebase local changes on top of other users' changes</a>
-      <a type="button" href="versions/discard" class="btn btn-danger">Discard local changes</a>
+      <a type="button" href="rebase" class="btn btn-primary">Rebase local changes on top of other users' changes</a>
+      <a type="button" href="discard" class="btn btn-danger">Discard local changes</a>
     </div>
   </#if>
 </@template.layout>
