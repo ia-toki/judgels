@@ -1,4 +1,4 @@
-package judgels.michael.problem.base;
+package judgels.michael.problem;
 
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;

@@ -1,4 +1,4 @@
-package judgels.michael.problem.base.editorial;
+package judgels.michael.problem.editorial;
 
 import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;

@@ -1,4 +1,4 @@
-<#-- @ftlvariable type="judgels.michael.problem.base.editorial.ViewEditorialView" -->
+<#-- @ftlvariable type="judgels.michael.problem.editorial.ViewEditorialView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>

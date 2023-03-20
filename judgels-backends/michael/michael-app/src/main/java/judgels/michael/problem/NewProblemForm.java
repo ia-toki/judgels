@@ -1,4 +1,4 @@
-package judgels.michael.problem.base;
+package judgels.michael.problem;
 
 import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;

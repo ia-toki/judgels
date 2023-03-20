@@ -1,4 +1,4 @@
-package judgels.michael.problem.base;
+package judgels.michael.problem;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

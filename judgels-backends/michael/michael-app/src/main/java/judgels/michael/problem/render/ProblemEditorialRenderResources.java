@@ -13,7 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
-import judgels.michael.problem.base.BaseProblemResource;
+import judgels.michael.problem.BaseProblemResource;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.service.ServiceUtils;
 

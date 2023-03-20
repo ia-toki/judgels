@@ -1,4 +1,4 @@
-package judgels.michael.problem.base.partner;
+package judgels.michael.problem.partner;
 
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
@@ -22,7 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
-import judgels.michael.problem.base.BaseProblemResource;
+import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.EditPartnersForm;
 import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;

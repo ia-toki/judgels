@@ -1,4 +1,4 @@
-package judgels.michael.problem.base.version;
+package judgels.michael.problem.version;
 
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
@@ -21,7 +21,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
-import judgels.michael.problem.base.BaseProblemResource;
+import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.CommitVersionForm;
 import judgels.michael.resource.ListVersionHistoryView;
 import judgels.michael.resource.RebaseVersionLocalChangesView;
@@ -32,7 +32,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 
 @Path("/problems/{problemId}/versions")
-public class ProblemVersionResource extends BaseProblemResource {
+public class  ProblemVersionResource extends BaseProblemResource {
     @Inject protected ProblemTagStore tagStore;
 
     @Inject public ProblemVersionResource() {}

@@ -1,4 +1,4 @@
-package judgels.michael.problem.base;
+package judgels.michael.problem;
 
 import java.util.HashSet;
 import java.util.Set;
