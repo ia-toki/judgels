@@ -46,7 +46,7 @@ public class IndexResource extends BaseResource {
     @GET
     @Path("/login")
     @UnitOfWork(readOnly = true)
-    public Response login(@CookieParam("JOPHIEL_TOKEN") String token) {
+    public Response login(@CookieParam("JUDGELS_TOKEN") String token) {
         if (token != null) {
             if (sessionStore.getSessionByToken(token).isPresent()) {
                 return redirect(POST_LOGIN_URL);
@@ -81,7 +81,7 @@ public class IndexResource extends BaseResource {
         return Response
                 .seeOther(URI.create(POST_LOGIN_URL))
                 .cookie(new NewCookie(
-                        "JOPHIEL_TOKEN",
+                        "JUDGELS_TOKEN",
                         session.getToken(),
                         "/",
                         uriInfo.getBaseUri().getHost(),
@@ -95,11 +95,11 @@ public class IndexResource extends BaseResource {
     @GET
     @Path("/logout")
     @UnitOfWork(readOnly = true)
-    public Response logOut(@CookieParam("JOPHIEL_TOKEN") String token, @Context UriInfo uriInfo) {
+    public Response logOut(@CookieParam("JUDGELS_TOKEN") String token, @Context UriInfo uriInfo) {
         sessionStore.deleteSessionByToken(token);
         return Response.seeOther(URI.create("/login"))
                 .cookie(new NewCookie(
-                        "JOPHIEL_TOKEN",
+                        "JUDGELS_TOKEN",
                         "expired",
                         "/",
                         uriInfo.getBaseUri().getHost(),

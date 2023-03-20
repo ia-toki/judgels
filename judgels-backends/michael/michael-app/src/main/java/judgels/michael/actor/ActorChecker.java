@@ -32,7 +32,7 @@ public class ActorChecker {
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("JOPHIEL_TOKEN")) {
+                if (cookie.getName().equals("JUDGELS_TOKEN")) {
                     Optional<Session> session = sessionStore.getSessionByToken(cookie.getValue());
                     if (session.isPresent()) {
                         String userJid = session.get().getUserJid();
