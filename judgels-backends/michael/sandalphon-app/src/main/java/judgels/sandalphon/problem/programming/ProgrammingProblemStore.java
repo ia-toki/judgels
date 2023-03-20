@@ -2,8 +2,6 @@ package judgels.sandalphon.problem.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -95,12 +93,8 @@ public final class ProgrammingProblemStore extends AbstractProblemStore {
         updateGradingLastUpdateTime(userJid, problemJid);
     }
 
-    public void uploadGradingTestDataFile(String userJid, String problemJid, File testDataFile, String filename) {
-        try {
-            problemFs.uploadPublicFile(getGradingTestDataDirPath(userJid, problemJid).resolve(filename), new FileInputStream(testDataFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void uploadGradingTestDataFile(String userJid, String problemJid, InputStream testDataFile, String filename) {
+        problemFs.uploadPublicFile(getGradingTestDataDirPath(userJid, problemJid).resolve(filename), testDataFile);
 
         updateGradingLastUpdateTime(userJid, problemJid);
     }
@@ -111,12 +105,8 @@ public final class ProgrammingProblemStore extends AbstractProblemStore {
         updateGradingLastUpdateTime(userJid, problemJid);
     }
 
-    public void uploadGradingHelperFile(String userJid, String problemJid, File helperFile, String filename) {
-        try {
-            problemFs.uploadPublicFile(getGradingHelpersDirPath(userJid, problemJid).resolve(filename), new FileInputStream(helperFile));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void uploadGradingHelperFile(String userJid, String problemJid, InputStream helperFile, String filename) {
+        problemFs.uploadPublicFile(getGradingHelpersDirPath(userJid, problemJid).resolve(filename), helperFile);
 
         updateGradingLastUpdateTime(userJid, problemJid);
     }

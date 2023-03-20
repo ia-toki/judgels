@@ -215,7 +215,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File testDataFile = file.getRef().path().toFile();
-            programmingProblemStore.uploadGradingTestDataFile(actorJid, problem.getJid(), testDataFile, file.getFilename());
+            programmingProblemStore.uploadGradingTestDataFile(actorJid, problem.getJid(), new FileInputStream(testDataFile), file.getFilename());
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
         }
@@ -261,7 +261,7 @@ public final class ProgrammingProblemGradingController extends AbstractProblemCo
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
 
             File helperFile = file.getRef().path().toFile();
-            programmingProblemStore.uploadGradingHelperFile(actorJid, problem.getJid(), helperFile, file.getFilename());
+            programmingProblemStore.uploadGradingHelperFile(actorJid, problem.getJid(), new FileInputStream(helperFile), file.getFilename());
 
             return redirect(routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
         }

@@ -9,6 +9,7 @@ import judgels.jophiel.user.UserStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemRoleChecker;
 import judgels.sandalphon.problem.base.ProblemStore;
 
@@ -49,6 +50,9 @@ public abstract class BaseProblemResource extends BaseResource {
         template.setTitle("#" + problem.getId() + ": " + problem.getSlug());
         template.addMainTab("general", "General", "/problems/" + problem.getId());
         template.addMainTab("statements", "Statements", "/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
+        if (problem.getType() == ProblemType.PROGRAMMING) {
+            template.addMainTab("grading", "Grading", "/problems/programming/" + problem.getId() + "/grading/config");
+        }
         if (roleChecker.isAuthor(actor, problem)) {
             template.addMainTab("partners", "Partners", "/problems/" + problem.getId() + "/partners");
         }

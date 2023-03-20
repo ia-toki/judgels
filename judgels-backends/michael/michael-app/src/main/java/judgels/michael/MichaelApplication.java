@@ -99,7 +99,8 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.problemEditorialRenderResourceInEditProblemEditorial());
         env.jersey().register(component.problemEditorialRenderResourceInViewProblemEditorial());
         env.jersey().register(component.problemVersionResource());
-        env.jersey().register(component.programmingProblemResource());
+        env.jersey().register(component.programmingProblemStatementResource());
+        env.jersey().register(component.programmingProblemGradingResource());
         env.jersey().register(component.lessonResource());
         env.jersey().register(component.lessonStatementResource());
         env.jersey().register(component.lessonStatementRenderResourceInEditLessonStatement());

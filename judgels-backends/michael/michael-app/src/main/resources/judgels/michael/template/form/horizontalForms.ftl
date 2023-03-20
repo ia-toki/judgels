@@ -38,15 +38,18 @@
   </div>
 </#macro>
 
-<#macro select name label options form={}>
+<#macro select name label options form={} disabled=false help="">
   <div class="form-group">
     <label class="control-label col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
-      <select id="${name}" name="${name}" class="form-control">
+      <select id="${name}" name="${name}" class="form-control" <#if disabled>disabled</#if>/>
         <#list options as k, v>
           <option value="${k}" ${(k == form[name]!"")?then("selected", "")}>${v}</option>
         </#list>
       </select>
+      <#if help?has_content>
+        <span class="help-block">${help}</span>
+      </#if>
     </div>
   </div>
 </#macro>

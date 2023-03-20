@@ -15,4 +15,11 @@ public class LanguageRestrictionAdapter {
         }
         return languages;
     }
+
+    public static LanguageRestriction getLanguageRestriction(boolean isAllowedAll, Set<String> allowedLanguages) {
+        if (isAllowedAll) {
+            return LanguageRestriction.noRestriction();
+        }
+        return LanguageRestriction.of(allowedLanguages);
+    }
 }
