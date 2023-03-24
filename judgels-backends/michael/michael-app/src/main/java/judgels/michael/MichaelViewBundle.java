@@ -9,6 +9,7 @@ public class MichaelViewBundle extends ViewBundle<MichaelApplicationConfiguratio
     public Map<String, Map<String, String>> getViewConfiguration(MichaelApplicationConfiguration configuration) {
         return ImmutableMap.of(
                 "freemarker", ImmutableMap.of(
-                        "strict_syntax", "true"));
+                        "strict_syntax", "true",
+                        "number_format", "computer"));
     }
 }

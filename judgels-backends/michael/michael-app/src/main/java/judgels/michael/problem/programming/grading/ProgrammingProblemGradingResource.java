@@ -24,6 +24,10 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.jophiel.api.actor.Actor;
 import judgels.michael.problem.programming.BaseProgrammingProblemResource;
+import judgels.michael.problem.programming.grading.config.EditGradingConfigView;
+import judgels.michael.problem.programming.grading.config.GradingConfigAdapter;
+import judgels.michael.problem.programming.grading.config.GradingConfigAdapterRegistry;
+import judgels.michael.problem.programming.grading.config.GradingConfigForm;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
@@ -90,9 +94,41 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
+        String engine = programmingProblemStore.getGradingEngine(actor.getUserJid(), problem.getJid());
+        GradingConfig config  = programmingProblemStore.getGradingConfig(actor.getUserJid(), problem.getJid());
+        List<FileInfo> testDataFiles = programmingProblemStore.getGradingTestDataFiles(actor.getUserJid(), problem.getJid());
+        List<FileInfo> helperFiles = programmingProblemStore.getGradingHelperFiles(actor.getUserJid(), problem.getJid());
+
+        GradingConfigAdapter adapter = GradingConfigAdapterRegistry.getInstance().get(engine);
+        GradingConfigForm form = adapter.buildFormFromConfig(config);
+
         HtmlTemplate template = newProblemGradingTemplate(actor, problem);
         template.setActiveSecondaryTab("config");
-        return new EditGradingConfigView(template);
+        return new EditGradingConfigView(engine, template, form, testDataFiles, helperFiles, roleChecker.canEdit(actor, problem));
+    }
+
+    @POST
+    @Path("/config")
+    @UnitOfWork
+    public Response updateGradingConfig(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @BeanParam GradingConfigForm form) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        String engine = programmingProblemStore.getGradingEngine(actor.getUserJid(), problem.getJid());
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+
+        GradingConfigAdapter adapter = GradingConfigAdapterRegistry.getInstance().get(engine);
+        GradingConfig config = adapter.buildConfigFromForm(form);
+
+        programmingProblemStore.updateGradingConfig(actor.getUserJid(), problem.getJid(), config);
+
+        return redirect("/problems/programming/" + problemId + "/grading/config");
     }
 
     @GET

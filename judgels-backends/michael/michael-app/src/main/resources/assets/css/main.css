@@ -352,3 +352,8 @@ th {
 .statement-help-modal-body, .statement-help-modal-body p {
   margin: 0;
 }
+
+.tc-remove-button span {
+  top: 6px;
+  color: #a94442;
+}
