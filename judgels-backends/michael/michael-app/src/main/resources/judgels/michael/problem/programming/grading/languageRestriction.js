@@ -1,21 +1,21 @@
-document.addEventListener('DOMContentLoaded', function() {
-  if ($('#isAllowedAll').prop('checked')) {
-    $('.allowedLanguage').each(function () {
-      $(this).prop('disabled', true);
-      $(this).prop('checked', true);
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('isAllowedAll').checked) {
+    document.querySelectorAll('.allowedLanguage').forEach(lang => {
+      lang.disabled = true;
+      lang.checked = true;
     });
   }
 
-  $('#isAllowedAll').on('click', function () {
-    if ($('#isAllowedAll').prop('checked')) {
-      $('.allowedLanguage').each(function () {
-        $(this).prop('disabled', true);
-        $(this).prop('checked', true);
+  document.getElementById('isAllowedAll').addEventListener('click', () => {
+    if (document.getElementById('isAllowedAll').checked) {
+      document.querySelectorAll('.allowedLanguage').forEach(lang => {
+        lang.disabled = true;
+        lang.checked = true;
       });
     } else {
-      $('.allowedLanguage').each(function () {
-        $(this).prop('disabled', false);
-        $(this).prop('checked', false);
+      document.querySelectorAll('.allowedLanguage').forEach(lang => {
+        lang.disabled = false;
+        lang.checked = false;
       });
     }
   });

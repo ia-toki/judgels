@@ -1,58 +1,46 @@
 function checkStates() {
-  $('.problemTag').each(function() {
-    var tag = $(this);
-    var tagValue = tag.prop('value');
-    if (!tagValue.includes(': ') && tag.prop('checked')) {
-      var indeterminate = false;
-      $('.problemTag').each(function() {
-        var child = $(this);
-        var childValue = child.prop('value');
-        if (tagValue !== childValue && childValue.startsWith(tagValue) && child.prop('checked')) {
-          indeterminate = true;
+  document.querySelectorAll('.problemTag').forEach(tag => {
+    if (!tag.value.includes(': ') && tag.checked) {
+      tag.indeterminate = false;
+      document.querySelectorAll('.problemTag').forEach(child => {
+        if (tag.value !== child.value && child.value.startsWith(tag.value) && child.checked) {
+          tag.indeterminate = true;
         }
       });
-      tag.prop('indeterminate', indeterminate);
     }
   });
 }
 
 function checkState(tag) {
-  var tagValue = tag.prop('value');
-  if (tag.prop('checked')) {
-    $('.problemTag').each(function() {
-      var parent = $(this);
-      var parentValue = parent.prop('value');
-      if (tagValue !== parentValue && tagValue.startsWith(parentValue)) {
-        parent.prop('checked', true);
+  if (tag.checked) {
+    document.querySelectorAll('.problemTag').forEach(parent => {
+      if (tag.value !== parent.value && tag.value.startsWith(parent.value)) {
+        parent.checked = true;
       }
     });
-    $('.problemTag').each(function() {
-      var child = $(this);
-      var childValue = child.prop('value');
-      if (tagValue !== childValue && childValue.startsWith(tagValue)) {
-        child.prop('checked', false);
-        child.prop('disabled', true);
+    document.querySelectorAll('.problemTag').forEach(child => {
+      if (tag.value !== child.value && child.value.startsWith(tag.value)) {
+        child.checked = false;
+        child.disabled = true;
       }
     });
   } else {
-    $('.problemTag').each(function() {
-      var child = $(this);
-      var childValue = child.prop('value');
-      if (tagValue !== childValue && childValue.startsWith(tagValue)) {
-        child.prop('checked', false);
-        child.prop('disabled', false);
+    document.querySelectorAll('.problemTag').forEach(child => {
+      if (tag.value !== child.value && child.value.startsWith(tag.value)) {
+        child.checked = false;
+        child.disabled = false;
       }
     });
   }
 }
 
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', () => {
   checkStates();
 
-  $('.problemTag').each(function() {
-    $(this).on('click', function(e) {
-      checkState($(e.target));
+  document.querySelectorAll('.problemTag').forEach(tag => {
+    tag.addEventListener('click', e => {
+      checkState(e.target);
       checkStates();
     });
   });
-});
+}, false);
