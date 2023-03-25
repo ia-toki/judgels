@@ -10,6 +10,7 @@ public class GradingConfigAdapterRegistry {
 
     private GradingConfigAdapterRegistry() {
         registry.put("Batch", new BatchGradingConfigAdapter());
+        registry.put("Interactive", new InteractiveGradingConfigAdapter());
     }
 
     public static GradingConfigAdapterRegistry getInstance() {

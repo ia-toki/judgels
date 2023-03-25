@@ -36,7 +36,7 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
 
             List<TestCase> testCases = new ArrayList<>();
             for (int j = 0; j < inputs.length; j++) {
-                if (!inputs[j].isEmpty() && !outputs[j].isEmpty()) {
+                if (!inputs[j].isEmpty()) {
                     testCases.add(TestCase.of(inputs[j], outputs[j], Collections.emptySet() /* placeholder */));
                 }
             }
@@ -54,6 +54,17 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
     protected Optional<String> getCustomScorerConfigPartFromForm(GradingConfigForm form) {
         if (!form.customScorer.equals("(none)")) {
             return Optional.of(form.customScorer);
+        }
+        return Optional.empty();
+    }
+
+    protected void fillCommunicatorFormPartFromConfig(GradingConfigForm form, Optional<String> communicator) {
+        form.communicator = communicator.orElse("(none)");
+    }
+
+    protected Optional<String> getCommunicatorConfigPartFromForm(GradingConfigForm form) {
+        if (!form.communicator.equals("(none)")) {
+            return Optional.of(form.communicator);
         }
         return Optional.empty();
     }

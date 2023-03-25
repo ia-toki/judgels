@@ -34,11 +34,23 @@ public class EditGradingConfigView extends TemplateView {
         return helperFiles;
     }
 
-    public Map<String, String> getHelperFilenames() {
+    public Map<String, String> getHelperFilenamesForCustomScorer() {
         Map<String, String> filenames = new LinkedHashMap<>();
         filenames.put("(none)", "(None)");
         for (FileInfo file : helperFiles) {
             filenames.put(file.getName(), file.getName());
+        }
+        return filenames;
+    }
+
+    public Map<String, String> getHelperFilenamesForCommunicator() {
+        Map<String, String> filenames = new LinkedHashMap<>();
+        if (helperFiles.isEmpty()) {
+            filenames.put("(none)", "(None yet. Please add communicator as a helper file.)");
+        } else {
+            for (FileInfo file : helperFiles) {
+                filenames.put(file.getName(), file.getName());
+            }
         }
         return filenames;
     }

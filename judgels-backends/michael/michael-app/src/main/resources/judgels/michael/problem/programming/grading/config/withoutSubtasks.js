@@ -29,7 +29,7 @@ function addEventListeners() {
       var inputValue = addForm.querySelector('.tc-input').value;
       var outputValue = addForm.querySelector('.tc-output').value;
 
-      if (!inputValue || !outputValue) {
+      if (!inputValue) {
         alert('No files selected! Please upload test data files first.');
         return;
       }

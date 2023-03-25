@@ -21,6 +21,9 @@ public class GradingConfigForm extends HtmlForm {
     @FormParam("customScorer")
     String customScorer;
 
+    @FormParam("communicator")
+    String communicator;
+
     public int getTimeLimit() {
         return timeLimit;
     }
@@ -39,5 +42,9 @@ public class GradingConfigForm extends HtmlForm {
 
     public String getCustomScorer() {
         return customScorer;
+    }
+
+    public String getCommunicator() {
+        return communicator;
     }
 }
