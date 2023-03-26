@@ -5,6 +5,10 @@
   <@forms.text form=form name="memoryLimit" label="Memory limit" addon="kilobytes" disabled=!canEdit/>
 </#macro>
 
+<#macro keys>
+  <@forms.text form=form name="sourceFileFieldKeys" label="Keys" addon="comma-separated keys" disabled=!canEdit/>
+</#macro>
+
 <#macro testCase isTemplate=false inputVal="" outputVal="" hasOutput=true>
   <tr <#if isTemplate>style="display: none"<#else>class="tc"</#if>>
     <td>

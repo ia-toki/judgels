@@ -6,11 +6,11 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig;
 
-public class OutputOnlyGradingConfigAdapter extends SingleSourceFileWithoutSubtasksGradingConfigAdapter {
+public class OutputOnlyGradingConfigAdapter extends BatchGradingConfigAdapter {
     @Override
     public GradingConfigForm buildFormFromConfig(GradingConfig config) {
         GradingConfigForm form = new GradingConfigForm();
-        fillFormPartsFromConfig(form, config);
+        fillTestDataFormPartsFromConfig(form, config);
 
         OutputOnlyGradingConfig castConfig = (OutputOnlyGradingConfig) config;
         fillCustomScorerFormPartFromConfig(form, castConfig.getCustomScorer());
@@ -19,15 +19,12 @@ public class OutputOnlyGradingConfigAdapter extends SingleSourceFileWithoutSubta
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GradingConfig buildConfigFromForm(GradingConfigForm form) {
-        Object[] parts = getSingleSourceFileWithoutSubtasksConfigPartsFromForm(form);
+        List<TestGroup> testDataPart = getTestDataWithoutSubtasksConfigPartsFromForm(form);
         Optional<String> customScorerPart = getCustomScorerConfigPartFromForm(form);
 
         return new OutputOnlyGradingConfig.Builder()
-                .timeLimit((int) parts[0])
-                .memoryLimit((int) parts[1])
-                .testData((List<TestGroup>) parts[2])
+                .testData(testDataPart)
                 .customScorer(customScorerPart)
                 .build();
     }

@@ -12,6 +12,9 @@ public class GradingConfigForm extends HtmlForm {
     @FormParam("memoryLimit")
     int memoryLimit;
 
+    @FormParam("sourceFileFieldKeys")
+    String sourceFileFieldKeys;
+
     @FormParam("testCaseInputs")
     List<String> testCaseInputs = Arrays.asList("", "");
 
@@ -30,6 +33,10 @@ public class GradingConfigForm extends HtmlForm {
 
     public int getMemoryLimit() {
         return memoryLimit;
+    }
+
+    public String getSourceFileFieldKeys() {
+        return sourceFileFieldKeys;
     }
 
     public List<String> getTestCaseInputs() {

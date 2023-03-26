@@ -6,11 +6,12 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.interactive.InteractiveGradingConfig;
 
-public class InteractiveGradingConfigAdapter extends SingleSourceFileWithoutSubtasksGradingConfigAdapter {
+public class InteractiveGradingConfigAdapter extends BaseGradingConfigAdapter {
     @Override
     public GradingConfigForm buildFormFromConfig(GradingConfig config) {
         GradingConfigForm form = new GradingConfigForm();
-        fillFormPartsFromConfig(form, config);
+        fillLimitsFormPartsFromConfig(form, config);
+        fillTestDataFormPartsFromConfig(form, config);
 
         InteractiveGradingConfig castConfig = (InteractiveGradingConfig) config;
         fillCommunicatorFormPartFromConfig(form, castConfig.getCommunicator());
@@ -19,15 +20,15 @@ public class InteractiveGradingConfigAdapter extends SingleSourceFileWithoutSubt
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public GradingConfig buildConfigFromForm(GradingConfigForm form) {
-        Object[] parts = getSingleSourceFileWithoutSubtasksConfigPartsFromForm(form);
+        Object[] limitParts = getLimitsConfigPartsFromForm(form);
+        List<TestGroup> testDataPart = getTestDataWithoutSubtasksConfigPartsFromForm(form);
         Optional<String> communicatorPart = getCommunicatorConfigPartFromForm(form);
 
         return new InteractiveGradingConfig.Builder()
-                .timeLimit((int) parts[0])
-                .memoryLimit((int) parts[1])
-                .testData((List<TestGroup>) parts[2])
+                .timeLimit((int) limitParts[0])
+                .memoryLimit((int) limitParts[1])
+                .testData(testDataPart)
                 .communicator(communicatorPart)
                 .build();
     }

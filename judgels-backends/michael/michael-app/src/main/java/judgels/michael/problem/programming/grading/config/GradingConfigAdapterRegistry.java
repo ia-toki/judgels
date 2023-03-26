@@ -9,7 +9,8 @@ public class GradingConfigAdapterRegistry {
     private static final List<GradingConfigAdapter> ADAPTERS = ImmutableList.of(
             new BatchGradingConfigAdapter(),
             new InteractiveGradingConfigAdapter(),
-            new OutputOnlyGradingConfigAdapter());
+            new OutputOnlyGradingConfigAdapter(),
+            new FunctionalGradingConfigAdapter());
 
     private static final GradingConfigAdapterRegistry INSTANCE = new GradingConfigAdapterRegistry();
 

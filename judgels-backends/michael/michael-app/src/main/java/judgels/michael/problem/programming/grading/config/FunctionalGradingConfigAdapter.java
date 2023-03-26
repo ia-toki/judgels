@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Optional;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
-import judgels.gabriel.engines.batch.BatchGradingConfig;
+import judgels.gabriel.engines.functional.FunctionalGradingConfig;
 
-public class BatchGradingConfigAdapter extends BaseGradingConfigAdapter {
+public class FunctionalGradingConfigAdapter extends BaseGradingConfigAdapter {
     @Override
     public GradingConfigForm buildFormFromConfig(GradingConfig config) {
         GradingConfigForm form = new GradingConfigForm();
         fillLimitsFormPartsFromConfig(form, config);
         fillTestDataFormPartsFromConfig(form, config);
 
-        BatchGradingConfig castConfig = (BatchGradingConfig) config;
+        FunctionalGradingConfig castConfig = (FunctionalGradingConfig) config;
+        fillSourceFileFieldKeysFormPartFromConfig(form, castConfig.getSourceFileFieldKeys());
         fillCustomScorerFormPartFromConfig(form, castConfig.getCustomScorer());
 
         return form;
@@ -22,12 +23,14 @@ public class BatchGradingConfigAdapter extends BaseGradingConfigAdapter {
     @Override
     public GradingConfig buildConfigFromForm(GradingConfigForm form) {
         Object[] limitParts = getLimitsConfigPartsFromForm(form);
+        List<String> sourceFileFieldKeysPart = getSourceFileFieldKeysConfigPartFromForm(form);
         List<TestGroup> testDataPart = getTestDataWithoutSubtasksConfigPartsFromForm(form);
         Optional<String> customScorerPart = getCustomScorerConfigPartFromForm(form);
 
-        return new BatchGradingConfig.Builder()
+        return new FunctionalGradingConfig.Builder()
                 .timeLimit((int) limitParts[0])
                 .memoryLimit((int) limitParts[1])
+                .sourceFileFieldKeys(sourceFileFieldKeysPart)
                 .testData(testDataPart)
                 .customScorer(customScorerPart)
                 .build();
