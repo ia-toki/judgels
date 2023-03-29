@@ -2,8 +2,10 @@ package judgels.michael.problem.programming.grading.config;
 
 import java.util.List;
 import java.util.Optional;
+import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.batch.ImmutableBatchWithSubtasksGradingConfig;
 import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
 
 public class InteractiveWithSubtasksGradingConfigAdapter extends BaseGradingConfigAdapter {
@@ -32,6 +34,18 @@ public class InteractiveWithSubtasksGradingConfigAdapter extends BaseGradingConf
                 .testData((List<TestGroup>) testDataParts[0])
                 .subtaskPoints((List<Integer>) testDataParts[1])
                 .communicator(communicatorPart)
+                .build();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public GradingConfig autoPopulateTestData(GradingConfig config, List<FileInfo> testDataFiles) {
+        Object[] parts = autoPopulateTestDataByTCFrameFormat(config.getSubtasks(), testDataFiles);
+
+        return new ImmutableBatchWithSubtasksGradingConfig.Builder()
+                .from(config)
+                .testData((List<TestGroup>) parts[0])
+                .subtaskPoints((List<Integer>) parts[1])
                 .build();
     }
 }

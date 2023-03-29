@@ -6,6 +6,7 @@
 
 <@template.layout>
   <@forms.form>
+    <@parts.autoPopulateByFilename/>
     <@parts.sampleTestData/>
     <@parts.testData/>
     <@parts.customScorer/>

@@ -6,6 +6,7 @@
 
 <@template.layout>
   <@forms.form>
+    <@parts.autoPopulateByTCFrameFormat/>
     <@parts.limits/>
     <@parts.keys/>
     <@parts.sampleTestDataWithSubtasks/>

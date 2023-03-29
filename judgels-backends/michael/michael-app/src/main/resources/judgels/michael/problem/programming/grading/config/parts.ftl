@@ -305,6 +305,30 @@
   <@forms.select form=form name="communicator" label="Communicator" options=helperFilenamesForCommunicator disabled=!canEdit/>
 </#macro>
 
+<#macro autoPopulateByFilename>
+  <#if !canEdit><#return></#if>
+  <div class="row">
+    <div class="col-md-offset-3 col-md-9">
+      <a href="config/auto-populate" class="btn btn-primary btn-sm">
+        Auto-populate test data based on filenames
+      </a>
+    </div>
+  </div>
+  <br>
+</#macro>
+
+<#macro autoPopulateByTCFrameFormat>
+  <#if !canEdit><#return></#if>
+  <div class="row">
+    <div class="col-md-offset-3 col-md-9">
+      <a href="config/auto-populate" class="btn btn-primary btn-sm">
+        Auto-populate test data based on tcframe format
+      </a>
+    </div>
+  </div>
+  <br>
+</#macro>
+
 <#macro submit>
   <#if !canEdit><#return></#if>
   <@forms.submit>Update</@forms.submit>

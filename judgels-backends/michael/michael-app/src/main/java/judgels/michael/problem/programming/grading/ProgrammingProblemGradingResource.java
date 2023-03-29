@@ -132,6 +132,28 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
     }
 
     @GET
+    @Path("/config/auto-populate")
+    @UnitOfWork
+    public Response autoPopulateGradingConfigTestData(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        String engine = programmingProblemStore.getGradingEngine(actor.getUserJid(), problem.getJid());
+        GradingConfig config  = programmingProblemStore.getGradingConfig(actor.getUserJid(), problem.getJid());
+        List<FileInfo> testDataFiles = programmingProblemStore.getGradingTestDataFiles(actor.getUserJid(), problem.getJid());
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+
+        GradingConfigAdapter adapter = GradingConfigAdapterRegistry.getInstance().get(engine);
+        GradingConfig newConfig = adapter.autoPopulateTestData(config, testDataFiles);
+
+        programmingProblemStore.updateGradingConfig(actor.getUserJid(), problem.getJid(), newConfig);
+
+        return redirect("/problems/programming/" + problemId + "/grading/config");
+    }
+
+    @GET
     @Path("/testdata")
     @UnitOfWork(readOnly = true)
     public View listGradingTestDataFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {

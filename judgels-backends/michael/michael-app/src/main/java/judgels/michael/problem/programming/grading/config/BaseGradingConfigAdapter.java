@@ -3,17 +3,21 @@ package judgels.michael.problem.programming.grading.config;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.Subtask;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
+import liquibase.util.file.FilenameUtils;
 
 public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
     protected void fillLimitsFormPartsFromConfig(GradingConfigForm form, GradingConfig config) {
@@ -215,5 +219,129 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
             return Optional.of(form.communicator);
         }
         return Optional.empty();
+    }
+
+    protected List<TestGroup> autoPopulateTestDataByFilename(List<FileInfo> testDataFiles) {
+        List<TestCase> testCases = new ArrayList<>();
+        List<TestCase> sampleTestCases = new ArrayList<>();
+
+        int i;
+        for (i = 0; i + 1 < testDataFiles.size(); i++) {
+            String in = testDataFiles.get(i).getName();
+            String out = testDataFiles.get(i + 1).getName();
+            if (isTestCasePair(in, out)) {
+                if (in.contains("sample")) {
+                    sampleTestCases.add(TestCase.of(in, out, ImmutableSet.of(0)));
+                } else {
+                    testCases.add(TestCase.of(in, out, ImmutableSet.of(-1)));
+                }
+                i++;
+            }
+        }
+
+        return ImmutableList.of(
+                TestGroup.of(0, sampleTestCases),
+                TestGroup.of(-1, testCases));
+    }
+
+    protected Object[] autoPopulateTestDataByTCFrameFormat(List<Subtask> subtasks, List<FileInfo> testDataFiles) {
+        Set<String> filenames = new HashSet<>(Lists.transform(testDataFiles, f -> f.getName()));
+        Set<String> filenamesNoExt = new HashSet<>();
+        for (String filename : filenames) {
+            String[] parts = filename.split("\\.");
+            if (parts.length != 2) {
+                continue;
+            }
+
+            filenamesNoExt.add(parts[0]);
+        }
+
+        List<TCFrameFile> tcframeFiles = new ArrayList<>();
+
+        for (String filename : filenamesNoExt) {
+            if (!filenames.contains(filename + ".in") || !filenames.contains(filename + ".out")) {
+                continue;
+            }
+
+            String[] parts = filename.split("_");
+            if (parts.length != 3) {
+                continue;
+            }
+
+            try {
+                String name = parts[0];
+                int tgNo;
+                if (parts[1].equals("sample")) {
+                    tgNo = 0;
+                } else {
+                    tgNo = Integer.parseInt(parts[1]);
+                }
+                int tcNo = Integer.parseInt(parts[2]);
+
+                tcframeFiles.add(new TCFrameFile(name, tgNo, tcNo));
+            } catch (NumberFormatException e) {
+                // skip
+            }
+        }
+
+        Collections.sort(tcframeFiles);
+
+        int maxTgNo = 0;
+        for (TCFrameFile file : tcframeFiles) {
+            maxTgNo = Math.max(maxTgNo, file.tgNo);
+        }
+
+        List<List<TestCase>> testGroups = new ArrayList<>();
+        for (int i = 0; i <= maxTgNo; i++) {
+            testGroups.add(new ArrayList<>());
+        }
+
+        for (TCFrameFile file : tcframeFiles) {
+            String name = file.filename;
+            int tgNo = file.tgNo;
+            String tgName = tgNo == 0 ? "sample" : "" + tgNo;
+            int tcNo = file.tcNo;
+
+            String filename = name + "_" + tgName + "_" + tcNo;
+            Set<Integer> subtaskIds = new LinkedHashSet<>();
+
+            if (tgNo == 0) {
+                subtaskIds.add(0);
+            } else {
+                for (int i = tgNo; i <= maxTgNo; i++) {
+                    subtaskIds.add(i);
+                }
+            }
+
+            TestCase testCase = TestCase.of(filename + ".in", filename + ".out", subtaskIds);
+
+            testGroups.get(file.tgNo).add(testCase);
+        }
+
+        List<TestGroup> testData = new ArrayList<>();
+        for (int i = 0; i <= maxTgNo; i++) {
+            testData.add(TestGroup.of(i, testGroups.get(i)));
+        }
+
+        List<Integer> subtaskPoints = new ArrayList<>();
+        for (int i = 0; i < maxTgNo; i++) {
+            if (i < subtasks.size()) {
+                subtaskPoints.add(subtasks.get(i).getPoints());
+            } else {
+                subtaskPoints.add(0);
+            }
+        }
+
+        return new Object[]{testData, subtaskPoints};
+    }
+
+    private boolean isTestCasePair(String in, String out) {
+        String inBaseName = FilenameUtils.getBaseName(in);
+        String inExtension = FilenameUtils.getExtension(in);
+
+        String outBaseName = FilenameUtils.getBaseName(out);
+        String outExtension = FilenameUtils.getExtension(out);
+
+        return inBaseName.equals(outBaseName) && inExtension.equals("in") && outExtension.equals("out");
     }
 }

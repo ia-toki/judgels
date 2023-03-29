@@ -2,6 +2,7 @@ package judgels.michael.problem.programming.grading.config;
 
 import java.util.List;
 import java.util.Optional;
+import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.batch.BatchGradingConfig;
@@ -30,6 +31,14 @@ public class BatchGradingConfigAdapter extends BaseGradingConfigAdapter {
                 .memoryLimit((int) limitParts[1])
                 .testData(testDataPart)
                 .customScorer(customScorerPart)
+                .build();
+    }
+
+    @Override
+    public GradingConfig autoPopulateTestData(GradingConfig config, List<FileInfo> testDataFiles) {
+        return new BatchGradingConfig.Builder()
+                .from(config)
+                .testData(autoPopulateTestDataByFilename(testDataFiles))
                 .build();
     }
 }
