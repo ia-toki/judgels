@@ -11,7 +11,7 @@ public class FunctionalGradingConfigAdapter extends BaseGradingConfigAdapter {
     public GradingConfigForm buildFormFromConfig(GradingConfig config) {
         GradingConfigForm form = new GradingConfigForm();
         fillLimitsFormPartsFromConfig(form, config);
-        fillTestDataFormPartsFromConfig(form, config);
+        fillTestDataWithoutSubtasksFormPartsFromConfig(form, config);
 
         FunctionalGradingConfig castConfig = (FunctionalGradingConfig) config;
         fillSourceFileFieldKeysFormPartFromConfig(form, castConfig.getSourceFileFieldKeys());

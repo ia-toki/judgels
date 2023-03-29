@@ -58,4 +58,8 @@ public class EditGradingConfigView extends TemplateView {
     public boolean getCanEdit() {
         return canEdit;
     }
+
+    public int getDefaultSubtaskCount() {
+        return GradingConfigForm.DEFAULT_SUBTASK_COUNT;
+    }
 }

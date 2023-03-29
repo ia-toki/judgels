@@ -10,7 +10,7 @@ public class OutputOnlyGradingConfigAdapter extends BatchGradingConfigAdapter {
     @Override
     public GradingConfigForm buildFormFromConfig(GradingConfig config) {
         GradingConfigForm form = new GradingConfigForm();
-        fillTestDataFormPartsFromConfig(form, config);
+        fillTestDataWithoutSubtasksFormPartsFromConfig(form, config);
 
         OutputOnlyGradingConfig castConfig = (OutputOnlyGradingConfig) config;
         fillCustomScorerFormPartFromConfig(form, castConfig.getCustomScorer());

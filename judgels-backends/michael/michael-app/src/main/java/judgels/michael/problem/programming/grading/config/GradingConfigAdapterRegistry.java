@@ -8,9 +8,13 @@ import java.util.Map;
 public class GradingConfigAdapterRegistry {
     private static final List<GradingConfigAdapter> ADAPTERS = ImmutableList.of(
             new BatchGradingConfigAdapter(),
+            new BatchWithSubtasksGradingConfigAdapter(),
             new InteractiveGradingConfigAdapter(),
+            new InteractiveWithSubtasksGradingConfigAdapter(),
             new OutputOnlyGradingConfigAdapter(),
-            new FunctionalGradingConfigAdapter());
+            new OutputOnlyWithSubtasksGradingConfigAdapter(),
+            new FunctionalGradingConfigAdapter(),
+            new FunctionalWithSubtasksGradingConfigAdapter());
 
     private static final GradingConfigAdapterRegistry INSTANCE = new GradingConfigAdapterRegistry();
 

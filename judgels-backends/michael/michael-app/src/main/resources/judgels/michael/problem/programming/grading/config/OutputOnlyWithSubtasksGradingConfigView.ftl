@@ -6,10 +6,9 @@
 
 <@template.layout>
   <@forms.form>
-    <@parts.limits/>
-    <@parts.keys/>
-    <@parts.sampleTestData/>
-    <@parts.testData/>
+    <@parts.sampleTestDataWithSubtasks/>
+    <@parts.testDataWithSubtasks/>
+    <@parts.subtasks/>
     <@parts.customScorer/>
     <@parts.submit/>
   </@forms.form>
@@ -17,7 +16,7 @@
   <#if canEdit>
     <script>
       <#include "config.js">
-      configure();
+      configureWithSubtasks();
     </script>
   </#if>
 </@template.layout>

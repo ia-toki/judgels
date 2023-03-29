@@ -1,4 +1,4 @@
-<#-- @ftlvariable type="judgels.michael.problem.programming.grading.config.InteractiveGradingConfigView" -->
+<#-- @ftlvariable type="judgels.michael.problem.programming.grading.config.EditGradingConfigView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
@@ -13,8 +13,10 @@
     <@parts.submit/>
   </@forms.form>
 
-  <script>
-    <#include "withoutSubtasks.js">
-    addEventListeners();
-  </script>
+  <#if canEdit>
+    <script>
+      <#include "config.js">
+      configure();
+    </script>
+  </#if>
 </@template.layout>
