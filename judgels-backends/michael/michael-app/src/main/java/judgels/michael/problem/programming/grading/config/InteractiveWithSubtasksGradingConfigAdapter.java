@@ -5,7 +5,6 @@ import java.util.Optional;
 import judgels.fs.FileInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
-import judgels.gabriel.engines.batch.ImmutableBatchWithSubtasksGradingConfig;
 import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
 
 public class InteractiveWithSubtasksGradingConfigAdapter extends BaseGradingConfigAdapter {
@@ -40,9 +39,9 @@ public class InteractiveWithSubtasksGradingConfigAdapter extends BaseGradingConf
     @Override
     @SuppressWarnings("unchecked")
     public GradingConfig autoPopulateTestData(GradingConfig config, List<FileInfo> testDataFiles) {
-        Object[] parts = autoPopulateTestDataByTCFrameFormat(config.getSubtasks(), testDataFiles);
+        Object[] parts = autoPopulateTestDataByTCFrameFormat(false, config.getSubtasks(), testDataFiles);
 
-        return new ImmutableBatchWithSubtasksGradingConfig.Builder()
+        return new InteractiveWithSubtasksGradingConfig.Builder()
                 .from(config)
                 .testData((List<TestGroup>) parts[0])
                 .subtaskPoints((List<Integer>) parts[1])

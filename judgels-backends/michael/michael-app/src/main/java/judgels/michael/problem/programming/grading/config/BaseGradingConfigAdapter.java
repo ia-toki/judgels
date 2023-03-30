@@ -221,21 +221,21 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
         return Optional.empty();
     }
 
-    protected List<TestGroup> autoPopulateTestDataByFilename(List<FileInfo> testDataFiles) {
+    protected List<TestGroup> autoPopulateTestDataByFilename(boolean hasOutput, List<FileInfo> testDataFiles) {
         List<TestCase> testCases = new ArrayList<>();
         List<TestCase> sampleTestCases = new ArrayList<>();
 
         int i;
-        for (i = 0; i + 1 < testDataFiles.size(); i++) {
+        for (i = 0; i + (hasOutput ? 1 : 0) < testDataFiles.size(); i++) {
             String in = testDataFiles.get(i).getName();
-            String out = testDataFiles.get(i + 1).getName();
+            String out = hasOutput ? testDataFiles.get(i + 1).getName() : "";
             if (isTestCasePair(in, out)) {
                 if (in.contains("sample")) {
                     sampleTestCases.add(TestCase.of(in, out, ImmutableSet.of(0)));
                 } else {
                     testCases.add(TestCase.of(in, out, ImmutableSet.of(-1)));
                 }
-                i++;
+                i += (hasOutput ? 1 : 0);
             }
         }
 
@@ -244,7 +244,11 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
                 TestGroup.of(-1, testCases));
     }
 
-    protected Object[] autoPopulateTestDataByTCFrameFormat(List<Subtask> subtasks, List<FileInfo> testDataFiles) {
+    protected List<TestGroup> autoPopulateTestDataByFilename(List<FileInfo> testDataFiles) {
+        return autoPopulateTestDataByFilename(true, testDataFiles);
+    }
+
+    protected Object[] autoPopulateTestDataByTCFrameFormat(boolean hasOutput, List<Subtask> subtasks, List<FileInfo> testDataFiles) {
         Set<String> filenames = new HashSet<>(Lists.transform(testDataFiles, f -> f.getName()));
         Set<String> filenamesNoExt = new HashSet<>();
         for (String filename : filenames) {
@@ -259,7 +263,7 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
         List<TCFrameFile> tcframeFiles = new ArrayList<>();
 
         for (String filename : filenamesNoExt) {
-            if (!filenames.contains(filename + ".in") || !filenames.contains(filename + ".out")) {
+            if (!filenames.contains(filename + ".in") || (hasOutput && !filenames.contains(filename + ".out"))) {
                 continue;
             }
 
@@ -313,7 +317,7 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
                 }
             }
 
-            TestCase testCase = TestCase.of(filename + ".in", filename + ".out", subtaskIds);
+            TestCase testCase = TestCase.of(filename + ".in", hasOutput ? filename + ".out" : "", subtaskIds);
 
             testGroups.get(file.tgNo).add(testCase);
         }
@@ -335,9 +339,17 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
         return new Object[]{testData, subtaskPoints};
     }
 
+    protected Object[] autoPopulateTestDataByTCFrameFormat(List<Subtask> subtasks, List<FileInfo> testDataFiles) {
+        return autoPopulateTestDataByTCFrameFormat(true, subtasks, testDataFiles);
+    }
+
     private boolean isTestCasePair(String in, String out) {
         String inBaseName = FilenameUtils.getBaseName(in);
         String inExtension = FilenameUtils.getExtension(in);
+
+        if (out.isEmpty()) {
+            return inExtension.equals("in");
+        }
 
         String outBaseName = FilenameUtils.getBaseName(out);
         String outExtension = FilenameUtils.getExtension(out);

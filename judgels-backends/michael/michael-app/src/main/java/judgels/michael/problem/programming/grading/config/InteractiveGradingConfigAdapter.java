@@ -38,7 +38,7 @@ public class InteractiveGradingConfigAdapter extends BaseGradingConfigAdapter {
     public GradingConfig autoPopulateTestData(GradingConfig config, List<FileInfo> testDataFiles) {
         return new InteractiveGradingConfig.Builder()
                 .from(config)
-                .testData(autoPopulateTestDataByFilename(testDataFiles))
+                .testData(autoPopulateTestDataByFilename(false, testDataFiles))
                 .build();
     }
 }
