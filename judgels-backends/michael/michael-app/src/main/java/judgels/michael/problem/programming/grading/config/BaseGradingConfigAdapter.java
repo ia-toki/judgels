@@ -160,6 +160,10 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
                         .testCases(sampleTestCases)
                         .build());
             } else {
+                if (testGroup.getTestCases().isEmpty()) {
+                    continue;
+                }
+
                 Set<Integer> subtaskIds = new LinkedHashSet<>();
                 if (i - 1 < form.testGroupSubtaskIds.size()) {
                     for (String subtaskId : form.testGroupSubtaskIds.get(i - 1).split(",")) {
@@ -200,22 +204,22 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
     }
 
     protected void fillCustomScorerFormPartFromConfig(GradingConfigForm form, Optional<String> customScorer) {
-        form.customScorer = customScorer.orElse("(none)");
+        form.customScorer = customScorer.orElse(GradingConfigForm.HELPER_NONE);
     }
 
     protected Optional<String> getCustomScorerConfigPartFromForm(GradingConfigForm form) {
-        if (!form.customScorer.equals("(none)")) {
+        if (!form.customScorer.equals(GradingConfigForm.HELPER_NONE)) {
             return Optional.of(form.customScorer);
         }
         return Optional.empty();
     }
 
     protected void fillCommunicatorFormPartFromConfig(GradingConfigForm form, Optional<String> communicator) {
-        form.communicator = communicator.orElse("(none)");
+        form.communicator = communicator.orElse(GradingConfigForm.HELPER_NONE);
     }
 
     protected Optional<String> getCommunicatorConfigPartFromForm(GradingConfigForm form) {
-        if (!form.communicator.equals("(none)")) {
+        if (!form.communicator.equals(GradingConfigForm.HELPER_NONE)) {
             return Optional.of(form.communicator);
         }
         return Optional.empty();
