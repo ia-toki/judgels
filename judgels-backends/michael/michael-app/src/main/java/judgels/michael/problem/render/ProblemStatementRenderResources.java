@@ -46,4 +46,11 @@ public abstract class ProblemStatementRenderResources extends BaseProblemResourc
     public static class InViewProgrammingProblemStatement extends ProblemStatementRenderResources {
         @Inject public InViewProgrammingProblemStatement() {}
     }
+
+    // page path: /problems/bundle/{problemId}/statements
+    // media file path: render/{mediaFilename}
+    @Path("/problems/bundle/{problemId}/render/{mediaFilename}")
+    public static class InViewBundleProblemStatement extends ProblemStatementRenderResources {
+        @Inject public InViewBundleProblemStatement() {}
+    }
 }
