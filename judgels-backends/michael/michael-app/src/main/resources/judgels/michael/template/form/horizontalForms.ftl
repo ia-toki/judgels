@@ -4,8 +4,8 @@
   </form>
 </#macro>
 
-<#macro multipartForm>
-  <form method="POST" class="form-horizontal" enctype="multipart/form-data">
+<#macro multipartForm action="">
+  <form method="POST" class="form-horizontal" enctype="multipart/form-data" <#if action?has_content>action="${action}"</#if>>
     <#nested>
   </form>
 </#macro>
@@ -46,11 +46,11 @@
   </div>
 </#macro>
 
-<#macro select name label options form={} disabled=false help="">
+<#macro select name label options form={} disabled=false help="" simple=false>
   <div class="form-group">
-    <label class="control-label col-md-3" for="${name}">${label}</label>
+    <label class="<#if !simple>control-label </#if> col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
-      <select id="${name}" name="${name}" class="form-control" <#if disabled>disabled</#if>/>
+      <select id="${name}" name="${name}" class="<#if !simple>form-control</#if>" <#if disabled>disabled</#if>/>
         <#list options as k, v>
           <option value="${k}" ${(k == form[name]!"")?then("selected", "")}>${v}</option>
         </#list>
@@ -71,11 +71,11 @@
   </div>
 </#macro>
 
-<#macro file name label form={} required=false>
+<#macro file name label form={} simple=false required=false>
   <div class="form-group">
-    <label class="control-label col-md-3" for="${name}">${label}</label>
+    <label class="<#if !simple>control-label </#if>col-md-3" for="${name}">${label}</label>
     <div class="col-md-9">
-      <input type="file" id="${name}" name="${name}" class="form-control">
+      <input type="file" id="${name}" name="${name}" class="<#if !simple>form-control</#if>">
     </div>
   </div>
 </#macro>

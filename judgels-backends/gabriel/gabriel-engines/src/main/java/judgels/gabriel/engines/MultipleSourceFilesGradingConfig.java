@@ -15,7 +15,7 @@ public interface MultipleSourceFilesGradingConfig extends GradingConfig {
     @Override
     default Map<String, String> getSourceFileFields() {
         if (getSourceFileFieldKeys().size() == 1) {
-            return ImmutableMap.of(getSourceFileFieldKeys().get(0), "Source Code");
+            return ImmutableMap.of(getSourceFileFieldKeys().get(0), "Source code");
         }
 
         Map<String, String> sourceFileFields = new LinkedHashMap<>();

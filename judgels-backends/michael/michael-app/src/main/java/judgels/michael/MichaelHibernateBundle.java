@@ -14,8 +14,6 @@ import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemLevelModel;
 import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
-import judgels.jerahmeel.persistence.ProgrammingGradingModel;
-import judgels.jerahmeel.persistence.ProgrammingSubmissionModel;
 import judgels.jerahmeel.persistence.StatsUserModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jophiel.persistence.SessionModel;
@@ -73,8 +71,8 @@ public class MichaelHibernateBundle extends HibernateBundle<MichaelApplicationCo
                 ProblemPartnerModel.class,
                 ProblemSetterModel.class,
                 ProblemTagModel.class,
-                ProgrammingGradingModel.class,
-                ProgrammingSubmissionModel.class,
+                judgels.sandalphon.persistence.ProgrammingGradingModel.class,
+                judgels.sandalphon.persistence.ProgrammingSubmissionModel.class,
 
                 // Uriel
                 ContestModel.class,
@@ -100,8 +98,8 @@ public class MichaelHibernateBundle extends HibernateBundle<MichaelApplicationCo
                 ChapterProblemModel.class,
                 CourseModel.class,
                 CourseChapterModel.class,
-                ProgrammingGradingModel.class,
-                ProgrammingSubmissionModel.class,
+                judgels.jerahmeel.persistence.ProgrammingGradingModel.class,
+                judgels.jerahmeel.persistence.ProgrammingSubmissionModel.class,
                 BundleItemSubmissionModel.class,
                 ProblemContestModel.class,
                 ProblemLevelModel.class,

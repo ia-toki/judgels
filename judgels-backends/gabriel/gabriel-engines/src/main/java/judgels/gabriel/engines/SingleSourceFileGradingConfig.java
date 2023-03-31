@@ -9,6 +9,6 @@ public interface SingleSourceFileGradingConfig extends GradingConfig {
     @JsonIgnore
     @Override
     default Map<String, String> getSourceFileFields() {
-        return ImmutableMap.of("source", "Source Code");
+        return ImmutableMap.of("source", "Source code");
     }
 }

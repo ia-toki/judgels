@@ -325,6 +325,10 @@ th {
   width: 50px;
 }
 
+.table-col-submission-actions {
+  width: 80px;
+}
+
 .table-col-updated-at {
   width: 160px;
 }

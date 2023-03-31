@@ -4,6 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.OutputOnlyOverrides;
+import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig;
+import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.sandalphon.api.problem.ProblemStatement;
@@ -58,12 +62,28 @@ public class ViewStatementView extends TemplateView {
         return gradingConfig;
     }
 
+    public boolean getIsOutputOnly() {
+        return gradingConfig instanceof OutputOnlyGradingConfig || gradingConfig instanceof OutputOnlyWithSubtasksGradingConfig;
+    }
+
+    public String getOutputOnlyGradingLanguage() {
+        return OutputOnlyOverrides.KEY;
+    }
+
     public String getGradingEngine() {
         return gradingEngine;
     }
 
-    public Set<String> getAllowedGradingLanguages() {
-        return allowedGradingLanguages;
+    public String getSourceKeys() {
+        return String.join(",", gradingConfig.getSourceFileFields().keySet());
+    }
+
+    public Map<String, String> getAllowedGradingLanguages() {
+        Map<String, String> languages = new LinkedHashMap<>();
+        for (String lang : allowedGradingLanguages) {
+            languages.put(lang, GradingLanguageRegistry.getInstance().getLanguages().get(lang));
+        }
+        return languages;
     }
 
     public String getReasonNotAllowedToSubmit() {
