@@ -21,6 +21,7 @@ public class ViewStatementView extends TemplateView {
     private final String gradingEngine;
     private final Set<String> allowedGradingLanguages;
     private final String reasonNotAllowedToSubmit;
+    private final boolean canSubmit;
 
     public ViewStatementView(
             HtmlTemplate template,
@@ -30,7 +31,8 @@ public class ViewStatementView extends TemplateView {
             GradingConfig gradingConfig,
             String gradingEngine,
             Set<String> allowedGradingLanguages,
-            String reasonNotAllowedToSubmit) {
+            String reasonNotAllowedToSubmit,
+            boolean canSubmit) {
 
         super("viewStatementView.ftl", template);
         this.statement = statement;
@@ -40,6 +42,7 @@ public class ViewStatementView extends TemplateView {
         this.gradingEngine = gradingEngine;
         this.allowedGradingLanguages = allowedGradingLanguages;
         this.reasonNotAllowedToSubmit = reasonNotAllowedToSubmit;
+        this.canSubmit = canSubmit;
     }
 
     public ProblemStatement getStatement() {
@@ -88,5 +91,9 @@ public class ViewStatementView extends TemplateView {
 
     public String getReasonNotAllowedToSubmit() {
         return reasonNotAllowedToSubmit;
+    }
+
+    public boolean getCanSubmit() {
+        return canSubmit;
     }
 }

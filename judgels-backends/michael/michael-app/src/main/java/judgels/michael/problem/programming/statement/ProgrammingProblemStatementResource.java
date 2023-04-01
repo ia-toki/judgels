@@ -47,9 +47,10 @@ public class ProgrammingProblemStatementResource extends BaseProgrammingProblemR
         if (!isClean) {
             reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
         }
+        boolean canSubmit = roleChecker.canEdit(actor, problem);
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
-        return new ViewStatementView(template, statement, language, enabledLanguages, gradingConfig, gradingEngine, allowedGradingLanguages, reasonNotAllowedToSubmit);
+        return new ViewStatementView(template, statement, language, enabledLanguages, gradingConfig, gradingEngine, allowedGradingLanguages, reasonNotAllowedToSubmit, canSubmit);
     }
 }
