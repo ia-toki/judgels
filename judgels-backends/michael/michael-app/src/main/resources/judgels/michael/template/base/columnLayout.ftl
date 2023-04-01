@@ -5,8 +5,7 @@
 <#macro
   layout
   sidebarMenus activeSidebarMenu
-  searchProblemsWidget hasSearchProblemsWidget
-  searchLessonsWidget hasSearchLessonsWidget
+  searchProblemsWidget searchLessonsWidget
 >
   <div class="row content">
     <#if sidebarMenus?size == 0>
@@ -16,11 +15,11 @@
     <#else>
       <div class="col-md-3">
         <@sidebar.view menus=sidebarMenus activeMenu=activeSidebarMenu/>
-        <#if hasSearchProblemsWidget>
-          <@searchProblems.widget data=searchProblemsWidget/>
+        <#if searchProblemsWidget.isPresent()>
+          <@searchProblems.widget data=searchProblemsWidget.get()/>
         </#if>
-        <#if hasSearchLessonsWidget>
-          <@searchLessons.widget data=searchLessonsWidget/>
+        <#if searchLessonsWidget.isPresent()>
+          <@searchLessons.widget data=searchLessonsWidget.get()/>
         </#if>
       </div>
       <div class="col-md-9">

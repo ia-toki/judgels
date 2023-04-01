@@ -18,9 +18,7 @@
         sidebarMenus=vars.sidebarMenus
         activeSidebarMenu=vars.activeSidebarMenu
         searchProblemsWidget=vars.searchProblemsWidget
-        hasSearchProblemsWidget=vars.hasSearchProblemsWidget
         searchLessonsWidget=vars.searchLessonsWidget
-        hasSearchLessonsWidget=vars.hasSearchLessonsWidget
       >
         <@content.layout>
           <@title.view title=vars.title buttons=vars.mainButtons/>

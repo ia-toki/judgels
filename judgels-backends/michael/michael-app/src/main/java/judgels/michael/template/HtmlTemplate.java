@@ -1,8 +1,8 @@
 package judgels.michael.template;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class HtmlTemplate {
     private final String name;
@@ -18,10 +18,8 @@ public class HtmlTemplate {
     private List<InternalLink> mainButtons = new ArrayList<>();
     private List<InternalLink> secondaryTabs = new ArrayList<>();
     private String activeSecondaryTab = "";
-    private SearchProblemsWidget searchProblemsWidget = new SearchProblemsWidget(0, "", new ArrayList<>(), new HashMap<>());
-    private SearchLessonsWidget searchLessonsWidget = new SearchLessonsWidget(0, "");
-    private boolean hasSearchProblemsWidget;
-    private boolean hasSearchLessonsWidget;
+    private Optional<SearchProblemsWidget> searchProblemsWidget = Optional.empty();
+    private Optional<SearchLessonsWidget> searchLessonsWidget = Optional.empty();
 
     public HtmlTemplate(String name) {
         this.name = name;
@@ -119,29 +117,23 @@ public class HtmlTemplate {
         return activeSecondaryTab;
     }
 
-    public SearchProblemsWidget getSearchProblemsWidget() {
+    public Optional<SearchProblemsWidget> getSearchProblemsWidget() {
         return searchProblemsWidget;
     }
 
     public void setSearchProblemsWidget(SearchProblemsWidget searchProblemsWidget) {
-        this.searchProblemsWidget = searchProblemsWidget;
-        this.hasSearchProblemsWidget = true;
+        this.searchProblemsWidget = Optional.of(searchProblemsWidget);
     }
 
     public boolean isHasSearchProblemsWidget() {
-        return hasSearchProblemsWidget;
+        return searchProblemsWidget.isPresent();
     }
 
-    public SearchLessonsWidget getSearchLessonsWidget() {
+    public Optional<SearchLessonsWidget> getSearchLessonsWidget() {
         return searchLessonsWidget;
     }
 
     public void setSearchLessonsWidget(SearchLessonsWidget searchLessonsWidget) {
-        this.searchLessonsWidget = searchLessonsWidget;
-        this.hasSearchLessonsWidget = true;
-    }
-
-    public boolean isHasSearchLessonsWidget() {
-        return hasSearchLessonsWidget;
+        this.searchLessonsWidget = Optional.of(searchLessonsWidget);
     }
 }
