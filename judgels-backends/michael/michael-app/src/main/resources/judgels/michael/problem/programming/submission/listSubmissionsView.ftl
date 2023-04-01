@@ -22,13 +22,15 @@
         <tr>
           <td>${submission.id}</td>
           <td>${profilesMap[submission.userJid].username}</td>
-          <td>${languagesMap[submission.gradingLanguage]}</td>
+          <td>${gradingLanguageNamesMap[submission.gradingLanguage]}</td>
           <td>${submission.latestGrading.get().verdict.getName()}</td>
           <td>${submission.latestGrading.get().score}</td>
           <td>${getFormattedDurationFromNow(submission.time)}</td>
           <td class="text-center">
             <a type="button" class="btn btn-primary btn-xs" href="submissions/${submission.id}">View</a>
-            <a type="button" class="btn btn-default btn-xs" href="submissions/${submission.id}/regrade"><span class="glyphicon glyphicon-refresh"></span></a>
+            <#if canEdit>
+              <a type="button" class="btn btn-default btn-xs" href="submissions/${submission.id}/regrade"><span class="glyphicon glyphicon-refresh"></span></a>
+            </#if>
           </td>
         </tr>
       </#list>

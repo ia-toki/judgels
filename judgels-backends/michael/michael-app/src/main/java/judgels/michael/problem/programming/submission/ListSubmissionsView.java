@@ -10,18 +10,21 @@ import judgels.sandalphon.api.submission.programming.Submission;
 public class ListSubmissionsView extends TemplateView {
     private final Page<Submission> submissions;
     private final Map<String, Profile> profilesMap;
-    private final Map<String, String> languagesMap;
+    private final Map<String, String> gradingLanguageNamesMap;
+    private final boolean canEdit;
 
     public ListSubmissionsView(
             HtmlTemplate template,
             Page<Submission> submissions,
             Map<String, Profile> profilesMap,
-            Map<String, String> languagesMap) {
+            Map<String, String> gradingLanguageNamesMap,
+            boolean canEdit) {
 
         super("listSubmissionsView.ftl", template);
         this.submissions = submissions;
         this.profilesMap = profilesMap;
-        this.languagesMap = languagesMap;
+        this.gradingLanguageNamesMap = gradingLanguageNamesMap;
+        this.canEdit = canEdit;
     }
 
     public Page<Submission> getSubmissions() {
@@ -32,7 +35,11 @@ public class ListSubmissionsView extends TemplateView {
         return profilesMap;
     }
 
-    public Map<String, String> getLanguagesMap() {
-        return languagesMap;
+    public Map<String, String> getGradingLanguageNamesMap() {
+        return gradingLanguageNamesMap;
+    }
+
+    public boolean getCanEdit() {
+        return canEdit;
     }
 }

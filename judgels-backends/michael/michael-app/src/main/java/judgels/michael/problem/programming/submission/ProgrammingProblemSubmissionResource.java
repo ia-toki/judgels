@@ -37,6 +37,7 @@ import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
 import judgels.sandalphon.submission.programming.SubmissionClient;
+import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -46,6 +47,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
     @Inject protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
     @Inject protected SubmissionClient submissionClient;
+    @Inject protected SubmissionRegrader submissionRegrader;
 
     @Inject public ProgrammingProblemSubmissionResource() {}
 
@@ -63,10 +65,10 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageIndex));
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
-        Map<String, String> languagesMap = GradingLanguageRegistry.getInstance().getLanguages();
+        Map<String, String> gradingLanguageNamesMap = GradingLanguageRegistry.getInstance().getLanguages();
 
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
-        return new ListSubmissionsView(template, submissions, profilesMap, languagesMap);
+        return new ListSubmissionsView(template, submissions, profilesMap, gradingLanguageNamesMap, roleChecker.canEdit(actor, problem));
     }
 
     @POST
@@ -129,6 +131,24 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
 
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
         return new ViewSubmissionView(template, submission, Optional.ofNullable(details), source.getSubmissionFiles(), profile, gradingLanguageName);
+    }
+
+    @GET
+    @Path("/{submissionId}/regrade")
+    @UnitOfWork
+    public Response regradeSubmission(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("submissionId") int submissionId) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canView(actor, problem));
+
+        Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
+        submissionRegrader.regradeSubmission(submission);
+
+        return redirect("/problems/programming/" + problemId + "/submissions");
     }
 
     private HtmlTemplate newProblemSubmissionTemplate(Actor actor, Problem problem) {

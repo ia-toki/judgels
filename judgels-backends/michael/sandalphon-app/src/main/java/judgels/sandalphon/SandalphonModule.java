@@ -3,7 +3,9 @@ package judgels.sandalphon;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
+import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import judgels.fs.FileSystem;
@@ -20,6 +22,8 @@ import judgels.sandalphon.problem.base.ProblemGit;
 import judgels.sandalphon.problem.base.submission.SubmissionFs;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionClient;
+import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
+import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 
@@ -101,6 +105,22 @@ public class SandalphonModule {
                 gradingResponseQueueName,
                 messageClient,
                 mapper);
+    }
+
+    @Provides
+    @Singleton
+    SubmissionRegrader submissionRegrader(
+            LifecycleEnvironment lifecycleEnvironment,
+            SubmissionStore submissionStore,
+            SubmissionRegradeProcessor processor) {
+
+        ExecutorService executorService =
+                lifecycleEnvironment.executorService("sandalphon-submission-regrade-processor-%d")
+                        .maxThreads(5)
+                        .minThreads(5)
+                        .build();
+
+        return new SubmissionRegrader(submissionStore, executorService, processor);
     }
 
     @Provides
