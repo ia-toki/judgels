@@ -23,6 +23,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.languages.GradingLanguageRegistry;
@@ -101,6 +102,33 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
 
         return redirect("/problems/programming/" + problemId + "/submissions");
+    }
+
+    @GET
+    @Path("/{submissionId}")
+    @UnitOfWork(readOnly = true)
+    public View viewSubmission(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("submissionId") int submissionId) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canView(actor, problem));
+
+        Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
+
+        String gradingLanguageName = GradingLanguageRegistry.getInstance().get(submission.getGradingLanguage()).getName();
+        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+        Profile profile = profileStore.getProfile(Instant.now(), submission.getUserJid());
+
+        GradingResultDetails details = null;
+        if (submission.getLatestGrading().isPresent() && submission.getLatestGrading().get().getDetails().isPresent()) {
+            details = submission.getLatestGrading().get().getDetails().get();
+        }
+
+        HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
+        return new ViewSubmissionView(template, submission, Optional.ofNullable(details), source.getSubmissionFiles(), profile, gradingLanguageName);
     }
 
     private HtmlTemplate newProblemSubmissionTemplate(Actor actor, Problem problem) {

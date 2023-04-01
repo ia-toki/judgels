@@ -75,6 +75,10 @@ public abstract class TemplateView extends View {
         return getFormattedDurationFromNow(date.toInstant());
     }
 
+    public Date getDateFromInstant(Instant instant) {
+        return Date.from(instant);
+    }
+
     public String getFormattedFileSize(long bytes) {
         long oneKb = 1024;
         long oneMb = 1024 * oneKb;
