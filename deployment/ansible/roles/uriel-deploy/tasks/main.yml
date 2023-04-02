@@ -24,14 +24,14 @@
   - name: Pull uriel image
     docker_image:
       name: ghcr.io/ia-toki/judgels/uriel
-      tag: "{{ judgels_version | default('latest', true) }}"
+      tag: 1.0
       source: pull
       force_source: yes
 
   - name: Run a uriel container
     docker_container:
       name: uriel
-      image: "ghcr.io/ia-toki/judgels/uriel:{{ judgels_version | default('latest', true) }}"
+      image: ghcr.io/ia-toki/judgels/uriel:1.0
       restart: yes
       restart_policy: always
       log_driver: json-file

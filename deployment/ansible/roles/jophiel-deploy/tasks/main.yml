@@ -24,14 +24,14 @@
   - name: Pull jophiel image
     docker_image:
       name: ghcr.io/ia-toki/judgels/jophiel
-      tag: "{{ judgels_version | default('latest', true) }}"
+      tag: 1.0
       source: pull
       force_source: yes
 
   - name: Run a jophiel container
     docker_container:
       name: jophiel
-      image: "ghcr.io/ia-toki/judgels/jophiel:{{ judgels_version | default('latest', true) }}"
+      image: ghcr.io/ia-toki/judgels/jophiel:1.0
       restart: yes
       restart_policy: always
       log_driver: json-file

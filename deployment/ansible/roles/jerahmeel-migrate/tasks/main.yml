@@ -17,14 +17,14 @@
   - name: Pull jerahmeel image
     docker_image:
       name: ghcr.io/ia-toki/judgels/jerahmeel
-      tag: "{{ judgels_version | default('latest', true) }}"
+      tag: 1.0
       source: pull
       force_source: yes
 
   - name: Run a jerahmeel container to do db migration
     docker_container:
       name: jerahmeel-migrate
-      image: "ghcr.io/ia-toki/judgels/jerahmeel:{{ judgels_version | default('latest', true) }}"
+      image: ghcr.io/ia-toki/judgels/jerahmeel:1.0
       restart: yes
       network_mode: host
       volumes:
