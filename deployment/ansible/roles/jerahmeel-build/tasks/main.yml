@@ -1,11 +1,24 @@
 - block:
-    - name: Build jerahmeel image and push it to GitHub container registry
-      docker_image:
-        source: build
-        force_source: yes
-        name: ghcr.io/ia-toki/judgels/jerahmeel
-        push: yes
-        build:
-          path: "{{ playbook_dir }}/../../../judgels-backends/jerahmeel/jerahmeel-dist"
-          args:
-            VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+  - name: Build v1 jerahmeel image and push it to GitHub container registry
+    docker_image:
+      source: build
+      force_source: yes
+      name: ghcr.io/ia-toki/judgels/jerahmeel
+      tag: 1.0
+      push: yes
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/jerahmeel/jerahmeel-dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+
+  - name: Build latest jerahmeel image and push it to GitHub container registry
+    docker_image:
+      source: build
+      force_source: yes
+      name: ghcr.io/ia-toki/judgels/jerahmeel
+      tag: latest
+      push: yes
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/jerahmeel/jerahmeel-dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

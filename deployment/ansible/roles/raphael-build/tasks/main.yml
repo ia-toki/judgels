@@ -1,9 +1,22 @@
 - block:
-  - name: Build raphael image and push it to GitHub container registry
+  - name: Build v1 raphael image and push it to GitHub container registry
     docker_image:
       source: build
       force_source: yes
       name: ghcr.io/ia-toki/judgels/raphael
+      tag: 1.0
+      push: yes
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-frontends/raphael/dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+
+  - name: Build latest raphael image and push it to GitHub container registry
+    docker_image:
+      source: build
+      force_source: yes
+      name: ghcr.io/ia-toki/judgels/raphael
+      tag: latest
       push: yes
       build:
         path: "{{ playbook_dir }}/../../../judgels-frontends/raphael/dist"

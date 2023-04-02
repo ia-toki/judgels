@@ -1,11 +1,24 @@
 - block:
-    - name: Build jophiel image and push it to GitHub container registry
-      docker_image:
-        source: build
-        force_source: yes
-        name: ghcr.io/ia-toki/judgels/jophiel
-        push: yes
-        build:
-          path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
-          args:
-            VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+  - name: Build v1 jophiel image and push it to GitHub container registry
+    docker_image:
+      source: build
+      force_source: yes
+      name: ghcr.io/ia-toki/judgels/jophiel
+      tag: 1.0
+      push: yes
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+
+  - name: Build latest jophiel image and push it to GitHub container registry
+    docker_image:
+      source: build
+      force_source: yes
+      name: ghcr.io/ia-toki/judgels/jophiel
+      tag: latest
+      push: yes
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

@@ -1,9 +1,22 @@
 - block:
-  - name: Build gabriel image and push it to GitHub container registry
+  - name: Build v1 gabriel image and push it to GitHub container registry
     docker_image:
       source: build
       force_source: yes
       name: ghcr.io/ia-toki/judgels/gabriel
+      tag: 1.0
+      push: yes
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/gabriel/gabriel-dist"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+
+  - name: Build latest gabriel image and push it to GitHub container registry
+    docker_image:
+      source: build
+      force_source: yes
+      name: ghcr.io/ia-toki/judgels/gabriel
+      tag: latest
       push: yes
       build:
         path: "{{ playbook_dir }}/../../../judgels-backends/gabriel/gabriel-dist"

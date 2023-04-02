@@ -1,9 +1,22 @@
 - block:
-  - name: Build sandalphon image and push it to GitHub container registry
+  - name: Build v1 sandalphon image and push it to GitHub container registry
     docker_image:
       source: build
       force_source: yes
       name: ghcr.io/ia-toki/judgels/sandalphon
+      tag: 1.0
+      push: yes
+      build:
+        path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-play-app"
+        args:
+          VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"
+
+  - name: Build latest sandalphon image and push it to GitHub container registry
+    docker_image:
+      source: build
+      force_source: yes
+      name: ghcr.io/ia-toki/judgels/sandalphon
+      tag: latest
       push: yes
       build:
         path: "{{ playbook_dir }}/../../../judgels-backends/sandalphon/sandalphon-play-app"
