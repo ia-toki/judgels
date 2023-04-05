@@ -329,6 +329,10 @@ th {
   width: 80px;
 }
 
+.table-col-item-actions {
+  width: 100px;
+}
+
 .table-col-updated-at {
   width: 160px;
 }
@@ -376,3 +380,6 @@ th {
   color: #a94442;
 }
 
+.choice-template {
+  display: none;
+}
