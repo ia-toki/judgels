@@ -10,15 +10,37 @@
   </form>
 </#macro>
 
-<#macro text name label form={} required=false disabled=false autofocus=false pattern="" title="" help="" addon="">
+<#function leftCol compact>
+  <#return compact?then("col-md-2", "col-md-3")>
+</#function>
+
+<#function rightCol compact>
+  <#return compact?then("col-md-10", "col-md-9")>
+</#function>
+
+<#function rightColWithOffset compact>
+  <#return compact?then("col-md-10 col-md-offset-2", "col-md-9 col-md-offset-3")>
+</#function>
+
+<#macro text
+  name label form={}
+  compact=false
+  number=false
+  required=false
+  disabled=false
+  autofocus=false
+  pattern="" title=""
+  help=""
+  addon=""
+>
   <div class="form-group">
-    <label class="control-label col-md-3" for="${name}">${label}</label>
-    <div class="col-md-9">
+    <label class="control-label ${leftCol(compact)}" for="${name}">${label}</label>
+    <div class="${rightCol(compact)}">
       <#if addon?has_content>
         <div class="input-group">
       </#if>
           <input
-            type="text" id="${name}" name="${name}" class="form-control"
+            type="${number?then("number", "text")}" id="${name}" name="${name}" class="form-control"
             <#if form[name]??>value="${form[name]}"</#if>
             <#if required>required</#if>
             <#if disabled>disabled</#if>
@@ -62,11 +84,12 @@
   </div>
 </#macro>
 
-<#macro textarea name label form={}>
+<#macro textarea name label form={} compact=false class="">
   <div class="form-group">
-    <label class="control-label col-md-3" for="${name}">${label}</label>
-    <div class="col-md-9">
-      <textarea rows="5" id="${name}" name="${name}" class="form-control">${form[name]!""}</textarea>
+    <label class="control-label ${leftCol(compact)}" for="${name}">${label}</label>
+    <div class="${rightCol(compact)}">
+      <#nested>
+      <textarea rows="5" id="${name}" name="${name}" class="form-control ${class}">${form[name]!""}</textarea>
     </div>
   </div>
 </#macro>
@@ -80,9 +103,9 @@
   </div>
 </#macro>
 
-<#macro submit>
+<#macro submit compact=false>
   <div class="form-group">
-    <div class="col-md-9 col-md-offset-3">
+    <div class="${rightColWithOffset(compact)}">
       <button type="submit" class="btn btn-primary">
         <#nested>
       </button>

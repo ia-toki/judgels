@@ -286,7 +286,7 @@
               <#list 0..<form.subtaskPoints?size as i>
                 <tr>
                   <td>${i+1}</td>
-                  <td><input type="text" name="subtaskPoints" class="form-control" value="${form.subtaskPoints[i]!""}" <#if !canEdit>disabled</#if>></td>
+                  <td><input type="number" name="subtaskPoints" class="form-control" value="${form.subtaskPoints[i]!""}" <#if !canEdit>disabled</#if>></td>
                 </tr>
               </#list>
             </tbody>

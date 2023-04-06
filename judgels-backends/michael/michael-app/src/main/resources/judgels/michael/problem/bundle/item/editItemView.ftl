@@ -1,7 +1,7 @@
 <#-- @ftlvariable type="judgels.michael.problem.bundle.item.EditItemView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/compactHorizontalForms.ftl" as forms>
+<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
 
 <#import "MultipleChoice.ftl" as multipleChoice>
@@ -12,11 +12,11 @@
   <#include "/judgels/michael/resource/ckeditor.ftl">
   <@switchLanguage.view languages=enabledLanguages language=language/>
 
-  <h3>${itemTypeName} Item <#if item.number.isPresent()>(No. ${item.number.get()})</#if></h3>
+  <h3>${itemTypeName} item <#if item.number.isPresent()>(No. ${item.number.get()})</#if></h3>
   <@forms.form>
-    <@forms.text form=form name="meta" label="Internal note" disabled=!canEdit/>
+    <@forms.text form=form compact=true name="meta" label="Internal note" disabled=!canEdit/>
 
-    <@forms.textarea form=form name="statement" label="Statement" class="ckeditor">
+    <@forms.textarea form=form compact=true name="statement" label="Statement" class="ckeditor">
       <div style="margin-bottom: 5px">
         <#include "/judgels/michael/resource/statementManualButtons.html">
       </div>
@@ -31,7 +31,7 @@
     </#if>
 
     <#if canEdit>
-      <@forms.submit>Update</@forms.submit>
+      <@forms.submit compact=true>Update</@forms.submit>
     </#if>
   </@forms.form>
   <#include "/judgels/michael/resource/katex.ftl">

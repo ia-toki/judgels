@@ -1,4 +1,4 @@
-<#import "/judgels/michael/template/form/compactHorizontalForms.ftl" as forms>
+<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 
 <#macro view item config>
   <div class="clearfix">
@@ -33,8 +33,8 @@
 </#macro>
 
 <#macro edit>
-  <@forms.text form=form name="score" label="Score" required=true help="Points for correct answer" disabled=!canEdit/>
-  <@forms.text form=form name="penalty" label="Penalty" required=true help="Points for wrong answer" disabled=!canEdit/>
+  <@forms.text form=form compact=true number=true name="score" label="Score" required=true help="Points for correct answer" disabled=!canEdit/>
+  <@forms.text form=form compact=true number=true name="penalty" label="Penalty" required=true help="Points for wrong answer" disabled=!canEdit/>
 
   <div class="row">
     <div class="col-md-2">
