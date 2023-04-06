@@ -35,6 +35,17 @@
             <td>${item.meta}</td>
             <td>
               <a type="button" class="btn btn-primary btn-xs" href="items/${item.jid}">Manage</a>
+              <#if canEdit>
+                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/up">
+                  <span class="glyphicon glyphicon-arrow-up"></span>
+                </a>
+                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/down">
+                  <span class="glyphicon glyphicon-arrow-down"></span>
+                </a>
+                <a type="button" class="btn btn-danger btn-xs" href="items/${item.jid}/remove">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </a>
+              </#if>
             </td>
           </tr>
         </#list>

@@ -330,15 +330,11 @@ th {
 }
 
 .table-col-item-actions {
-  width: 100px;
+  width: 155px;
 }
 
 .table-col-updated-at {
   width: 160px;
-}
-
-.table-col-item-actions {
-  width: 80px;
 }
 
 .table-col-permissions {

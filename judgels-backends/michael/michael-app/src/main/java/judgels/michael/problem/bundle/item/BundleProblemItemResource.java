@@ -124,6 +124,63 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
         return redirect("/problems/bundle/" + problemId + "/items/" + itemJid);
     }
 
+    @GET
+    @Path("/{itemJid}/up")
+    @UnitOfWork
+    public Response moveItemUp(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("itemJid") String itemJid) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+        checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        itemStore.moveItemUp(actor.getUserJid(), problem.getJid(), itemJid);
+
+        return redirect("/problems/bundle/" + problemId + "/items/" + itemJid);
+    }
+
+    @GET
+    @Path("/{itemJid}/down")
+    @UnitOfWork
+    public Response moveItemDown(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("itemJid") String itemJid) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+        checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        itemStore.moveItemDown(actor.getUserJid(), problem.getJid(), itemJid);
+
+        return redirect("/problems/bundle/" + problemId + "/items");
+    }
+
+    @GET
+    @Path("/{itemJid}/remove")
+    @UnitOfWork
+    public Response removeItem(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("itemJid") String itemJid) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+        checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        itemStore.removeItem(actor.getUserJid(), problem.getJid(), itemJid);
+
+        return redirect("/problems/bundle/" + problemId + "/items");
+    }
+
     private HtmlTemplate newProblemItemTemplate(Actor actor, Problem problem) {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("items");

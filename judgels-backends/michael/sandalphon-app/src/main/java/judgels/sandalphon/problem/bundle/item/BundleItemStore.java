@@ -88,6 +88,53 @@ public class BundleItemStore extends AbstractBundleProblemStore {
         problemFs.writeToFile(getItemConfigFilePath(problemJid, userJid, item.getJid(), language), writeObj(config));
     }
 
+    public void moveItemUp(String userJid, String problemJid, String itemJid) {
+        List<BundleItem> items = new ArrayList<>(getItems(userJid, problemJid));
+        for (int i = 1; i < items.size(); i++) {
+            if (items.get(i).getJid().equals(itemJid)) {
+                BundleItem current = items.get(i);
+                BundleItem previous = items.get(i - 1);
+
+                items.set(i, previous);
+                items.set(i - 1, current);
+                break;
+            }
+        }
+
+        BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
+        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+    }
+
+    public void moveItemDown(String userJid, String problemJid, String itemJid) {
+        List<BundleItem> items = new ArrayList<>(getItems(userJid, problemJid));
+        for (int i = 0; i + 1 < items.size(); i++) {
+            if (items.get(i).getJid().equals(itemJid)) {
+                BundleItem current = items.get(i);
+                BundleItem next = items.get(i + 1);
+
+                items.set(i, next);
+                items.set(i + 1, current);
+                break;
+            }
+        }
+
+        BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
+        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+    }
+
+    public void removeItem(String userJid, String problemJid, String itemJid) {
+        List<BundleItem> items = new ArrayList<>(getItems(userJid, problemJid));
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getJid().equals(itemJid)) {
+                items.remove(i);
+                break;
+            }
+        }
+
+        BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
+        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+    }
+
     public ItemConfig getItemConfig(String userJid, String problemJid, BundleItem item, String language, String defaultLanguage) {
         String config;
 
