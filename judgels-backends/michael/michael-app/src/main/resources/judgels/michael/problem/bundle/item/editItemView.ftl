@@ -12,7 +12,7 @@
   <#include "/judgels/michael/resource/ckeditor.ftl">
   <@switchLanguage.view languages=enabledLanguages language=language/>
 
-  <h3>Item <#if item.number.isPresent()>No. ${item.number.get()}</#if></h3>
+  <h3>${itemTypeName} Item <#if item.number.isPresent()>(No. ${item.number.get()})</#if></h3>
   <@forms.form>
     <@forms.text form=form name="meta" label="Internal note" disabled=!canEdit/>
 

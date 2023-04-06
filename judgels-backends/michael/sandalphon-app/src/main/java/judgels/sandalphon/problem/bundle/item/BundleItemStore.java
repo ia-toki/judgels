@@ -28,15 +28,17 @@ public class BundleItemStore extends AbstractBundleProblemStore {
         this.problemFs = problemFs;
     }
 
-    public void createItem(String userJid, String problemJid, ItemType type, ItemConfig config, String language) {
+    public BundleItem createItem(String userJid, String problemJid, ItemType type, ItemConfig config, String language) {
         List<BundleItem> items = new ArrayList<>(getItems(userJid, problemJid));
 
         String itemJid = JidGenerator.generateJid("ITEM");
-        items.add(new BundleItem.Builder()
+        BundleItem createdItem = new BundleItem.Builder()
                 .jid(itemJid)
                 .type(type)
                 .meta("")
-                .build());
+                .build();
+
+        items.add(createdItem);
 
         BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
         problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
@@ -44,6 +46,7 @@ public class BundleItemStore extends AbstractBundleProblemStore {
         problemFs.createDirectory(getItemDirPath(problemJid, userJid, itemJid));
         problemFs.writeToFile(getItemConfigFilePath(problemJid, userJid, itemJid, language), writeObj(config));
 
+        return createdItem;
     }
 
     public List<BundleItem> getNumberedItems(String userJid, String problemJid) {

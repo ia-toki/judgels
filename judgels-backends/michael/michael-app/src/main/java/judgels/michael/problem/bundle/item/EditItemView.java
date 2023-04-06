@@ -7,6 +7,7 @@ import judgels.michael.problem.bundle.item.config.ItemConfigForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
+import judgels.sandalphon.problem.bundle.item.ItemEngineRegistry;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 
 public class EditItemView extends TemplateView {
@@ -36,6 +37,10 @@ public class EditItemView extends TemplateView {
 
     public String getItemType() {
         return item.getType().name();
+    }
+
+    public String getItemTypeName() {
+        return ItemEngineRegistry.getByType(item.getType()).getName();
     }
 
     public String getLanguage() {

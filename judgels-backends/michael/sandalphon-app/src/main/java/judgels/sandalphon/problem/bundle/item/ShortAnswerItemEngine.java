@@ -17,7 +17,7 @@ public class ShortAnswerItemEngine implements ItemEngine {
                 .statement("")
                 .score(1.0)
                 .penalty(0.0)
-                .inputValidationRegex("")
+                .inputValidationRegex(".*")
                 .build();
     }
 

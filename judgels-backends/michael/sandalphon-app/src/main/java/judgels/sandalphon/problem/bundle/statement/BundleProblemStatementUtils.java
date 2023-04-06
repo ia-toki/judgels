@@ -6,9 +6,9 @@ import java.util.Map;
 public final class BundleProblemStatementUtils {
     private static final Map<String, String> DEFAULT_STATEMENTS = ImmutableMap.of(
             "id-ID",
-                    "<h3>Bundel Soal</h3>\n",
+                    "(instruksi soal)",
             "en-US",
-                    "<h3>Problem Bundle</h3>\n"
+                    "(problem instructions)"
     );
 
     private BundleProblemStatementUtils() {

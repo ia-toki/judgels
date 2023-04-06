@@ -63,9 +63,9 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
         String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        itemStore.createItem(actor.getUserJid(), problem.getJid(), itemType, itemConfig, defaultLanguage);
+        BundleItem item = itemStore.createItem(actor.getUserJid(), problem.getJid(), itemType, itemConfig, defaultLanguage);
 
-        return redirect("/problems/bundle/" + problemId + "/items");
+        return redirect("/problems/bundle/" + problemId + "/items/" + item.getJid());
     }
 
     @GET
