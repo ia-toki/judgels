@@ -1,5 +1,27 @@
 <#import "/judgels/michael/template/form/compactHorizontalForms.ftl" as forms>
 
+<#macro view item config>
+  <div class="clearfix">
+    <div style="display: table-cell">
+      ${item.number.get()}.&nbsp;
+    </div>
+    <div style="display: table-cell">
+      <div class="content-text">
+        ${config.statement?no_esc}
+      </div>
+    </div>
+  </div>
+  <hr />
+  <input
+    type="text"
+    name="${item.jid}"
+    <#if config.inputValidationRegex?has_content>
+      pattern="${config.inputValidationRegex}"
+      title="Answer format: ${config.inputValidationRegex}"
+    </#if>
+  >
+</#macro>
+
 <#macro edit>
   <@forms.text form=form name="score" label="Score" required=true help="Points for correct answer" disabled=!canEdit/>
   <@forms.text form=form name="penalty" label="Penalty" required=tru help="Points for wrong answer" disabled=!canEdit/>

@@ -27,13 +27,10 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.ItemConfig;
 import judgels.sandalphon.api.problem.bundle.ItemType;
-import judgels.sandalphon.problem.bundle.item.BundleItemStore;
 import judgels.sandalphon.problem.bundle.item.ItemEngineRegistry;
 
 @Path("/problems/bundle/{problemId}/items")
 public class BundleProblemItemResource extends BaseBundleProblemResource {
-    @Inject protected BundleItemStore itemStore;
-
     @Inject public BundleProblemItemResource() {}
 
     @GET

@@ -1,5 +1,37 @@
 <#import "/judgels/michael/template/form/compactHorizontalForms.ftl" as forms>
 
+<#macro view item config>
+  <div class="clearfix">
+    <div style="display: table-cell">
+      ${item.number.get()}.&nbsp;
+    </div>
+    <div style="display: table-cell">
+      <div class="content-text">
+        ${config.statement?no_esc}
+      </div>
+    </div>
+  </div>
+  <hr />
+  <#list config.choices as choice>
+    <div class="radio" style="margin-top: -5px">
+      <label>
+        <div class="pull-left">
+          <input type="radio" name="${item.jid}" value="${choice.alias}">
+        </div>
+        <div class="pull-left" style="margin-right: 5px;">
+          <span class="badge">${choice.alias}</span>
+        </div>
+        <div class="pull-left content-text">
+          ${choice.content?no_esc}
+        </div>
+       </label>
+    </div>
+  </#list>
+  <button type="button" class="btn btn-xs btn-default" style="margin-top: 10px" onclick="clearChoices(this)">
+    Clear answer
+  </button>
+</#macro>
+
 <#macro edit>
   <@forms.text form=form name="score" label="Score" required=true help="Points for correct answer" disabled=!canEdit/>
   <@forms.text form=form name="penalty" label="Penalty" required=true help="Points for wrong answer" disabled=!canEdit/>

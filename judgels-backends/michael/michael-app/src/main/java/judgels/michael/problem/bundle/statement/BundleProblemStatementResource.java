@@ -1,10 +1,12 @@
 package judgels.michael.problem.bundle.statement;
 
+import static java.util.stream.Collectors.toList;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
+import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +19,8 @@ import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
+import judgels.sandalphon.api.problem.bundle.ItemConfig;
 
 @Path("/problems/bundle/{problemId}/statements")
 public class BundleProblemStatementResource extends BaseBundleProblemResource {
@@ -31,7 +35,13 @@ public class BundleProblemStatementResource extends BaseBundleProblemResource {
 
         Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
+        String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
         ProblemStatement statement = problemStore.getStatement(actor.getUserJid(), problem.getJid(), language);
+
+        List<BundleItem> items = itemStore.getNumberedItems(actor.getUserJid(), problem.getJid());
+        List<ItemConfig> itemConfigs = items.stream()
+                .map(item -> itemStore.getItemConfig(actor.getUserJid(), problem.getJid(), item, language, defaultLanguage))
+                .collect(toList());
 
         boolean isClean = !problemStore.userCloneExists(actor.getUserJid(), problem.getJid());
 
@@ -39,9 +49,10 @@ public class BundleProblemStatementResource extends BaseBundleProblemResource {
         if (!isClean) {
             reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
         }
+        boolean canSubmit = roleChecker.canEdit(actor, problem);
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
-        return new ViewStatementView(template, statement, language, enabledLanguages, reasonNotAllowedToSubmit);
+        return new ViewStatementView(template, statement, items, itemConfigs, language, enabledLanguages, reasonNotAllowedToSubmit, canSubmit);
     }
 }
