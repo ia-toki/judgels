@@ -7,6 +7,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -82,6 +83,25 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
     }
 
     @GET
+    @Path("/regrade")
+    @UnitOfWork
+    public Response regradeSubmissions(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canSubmit(actor, problem));
+
+        for (int pageIndex = 1; ; pageIndex++) {
+            List<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageIndex).getPage();
+            if (submissions.isEmpty()) {
+                break;
+            }
+            submissionClient.regradeSubmissions(submissions);
+        }
+
+        return redirect("/problems/bundle/" + problemId + "/submissions");
+    }
+
+    @GET
     @Path("/{submissionId}")
     @UnitOfWork(readOnly = true)
     public View viewSubmission(
@@ -114,8 +134,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
-        BundleAnswer answer = submissionClient.createBundleAnswerFromPastSubmission(submission.getJid());
-        submissionClient.regrade(submission.getJid(), answer);
+        submissionClient.regradeSubmission(submission);
 
         return redirect("/problems/bundle/" + problemId + "/submissions");
     }

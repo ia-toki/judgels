@@ -8,6 +8,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -105,6 +106,25 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
                 .build();
         Submission submission = submissionClient.submit(data, source, config);
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
+
+        return redirect("/problems/programming/" + problemId + "/submissions");
+    }
+
+    @GET
+    @Path("/regrade")
+    @UnitOfWork
+    public Response regradeSubmissions(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canSubmit(actor, problem));
+
+        for (int pageIndex = 1; ; pageIndex++) {
+            List<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageIndex)).getPage();
+            if (submissions.isEmpty()) {
+                break;
+            }
+            submissionRegrader.regradeSubmissions(submissions);
+        }
 
         return redirect("/problems/programming/" + problemId + "/submissions");
     }

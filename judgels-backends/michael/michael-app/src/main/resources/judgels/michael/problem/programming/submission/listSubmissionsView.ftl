@@ -5,6 +5,12 @@
 <#import "/judgels/michael/template/table/paginationView.ftl" as pagination>
 
 <@template.layout>
+  <#if canEdit>
+    <a type="button" class="btn btn-primary btn-sm" style="margin-bottom: 10px" href="submissions/regrade" <#if !canSubmit>disabled</#if> onclick="return confirm('Will regrade ALL submissions in ALL pages, are you sure?')">
+      <span class="glyphicon glyphicon-refresh"></span> Regrade all
+    </a>
+  </#if>
+
   <@table.layout>
     <thead>
       <tr>

@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
 import judgels.fs.FileSystem;
 import judgels.sandalphon.api.submission.bundle.BundleAnswer;
 import judgels.sandalphon.api.submission.bundle.BundleGradingResult;
+import judgels.sandalphon.api.submission.bundle.BundleSubmission;
 import judgels.sandalphon.persistence.BundleGradingDao;
 import judgels.sandalphon.persistence.BundleGradingModel;
 import judgels.sandalphon.persistence.BundleSubmissionDao;
@@ -73,10 +75,17 @@ public class BundleSubmissionClient {
         submissionFs.writeToFile(Paths.get(submissionModel.jid, "answer.json"), writeObj(answer));
     }
 
-    public final void regrade(String submissionJid, BundleAnswer answer) {
-        BundleSubmissionModel submissionModel = submissionDao.findByJid(submissionJid);
+    public void regradeSubmission(BundleSubmission submission) {
+        BundleSubmissionModel submissionModel = submissionDao.findByJid(submission.getJid());
+        BundleAnswer answer = createBundleAnswerFromPastSubmission(submission.getJid());
 
         grade(submissionModel, answer);
+    }
+
+    public void regradeSubmissions(List<BundleSubmission> submissions) {
+        for (BundleSubmission submission : submissions) {
+            regradeSubmission(submission);
+        }
     }
 
     private void grade(BundleSubmissionModel submissionModel, BundleAnswer answer) {
