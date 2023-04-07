@@ -17,7 +17,7 @@
         <th class="table-col-id">ID</th>
         <th>Author</th>
         <th>Score</th>
-        <th>Time</th>
+        <th>Submitted at</th>
         <th class="col-actions"></th>
       </tr>
     </thead>

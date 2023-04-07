@@ -19,7 +19,7 @@
         <th>Language</th>
         <th>Verdict</th>
         <th>Score</th>
-        <th>Time</th>
+        <th>Submitted at</th>
         <th class="table-col-submission-actions"></th>
       </tr>
     </thead>

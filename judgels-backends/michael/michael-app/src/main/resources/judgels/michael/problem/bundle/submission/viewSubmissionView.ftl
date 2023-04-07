@@ -23,7 +23,7 @@
             <td>Score</td><td>${submission.latestGrading.score}</td>
           </tr>
           <tr>
-            <td>Time</td><td>${getDateFromInstant(submission.time)?datetime?string.long}</td>
+            <td>Submitted at</td><td>${getDateFromInstant(submission.time)?datetime?string.long}</td>
           </tr>
         </tbody>
       </table>
