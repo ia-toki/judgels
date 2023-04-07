@@ -36,10 +36,10 @@
             <td>
               <a type="button" class="btn btn-primary btn-xs" href="items/${item.jid}">Manage</a>
               <#if canEdit>
-                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/up">
+                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/up" <#if item?index == 0>disabled</#if>>
                   <span class="glyphicon glyphicon-arrow-up"></span>
                 </a>
-                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/down">
+                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/down" <#if item?index == items?size-1>disabled</#if>>
                   <span class="glyphicon glyphicon-arrow-down"></span>
                 </a>
                 <a type="button" class="btn btn-danger btn-xs" href="items/${item.jid}/remove">
