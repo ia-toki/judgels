@@ -54,7 +54,7 @@
               </tr>
             </thead>
             <tbody id="choices">
-              <tr class="choice choice-template">
+              <tr class="choice choice-template hidden">
                 <td>
                   <input type="text" name="choiceAliases" class="form-control input-sm" required disabled>
                 </td>

@@ -357,10 +357,6 @@ th {
   margin: 0;
 }
 
-.test-case-template, .test-group-template, .subtask-assignment-template {
-  display: none;
-}
-
 .test-case-remove-button span {
   top: 6px;
   color: #a94442;
@@ -374,8 +370,4 @@ th {
 .test-group-remove-button span {
   top: 3px;
   color: #a94442;
-}
-
-.choice-template {
-  display: none;
 }

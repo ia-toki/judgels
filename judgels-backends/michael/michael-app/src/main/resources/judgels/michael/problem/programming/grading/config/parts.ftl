@@ -10,11 +10,11 @@
 </#macro>
 
 <#macro testCase isTemplate=false inputFile="" outputFile="" hasOutput=true>
-  <tr class="test-case <#if isTemplate>test-case-template</#if>">
+  <tr class="test-case <#if isTemplate>test-case-template hidden</#if>">
     <td>
       <input class="form-control input-sm test-case-input" type="text" disabled value="${inputFile}">
     </td>
-    <td <#if !hasOutput>style="display: none"</#if>>
+    <td <#if !hasOutput>class="hidden"</#if>>
       <input class="form-control input-sm test-case-output" type="text" disabled value="${outputFile}">
     </td>
     <#if canEdit>
@@ -47,7 +47,7 @@
         </select>
       </td>
     <#else>
-      <td style="display: none">
+      <td class="hidden">
         <select class="test-case-output" value=""></select>
       </td>
     </#if>
@@ -74,7 +74,7 @@
 </#macro>
 
 <#macro sampleTestCaseSubtaskAssignment isTemplate=false subtaskIds=[]>
-  <tr class="subtask-assignment <#if isTemplate>subtask-assignment-template</#if>">
+  <tr class="subtask-assignment <#if isTemplate>subtask-assignment-template hidden</#if>">
     <td colspan="3">
       <@subtaskAssignment subtaskIds=subtaskIds/>
       <#nested>
@@ -96,11 +96,11 @@
 </#function>
 
 <#macro testGroup isTemplate=false heading="" inputFiles=[] outputFiles=[] hasOutput=true>
-  <div class="panel panel-default test-group <#if isTemplate>test-group-template</#if>">
+  <div class="panel panel-default test-group <#if isTemplate>test-group-template hidden</#if>">
     <#if heading?has_content>
       <div class="panel-heading">
         <span>${heading}</span>
-        <a href="#" class="test-group-remove-button" <#if !canEdit>style="display: none"</#if>>
+        <a href="#" class="test-group-remove-button <#if !canEdit>hidden</#if>">
           <span class="glyphicon glyphicon-remove"></span>
         </a>
       </div>
@@ -110,7 +110,7 @@
         <thead>
           <tr>
             <th>Input</th>
-            <th <#if !hasOutput>style="display: none"</#if>>Output</th>
+            <th <#if !hasOutput>class="hidden"</#if>>Output</th>
             <#if canEdit><th></th></#if>
           </tr>
         </thead>
@@ -145,7 +145,7 @@
             <thead>
               <tr>
                 <th>Sample input</th>
-                <th <#if !hasOutput>style="display: none"</#if>>Sample output</th>
+                <th <#if !hasOutput>class="hidden"</#if>>Sample output</th>
                 <#if canEdit><th></th></#if>
               </tr>
             </thead>
@@ -183,7 +183,7 @@
             <thead>
               <tr>
                 <th>Sample input</th>
-                <th <#if !hasOutput>style="display: none"</#if>>Sample output</th>
+                <th <#if !hasOutput>class="hidden"</#if>>Sample output</th>
                 <#if canEdit><th></th></#if>
               </tr>
             </thead>

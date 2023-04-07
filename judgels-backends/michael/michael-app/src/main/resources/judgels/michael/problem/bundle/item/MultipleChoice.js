@@ -18,6 +18,7 @@ function addEventListenersToAddChoiceForm(choices) {
     var newChoice = choices.querySelector('.choice-template').cloneNode(true);
     var addForm = choices.querySelector('.choice-add-form');
     newChoice.classList.remove('choice-template');
+    newChoice.classList.remove('hidden');
     newChoice.querySelectorAll('input').forEach(input => input.disabled = false);
     choices.insertBefore(newChoice, addForm);
     addEventListenersToChoice(choices, newChoice);

@@ -60,6 +60,7 @@ function addEventListenersToAddTestCaseForm(testGroup, withSubtaskAssignment) {
     }
 
     newTestCase.classList.remove('test-case-template');
+    newTestCase.classList.remove('hidden');
     newTestCase.querySelector('.test-case-input').value = inputFile;
     newTestCase.querySelector('.test-case-output').value = outputFile;
     addEventListenersToTestCase(testGroup, newTestCase, withSubtaskAssignment);
@@ -68,6 +69,7 @@ function addEventListenersToAddTestCaseForm(testGroup, withSubtaskAssignment) {
     if (withSubtaskAssignment) {
       var newSubtaskAssignment = testGroup.querySelector('.subtask-assignment-template').cloneNode(true);
       newSubtaskAssignment.classList.remove('subtask-assignment-template');
+      newSubtaskAssignment.classList.remove('hidden');
       newSubtaskAssignment.querySelectorAll('input[type=hidden]').forEach(input => input.disabled = false);
       testGroup.querySelector('tbody').insertBefore(newSubtaskAssignment, addForm);
     }
@@ -109,6 +111,7 @@ function addEventListenersToAddTestGroupForm(testGroups) {
   addButton.addEventListener('click', event => {
     var newTestGroup = testGroups.querySelector('.test-group-template').cloneNode(true);
     newTestGroup.classList.remove('test-group-template');
+    newTestGroup.classList.remove('hidden');
     newTestGroup.querySelectorAll('input[type=hidden]').forEach(input => input.disabled = false);
     testGroups.insertBefore(newTestGroup, addButton);
     addEventListenersToTestGroup(newTestGroup, true);
