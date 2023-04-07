@@ -23,12 +23,15 @@ import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.submission.bundle.BundleAnswer;
 import judgels.sandalphon.api.submission.bundle.BundleSubmission;
+import judgels.sandalphon.problem.bundle.submission.BundleSubmissionClient;
 import judgels.sandalphon.problem.bundle.submission.BundleSubmissionStore;
 
 @Path("/problems/bundle/{problemId}/submissions")
 public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
-    @Inject protected BundleSubmissionStore bundleSubmissionStore;
+    @Inject protected BundleSubmissionStore submissionStore;
+    @Inject protected BundleSubmissionClient submissionClient;
 
     @Inject BundleProblemSubmissionResource() {}
 
@@ -43,16 +46,36 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Page<BundleSubmission> submissions = bundleSubmissionStore.getSubmissions(problem.getJid(), pageIndex);
+        Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageIndex);
 
         Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
-        HtmlTemplate template = newProblemItemTemplate(actor, problem);
+        HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
         return new ListSubmissionsView(template, submissions, profilesMap);
     }
 
-    private HtmlTemplate newProblemItemTemplate(Actor actor, Problem problem) {
+    @GET
+    @Path("/{submissionId}")
+    @UnitOfWork(readOnly = true)
+    public View viewSubmission(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("submissionId") int submissionId) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canView(actor, problem));
+
+        BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
+        BundleAnswer answer = submissionClient.createBundleAnswerFromPastSubmission(submission.getJid());
+        Profile profile = profileStore.getProfile(Instant.now(), submission.getAuthorJid());
+
+        HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
+        return new ViewSubmissionView(template, submission, answer, profile);
+    }
+
+    private HtmlTemplate newProblemSubmissionTemplate(Actor actor, Problem problem) {
         HtmlTemplate template = newProblemTemplate(actor, problem);
         template.setActiveMainTab("submissions");
         return template;

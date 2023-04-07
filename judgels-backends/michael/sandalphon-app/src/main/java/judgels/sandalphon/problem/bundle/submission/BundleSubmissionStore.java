@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
@@ -15,6 +16,7 @@ import judgels.sandalphon.api.submission.bundle.BundleSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
 import judgels.sandalphon.persistence.BundleGradingDao;
 import judgels.sandalphon.persistence.BundleGradingModel;
+import judgels.sandalphon.persistence.BundleGradingModel_;
 import judgels.sandalphon.persistence.BundleSubmissionDao;
 import judgels.sandalphon.persistence.BundleSubmissionModel;
 import judgels.sandalphon.persistence.BundleSubmissionModel_;
@@ -59,6 +61,16 @@ public class BundleSubmissionStore {
                 .pageIndex(selectionOptions.getPage())
                 .pageSize(selectionOptions.getPageSize())
                 .build();
+    }
+
+    public Optional<BundleSubmission> getSubmissionById(int submissionId) {
+        return submissionDao.select(submissionId).map(sm -> {
+            FilterOptions<BundleGradingModel> filterOptions = new FilterOptions.Builder<BundleGradingModel>()
+                    .putColumnsEq(BundleGradingModel_.submissionJid, sm.jid)
+                    .build();
+            List<BundleGradingModel> gradingModels = gradingDao.selectAll(filterOptions, SelectionOptions.DEFAULT_ALL);
+            return createSubmissionFromModels(sm, gradingModels);
+        });
     }
 
     private BundleSubmission createSubmissionFromModels(BundleSubmissionModel submissionModel, List<BundleGradingModel> gradingModels) {
