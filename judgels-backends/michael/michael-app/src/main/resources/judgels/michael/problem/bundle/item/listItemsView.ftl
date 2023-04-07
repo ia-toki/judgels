@@ -6,10 +6,9 @@
 
 <@template.layout>
   <#if canEdit>
-    <h3>Add new item</h3>
     <@forms.form>
-      <@forms.select form=form name="type" label="Type" options=itemTypes/>
-      <@forms.submit>Add</@forms.submit>
+      <@forms.select form=form name="type" label="Add new item" options=itemTypes/>
+      <@forms.submit small=true>Add</@forms.submit>
     </@forms.form>
     <hr>
   </#if>

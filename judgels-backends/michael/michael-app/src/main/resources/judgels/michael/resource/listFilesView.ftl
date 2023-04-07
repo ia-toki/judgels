@@ -6,17 +6,17 @@
 
 <@template.layout>
   <#if canEdit>
-    <h3>Upload new</h3>
     <@forms.multipartForm>
-      <@forms.file name="file" label="Upload single file"/>
-      <@forms.submit>Upload</@forms.submit>
+      <@forms.file name="file" label="Upload new file"/>
+      <@forms.submit small=true>Upload</@forms.submit>
     </@forms.multipartForm>
     <@forms.multipartForm>
-      <@forms.file name="fileZipped" label="Upload zipped file"/>
-      <@forms.submit>Upload</@forms.submit>
+      <@forms.file name="fileZipped" label="Upload new files as zip"/>
+      <@forms.submit small=true>Upload</@forms.submit>
     </@forms.multipartForm>
     <hr>
   </#if>
+
   <h3>Files</h3>
   <#if files?size == 0>
     <p>No files.</p>

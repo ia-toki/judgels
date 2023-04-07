@@ -103,10 +103,10 @@
   </div>
 </#macro>
 
-<#macro submit compact=false>
+<#macro submit compact=false small=false>
   <div class="form-group">
     <div class="${rightColWithOffset(compact)}">
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-primary <#if small>btn-sm</#if>">
         <#nested>
       </button>
     </div>

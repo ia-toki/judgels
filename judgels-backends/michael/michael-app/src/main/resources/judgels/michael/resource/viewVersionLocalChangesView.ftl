@@ -4,10 +4,10 @@
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 
 <@template.layout>
-  <h3>Commit local changes</h3>
   <#if isClean>
     <p>No local changes.</p>
   <#else>
+    <h3>Commit local changes</h3>
     <#if form.localChangesError?has_content>
      <p>${form.localChangesError}</p>
     <#else>

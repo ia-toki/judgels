@@ -6,14 +6,13 @@
 
 <@template.layout>
   <#if canEdit>
-    <h3>Add language</h3>
     <@forms.form>
-      <@forms.select name="language" label="Language" options=languages/>
+      <@forms.select name="language" label="Add language" options=languages/>
       <@forms.submit>Add</@forms.submit>
     </@forms.form>
     <hr>
   </#if>
-  <h3>Available languages</h3>
+  <h3>Languages</h3>
   <@table.layout>
     <thead>
       <tr>
