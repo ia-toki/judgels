@@ -55,6 +55,7 @@ public abstract class BaseProblemResource extends BaseResource {
             template.addMainTab("submissions", "Submissions", "/problems/programming/" + problem.getId() + "/submissions");
         } else if (problem.getType() == ProblemType.BUNDLE) {
             template.addMainTab("items", "Items", "/problems/bundle/" + problem.getId() + "/items");
+            template.addMainTab("submissions", "Submissions", "/problems/bundle/" + problem.getId() + "/submissions");
         }
         if (roleChecker.isAuthor(actor, problem)) {
             template.addMainTab("partners", "Partners", "/problems/" + problem.getId() + "/partners");
