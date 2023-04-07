@@ -11,11 +11,13 @@ import judgels.sandalphon.role.RoleChecker;
 
 public class ProblemRoleChecker {
     private final RoleChecker roleChecker;
+    private final ProblemStore problemStore;
     private final ProblemPartnerStore partnerStore;
 
     @Inject
-    public ProblemRoleChecker(RoleChecker roleChecker, ProblemPartnerStore partnerStore) {
+    public ProblemRoleChecker(RoleChecker roleChecker, ProblemStore problemStore, ProblemPartnerStore partnerStore) {
         this.roleChecker = roleChecker;
+        this.problemStore = problemStore;
         this.partnerStore = partnerStore;
     }
 
@@ -35,6 +37,16 @@ public class ProblemRoleChecker {
     public boolean canEdit(Actor actor, Problem problem) {
         return isAuthorOrAbove(actor, problem)
                 || isPartnerWithUpdatePermission(actor, problem);
+    }
+
+    public Optional<String> canSubmit(Actor actor, Problem problem) {
+        if (!canEdit(actor, problem)) {
+            return Optional.of("Submission not allowed.");
+        }
+        if (problemStore.userCloneExists(actor.getUserJid(), problem.getJid())) {
+            return Optional.of("Submission not allowed if there are local changes.");
+        }
+        return Optional.empty();
     }
 
     public boolean isAuthor(Actor actor, Problem problem) {

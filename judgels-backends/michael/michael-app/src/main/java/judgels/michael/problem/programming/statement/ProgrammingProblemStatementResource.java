@@ -41,13 +41,8 @@ public class ProgrammingProblemStatementResource extends BaseProgrammingProblemR
         LanguageRestriction gradingLanguageRestriction = programmingProblemStore.getLanguageRestriction(actor.getUserJid(), problem.getJid());
         Set<String> allowedGradingLanguages = LanguageRestrictionAdapter.getAllowedLanguages(gradingLanguageRestriction);
 
-        boolean isClean = !problemStore.userCloneExists(actor.getUserJid(), problem.getJid());
-
-        String reasonNotAllowedToSubmit = null;
-        if (!isClean) {
-            reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
-        }
-        boolean canSubmit = roleChecker.canEdit(actor, problem);
+        String reasonNotAllowedToSubmit = roleChecker.canSubmit(actor, problem).orElse("");
+        boolean canSubmit = !reasonNotAllowedToSubmit.isEmpty();
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("view");

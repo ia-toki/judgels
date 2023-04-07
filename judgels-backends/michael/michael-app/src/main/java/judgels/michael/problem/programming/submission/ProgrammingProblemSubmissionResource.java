@@ -67,8 +67,11 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
         Map<String, String> gradingLanguageNamesMap = GradingLanguageRegistry.getInstance().getLanguages();
 
+        boolean canEdit = roleChecker.canEdit(actor, problem);
+        boolean canSubmit = !roleChecker.canSubmit(actor, problem).isPresent();
+
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
-        return new ListSubmissionsView(template, submissions, profilesMap, gradingLanguageNamesMap, roleChecker.canEdit(actor, problem));
+        return new ListSubmissionsView(template, submissions, profilesMap, gradingLanguageNamesMap, canEdit, canSubmit);
     }
 
     @POST
@@ -81,7 +84,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(roleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canSubmit(actor, problem));
 
         String gradingEngine = parts.getField("gradingEngine").getValue();
         String gradingLanguage = parts.getField("gradingLanguage").getValue();

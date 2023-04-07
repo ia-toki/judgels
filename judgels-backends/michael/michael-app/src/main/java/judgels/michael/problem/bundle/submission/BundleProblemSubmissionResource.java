@@ -54,8 +54,11 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
+        boolean canEdit = roleChecker.canEdit(actor, problem);
+        boolean canSubmit = !roleChecker.canSubmit(actor, problem).isPresent();
+
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
-        return new ListSubmissionsView(template, submissions, profilesMap, roleChecker.canEdit(actor, problem));
+        return new ListSubmissionsView(template, submissions, profilesMap, canEdit, canSubmit);
     }
 
     @POST
@@ -67,7 +70,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        checkAllowed(roleChecker.canEdit(actor, problem));
+        checkAllowed(roleChecker.canSubmit(actor, problem));
 
         Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);

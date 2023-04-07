@@ -37,7 +37,7 @@
     ${statement.text?no_esc}
   </div>
 
-  <#if canSubmit && !reasonNotAllowedToSubmit?has_content>
+  <#if canSubmit>
     <hr>
     <h4>Submit solution</h4>
 

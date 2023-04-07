@@ -11,17 +11,20 @@ public class ListSubmissionsView extends TemplateView {
     private final Page<BundleSubmission> submissions;
     private final Map<String, Profile> profilesMap;
     private final boolean canEdit;
+    private final boolean canSubmit;
 
     public ListSubmissionsView(
             HtmlTemplate template,
             Page<BundleSubmission> submissions,
             Map<String, Profile> profilesMap,
-            boolean canEdit) {
+            boolean canEdit,
+            boolean canSubmit) {
 
         super("listSubmissionsView.ftl", template);
         this.submissions = submissions;
         this.profilesMap = profilesMap;
         this.canEdit = canEdit;
+        this.canSubmit = canSubmit;
     }
 
     public Page<BundleSubmission> getSubmissions() {
@@ -34,5 +37,9 @@ public class ListSubmissionsView extends TemplateView {
 
     public boolean getCanEdit() {
         return canEdit;
+    }
+
+    public boolean getCanSubmit() {
+        return canSubmit;
     }
 }

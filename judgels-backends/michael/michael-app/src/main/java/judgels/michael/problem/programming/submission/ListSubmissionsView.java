@@ -12,19 +12,22 @@ public class ListSubmissionsView extends TemplateView {
     private final Map<String, Profile> profilesMap;
     private final Map<String, String> gradingLanguageNamesMap;
     private final boolean canEdit;
+    private final boolean canSubmit;
 
     public ListSubmissionsView(
             HtmlTemplate template,
             Page<Submission> submissions,
             Map<String, Profile> profilesMap,
             Map<String, String> gradingLanguageNamesMap,
-            boolean canEdit) {
+            boolean canEdit,
+            boolean canSubmit) {
 
         super("listSubmissionsView.ftl", template);
         this.submissions = submissions;
         this.profilesMap = profilesMap;
         this.gradingLanguageNamesMap = gradingLanguageNamesMap;
         this.canEdit = canEdit;
+        this.canSubmit = canSubmit;
     }
 
     public Page<Submission> getSubmissions() {
@@ -41,5 +44,9 @@ public class ListSubmissionsView extends TemplateView {
 
     public boolean getCanEdit() {
         return canEdit;
+    }
+
+    public boolean getCanSubmit() {
+        return canSubmit;
     }
 }

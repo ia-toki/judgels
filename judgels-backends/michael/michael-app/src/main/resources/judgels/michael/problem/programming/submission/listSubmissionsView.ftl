@@ -29,7 +29,9 @@
           <td class="text-center">
             <a type="button" class="btn btn-primary btn-xs" href="submissions/${submission.id}">View</a>
             <#if canEdit>
-              <a type="button" class="btn btn-default btn-xs" href="submissions/${submission.id}/regrade"><span class="glyphicon glyphicon-refresh"></span></a>
+              <a type="button" class="btn btn-default btn-xs" href="submissions/${submission.id}/regrade" <#if !canSubmit>disabled</#if>>
+                <span class="glyphicon glyphicon-refresh"></span>
+              </a>
             </#if>
           </td>
         </tr>
