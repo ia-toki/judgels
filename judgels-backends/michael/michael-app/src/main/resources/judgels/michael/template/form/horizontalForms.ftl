@@ -1,5 +1,5 @@
-<#macro form>
-  <form method="POST" class="form-horizontal">
+<#macro form action="">
+  <form method="POST" class="form-horizontal" <#if action?has_content>action="${action}"</#if>>
     <#nested>
   </form>
 </#macro>

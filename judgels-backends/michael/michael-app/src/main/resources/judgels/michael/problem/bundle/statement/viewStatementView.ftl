@@ -23,13 +23,14 @@
 
   <hr>
 
-  <@forms.form>
+  <@forms.form action="submissions">
     <#list 0..<items?size as i>
       <@viewItem.view item=items[i] type=itemTypes[i] config=itemConfigs[i]/>
     </#list>
 
     <#if canSubmit && !reasonNotAllowedToSubmit?has_content>
       <button type="submit" class="btn btn-primary">Submit</button>
+      <br>
       <br>
     </#if>
   </@forms.form>

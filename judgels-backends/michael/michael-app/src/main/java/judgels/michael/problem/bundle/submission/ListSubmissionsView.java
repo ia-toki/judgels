@@ -10,15 +10,18 @@ import judgels.sandalphon.api.submission.bundle.BundleSubmission;
 public class ListSubmissionsView extends TemplateView {
     private final Page<BundleSubmission> submissions;
     private final Map<String, Profile> profilesMap;
+    private final boolean canEdit;
 
     public ListSubmissionsView(
             HtmlTemplate template,
             Page<BundleSubmission> submissions,
-            Map<String, Profile> profilesMap) {
+            Map<String, Profile> profilesMap,
+            boolean canEdit) {
 
         super("listSubmissionsView.ftl", template);
         this.submissions = submissions;
         this.profilesMap = profilesMap;
+        this.canEdit = canEdit;
     }
 
     public Page<BundleSubmission> getSubmissions() {
@@ -27,5 +30,9 @@ public class ListSubmissionsView extends TemplateView {
 
     public Map<String, Profile> getProfilesMap() {
         return profilesMap;
+    }
+
+    public boolean getCanEdit() {
+        return canEdit;
     }
 }

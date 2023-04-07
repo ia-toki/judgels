@@ -13,10 +13,13 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.profile.Profile;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
@@ -52,7 +55,27 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
 
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
-        return new ListSubmissionsView(template, submissions, profilesMap);
+        return new ListSubmissionsView(template, submissions, profilesMap, roleChecker.canEdit(actor, problem));
+    }
+
+    @POST
+    @UnitOfWork
+    public Response submit(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            MultivaluedMap<String, String> form) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
+
+        BundleAnswer answer = submissionClient.createBundleAnswerFromNewSubmission(form, language);
+        submissionClient.submit(problem.getJid(), answer);
+
+        return redirect("/problems/bundle/" + problemId + "/submissions");
     }
 
     @GET
@@ -73,6 +96,25 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
 
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
         return new ViewSubmissionView(template, submission, answer, profile);
+    }
+
+    @GET
+    @Path("/{submissionId}/regrade")
+    @UnitOfWork
+    public Response regradeSubmission(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("submissionId") int submissionId) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
+        BundleAnswer answer = submissionClient.createBundleAnswerFromPastSubmission(submission.getJid());
+        submissionClient.regrade(submission.getJid(), answer);
+
+        return redirect("/problems/bundle/" + problemId + "/submissions");
     }
 
     private HtmlTemplate newProblemSubmissionTemplate(Actor actor, Problem problem) {
