@@ -172,9 +172,26 @@
         <div class="panel-heading">${key}: ${sourceFile.name}</div>
           <div class="panel-body">
             <pre>${getSourceFileContent(sourceFile)}</pre>
+            <#if details.isPresent() && details.get().compilationOutputs[key]??>
+              <p><strong>Compilation output</strong></p>
+              <pre>${details.get().compilationOutputs[key]}</pre>
+            </#if>
           </div>
         </div>
       </div>
     </#list>
+
+    <#if details.isPresent()>
+      <#list details.get().compilationOutputs as key, compilationOutput>
+        <#if !sourceFiles[key]??>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <p><strong>Compilation output</strong></p>
+              <pre>${compilationOutput}</pre>
+            </div>
+          </div>
+        </#if>
+      </#list>
+    </#if>
   </#if>
 </@template.layout>
