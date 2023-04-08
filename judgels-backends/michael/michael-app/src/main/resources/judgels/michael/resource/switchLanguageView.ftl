@@ -1,4 +1,5 @@
 <#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
 
 <#macro view languages language>
   <div class="small pull-left">
@@ -15,7 +16,7 @@
           </#list>
         </select>
       </div>
-      <button type="submit" class="btn btn-primary btn-xs">Switch</button>
+      <@buttons.submit size="xs">Switch</@buttons.submit>
     </@forms.form>
   </div>
 

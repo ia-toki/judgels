@@ -1,3 +1,5 @@
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
+
 <#macro form action="">
   <form method="POST" class="form-inline" <#if action?has_content>action="${action}"</#if>>
     <#nested>
@@ -16,7 +18,7 @@
 </#macro>
 
 <#macro submit>
-  <button type="submit" class="btn btn-primary btn-xs">
+  <@buttons.submit size="xs">
     <#nested>
-  </button>
+  </@buttons.submit>
 </#macro>

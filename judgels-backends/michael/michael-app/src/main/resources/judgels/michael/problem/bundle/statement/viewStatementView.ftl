@@ -2,6 +2,7 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
 <#import "/judgels/michael/problem/bundle/item/viewItemView.ftl" as viewItem>
 
@@ -29,7 +30,7 @@
     </#list>
 
     <#if canSubmit && !reasonNotAllowedToSubmit?has_content>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <@buttons.submit>Submit</@buttons.submit>
       <br>
       <br>
     </#if>

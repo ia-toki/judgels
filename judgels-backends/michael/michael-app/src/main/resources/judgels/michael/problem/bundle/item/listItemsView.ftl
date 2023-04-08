@@ -2,7 +2,8 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
-<#import "/judgels/michael/template/table/tableLayout.ftl" as table>
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
+<#import "/judgels/michael/template/ui/tables.ftl" as tables>
 
 <@template.layout>
   <#if canEdit>
@@ -17,7 +18,7 @@
   <#if items?size == 0>
     <p>No items.</p>
   <#else>
-    <@table.layout>
+    <@tables.table>
       <thead>
         <tr>
           <th style="min-width: 50px">No.</th>
@@ -33,22 +34,22 @@
             <td>${itemTypes[item.type]}</td>
             <td>${item.meta}</td>
             <td class="col-fit">
-              <a type="button" class="btn btn-primary btn-xs" href="items/${item.jid}">Manage</a>
+              <@buttons.link size="xs" to="items/${item.jid}">Manage</@buttons.link>
               <#if canEdit>
-                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/up" <#if item?index == 0>disabled</#if>>
+                <@buttons.link intent="default" size="xs" to="items/${item.jid}/up" disabled=(item?index == 0)>
                   <span class="glyphicon glyphicon-arrow-up"></span>
-                </a>
-                <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/down" <#if item?index == items?size-1>disabled</#if>>
+                </@buttons.link>
+                <@buttons.link intent="default" size="xs" to="items/${item.jid}/down" disabled=(item?index == items?size-1)>
                   <span class="glyphicon glyphicon-arrow-down"></span>
-                </a>
-                <a type="button" class="btn btn-danger btn-xs" href="items/${item.jid}/remove">
+                </@buttons.link>
+                <@buttons.link intent="danger" size="xs" to="items/${item.jid}/remove">
                   <span class="glyphicon glyphicon-remove"></span>
-                </a>
+                </@buttons.link>
               </#if>
             </td>
           </tr>
         </#list>
       </tbody>
-    </@table.layout>
+    </@tables.table>
   </#if>
 </@template.layout>

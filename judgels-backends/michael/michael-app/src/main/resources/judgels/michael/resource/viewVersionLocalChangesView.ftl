@@ -2,6 +2,7 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
 
 <@template.layout>
   <#if isClean>
@@ -20,8 +21,8 @@
     <hr>
     <h3>Modify local changes</h3>
     <div class="form-group">
-      <a type="button" href="rebase" class="btn btn-primary">Rebase local changes on top of other users' changes</a>
-      <a type="button" href="discard" class="btn btn-danger">Discard local changes</a>
+      <@buttons.link to="rebase">Rebase local changes on top of other users' changes</@buttons.link>
+      <@buttons.link intent="danger" to="discard">Discard local changes</@buttons.link>
     </div>
   </#if>
 </@template.layout>

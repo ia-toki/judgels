@@ -1,11 +1,11 @@
 <#-- @ftlvariable type="judgels.michael.lesson.ListLessonsView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/table/tableLayout.ftl" as table>
-<#import "/judgels/michael/template/table/paginationView.ftl" as pagination>
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
+<#import "/judgels/michael/template/ui/tables.ftl" as tables>
 
 <@template.layout>
-  <@table.layout>
+  <@tables.table>
     <thead>
       <tr>
         <th style="min-width: 50px">ID</th>
@@ -23,11 +23,11 @@
           <td>${profilesMap[lesson.authorJid].username}</td>
           <td>${getFormattedDurationFromNow(lesson.lastUpdateTime)}</td>
           <td class="col-fit">
-            <a type="button" class="btn btn-primary btn-xs" href="/lessons/${lesson.id}/statements">Manage</a>
+            <@buttons.link size="xs" to="/lessons/${lesson.id}/statements">Manage</@buttons.link>
           </td>
         </tr>
       </#list>
     </tbody>
-  </@table.layout>
-  <@pagination.view page=lessons filterString=filterString/>
+  </@tables.table>
+  <@tables.pagination page=lessons filterString=filterString/>
 </@template.layout>

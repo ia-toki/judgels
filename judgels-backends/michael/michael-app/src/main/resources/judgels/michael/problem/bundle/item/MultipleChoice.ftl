@@ -1,4 +1,5 @@
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
 
 <#macro view item config>
   <div class="clearfix">
@@ -27,9 +28,9 @@
        </label>
     </div>
   </#list>
-  <button type="button" class="btn btn-xs btn-default" style="margin-top: 10px" onclick="clearChoices(this)">
+  <@buttons.button intent="default" size="xs" style="margin-top: 10px" onclick="clearChoices(this)">
     Clear answer
-  </button>
+  </@buttons.button>
 </#macro>
 
 <#macro edit>
@@ -89,11 +90,11 @@
                 <tr>
               </#list>
               <#if canEdit>
-                <tr class="active choice-add-form"">
+                <tr class="active choice-add-form">
                   <td class="text-center">
-                    <button type="button" class="btn btn-primary btn-xs choice-add-button">
+                    <@buttons.button size="xs" class="choice-add-button" class="choice-add-button">
                       <span class="glyphicon glyphicon-plus"></span> New choice
-                    </button>
+                    </@buttons.button>
                   </td>
                   <td></td>
                   <td></td>

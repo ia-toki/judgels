@@ -1,14 +1,14 @@
 <#-- @ftlvariable type="judgels.michael.resource.ListPartnersView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/table/tableLayout.ftl" as table>
+<#import "/judgels/michael/template/ui/tables.ftl" as tables>
 
 <@template.layout>
   <h3>Partners</h3>
   <#if partners?size == 0>
     <p>No partners.</p>
   <#else>
-    <@table.layout>
+    <@tables.table>
       <thead>
         <tr>
           <th>User</th>
@@ -23,6 +23,6 @@
           </tr>
         </#list>
       </tbody>
-    </@table.layout>
+    </@tables.table>
   </#if>
 </@template.layout>

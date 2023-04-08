@@ -1,3 +1,11 @@
+<#macro table>
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed table-striped table-bordered">
+      <#nested>
+    </table>
+   </div>
+</#macro>
+
 <#function newPageLink newPageIndex filterString="" tags=[]>
   <#local res = []>
   <#if (newPageIndex > 1)>
@@ -12,7 +20,7 @@
   <#return "?" + res?join("&")>
 </#function>
 
-<#macro view page filterString="" tags=[]>
+<#macro pagination page filterString="" tags=[]>
   <div>
     <small>
       Showing ${(page.pageIndex - 1) * page.pageSize + 1} - ${[page.totalCount, page.pageIndex * page.pageSize]?min} out of ${page.totalCount} data.

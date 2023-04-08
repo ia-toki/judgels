@@ -1,17 +1,17 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.submission.ListSubmissionsView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/table/tableLayout.ftl" as table>
-<#import "/judgels/michael/template/table/paginationView.ftl" as pagination>
+<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
+<#import "/judgels/michael/template/ui/tables.ftl" as tables>
 
 <@template.layout>
   <#if canEdit>
-    <a type="button" class="btn btn-primary btn-sm" style="margin-bottom: 10px" href="submissions/regrade" <#if !canSubmit>disabled</#if> onclick="return confirm('Will regrade ALL submissions in ALL pages, are you sure?')">
+    <@buttons.link intent="default" size="sm" to="submissions/regrade" disabled=!canSubmit style="margin-bottom: 10px" onclick="return confirm('Will regrade ALL submissions in ALL pages, are you sure?')">
       <span class="glyphicon glyphicon-refresh"></span> Regrade all
-    </a>
+    </@buttons.link>
   </#if>
 
-  <@table.layout>
+  <@tables.table>
     <thead>
       <tr>
         <th style="min-width: 50px">ID</th>
@@ -33,16 +33,16 @@
           <td>${submission.latestGrading.get().score}</td>
           <td>${getFormattedDurationFromNow(submission.time)}</td>
           <td class="col-fit">
-            <a type="button" class="btn btn-primary btn-xs" href="submissions/${submission.id}">View</a>
+            <@buttons.link size="xs" to="submissions/${submission.id}">View</@buttons.link>
             <#if canEdit>
-              <a type="button" class="btn btn-default btn-xs" href="submissions/${submission.id}/regrade" <#if !canSubmit>disabled</#if>>
+              <@buttons.link intent="default" size="xs" to="submissions/${submission.id}/regrade" disabled=!canSubmit>
                 <span class="glyphicon glyphicon-refresh"></span>
-              </a>
+              </@buttons.link>
             </#if>
           </td>
         </tr>
       </#list>
     </tbody>
-  </@table.layout>
-  <@pagination.view page=submissions/>
+  </@tables.table>
+  <@tables.pagination page=submissions/>
 </@template.layout>
