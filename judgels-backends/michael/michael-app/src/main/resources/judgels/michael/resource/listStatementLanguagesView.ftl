@@ -18,7 +18,7 @@
       <tr>
         <th>Language</th>
         <th>Status</th>
-        <th></th>
+        <th class="col-fit"></th>
       </tr>
     </thead>
 
@@ -28,14 +28,14 @@
           <td>${languages[lang]}</td>
           <td>${status} <#if lang == defaultLanguage>(DEFAULT)</#if></td>
           <#if status == "ENABLED">
-            <td>
+            <td class="col-fit">
               <#if canEdit && lang != defaultLanguage>
                 <a href="languages/${lang}/disable" type="button" class="btn btn-primary btn-xs">Disable</a>
                 <a href="languages/${lang}/makeDefault" type="button" class="btn btn-primary btn-xs">Make default</a>
               </#if>
             </td>
           <#else>
-            <td>
+            <td class="col-fit">
               <#if canEdit>
                 <a href="languages/${lang}/enable" type="button" class="btn btn-primary btn-xs">Enable</a>
               </#if>

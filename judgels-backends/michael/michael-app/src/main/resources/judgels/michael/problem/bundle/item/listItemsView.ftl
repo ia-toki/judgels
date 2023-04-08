@@ -20,19 +20,19 @@
     <@table.layout>
       <thead>
         <tr>
-          <th class="table-col-id">No.</th>
+          <th style="min-width: 50px">No.</th>
           <th>Type</th>
           <th>Internal note</th>
-          <th class="table-col-item-actions"></th>
+          <th class="col-fit"></th>
         </tr>
       </thead>
       <tbody>
         <#list items as item>
           <tr>
-            <td>${item.number.isPresent()?then(item.number.get(), "")}</td>
+            <td class="col-fit">${item.number.isPresent()?then(item.number.get(), "")}</td>
             <td>${itemTypes[item.type]}</td>
             <td>${item.meta}</td>
-            <td>
+            <td class="col-fit">
               <a type="button" class="btn btn-primary btn-xs" href="items/${item.jid}">Manage</a>
               <#if canEdit>
                 <a type="button" class="btn btn-default btn-xs" href="items/${item.jid}/up" <#if item?index == 0>disabled</#if>>

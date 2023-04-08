@@ -14,21 +14,21 @@
   <@table.layout>
     <thead>
       <tr>
-        <th class="table-col-id">ID</th>
+        <th style="min-width: 50px">ID</th>
         <th>Author</th>
         <th>Score</th>
         <th>Submitted at</th>
-        <th class="col-actions"></th>
+        <th class="col-fit"></th>
       </tr>
     </thead>
     <tbody>
       <#list submissions.page as submission>
         <tr>
-          <td>${submission.id}</td>
+          <td class="col-fit">${submission.id}</td>
           <td>${profilesMap[submission.authorJid].username}</td>
           <td>${submission.latestGrading.score}</td>
           <td>${getFormattedDurationFromNow(submission.time)}</td>
-          <td class="text-center">
+          <td class="col-fit">
             <a type="button" class="btn btn-primary btn-xs" href="submissions/${submission.id}">View</a>
             <#if canEdit>
               <a type="button" class="btn btn-default btn-xs" href="submissions/${submission.id}/regrade" <#if !canSubmit>disabled</#if>>

@@ -27,7 +27,7 @@
           <th>Filename</th>
           <th>Last modified at</th>
           <th>Size</th>
-          <th class="table-col-actions"></th>
+          <th class="col-fit"></th>
         </tr>
       </thead>
 
@@ -37,7 +37,7 @@
             <td>${file.name}</td>
             <td>${getFormattedDurationFromNow(file.lastModifiedTime)}</td>
             <td>${getFormattedFileSize(file.size)}</td>
-            <td class="text-center"><a href="${currentPath}/${file.name}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
+            <td class="col-fit"><a href="${currentPath}/${file.name}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
           </tr>
         </#list>
       </tbody>

@@ -8,21 +8,21 @@
   <@table.layout>
     <thead>
       <tr>
-        <th class="table-col-id">ID</th>
+        <th style="min-width: 50px">ID</th>
         <th>Slug</th>
         <th>Created by</th>
         <th>Last updated at</th>
-        <th class="table-col-actions"></th>
+        <th class="col-fit"></th>
       </tr>
     </thead>
     <tbody>
       <#list problems.page as problem>
         <tr>
-          <td>${problem.id}</td>
+          <td class="col-fit">${problem.id}</td>
           <td>${problem.slug}</td>
           <td>${profilesMap[problem.authorJid].username}</td>
           <td>${getFormattedDurationFromNow(problem.lastUpdateTime)}</td>
-          <td class="text-center">
+          <td class="col-fit">
             <a type="button" class="btn btn-primary btn-xs" href="/problems/${problem.type?lower_case}/${problem.id}/statements">Manage</a>
           </td>
         </tr>

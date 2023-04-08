@@ -12,14 +12,14 @@
       <thead>
         <tr>
           <th>User</th>
-          <th class="table-col-permissions">Permission</th>
+          <th class="col-fit">Permission</th>
         </tr>
       </thead>
       <tbody>
         <#list partners as partner>
           <tr>
             <td>${profilesMap[partner.userJid].username}</td>
-            <td>${partner.permission}</td>
+            <td class="col-fit">${partner.permission}</td>
           </tr>
         </#list>
       </tbody>

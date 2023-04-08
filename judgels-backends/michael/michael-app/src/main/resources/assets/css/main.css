@@ -317,32 +317,13 @@ th {
   font-weight: bold;
 }
 
-.table-col-id {
-  width: 50px;
-}
-
-.table-col-actions {
-  width: 50px;
-}
-
-.table-col-submission-actions {
-  width: 80px;
-}
-
-.table-col-item-actions {
-  width: 155px;
-}
-
-.table-col-updated-at {
-  width: 160px;
-}
-
-.table-col-permissions {
-  width: 100px;
+.col-fit {
+  width: 1%;
+  white-space: nowrap;
 }
 
 .panel-heading {
-    font-family: var(--accent-font);
+  font-family: var(--accent-font);
 }
 
 .statement-help-modal-body, .statement-help-modal-body pre {

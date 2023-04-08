@@ -8,21 +8,21 @@
   <@table.layout>
     <thead>
       <tr>
-        <th class="table-col-id">ID</th>
+        <th style="min-width: 50px">ID</th>
         <th>Slug</th>
         <th>Created by</th>
         <th>Last updated at</th>
-        <th class="table-col-actions"></th>
+        <th class="col-fit"></th>
       </tr>
     </thead>
     <tbody>
       <#list lessons.page as lesson>
         <tr>
-          <td>${lesson.id}</td>
+          <td class="col-fit">${lesson.id}</td>
           <td>${lesson.slug}</td>
           <td>${profilesMap[lesson.authorJid].username}</td>
           <td>${getFormattedDurationFromNow(lesson.lastUpdateTime)}</td>
-          <td class="text-center">
+          <td class="col-fit">
             <a type="button" class="btn btn-primary btn-xs" href="/lessons/${lesson.id}/statements">Manage</a>
           </td>
         </tr>
