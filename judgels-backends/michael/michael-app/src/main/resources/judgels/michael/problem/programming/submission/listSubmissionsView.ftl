@@ -1,17 +1,16 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.submission.ListSubmissionsView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
-<#import "/judgels/michael/template/ui/tables.ftl" as tables>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#if canEdit>
-    <@buttons.link intent="default" size="sm" to="submissions/regrade" disabled=!canSubmit style="margin-bottom: 10px" onclick="return confirm('Will regrade ALL submissions in ALL pages, are you sure?')">
+    <@ui.buttonLink intent="default" size="sm" to="submissions/regrade" disabled=!canSubmit style="margin-bottom: 10px" onclick="return confirm('Will regrade ALL submissions in ALL pages, are you sure?')">
       <span class="glyphicon glyphicon-refresh"></span> Regrade all
-    </@buttons.link>
+    </@ui.buttonLink>
   </#if>
 
-  <@tables.table>
+  <@ui.table>
     <thead>
       <tr>
         <th style="min-width: 50px">ID</th>
@@ -33,16 +32,16 @@
           <td>${submission.latestGrading.get().score}</td>
           <td>${getFormattedDurationFromNow(submission.time)}</td>
           <td class="col-fit">
-            <@buttons.link size="xs" to="submissions/${submission.id}">View</@buttons.link>
+            <@ui.buttonLink size="xs" to="submissions/${submission.id}">View</@ui.buttonLink>
             <#if canEdit>
-              <@buttons.link intent="default" size="xs" to="submissions/${submission.id}/regrade" disabled=!canSubmit>
+              <@ui.buttonLink intent="default" size="xs" to="submissions/${submission.id}/regrade" disabled=!canSubmit>
                 <span class="glyphicon glyphicon-refresh"></span>
-              </@buttons.link>
+              </@ui.buttonLink>
             </#if>
           </td>
         </tr>
       </#list>
     </tbody>
-  </@tables.table>
-  <@tables.pagination page=submissions/>
+  </@ui.table>
+  <@ui.pagination page=submissions/>
 </@template.layout>

@@ -1,11 +1,10 @@
 <#-- @ftlvariable type="judgels.michael.problem.ListProblemsView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
-<#import "/judgels/michael/template/ui/tables.ftl" as tables>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
-  <@tables.table>
+  <@ui.table>
     <thead>
       <tr>
         <th style="min-width: 50px">ID</th>
@@ -23,11 +22,11 @@
           <td>${profilesMap[problem.authorJid].username}</td>
           <td>${getFormattedDurationFromNow(problem.lastUpdateTime)}</td>
           <td class="col-fit">
-            <@buttons.link size="xs" to="/problems/${problem.type?lower_case}/${problem.id}/statements">Manage</@buttons.link>
+            <@ui.buttonLink size="xs" to="/problems/${problem.type?lower_case}/${problem.id}/statements">Manage</@ui.buttonLink>
           </td>
         </tr>
       </#list>
     </tbody>
-  </@tables.table>
-  <@tables.pagination page=problems filterString=filterString tags=tags/>
+  </@ui.table>
+  <@ui.pagination page=problems filterString=filterString tags=tags/>
 </@template.layout>

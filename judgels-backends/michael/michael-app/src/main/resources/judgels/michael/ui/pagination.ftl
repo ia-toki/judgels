@@ -1,11 +1,3 @@
-<#macro table>
-  <div class="table-responsive">
-    <table class="table table-hover table-condensed table-striped table-bordered">
-      <#nested>
-    </table>
-   </div>
-</#macro>
-
 <#function newPageLink newPageIndex filterString="" tags=[]>
   <#local res = []>
   <#if (newPageIndex > 1)>

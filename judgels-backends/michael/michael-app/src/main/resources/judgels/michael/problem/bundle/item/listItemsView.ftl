@@ -2,8 +2,7 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
-<#import "/judgels/michael/template/ui/tables.ftl" as tables>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#if canEdit>
@@ -18,7 +17,7 @@
   <#if items?size == 0>
     <p>No items.</p>
   <#else>
-    <@tables.table>
+    <@ui.table>
       <thead>
         <tr>
           <th style="min-width: 50px">No.</th>
@@ -34,22 +33,22 @@
             <td>${itemTypes[item.type]}</td>
             <td>${item.meta}</td>
             <td class="col-fit">
-              <@buttons.link size="xs" to="items/${item.jid}">Manage</@buttons.link>
+              <@ui.buttonLink size="xs" to="items/${item.jid}">Manage</@ui.buttonLink>
               <#if canEdit>
-                <@buttons.link intent="default" size="xs" to="items/${item.jid}/up" disabled=(item?index == 0)>
+                <@ui.buttonLink intent="default" size="xs" to="items/${item.jid}/up" disabled=(item?index == 0)>
                   <span class="glyphicon glyphicon-arrow-up"></span>
-                </@buttons.link>
-                <@buttons.link intent="default" size="xs" to="items/${item.jid}/down" disabled=(item?index == items?size-1)>
+                </@ui.buttonLink>
+                <@ui.buttonLink intent="default" size="xs" to="items/${item.jid}/down" disabled=(item?index == items?size-1)>
                   <span class="glyphicon glyphicon-arrow-down"></span>
-                </@buttons.link>
-                <@buttons.link intent="danger" size="xs" to="items/${item.jid}/remove">
+                </@ui.buttonLink>
+                <@ui.buttonLink intent="danger" size="xs" to="items/${item.jid}/remove">
                   <span class="glyphicon glyphicon-remove"></span>
-                </@buttons.link>
+                </@ui.buttonLink>
               </#if>
             </td>
           </tr>
         </#list>
       </tbody>
-    </@tables.table>
+    </@ui.table>
   </#if>
 </@template.layout>

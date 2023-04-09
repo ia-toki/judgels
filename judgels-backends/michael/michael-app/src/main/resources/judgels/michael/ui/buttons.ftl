@@ -1,6 +1,6 @@
-<#macro button intent="primary" size="" disabled=false class="" clazz="" style="" onclick="">
+<#macro button type="button" intent="primary" size="" disabled=false class="" clazz="" style="" onclick="">
   <button
-    type="button"
+    type="${type}"
     class="btn btn-${intent} <#if size?has_content>btn-${size}</#if> ${class}"
     <#if disabled>disabled</#if>
     <#if style?has_content>style="${style}"</#if>
@@ -10,7 +10,7 @@
   </button>
 </#macro>
 
-<#macro link to intent="primary" size="" disabled=false class="" style="" onclick="">
+<#macro buttonLink to intent="primary" size="" disabled=false class="" style="" onclick="">
   <a
     type="button" href="${to}"
     class="btn btn-${intent} <#if size?has_content>btn-${size}</#if> ${class}"
@@ -20,15 +20,4 @@
   >
     <#nested>
   </a>
-</#macro>
-
-<#macro submit intent="primary" size="" disabled=false class="" style="">
-  <button
-    type="button"
-    class="btn btn-${intent} <#if size?has_content>btn-${size}</#if> ${class}"
-    <#if disabled>disabled</#if>
-    <#if style?has_content>style="${style}"</#if>
-  >
-    <#nested>
-  </button>
 </#macro>

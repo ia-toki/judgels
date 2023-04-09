@@ -2,9 +2,9 @@
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
 <#import "/judgels/michael/problem/bundle/item/viewItemView.ftl" as viewItem>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#include "/judgels/michael/resource/katex.ftl">
@@ -30,7 +30,7 @@
     </#list>
 
     <#if canSubmit && !reasonNotAllowedToSubmit?has_content>
-      <@buttons.submit>Submit</@buttons.submit>
+      <@ui.button type="submit">Submit</@ui.button>
       <br>
       <br>
     </#if>

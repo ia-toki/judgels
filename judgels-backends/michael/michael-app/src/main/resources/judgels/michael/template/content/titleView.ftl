@@ -1,4 +1,4 @@
-<#import "/judgels/michael/template/ui/buttons.ftl" as btns>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <#macro view title buttons>
   <#if buttons?size == 0>
@@ -7,7 +7,7 @@
     <div class="title-inline">
       <h2>${title}</h2>
       <#list buttons as button>
-        <@btns.link size="sm" to="${button.target}">${button.label}</@btns.link>
+        <@ui.buttonLink size="sm" to="${button.target}">${button.label}</@ui.buttonLink>
       </#list>
     </div>
    </#if>

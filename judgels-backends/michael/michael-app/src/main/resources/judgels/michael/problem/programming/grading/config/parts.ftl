@@ -1,5 +1,5 @@
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <#macro limits>
   <@forms.text form=form name="timeLimit" label="Time limit" addon="milliseconds" required=true disabled=!canEdit/>
@@ -259,9 +259,9 @@
       </#list>
 
       <#if canEdit>
-        <@buttons.button size="xs" class="test-group-add-button">
+        <@ui.button size="xs" class="test-group-add-button">
           <span class="glyphicon glyphicon-plus"></span> New test group
-        </@buttons.button>
+        </@ui.button>
       </#if>
     </div>
   </div>
@@ -310,9 +310,9 @@
   <#if !canEdit><#return></#if>
   <div class="row">
     <div class="col-md-offset-3 col-md-9">
-      <@buttons.link size="sm" to="config/auto-populate">
+      <@ui.buttonLink size="sm" to="config/auto-populate">
         Auto-populate test data based on filenames
-      </@buttons.link>
+      </@ui.buttonLink>
     </div>
   </div>
   <br>
@@ -322,9 +322,9 @@
   <#if !canEdit><#return></#if>
   <div class="row">
     <div class="col-md-offset-3 col-md-9">
-      <@buttons.link size="sm" to="config/auto-populate">
+      <@ui.buttonLink size="sm" to="config/auto-populate">
         Auto-populate test data based on tcframe format
-      </@buttons.link>
+      </@ui.buttonLink>
     </div>
   </div>
   <br>

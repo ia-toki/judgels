@@ -1,8 +1,8 @@
 <#-- @ftlvariable type="judgels.michael.resource.ListFilesView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/ui/tables.ftl" as tables>
 <#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#if canEdit>
@@ -21,7 +21,7 @@
   <#if files?size == 0>
     <p>No files.</p>
   <#else>
-    <@tables.table>
+    <@ui.table>
       <thead>
         <tr>
           <th>Filename</th>
@@ -41,6 +41,6 @@
           </tr>
         </#list>
       </tbody>
-    </@tables.table>
+    </@ui.table>
   </#if>
 </@template.layout>

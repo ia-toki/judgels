@@ -1,9 +1,8 @@
 <#-- @ftlvariable type="judgels.michael.resource.ListStatementLanguagesView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
-<#import "/judgels/michael/template/ui/tables.ftl" as tables>
 <#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#if canEdit>
@@ -14,7 +13,7 @@
     <hr>
   </#if>
   <h3>Languages</h3>
-  <@tables.table>
+  <@ui.table>
     <thead>
       <tr>
         <th>Language</th>
@@ -31,19 +30,19 @@
           <#if status == "ENABLED">
             <td class="col-fit">
               <#if canEdit && lang != defaultLanguage>
-                <@buttons.link size="xs" to="languages/${lang}/disable">Disable</@buttons.link>
-                <@buttons.link size="xs" to="languages/${lang}/makeDefault">Make default</@buttons.link>
+                <@ui.buttonLink size="xs" to="languages/${lang}/disable">Disable</@ui.buttonLink>
+                <@ui.buttonLink size="xs" to="languages/${lang}/makeDefault">Make default</@ui.buttonLink>
               </#if>
             </td>
           <#else>
             <td class="col-fit">
               <#if canEdit>
-                <@buttons.link size="xs" to="languages/${lang}/enable">Enable</@buttons.link>
+                <@ui.buttonLink size="xs" to="languages/${lang}/enable">Enable</@ui.buttonLink>
               </#if>
             </td>
           </#if>
         </tr>
       </#list>
     </tbody>
-  </@tables.table>
+  </@ui.table>
 </@template.layout>

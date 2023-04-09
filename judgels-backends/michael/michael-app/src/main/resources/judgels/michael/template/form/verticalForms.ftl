@@ -1,4 +1,4 @@
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <#macro form>
   <form method="POST" class="form-vertical">
@@ -26,8 +26,8 @@
 
 <#macro submit>
   <div class="form-group">
-    <@buttons.submit>
+    <@ui.button type="submit">
       <#nested>
-    </@buttons.submit>
+    </@ui.button>
   </div>
 </#macro>

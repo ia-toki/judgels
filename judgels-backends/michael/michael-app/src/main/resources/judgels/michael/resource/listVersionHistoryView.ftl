@@ -1,7 +1,7 @@
 <#-- @ftlvariable type="judgels.michael.resource.ListVersionHistoryView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/ui/buttons.ftl" as buttons>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#list versions as version>
@@ -13,7 +13,7 @@
         </span>
         <span class="panel-title pull-right">
           <#if (version?index > 0 && isClean)>
-            &nbsp;<@buttons.link intent="danger" size="xs" to="history/${version.hash}/restore">Restore</@buttons.link>
+            &nbsp;<@ui.buttonLink intent="danger" size="xs" to="history/${version.hash}/restore">Restore</@ui.buttonLink>
           </#if>
         </span>
         <span class="panel-title pull-right">
