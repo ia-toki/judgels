@@ -43,13 +43,8 @@ public class BundleProblemStatementResource extends BaseBundleProblemResource {
                 .map(item -> itemStore.getItemConfig(actor.getUserJid(), problem.getJid(), item, language, defaultLanguage))
                 .collect(toList());
 
-        boolean isClean = !problemStore.userCloneExists(actor.getUserJid(), problem.getJid());
-
-        String reasonNotAllowedToSubmit = null;
-        if (!isClean) {
-            reasonNotAllowedToSubmit = "Submission not allowed if there are local changes.";
-        }
-        boolean canSubmit = roleChecker.canEdit(actor, problem);
+        String reasonNotAllowedToSubmit = roleChecker.canSubmit(actor, problem).orElse("");
+        boolean canSubmit = reasonNotAllowedToSubmit.isEmpty();
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("view");

@@ -42,7 +42,7 @@ public class ProgrammingProblemStatementResource extends BaseProgrammingProblemR
         Set<String> allowedGradingLanguages = LanguageRestrictionAdapter.getAllowedLanguages(gradingLanguageRestriction);
 
         String reasonNotAllowedToSubmit = roleChecker.canSubmit(actor, problem).orElse("");
-        boolean canSubmit = !reasonNotAllowedToSubmit.isEmpty();
+        boolean canSubmit = reasonNotAllowedToSubmit.isEmpty();
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
