@@ -8,6 +8,7 @@
 <#import "content/secondaryTabsView.ftl" as secondaryTabs>
 <#import "content/titleView.ftl" as title>
 <#import "base/headerView.ftl" as header>
+<#import "base/footerView.ftl" as footer>
 <#import "base/formErrorView.ftl" as formError>
 
 <#macro layout>
@@ -30,5 +31,6 @@
         </@content.layout>
       </@column.layout>
     </main>
+    <@footer.view/>
   </@base.layout>
 </#macro>

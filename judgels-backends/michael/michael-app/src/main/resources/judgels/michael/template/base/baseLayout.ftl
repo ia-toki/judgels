@@ -14,9 +14,7 @@
       <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
-      <div class="container-fluid">
-        <#nested>
-      </div>
+      <#nested>
     </body>
   </html>
 </#macro>

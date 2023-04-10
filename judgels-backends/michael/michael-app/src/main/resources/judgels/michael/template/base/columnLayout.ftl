@@ -7,7 +7,7 @@
   sidebarMenus activeSidebarMenu
   searchProblemsWidget searchLessonsWidget
 >
-  <div class="row content">
+  <div class="row">
     <#if sidebarMenus?size == 0>
       <div class="col-md-offset-3 col-md-6">
         <#nested>

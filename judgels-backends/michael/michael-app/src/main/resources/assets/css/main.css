@@ -35,22 +35,16 @@ body {
   background-color: var(--background-color);
 }
 
-body .container-fluid {
-  padding-left: 0;
-  padding-right: 0;
-}
-
 header {
   height: 50px;
+  margin-bottom: 15px;
+  padding-left: 0;
+  padding-right: 0;
   color: var(--accent-font-color);
   background-color: var(--primary-color);
   -webkit-box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
   -moz-box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
   box-shadow: 3px 3px 2px 1px rgba(119,119,119,0.4);
-}
-
-header .row {
-  margin: 0;
 }
 
 header .logo {
@@ -107,7 +101,7 @@ header .avatar-image img {
 }
 
 .control-label {
-  font-weight: 400;
+  font-weight: inherit;
 }
 
 .form-inline label {
@@ -190,12 +184,7 @@ input[type="text"], input[type="password"], textarea {
 }
 
 .content {
-  padding-top: 15px;
-  width: 100%;
-  margin: 0;
-}
-
-.primary-content {
+  padding: 0 15px;
   background-color: var(--content-color);
   min-height: 624px;
   border: 1px solid var(--accent-color);
