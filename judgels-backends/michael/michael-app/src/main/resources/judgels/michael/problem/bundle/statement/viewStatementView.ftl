@@ -1,9 +1,9 @@
 <#-- @ftlvariable type="judgels.michael.problem.bundle.statement.ViewStatementView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
 <#import "/judgels/michael/problem/bundle/item/viewItemView.ftl" as viewItem>
+<#import "/judgels/michael/forms.ftl" as forms>
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
@@ -24,15 +24,13 @@
 
   <hr>
 
-  <@forms.form action="submissions">
+  <@forms.form type="vertical" action="submissions">
     <#list 0..<items?size as i>
       <@viewItem.view item=items[i] type=itemTypes[i] config=itemConfigs[i]/>
     </#list>
 
     <#if canSubmit && !reasonNotAllowedToSubmit?has_content>
-      <@ui.button type="submit">Submit</@ui.button>
-      <br>
-      <br>
+      <@forms.submit>Submit</@forms.submit>
     </#if>
   </@forms.form>
 

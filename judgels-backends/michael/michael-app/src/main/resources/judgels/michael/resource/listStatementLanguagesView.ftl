@@ -1,12 +1,12 @@
 <#-- @ftlvariable type="judgels.michael.resource.ListStatementLanguagesView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#if canEdit>
-    <@forms.form>
+    <@forms.form type="inline">
       <@forms.select name="language" label="Add language" options=languages/>
       <@forms.submit>Add</@forms.submit>
     </@forms.form>

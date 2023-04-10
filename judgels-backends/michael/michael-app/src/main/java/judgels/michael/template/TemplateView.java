@@ -23,7 +23,7 @@ public abstract class TemplateView extends View {
         return template;
     }
 
-    public HtmlForm getForm() {
+    public HtmlForm getFormValues() {
         return form;
     }
 

@@ -1,16 +1,17 @@
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
+<#import "/judgels/michael/ui.ftl" as ui>
 
 <#macro widget data>
-  <div class="widget clearfix">
-    <div class="col-md-12">
-      <form method="GET" action="/lessons">
-        <div class="form-group">
-          <label>Slug / additional note</label>
-          <input type="search" class="form-control" name="filter" value="${data.filterString}">
-        </div>
+  <div class="widget">
+    <form method="GET" action="/lessons">
+      <@forms.formGroup>
+        <label>Slug / additional note</label>
+        <input type="search" class="form-control" name="filter" value="${data.filterString}">
+      </@forms.formGroup>
 
-        <@forms.submit>Search</@forms.submit>
-      </form>
-    </div>
+      <div class="text-center">
+        <@ui.button type="submit">Search</@ui.button>
+      </div>
+    </form>
   </div>
 </#macro>

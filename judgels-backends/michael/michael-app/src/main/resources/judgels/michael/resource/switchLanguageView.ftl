@@ -1,4 +1,4 @@
-<#import "/judgels/michael/template/form/inlineForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <#macro view languages language>
@@ -7,15 +7,15 @@
   </div>
 
   <div class="pull-right">
-    <@forms.form action="/switchLanguage">
-      <label for="language"><span class="small">Switch to</span></label>
-      <div class="form-group">
+    <@forms.form type="inline" action="/switchLanguage">
+      <@forms.formLabel for="language" value="Switch to"/>
+      <@forms.formGroup>
         <select id="language" name="language">
           <#list languages as k, v>
             <option value="${k}" ${(k == language)?then("selected", "")}>${v}</option>
           </#list>
         </select>
-      </div>
+      </@forms.formGroup>
       <@ui.button type="submit" size="xs">Switch</@ui.button>
     </@forms.form>
   </div>

@@ -1,12 +1,11 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.grading.EditGradingEngineView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 
 <@template.layout>
   <@forms.form>
     <@forms.select
-      form=form
       name="gradingEngine"
       label="Grading engine"
       options=gradingEngines

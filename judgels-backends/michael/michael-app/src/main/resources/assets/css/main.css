@@ -184,8 +184,7 @@ input[type="text"], input[type="password"], textarea {
 
 .widget {
   margin-top: 15px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding: 8px 15px;
   background-color: var(--content-color);
   border: 1px solid var(--accent-color);
 }

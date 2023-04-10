@@ -7,8 +7,8 @@
 <#import "content/mainWarningView.ftl" as mainWarning>
 <#import "content/secondaryTabsView.ftl" as secondaryTabs>
 <#import "content/titleView.ftl" as title>
-<#import "form/globalFormErrorView.ftl" as globalFormError>
 <#import "base/headerView.ftl" as header>
+<#import "base/formErrorView.ftl" as formError>
 
 <#macro layout>
   <@base.layout title=vars.title>
@@ -25,7 +25,7 @@
           <@mainWarning.view html=vars.mainWarningHtml/>
           <@mainTabs.view tabs=vars.mainTabs activeTab=vars.activeMainTab/>
           <@secondaryTabs.view tabs=vars.secondaryTabs activeTab=vars.activeSecondaryTab/>
-          <@globalFormError.view message=(form.globalError)!""/>
+          <@formError.view message=(formValues.globalError)!""/>
           <#nested>
         </@content.layout>
       </@column.layout>

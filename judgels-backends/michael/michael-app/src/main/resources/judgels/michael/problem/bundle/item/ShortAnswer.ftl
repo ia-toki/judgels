@@ -1,4 +1,4 @@
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 
 <#macro view item config>
   <div class="clearfix">
@@ -23,8 +23,8 @@
 </#macro>
 
 <#macro edit>
-  <@forms.text form=form compact=true number=true name="score" label="Score" required=true help="Points for correct answer" disabled=!canEdit/>
-  <@forms.text form=form compact=true number=true name="penalty" label="Penalty" required=true help="Points for wrong answer" disabled=!canEdit/>
-  <@forms.text form=form compact=true name="inputValidationRegex" label="Answer format regex" required=true help="Matches whole string. Example: [0-9]+,[0-9]+" disabled=!canEdit/>
-  <@forms.text form=form compact=true name="gradingRegex" label="Correct answer regex" help="Optional. Matches whole string. Example: (1,2)|(2,1)" disabled=!canEdit/>
+  <@forms.input type="number" name="score" label="Score" required=true help="Points for correct answer" disabled=!canEdit/>
+  <@forms.input type="number" name="penalty" label="Penalty" required=true help="Points for wrong answer" disabled=!canEdit/>
+  <@forms.input name="inputValidationRegex" label="Answer format regex" required=true help="Matches whole string. Example: [0-9]+,[0-9]+" disabled=!canEdit/>
+  <@forms.input name="gradingRegex" label="Correct answer regex" help="Optional. Matches whole string. Example: (1,2)|(2,1)" disabled=!canEdit/>
 </#macro>

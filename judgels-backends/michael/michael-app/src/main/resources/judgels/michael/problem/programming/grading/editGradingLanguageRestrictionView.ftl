@@ -1,13 +1,13 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.grading.EditGradingLanguageRestrictionView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 
 <@template.layout>
   <@forms.form>
-    <div class="form-group">
-      <label class="control-label col-md-3">Allowed languages</label>
-      <div class="col-md-9">
+    <@forms.formGroup>
+      <@forms.formLabel value="Allowed languages"/>
+      <@forms.formField>
         <div class="checkbox">
           <label>
             <input
@@ -15,7 +15,7 @@
               id="isAllowedAll"
               name="isAllowedAll"
               value="true"
-              <#if form.isAllowedAll>checked</#if>
+              <#if formValues.isAllowedAll>checked</#if>
               <#if !canEdit>disabled</#if>
             > Allow all
           </label>
@@ -28,14 +28,14 @@
                 class="allowedLanguage"
                 name="allowedLanguages"
                 value="${lang}"
-                <#if form.allowedLanguages?seq_contains(lang)>checked</#if>
+                <#if formValues.allowedLanguages?seq_contains(lang)>checked</#if>
                 <#if !canEdit>disabled</#if>
               > ${name}
             </label>
           </div>
         </#list>
-      </div>
-    </div>
+      </@forms.formField>
+    </@forms.formGroup>
 
     <#if canEdit>
       <@forms.submit>Update</@forms.submit>

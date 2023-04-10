@@ -1,19 +1,19 @@
 <#-- @ftlvariable type="judgels.michael.resource.ListFilesView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#if canEdit>
-    <@forms.multipartForm>
+    <@forms.form multipart=true>
       <@forms.file name="file" label="Upload new file"/>
-      <@forms.submit small=true>Upload</@forms.submit>
-    </@forms.multipartForm>
-    <@forms.multipartForm>
+      <@forms.submit size="sm">Upload</@forms.submit>
+    </@forms.form>
+    <@forms.form multipart=true>
       <@forms.file name="fileZipped" label="Upload new files as zip"/>
-      <@forms.submit small=true>Upload</@forms.submit>
-    </@forms.multipartForm>
+      <@forms.submit size="sm">Upload</@forms.submit>
+    </@forms.form>
     <hr>
   </#if>
 

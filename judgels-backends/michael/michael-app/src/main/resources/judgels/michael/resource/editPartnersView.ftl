@@ -1,7 +1,7 @@
 <#-- @ftlvariable type="judgels.michael.resource.EditPartnersView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/verticalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 
 <@template.layout>
   <h3>Edit partners</h3>
@@ -15,8 +15,8 @@ budi
 caca,UPDATE</pre>
   <hr>
   <p>One user per line, max 100 users:</p>
-  <@forms.form>
-    <@forms.csv form=form name="csv"/>
+  <@forms.form type="vertical">
+    <@forms.csv name="csv"/>
     <@forms.submit>Update</@forms.submit>
   </@forms.form>
 </@template.layout>

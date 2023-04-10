@@ -1,7 +1,7 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.grading.config.EditGradingConfigView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 <#import "parts.ftl" as parts>
 
 <@template.layout>

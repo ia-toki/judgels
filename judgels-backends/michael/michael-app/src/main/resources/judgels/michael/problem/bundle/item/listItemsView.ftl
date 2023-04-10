@@ -1,14 +1,14 @@
 <#-- @ftlvariable type="judgels.michael.problem.bundle.item.ListItemsView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
   <#if canEdit>
-    <@forms.form>
-      <@forms.select form=form name="type" label="Add new item" options=itemTypes/>
-      <@forms.submit small=true>Add</@forms.submit>
+    <@forms.form type="inline">
+      <@forms.select name="type" label="Add new item" options=itemTypes/>
+      <@forms.submit>Add</@forms.submit>
     </@forms.form>
     <hr>
   </#if>

@@ -1,13 +1,13 @@
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
+<#import "/judgels/michael/forms.ftl" as forms>
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <#macro limits>
-  <@forms.text form=form name="timeLimit" label="Time limit" addon="milliseconds" required=true disabled=!canEdit/>
-  <@forms.text form=form name="memoryLimit" label="Memory limit" addon="kilobytes" required=true disabled=!canEdit/>
+  <@forms.input type="number" name="timeLimit" label="Time limit" addon="milliseconds" required=true disabled=!canEdit/>
+  <@forms.input type="number" name="memoryLimit" label="Memory limit" addon="kilobytes" required=true disabled=!canEdit/>
 </#macro>
 
 <#macro keys>
-  <@forms.text form=form name="sourceFileFieldKeys" label="Keys" addon="comma-separated keys" required=true disabled=!canEdit/>
+  <@forms.input name="sourceFileFieldKeys" label="Keys" addon="comma-separated keys" required=true disabled=!canEdit/>
 </#macro>
 
 <#macro testCase isTemplate=false inputFile="" outputFile="" hasOutput=true>
@@ -131,15 +131,12 @@
 </#macro>
 
 <#macro sampleTestData hasOutput=true>
-  <#local inputFiles = splitCsv(form.testCaseInputs[0])>
-  <#local outputFiles = splitCsv(form.testCaseOutputs[0])>
+  <#local inputFiles = splitCsv(formValues.testCaseInputs[0])>
+  <#local outputFiles = splitCsv(formValues.testCaseOutputs[0])>
 
   <div class="row" id="sample-test-data">
-    <div class="col-md-3">
-      <label class="control-label">Sample test data</label>
-    </div>
-
-    <div class="col-md-9">
+    <@forms.formLabel value="Sample test data"/>
+    <@forms.formField>
       <div class="panel panel-default">
         <div class="panel-body">
           <table class="table table-condensed">
@@ -160,24 +157,22 @@
               <@addTestCaseForm hasOutput=hasOutput/>
             </tbody>
           </table>
-          <input type="hidden" name="testCaseInputs" value="${form.testCaseInputs[0]}">
-          <input type="hidden" name="testCaseOutputs" value="${form.testCaseOutputs[0]}">
+          <input type="hidden" name="testCaseInputs" value="${formValues.testCaseInputs[0]}">
+          <input type="hidden" name="testCaseOutputs" value="${formValues.testCaseOutputs[0]}">
         </div>
       </div>
-    </div>
+    </@forms.formField>
   </div>
 </#macro>
 
 <#macro sampleTestDataWithSubtasks hasOutput=true>
-  <#local inputFiles = splitCsv(form.testCaseInputs[0])>
-  <#local outputFiles = splitCsv(form.testCaseOutputs[0])>
+  <#local inputFiles = splitCsv(formValues.testCaseInputs[0])>
+  <#local outputFiles = splitCsv(formValues.testCaseOutputs[0])>
 
   <div class="row" id="sample-test-data">
-    <div class="col-md-3">
-      <label class="control-label">Sample test data</label>
-    </div>
+    <@forms.formLabel value="Sample test data"/>
 
-    <div class="col-md-9">
+    <@forms.formField>
       <div class="panel panel-default">
         <div class="panel-body">
           <table class="table table-condensed" style="margin-bottom: 0">
@@ -196,47 +191,41 @@
 
               <#list 0..<inputFiles?size as i>
                 <@testCase inputFile=inputFiles[i] outputFile=outputFiles[i] hasOutput=hasOutput/>
-                <@sampleTestCaseSubtaskAssignment subtaskIds=splitCsv(form.sampleTestCaseSubtaskIds[i])>
-                  <input type="hidden" name="sampleTestCaseSubtaskIds" value="${form.sampleTestCaseSubtaskIds[i]}">
+                <@sampleTestCaseSubtaskAssignment subtaskIds=splitCsv(formValues.sampleTestCaseSubtaskIds[i])>
+                  <input type="hidden" name="sampleTestCaseSubtaskIds" value="${formValues.sampleTestCaseSubtaskIds[i]}">
                 </@sampleTestCaseSubtaskAssignment>
               </#list>
 
               <@addTestCaseForm hasOutput=hasOutput/>
             </tbody>
           </table>
-          <input type="hidden" name="testCaseInputs" value="${form.testCaseInputs[0]}">
-          <input type="hidden" name="testCaseOutputs" value="${form.testCaseOutputs[0]}">
+          <input type="hidden" name="testCaseInputs" value="${formValues.testCaseInputs[0]}">
+          <input type="hidden" name="testCaseOutputs" value="${formValues.testCaseOutputs[0]}">
         </div>
       </div>
-    </div>
+    </@forms.formField>
   </div>
 </#macro>
 
 <#macro testData hasOutput=true>
-  <#local inputFiles = splitCsv(form.testCaseInputs[1])>
-  <#local outputFiles = splitCsv(form.testCaseOutputs[1])>
+  <#local inputFiles = splitCsv(formValues.testCaseInputs[1])>
+  <#local outputFiles = splitCsv(formValues.testCaseOutputs[1])>
 
   <div class="row" id="test-data">
-    <div class="col-md-3">
-      <label class="control-label">Test data</label>
-    </div>
-
-    <div class="col-md-9">
+    <@forms.formLabel value="Test data"/>
+    <@forms.formField>
       <@testGroup inputFiles=inputFiles outputFiles=outputFiles hasOutput=hasOutput>
-        <input type="hidden" name="testCaseInputs" value="${form.testCaseInputs[1]}">
-        <input type="hidden" name="testCaseOutputs" value="${form.testCaseOutputs[1]}">
+        <input type="hidden" name="testCaseInputs" value="${formValues.testCaseInputs[1]}">
+        <input type="hidden" name="testCaseOutputs" value="${formValues.testCaseOutputs[1]}">
       </@testGroup>
-    </div>
+    </@forms.formField>
   </div>
 </#macro>
 
 <#macro testDataWithSubtasks hasOutput=true>
   <div class="row">
-    <div class="col-md-3">
-      <label class="control-label">Test data</label>
-    </div>
-
-    <div class="col-md-9" id="test-groups">
+    <@forms.formLabel value="Test data"/>
+    <@forms.formField id="test-groups">
       <@testGroup isTemplate=true heading="Test group" hasOutput=hasOutput>
         <input type="hidden" name="testCaseInputs" disabled>
         <input type="hidden" name="testCaseOutputs" disabled>
@@ -245,15 +234,15 @@
         </@testGroupSubtaskAssignment>
       </@testGroup>
 
-      <#list 1..<form.testCaseInputs?size as i>
-        <#local inputFiles = splitCsv(form.testCaseInputs[i])>
-        <#local outputFiles = splitCsv(form.testCaseOutputs[i])>
+      <#list 1..<formValues.testCaseInputs?size as i>
+        <#local inputFiles = splitCsv(formValues.testCaseInputs[i])>
+        <#local outputFiles = splitCsv(formValues.testCaseOutputs[i])>
 
         <@testGroup heading="Test group ${i}" hasOutput=hasOutput inputFiles=inputFiles outputFiles=outputFiles>
-          <input type="hidden" name="testCaseInputs" value="${form.testCaseInputs[i]}">
-          <input type="hidden" name="testCaseOutputs" value="${form.testCaseOutputs[i]}">
-          <@testGroupSubtaskAssignment subtaskIds=splitCsv(form.testGroupSubtaskIds[i-1])>
-            <input type="hidden" name="testGroupSubtaskIds" value="${form.testGroupSubtaskIds[i-1]}">
+          <input type="hidden" name="testCaseInputs" value="${formValues.testCaseInputs[i]}">
+          <input type="hidden" name="testCaseOutputs" value="${formValues.testCaseOutputs[i]}">
+          <@testGroupSubtaskAssignment subtaskIds=splitCsv(formValues.testGroupSubtaskIds[i-1])>
+            <input type="hidden" name="testGroupSubtaskIds" value="${formValues.testGroupSubtaskIds[i-1]}">
           </@testGroupSubtaskAssignment>
         </@testGroup>
       </#list>
@@ -263,17 +252,14 @@
           <span class="glyphicon glyphicon-plus"></span> New test group
         </@ui.button>
       </#if>
-    </div>
+    </@forms.formField>
   </div>
 </#macro>
 
 <#macro subtasks>
   <div class="row">
-    <div class="col-md-3">
-      <label class="control-label">Subtasks</label>
-    </div>
-
-    <div class="col-md-9">
+    <@forms.formLabel value="Subtasks"/>
+    <@forms.formField>
       <div class="panel panel-default">
         <div class="panel-body">
           <table class="table table-condensed">
@@ -284,36 +270,36 @@
               </tr>
             </thead>
             <tbody>
-              <#list 0..<form.subtaskPoints?size as i>
+              <#list 0..<formValues.subtaskPoints?size as i>
                 <tr>
                   <td>${i+1}</td>
-                  <td><input type="number" name="subtaskPoints" class="form-control" value="${form.subtaskPoints[i]!""}" <#if !canEdit>disabled</#if>></td>
+                  <td><input type="number" name="subtaskPoints" class="form-control" value="${formValues.subtaskPoints[i]!""}" <#if !canEdit>disabled</#if>></td>
                 </tr>
               </#list>
             </tbody>
           </table>
         </div>
       </div>
-    </div>
+    </@forms.formField>
   </div>
 </#macro>
 
 <#macro customScorer>
-  <@forms.select form=form name="customScorer" label="Custom scorer" options=helperFilenamesForCustomScorer disabled=!canEdit/>
+  <@forms.select name="customScorer" label="Custom scorer" options=helperFilenamesForCustomScorer disabled=!canEdit/>
 </#macro>
 
 <#macro communicator>
-  <@forms.select form=form name="communicator" label="Communicator" options=helperFilenamesForCommunicator disabled=!canEdit/>
+  <@forms.select name="communicator" label="Communicator" options=helperFilenamesForCommunicator disabled=!canEdit/>
 </#macro>
 
 <#macro autoPopulateByFilename>
   <#if !canEdit><#return></#if>
   <div class="row">
-    <div class="col-md-offset-3 col-md-9">
+    <@forms.formField offset=true>
       <@ui.buttonLink size="sm" to="config/auto-populate">
         Auto-populate test data based on filenames
       </@ui.buttonLink>
-    </div>
+    </@forms.formField>
   </div>
   <br>
 </#macro>
@@ -321,11 +307,11 @@
 <#macro autoPopulateByTCFrameFormat>
   <#if !canEdit><#return></#if>
   <div class="row">
-    <div class="col-md-offset-3 col-md-9">
+    <@forms.formField offset=true>
       <@ui.buttonLink size="sm" to="config/auto-populate">
         Auto-populate test data based on tcframe format
       </@ui.buttonLink>
-    </div>
+    </@forms.formField>
   </div>
   <br>
 </#macro>

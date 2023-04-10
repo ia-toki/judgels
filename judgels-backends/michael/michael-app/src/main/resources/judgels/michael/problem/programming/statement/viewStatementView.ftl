@@ -1,8 +1,8 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.statement.ViewStatementView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/form/horizontalForms.ftl" as forms>
 <#import "/judgels/michael/resource/switchLanguageView.ftl" as switchLanguage>
+<#import "/judgels/michael/forms.ftl" as forms>
 
 <@template.layout>
   <#include "/judgels/michael/resource/katex.ftl">
@@ -41,21 +41,21 @@
     <hr>
     <h4>Submit solution</h4>
 
-    <@forms.multipartForm action="submissions">
+    <@forms.form multipart=true compact=true action="submissions">
       <input type="hidden" name="gradingEngine" value="${gradingEngine}">
       <input type="hidden" name="sourceKeys" value="${sourceKeys}">
 
       <#list gradingConfig.sourceFileFields as k, v>
-        <@forms.file name="sourceFiles."+k label=v simple=true required=true/>
+        <@forms.file name="sourceFiles."+k label=v required=true/>
       </#list>
 
       <#if isOutputOnly>
         <input type="hidden" name="gradingLanguage" value="${outputOnlyGradingLanguage}">
       <#else>
-        <@forms.select name="gradingLanguage" label="Language" options=allowedGradingLanguages simple=true/>
+        <@forms.select name="gradingLanguage" label="Language" options=allowedGradingLanguages/>
       </#if>
 
       <@forms.submit>Submit</@forms.submit>
-    </@forms.multipartForm>
+    </@forms.form>
   </#if>
 </@template.layout>
