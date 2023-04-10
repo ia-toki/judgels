@@ -1,15 +1,23 @@
 plugins {
-    id 'com.palantir.sls-java-service-distribution'
-    id 'com.palantir.launch-config' version '1.1.0'
+    id 'application'
 }
 
 dependencies {
     runtimeOnly project(':gabriel:gabriel-app')
 }
 
-distribution {
-    serviceName 'gabriel'
-    serviceGroup 'judgels'
-    mainClass 'judgels.gabriel.GabrielApplication'
-    args 'server', 'var/conf/gabriel.yml'
+application {
+    mainClassName 'judgels.gabriel.GabrielApplication'
+}
+
+run {
+    args = [ 'server', 'var/conf/gabriel.yml' ]
+}
+
+distributions.main {
+    contents {
+        from('var') {
+            into 'var'
+        }
+    }
 }

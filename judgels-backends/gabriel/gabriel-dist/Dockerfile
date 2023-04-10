@@ -53,5 +53,5 @@ COPY --from=0 /usr/local/etc/isolate /usr/local/etc/
 COPY --from=0 /moe/eval/iwrapper /judgels/moe/
 COPY build/distributions .
 
-ENTRYPOINT ["./service/bin/init.sh"]
+ENTRYPOINT ["./init.sh"]
 CMD ["console"]
