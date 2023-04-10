@@ -63,8 +63,10 @@
                   <input type="checkbox" name="choiceIsCorrects" style="margin-top: 8px" disabled>
                 </td>
                 <#if canEdit>
-                  <td class="text-center">
-                    <a href="#" class="choice-remove-button"><span class="glyphicon glyphicon-remove" style="margin-top: 8px"></span></a>
+                  <td class="col-fit">
+                    <@ui.button intent="danger" size="xs" class="choice-remove-button" style="margin-top: 4px">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </@ui.button>
                   </td>
                 </#if>
               </tr>
@@ -80,8 +82,10 @@
                     <input type="checkbox" name="choiceIsCorrects" style="margin-top: 8px" value="${i}" <#if formValues.choiceIsCorrects?seq_contains(i)> checked</#if> <#if !canEdit>disabled</#if>>
                   </td>
                   <#if canEdit>
-                    <td class="text-center">
-                      <a href="#" class="choice-remove-button"><span class="glyphicon glyphicon-remove" style="margin-top: 8px"></span></a>
+                    <td class="col-fit">
+                      <@ui.button intent="danger" size="xs" class="choice-remove-button" style="margin-top: 4px">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </@ui.button>
                     </td>
                   </#if>
                 <tr>

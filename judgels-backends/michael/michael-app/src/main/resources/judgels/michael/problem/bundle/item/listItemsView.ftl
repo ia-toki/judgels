@@ -42,7 +42,7 @@
                   <span class="glyphicon glyphicon-arrow-down"></span>
                 </@ui.buttonLink>
                 <@ui.buttonLink intent="danger" size="xs" to="items/${item.jid}/remove">
-                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="glyphicon glyphicon-trash"></span>
                 </@ui.buttonLink>
               </#if>
             </td>

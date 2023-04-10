@@ -5,7 +5,7 @@
 
 <@template.layout>
   <#if canEdit>
-    <@ui.buttonLink intent="default" size="sm" to="submissions/regrade" disabled=!canSubmit style="margin-bottom: 10px" onclick="return confirm('Will regrade ALL submissions in ALL pages, are you sure?')">
+    <@ui.buttonLink size="xs" to="submissions/regrade" disabled=!canSubmit style="margin-bottom: 10px" onclick="return confirm('Will regrade ALL submissions in ALL pages, are you sure?')">
       <span class="glyphicon glyphicon-refresh"></span> Regrade all
     </@ui.buttonLink>
   </#if>

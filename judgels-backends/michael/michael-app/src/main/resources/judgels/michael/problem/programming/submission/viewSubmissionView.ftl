@@ -1,7 +1,6 @@
 <#-- @ftlvariable type="judgels.michael.problem.programming.submission.ViewSubmissionView" -->
 
 <#import "/judgels/michael/template/templateLayout.ftl" as template>
-<#import "/judgels/michael/template/table/tableLayout.ftl" as table>
 
 <@template.layout>
   <h3>Submission #${submission.id}</h3>

@@ -325,18 +325,3 @@ th {
 .statement-help-modal-body, .statement-help-modal-body p {
   margin: 0;
 }
-
-.test-case-remove-button span {
-  top: 6px;
-  color: #a94442;
-}
-
-.test-group-add-button {
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
-.test-group-remove-button span {
-  top: 3px;
-  color: #a94442;
-}

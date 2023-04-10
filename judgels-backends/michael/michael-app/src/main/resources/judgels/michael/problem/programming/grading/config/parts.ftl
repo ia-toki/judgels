@@ -19,10 +19,10 @@
       <input class="form-control input-sm test-case-output" type="text" disabled value="${outputFile}">
     </td>
     <#if canEdit>
-      <td class="text-center">
-        <a href="#" class="test-case-remove-button">
-          <span class="glyphicon glyphicon-remove"></span>
-        </a>
+      <td class="col-fit">
+        <@ui.button intent="danger" size="xs" class="test-case-remove-button" style="margin-top: 4px">
+          <span class="glyphicon glyphicon-trash"></span>
+        </@ui.button>
       </td>
     </#if>
   </tr>
@@ -52,8 +52,10 @@
         <select class="test-case-output" value=""></select>
       </td>
     </#if>
-    <td class="text-center">
-      <a href="#" class="test-case-add-button"><span class="glyphicon glyphicon-plus"></span></a>
+    <td class="col-fit">
+      <@ui.button size="xs" class="test-case-add-button">
+        <span class="glyphicon glyphicon-plus"></span>
+      </@ui.button>
     </td>
   </tr>
 </#macro>
@@ -101,9 +103,12 @@
     <#if heading?has_content>
       <div class="panel-heading">
         <span>${heading}</span>
-        <a href="#" class="test-group-remove-button <#if !canEdit>hidden</#if>">
-          <span class="glyphicon glyphicon-remove"></span>
-        </a>
+        &nbsp;
+        <#if canEdit>
+          <@ui.button intent="danger" size="xs" class="test-group-remove-button">
+            <span class="glyphicon glyphicon-trash"></span>
+          </@ui.button>
+        </#if>
       </div>
     </#if>
     <div class="panel-body">
@@ -248,7 +253,7 @@
       </#list>
 
       <#if canEdit>
-        <@ui.button size="xs" class="test-group-add-button">
+        <@ui.button size="xs" class="test-group-add-button" style="margin-bottom: 10px">
           <span class="glyphicon glyphicon-plus"></span> New test group
         </@ui.button>
       </#if>

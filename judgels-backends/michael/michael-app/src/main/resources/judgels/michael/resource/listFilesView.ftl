@@ -37,7 +37,11 @@
             <td>${file.name}</td>
             <td>${getFormattedDurationFromNow(file.lastModifiedTime)}</td>
             <td>${getFormattedFileSize(file.size)}</td>
-            <td class="col-fit"><a href="${currentPath}/${file.name}"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
+            <td class="col-fit">
+              <@ui.buttonLink size="xs" to="${currentPath}/${file.name}">
+                <span class="glyphicon glyphicon-download"></span>
+              </@ui.buttonLink>
+            </td>
           </tr>
         </#list>
       </tbody>
