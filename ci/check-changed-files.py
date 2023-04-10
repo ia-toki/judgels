@@ -19,10 +19,6 @@ MODULES = OrderedDict([
     (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api'}),
     (':judgels-commons:judgels-service-persistence', {':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-service-core'}),
 
-    (':jophiel:jophiel-dist', set()),
-    (':uriel:uriel-dist', set()),
-    (':jerahmeel:jerahmeel-dist', set()),
-
     (':michael:jophiel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
     (':michael:jophiel-app', {':michael:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-recaptcha', ':judgels-commons:judgels-service-persistence'}),
     (':michael:jophiel-client', {':michael:jophiel-api'}),
@@ -47,20 +43,13 @@ MODULES = OrderedDict([
     (':michael:michael-app', set()),
     (':michael', {':michael:michael-app', ':michael:sandalphon-app', ':jophiel', ':uriel', ':jerahmeel'}),
 
-    (':jophiel', {':michael:jophiel-app', ':michael:jophiel-client', ':michael:jophiel-api', ':jophiel:jophiel-dist'}),
-    (':uriel', {':michael:uriel-app', ':michael:uriel-api', ':uriel:uriel-dist'}),
-    (':jerahmeel', {':michael:jerahmeel-app', ':michael:jerahmeel-api', ':jerahmeel:jerahmeel-dist'}),
-
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})
 ])
 
 SERVICES = [
     ':michael',
-    ':jophiel',
-    ':uriel',
     ':sandalphon',
-    ':jerahmeel',
     ':gabriel',
     ':raphael'
 ]

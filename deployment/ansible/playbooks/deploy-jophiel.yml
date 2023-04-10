@@ -1,4 +1,0 @@
-- hosts: jophiel
-  gather_facts: false
-  roles:
-    - name: jophiel-deploy

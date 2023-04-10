@@ -23,10 +23,6 @@ include ':michael:uriel-app'
 include ':michael:jerahmeel-api'
 include ':michael:jerahmeel-app'
 
-include ':jophiel:jophiel-dist'
-include ':uriel:uriel-dist'
-include ':jerahmeel:jerahmeel-dist'
-
 include ':sandalphon:sandalphon-play-app'
 
 include ':gabriel:gabriel-api'

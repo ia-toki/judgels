@@ -1,18 +1,6 @@
-upstream jophiel {
-    {% for host in groups['jophiel'] %}
-    server {{ host }}:9001;
-    {% endfor %}
-}
-
-upstream uriel {
-    {% for host in groups['uriel'] %}
-    server {{ host }}:9004;
-    {% endfor %}
-}
-
-upstream jerahmeel {
-    {% for host in groups['jerahmeel'] %}
-    server {{ host }}:9005;
+upstream michael {
+    {% for host in groups['michael'] %}
+    server {{ host }}:9101;
     {% endfor %}
 }
 
@@ -27,39 +15,10 @@ server {
     server_name {{ domain.fqdn }};
     access_log off;
 
-    location ~ /api/play/session {
-        include proxy_params;
-        proxy_pass http://jophiel;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
-    location ~ /(api/)?v2/(client/user|user|session|profile) {
+    location ~ /(api/)?v2 {
         rewrite ^(?:/api)?(.*) /api$1 break;
         include proxy_params;
-        proxy_pass http://jophiel;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
-    location ~ /(api/)?v2/contest {
-        rewrite ^(?:/api)?(.*) /api$1 break;
-        include proxy_params;
-        proxy_pass http://uriel;
-        proxy_set_header Connection "";
-        proxy_http_version 1.1;
-        proxy_buffering off;
-        client_max_body_size 512M;
-    }
-
-    location ~ /(api/)?v2/(archive|curriculum|course|chapter|problem|submission|stat) {
-        rewrite ^(?:/api)?(.*) /api$1 break;
-        include proxy_params;
-        proxy_pass http://jerahmeel;
+        proxy_pass http://michael;
         proxy_set_header Connection "";
         proxy_http_version 1.1;
         proxy_buffering off;
