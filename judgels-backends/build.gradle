@@ -3,10 +3,6 @@ buildscript {
         gradlePluginPortal()
         mavenCentral()
     }
-
-    dependencies {
-        classpath "com.palantir.sls-packaging:gradle-sls-packaging:$gradleSlsPackagingVersion"
-    }
 }
 
 plugins {
