@@ -25,11 +25,11 @@ allprojects {
 subprojects {
     apply plugin: 'checkstyle'
 
-    configurations.each {
+    configurations.all {
         it.resolutionStrategy {
             eachDependency { details ->
                 if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-                    force "${details.requested.group}:${details.requested.name}:$jacksonVersion"
+                    details.useVersion "$jacksonVersion"
                 }
             }
         }
