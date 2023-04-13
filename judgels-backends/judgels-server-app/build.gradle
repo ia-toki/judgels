@@ -1,0 +1,63 @@
+apply from: '../gradle/java.gradle'
+apply from: '../gradle/integTest.gradle'
+
+dependencies {
+    implementation project(':judgels-commons:judgels-fs')
+    implementation project(':judgels-commons:judgels-messaging')
+    implementation project(':judgels-commons:judgels-recaptcha')
+    implementation project(':judgels-commons:judgels-service-core')
+    implementation project(':judgels-commons:judgels-service-persistence')
+
+    implementation project(':judgels-grader-api')
+    implementation project(':judgels-grader-engines')
+    implementation project(':judgels-server-api')
+
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.api-client:google-api-client:$googleApiClientVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "commons-io:commons-io:2.4"
+    implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
+    implementation "org.apache.commons:commons-email:$apacheCommonsEmailVersion"
+    implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
+    implementation "org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r"
+    implementation ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
+        exclude group: "joda-time", module: "joda-time"
+    }
+    implementation "io.dropwizard:dropwizard-assets:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-views-freemarker:$dropwizardVersion"
+
+    implementation "io.dropwizard-bundles:dropwizard-webjars-bundle:$dropwizardWebJarsBundleVersion"
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'org.webjars:bootstrap:3.3.4'
+    implementation 'org.webjars:jquery:2.1.4'
+    implementation 'org.webjars:ckeditor:4.19.0'
+    implementation 'org.webjars.bower:open-sans:1.1.0'
+    implementation 'org.webjars.bower:roboto-fontface:0.7.0'
+    implementation 'org.webjars.npm:katex:0.16.4'
+
+    testImplementation project(':judgels-commons:judgels-persistence-testing')
+
+    testImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
+    testImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
+    compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestImplementation "org.subethamail:subethasmtp-wiser:$wiserVersion"
+
+    integTestRuntimeOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+
+    integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}
