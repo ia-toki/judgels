@@ -8,8 +8,8 @@ server:
   requestLog:
     appenders:
     - type: file
-      currentLogFilename: var/log/michael-request.log
-      archivedLogFilenamePattern: var/log/michael-request-%d.log.gz
+      currentLogFilename: var/log/judgels-server-request.log
+      archivedLogFilenamePattern: var/log/judgels-server-request-%d.log.gz
       archivedFileCount: 14
 
 database:
@@ -29,8 +29,8 @@ logging:
     - type: console
       threshold: INFO
     - type: file
-      currentLogFilename: var/log/michael.log
-      archivedLogFilenamePattern: var/log/michael-%d.log.gz
+      currentLogFilename: var/log/judgels-server.log
+      archivedLogFilenamePattern: var/log/judgels-server-%d.log.gz
       archivedFileCount: 14
 
   loggers:
@@ -41,8 +41,10 @@ webSecurity:
   cors:
     allowedOrigins: "*"
 
-michael:
-  name: Judgels
+judgels:
+  baseDataDir: var/data
+  app:
+    name: Judgels
 
 jophiel:
   baseDataDir: var/data

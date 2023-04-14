@@ -2,17 +2,18 @@ package judgels.michael;
 
 import dagger.Module;
 import dagger.Provides;
+import judgels.JudgelsAppConfiguration;
 
 @Module
 public class MichaelModule {
-    private final MichaelConfiguration config;
+    private final JudgelsAppConfiguration appConfig;
 
-    public MichaelModule(MichaelConfiguration config) {
-        this.config = config;
+    public MichaelModule(JudgelsAppConfiguration appConfig) {
+        this.appConfig = appConfig;
     }
 
     @Provides
-    MichaelConfiguration michaelConfig() {
-        return config;
+    JudgelsAppConfiguration appConfig() {
+        return appConfig;
     }
 }

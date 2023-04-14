@@ -1,6 +1,8 @@
 apply from: '../gradle/java.gradle'
 apply from: '../gradle/integTest.gradle'
 
+apply plugin: 'application'
+
 dependencies {
     implementation project(':judgels-commons:judgels-fs')
     implementation project(':judgels-commons:judgels-messaging')
@@ -38,6 +40,8 @@ dependencies {
     implementation 'org.webjars.bower:roboto-fontface:0.7.0'
     implementation 'org.webjars.npm:katex:0.16.4'
 
+    runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
+
     testImplementation project(':judgels-commons:judgels-persistence-testing')
 
     testImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
@@ -60,4 +64,12 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"
+}
+
+application {
+    mainClassName = 'judgels.JudgelsServerApplication'
+}
+
+run {
+    args = [ 'server', 'var/conf/judgels-server.yml' ]
 }

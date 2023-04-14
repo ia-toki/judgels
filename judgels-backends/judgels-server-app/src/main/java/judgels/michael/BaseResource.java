@@ -5,12 +5,13 @@ import java.net.URI;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
+import judgels.JudgelsAppConfiguration;
 import judgels.jophiel.api.actor.Actor;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
 
 public abstract class BaseResource {
-    @Inject protected MichaelConfiguration config;
+    @Inject protected JudgelsAppConfiguration appConfig;
     @Inject protected ActorChecker actorChecker;
 
     protected Response badRequest() {
@@ -30,7 +31,7 @@ public abstract class BaseResource {
     }
 
     protected HtmlTemplate newTemplate() {
-        return new HtmlTemplate(config.getName());
+        return new HtmlTemplate(appConfig.getName());
     }
 
     protected HtmlTemplate newTemplate(Actor actor) {

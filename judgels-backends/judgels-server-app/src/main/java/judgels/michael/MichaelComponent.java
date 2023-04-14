@@ -29,7 +29,6 @@ import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
-import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
@@ -73,6 +72,4 @@ public interface MichaelComponent {
     LessonStatementRenderResources.InViewLessonStatement lessonStatementRenderResourceInViewLessonStatement();
     LessonPartnerResource lessonPartnerResource();
     LessonVersionResource lessonVersionResource();
-
-    JudgelsScheduler scheduler();
 }

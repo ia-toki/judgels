@@ -1,4 +1,4 @@
-package judgels.michael;
+package judgels;
 
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -48,8 +48,8 @@ import judgels.uriel.persistence.ContestScoreboardModel;
 import judgels.uriel.persistence.ContestStyleModel;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
-public class MichaelHibernateBundle extends HibernateBundle<MichaelApplicationConfiguration> {
-    public MichaelHibernateBundle() {
+public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerApplicationConfiguration> {
+    public JudgelsServerHibernateBundle() {
         super(
                 // Jophiel
                 PlaySessionModel.class,
@@ -110,7 +110,7 @@ public class MichaelHibernateBundle extends HibernateBundle<MichaelApplicationCo
     }
 
     @Override
-    public PooledDataSourceFactory getDataSourceFactory(MichaelApplicationConfiguration config) {
+    public PooledDataSourceFactory getDataSourceFactory(JudgelsServerApplicationConfiguration config) {
         return config.getDatabaseConfig();
     }
 }

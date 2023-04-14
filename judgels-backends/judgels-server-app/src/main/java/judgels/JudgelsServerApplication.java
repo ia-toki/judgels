@@ -1,4 +1,4 @@
-package judgels.michael;
+package judgels;
 
 import com.palantir.websecurity.WebSecurityBundle;
 import io.dropwizard.Application;
@@ -8,8 +8,6 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.nio.file.Paths;
-import java.time.Duration;
 import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
@@ -27,6 +25,9 @@ import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.WebModule;
+import judgels.michael.DaggerMichaelComponent;
+import judgels.michael.MichaelComponent;
+import judgels.michael.MichaelModule;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.sandalphon.DaggerSandalphonComponent;
 import judgels.sandalphon.SandalphonComponent;
@@ -43,36 +44,49 @@ import judgels.uriel.UrielConfiguration;
 import judgels.uriel.UrielModule;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
+import java.nio.file.Paths;
+import java.time.Duration;
 
-public class MichaelApplication extends Application<MichaelApplicationConfiguration> {
-    private final HibernateBundle<MichaelApplicationConfiguration> hibernateBundle = new MichaelHibernateBundle();
+public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
+    private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();
 
     public static void main(String[] args) throws Exception {
-        new MichaelApplication().run(args);
+        new JudgelsServerApplication().run(args);
     }
 
     @Override
-    public void initialize(Bootstrap<MichaelApplicationConfiguration> bootstrap) {
+    public void initialize(Bootstrap<JudgelsServerApplicationConfiguration> bootstrap) {
         JudgelsObjectMappers.configure(bootstrap.getObjectMapper());
 
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(new AssetsBundle());
         bootstrap.addBundle(new MultiPartBundle());
-        bootstrap.addBundle(new MichaelMigrationsBundle());
-        bootstrap.addBundle(new MichaelViewBundle());
+        bootstrap.addBundle(new JudgelsServerMigrationsBundle());
+        bootstrap.addBundle(new JudgelsServerViewBundle());
         bootstrap.addBundle(new WebJarBundle("org.webjars.bower", "org.webjars.npm"));
         bootstrap.addBundle(new WebSecurityBundle());
     }
 
     @Override
-    public void run(MichaelApplicationConfiguration config, Environment env) {
+    public void run(JudgelsServerApplicationConfiguration config, Environment env) throws Exception {
+        JudgelsScheduler scheduler = new JudgelsScheduler(env.lifecycle());
+
+        runMichael(config, env, scheduler);
+        runJophiel(config, env, scheduler);
+        runSandalphon(config, env, scheduler);
+        runUriel(config, env, scheduler);
+        runJerahmeel(config, env, scheduler);
+    }
+
+    private void runMichael(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JophielConfiguration jophielConfig = config.getJophielConfig();
         SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .michaelModule(new MichaelModule(config.getMichaelConfig()))
+                .michaelModule(new MichaelModule(judgelsConfig.getAppConfig()))
 
                 // Jophiel
                 .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
@@ -112,31 +126,28 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.lessonStatementRenderResourceInViewLessonStatement());
         env.jersey().register(component.lessonPartnerResource());
         env.jersey().register(component.lessonVersionResource());
-
-        runJophiel(jophielConfig, env, component.scheduler());
-        runSandalphon(sandalphonConfig, env, component.scheduler());
-        runUriel(config.getUrielConfig(), env, component.scheduler());
-        runJerahmeel(config.getJerahmeelConfig(), env, component.scheduler());
     }
 
-    private void runJophiel(JophielConfiguration config, Environment env, JudgelsScheduler scheduler) {
+    private void runJophiel(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        JophielConfiguration jophielConfig = config.getJophielConfig();
+
         JophielComponent component = DaggerJophielComponent.builder()
-                .authModule(new AuthModule(config.getAuthConfig()))
-                .awsModule(new AwsModule(config.getAwsConfig()))
+                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
+                .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .mailerModule(new MailerModule(config.getMailerConfig()))
-                .recaptchaModule(new RecaptchaModule(config.getRecaptchaConfig()))
+                .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
+                .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                 .userAvatarModule(new UserAvatarModule(
-                        Paths.get(config.getBaseDataDir()),
-                        config.getUserAvatarConfig()))
+                        Paths.get(jophielConfig.getBaseDataDir()),
+                        jophielConfig.getUserAvatarConfig()))
                 .userRegistrationModule(new UserRegistrationModule(
-                        config.getUserRegistrationConfig(),
-                        UserRegistrationWebConfig.fromServerConfig(config)))
-                .userResetPasswordModule(new UserResetPasswordModule(config.getUserResetPasswordConfig()))
-                .superadminModule(new SuperadminModule(config.getSuperadminCreatorConfig()))
-                .sessionModule(new SessionModule(config.getSessionConfig()))
-                .webModule(new WebModule(config.getWebConfig()))
+                        jophielConfig.getUserRegistrationConfig(),
+                        UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
+                .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
+                .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
+                .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
+                .webModule(new WebModule(jophielConfig.getWebConfig()))
                 .build();
 
         component.superadminCreator().ensureSuperadminExists();
@@ -157,33 +168,37 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.clientUserResource());
 
         scheduler.scheduleWithFixedDelay(
-                "session-cleaner",
+                "jophiel-session-cleaner",
                 component.sessionCleaner(),
                 Duration.ofDays(1));
     }
 
-    private void runSandalphon(SandalphonConfiguration config, Environment env, JudgelsScheduler scheduler) {
+    private void runSandalphon(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
+
         SandalphonComponent component = DaggerSandalphonComponent.builder()
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .sandalphonModule(new SandalphonModule(config))
+                .sandalphonModule(new SandalphonModule(sandalphonConfig))
                 .build();
 
         env.jersey().register(component.problemResource());
         env.jersey().register(component.lessonResource());
     }
 
-    private void runUriel(UrielConfiguration config, Environment env, JudgelsScheduler scheduler) {
+    private void runUriel(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        UrielConfiguration urielConfig = config.getUrielConfig();
+
         UrielComponent component = DaggerUrielComponent.builder()
-                .awsModule(new AwsModule(config.getAwsConfig()))
-                .fileModule(new FileModule(config.getFileConfig()))
-                .jophielModule(new judgels.uriel.jophiel.JophielModule(config.getJophielConfig()))
+                .awsModule(new AwsModule(urielConfig.getAwsConfig()))
+                .fileModule(new FileModule(urielConfig.getFileConfig()))
+                .jophielModule(new judgels.uriel.jophiel.JophielModule(urielConfig.getJophielConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .sandalphonModule(new judgels.uriel.sandalphon.SandalphonModule(config.getSandalphonConfig()))
-                .gabrielModule(new judgels.uriel.gabriel.GabrielModule(config.getGabrielConfig()))
-                .messagingModule(new judgels.uriel.messaging.MessagingModule(config.getRabbitMQConfig()))
-                .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(config.getSubmissionConfig()))
-                .urielModule(new UrielModule(config))
+                .sandalphonModule(new judgels.uriel.sandalphon.SandalphonModule(urielConfig.getSandalphonConfig()))
+                .gabrielModule(new judgels.uriel.gabriel.GabrielModule(urielConfig.getGabrielConfig()))
+                .messagingModule(new judgels.uriel.messaging.MessagingModule(urielConfig.getRabbitMQConfig()))
+                .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(urielConfig.getSubmissionConfig()))
+                .urielModule(new UrielModule(urielConfig))
                 .build();
 
         env.jersey().register(component.contestResource());
@@ -205,35 +220,36 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.contestRatingResource());
 
         scheduler.scheduleWithFixedDelay(
-                "contest-scoreboard-poller",
+                "uriel-contest-scoreboard-poller",
                 component.contestScoreboardPoller(),
                 Duration.ofSeconds(10));
 
         scheduler.scheduleOnce(
-                "contest-log-poller",
+                "uriel-contest-log-poller",
                 component.contestLogPoller());
 
-        if (config.getRabbitMQConfig().isPresent()) {
+        if (urielConfig.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
                     "uriel-grading-response-poller",
                     component.gradingResponsePoller());
         }
     }
+    private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
 
-    private void runJerahmeel(JerahmeelConfiguration config, Environment env, JudgelsScheduler scheduler) {
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
-                .awsModule(new AwsModule(config.getAwsConfig()))
-                .jophielModule(new judgels.jerahmeel.jophiel.JophielModule(config.getJophielConfig()))
+                .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
+                .jophielModule(new judgels.jerahmeel.jophiel.JophielModule(jerahmeelConfig.getJophielConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .sandalphonModule(new judgels.jerahmeel.sandalphon.SandalphonModule(config.getSandalphonConfig()))
-                .urielModule(new judgels.jerahmeel.uriel.UrielModule(config.getUrielConfig()))
-                .gabrielModule(new judgels.jerahmeel.gabriel.GabrielModule(config.getGabrielConfig()))
-                .messagingModule(new judgels.jerahmeel.messaging.MessagingModule(config.getRabbitMQConfig()))
+                .sandalphonModule(new judgels.jerahmeel.sandalphon.SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
+                .urielModule(new judgels.jerahmeel.uriel.UrielModule(jerahmeelConfig.getUrielConfig()))
+                .gabrielModule(new judgels.jerahmeel.gabriel.GabrielModule(jerahmeelConfig.getGabrielConfig()))
+                .messagingModule(new judgels.jerahmeel.messaging.MessagingModule(jerahmeelConfig.getRabbitMQConfig()))
                 .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
-                        config.getSubmissionConfig(),
-                        config.getStatsConfig()))
-                .jerahmeelModule(new JerahmeelModule(config))
+                        jerahmeelConfig.getSubmissionConfig(),
+                        jerahmeelConfig.getStatsConfig()))
+                .jerahmeelModule(new JerahmeelModule(jerahmeelConfig))
                 .build();
 
         env.jersey().register(component.archiveResource());
@@ -251,7 +267,7 @@ public class MichaelApplication extends Application<MichaelApplicationConfigurat
         env.jersey().register(component.submissionResource());
         env.jersey().register(component.userStatsResource());
 
-        if (config.getRabbitMQConfig().isPresent()) {
+        if (jerahmeelConfig.getRabbitMQConfig().isPresent()) {
             scheduler.scheduleOnce(
                     "jerahmeel-grading-response-poller",
                     component.gradingResponsePoller());

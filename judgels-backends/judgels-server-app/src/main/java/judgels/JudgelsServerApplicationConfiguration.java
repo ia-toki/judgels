@@ -1,4 +1,4 @@
-package judgels.michael;
+package judgels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.palantir.websecurity.WebSecurityConfigurable;
@@ -10,19 +10,19 @@ import judgels.jophiel.JophielConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.uriel.UrielConfiguration;
 
-public class MichaelApplicationConfiguration extends Configuration implements WebSecurityConfigurable {
+public class JudgelsServerApplicationConfiguration extends Configuration implements WebSecurityConfigurable {
     private final DataSourceFactory databaseConfig;
     private final WebSecurityConfiguration webSecurityConfig;
-    private final MichaelConfiguration michaelConfig;
+    private final JudgelsServerConfiguration judgelsConfig;
     private final JophielConfiguration jophielConfig;
     private final SandalphonConfiguration sandalphonConfig;
     private final UrielConfiguration urielConfig;
     private final JerahmeelConfiguration jerahmeelConfig;
 
-    public MichaelApplicationConfiguration(
+    public JudgelsServerApplicationConfiguration(
             @JsonProperty("database") DataSourceFactory databaseConfig,
             @JsonProperty("webSecurity") WebSecurityConfiguration webSecurityConfig,
-            @JsonProperty("michael") MichaelConfiguration michaelConfig,
+            @JsonProperty("judgels") JudgelsServerConfiguration judgelsConfig,
             @JsonProperty("jophiel") JophielConfiguration jophielConfig,
             @JsonProperty("sandalphon") SandalphonConfiguration sandalphonConfig,
             @JsonProperty("uriel") UrielConfiguration urielConfig,
@@ -30,7 +30,7 @@ public class MichaelApplicationConfiguration extends Configuration implements We
 
         this.databaseConfig = databaseConfig;
         this.webSecurityConfig = webSecurityConfig;
-        this.michaelConfig = michaelConfig;
+        this.judgelsConfig = judgelsConfig;
         this.jophielConfig = jophielConfig;
         this.sandalphonConfig = sandalphonConfig;
         this.urielConfig = urielConfig;
@@ -46,8 +46,8 @@ public class MichaelApplicationConfiguration extends Configuration implements We
         return webSecurityConfig;
     }
 
-    public MichaelConfiguration getMichaelConfig() {
-        return michaelConfig;
+    public JudgelsServerConfiguration getJudgelsConfig() {
+        return judgelsConfig;
     }
 
     public JophielConfiguration getJophielConfig() {
