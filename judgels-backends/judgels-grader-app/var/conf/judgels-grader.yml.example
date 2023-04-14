@@ -9,14 +9,8 @@ logging:
       archivedLogFilenamePattern: var/log/gabriel-%d.log.gz
       archivedFileCount: 14
 
-gabriel:
+judgels:
   baseDataDir: var/data
-
-  grading:
-    gradingRequestQueueName: gabriel-grading-request
-    localSandalphonBaseDataDir: /judgels/sandalphon/var/data
-    numWorkerThreads: 2
-
   rabbitmq:
     host: localhost
     port: 5672
@@ -24,6 +18,12 @@ gabriel:
     password: guest
     virtualHost: "/"
 
+
+gabriel:
+  grading:
+    gradingRequestQueueName: gabriel-grading-request
+    localSandalphonBaseDataDir: /judgels/sandalphon/var/data
+    numWorkerThreads: 2
   moe:
     isolatePath: /judgels/moe/isolate
     iwrapperPath: /judgels/moe/iwrapper

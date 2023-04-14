@@ -1,6 +1,8 @@
 apply from: '../gradle/java.gradle'
 apply from: '../gradle/integTest.gradle'
 
+apply plugin: 'application'
+
 dependencies {
     implementation project(':judgels-grader-engines')
     implementation project(':judgels-commons:judgels-service-core')
@@ -16,4 +18,12 @@ dependencies {
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"
+}
+
+application {
+    mainClassName = 'judgels.JudgelsGraderApplication'
+}
+
+run {
+    args = [ 'server', 'var/conf/judgels-grader.yml' ]
 }
