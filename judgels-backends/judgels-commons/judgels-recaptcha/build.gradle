@@ -4,7 +4,7 @@ dependencies {
     api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     api "com.google.dagger:dagger:$daggerVersion"
 
-    implementation "org.glassfish.jersey.core:jersey-client:$jerseyClientVersion"
+    implementation "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"

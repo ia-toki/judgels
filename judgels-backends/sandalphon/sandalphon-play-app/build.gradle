@@ -32,7 +32,7 @@ dependencies {
     implementation "commons-io:commons-io:2.4"
     implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
     implementation "org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r"
-    implementation "org.glassfish.jersey.media:jersey-media-multipart:2.30"
+    implementation "org.glassfish.jersey.media:jersey-media-multipart:$jerseyVersion"
     implementation ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
         exclude group: "joda-time", module: "joda-time"
     }
