@@ -73,3 +73,30 @@ application {
 run {
     args = [ 'server', 'var/conf/judgels-server.yml' ]
 }
+
+task dbDump(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Dumps current database schema.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.JudgelsServerApplication'
+    args = [ 'db', 'dump', 'var/conf/judgels-server.yml' ]
+}
+
+task dbMigrate(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Migrates database to the latest version.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.JudgelsServerApplication'
+    args = [ 'db', 'migrate', 'var/conf/judgels-server.yml' ]
+}
+
+task dbFastForward(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Fast fowards database to the latest version.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.JudgelsServerApplication'
+    args = [ 'db', 'fast-forward', '--all', 'var/conf/judgels-server.yml' ]
+}

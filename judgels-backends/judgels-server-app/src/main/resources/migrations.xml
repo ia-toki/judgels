@@ -6,9 +6,5 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="migrations/000.xml"/>
-    <include file="migrations/001-change-scoreboard-to-longtext.xml"/>
-    <include file="migrations/002-add-contest-log.xml"/>
-    <include file="migrations/003-add-index-created-at-to-contest-log.xml"/>
-    <include file="migrations/004-remove-role_admin.xml"/>
+    <includeAll path="migrations"/>
 </databaseChangeLog>
