@@ -6,7 +6,7 @@ import static org.awaitility.Awaitility.await;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import judgels.jophiel.api.AbstractServiceIntegrationTests;
+import judgels.BaseJudgelsServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.session.SessionService;
@@ -15,7 +15,7 @@ import judgels.jophiel.api.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 
-class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests {
+class UserAccountServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
     private final UserService userService = createService(UserService.class);
     private final UserAccountService accountService = createService(UserAccountService.class);
     private final SessionService sessionService = createService(SessionService.class);

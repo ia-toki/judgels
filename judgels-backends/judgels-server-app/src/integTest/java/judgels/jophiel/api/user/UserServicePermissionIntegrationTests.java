@@ -3,12 +3,12 @@ package judgels.jophiel.api.user;
 import static java.util.Optional.empty;
 
 import com.google.common.collect.ImmutableList;
-import judgels.jophiel.api.AbstractServiceIntegrationTests;
+import judgels.BaseJudgelsServiceIntegrationTests;
 import judgels.service.api.actor.AuthHeader;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
-class UserServicePermissionIntegrationTests extends AbstractServiceIntegrationTests {
+class UserServicePermissionIntegrationTests extends BaseJudgelsServiceIntegrationTests {
     private final UserService userService = createService(UserService.class);
 
     @Test

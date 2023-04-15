@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.jophiel.api.AbstractServiceIntegrationTests;
+import judgels.BaseJudgelsServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.rating.UserRating;
@@ -18,7 +18,7 @@ import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import org.junit.jupiter.api.Test;
 
-public class ProfileServiceIntegrationTests extends AbstractServiceIntegrationTests {
+public class ProfileServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
     private final ProfileService profileService = createService(ProfileService.class);
     private final UserService userService = createService(UserService.class);
     private final UserRatingService userRatingService = createService(UserRatingService.class);

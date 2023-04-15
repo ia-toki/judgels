@@ -1,4 +1,4 @@
-package judgels.jophiel.api;
+package judgels;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,9 +17,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import javax.ws.rs.client.WebTarget;
-import judgels.jophiel.JophielApplication;
-import judgels.jophiel.JophielApplicationConfiguration;
+import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.jerahmeel.JerahmeelConfiguration;
+import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jophiel.JophielConfiguration;
+import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.User;
@@ -32,8 +34,13 @@ import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.jophiel.user.web.WebConfiguration;
+import judgels.sandalphon.SandalphonConfiguration;
+import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.jaxrs.JaxRsClients;
+import judgels.uriel.UrielConfiguration;
+import judgels.uriel.api.UrielClientConfiguration;
+import judgels.uriel.file.FileConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -43,8 +50,8 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-public abstract class AbstractServiceIntegrationTests {
-    private static DropwizardTestSupport<JophielApplicationConfiguration> support;
+public abstract class BaseJudgelsServiceIntegrationTests {
+    private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;
     private static Path baseDataDir;
 
     protected static User user;
@@ -56,14 +63,23 @@ public abstract class AbstractServiceIntegrationTests {
     static void beforeAll() throws Exception {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
-        dbConfig.setUrl("jdbc:h2:mem:./" + UUID.randomUUID().toString());
+        dbConfig.setUrl("jdbc:h2:mem:./" + UUID.randomUUID());
         dbConfig.setProperties(ImmutableMap.<String, String>builder()
                 .put(DIALECT, H2Dialect.class.getName())
                 .put(HBM2DDL_AUTO, "create")
                 .put(GENERATE_STATISTICS, "false")
                 .build());
 
-        baseDataDir = Files.createTempDirectory("jophiel");
+        baseDataDir = Files.createTempDirectory("judgels");
+
+        JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
+                .name("Judgels")
+                .build();
+
+        JudgelsServerConfiguration judgelsConfig = new JudgelsServerConfiguration.Builder()
+                .baseDataDir(baseDataDir.toString())
+                .appConfig(judgelsAppConfig)
+                .build();
 
         JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
                 .baseDataDir(baseDataDir.toString())
@@ -83,12 +99,41 @@ public abstract class AbstractServiceIntegrationTests {
                 .webConfig(WebConfiguration.DEFAULT)
                 .build();
 
-        JophielApplicationConfiguration config = new JophielApplicationConfiguration(
+        UrielConfiguration urielConfig = new UrielConfiguration.Builder()
+                .baseDataDir(baseDataDir.toString())
+                .jophielConfig(JophielClientConfiguration.DEFAULT)
+                .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
+                .gabrielConfig(GabrielClientConfiguration.DEFAULT)
+                .submissionConfig(judgels.uriel.submission.programming.SubmissionConfiguration.DEFAULT)
+                .fileConfig(FileConfiguration.DEFAULT)
+                .build();
+
+        SandalphonConfiguration sandalphonConfig = new SandalphonConfiguration.Builder()
+                .baseDataDir(baseDataDir.toString())
+                .jophielConfig(JophielClientConfiguration.DEFAULT)
+                .gabrielConfig(GabrielClientConfiguration.DEFAULT)
+                .build();
+
+        JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
+                .baseDataDir(baseDataDir.toString())
+                .jophielConfig(JophielClientConfiguration.DEFAULT)
+                .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
+                .urielConfig(UrielClientConfiguration.DEFAULT)
+                .gabrielConfig(GabrielClientConfiguration.DEFAULT)
+                .submissionConfig(judgels.jerahmeel.submission.programming.SubmissionConfiguration.DEFAULT)
+                .statsConfig(StatsConfiguration.DEFAULT)
+                .build();
+
+        JudgelsServerApplicationConfiguration config = new JudgelsServerApplicationConfiguration(
                 dbConfig,
                 WebSecurityConfiguration.DEFAULT,
-                jophielConfig);
+                judgelsConfig,
+                jophielConfig,
+                sandalphonConfig,
+                urielConfig,
+                jerahmeelConfig);
 
-        support = new DropwizardTestSupport<>(JophielApplication.class, config);
+        support = new DropwizardTestSupport<>(JudgelsServerApplication.class, config);
         support.before();
 
         adminHeader = AuthHeader.of(createService(SessionService.class)

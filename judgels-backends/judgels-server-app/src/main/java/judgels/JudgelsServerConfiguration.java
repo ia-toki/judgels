@@ -11,4 +11,6 @@ public interface JudgelsServerConfiguration {
 
     @JsonProperty("app")
     JudgelsAppConfiguration getAppConfig();
+
+    class Builder extends ImmutableJudgelsServerConfiguration.Builder {}
 }

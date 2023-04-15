@@ -3,7 +3,7 @@ package judgels.jophiel.api.rating;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
-import judgels.jophiel.api.AbstractServiceIntegrationTests;
+import judgels.BaseJudgelsServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
@@ -12,7 +12,7 @@ import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import org.junit.jupiter.api.Test;
 
-public class UserRatingServiceIntegrationTests extends AbstractServiceIntegrationTests {
+public class UserRatingServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
     private final UserRatingService userRatingService = createService(UserRatingService.class);
 
     @Test
