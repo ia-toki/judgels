@@ -15,8 +15,7 @@
     <suppress files="[/\\]src[/\\].*[Tt]est[/\\](java|groovy)[/\\]" id="BanSystemOut" />
     <suppress files="[/\\]src[/\\].*[Tt]est[/\\](java|groovy)[/\\]" id="BanSystemErr" />
 
-
-    <suppress files="[\\/]michael-app[\\/]" checks="VisibilityModifier" />
+    <suppress files="[\\/]judgels-server-app[\\/]" checks="VisibilityModifier" />
 
     <suppress files="routes.java" checks="." />
     <suppress files="[\\/]sandalphon-play-app[\\/]" checks="LineLength" />
