@@ -9,48 +9,28 @@ from collections import OrderedDict
 FORCE_CI = '[force ci]'
 
 MODULES = OrderedDict([
-    (':judgels-commons:judgels-fs', set()),
-    (':judgels-commons:judgels-messaging', set()),
-    (':judgels-commons:judgels-persistence-api', set()),
-    (':judgels-commons:judgels-persistence-core', {':judgels-commons:judgels-persistence-testing'}),
-    (':judgels-commons:judgels-persistence-testing', {':judgels-commons:judgels-persistence-api'}),
-    (':judgels-commons:judgels-recaptcha', set()),
-    (':judgels-commons:judgels-service-api', set()),
-    (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api'}),
-    (':judgels-commons:judgels-service-persistence', {':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-service-core'}),
+    (':judgels-commons', set()),
 
-    (':michael:jophiel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
-    (':michael:jophiel-app', {':michael:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-recaptcha', ':judgels-commons:judgels-service-persistence'}),
-    (':michael:jophiel-client', {':michael:jophiel-api'}),
-    (':michael:sandalphon-api', {':michael:jophiel-api', ':gabriel:gabriel-api'}),
-    (':michael:sandalphon-client', {':michael:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':judgels-commons:judgels-messaging'}),
-    (':michael:sandalphon-app', {':michael:sandalphon-client', ':michael:jophiel-client', ':gabriel:gabriel-engines'}),
-    (':michael:uriel-api', {':michael:sandalphon-api'}),
-    (':michael:uriel-app', {':michael:uriel-api', ':michael:jophiel-client', ':michael:sandalphon-client', ':judgels-commons:judgels-messaging'}),
-    (':michael:jerahmeel-api', {':michael:sandalphon-api'}),
-    (':michael:jerahmeel-app', {':michael:jerahmeel-api', ':michael:jophiel-client', ':michael:sandalphon-client', ':judgels-commons:judgels-messaging'}),
+    (':judgels-grader-api', set()),
+    (':judgels-grader-engines', {':judgels-commons', ':judgels-grader-api'}),
+    (':judgels-grader-app', {':judgels-grader-engines', ':judgels-grader-api'}),
+    (':judgels-grader', {':judgels-grader-app', ':judgels-grader-engines', ':judgels-grader-api'}),
 
-    (':gabriel:gabriel-api', set()),
-    (':gabriel:gabriel-engine-api', {':gabriel:gabriel-api'}),
-    (':gabriel:gabriel-engines', {':gabriel:gabriel-engine-api', ':judgels-commons:judgels-fs'}),
-    (':gabriel:gabriel-app', {':gabriel:gabriel-engines', ':judgels-commons:judgels-messaging', ':judgels-commons:judgels-service-core'}),
-    (':gabriel:gabriel-dist', set()),
-    (':gabriel', {':gabriel:gabriel-app', ':gabriel:gabriel-dist', ':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
+    (':judgels-server-api', {':judgels-commons', ':judgels-grader-api'}),
+    (':judgels-server-app', {':judgels-grader-engines', ':judgels-server-api'}),
+    (':judgels-server', {':judgels-server-app', ':judgels-server-api'}),
 
-    (':sandalphon:sandalphon-play-app', {':michael:sandalphon-app', ':michael:sandalphon-client', ':michael:jophiel-client', ':gabriel:gabriel-engines'}),
-    (':sandalphon', {':sandalphon:sandalphon-play-app'}),
-
-    (':michael:michael-app', set()),
-    (':michael', {':michael:michael-app', ':michael:sandalphon-app', ':jophiel', ':uriel', ':jerahmeel'}),
+    (':sandalphon', {':judgels-commons', ':judgels-grader-engines', ':judgels-server-app'}),
 
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})
 ])
 
 SERVICES = [
-    ':michael',
+    ':judgels-commons',
+    ':judgels-grader',
+    ':judgels-server',
     ':sandalphon',
-    ':gabriel',
     ':raphael'
 ]
 

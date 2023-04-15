@@ -2,8 +2,8 @@ apply from: '../gradle/java.gradle'
 apply from: '../gradle/integTest.gradle'
 
 dependencies {
-    api project(':judgels-grader-api')
     implementation project(':judgels-commons:judgels-fs')
+    implementation project(':judgels-grader-api')
 
     implementation "com.google.guava:guava:$guavaVersion"
     implementation "commons-io:commons-io:$apacheCommonsIoVersion"

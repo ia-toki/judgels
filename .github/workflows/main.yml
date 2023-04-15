@@ -40,17 +40,33 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Test Michael
-        if: steps.changed-files.outputs.michael == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/michael check
+      - name: Test judgels-commons
+        if: steps.changed-files.outputs.judgels-commons == '1'
+        run: ./judgels-backends/gradlew -p judgels-backends/judgels-commons check
 
-      - name: Test Sandalphon
+      - name: Test judgels-grader-api
+        if: steps.changed-files.outputs.judgels-grader == '1'
+        run: ./judgels-backends/gradlew -p judgels-backends/judgels-grader-api check
+
+      - name: Test judgels-grader-engines
+        if: steps.changed-files.outputs.judgels-grader == '1'
+        run: ./judgels-backends/gradlew -p judgels-backends/judgels-grader-engines check
+
+      - name: Test judgels-grader-app
+        if: steps.changed-files.outputs.judgels-grader == '1'
+        run: ./judgels-backends/gradlew -p judgels-backends/judgels-grader-app check
+
+      - name: Test judgels-server-api
+        if: steps.changed-files.outputs.judgels-server == '1'
+        run: ./judgels-backends/gradlew -p judgels-backends/judgels-server-api check
+
+      - name: Test judgels-server-app
+        if: steps.changed-files.outputs.judgels-server == '1'
+        run: ./judgels-backends/gradlew -p judgels-backends/judgels-server-app check
+
+      - name: Test sandalphon
         if: steps.changed-files.outputs.sandalphon == '1'
         run: ./judgels-backends/gradlew -p judgels-backends/sandalphon check
-
-      - name: Test Gabriel
-        if: steps.changed-files.outputs.gabriel == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/gabriel check
 
       - name: Set up Node
         if: steps.changed-files.outputs.yarn == '1'
@@ -73,7 +89,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Test Raphael
+      - name: Test raphael
         if: steps.changed-files.outputs.raphael == '1'
         run: yarn --cwd=`pwd`/judgels-frontends/raphael install && yarn --cwd=`pwd`/judgels-frontends/raphael ci
 
@@ -112,18 +128,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
-      - name: Build Michael
-        if: steps.changed-files.outputs.michael == '1'
-        run: ./deployment/scripts/build_michael.sh
-
-      - name: Build Sandalphon
-        if: steps.changed-files.outputs.sandalphon == '1'
-        run: ./deployment/scripts/build_sandalphon.sh
-
-      - name: Build Gabriel
-        if: steps.changed-files.outputs.gabriel == '1'
-        run: ./deployment/scripts/build_gabriel.sh
 
       - name: Set up Node
         if: steps.changed-files.outputs.yarn == '1'
@@ -172,20 +176,6 @@ jobs:
       - id: changed-files
         name: Check changed files
         run: python3 ci/check-changed-files.py | bash
-
-      - name: Deploy Michael
-        if: steps.changed-files.outputs.michael == '1'
-        run: |
-          eval "$(ssh-agent -s)"
-          ssh-add deployment/ansible/dist/deployment_rsa
-          ./deployment/scripts/deploy_michael.sh
-
-      - name: Deploy Sandalphon
-        if: steps.changed-files.outputs.sandalphon == '1'
-        run: |
-          eval "$(ssh-agent -s)"
-          ssh-add deployment/ansible/dist/deployment_rsa
-          ./deployment/scripts/deploy_sandalphon.sh
 
       - name: Deploy Raphael
         if: steps.changed-files.outputs.raphael == '1'

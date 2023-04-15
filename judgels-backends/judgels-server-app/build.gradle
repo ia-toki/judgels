@@ -9,7 +9,6 @@ dependencies {
     implementation project(':judgels-commons:judgels-recaptcha')
     implementation project(':judgels-commons:judgels-service-core')
     implementation project(':judgels-commons:judgels-service-persistence')
-
     implementation project(':judgels-grader-api')
     implementation project(':judgels-grader-engines')
     implementation project(':judgels-server-api')
