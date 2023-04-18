@@ -113,9 +113,4 @@ public interface ClientProblemService {
     void setProblemVisibilityTagsByJids(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             Map<String, Boolean> problemVisibilitiesMap);
-
-    @GET
-    @Path("/public-tag-counts")
-    @Produces(APPLICATION_JSON)
-    Map<String, Integer> getPublicTagCounts(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader);
 }

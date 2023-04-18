@@ -28,6 +28,7 @@ import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
 import judgels.jerahmeel.uriel.UrielModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
@@ -38,6 +39,8 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 @Component(modules = {
         // Jophiel
         JophielHibernateDaoModule.class,
+
+        SandalphonHibernateDaoModule.class,
 
         AwsModule.class,
         SubmissionModule.class,

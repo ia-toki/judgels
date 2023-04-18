@@ -227,7 +227,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
-                .sandalphonModule(new judgels.jerahmeel.sandalphon.SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
+                .sandalphonModule(new judgels.jerahmeel.sandalphon.SandalphonModule(jerahmeelConfig.getBaseDataDir(), jerahmeelConfig.getSandalphonConfig()))
                 .urielModule(new judgels.jerahmeel.uriel.UrielModule(jerahmeelConfig.getUrielConfig()))
                 .gabrielModule(new judgels.jerahmeel.gabriel.GabrielModule(jerahmeelConfig.getGabrielConfig()))
                 .messagingModule(new judgels.jerahmeel.messaging.MessagingModule(jerahmeelConfig.getRabbitMQConfig()))

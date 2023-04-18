@@ -1,5 +1,6 @@
 package judgels.jerahmeel.problem;
 
+import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -7,19 +8,20 @@ import judgels.jerahmeel.api.problem.ProblemTagCategory;
 import judgels.jerahmeel.api.problem.ProblemTagOption;
 import judgels.jerahmeel.api.problem.ProblemTagService;
 import judgels.jerahmeel.api.problem.ProblemTagsResponse;
-import judgels.sandalphon.problem.ProblemClient;
+import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 
 public class ProblemTagResource implements ProblemTagService {
-    private final ProblemClient problemClient;
+    private final ProblemTagStore tagStore;
 
     @Inject
-    public ProblemTagResource(ProblemClient problemClient) {
-        this.problemClient = problemClient;
+    public ProblemTagResource(ProblemTagStore tagStore) {
+        this.tagStore = tagStore;
     }
 
     @Override
+    @UnitOfWork(readOnly = true)
     public ProblemTagsResponse getProblemTags() {
-        Map<String, Integer> tagCounts = problemClient.getPublicTagCounts();
+        Map<String, Integer> tagCounts = tagStore.getPublicTagCounts();
 
         ProblemTagCategory topicCategory = new ProblemTagCategory.Builder()
                 .title("Tag")
