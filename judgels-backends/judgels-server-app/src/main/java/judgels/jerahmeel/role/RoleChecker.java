@@ -1,13 +1,11 @@
 package judgels.jerahmeel.role;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.jerahmeel.api.role.JerahmeelRole;
 import judgels.jophiel.api.role.JophielRole;
 import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.role.UserRoleStore;
 
-@Singleton
 public class RoleChecker {
     private final UserRoleStore userRoleStore;
 

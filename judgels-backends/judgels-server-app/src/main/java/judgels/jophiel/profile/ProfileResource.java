@@ -9,13 +9,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 
-@Singleton
 public class ProfileResource implements ProfileService {
     private final Clock clock;
     private final ProfileStore profileStore;

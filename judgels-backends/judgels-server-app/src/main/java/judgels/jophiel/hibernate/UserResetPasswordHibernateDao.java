@@ -5,7 +5,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserResetPasswordModel;
@@ -15,7 +14,6 @@ import judgels.persistence.Model_;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 
-@Singleton
 public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswordModel>
         implements UserResetPasswordDao {
 

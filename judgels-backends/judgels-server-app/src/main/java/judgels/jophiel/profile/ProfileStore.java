@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.User;
@@ -23,7 +22,6 @@ import judgels.jophiel.user.rating.UserWithRating;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
-@Singleton
 public class ProfileStore {
     private static final Pattern USERNAME_PATTERN = Pattern.compile("\\[user:(\\S+)]");
 

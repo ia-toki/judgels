@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.criteria.Expression;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
@@ -26,7 +25,6 @@ import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
 import org.apache.commons.lang3.math.NumberUtils;
 
-@Singleton
 public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> implements ContestDao {
     private final Clock clock;
 

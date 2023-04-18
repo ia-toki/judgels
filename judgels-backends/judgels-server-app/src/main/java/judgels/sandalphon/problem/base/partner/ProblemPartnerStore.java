@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import judgels.sandalphon.api.resource.Partner;
@@ -16,7 +15,6 @@ import judgels.sandalphon.api.resource.PartnerPermission;
 import judgels.sandalphon.persistence.ProblemPartnerDao;
 import judgels.sandalphon.persistence.ProblemPartnerModel;
 
-@Singleton
 public class ProblemPartnerStore {
     private final ProblemPartnerDao partnerDao;
     private final ObjectMapper mapper;

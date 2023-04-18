@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.persistence.UserRatingEventModel_;
@@ -16,7 +15,6 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 
-@Singleton
 public class UserRatingEventHibernateDao extends UnmodifiableHibernateDao<UserRatingEventModel>
         implements UserRatingEventDao {
 

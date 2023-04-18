@@ -6,7 +6,6 @@ import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -16,7 +15,6 @@ import judgels.sandalphon.persistence.BundleGradingDao;
 import judgels.sandalphon.persistence.BundleGradingModel;
 import judgels.sandalphon.persistence.BundleGradingModel_;
 
-@Singleton
 public final class BundleGradingHibernateDao extends JudgelsHibernateDao<BundleGradingModel> implements BundleGradingDao {
 
     @Inject

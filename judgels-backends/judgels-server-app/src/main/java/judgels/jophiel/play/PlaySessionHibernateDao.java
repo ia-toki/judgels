@@ -2,11 +2,9 @@ package judgels.jophiel.play;
 
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 
-@Singleton
 public class PlaySessionHibernateDao extends UnmodifiableHibernateDao<PlaySessionModel> implements PlaySessionDao {
     @Inject
     public PlaySessionHibernateDao(HibernateDaoData data) {

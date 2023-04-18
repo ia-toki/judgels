@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
@@ -19,7 +18,6 @@ import judgels.jophiel.persistence.UserRatingModel;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
-@Singleton
 public class UserRatingStore {
     private final UserRatingDao ratingDao;
     private final UserRatingEventDao ratingEventDao;

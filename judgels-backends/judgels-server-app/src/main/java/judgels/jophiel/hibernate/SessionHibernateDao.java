@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -16,7 +15,6 @@ import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 
-@Singleton
 public class SessionHibernateDao extends UnmodifiableHibernateDao<SessionModel> implements SessionDao {
     @Inject
     public SessionHibernateDao(HibernateDaoData data) {

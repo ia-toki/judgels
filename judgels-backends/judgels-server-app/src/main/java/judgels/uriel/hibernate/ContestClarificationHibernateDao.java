@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -15,7 +14,6 @@ import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestClarificationModel;
 import judgels.uriel.persistence.ContestClarificationModel_;
 
-@Singleton
 public class ContestClarificationHibernateDao extends JudgelsHibernateDao<ContestClarificationModel> implements
         ContestClarificationDao {
 

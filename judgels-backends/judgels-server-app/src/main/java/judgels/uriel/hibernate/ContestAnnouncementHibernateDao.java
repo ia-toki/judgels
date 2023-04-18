@@ -3,7 +3,6 @@ package judgels.uriel.hibernate;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -14,7 +13,6 @@ import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 import judgels.uriel.persistence.ContestAnnouncementModel_;
 
-@Singleton
 public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<ContestAnnouncementModel> implements
         ContestAnnouncementDao {
 

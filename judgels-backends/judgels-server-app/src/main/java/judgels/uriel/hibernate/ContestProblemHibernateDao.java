@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
@@ -16,7 +15,6 @@ import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 import judgels.uriel.persistence.ContestProblemModel_;
 
-@Singleton
 public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel> implements ContestProblemDao {
     @Inject
     public ContestProblemHibernateDao(HibernateDaoData data) {

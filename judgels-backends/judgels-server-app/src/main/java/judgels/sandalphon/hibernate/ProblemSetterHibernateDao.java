@@ -2,7 +2,6 @@ package judgels.sandalphon.hibernate;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
@@ -13,7 +12,6 @@ import judgels.sandalphon.persistence.ProblemSetterDao;
 import judgels.sandalphon.persistence.ProblemSetterModel;
 import judgels.sandalphon.persistence.ProblemSetterModel_;
 
-@Singleton
 public class ProblemSetterHibernateDao extends UnmodifiableHibernateDao<ProblemSetterModel> implements
         ProblemSetterDao {
     @Inject

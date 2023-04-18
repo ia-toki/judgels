@@ -3,7 +3,6 @@ package judgels.sandalphon.hibernate;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -14,7 +13,6 @@ import judgels.sandalphon.persistence.LessonPartnerDao;
 import judgels.sandalphon.persistence.LessonPartnerModel;
 import judgels.sandalphon.persistence.LessonPartnerModel_;
 
-@Singleton
 public final class LessonPartnerHibernateDao extends HibernateDao<LessonPartnerModel> implements LessonPartnerDao {
 
     @Inject

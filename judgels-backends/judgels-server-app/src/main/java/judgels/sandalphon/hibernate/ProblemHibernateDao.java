@@ -2,7 +2,6 @@ package judgels.sandalphon.hibernate;
 
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -12,7 +11,6 @@ import judgels.sandalphon.persistence.ProblemDao;
 import judgels.sandalphon.persistence.ProblemModel;
 import judgels.sandalphon.persistence.ProblemModel_;
 
-@Singleton
 public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel> implements ProblemDao {
 
     @Inject

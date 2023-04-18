@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import judgels.persistence.CustomPredicateFilter;
@@ -19,7 +18,6 @@ import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
 import judgels.uriel.persistence.ContestModuleModel_;
 
-@Singleton
 public class ContestModuleHibernateDao extends HibernateDao<ContestModuleModel> implements ContestModuleDao {
     @Inject
     public ContestModuleHibernateDao(HibernateDaoData data) {

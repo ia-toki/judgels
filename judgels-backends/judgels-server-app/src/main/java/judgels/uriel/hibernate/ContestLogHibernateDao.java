@@ -2,7 +2,6 @@ package judgels.uriel.hibernate;
 
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.Page;
@@ -13,7 +12,6 @@ import judgels.uriel.persistence.ContestLogDao;
 import judgels.uriel.persistence.ContestLogModel;
 import judgels.uriel.persistence.ContestLogModel_;
 
-@Singleton
 public class ContestLogHibernateDao extends UnmodifiableHibernateDao<ContestLogModel> implements ContestLogDao {
     @Inject
     public ContestLogHibernateDao(HibernateDaoData data) {
