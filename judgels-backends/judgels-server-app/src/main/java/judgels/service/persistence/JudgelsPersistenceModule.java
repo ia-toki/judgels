@@ -1,4 +1,4 @@
-package judgels.service;
+package judgels.service.persistence;
 
 import dagger.Module;
 import dagger.Provides;

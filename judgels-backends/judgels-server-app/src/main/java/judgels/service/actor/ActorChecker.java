@@ -4,16 +4,19 @@ import static judgels.service.actor.Actors.GUEST;
 
 import java.util.Optional;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
-import judgels.service.api.actor.ActorExtractor;
+import judgels.jophiel.api.session.Session;
+import judgels.jophiel.session.SessionStore;
 import judgels.service.api.actor.AuthHeader;
 import org.eclipse.jetty.server.Response;
 
 public class ActorChecker {
-    private final ActorExtractor actorExtractor;
+    private final SessionStore sessionStore;
 
-    public ActorChecker(ActorExtractor actorExtractor) {
-        this.actorExtractor = actorExtractor;
+    @Inject
+    public ActorChecker(SessionStore sessionStore) {
+        this.sessionStore = sessionStore;
     }
 
     public String check(Optional<AuthHeader> authHeader) {
@@ -32,8 +35,10 @@ public class ActorChecker {
             throw new NotAuthorizedException(Response.SC_UNAUTHORIZED);
         }
 
-        String actorJid = actorExtractor.extractJid(authHeader)
+        Session session = sessionStore.getSessionByToken(authHeader.getBearerToken())
                 .orElseThrow(() -> new NotAuthorizedException(Response.SC_UNAUTHORIZED));
+
+        String actorJid = session.getUserJid();
 
         PerRequestActorProvider.setJid(actorJid);
 

@@ -31,14 +31,13 @@ import judgels.jophiel.user.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
-import judgels.service.JudgelsPersistenceModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
         AuthModule.class,
         AwsModule.class,
-        JophielModule.class,
         JophielHibernateDaoModule.class,
         JudgelsModule.class,
         JudgelsApplicationModule.class,

@@ -9,13 +9,10 @@ import javax.inject.Singleton;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
-import judgels.jophiel.api.session.Session;
-import judgels.jophiel.session.SessionStore;
 import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.service.actor.ActorChecker;
 
 @Module
 public class JerahmeelModule {
@@ -29,13 +26,6 @@ public class JerahmeelModule {
     @JerahmeelBaseDataDir
     Path jerahmeelBaseDataDir() {
         return Paths.get(config.getBaseDataDir());
-    }
-
-    @Provides
-    @Singleton
-    static ActorChecker actorChecker(SessionStore sessionStore) {
-        return new ActorChecker(authHeader ->
-                sessionStore.getSessionByToken(authHeader.getBearerToken()).map(Session::getUserJid));
     }
 
     @Provides

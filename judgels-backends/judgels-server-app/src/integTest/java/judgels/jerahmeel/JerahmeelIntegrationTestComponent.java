@@ -13,8 +13,8 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jerahmeel.submission.programming.StatsProcessor;
 import judgels.service.JudgelsModule;
-import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
         JudgelsModule.class,

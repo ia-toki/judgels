@@ -6,8 +6,8 @@ import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.lesson.LessonResource;
 import judgels.sandalphon.problem.base.ProblemResource;
 import judgels.service.JudgelsModule;
-import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
         JudgelsModule.class,

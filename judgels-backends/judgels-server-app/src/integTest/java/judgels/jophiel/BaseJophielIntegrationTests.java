@@ -3,8 +3,8 @@ package judgels.jophiel;
 import java.time.Clock;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.TestClock;
-import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 import org.hibernate.SessionFactory;
 
 public abstract class BaseJophielIntegrationTests {

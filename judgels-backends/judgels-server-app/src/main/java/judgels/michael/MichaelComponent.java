@@ -28,8 +28,8 @@ import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
-import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
         JudgelsModule.class,

@@ -8,7 +8,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.Optional;
 import javax.ws.rs.NotAuthorizedException;
-import judgels.service.api.actor.ActorExtractor;
+import judgels.jophiel.api.session.Session;
+import judgels.jophiel.session.SessionStore;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -16,16 +17,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 class ActorCheckerTests {
-    private static final AuthHeader AUTH_HEADER = AuthHeader.of("token");
+    private static final String BEARER_TOKEN = "token";
+    private static final AuthHeader AUTH_HEADER = AuthHeader.of(BEARER_TOKEN);
     private static final String ACTOR_JID = "JIDUSERactor";
 
-    @Mock private ActorExtractor actorExtractor;
+    @Mock private SessionStore sessionStore;
     private ActorChecker actorChecker;
 
     @BeforeEach
     void before() {
         initMocks(this);
-        actorChecker = new ActorChecker(actorExtractor);
+        actorChecker = new ActorChecker(sessionStore);
     }
 
     @Nested
@@ -36,7 +38,7 @@ class ActorCheckerTests {
 
             @BeforeEach
             void before() {
-                when(actorExtractor.extractJid(AUTH_HEADER)).thenReturn(Optional.of(ACTOR_JID));
+                when(sessionStore.getSessionByToken(BEARER_TOKEN)).thenReturn(Optional.of(Session.of(BEARER_TOKEN, ACTOR_JID)));
                 actorJid = actorChecker.check(AUTH_HEADER);
             }
 
@@ -64,7 +66,7 @@ class ActorCheckerTests {
         class when_auth_header_is_invalid {
             @BeforeEach
             void before() {
-                when(actorExtractor.extractJid(AUTH_HEADER)).thenReturn(Optional.empty());
+                when(sessionStore.getSessionByToken(BEARER_TOKEN)).thenReturn(Optional.empty());
             }
 
             @Test

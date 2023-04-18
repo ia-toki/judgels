@@ -2,8 +2,8 @@ package judgels.jerahmeel;
 
 import java.time.Clock;
 import judgels.persistence.TestActorProvider;
-import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 import org.hibernate.SessionFactory;
 
 public abstract class BaseJerahmeelIntegrationTests {

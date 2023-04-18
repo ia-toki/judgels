@@ -9,11 +9,10 @@ import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.account.UserResetPasswordStore;
 import judgels.jophiel.user.avatar.UserAvatarIntegrationTestModule;
 import judgels.service.JudgelsModule;
-import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
-        JophielModule.class,
         JophielHibernateDaoModule.class,
         JudgelsModule.class,
         JudgelsHibernateModule.class,
