@@ -46,7 +46,7 @@ class ContestLogServiceIntegrationTests extends BaseUrielServiceIntegrationTests
 
         createContest();
 
-        await().atMost(3, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).until(() -> logService
+        await().atMost(7, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> logService
                 .getLogs(managerHeader, contest1.getJid(), empty(), empty(), empty())
                 .getData().getTotalCount() == 8);
 

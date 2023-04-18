@@ -227,9 +227,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 component.contestScoreboardPoller(),
                 Duration.ofSeconds(10));
 
-        scheduler.scheduleOnce(
+        scheduler.scheduleWithFixedDelay(
                 "uriel-contest-log-poller",
-                component.contestLogPoller());
+                component.contestLogPoller(),
+                Duration.ofSeconds(3));
 
         if (urielConfig.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
