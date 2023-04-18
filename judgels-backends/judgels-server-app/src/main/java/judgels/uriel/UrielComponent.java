@@ -4,7 +4,6 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
-import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
@@ -43,7 +42,6 @@ import judgels.uriel.submission.programming.SubmissionModule;
 @Component(modules = {
         // Jophiel
         JophielHibernateDaoModule.class,
-        UserAvatarModule.class,
 
         AwsModule.class,
         FileModule.class,

@@ -80,19 +80,12 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runMichael(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        JophielConfiguration jophielConfig = config.getJophielConfig();
         SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .michaelModule(new MichaelModule(judgelsConfig.getAppConfig()))
-
-                // Jophiel
-                .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
-                .userAvatarModule(new UserAvatarModule(
-                        Paths.get(jophielConfig.getBaseDataDir()),
-                        jophielConfig.getUserAvatarConfig()))
 
                 // Sandalphon
                 .sandalphonModule(new SandalphonModule(sandalphonConfig))
@@ -175,7 +168,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runSandalphon(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
         SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
-
         SandalphonComponent component = DaggerSandalphonComponent.builder()
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(sandalphonConfig))
@@ -186,13 +178,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     }
 
     private void runUriel(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
-        JophielConfiguration jophielConfig = config.getJophielConfig();
         UrielConfiguration urielConfig = config.getUrielConfig();
-
         UrielComponent component = DaggerUrielComponent.builder()
-                .userAvatarModule(new UserAvatarModule(
-                        Paths.get(jophielConfig.getBaseDataDir()),
-                        jophielConfig.getUserAvatarConfig()))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
                 .fileModule(new FileModule(urielConfig.getFileConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
@@ -239,13 +226,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         }
     }
     private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
-        JophielConfiguration jophielConfig = config.getJophielConfig();
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
-
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
-                .userAvatarModule(new UserAvatarModule(
-                        Paths.get(jophielConfig.getBaseDataDir()),
-                        jophielConfig.getUserAvatarConfig()))
                 .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))

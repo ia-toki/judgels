@@ -2,9 +2,7 @@ package judgels.michael;
 
 import dagger.Component;
 import javax.inject.Singleton;
-import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
-import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.michael.index.IndexResource;
 import judgels.michael.lesson.LessonResource;
 import judgels.michael.lesson.partner.LessonPartnerResource;
@@ -40,8 +38,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 
         // Jophiel
         JophielHibernateDaoModule.class,
-        AwsModule.class,
-        UserAvatarModule.class,
 
         // Sandalphon
         SandalphonHibernateDaoModule.class,

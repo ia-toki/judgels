@@ -65,7 +65,7 @@ public class UserAvatarResource implements UserAvatarService {
     @Override
     @UnitOfWork(readOnly = true)
     public boolean avatarExists(String userJid) {
-        return userStore.getUserAvatarUrl(userJid).isPresent();
+        return userStore.getUserAvatarFilename(userJid).isPresent();
     }
 
     @GET
@@ -74,9 +74,9 @@ public class UserAvatarResource implements UserAvatarService {
             @HeaderParam(IF_MODIFIED_SINCE) Optional<String> ifModifiedSince,
             @PathParam("userJid") String userJid) {
 
-        Optional<String> avatarUrl = userStore.getUserAvatarUrl(userJid);
-        if (avatarUrl.isPresent()) {
-            return buildImageResponse(avatarUrl.get(), ifModifiedSince);
+        Optional<String> avatarFilename = userStore.getUserAvatarFilename(userJid);
+        if (avatarFilename.isPresent()) {
+            return buildImageResponse(avatarFs.getPublicFileUrl(Paths.get(avatarFilename.get())), ifModifiedSince);
         }
         return buildImageResponse(
                 UserAvatarResource.class.getClassLoader().getResourceAsStream(DEFAULT_AVATAR),

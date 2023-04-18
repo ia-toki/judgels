@@ -1,7 +1,6 @@
 package judgels.jophiel.user;
 
 import com.google.common.collect.Lists;
-import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
@@ -11,12 +10,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
-import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -25,12 +22,10 @@ public class UserStore {
     private static final int PAGE_SIZE = 250;
 
     private final UserDao userDao;
-    private final FileSystem userAvatarFs;
 
     @Inject
-    public UserStore(UserDao userDao, @UserAvatarFs FileSystem userAvatarFs) {
+    public UserStore(UserDao userDao) {
         this.userDao = userDao;
-        this.userAvatarFs = userAvatarFs;
     }
 
     public User createUser(UserData userData) {
@@ -125,9 +120,9 @@ public class UserStore {
         });
     }
 
-    public Optional<String> getUserAvatarUrl(String userJid) {
+    public Optional<String> getUserAvatarFilename(String userJid) {
         return userDao.selectByJid(userJid).flatMap(model ->
-                Optional.ofNullable(model.avatarFilename).map(Paths::get).map(userAvatarFs::getPublicFileUrl));
+                Optional.ofNullable(model.avatarFilename));
     }
 
     public Optional<User> updateUserAvatar(String userJid, @Nullable String newAvatarFilename) {
