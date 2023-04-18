@@ -3,12 +3,12 @@ package judgels.uriel.contest.log;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import judgels.service.JudgelsScheduler;
 import judgels.uriel.api.contest.log.ContestLog;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
@@ -27,16 +27,11 @@ public class ContestLogModule {
     @Provides
     @Singleton
     static ContestLogPoller contestLogPoller(
-            LifecycleEnvironment lifecycleEnvironment,
+            JudgelsScheduler scheduler,
             @Named("ContestLogQueue") Queue<ContestLog> logQueue,
             ContestLogCreator logCreator) {
 
-        ExecutorService executorService =
-                lifecycleEnvironment.executorService("contest-log-creator-%d")
-                        .maxThreads(2)
-                        .minThreads(2)
-                        .build();
-
+        ExecutorService executorService = scheduler.createExecutorService("uriel-contest-log-creator-%d", 2);
         return new ContestLogPoller(logQueue, executorService, logCreator);
     }
 

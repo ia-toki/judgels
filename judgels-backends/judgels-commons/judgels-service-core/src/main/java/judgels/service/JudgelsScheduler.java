@@ -5,7 +5,6 @@ import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +13,16 @@ public class JudgelsScheduler {
 
     private final LifecycleEnvironment lifecycleEnvironment;
 
-    @Inject
     public JudgelsScheduler(LifecycleEnvironment lifecycleEnvironment) {
         this.lifecycleEnvironment = lifecycleEnvironment;
+    }
+
+    public ExecutorService createExecutorService(String name, int threads) {
+        return lifecycleEnvironment
+                .executorService(name)
+                .minThreads(threads)
+                .maxThreads(threads)
+                .build();
     }
 
     public void scheduleOnce(String name, Runnable job) {

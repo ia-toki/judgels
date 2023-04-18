@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
 import judgels.jophiel.user.UserClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
+import judgels.service.JudgelsScheduler;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -24,15 +24,11 @@ public class ContestScoreboardUpdaterModule {
     @Singleton
     static ContestScoreboardPoller contestScoreboardPoller(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            LifecycleEnvironment lifecycleEnvironment,
+            JudgelsScheduler scheduler,
             ContestStore contestStore,
             ContestScoreboardUpdater contestScoreboardUpdater) {
 
-        ExecutorService executorService =
-                lifecycleEnvironment.executorService("contest-scoreboard-updater-%d")
-                        .maxThreads(2)
-                        .minThreads(2)
-                        .build();
+        ExecutorService executorService = scheduler.createExecutorService("uriel-contest-scoreboard-updater-%d", 2);
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardPoller.class,

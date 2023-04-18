@@ -3,7 +3,6 @@ package judgels.jerahmeel.submission.bundle;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
 import judgels.sandalphon.problem.ProblemClient;
@@ -11,6 +10,7 @@ import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegradeProcessor;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
+import judgels.service.JudgelsScheduler;
 
 @Module
 public class ItemSubmissionModule {
@@ -19,16 +19,11 @@ public class ItemSubmissionModule {
     @Provides
     @Singleton
     static ItemSubmissionRegrader itemSubmissionRegrader(
-            LifecycleEnvironment lifecycleEnvironment,
+            JudgelsScheduler scheduler,
             ItemSubmissionStore itemSubmissionStore,
             ItemSubmissionRegradeProcessor processor) {
 
-        ExecutorService executorService =
-                lifecycleEnvironment.executorService("item-submission-regrade-processor-%d")
-                        .maxThreads(5)
-                        .minThreads(5)
-                        .build();
-
+        ExecutorService executorService = scheduler.createExecutorService("jerahmeel-item-submission-regrade-processor-%d", 5);
         return new ItemSubmissionRegrader(itemSubmissionStore, executorService, processor);
     }
 

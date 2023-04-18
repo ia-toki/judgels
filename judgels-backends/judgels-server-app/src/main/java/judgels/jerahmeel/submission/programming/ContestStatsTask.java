@@ -20,7 +20,7 @@ public class ContestStatsTask extends Task {
             Optional<ContestSubmissionService> contestSubmissionService,
             StatsProcessor statsProcessor) {
 
-        super("stats-contest");
+        super("jerahmeel-stats-contest");
 
         this.contestSubmissionService = contestSubmissionService;
         this.statsProcessor = statsProcessor;

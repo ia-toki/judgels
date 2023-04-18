@@ -29,9 +29,9 @@ import judgels.jerahmeel.submission.programming.SubmissionResource;
 import judgels.jerahmeel.uriel.UrielModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
-import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
+import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 
@@ -49,9 +49,9 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         MessagingModule.class,
 
         JudgelsModule.class,
-        JudgelsApplicationModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
+        JudgelsSchedulerModule.class,
 
         JerahmeelModule.class,
         JerahmeelHibernateDaoModule.class,

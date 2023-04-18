@@ -29,9 +29,9 @@ import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.UserWebResource;
 import judgels.jophiel.user.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
-import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
+import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 
@@ -40,9 +40,9 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         AwsModule.class,
         JophielHibernateDaoModule.class,
         JudgelsModule.class,
-        JudgelsApplicationModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
+        JudgelsSchedulerModule.class,
         MailerModule.class,
         RecaptchaModule.class,
         SuperadminModule.class,

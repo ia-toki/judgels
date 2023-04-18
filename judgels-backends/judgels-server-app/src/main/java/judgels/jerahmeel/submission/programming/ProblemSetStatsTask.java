@@ -18,7 +18,7 @@ public class ProblemSetStatsTask extends Task {
     private final StatsProcessor statsProcessor;
 
     public ProblemSetStatsTask(SubmissionStore submissionStore, StatsProcessor statsProcessor) {
-        super("stats-problemset");
+        super("jerahmeel-stats-problemset");
 
         this.submissionStore = submissionStore;
         this.statsProcessor = statsProcessor;

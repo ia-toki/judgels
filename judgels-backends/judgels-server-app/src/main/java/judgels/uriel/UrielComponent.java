@@ -5,9 +5,9 @@ import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
-import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
+import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.contest.ContestResource;
@@ -53,9 +53,9 @@ import judgels.uriel.submission.programming.SubmissionModule;
         MessagingModule.class,
 
         JudgelsModule.class,
-        JudgelsApplicationModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
+        JudgelsSchedulerModule.class,
 
         UrielModule.class,
         UrielHibernateDaoModule.class,

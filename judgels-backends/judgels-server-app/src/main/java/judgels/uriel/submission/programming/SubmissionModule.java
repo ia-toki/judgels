@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +22,7 @@ import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
+import judgels.service.JudgelsScheduler;
 import judgels.uriel.UrielBaseDataDir;
 
 @Module
@@ -66,33 +66,23 @@ public class SubmissionModule {
     @Provides
     @Singleton
     SubmissionRegrader submissionRegrader(
-            LifecycleEnvironment lifecycleEnvironment,
+            JudgelsScheduler scheduler,
             SubmissionStore submissionStore,
             SubmissionRegradeProcessor processor) {
 
-        ExecutorService executorService =
-                lifecycleEnvironment.executorService("submission-regrade-processor-%d")
-                        .maxThreads(5)
-                        .minThreads(5)
-                        .build();
-
+        ExecutorService executorService = scheduler.createExecutorService("uriel-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(submissionStore, executorService, processor);
     }
 
     @Provides
     @Singleton
     static GradingResponsePoller gradingResponsePoller(
-            LifecycleEnvironment lifecycleEnvironment,
+            JudgelsScheduler scheduler,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             MessageClient messageClient,
             GradingResponseProcessor processor) {
 
-        ExecutorService executorService =
-                lifecycleEnvironment.executorService("grading-response-processor-%d")
-                        .maxThreads(10)
-                        .minThreads(10)
-                        .build();
-
+        ExecutorService executorService = scheduler.createExecutorService("uriel-grading-response-processor-%d", 10);
         return new GradingResponsePoller(gradingResponseQueueName, messageClient, executorService, processor);
     }
 
