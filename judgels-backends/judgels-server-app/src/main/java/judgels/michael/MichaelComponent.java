@@ -44,7 +44,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         SandalphonModule.class})
 @Singleton
 public interface MichaelComponent {
-    PingResource pingResource();
     IndexResource indexResource();
     ProblemResource problemResource();
     ProblemStatementResource problemStatementResource();

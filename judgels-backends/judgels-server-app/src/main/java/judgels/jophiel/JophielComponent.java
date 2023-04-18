@@ -68,7 +68,6 @@ public interface JophielComponent {
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
     ClientUserResource clientUserResource();
-    PingResource pingResource();
 
     JudgelsScheduler scheduler();
     SessionCleaner sessionCleaner();

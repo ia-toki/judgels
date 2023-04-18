@@ -95,7 +95,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.servlets().setSessionHandler(new SessionHandler());
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
-        env.jersey().register(component.pingResource());
         env.jersey().register(component.indexResource());
         env.jersey().register(component.problemResource());
         env.jersey().register(component.problemStatementResource());

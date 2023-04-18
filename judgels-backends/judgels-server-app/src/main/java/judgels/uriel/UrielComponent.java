@@ -81,7 +81,6 @@ public interface UrielComponent {
     ContestSubmissionResource contestProgrammingSubmissionResource();
     ContestSupervisorResource contestSupervisorResource();
     ContestWebResource contestWebResource();
-    PingResource pingResource();
 
     JudgelsScheduler scheduler();
     ContestLogPoller contestLogPoller();

@@ -74,7 +74,6 @@ public interface JerahmeelComponent {
     ItemSubmissionResource itemSubmissionResource();
     SubmissionResource submissionResource();
     UserStatsResource userStatsResource();
-    PingResource pingResource();
 
     JudgelsScheduler scheduler();
     GradingResponsePoller gradingResponsePoller();
