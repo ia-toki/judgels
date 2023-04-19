@@ -6,13 +6,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import judgels.fs.FileSystem;
 
-public abstract class AbstractProblemStore {
-    private final ObjectMapper mapper;
-    private final FileSystem fs;
+public abstract class BaseProblemStore {
+    protected final ObjectMapper mapper;
+    protected final FileSystem problemFs;
 
-    protected AbstractProblemStore(ObjectMapper mapper, FileSystem fs) {
+    protected BaseProblemStore(ObjectMapper mapper, FileSystem problemFs) {
         this.mapper = mapper;
-        this.fs = fs;
+        this.problemFs = problemFs;
     }
 
     protected Path getOriginDirPath(String problemJid) {
@@ -34,7 +34,7 @@ public abstract class AbstractProblemStore {
         }
 
         Path root = getCloneDirPath(userJid, problemJid);
-        if (!fs.directoryExists(root)) {
+        if (!problemFs.directoryExists(root)) {
             return origin;
         } else {
             return root;

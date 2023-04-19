@@ -49,9 +49,9 @@ public class ProblemStatementResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
-        ProblemStatement statement = problemStore.getStatement(actor.getUserJid(), problem.getJid(), language);
+        ProblemStatement statement = statementStore.getStatement(actor.getUserJid(), problem.getJid(), language);
 
         EditStatementForm form = new EditStatementForm();
         form.title = statement.getTitle();
@@ -74,11 +74,11 @@ public class ProblemStatementResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.updateStatement(actor.getUserJid(), problem.getJid(), language, new ProblemStatement.Builder()
+        statementStore.updateStatement(actor.getUserJid(), problem.getJid(), language, new ProblemStatement.Builder()
                 .title(form.title)
                 .text(form.text)
                 .build());
@@ -94,7 +94,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actor.getUserJid(), problem.getJid());
+        List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("media");
@@ -118,10 +118,10 @@ public class ProblemStatementResource extends BaseProblemResource {
 
         if (fileStream != null) {
             problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-            problemStore.uploadStatementMediaFile(actor.getUserJid(), problem.getJid(), fileStream, fileDetails.getFileName());
+            statementStore.uploadStatementMediaFile(actor.getUserJid(), problem.getJid(), fileStream, fileDetails.getFileName());
         } else if (fileZippedStream != null) {
             problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-            problemStore.uploadStatementMediaFileZipped(actor.getUserJid(), problem.getJid(), fileZippedStream);
+            statementStore.uploadStatementMediaFileZipped(actor.getUserJid(), problem.getJid(), fileZippedStream);
         }
 
         return redirect("/problems/" + problemId + "/statements/media");
@@ -139,7 +139,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        String mediaUrl = problemStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
         return ServiceUtils.buildDownloadResponse(mediaUrl);
     }
 
@@ -151,8 +151,8 @@ public class ProblemStatementResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getStatementAvailableLanguages(actor.getUserJid(), problem.getJid());
-        String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+        Map<String, StatementLanguageStatus> availableLanguages = statementStore.getStatementAvailableLanguages(actor.getUserJid(), problem.getJid());
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemStatementTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
@@ -176,7 +176,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.addStatementLanguage(actor.getUserJid(), problem.getJid(), language);
+        statementStore.addStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/statements/languages");
     }
@@ -198,7 +198,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.enableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
+        statementStore.enableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/statements/languages");
     }
@@ -220,7 +220,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.disableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
+        statementStore.disableStatementLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/statements/languages");
     }
@@ -242,7 +242,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.makeStatementDefaultLanguage(actor.getUserJid(), problem.getJid(), language);
+        statementStore.makeStatementDefaultLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/statements/languages");
     }

@@ -13,6 +13,8 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
@@ -32,6 +34,7 @@ public final class BundleItemController extends AbstractProblemController {
 
     private final ObjectMapper mapper;
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final BundleItemStore bundleItemStore;
 
@@ -39,12 +42,15 @@ public final class BundleItemController extends AbstractProblemController {
     public BundleItemController(
             ObjectMapper mapper,
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemRoleChecker problemRoleChecker,
             BundleItemStore bundleItemStore) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.mapper = mapper;
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleItemStore = bundleItemStore;
     }
@@ -133,7 +139,7 @@ public final class BundleItemController extends AbstractProblemController {
         }
 
         bundleItemStore.createBundleItem(problem.getJid(), actorJid, ItemType.valueOf(itemType), itemConfigAdapter.getMetaFromForm(bundleItemConfForm), itemConfigAdapter
-                .processRequestForm(bundleItemConfForm), problemStore
+                .processRequestForm(bundleItemConfForm), statementStore
                 .getStatementDefaultLanguage(actorJid, problem.getJid()));
 
         return redirect(routes.BundleItemController.viewItems(problem.getId()))
@@ -166,7 +172,7 @@ public final class BundleItemController extends AbstractProblemController {
             bundleItemConfForm = itemConfigAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, language), item.getMeta());
         } catch (RuntimeException e) {
             if (e.getCause() instanceof IOException) {
-                bundleItemConfForm = itemConfigAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, problemStore
+                bundleItemConfForm = itemConfigAdapter.generateForm(formFactory, bundleItemStore.getItemConfInProblemWithCloneByJid(problem.getJid(), actorJid, itemJid, statementStore
                         .getStatementDefaultLanguage(actorJid, problem.getJid())), item.getMeta());
             } else {
                 throw e;

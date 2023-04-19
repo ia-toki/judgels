@@ -29,9 +29,11 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.GitCommit;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
+import judgels.sandalphon.problem.base.version.ProblemVersionStore;
 
 @Path("/problems/{problemId}/versions")
 public class  ProblemVersionResource extends BaseProblemResource {
+    @Inject protected ProblemVersionStore versionStore;
     @Inject protected ProblemTagStore tagStore;
 
     @Inject public ProblemVersionResource() {}
@@ -70,11 +72,11 @@ public class  ProblemVersionResource extends BaseProblemResource {
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         String localChangesError = null;
-        if (problemStore.fetchUserClone(actor.getUserJid(), problem.getJid())) {
+        if (versionStore.fetchUserClone(actor.getUserJid(), problem.getJid())) {
             localChangesError = "There have been newer changes in the master copy. Please rebase your local changes.";
-        } else if (!problemStore.commitThenMergeUserClone(actor.getUserJid(), problem.getJid(), form.title, form.description)) {
+        } else if (!versionStore.commitThenMergeUserClone(actor.getUserJid(), problem.getJid(), form.title, form.description)) {
             localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        } else if (!problemStore.pushUserClone(actor.getUserJid(), problem.getJid())) {
+        } else if (!versionStore.pushUserClone(actor.getUserJid(), problem.getJid())) {
             localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }
 
@@ -83,7 +85,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
             return ok(renderViewVersionLocalChanges(actor, problem, form));
         }
 
-        problemStore.discardUserClone(actor.getUserJid(), problem.getJid());
+        versionStore.discardUserClone(actor.getUserJid(), problem.getJid());
         tagStore.refreshDerivedTags(problem.getJid());
 
         return redirect("/problems/" + problemId + "/versions/local");
@@ -97,7 +99,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        List<GitCommit> versions = problemStore.getVersions(actor.getUserJid(), problem.getJid());
+        List<GitCommit> versions = versionStore.getVersions(actor.getUserJid(), problem.getJid());
 
         Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -121,7 +123,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        problemStore.restore(problem.getJid(), versionHash);
+        versionStore.restore(problem.getJid(), versionHash);
 
         return redirect("/problems/" + problemId + "/versions/history");
     }
@@ -134,8 +136,8 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        problemStore.fetchUserClone(actor.getUserJid(), problem.getJid());
-        if (!problemStore.updateUserClone(actor.getUserJid(), problem.getJid())) {
+        versionStore.fetchUserClone(actor.getUserJid(), problem.getJid());
+        if (!versionStore.updateUserClone(actor.getUserJid(), problem.getJid())) {
             String localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
 
             HtmlTemplate template = newProblemVersionTemplate(actor, problem);
@@ -154,7 +156,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        problemStore.discardUserClone(actor.getUserJid(), problem.getJid());
+        versionStore.discardUserClone(actor.getUserJid(), problem.getJid());
 
         return redirect("/problems/" + problemId + "/versions/local");
     }

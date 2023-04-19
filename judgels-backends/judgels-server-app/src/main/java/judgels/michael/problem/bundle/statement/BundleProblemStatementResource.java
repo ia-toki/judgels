@@ -33,10 +33,10 @@ public class BundleProblemStatementResource extends BaseBundleProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
-        String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
-        ProblemStatement statement = problemStore.getStatement(actor.getUserJid(), problem.getJid(), language);
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+        ProblemStatement statement = statementStore.getStatement(actor.getUserJid(), problem.getJid(), language);
 
         List<BundleItem> items = itemStore.getNumberedItems(actor.getUserJid(), problem.getJid());
         List<ItemConfig> itemConfigs = items.stream()

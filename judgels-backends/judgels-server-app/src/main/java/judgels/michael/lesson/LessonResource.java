@@ -25,9 +25,6 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
-import judgels.sandalphon.api.lesson.LessonStatement;
-import judgels.sandalphon.lesson.statement.LessonStatementUtils;
-import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 
 @Path("/lessons")
 public class LessonResource extends BaseLessonResource {
@@ -88,11 +85,9 @@ public class LessonResource extends BaseLessonResource {
             return ok(renderNewLesson(actor, form));
         }
 
-        Lesson lesson = lessonStore.createLesson(form.slug, form.additionalNote, form.initialLanguage);
-        lessonStore.updateStatement(null, lesson.getJid(), form.initialLanguage, new LessonStatement.Builder()
-                .title(ProblemStatementUtils.getDefaultTitle(form.initialLanguage))
-                .text(LessonStatementUtils.getDefaultText(form.initialLanguage))
-                .build());
+        Lesson lesson = lessonStore.createLesson(form.slug, form.additionalNote);
+
+        statementStore.initStatements(lesson.getJid(), form.initialLanguage);
 
         lessonStore.initRepository(actor.getUserJid(), lesson.getJid());
 

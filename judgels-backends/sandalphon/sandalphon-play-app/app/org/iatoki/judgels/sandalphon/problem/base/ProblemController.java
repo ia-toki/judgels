@@ -24,6 +24,8 @@ import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemSearchStore;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.html.createProblemView;
@@ -52,6 +54,8 @@ public final class ProblemController extends AbstractProblemController {
     @Inject
     public ProblemController(
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemTagStore problemTagStore,
             ProblemSearchStore problemSearchStore,
             RoleChecker roleChecker,
@@ -59,7 +63,7 @@ public final class ProblemController extends AbstractProblemController {
             UserSearchService userSearchService,
             ProfileService profileService) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
         this.problemTagStore = problemTagStore;
         this.problemSearchStore = problemSearchStore;

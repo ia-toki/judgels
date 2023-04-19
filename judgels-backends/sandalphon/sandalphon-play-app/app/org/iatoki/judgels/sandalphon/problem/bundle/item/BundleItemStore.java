@@ -15,10 +15,10 @@ import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.BundleItemsConfig;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.problem.base.ProblemFs;
-import judgels.sandalphon.problem.bundle.AbstractBundleProblemStore;
+import judgels.sandalphon.problem.bundle.BaseBundleProblemStore;
 import org.apache.commons.lang3.StringUtils;
 
-public final class BundleItemStore extends AbstractBundleProblemStore {
+public final class BundleItemStore extends BaseBundleProblemStore {
     private final ObjectMapper mapper;
     private final FileSystem problemFs;
 

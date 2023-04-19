@@ -60,7 +60,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
         ItemType itemType = ItemType.valueOf(type);
         ItemConfig itemConfig = ItemEngineRegistry.getByType(itemType).createDefaultConfig();
 
-        String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         BundleItem item = itemStore.createItem(actor.getUserJid(), problem.getJid(), itemType, itemConfig, defaultLanguage);
@@ -82,9 +82,9 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
 
         BundleItem item = checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
 
-        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
-        String defaultLanguage = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
 
         ItemConfig config = itemStore.getItemConfig(actor.getUserJid(), problem.getJid(), item, language, defaultLanguage);
 
@@ -112,7 +112,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
 
         BundleItem item = checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
 
-        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
 
         ItemConfigAdapter adapter = ItemConfigAdapterRegistry.getByType(item.getType());

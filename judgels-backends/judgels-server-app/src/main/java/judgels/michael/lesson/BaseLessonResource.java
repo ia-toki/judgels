@@ -11,9 +11,11 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.lesson.LessonRoleChecker;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 
 public class BaseLessonResource extends BaseResource {
     @Inject protected LessonStore lessonStore;
+    @Inject protected LessonStatementStore statementStore;
     @Inject protected LessonRoleChecker roleChecker;
     @Inject protected UserStore userStore;
     @Inject protected ProfileStore profileStore;
@@ -21,7 +23,7 @@ public class BaseLessonResource extends BaseResource {
     protected String resolveStatementLanguage(HttpServletRequest req, Actor actor, Lesson lesson, Set<String> enabledLanguages) {
         String language = (String) req.getSession().getAttribute("statementLanguage");
         if (language == null || !enabledLanguages.contains(language)) {
-            language = lessonStore.getDefaultLanguage(actor.getUserJid(), lesson.getJid());
+            language = statementStore.getDefaultLanguage(actor.getUserJid(), lesson.getJid());
         }
 
         setCurrentStatementLanguage(req, language);

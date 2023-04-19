@@ -20,6 +20,8 @@ import judgels.sandalphon.api.submission.bundle.BundleAnswer;
 import judgels.sandalphon.api.submission.bundle.BundleSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.base.submission.SubmissionFs;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
 import org.iatoki.judgels.play.template.HtmlTemplate;
@@ -43,12 +45,14 @@ public final class BundleProblemSubmissionController extends AbstractProblemCont
     @Inject
     public BundleProblemSubmissionController(
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemRoleChecker problemRoleChecker,
             @SubmissionFs FileSystem bundleSubmissionFs,
             BundleSubmissionStore bundleSubmissionStore,
             ProfileService profileService) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleSubmissionFs = bundleSubmissionFs;

@@ -29,7 +29,7 @@ public abstract class LessonStatementRenderResources extends BaseLessonResource 
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
-        String mediaUrl = lessonStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), mediaFilename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), mediaFilename);
         return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
     }
 

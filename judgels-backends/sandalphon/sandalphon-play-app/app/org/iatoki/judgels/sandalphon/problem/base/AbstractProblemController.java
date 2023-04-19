@@ -5,6 +5,8 @@ import java.util.Set;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import play.mvc.Call;
@@ -14,8 +16,8 @@ import play.mvc.Result;
 public abstract class AbstractProblemController extends AbstractBaseProblemController {
     private final ProblemRoleChecker problemRoleChecker;
 
-    protected AbstractProblemController(ProblemStore problemStore, ProblemRoleChecker problemRoleChecker) {
-        super(problemStore);
+    protected AbstractProblemController(ProblemStore problemStore, ProblemStatementStore statementStore, ProblemEditorialStore editorialStore, ProblemRoleChecker problemRoleChecker) {
+        super(problemStore, statementStore, editorialStore);
         this.problemRoleChecker = problemRoleChecker;
     }
 

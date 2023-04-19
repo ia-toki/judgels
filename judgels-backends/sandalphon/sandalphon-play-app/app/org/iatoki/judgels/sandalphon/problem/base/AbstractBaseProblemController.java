@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
@@ -13,9 +15,13 @@ import play.mvc.Result;
 
 public abstract class AbstractBaseProblemController extends AbstractSandalphonController {
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
+    private final ProblemEditorialStore editorialStore;
 
-    protected AbstractBaseProblemController(ProblemStore problemStore) {
+    protected AbstractBaseProblemController(ProblemStore problemStore, ProblemStatementStore statementStore, ProblemEditorialStore editorialStore) {
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
+        this.editorialStore = editorialStore;
     }
 
     protected String getJustCreatedProblemSlug(Http.Request req) {
@@ -51,12 +57,12 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
         String userJid = getUserJid(req);
         String currentLanguage = getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus>
-                availableLanguages = problemStore.getStatementAvailableLanguages(userJid, problem.getJid());
+                availableLanguages = statementStore.getStatementAvailableLanguages(userJid, problem.getJid());
 
         if (currentLanguage == null
                 || !availableLanguages.containsKey(currentLanguage)
                 || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            return problemStore.getStatementDefaultLanguage(userJid, problem.getJid());
+            return statementStore.getStatementDefaultLanguage(userJid, problem.getJid());
         }
         return currentLanguage;
     }
@@ -65,12 +71,12 @@ public abstract class AbstractBaseProblemController extends AbstractSandalphonCo
         String userJid = getUserJid(req);
         String currentLanguage = getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus>
-                availableLanguages = problemStore.getEditorialAvailableLanguages(userJid, problem.getJid());
+                availableLanguages = editorialStore.getEditorialAvailableLanguages(userJid, problem.getJid());
 
         if (currentLanguage == null
                 || !availableLanguages.containsKey(currentLanguage)
                 || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            return problemStore.getEditorialDefaultLanguage(userJid, problem.getJid());
+            return editorialStore.getEditorialDefaultLanguage(userJid, problem.getJid());
         }
         return currentLanguage;
     }

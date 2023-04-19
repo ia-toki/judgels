@@ -72,7 +72,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
-        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
 
         BundleAnswer answer = submissionClient.createBundleAnswerFromNewSubmission(form, language);

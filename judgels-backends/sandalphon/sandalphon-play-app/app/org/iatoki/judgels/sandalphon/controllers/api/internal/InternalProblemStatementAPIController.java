@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import play.db.jpa.Transactional;
@@ -18,11 +19,13 @@ import play.mvc.Security;
 @Security.Authenticated(Secured.class)
 public final class InternalProblemStatementAPIController extends AbstractJudgelsAPIController {
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
 
     @Inject
-    public InternalProblemStatementAPIController(ObjectMapper mapper, ProblemStore problemStore) {
+    public InternalProblemStatementAPIController(ObjectMapper mapper, ProblemStore problemStore, ProblemStatementStore statementStore) {
         super(mapper);
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
     }
 
     @Transactional(readOnly = true)
@@ -30,7 +33,7 @@ public final class InternalProblemStatementAPIController extends AbstractJudgels
         String actorJid = req.attrs().get(Security.USERNAME);
 
         Problem problem = checkFound(problemStore.findProblemById(problemId));
-        String mediaUrl = problemStore.getStatementMediaFileURL(actorJid, problem.getJid(), mediaFilename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actorJid, problem.getJid(), mediaFilename);
 
         return okAsImage(req, mediaUrl);
     }
@@ -40,7 +43,7 @@ public final class InternalProblemStatementAPIController extends AbstractJudgels
         String actorJid = req.attrs().get(Security.USERNAME);
 
         Problem problem = checkFound(problemStore.findProblemById(id));
-        String mediaUrl = problemStore.getStatementMediaFileURL(actorJid, problem.getJid(), filename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actorJid, problem.getJid(), filename);
 
         return okAsDownload(mediaUrl);
     }

@@ -48,9 +48,9 @@ public class LessonStatementResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
-        Set<String> enabledLanguages = lessonStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
+        Set<String> enabledLanguages = statementStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
         String language = resolveStatementLanguage(req, actor, lesson, enabledLanguages);
-        LessonStatement statement = lessonStore.getStatement(actor.getUserJid(), lesson.getJid(), language);
+        LessonStatement statement = statementStore.getStatement(actor.getUserJid(), lesson.getJid(), language);
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("view");
@@ -65,9 +65,9 @@ public class LessonStatementResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
-        Set<String> enabledLanguages = lessonStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
+        Set<String> enabledLanguages = statementStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
         String language = resolveStatementLanguage(req, actor, lesson, enabledLanguages);
-        LessonStatement statement = lessonStore.getStatement(actor.getUserJid(), lesson.getJid(), language);
+        LessonStatement statement = statementStore.getStatement(actor.getUserJid(), lesson.getJid(), language);
 
         EditStatementForm form = new EditStatementForm();
         form.title = statement.getTitle();
@@ -90,11 +90,11 @@ public class LessonStatementResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        Set<String> enabledLanguages = lessonStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
+        Set<String> enabledLanguages = statementStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
         String language = resolveStatementLanguage(req, actor, lesson, enabledLanguages);
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
-        lessonStore.updateStatement(actor.getUserJid(), lesson.getJid(), language, new LessonStatement.Builder()
+        statementStore.updateStatement(actor.getUserJid(), lesson.getJid(), language, new LessonStatement.Builder()
                 .title(form.title)
                 .text(form.text)
                 .build());
@@ -110,7 +110,7 @@ public class LessonStatementResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
-        List<FileInfo> mediaFiles = lessonStore.getStatementMediaFiles(actor.getUserJid(), lesson.getJid());
+        List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actor.getUserJid(), lesson.getJid());
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("media");
@@ -134,10 +134,10 @@ public class LessonStatementResource extends BaseLessonResource {
 
         if (fileStream != null) {
             lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
-            lessonStore.uploadStatementMediaFile(actor.getUserJid(), lesson.getJid(), fileStream, fileDetails.getFileName());
+            statementStore.uploadStatementMediaFile(actor.getUserJid(), lesson.getJid(), fileStream, fileDetails.getFileName());
         } else if (fileZippedStream != null) {
             lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
-            lessonStore.uploadStatementMediaFileZipped(actor.getUserJid(), lesson.getJid(), fileZippedStream);
+            statementStore.uploadStatementMediaFileZipped(actor.getUserJid(), lesson.getJid(), fileZippedStream);
         }
 
         return redirect("/lessons/" + lessonId + "/statements/media");
@@ -155,7 +155,7 @@ public class LessonStatementResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
-        String mediaUrl = lessonStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), filename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), filename);
         return ServiceUtils.buildDownloadResponse(mediaUrl);
     }
 
@@ -168,8 +168,8 @@ public class LessonStatementResource extends BaseLessonResource {
         checkAllowed(roleChecker.canView(actor, lesson));
 
         Map<String, StatementLanguageStatus>
-                availableLanguages = lessonStore.getAvailableLanguages(actor.getUserJid(), lesson.getJid());
-        String defaultLanguage = lessonStore.getDefaultLanguage(actor.getUserJid(), lesson.getJid());
+                availableLanguages = statementStore.getAvailableLanguages(actor.getUserJid(), lesson.getJid());
+        String defaultLanguage = statementStore.getDefaultLanguage(actor.getUserJid(), lesson.getJid());
 
         HtmlTemplate template = newLessonStatementTemplate(actor, lesson);
         template.setActiveSecondaryTab("languages");
@@ -193,7 +193,7 @@ public class LessonStatementResource extends BaseLessonResource {
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
-        lessonStore.addLanguage(actor.getUserJid(), lesson.getJid(), language);
+        statementStore.addLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return redirect("/lessons/" + lessonId + "/statements/languages");
     }
@@ -215,7 +215,7 @@ public class LessonStatementResource extends BaseLessonResource {
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
-        lessonStore.enableLanguage(actor.getUserJid(), lesson.getJid(), language);
+        statementStore.enableLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return redirect("/lessons/" + lessonId + "/statements/languages");
     }
@@ -237,7 +237,7 @@ public class LessonStatementResource extends BaseLessonResource {
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
-        lessonStore.disableLanguage(actor.getUserJid(), lesson.getJid(), language);
+        statementStore.disableLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return redirect("/lessons/" + lessonId + "/statements/languages");
     }
@@ -259,7 +259,7 @@ public class LessonStatementResource extends BaseLessonResource {
         }
 
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
-        lessonStore.makeDefaultLanguage(actor.getUserJid(), lesson.getJid(), language);
+        statementStore.makeDefaultLanguage(actor.getUserJid(), lesson.getJid(), language);
 
         return redirect("/lessons/" + lessonId + "/statements/languages");
     }

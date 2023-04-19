@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon.lesson;
 import java.util.Map;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.AbstractSandalphonController;
@@ -12,10 +13,12 @@ import play.mvc.Result;
 
 public class AbstractLessonController extends AbstractSandalphonController {
     private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
     private final LessonRoleChecker lessonRoleChecker;
 
-    protected AbstractLessonController(LessonStore lessonStore, LessonRoleChecker lessonRoleChecker) {
+    protected AbstractLessonController(LessonStore lessonStore, LessonStatementStore statementStore, LessonRoleChecker lessonRoleChecker) {
         this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
         this.lessonRoleChecker = lessonRoleChecker;
     }
 
@@ -23,12 +26,12 @@ public class AbstractLessonController extends AbstractSandalphonController {
         String userJid = getUserJid(req);
         String currentLanguage = getCurrentStatementLanguage(req);
         Map<String, StatementLanguageStatus> availableLanguages =
-                lessonStore.getAvailableLanguages(userJid, lesson.getJid());
+                statementStore.getAvailableLanguages(userJid, lesson.getJid());
 
         if (currentLanguage == null
                 || !availableLanguages.containsKey(currentLanguage)
                 || availableLanguages.get(currentLanguage) == StatementLanguageStatus.DISABLED) {
-            return lessonStore.getDefaultLanguage(userJid, lesson.getJid());
+            return statementStore.getDefaultLanguage(userJid, lesson.getJid());
         }
         return currentLanguage;
     }

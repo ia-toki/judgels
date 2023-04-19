@@ -16,6 +16,8 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
@@ -38,12 +40,14 @@ import play.mvc.Result;
 @Singleton
 public class ProblemStatementController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
     private final ProblemRoleChecker problemRoleChecker;
 
     @Inject
-    public ProblemStatementController(ProblemStore problemStore, ProblemRoleChecker problemRoleChecker) {
-        super(problemStore, problemRoleChecker);
+    public ProblemStatementController(ProblemStore problemStore, ProblemStatementStore statementStore, ProblemEditorialStore editorialStore, ProblemRoleChecker problemRoleChecker) {
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
         this.problemRoleChecker = problemRoleChecker;
     }
 
@@ -68,7 +72,7 @@ public class ProblemStatementController extends AbstractProblemController {
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatementInLanguage(req, problem, language));
 
-        ProblemStatement statement = problemStore.getStatement(actorJid, problem.getJid(), language);
+        ProblemStatement statement = statementStore.getStatement(actorJid, problem.getJid(), language);
 
         UpdateStatementForm updateStatementData = new UpdateStatementForm();
         updateStatementData.title = statement.getTitle();
@@ -104,7 +108,7 @@ public class ProblemStatementController extends AbstractProblemController {
                 .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                 .build();
 
-        problemStore.updateStatement(actorJid, problem.getJid(), language, statement);
+        statementStore.updateStatement(actorJid, problem.getJid(), language, statement);
 
         return redirect(routes.ProblemStatementController.viewStatement(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));
@@ -118,7 +122,7 @@ public class ProblemStatementController extends AbstractProblemController {
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = problemRoleChecker.isAllowedToUploadStatementResources(req, problem);
-        List<FileInfo> mediaFiles = problemStore.getStatementMediaFiles(actorJid, problem.getJid());
+        List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actorJid, problem.getJid());
 
         return showListStatementMediaFiles(req, uploadFileForm, problem, mediaFiles, isAllowedToUploadMediaFiles);
     }
@@ -137,7 +141,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadStatementMediaFile(actorJid, problem.getJid(), new FileInputStream(mediaFile), file.getFilename());
+            statementStore.uploadStatementMediaFile(actorJid, problem.getJid(), new FileInputStream(mediaFile), file.getFilename());
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
         }
@@ -146,7 +150,7 @@ public class ProblemStatementController extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), new FileInputStream(mediaFile));
+            statementStore.uploadStatementMediaFileZipped(actorJid, problem.getJid(), new FileInputStream(mediaFile));
 
             return redirect(routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
         }
@@ -161,8 +165,8 @@ public class ProblemStatementController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
-        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getStatementAvailableLanguages(actorJid, problem.getJid());
-        String defaultLanguage = problemStore.getStatementDefaultLanguage(actorJid, problem.getJid());
+        Map<String, StatementLanguageStatus> availableLanguages = statementStore.getStatementAvailableLanguages(actorJid, problem.getJid());
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(actorJid, problem.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
@@ -187,7 +191,7 @@ public class ProblemStatementController extends AbstractProblemController {
             throw new IllegalStateException("Languages is not from list.");
         }
 
-        problemStore.addStatementLanguage(actorJid, problem.getJid(), languageCode);
+        statementStore.addStatementLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
@@ -205,7 +209,7 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.enableStatementLanguage(actorJid, problem.getJid(), languageCode);
+        statementStore.enableStatementLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }
@@ -224,10 +228,10 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.disableStatementLanguage(actorJid, problem.getJid(), languageCode);
+        statementStore.disableStatementLanguage(actorJid, problem.getJid(), languageCode);
 
         if (getCurrentStatementLanguage(req).equals(languageCode)) {
-            language = problemStore.getStatementDefaultLanguage(actorJid, problem.getJid());
+            language = statementStore.getStatementDefaultLanguage(actorJid, problem.getJid());
         }
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()))
@@ -247,7 +251,7 @@ public class ProblemStatementController extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.makeStatementDefaultLanguage(actorJid, problem.getJid(), languageCode);
+        statementStore.makeStatementDefaultLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemStatementController.listStatementLanguages(problem.getId()));
     }

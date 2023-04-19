@@ -15,9 +15,9 @@ import judgels.sandalphon.api.problem.bundle.BundleItemsConfig;
 import judgels.sandalphon.api.problem.bundle.ItemConfig;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.problem.base.ProblemFs;
-import judgels.sandalphon.problem.bundle.AbstractBundleProblemStore;
+import judgels.sandalphon.problem.bundle.BaseBundleProblemStore;
 
-public class BundleItemStore extends AbstractBundleProblemStore {
+public class BundleItemStore extends BaseBundleProblemStore {
     private final ObjectMapper mapper;
     private final FileSystem problemFs;
 

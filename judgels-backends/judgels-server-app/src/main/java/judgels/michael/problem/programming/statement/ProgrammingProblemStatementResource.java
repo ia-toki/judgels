@@ -32,9 +32,9 @@ public class ProgrammingProblemStatementResource extends BaseProgrammingProblemR
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Set<String> enabledLanguages = problemStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
-        ProblemStatement statement = problemStore.getStatement(actor.getUserJid(), problem.getJid(), language);
+        ProblemStatement statement = statementStore.getStatement(actor.getUserJid(), problem.getJid(), language);
 
         String gradingEngine = programmingProblemStore.getGradingEngine(actor.getUserJid(), problem.getJid());
         GradingConfig gradingConfig = programmingProblemStore.getGradingConfig(actor.getUserJid(), problem.getJid());

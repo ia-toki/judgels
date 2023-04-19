@@ -12,17 +12,21 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemRoleChecker;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 
 public abstract class BaseProblemResource extends BaseResource {
-    @Inject protected ProblemStore problemStore;
     @Inject protected ProblemRoleChecker roleChecker;
+    @Inject protected ProblemStore problemStore;
+    @Inject protected ProblemStatementStore statementStore;
+    @Inject protected ProblemEditorialStore editorialStore;
     @Inject protected UserStore userStore;
     @Inject protected ProfileStore profileStore;
 
     protected String resolveStatementLanguage(HttpServletRequest req, Actor actor, Problem problem, Set<String> enabledLanguages) {
         String language = (String) req.getSession().getAttribute("statementLanguage");
         if (language == null || !enabledLanguages.contains(language)) {
-            language = problemStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+            language = statementStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
         }
 
         setCurrentStatementLanguage(req, language);
@@ -32,7 +36,7 @@ public abstract class BaseProblemResource extends BaseResource {
     protected String resolveEditorialLanguage(HttpServletRequest req, Actor actor, Problem problem, Set<String> enabledLanguages) {
         String language = (String) req.getSession().getAttribute("statementLanguage");
         if (language == null || !enabledLanguages.contains(language)) {
-            language = problemStore.getEditorialDefaultLanguage(actor.getUserJid(), problem.getJid());
+            language = editorialStore.getEditorialDefaultLanguage(actor.getUserJid(), problem.getJid());
         }
 
         setCurrentStatementLanguage(req, language);

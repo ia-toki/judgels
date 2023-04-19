@@ -3,13 +3,12 @@ package org.iatoki.judgels.sandalphon.problem.programming;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemStore;
-import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
-import judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
@@ -24,18 +23,22 @@ import play.mvc.Result;
 @Singleton
 public final class ProgrammingProblemController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
     private final ProgrammingProblemStore programmingProblemStore;
     private final ProblemTagStore problemTagStore;
 
     @Inject
     public ProgrammingProblemController(
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemStore programmingProblemStore,
             ProblemTagStore problemTagStore) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
         this.programmingProblemStore = programmingProblemStore;
         this.problemTagStore = problemTagStore;
     }
@@ -73,12 +76,9 @@ public final class ProgrammingProblemController extends AbstractProblemControlle
 
         ProgrammingProblemCreateForm data = form.get();
 
-        Problem problem = problemStore.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode);
-        ProblemStatement statement = new ProblemStatement.Builder()
-                .title(ProblemStatementUtils.getDefaultTitle(languageCode))
-                .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
-                .build();
-        problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
+        Problem problem = problemStore.createProblem(ProblemType.PROGRAMMING, slug, additionalNote);
+        statementStore.initStatements(problem.getJid(), ProblemType.PROGRAMMING, languageCode);
+
         programmingProblemStore.initProgrammingProblem(problem.getJid(), data.gradingEngineName);
 
         problemStore.initRepository(actorJid, problem.getJid());

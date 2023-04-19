@@ -12,6 +12,8 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
@@ -26,17 +28,21 @@ import play.mvc.Result;
 @Singleton
 public final class ProgrammingProblemStatementController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final ProgrammingProblemStore programmingProblemStore;
 
     @Inject
     public ProgrammingProblemStatementController(
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemStore programmingProblemStore) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
         this.problemRoleChecker = problemRoleChecker;
         this.programmingProblemStore = programmingProblemStore;
     }
@@ -48,7 +54,7 @@ public final class ProgrammingProblemStatementController extends AbstractProblem
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
-        ProblemStatement statement = problemStore.getStatement(actorJid, problem.getJid(), language);
+        ProblemStatement statement = statementStore.getStatement(actorJid, problem.getJid(), language);
 
         String engine = programmingProblemStore.getGradingEngine(actorJid, problem.getJid());
         GradingConfig config = programmingProblemStore.getGradingConfig(actorJid, problem.getJid());

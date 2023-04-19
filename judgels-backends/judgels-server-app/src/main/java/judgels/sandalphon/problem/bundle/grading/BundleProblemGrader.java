@@ -10,26 +10,26 @@ import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.submission.bundle.BundleAnswer;
 import judgels.sandalphon.api.submission.bundle.BundleGradingResult;
 import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
-import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.bundle.item.BundleItemStore;
 import judgels.sandalphon.problem.bundle.item.ItemEngine;
 import judgels.sandalphon.problem.bundle.item.ItemEngineRegistry;
 
 public final class BundleProblemGrader {
     private final BundleItemStore itemStore;
-    private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
 
     @Inject
-    public BundleProblemGrader(BundleItemStore itemStore, ProblemStore problemStore) {
+    public BundleProblemGrader(BundleItemStore itemStore, ProblemStatementStore statementStore) {
         this.itemStore = itemStore;
-        this.problemStore = problemStore;
+        this.statementStore = statementStore;
     }
 
     public BundleGradingResult grade(String problemJid, BundleAnswer answer) {
         List<BundleItem> items = itemStore.getNumberedItems(null, problemJid);
         Map<String, ItemGradingResult> details = new HashMap<>();
 
-        String defaultLanguage = problemStore.getStatementDefaultLanguage(null, problemJid);
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(null, problemJid);
 
         double totalScore = 0;
         for (BundleItem item : items) {

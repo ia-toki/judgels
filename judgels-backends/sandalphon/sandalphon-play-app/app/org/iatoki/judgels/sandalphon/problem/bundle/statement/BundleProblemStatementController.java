@@ -14,6 +14,8 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
@@ -30,6 +32,7 @@ import play.twirl.api.Html;
 public final class BundleProblemStatementController extends AbstractProblemController {
     private final ObjectMapper mapper;
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final BundleItemStore bundleItemStore;
 
@@ -37,12 +40,15 @@ public final class BundleProblemStatementController extends AbstractProblemContr
     public BundleProblemStatementController(
             ObjectMapper mapper,
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemRoleChecker problemRoleChecker,
             BundleItemStore bundleItemStore) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.mapper = mapper;
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
         this.problemRoleChecker = problemRoleChecker;
         this.bundleItemStore = bundleItemStore;
     }
@@ -54,7 +60,7 @@ public final class BundleProblemStatementController extends AbstractProblemContr
         String language = getStatementLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
-        ProblemStatement statement = problemStore.getStatement(actorJid, problem.getJid(), language);
+        ProblemStatement statement = statementStore.getStatement(actorJid, problem.getJid(), language);
 
         boolean isAllowedToSubmitByPartner = problemRoleChecker.isAllowedToSubmit(req, problem);
         boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
@@ -82,7 +88,7 @@ public final class BundleProblemStatementController extends AbstractProblemContr
                                 language)));
             } catch (RuntimeException e) {
                 if (e.getCause() instanceof IOException) {
-                    language = problemStore.getStatementDefaultLanguage(actorJid, problem.getJid());
+                    language = statementStore.getStatementDefaultLanguage(actorJid, problem.getJid());
                     htmlBuilder.add(adapter.renderViewHtml(
                             item,
                             bundleItemStore.getItemConfInProblemWithCloneByJid(

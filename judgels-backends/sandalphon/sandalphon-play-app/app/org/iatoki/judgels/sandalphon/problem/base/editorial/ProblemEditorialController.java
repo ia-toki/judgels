@@ -14,6 +14,8 @@ import judgels.fs.FileInfo;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemEditorial;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
@@ -37,12 +39,14 @@ import play.mvc.Result;
 
 public class ProblemEditorialController  extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemEditorialStore editorialStore;
     private final ProblemRoleChecker problemRoleChecker;
 
     @Inject
-    public ProblemEditorialController(ProblemStore problemStore, ProblemRoleChecker problemRoleChecker) {
-        super(problemStore, problemRoleChecker);
+    public ProblemEditorialController(ProblemStore problemStore, ProblemStatementStore statementStore, ProblemEditorialStore editorialStore, ProblemRoleChecker problemRoleChecker) {
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.editorialStore = editorialStore;
         this.problemRoleChecker = problemRoleChecker;
     }
 
@@ -51,14 +55,14 @@ public class ProblemEditorialController  extends AbstractProblemController {
         String actorJid = getUserJid(req);
         Problem problem = checkFound(problemStore.findProblemById(problemId));
 
-        if (!problemStore.hasEditorial(actorJid, problem.getJid())) {
+        if (!editorialStore.hasEditorial(actorJid, problem.getJid())) {
             return redirect(routes.ProblemEditorialController.createEditorial(problem.getId()));
         }
 
         String language = getEditorialLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToViewStatement(req, problem, language));
 
-        ProblemEditorial editorial = problemStore.getEditorial(actorJid, problem.getJid(), language);
+        ProblemEditorial editorial = editorialStore.getEditorial(actorJid, problem.getJid(), language);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(viewEditorialView.render(editorial));
@@ -100,7 +104,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
 
         EditorialCreateForm data = form.get();
 
-        problemStore.initEditorials(actorJid, problem.getJid(), data.initLanguageCode);
+        editorialStore.initEditorials(actorJid, problem.getJid(), data.initLanguageCode);
 
         return redirect(routes.ProblemEditorialController.editEditorial(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(data.initLanguageCode));
@@ -114,7 +118,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
         String language = getEditorialLanguage(req, problem);
         checkAllowed(problemRoleChecker.isAllowedToUpdateStatementInLanguage(req, problem, language));
 
-        ProblemEditorial editorial = problemStore.getEditorial(actorJid, problem.getJid(), language);
+        ProblemEditorial editorial = editorialStore.getEditorial(actorJid, problem.getJid(), language);
 
         EditorialEditForm data = new EditorialEditForm();
         data.text = editorial.getText();
@@ -148,7 +152,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
                 .text(JudgelsPlayUtils.toSafeHtml(data.text))
                 .build();
 
-        problemStore.updateEditorial(actorJid, problem.getJid(), language, editorial);
+        editorialStore.updateEditorial(actorJid, problem.getJid(), language, editorial);
 
         return redirect(routes.ProblemEditorialController.viewEditorial(problem.getId()))
                 .addingToSession(req, newCurrentStatementLanguage(language));
@@ -162,7 +166,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
 
         Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = problemRoleChecker.isAllowedToUploadStatementResources(req, problem);
-        List<FileInfo> mediaFiles = problemStore.getEditorialMediaFiles(actorJid, problem.getJid());
+        List<FileInfo> mediaFiles = editorialStore.getEditorialMediaFiles(actorJid, problem.getJid());
 
         return showListEditorialMediaFiles(req, form, problem, mediaFiles, isAllowedToUploadMediaFiles);
     }
@@ -181,7 +185,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadEditorialMediaFile(actorJid, problem.getJid(), new FileInputStream(mediaFile), file.getFilename());
+            editorialStore.uploadEditorialMediaFile(actorJid, problem.getJid(), new FileInputStream(mediaFile), file.getFilename());
 
             return redirect(routes.ProblemEditorialController.listEditorialMediaFiles(problem.getId()));
         }
@@ -190,7 +194,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
         if (file != null) {
             File mediaFile = file.getRef().path().toFile();
             problemStore.createUserCloneIfNotExists(actorJid, problem.getJid());
-            problemStore.uploadEditorialMediaFileZipped(actorJid, problem.getJid(), new FileInputStream(mediaFile));
+            editorialStore.uploadEditorialMediaFileZipped(actorJid, problem.getJid(), new FileInputStream(mediaFile));
 
             return redirect(routes.ProblemEditorialController.listEditorialMediaFiles(problem.getId()));
         }
@@ -206,8 +210,8 @@ public class ProblemEditorialController  extends AbstractProblemController {
         checkAllowed(problemRoleChecker.isAllowedToManageStatementLanguages(req, problem));
 
         Map<String, StatementLanguageStatus>
-                availableLanguages = problemStore.getEditorialAvailableLanguages(actorJid, problem.getJid());
-        String defaultLanguage = problemStore.getEditorialDefaultLanguage(actorJid, problem.getJid());
+                availableLanguages = editorialStore.getEditorialAvailableLanguages(actorJid, problem.getJid());
+        String defaultLanguage = editorialStore.getEditorialDefaultLanguage(actorJid, problem.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listEditorialLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
@@ -232,7 +236,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
             throw new IllegalStateException("Languages is not from list.");
         }
 
-        problemStore.addEditorialLanguage(actorJid, problem.getJid(), languageCode);
+        editorialStore.addEditorialLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemEditorialController.listEditorialLanguages(problem.getId()));
     }
@@ -250,7 +254,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.enableEditorialLanguage(actorJid, problem.getJid(), languageCode);
+        editorialStore.enableEditorialLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemEditorialController.listEditorialLanguages(problem.getId()));
     }
@@ -269,10 +273,10 @@ public class ProblemEditorialController  extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.disableEditorialLanguage(actorJid, problem.getJid(), languageCode);
+        editorialStore.disableEditorialLanguage(actorJid, problem.getJid(), languageCode);
 
         if (getCurrentStatementLanguage(req).equals(languageCode)) {
-            language = problemStore.getEditorialDefaultLanguage(actorJid, problem.getJid());
+            language = editorialStore.getEditorialDefaultLanguage(actorJid, problem.getJid());
         }
 
         return redirect(routes.ProblemEditorialController.listEditorialLanguages(problem.getId()))
@@ -292,7 +296,7 @@ public class ProblemEditorialController  extends AbstractProblemController {
             return notFound();
         }
 
-        problemStore.makeEditorialDefaultLanguage(actorJid, problem.getJid(), languageCode);
+        editorialStore.makeEditorialDefaultLanguage(actorJid, problem.getJid(), languageCode);
 
         return redirect(routes.ProblemEditorialController.listEditorialLanguages(problem.getId()));
     }

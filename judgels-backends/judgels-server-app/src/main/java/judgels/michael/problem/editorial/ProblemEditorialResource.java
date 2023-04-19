@@ -49,7 +49,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        if (!problemStore.hasEditorial(actor.getUserJid(), problem.getJid())) {
+        if (!editorialStore.hasEditorial(actor.getUserJid(), problem.getJid())) {
             NewEditorialForm form = new NewEditorialForm();
             form.initialLanguage = "en-US";
 
@@ -57,9 +57,9 @@ public class ProblemEditorialResource extends BaseProblemResource {
             return new NewEditorialView(template, form, roleChecker.canEdit(actor, problem));
         }
 
-        Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = editorialStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveEditorialLanguage(req, actor, problem, enabledLanguages);
-        ProblemEditorial editorial = problemStore.getEditorial(actor.getUserJid(), problem.getJid(), language);
+        ProblemEditorial editorial = editorialStore.getEditorial(actor.getUserJid(), problem.getJid(), language);
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("view");
@@ -79,7 +79,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.initEditorials(actor.getUserJid(), problem.getJid(), form.initialLanguage);
+        editorialStore.initEditorials(actor.getUserJid(), problem.getJid(), form.initialLanguage);
 
         setCurrentStatementLanguage(req, form.initialLanguage);
         return redirect("/problems/" + problemId + "/editorials/edit");
@@ -93,9 +93,9 @@ public class ProblemEditorialResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = editorialStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveEditorialLanguage(req, actor, problem, enabledLanguages);
-        ProblemEditorial editorial = problemStore.getEditorial(actor.getUserJid(), problem.getJid(), language);
+        ProblemEditorial editorial = editorialStore.getEditorial(actor.getUserJid(), problem.getJid(), language);
 
         EditStatementForm form = new EditStatementForm();
         form.text = editorial.getText();
@@ -117,11 +117,11 @@ public class ProblemEditorialResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        Set<String> enabledLanguages = problemStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
+        Set<String> enabledLanguages = editorialStore.getEditorialEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveEditorialLanguage(req, actor, problem, enabledLanguages);
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.updateEditorial(actor.getUserJid(), problem.getJid(), language, new ProblemEditorial.Builder()
+        editorialStore.updateEditorial(actor.getUserJid(), problem.getJid(), language, new ProblemEditorial.Builder()
                 .text(form.text)
                 .build());
 
@@ -136,7 +136,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        List<FileInfo> mediaFiles = problemStore.getEditorialMediaFiles(actor.getUserJid(), problem.getJid());
+        List<FileInfo> mediaFiles = editorialStore.getEditorialMediaFiles(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("media");
@@ -160,10 +160,10 @@ public class ProblemEditorialResource extends BaseProblemResource {
 
         if (fileStream != null) {
             problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-            problemStore.uploadEditorialMediaFile(actor.getUserJid(), problem.getJid(), fileStream, fileDetails.getFileName());
+            editorialStore.uploadEditorialMediaFile(actor.getUserJid(), problem.getJid(), fileStream, fileDetails.getFileName());
         } else if (fileZippedStream != null) {
             problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-            problemStore.uploadEditorialMediaFileZipped(actor.getUserJid(), problem.getJid(), fileZippedStream);
+            editorialStore.uploadEditorialMediaFileZipped(actor.getUserJid(), problem.getJid(), fileZippedStream);
         }
 
         return redirect("/problems/" + problemId + "/editorials/media");
@@ -181,7 +181,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        String mediaUrl = problemStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
+        String mediaUrl = editorialStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
         return ServiceUtils.buildDownloadResponse(mediaUrl);
     }
 
@@ -194,8 +194,8 @@ public class ProblemEditorialResource extends BaseProblemResource {
         checkAllowed(roleChecker.canView(actor, problem));
 
         Map<String, StatementLanguageStatus>
-                availableLanguages = problemStore.getEditorialAvailableLanguages(actor.getUserJid(), problem.getJid());
-        String defaultLanguage = problemStore.getEditorialDefaultLanguage(actor.getUserJid(), problem.getJid());
+                availableLanguages = editorialStore.getEditorialAvailableLanguages(actor.getUserJid(), problem.getJid());
+        String defaultLanguage = editorialStore.getEditorialDefaultLanguage(actor.getUserJid(), problem.getJid());
 
         HtmlTemplate template = newProblemEditorialTemplate(actor, problem);
         template.setActiveSecondaryTab("languages");
@@ -219,7 +219,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.addEditorialLanguage(actor.getUserJid(), problem.getJid(), language);
+        editorialStore.addEditorialLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/editorials/languages");
     }
@@ -241,7 +241,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.enableEditorialLanguage(actor.getUserJid(), problem.getJid(), language);
+        editorialStore.enableEditorialLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/editorials/languages");
     }
@@ -263,7 +263,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.disableEditorialLanguage(actor.getUserJid(), problem.getJid(), language);
+        editorialStore.disableEditorialLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/editorials/languages");
     }
@@ -285,7 +285,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         }
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
-        problemStore.makeEditorialDefaultLanguage(actor.getUserJid(), problem.getJid(), language);
+        editorialStore.makeEditorialDefaultLanguage(actor.getUserJid(), problem.getJid(), language);
 
         return redirect("/problems/" + problemId + "/editorials/languages");
     }

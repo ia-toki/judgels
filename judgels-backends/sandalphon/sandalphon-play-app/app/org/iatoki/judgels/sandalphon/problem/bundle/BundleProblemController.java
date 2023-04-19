@@ -3,12 +3,11 @@ package org.iatoki.judgels.sandalphon.problem.bundle;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemStore;
-import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.bundle.BundleProblemStore;
-import judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
 import play.db.jpa.Transactional;
@@ -18,17 +17,21 @@ import play.mvc.Result;
 @Singleton
 public final class BundleProblemController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
     private final BundleProblemStore bundleProblemStore;
 
     @Inject
     public BundleProblemController(
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemRoleChecker problemRoleChecker,
             BundleProblemStore bundleProblemStore) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.bundleProblemStore = bundleProblemStore;
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
     }
 
     @Transactional
@@ -43,13 +46,9 @@ public final class BundleProblemController extends AbstractProblemController {
         String additionalNote = getJustCreatedProblemAdditionalNote(req);
         String languageCode = getJustCreatedProblemInitLanguage(req);
 
-        Problem problem = problemStore.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode);
-        ProblemStatement statement = new ProblemStatement.Builder()
-                .title(ProblemStatementUtils.getDefaultTitle(languageCode))
-                .text(BundleProblemStatementUtils.getDefaultStatement(languageCode))
-                .build();
+        Problem problem = problemStore.createProblem(ProblemType.BUNDLE, slug, additionalNote);
+        statementStore.initStatements(problem.getJid(), ProblemType.BUNDLE, languageCode);
 
-        problemStore.updateStatement(null, problem.getJid(), languageCode, statement);
         bundleProblemStore.initBundleProblem(problem.getJid());
 
         problemStore.initRepository(actorJid, problem.getJid());

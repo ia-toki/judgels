@@ -14,6 +14,8 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.GitCommit;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
+import judgels.sandalphon.lesson.version.LessonVersionStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonRoleChecker;
@@ -30,17 +32,21 @@ import play.mvc.Result;
 @Singleton
 public final class LessonVersionController extends AbstractLessonController {
     private final LessonStore lessonStore;
+    private final LessonVersionStore versionStore;
     private final LessonRoleChecker lessonRoleChecker;
     private final ProfileService profileService;
 
     @Inject
     public LessonVersionController(
             LessonStore lessonStore,
+            LessonStatementStore statementStore,
+            LessonVersionStore versionStore,
             LessonRoleChecker lessonRoleChecker,
             ProfileService profileService) {
 
-        super(lessonStore, lessonRoleChecker);
+        super(lessonStore, statementStore, lessonRoleChecker);
         this.lessonStore = lessonStore;
+        this.versionStore = versionStore;
         this.lessonRoleChecker = lessonRoleChecker;
         this.profileService = profileService;
     }
@@ -51,7 +57,7 @@ public final class LessonVersionController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAllowedToViewVersionHistory(req, lesson));
 
-        List<GitCommit> versions = lessonStore.getVersions(actorJid, lesson.getJid());
+        List<GitCommit> versions = versionStore.getVersions(actorJid, lesson.getJid());
 
         Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -74,7 +80,7 @@ public final class LessonVersionController extends AbstractLessonController {
         boolean isClean = !lessonStore.userCloneExists(actorJid, lesson.getJid());
         checkAllowed(lessonRoleChecker.isAllowedToRestoreVersionHistory(req, lesson) && isClean);
 
-        lessonStore.restore(lesson.getJid(), hash);
+        versionStore.restore(lesson.getJid(), hash);
 
         return redirect(routes.LessonVersionController.listVersionHistory(lesson.getId()));
     }
@@ -109,14 +115,14 @@ public final class LessonVersionController extends AbstractLessonController {
         VersionCommitForm data = form.get();
         String localChangesErrorFlash = "";
 
-        if (lessonStore.fetchUserClone(actorJid, lesson.getJid())) {
+        if (versionStore.fetchUserClone(actorJid, lesson.getJid())) {
             localChangesErrorFlash = "Your working copy has diverged from the master copy. Please update your working copy.";
-        } else if (!lessonStore.commitThenMergeUserClone(actorJid, lesson.getJid(), data.title, data.description)) {
+        } else if (!versionStore.commitThenMergeUserClone(actorJid, lesson.getJid(), data.title, data.description)) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        } else if (!lessonStore.pushUserClone(actorJid, lesson.getJid())) {
+        } else if (!versionStore.pushUserClone(actorJid, lesson.getJid())) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         } else {
-            lessonStore.discardUserClone(actorJid, lesson.getJid());
+            versionStore.discardUserClone(actorJid, lesson.getJid());
         }
 
         return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()))
@@ -129,10 +135,10 @@ public final class LessonVersionController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
-        lessonStore.fetchUserClone(actorJid, lesson.getJid());
+        versionStore.fetchUserClone(actorJid, lesson.getJid());
 
         String localChangesErrorFlash = "";
-        if (!lessonStore.updateUserClone(actorJid, lesson.getJid())) {
+        if (!versionStore.updateUserClone(actorJid, lesson.getJid())) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }
 
@@ -146,7 +152,7 @@ public final class LessonVersionController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isPartnerOrAbove(req, lesson));
 
-        lessonStore.discardUserClone(actorJid, lesson.getJid());
+        versionStore.discardUserClone(actorJid, lesson.getJid());
 
         return redirect(routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
     }

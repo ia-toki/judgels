@@ -29,7 +29,7 @@ public abstract class ProblemEditorialRenderResources extends BaseProblemResourc
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        String mediaUrl = problemStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
+        String mediaUrl = editorialStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
         return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
     }
 

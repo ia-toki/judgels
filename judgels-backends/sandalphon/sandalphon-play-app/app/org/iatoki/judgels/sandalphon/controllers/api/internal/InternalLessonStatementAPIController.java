@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import org.iatoki.judgels.jophiel.controllers.Secured;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import play.db.jpa.Transactional;
@@ -18,11 +19,13 @@ import play.mvc.Security;
 @Security.Authenticated(Secured.class)
 public final class InternalLessonStatementAPIController extends AbstractJudgelsAPIController {
     private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
 
     @Inject
-    public InternalLessonStatementAPIController(ObjectMapper mapper, LessonStore lessonStore) {
+    public InternalLessonStatementAPIController(ObjectMapper mapper, LessonStore lessonStore, LessonStatementStore statementStore) {
         super(mapper);
         this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
     }
 
     @Transactional(readOnly = true)
@@ -30,7 +33,7 @@ public final class InternalLessonStatementAPIController extends AbstractJudgelsA
         String actorJid = req.attrs().get(Security.USERNAME);
 
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
-        String mediaUrl = lessonStore.getStatementMediaFileURL(actorJid, lesson.getJid(), mediaFilename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actorJid, lesson.getJid(), mediaFilename);
 
         return okAsImage(req, mediaUrl);
     }
@@ -40,7 +43,7 @@ public final class InternalLessonStatementAPIController extends AbstractJudgelsA
         String actorJid = req.attrs().get(Security.USERNAME);
 
         Lesson lesson = checkFound(lessonStore.findLessonById(id));
-        String mediaUrl = lessonStore.getStatementMediaFileURL(actorJid, lesson.getJid(), filename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actorJid, lesson.getJid(), filename);
 
         return okAsDownload(mediaUrl);
     }

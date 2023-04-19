@@ -14,6 +14,7 @@ import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import play.db.jpa.Transactional;
@@ -26,16 +27,19 @@ import play.mvc.Security;
 public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIController {
     private final ClientUserService userService;
     private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
 
     @Inject
     public ClientLessonAPIControllerV2(
             ObjectMapper mapper,
             ClientUserService userService,
-            LessonStore lessonStore) {
+            LessonStore lessonStore,
+            LessonStatementStore statementStore) {
 
         super(mapper);
         this.userService = userService;
         this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
     }
 
     @Transactional(readOnly = true)
@@ -54,7 +58,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
         }
 
         String language = sanitizeLanguageCode(lessonJid, req.getQueryString("language"));
-        LessonStatement statement = lessonStore.getStatement(null, lessonJid, language);
+        LessonStatement statement = statementStore.getStatement(null, lessonJid, language);
 
         return okAsJson(req, new judgels.sandalphon.api.lesson.LessonStatement.Builder()
                 .title(statement.getTitle())
@@ -103,8 +107,8 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
 
         return new LessonInfo.Builder()
                 .slug(lesson.getSlug())
-                .defaultLanguage(simplifyLanguageCode(lessonStore.getDefaultLanguage(null, lessonJid)))
-                .titlesByLanguage(lessonStore.getTitlesByLanguage(null, lessonJid).entrySet()
+                .defaultLanguage(simplifyLanguageCode(statementStore.getDefaultLanguage(null, lessonJid)))
+                .titlesByLanguage(statementStore.getTitlesByLanguage(null, lessonJid).entrySet()
                         .stream()
                         .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
                 .build();
@@ -118,14 +122,14 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
 
 
     private String sanitizeLanguageCode(String lessonJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = lessonStore.getAvailableLanguages(null, lessonJid);
+        Map<String, StatementLanguageStatus> availableLanguages = statementStore.getAvailableLanguages(null, lessonJid);
         Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
 
         String lang = language;
         if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
-            lang = simplifyLanguageCode(lessonStore.getDefaultLanguage(null, lessonJid));
+            lang = simplifyLanguageCode(statementStore.getDefaultLanguage(null, lessonJid));
         }
 
         return simplifiedLanguages.get(lang);

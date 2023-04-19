@@ -1,30 +1,21 @@
 package judgels.sandalphon.lesson;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.Git;
-import judgels.sandalphon.GitCommit;
 import judgels.sandalphon.api.lesson.Lesson;
-import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import judgels.sandalphon.persistence.LessonDao;
@@ -33,38 +24,34 @@ import judgels.sandalphon.persistence.LessonModel_;
 import judgels.sandalphon.persistence.LessonPartnerDao;
 import judgels.sandalphon.persistence.LessonPartnerModel;
 import judgels.sandalphon.persistence.LessonPartnerModel_;
-import judgels.sandalphon.resource.StatementLanguageStatus;
 
-public final class LessonStore {
+public final class LessonStore extends BaseLessonStore {
     private final ObjectMapper mapper;
-    private final LessonDao lessonDao;
-    private final FileSystem lessonFs;
     private final Git lessonGit;
+    private final LessonDao lessonDao;
     private final LessonPartnerDao lessonPartnerDao;
 
     @Inject
     public LessonStore(
             ObjectMapper mapper,
-            LessonDao lessonDao,
             @LessonFs FileSystem lessonFs,
             @LessonGit Git lessonGit,
+            LessonDao lessonDao,
             LessonPartnerDao lessonPartnerDao) {
 
+        super(mapper, lessonFs);
         this.mapper = mapper;
-        this.lessonDao = lessonDao;
-        this.lessonFs = lessonFs;
         this.lessonGit = lessonGit;
+        this.lessonDao = lessonDao;
         this.lessonPartnerDao = lessonPartnerDao;
     }
 
-    public Lesson createLesson(String slug, String additionalNote, String initialLanguageCode) {
+    public Lesson createLesson(String slug, String additionalNote) {
         LessonModel model = new LessonModel();
         model.slug = slug;
         model.additionalNote = additionalNote;
 
         lessonDao.insert(model);
-
-        initStatements(model.jid, initialLanguageCode);
         lessonFs.createDirectory(getClonesDirPath(model.jid));
 
         return createLessonFromModel(model);
@@ -202,109 +189,6 @@ public final class LessonStore {
                 .build();
     }
 
-    public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String lessonJid) {
-        String languages = lessonFs.readFromFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid));
-        try {
-            return mapper.readValue(languages, new TypeReference<Map<String, StatementLanguageStatus>>() {});
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Set<String> getEnabledLanguages(String userJid, String lessonJid) {
-        return getAvailableLanguages(userJid, lessonJid)
-                .entrySet()
-                .stream()
-                .filter(e -> e.getValue() == StatementLanguageStatus.ENABLED)
-                .map(e -> e.getKey())
-                .collect(Collectors.toSet());
-    }
-
-    public void addLanguage(String userJid, String lessonJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
-        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
-
-        LessonStatement statement = getStatement(userJid, lessonJid, getDefaultLanguage(userJid, lessonJid));
-        lessonFs.writeToFile(getStatementTitleFilePath(userJid, lessonJid, language), statement.getTitle());
-        lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonJid, language), statement.getText());
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), writeObj(availableLanguages));
-    }
-
-    public void enableLanguage(String userJid, String lessonJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
-        availableLanguages.put(language, StatementLanguageStatus.ENABLED);
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), writeObj(availableLanguages));
-    }
-
-    public void disableLanguage(String userJid, String lessonJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
-        availableLanguages.put(language, StatementLanguageStatus.DISABLED);
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(userJid, lessonJid), writeObj(availableLanguages));
-    }
-
-    public void makeDefaultLanguage(String userJid, String lessonJid, String language) {
-        lessonFs.writeToFile(getStatementDefaultLanguageFilePath(userJid, lessonJid), language);
-    }
-
-    public String getDefaultLanguage(String userJid, String lessonJid) {
-        return lessonFs.readFromFile(getStatementDefaultLanguageFilePath(userJid, lessonJid));
-    }
-
-    public LessonStatement getStatement(String userJid, String lessonJid, String languageCode) {
-        String title = lessonFs.readFromFile(getStatementTitleFilePath(userJid, lessonJid, languageCode));
-        String text = lessonFs.readFromFile(getStatementTextFilePath(userJid, lessonJid, languageCode));
-
-        return new LessonStatement.Builder().title(title).text(text).build();
-    }
-
-    public Map<String, String> getTitlesByLanguage(String userJid, String lessonJid) {
-        Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
-
-        ImmutableMap.Builder<String, String> titlesByLanguageBuilder = ImmutableMap.builder();
-
-        for (Map.Entry<String, StatementLanguageStatus> entry : availableLanguages.entrySet()) {
-            if (entry.getValue() == StatementLanguageStatus.ENABLED) {
-                String title = lessonFs.readFromFile(getStatementTitleFilePath(userJid, lessonJid, entry.getKey()));
-                titlesByLanguageBuilder.put(entry.getKey(), title);
-            }
-        }
-
-        return titlesByLanguageBuilder.build();
-    }
-
-    public void updateStatement(String userJid, String lessonJid, String languageCode, LessonStatement statement) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        lessonFs.writeToFile(getStatementTitleFilePath(userJid, lessonModel.jid, languageCode), statement.getTitle());
-        lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonModel.jid, languageCode), statement.getText());
-    }
-
-    public void uploadStatementMediaFile(String userJid, String lessonJid, InputStream mediaFile, String filename) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
-        lessonFs.uploadPublicFile(mediaDirPath.resolve(filename), mediaFile);
-    }
-
-    public void uploadStatementMediaFileZipped(String userJid, String lessonJid, InputStream mediaFileZipped) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
-        lessonFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
-    }
-
-    public List<FileInfo> getStatementMediaFiles(String userJid, String lessonJid) {
-        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonJid);
-        return lessonFs.listFilesInDirectory(mediaDirPath);
-    }
-
-    public String getStatementMediaFileURL(String userJid, String lessonJid, String filename) {
-        Path mediaFilePath = getStatementMediaDirPath(userJid, lessonJid).resolve(filename);
-        return lessonFs.getPublicFileUrl(mediaFilePath);
-    }
-
-    public List<GitCommit> getVersions(String userJid, String lessonJid) {
-        Path root = getRootDirPath(lessonFs, userJid, lessonJid);
-        return lessonGit.getLog(root);
-    }
-
     public void initRepository(String userJid, String lessonJid) {
         Path root = getRootDirPath(lessonFs, null, lessonJid);
 
@@ -328,144 +212,6 @@ public final class LessonStore {
         }
     }
 
-    public boolean commitThenMergeUserClone(String userJid, String lessonJid, String title, String description) {
-        Path root = getCloneDirPath(userJid, lessonJid);
-
-        lessonGit.addAll(root);
-        lessonGit.commit(root, userJid, "no@email.com", title, description);
-        boolean success = lessonGit.rebase(root);
-
-        if (!success) {
-            lessonGit.resetToParent(root);
-        } else {
-            LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-            lessonDao.update(lessonModel);
-        }
-
-        return success;
-    }
-
-    public boolean updateUserClone(String userJid, String lessonJid) {
-        Path root = getCloneDirPath(userJid, lessonJid);
-
-        lessonGit.addAll(root);
-        lessonGit.commit(root, userJid, "no@email.com", "dummy", "dummy");
-        boolean success = lessonGit.rebase(root);
-
-        lessonGit.resetToParent(root);
-
-        return success;
-    }
-
-    public boolean pushUserClone(String userJid, String lessonJid) {
-        Path origin = getOriginDirPath(lessonJid);
-        Path root = getRootDirPath(lessonFs, userJid, lessonJid);
-
-        if (lessonGit.push(root)) {
-            lessonGit.resetHard(origin);
-
-            LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-            lessonDao.update(lessonModel);
-
-            return true;
-        }
-        return false;
-    }
-
-    public boolean fetchUserClone(String userJid, String lessonJid) {
-        Path root = getRootDirPath(lessonFs, userJid, lessonJid);
-
-        return lessonGit.fetch(root);
-    }
-
-    public void discardUserClone(String userJid, String lessonJid) {
-        Path root = getRootDirPath(lessonFs, userJid, lessonJid);
-
-        lessonFs.removeFile(root);
-    }
-
-    public void restore(String lessonJid, String hash) {
-        Path root = getOriginDirPath(lessonJid);
-
-        lessonGit.restore(root, hash);
-
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        lessonDao.update(lessonModel);
-    }
-
-    private void initStatements(String lessonJid, String initialLanguageCode) {
-        Path statementsDirPath = getStatementsDirPath(null, lessonJid);
-        lessonFs.createDirectory(statementsDirPath);
-
-        Path statementDirPath = getStatementDirPath(null, lessonJid, initialLanguageCode);
-        lessonFs.createDirectory(statementDirPath);
-
-        Path mediaDirPath = getStatementMediaDirPath(null, lessonJid);
-        lessonFs.createDirectory(mediaDirPath);
-        lessonFs.createFile(mediaDirPath.resolve(".gitkeep"));
-
-        lessonFs.createFile(getStatementTitleFilePath(null, lessonJid, initialLanguageCode));
-        lessonFs.createFile(getStatementTextFilePath(null, lessonJid, initialLanguageCode));
-        lessonFs.writeToFile(getStatementDefaultLanguageFilePath(null, lessonJid), initialLanguageCode);
-
-        Map<String, StatementLanguageStatus> initialLanguage = ImmutableMap.of(initialLanguageCode, StatementLanguageStatus.ENABLED);
-        lessonFs.writeToFile(getStatementAvailableLanguagesFilePath(null, lessonJid), writeObj(initialLanguage));
-    }
-
-    private Path getStatementsDirPath(String userJid, String lessonJid) {
-        return getRootDirPath(lessonFs, userJid, lessonJid).resolve("statements");
-    }
-
-    private Path getStatementDirPath(String userJid, String lessonJid, String languageCode) {
-        return getStatementsDirPath(userJid, lessonJid).resolve(languageCode);
-    }
-
-    private Path getStatementTitleFilePath(String userJid, String lessonJid, String languageCode) {
-        return getStatementDirPath(userJid, lessonJid, languageCode).resolve("title.txt");
-    }
-
-    private Path getStatementTextFilePath(String userJid, String lessonJid, String languageCode) {
-        return getStatementDirPath(userJid, lessonJid, languageCode).resolve("text.html");
-    }
-
-    private Path getStatementDefaultLanguageFilePath(String userJid, String lessonJid) {
-        return getStatementsDirPath(userJid, lessonJid).resolve("defaultLanguage.txt");
-    }
-
-    private Path getStatementAvailableLanguagesFilePath(String userJid, String lessonJid) {
-        return getStatementsDirPath(userJid, lessonJid).resolve("availableLanguages.txt");
-    }
-
-    private Path getStatementMediaDirPath(String userJid, String lessonJid) {
-        return getStatementsDirPath(userJid, lessonJid).resolve("resources");
-    }
-
-    private static Path getOriginDirPath(String lessonJid) {
-        return Paths.get("lessons", lessonJid);
-    }
-
-    private static Path getClonesDirPath(String lessonJid) {
-        return Paths.get("lesson-clones", lessonJid);
-    }
-
-    private static Path getCloneDirPath(String userJid, String lessonJid) {
-        return getClonesDirPath(lessonJid).resolve(userJid);
-    }
-
-    private static Path getRootDirPath(FileSystem fs, String userJid, String lessonJid) {
-        Path origin = getOriginDirPath(lessonJid);
-        if (userJid == null) {
-            return origin;
-        }
-
-        Path root = getCloneDirPath(userJid, lessonJid);
-        if (!fs.directoryExists(root)) {
-            return origin;
-        } else {
-            return root;
-        }
-    }
-
     private static  Lesson createLessonFromModel(LessonModel lessonModel) {
         return new Lesson.Builder()
                 .id(lessonModel.id)
@@ -485,14 +231,6 @@ public final class LessonStore {
                     .userJid(lessonPartnerModel.userJid)
                     .config(mapper.readValue(lessonPartnerModel.config, LessonPartnerConfig.class))
                     .build();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String writeObj(Object obj) {
-        try {
-            return mapper.writeValueAsString(obj);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

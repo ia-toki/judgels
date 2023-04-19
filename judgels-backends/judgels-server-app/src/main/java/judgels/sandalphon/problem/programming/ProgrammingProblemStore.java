@@ -14,18 +14,13 @@ import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
-import judgels.sandalphon.problem.base.AbstractProblemStore;
+import judgels.sandalphon.problem.base.BaseProblemStore;
 import judgels.sandalphon.problem.base.ProblemFs;
 
-public final class ProgrammingProblemStore extends AbstractProblemStore {
-    private final ObjectMapper mapper;
-    private final FileSystem problemFs;
-
+public final class ProgrammingProblemStore extends BaseProblemStore {
     @Inject
     public ProgrammingProblemStore(ObjectMapper mapper, @ProblemFs FileSystem problemFs) {
         super(mapper, problemFs);
-        this.mapper = mapper;
-        this.problemFs = problemFs;
     }
 
     public void initProgrammingProblem(String problemJid, String gradingEngine) {

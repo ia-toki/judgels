@@ -7,7 +7,7 @@ import judgels.fs.FileSystem;
 import judgels.sandalphon.api.problem.bundle.BundleItemsConfig;
 import judgels.sandalphon.problem.base.ProblemFs;
 
-public final class BundleProblemStore extends AbstractBundleProblemStore {
+public final class BundleProblemStore extends BaseBundleProblemStore {
     private final ObjectMapper mapper;
     private final FileSystem problemFs;
 

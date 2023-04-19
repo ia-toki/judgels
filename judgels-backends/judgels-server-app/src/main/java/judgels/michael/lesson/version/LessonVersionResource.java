@@ -28,9 +28,12 @@ import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.GitCommit;
 import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.lesson.version.LessonVersionStore;
 
 @Path("/lessons/{lessonId}/versions")
 public class LessonVersionResource extends BaseLessonResource {
+    @Inject protected LessonVersionStore versionStore;
+
     @Inject public LessonVersionResource() {}
 
     @GET
@@ -67,11 +70,11 @@ public class LessonVersionResource extends BaseLessonResource {
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         String localChangesError = null;
-        if (lessonStore.fetchUserClone(actor.getUserJid(), lesson.getJid())) {
+        if (versionStore.fetchUserClone(actor.getUserJid(), lesson.getJid())) {
             localChangesError = "There have been newer changes in the master copy. Please rebase your local changes.";
-        } else if (!lessonStore.commitThenMergeUserClone(actor.getUserJid(), lesson.getJid(), form.title, form.description)) {
+        } else if (!versionStore.commitThenMergeUserClone(actor.getUserJid(), lesson.getJid(), form.title, form.description)) {
             localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        } else if (!lessonStore.pushUserClone(actor.getUserJid(), lesson.getJid())) {
+        } else if (!versionStore.pushUserClone(actor.getUserJid(), lesson.getJid())) {
             localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }
 
@@ -80,7 +83,7 @@ public class LessonVersionResource extends BaseLessonResource {
             return ok(renderViewVersionLocalChanges(actor, lesson, form));
         }
 
-        lessonStore.discardUserClone(actor.getUserJid(), lesson.getJid());
+        versionStore.discardUserClone(actor.getUserJid(), lesson.getJid());
 
         return redirect("/lessons/" + lessonId + "/versions/local");
     }
@@ -93,7 +96,7 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        List<GitCommit> versions = lessonStore.getVersions(actor.getUserJid(), lesson.getJid());
+        List<GitCommit> versions = versionStore.getVersions(actor.getUserJid(), lesson.getJid());
 
         Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -117,7 +120,7 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        lessonStore.restore(lesson.getJid(), versionHash);
+        versionStore.restore(lesson.getJid(), versionHash);
 
         return redirect("/lessons/" + lessonId + "/versions/history");
     }
@@ -130,8 +133,8 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        lessonStore.fetchUserClone(actor.getUserJid(), lesson.getJid());
-        if (!lessonStore.updateUserClone(actor.getUserJid(), lesson.getJid())) {
+        versionStore.fetchUserClone(actor.getUserJid(), lesson.getJid());
+        if (!versionStore.updateUserClone(actor.getUserJid(), lesson.getJid())) {
             String localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
 
             HtmlTemplate template = newLessonVersionTemplate(actor, lesson);
@@ -150,7 +153,7 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        lessonStore.discardUserClone(actor.getUserJid(), lesson.getJid());
+        versionStore.discardUserClone(actor.getUserJid(), lesson.getJid());
 
         return redirect("/lessons/" + lessonId + "/versions/local");
     }

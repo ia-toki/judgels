@@ -16,6 +16,7 @@ import judgels.fs.FileInfo;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
@@ -42,12 +43,14 @@ import play.mvc.Result;
 @Singleton
 public class LessonStatementController extends AbstractLessonController {
     private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
     private final LessonRoleChecker lessonRoleChecker;
 
     @Inject
-    public LessonStatementController(LessonStore lessonStore, LessonRoleChecker lessonRoleChecker) {
-        super(lessonStore, lessonRoleChecker);
+    public LessonStatementController(LessonStore lessonStore, LessonStatementStore statementStore, LessonRoleChecker lessonRoleChecker) {
+        super(lessonStore, statementStore, lessonRoleChecker);
         this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
         this.lessonRoleChecker = lessonRoleChecker;
     }
 
@@ -58,7 +61,7 @@ public class LessonStatementController extends AbstractLessonController {
         String language = getStatementLanguage(req, lesson);
         checkAllowed(lessonRoleChecker.isAllowedToViewStatement(req, lesson, language));
 
-        LessonStatement statement = lessonStore.getStatement(actorJid, lesson.getJid(), language);
+        LessonStatement statement = statementStore.getStatement(actorJid, lesson.getJid(), language);
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(lessonStatementView.render(statement));
@@ -82,7 +85,7 @@ public class LessonStatementController extends AbstractLessonController {
         String language = getStatementLanguage(req, lesson);
         checkAllowed(lessonRoleChecker.isAllowedToUpdateStatementInLanguage(req, lesson, language));
 
-        LessonStatement statement = lessonStore.getStatement(actorJid, lesson.getJid(), language);
+        LessonStatement statement = statementStore.getStatement(actorJid, lesson.getJid(), language);
 
         UpdateStatementForm updateStatementData = new UpdateStatementForm();
         updateStatementData.title = statement.getTitle();
@@ -113,7 +116,7 @@ public class LessonStatementController extends AbstractLessonController {
         lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
         UpdateStatementForm updateStatementData = updateStatementForm.get();
-        lessonStore.updateStatement(actorJid, lesson.getJid(), language, new LessonStatement.Builder()
+        statementStore.updateStatement(actorJid, lesson.getJid(), language, new LessonStatement.Builder()
                     .title(updateStatementData.title)
                     .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                     .build());
@@ -130,7 +133,7 @@ public class LessonStatementController extends AbstractLessonController {
 
         Form<UploadFileForm> uploadFileForm = formFactory.form(UploadFileForm.class);
         boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);
-        List<FileInfo> mediaFiles = lessonStore.getStatementMediaFiles(actorJid, lesson.getJid());
+        List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actorJid, lesson.getJid());
 
         return showListStatementMediaFiles(req, uploadFileForm, lesson, mediaFiles, isAllowedToUploadMediaFiles);
     }
@@ -151,11 +154,11 @@ public class LessonStatementController extends AbstractLessonController {
             lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
             try {
-                lessonStore.uploadStatementMediaFile(actorJid, lesson.getJid(), new FileInputStream(mediaFile), file.getFilename());
+                statementStore.uploadStatementMediaFile(actorJid, lesson.getJid(), new FileInputStream(mediaFile), file.getFilename());
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);
-                List<FileInfo> mediaFiles = lessonStore.getStatementMediaFiles(actorJid, lesson.getJid());
+                List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actorJid, lesson.getJid());
 
                 return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
             }
@@ -169,11 +172,11 @@ public class LessonStatementController extends AbstractLessonController {
             lessonStore.createUserCloneIfNotExists(actorJid, lesson.getJid());
 
             try {
-                lessonStore.uploadStatementMediaFileZipped(actorJid, lesson.getJid(), new FileInputStream(mediaFile));
+                statementStore.uploadStatementMediaFileZipped(actorJid, lesson.getJid(), new FileInputStream(mediaFile));
             } catch (IOException e) {
                 Form<UploadFileForm> form = formFactory.form(UploadFileForm.class);
                 boolean isAllowedToUploadMediaFiles = lessonRoleChecker.isAllowedToUploadStatementResources(req, lesson);
-                List<FileInfo> mediaFiles = lessonStore.getStatementMediaFiles(actorJid, lesson.getJid());
+                List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actorJid, lesson.getJid());
 
                 return showListStatementMediaFiles(req, form.withGlobalError("Error uploading media files."), lesson, mediaFiles, isAllowedToUploadMediaFiles);
             }
@@ -191,8 +194,8 @@ public class LessonStatementController extends AbstractLessonController {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(lessonRoleChecker.isAllowedToManageStatementLanguages(req, lesson));
 
-        Map<String, StatementLanguageStatus> availableLanguages = lessonStore.getAvailableLanguages(actorJid, lesson.getJid());
-        String defaultLanguage = lessonStore.getDefaultLanguage(actorJid, lesson.getJid());
+        Map<String, StatementLanguageStatus> availableLanguages = statementStore.getAvailableLanguages(actorJid, lesson.getJid());
+        String defaultLanguage = statementStore.getDefaultLanguage(actorJid, lesson.getJid());
 
         HtmlTemplate template = getBaseHtmlTemplate(req);
         template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, lesson.getId()));
@@ -217,7 +220,7 @@ public class LessonStatementController extends AbstractLessonController {
             throw new IllegalStateException("Languages is not from list.");
         }
 
-        lessonStore.addLanguage(actorJid, lesson.getJid(), languageCode);
+        statementStore.addLanguage(actorJid, lesson.getJid(), languageCode);
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }
@@ -235,7 +238,7 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        lessonStore.enableLanguage(actorJid, lesson.getJid(), languageCode);
+        statementStore.enableLanguage(actorJid, lesson.getJid(), languageCode);
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }
@@ -254,10 +257,10 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        lessonStore.disableLanguage(actorJid, lesson.getJid(), languageCode);
+        statementStore.disableLanguage(actorJid, lesson.getJid(), languageCode);
 
         if (language.equals(languageCode)) {
-            language = lessonStore.getDefaultLanguage(actorJid, lesson.getJid());
+            language = statementStore.getDefaultLanguage(actorJid, lesson.getJid());
         }
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()))
@@ -277,7 +280,7 @@ public class LessonStatementController extends AbstractLessonController {
             return notFound();
         }
 
-        lessonStore.makeDefaultLanguage(actorJid, lesson.getJid(), languageCode);
+        statementStore.makeDefaultLanguage(actorJid, lesson.getJid(), languageCode);
 
         return redirect(routes.LessonStatementController.listStatementLanguages(lesson.getId()));
     }

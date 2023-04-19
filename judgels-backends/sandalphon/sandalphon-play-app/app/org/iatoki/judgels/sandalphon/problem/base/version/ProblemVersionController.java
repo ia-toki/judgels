@@ -14,7 +14,10 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.GitCommit;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
+import judgels.sandalphon.problem.base.version.ProblemVersionStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemRoleChecker;
@@ -31,6 +34,7 @@ import play.mvc.Result;
 @Singleton
 public final class ProblemVersionController extends AbstractProblemController {
     private final ProblemStore problemStore;
+    private final ProblemVersionStore versionStore;
     private final ProblemTagStore problemTagStore;
     private final ProblemRoleChecker problemRoleChecker;
     private final ProfileService profileService;
@@ -38,12 +42,16 @@ public final class ProblemVersionController extends AbstractProblemController {
     @Inject
     public ProblemVersionController(
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
+            ProblemVersionStore versionStore,
             ProblemTagStore problemTagStore,
             ProblemRoleChecker problemRoleChecker,
             ProfileService profileService) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
+        this.versionStore = versionStore;
         this.problemTagStore = problemTagStore;
         this.problemRoleChecker = problemRoleChecker;
         this.profileService = profileService;
@@ -55,7 +63,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isAllowedToViewVersionHistory(req, problem));
 
-        List<GitCommit> versions = problemStore.getVersions(actorJid, problem.getJid());
+        List<GitCommit> versions = versionStore.getVersions(actorJid, problem.getJid());
 
         Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
@@ -79,7 +87,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         boolean isClean = !problemStore.userCloneExists(actorJid, problem.getJid());
         checkAllowed(problemRoleChecker.isAllowedToRestoreVersionHistory(req, problem) && isClean);
 
-        problemStore.restore(problem.getJid(), hash);
+        versionStore.restore(problem.getJid(), hash);
 
         return redirect(routes.ProblemVersionController.listVersionHistory(problem.getId()));
     }
@@ -114,14 +122,14 @@ public final class ProblemVersionController extends AbstractProblemController {
         VersionCommitForm data = form.get();
         String localChangesErrorFlash = "";
 
-        if (problemStore.fetchUserClone(actorJid, problem.getJid())) {
+        if (versionStore.fetchUserClone(actorJid, problem.getJid())) {
             localChangesErrorFlash = "Your working copy has diverged from the master copy. Please update your working copy.";
-        } else if (!problemStore.commitThenMergeUserClone(actorJid, problem.getJid(), data.title, data.description)) {
+        } else if (!versionStore.commitThenMergeUserClone(actorJid, problem.getJid(), data.title, data.description)) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        } else if (!problemStore.pushUserClone(actorJid, problem.getJid())) {
+        } else if (!versionStore.pushUserClone(actorJid, problem.getJid())) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         } else {
-            problemStore.discardUserClone(actorJid, problem.getJid());
+            versionStore.discardUserClone(actorJid, problem.getJid());
             problemTagStore.refreshDerivedTags(problem.getJid());
         }
 
@@ -135,10 +143,10 @@ public final class ProblemVersionController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
-        problemStore.fetchUserClone(actorJid, problem.getJid());
+        versionStore.fetchUserClone(actorJid, problem.getJid());
 
         String localChangesErrorFlash = "";
-        if (!problemStore.updateUserClone(actorJid, problem.getJid())) {
+        if (!versionStore.updateUserClone(actorJid, problem.getJid())) {
             localChangesErrorFlash = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
         }
 
@@ -152,7 +160,7 @@ public final class ProblemVersionController extends AbstractProblemController {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(problemRoleChecker.isPartnerOrAbove(req, problem));
 
-        problemStore.discardUserClone(actorJid, problem.getJid());
+        versionStore.discardUserClone(actorJid, problem.getJid());
 
         return redirect(routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
     }

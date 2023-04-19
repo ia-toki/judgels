@@ -9,15 +9,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.service.ServiceUtils;
 
 @Path("/api/v2/problems/{problemJid}")
 public class ProblemResource {
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
+    private final ProblemEditorialStore editorialStore;
 
     @Inject
-    public ProblemResource(ProblemStore problemStore) {
+    public ProblemResource(ProblemStore problemStore, ProblemStatementStore statementStore, ProblemEditorialStore editorialStore) {
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
+        this.editorialStore = editorialStore;
     }
 
     @GET
@@ -29,7 +35,7 @@ public class ProblemResource {
             @PathParam("mediaFilename") String mediaFilename) {
 
         Problem problem = problemStore.findProblemByJid(problemJid);
-        String mediaUrl = problemStore.getStatementMediaFileURL(null, problem.getJid(), mediaFilename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(null, problem.getJid(), mediaFilename);
 
         return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }
@@ -43,7 +49,7 @@ public class ProblemResource {
             @PathParam("mediaFilename") String mediaFilename) {
 
         Problem problem = problemStore.findProblemByJid(problemJid);
-        String mediaUrl = problemStore.getEditorialMediaFileURL(null, problem.getJid(), mediaFilename);
+        String mediaUrl = editorialStore.getEditorialMediaFileURL(null, problem.getJid(), mediaFilename);
 
         return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }

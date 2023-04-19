@@ -27,6 +27,8 @@ import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
@@ -45,6 +47,8 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     private final ObjectMapper mapper;
     private final ClientUserService userService;
     private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
+    private final ProblemEditorialStore editorialStore;
     private final ProblemTagStore problemTagStore;
     private final ProgrammingProblemStore programmingProblemStore;
     private final BundleItemStore bundleItemStore;
@@ -55,6 +59,8 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             ObjectMapper mapper,
             ClientUserService userService,
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemTagStore problemTagStore,
             ProgrammingProblemStore programmingProblemStore,
             BundleItemStore bundleItemStore,
@@ -64,6 +70,8 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         this.mapper = mapper;
         this.userService = userService;
         this.problemStore = problemStore;
+        this.statementStore = statementStore;
+        this.editorialStore = editorialStore;
         this.problemTagStore = problemTagStore;
         this.programmingProblemStore = programmingProblemStore;
         this.bundleItemStore = bundleItemStore;
@@ -121,7 +129,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         String language = sanitizeStatementLanguageCode(problemJid, req.getQueryString("language"));
 
         return okAsJson(req, new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
-                .statement(problemStore.getStatement(null, problemJid, language))
+                .statement(statementStore.getStatement(null, problemJid, language))
                 .limits(new ProblemLimits.Builder()
                         .timeLimit(config.getTimeLimit())
                         .memoryLimit(config.getMemoryLimit())
@@ -160,7 +168,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         }
 
         return okAsJson(req, new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                        .statement(problemStore.getStatement(null, problemJid, language))
+                        .statement(statementStore.getStatement(null, problemJid, language))
                         .items(itemsWithConfig)
                         .build());
     }
@@ -203,7 +211,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
         for (JsonNode problemJidNode : problemJids) {
             String problemJid = problemJidNode.asText();
-            if (problemStore.hasEditorial(null, problemJid)) {
+            if (editorialStore.hasEditorial(null, problemJid)) {
                 result.put(problemJid, getProblemEditorialInfo(req, problemJid));
             }
         }
@@ -263,8 +271,8 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return new ProblemInfo.Builder()
                 .slug(problem.getSlug())
                 .type(ProblemType.valueOf(problem.getType().name()))
-                .defaultLanguage(simplifyLanguageCode(problemStore.getStatementDefaultLanguage(null, problemJid)))
-                .titlesByLanguage(problemStore.getTitlesByLanguage(null, problemJid).entrySet()
+                .defaultLanguage(simplifyLanguageCode(statementStore.getStatementDefaultLanguage(null, problemJid)))
+                .titlesByLanguage(statementStore.getTitlesByLanguage(null, problemJid).entrySet()
                         .stream()
                         .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
                 .build();
@@ -272,7 +280,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
     private ProblemMetadata getProblemMetadataInfo(String problemJid) {
         return new ProblemMetadata.Builder()
-                .hasEditorial(problemStore.hasEditorial(null, problemJid))
+                .hasEditorial(editorialStore.hasEditorial(null, problemJid))
                 .tags(problemTagStore.findTopicTags(problemJid))
                 .settersMap(problemStore.findProblemSettersByProblemJid(problemJid))
                 .build();
@@ -281,9 +289,9 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     private ProblemEditorialInfo getProblemEditorialInfo(Http.Request req, String problemJid) {
         String language = sanitizeEditorialLanguageCode(problemJid, req.getQueryString("language"));
         return new ProblemEditorialInfo.Builder()
-                .text(problemStore.getEditorial(null, problemJid, language).getText())
-                .defaultLanguage(simplifyLanguageCode(problemStore.getEditorialDefaultLanguage(null, problemJid)))
-                .languages(problemStore.getEditorialLanguages(null, problemJid).stream()
+                .text(editorialStore.getEditorial(null, problemJid, language).getText())
+                .defaultLanguage(simplifyLanguageCode(editorialStore.getEditorialDefaultLanguage(null, problemJid)))
+                .languages(editorialStore.getEditorialLanguages(null, problemJid).stream()
                         .map(lang -> simplifyLanguageCode(lang))
                         .collect(Collectors.toSet()))
                 .build();
@@ -304,28 +312,28 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     private String sanitizeStatementLanguageCode(String problemJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getStatementAvailableLanguages(null, problemJid);
+        Map<String, StatementLanguageStatus> availableLanguages = statementStore.getStatementAvailableLanguages(null, problemJid);
         Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
 
         String lang = language;
         if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
-            lang = simplifyLanguageCode(problemStore.getStatementDefaultLanguage(null, problemJid));
+            lang = simplifyLanguageCode(statementStore.getStatementDefaultLanguage(null, problemJid));
         }
 
         return simplifiedLanguages.get(lang);
     }
 
     private String sanitizeEditorialLanguageCode(String problemJid, String language) {
-        Map<String, StatementLanguageStatus> availableLanguages = problemStore.getEditorialAvailableLanguages(null, problemJid);
+        Map<String, StatementLanguageStatus> availableLanguages = editorialStore.getEditorialAvailableLanguages(null, problemJid);
         Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
 
         String lang = language;
         if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
-            lang = simplifyLanguageCode(problemStore.getEditorialDefaultLanguage(null, problemJid));
+            lang = simplifyLanguageCode(editorialStore.getEditorialDefaultLanguage(null, problemJid));
         }
 
         return simplifiedLanguages.get(lang);

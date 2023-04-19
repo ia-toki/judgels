@@ -3,10 +3,10 @@ package judgels.sandalphon.problem.bundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Path;
 import judgels.fs.FileSystem;
-import judgels.sandalphon.problem.base.AbstractProblemStore;
+import judgels.sandalphon.problem.base.BaseProblemStore;
 
-public abstract class AbstractBundleProblemStore extends AbstractProblemStore {
-    protected AbstractBundleProblemStore(ObjectMapper mapper, FileSystem fs) {
+public abstract class BaseBundleProblemStore extends BaseProblemStore {
+    protected BaseBundleProblemStore(ObjectMapper mapper, FileSystem fs) {
         super(mapper, fs);
     }
 

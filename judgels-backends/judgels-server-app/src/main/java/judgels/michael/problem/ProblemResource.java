@@ -32,15 +32,11 @@ import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
-import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.base.ProblemSearchStore;
-import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import judgels.sandalphon.problem.bundle.BundleProblemStore;
-import judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
-import judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {
@@ -109,21 +105,10 @@ public class ProblemResource extends BaseProblemResource {
             return ok(renderNewProblem(actor, form));
         }
 
-        ProblemType type;
-        String initialText;
-        if (form.gradingEngine.equals("Bundle")) {
-            type = ProblemType.BUNDLE;
-            initialText = BundleProblemStatementUtils.getDefaultStatement(form.initialLanguage);
-        } else {
-            type = ProblemType.PROGRAMMING;
-            initialText = ProgrammingProblemStatementUtils.getDefaultText(form.initialLanguage);
-        }
+        ProblemType type = form.gradingEngine.equals("Bundle") ? ProblemType.BUNDLE : ProblemType.PROGRAMMING;
+        Problem problem = problemStore.createProblem(type, form.slug, form.additionalNote);
 
-        Problem problem = problemStore.createProblem(type, form.slug, form.additionalNote, form.initialLanguage);
-        problemStore.updateStatement(null, problem.getJid(), form.initialLanguage, new ProblemStatement.Builder()
-                .title(ProblemStatementUtils.getDefaultTitle(form.initialLanguage))
-                .text(initialText)
-                .build());
+        statementStore.initStatements(problem.getJid(), type, form.initialLanguage);
 
         if (type == ProblemType.BUNDLE) {
             bundleProblemStore.initBundleProblem(problem.getJid());

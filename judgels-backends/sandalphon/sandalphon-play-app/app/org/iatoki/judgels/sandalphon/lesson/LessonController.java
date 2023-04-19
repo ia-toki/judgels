@@ -12,10 +12,8 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.lesson.Lesson;
-import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.lesson.LessonStore;
-import judgels.sandalphon.lesson.statement.LessonStatementUtils;
-import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.html.createLessonView;
 import org.iatoki.judgels.sandalphon.lesson.html.editLessonView;
@@ -33,6 +31,7 @@ import play.mvc.Result;
 public final class LessonController extends AbstractLessonController {
     private final RoleChecker roleChecker;
     private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
     private final LessonRoleChecker lessonRoleChecker;
     private final ProfileService profileService;
 
@@ -40,12 +39,14 @@ public final class LessonController extends AbstractLessonController {
     public LessonController(
             RoleChecker roleChecker,
             LessonStore lessonStore,
+            LessonStatementStore statementStore,
             LessonRoleChecker lessonRoleChecker,
             ProfileService profileService) {
 
-        super(lessonStore, lessonRoleChecker);
+        super(lessonStore, statementStore, lessonRoleChecker);
         this.roleChecker = roleChecker;
         this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
         this.lessonRoleChecker = lessonRoleChecker;
         this.profileService = profileService;
     }
@@ -103,11 +104,9 @@ public final class LessonController extends AbstractLessonController {
 
         LessonCreateForm lessonCreateData = lessonCreateForm.get();
 
-        Lesson lesson = lessonStore.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote, lessonCreateData.initLanguageCode);
-        lessonStore.updateStatement(null, lesson.getJid(), lessonCreateData.initLanguageCode, new LessonStatement.Builder()
-                .title(ProblemStatementUtils.getDefaultTitle(lessonCreateData.initLanguageCode))
-                .text(LessonStatementUtils.getDefaultText(lessonCreateData.initLanguageCode))
-                .build());
+        Lesson lesson = lessonStore.createLesson(lessonCreateData.slug, lessonCreateData.additionalNote);
+
+        statementStore.initStatements(lesson.getJid(), lessonCreateData.initLanguageCode);
 
         lessonStore.initRepository(actorJid, lesson.getJid());
 

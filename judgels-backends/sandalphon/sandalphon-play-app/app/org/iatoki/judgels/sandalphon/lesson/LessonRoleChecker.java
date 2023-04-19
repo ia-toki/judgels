@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.role.RoleChecker;
 import play.mvc.Http;
@@ -18,11 +19,13 @@ import play.mvc.Http;
 public class LessonRoleChecker {
     private final RoleChecker roleChecker;
     private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
 
     @Inject
-    public LessonRoleChecker(RoleChecker roleChecker, LessonStore lessonStore) {
+    public LessonRoleChecker(RoleChecker roleChecker, LessonStore lessonStore, LessonStatementStore statementStore) {
         this.roleChecker = roleChecker;
         this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
     }
 
     public boolean isAuthor(Http.Request req, Lesson lesson) {
@@ -59,7 +62,7 @@ public class LessonRoleChecker {
             return false;
         }
 
-        String defaultLanguage = lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid());
+        String defaultLanguage = statementStore.getDefaultLanguage(getUserJid(req), lesson.getJid());
         Set<String> allowedLanguages = getPartnerConfig(req, lesson).getAllowedStatementLanguagesToView();
 
         return allowedLanguages.isEmpty() || allowedLanguages.contains(language) || language.equals(defaultLanguage);
@@ -103,7 +106,7 @@ public class LessonRoleChecker {
 
     public Set<String> getAllowedLanguagesToView(Http.Request req, Lesson lesson) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                lessonStore.getAvailableLanguages(getUserJid(req), lesson.getJid());
+                statementStore.getAvailableLanguages(getUserJid(req), lesson.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -116,7 +119,7 @@ public class LessonRoleChecker {
             if (!allowedPartnerLanguages.isEmpty()) {
                 allowedLanguages.retainAll(allowedPartnerLanguages);
             }
-            allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
+            allowedLanguages.add(statementStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);
@@ -124,7 +127,7 @@ public class LessonRoleChecker {
 
     public Set<String> getAllowedLanguagesToUpdate(Http.Request req, Lesson lesson) {
         Map<String, StatementLanguageStatus> availableLanguages =
-                lessonStore.getAvailableLanguages(getUserJid(req), lesson.getJid());
+                statementStore.getAvailableLanguages(getUserJid(req), lesson.getJid());
 
         Set<String> allowedLanguages = Sets.newTreeSet();
         allowedLanguages.addAll(availableLanguages.entrySet().stream()
@@ -137,7 +140,7 @@ public class LessonRoleChecker {
             if (!allowedPartnerLanguages.isEmpty()) {
                 allowedLanguages.retainAll(allowedPartnerLanguages);
             }
-            allowedLanguages.add(lessonStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
+            allowedLanguages.add(statementStore.getDefaultLanguage(getUserJid(req), lesson.getJid()));
         }
 
         return ImmutableSet.copyOf(allowedLanguages);

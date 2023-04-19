@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import play.db.jpa.Transactional;
 import play.mvc.Http;
@@ -13,17 +14,19 @@ import play.mvc.Result;
 @Singleton
 public class PublicLessonAPIControllerV2 extends AbstractJudgelsAPIController {
     private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
 
     @Inject
-    public PublicLessonAPIControllerV2(ObjectMapper mapper, LessonStore lessonStore) {
+    public PublicLessonAPIControllerV2(ObjectMapper mapper, LessonStore lessonStore, LessonStatementStore statementStore) {
         super(mapper);
         this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
     }
 
     @Transactional(readOnly = true)
     public Result renderMedia(Http.Request req, String lessonJid, String mediaFilename) {
         Lesson lesson = lessonStore.findLessonByJid(lessonJid);
-        String mediaUrl = lessonStore.getStatementMediaFileURL(null, lesson.getJid(), mediaFilename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(null, lesson.getJid(), mediaFilename);
 
         return okAsImage(req, mediaUrl);
     }

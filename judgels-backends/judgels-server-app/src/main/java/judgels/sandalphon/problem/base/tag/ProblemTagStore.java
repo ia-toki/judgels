@@ -14,22 +14,26 @@ import javax.inject.Inject;
 import judgels.gabriel.api.GradingConfig;
 import judgels.sandalphon.persistence.ProblemTagDao;
 import judgels.sandalphon.persistence.ProblemTagModel;
-import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 
 public class ProblemTagStore {
-    private final ProblemTagDao problemTagDao;
-    private final ProblemStore problemStore;
+    private final ProblemTagDao tagDao;
+    private final ProblemStatementStore statementStore;
+    private final ProblemEditorialStore editorialStore;
     private final ProgrammingProblemStore programmingProblemStore;
 
     @Inject
     public ProblemTagStore(
-            ProblemTagDao problemTagDao,
-            ProblemStore problemStore,
+            ProblemTagDao tagDao,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProgrammingProblemStore programmingProblemStore) {
 
-        this.problemTagDao = problemTagDao;
-        this.problemStore = problemStore;
+        this.tagDao = tagDao;
+        this.statementStore = statementStore;
+        this.editorialStore = editorialStore;
         this.programmingProblemStore = programmingProblemStore;
     }
 
@@ -37,15 +41,15 @@ public class ProblemTagStore {
         if (!isAdmin) {
             return ImmutableMap.of();
         }
-        return problemTagDao.selectTagCounts();
+        return tagDao.selectTagCounts();
     }
 
     public Map<String, Integer> getPublicTagCounts() {
-        return problemTagDao.selectPublicTagCounts();
+        return tagDao.selectPublicTagCounts();
     }
 
     public Set<String> findTopicTags(String problemJid) {
-        return problemTagDao.selectAllByProblemJid(problemJid)
+        return tagDao.selectAllByProblemJid(problemJid)
                 .stream()
                 .map(m -> m.tag)
                 .filter(tag -> tag.startsWith("topic-"))
@@ -59,10 +63,10 @@ public class ProblemTagStore {
             ProblemTagModel m = new ProblemTagModel();
             m.problemJid = problemJid;
             m.tag = tag;
-            problemTagDao.insert(m);
+            tagDao.insert(m);
         }
         for (String tag : Sets.difference(curTags, topicTags)) {
-            problemTagDao.selectByProblemJidAndTag(problemJid, tag).ifPresent(problemTagDao::delete);
+            tagDao.selectByProblemJidAndTag(problemJid, tag).ifPresent(tagDao::delete);
         }
     }
 
@@ -97,7 +101,7 @@ public class ProblemTagStore {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "visibility-private");
         }
 
-        if (problemStore.getStatementAvailableLanguages(null, problemJid).getOrDefault("en-US", DISABLED) == ENABLED) {
+        if (statementStore.getStatementAvailableLanguages(null, problemJid).getOrDefault("en-US", DISABLED) == ENABLED) {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "statement-en");
         } else {
             removeTag(curTags, tagsToAdd, tagsToRemove, "statement-en");
@@ -106,10 +110,10 @@ public class ProblemTagStore {
         removeTag(curTags, tagsToAdd, tagsToRemove, "editorial-yes");
         removeTag(curTags, tagsToAdd, tagsToRemove, "editorial-no");
 
-        if (problemStore.hasEditorial(null, problemJid)) {
+        if (editorialStore.hasEditorial(null, problemJid)) {
             upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-yes");
 
-            if (problemStore.getEditorialAvailableLanguages(null, problemJid).getOrDefault("en-US", DISABLED) == ENABLED) {
+            if (editorialStore.getEditorialAvailableLanguages(null, problemJid).getOrDefault("en-US", DISABLED) == ENABLED) {
                 upsertTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
             } else {
                 removeTag(curTags, tagsToAdd, tagsToRemove, "editorial-en");
@@ -178,7 +182,7 @@ public class ProblemTagStore {
             return problemJids;
         }
 
-        Set<String> allowedProblemJids = problemTagDao.selectAllByTags(intersectionTags).stream()
+        Set<String> allowedProblemJids = tagDao.selectAllByTags(intersectionTags).stream()
                 .map(m -> m.problemJid)
                 .collect(Collectors.toSet());
 
@@ -198,7 +202,7 @@ public class ProblemTagStore {
             return problemJids;
         }
 
-        Set<String> allowedProblemJids = problemTagDao.selectAllByTags(topicTags).stream()
+        Set<String> allowedProblemJids = tagDao.selectAllByTags(topicTags).stream()
                 .map(m -> m.problemJid)
                 .collect(Collectors.toSet());
 
@@ -209,7 +213,7 @@ public class ProblemTagStore {
     }
 
     private Set<String> getTags(String problemJid) {
-        return problemTagDao.selectAllByProblemJid(problemJid)
+        return tagDao.selectAllByProblemJid(problemJid)
                 .stream()
                 .map(m -> m.tag)
                 .collect(Collectors.toSet());
@@ -236,10 +240,10 @@ public class ProblemTagStore {
             ProblemTagModel m = new ProblemTagModel();
             m.problemJid = problemJid;
             m.tag = tag;
-            problemTagDao.insert(m);
+            tagDao.insert(m);
         }
         for (String tag : tagsToRemove) {
-            problemTagDao.selectByProblemJidAndTag(problemJid, tag).ifPresent(problemTagDao::delete);
+            tagDao.selectByProblemJidAndTag(problemJid, tag).ifPresent(tagDao::delete);
         }
     }
 

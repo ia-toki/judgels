@@ -9,7 +9,7 @@ import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.submission.bundle.BundleAnswer;
 import judgels.sandalphon.api.submission.bundle.BundleGradingResult;
 import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
-import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapter;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapters;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemHasScore;
@@ -18,13 +18,13 @@ import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemStore;
 public final class BundleProblemGrader {
     private final ObjectMapper mapper;
     private final BundleItemStore bundleItemStore;
-    private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
 
     @Inject
-    public BundleProblemGrader(ObjectMapper mapper, BundleItemStore bundleItemStore, ProblemStore problemStore) {
+    public BundleProblemGrader(ObjectMapper mapper, BundleItemStore bundleItemStore, ProblemStatementStore statementStore) {
         this.mapper = mapper;
         this.bundleItemStore = bundleItemStore;
-        this.problemStore = problemStore;
+        this.statementStore = statementStore;
     }
 
     public BundleGradingResult gradeBundleProblem(String problemJid, BundleAnswer answer) {
@@ -41,7 +41,7 @@ public final class BundleProblemGrader {
                     conf = bundleItemStore.getItemConfInProblemWithCloneByJid(problemJid,
                             null,
                             item.getJid(),
-                            problemStore
+                            statementStore
                                     .getStatementDefaultLanguage(null, problemJid));
                 } else {
                     throw e;

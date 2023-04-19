@@ -29,7 +29,7 @@ public abstract class ProblemStatementRenderResources extends BaseProblemResourc
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        String mediaUrl = problemStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
+        String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
         return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
     }
 

@@ -17,6 +17,7 @@ import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.partner.LessonPartner;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import judgels.sandalphon.lesson.LessonStore;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.LessonRoleChecker;
@@ -41,11 +42,12 @@ public class LessonPartnerController extends AbstractLessonController {
     @Inject
     public LessonPartnerController(
             LessonStore lessonStore,
+            LessonStatementStore statementStore,
             LessonRoleChecker lessonRoleChecker,
             UserSearchService userSearchService,
             ProfileService profileService) {
 
-        super(lessonStore, lessonRoleChecker);
+        super(lessonStore, statementStore, lessonRoleChecker);
         this.lessonStore = lessonStore;
         this.lessonRoleChecker = lessonRoleChecker;
         this.userSearchService = userSearchService;

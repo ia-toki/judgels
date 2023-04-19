@@ -25,6 +25,8 @@ import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
 import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
@@ -57,6 +59,8 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
     @Inject
     public ProgrammingProblemSubmissionController(
             ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
             ProblemRoleChecker problemRoleChecker,
             ProgrammingProblemStore programmingProblemStore,
             ProfileService profileService,
@@ -65,7 +69,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractProble
             SubmissionClient submissionClient,
             SubmissionRegrader submissionRegrader) {
 
-        super(problemStore, problemRoleChecker);
+        super(problemStore, statementStore, editorialStore, problemRoleChecker);
         this.problemStore = problemStore;
         this.problemRoleChecker = problemRoleChecker;
         this.programmingProblemStore = programmingProblemStore;
