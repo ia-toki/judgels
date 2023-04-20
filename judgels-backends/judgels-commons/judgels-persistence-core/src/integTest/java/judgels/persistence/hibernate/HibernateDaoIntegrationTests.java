@@ -133,6 +133,8 @@ class HibernateDaoIntegrationTests {
                 .pageSize(10)
                 .build());
         assertThat(data.getTotalCount()).isZero();
+        assertThat(data.getPageIndex()).isEqualTo(1);
+        assertThat(data.getPageSize()).isEqualTo(10);
         assertThat(data.getPage()).isEmpty();
 
         ExampleModel model1 = new ExampleModel();
@@ -148,6 +150,8 @@ class HibernateDaoIntegrationTests {
                 .pageSize(1)
                 .build());
         assertThat(data.getTotalCount()).isEqualTo(2);
+        assertThat(data.getPageIndex()).isEqualTo(1);
+        assertThat(data.getPageSize()).isEqualTo(1);
         assertThat(data.getPage()).containsExactly(model2);
 
         data = dao.selectPaged(new SelectionOptions.Builder()
@@ -155,6 +159,8 @@ class HibernateDaoIntegrationTests {
                 .pageSize(1)
                 .build());
         assertThat(data.getTotalCount()).isEqualTo(2);
+        assertThat(data.getPageIndex()).isEqualTo(2);
+        assertThat(data.getPageSize()).isEqualTo(1);
         assertThat(data.getPage()).containsExactly(model1);
 
         data = dao.selectPaged(new SelectionOptions.Builder()
@@ -162,6 +168,8 @@ class HibernateDaoIntegrationTests {
                 .pageSize(2)
                 .build());
         assertThat(data.getTotalCount()).isEqualTo(2);
+        assertThat(data.getPageIndex()).isEqualTo(1);
+        assertThat(data.getPageSize()).isEqualTo(2);
         assertThat(data.getPage()).containsExactly(model2, model1);
 
         data = dao.selectPaged(new SelectionOptions.Builder()
@@ -169,12 +177,16 @@ class HibernateDaoIntegrationTests {
                 .pageSize(10)
                 .build());
         assertThat(data.getTotalCount()).isEqualTo(2);
+        assertThat(data.getPageIndex()).isEqualTo(1);
+        assertThat(data.getPageSize()).isEqualTo(10);
         assertThat(data.getPage()).containsExactly(model2, model1);
 
         data = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .lastId(1)
                 .build());
         assertThat(data.getTotalCount()).isEqualTo(1);
+        assertThat(data.getPageIndex()).isEqualTo(1);
+        assertThat(data.getPageSize()).isEqualTo(20);
         assertThat(data.getPage()).containsExactly(model2);
     }
 

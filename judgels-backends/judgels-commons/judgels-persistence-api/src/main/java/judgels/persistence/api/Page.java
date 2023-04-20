@@ -29,6 +29,8 @@ public interface Page<M> {
         return new Builder<R>()
                 .totalCount(getTotalCount())
                 .page(func.apply(getPage()))
+                .pageIndex(getPageIndex())
+                .pageSize(getPageSize())
                 .build();
     }
 

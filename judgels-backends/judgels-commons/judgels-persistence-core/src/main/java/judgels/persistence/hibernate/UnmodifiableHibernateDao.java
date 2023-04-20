@@ -140,6 +140,8 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         return new Page.Builder<M>()
                 .totalCount(totalCount)
                 .page(page)
+                .pageIndex(selectionOptions.getPage())
+                .pageSize(selectionOptions.getPageSize())
                 .build();
     }
     @Override
