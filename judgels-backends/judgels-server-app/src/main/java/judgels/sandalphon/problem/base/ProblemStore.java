@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.FilterOptions;
@@ -29,6 +30,7 @@ import judgels.sandalphon.persistence.ProblemPartnerModel;
 import judgels.sandalphon.persistence.ProblemPartnerModel_;
 import judgels.sandalphon.persistence.ProblemSetterDao;
 import judgels.sandalphon.persistence.ProblemSetterModel;
+import judgels.sandalphon.problem.base.tag.ProblemTags;
 
 public class ProblemStore extends BaseProblemStore {
     private final Git problemGit;
@@ -83,6 +85,21 @@ public class ProblemStore extends BaseProblemStore {
     public Problem findProblemBySlug(String slug) {
         ProblemModel model = problemDao.findBySlug(slug);
         return createProblemFromModel(model);
+    }
+
+    public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageIndex) {
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .orderBy("updatedAt")
+                .page(pageIndex)
+                .build();
+
+        List<Set<String>> tagsFilterByType = ProblemTags.splitTagsFilterByType(tagsFilter);
+
+        Page<ProblemModel> models = isAdmin
+                ? problemDao.selectPaged(termFilter, tagsFilterByType, selectionOptions)
+                : problemDao.selectPagedByUserJid(userJid, termFilter, tagsFilterByType, selectionOptions);
+        return models.mapPage(p -> Lists.transform(p, ProblemStore::createProblemFromModel));
     }
 
     public Map<ProblemSetterRole, List<String>> findProblemSettersByProblemJid(String problemJid) {

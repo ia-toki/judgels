@@ -33,7 +33,6 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.problem.base.ProblemSearchStore;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import judgels.sandalphon.problem.bundle.BundleProblemStore;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
@@ -42,7 +41,6 @@ import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 public class ProblemResource extends BaseProblemResource {
     @Inject protected BundleProblemStore bundleProblemStore;
     @Inject protected ProgrammingProblemStore programmingProblemStore;
-    @Inject protected ProblemSearchStore searchStore;
     @Inject protected ProblemTagStore tagStore;
 
     @Inject public ProblemResource() {}
@@ -52,14 +50,14 @@ public class ProblemResource extends BaseProblemResource {
     public View listProblems(
             @Context HttpServletRequest req,
             @QueryParam("page") @DefaultValue("1") int pageIndex,
-            @QueryParam("filter") @DefaultValue("") String filterString,
-            @QueryParam("tags") List<String> tags) {
+            @QueryParam("term") @DefaultValue("") String termFilter,
+            @QueryParam("tags") Set<String> tagsFilter) {
 
         Actor actor = actorChecker.check(req);
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Problem> problems = searchStore.searchProblems(pageIndex, "updatedAt", "desc", filterString, tags, actor.getUserJid(), isAdmin);
+        Page<Problem> problems = problemStore.getProblems(actor.getUserJid(), isAdmin, termFilter, tagsFilter, pageIndex);
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, Integer> tagCounts = tagStore.getTagCounts(isAdmin);
@@ -69,8 +67,8 @@ public class ProblemResource extends BaseProblemResource {
         if (isWriter) {
             template.addMainButton("New problem", "/problems/new");
         }
-        template.setSearchProblemsWidget(new SearchProblemsWidget(pageIndex, filterString, tags, tagCounts));
-        return new ListProblemsView(template, problems, filterString, profilesMap, tags);
+        template.setSearchProblemsWidget(new SearchProblemsWidget(pageIndex, termFilter, tagsFilter, tagCounts));
+        return new ListProblemsView(template, problems, termFilter, tagsFilter, profilesMap);
     }
 
     @GET

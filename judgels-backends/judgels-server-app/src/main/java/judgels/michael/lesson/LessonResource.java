@@ -35,13 +35,13 @@ public class LessonResource extends BaseLessonResource {
     public View listProblems(
             @Context HttpServletRequest req,
             @QueryParam("page") @DefaultValue("1") int pageIndex,
-            @QueryParam("filter") @DefaultValue("") String filterString) {
+            @QueryParam("term") @DefaultValue("") String termFilter) {
 
         Actor actor = actorChecker.check(req);
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Lesson> lessons = lessonStore.getPageOfLessons(pageIndex, "updatedAt", "desc", filterString, actor.getUserJid(), isAdmin);
+        Page<Lesson> lessons = lessonStore.getLessons(actor.getUserJid(), isAdmin, termFilter, pageIndex);
         Set<String> userJids = lessons.getPage().stream().map(Lesson::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
@@ -50,8 +50,8 @@ public class LessonResource extends BaseLessonResource {
         if (isWriter) {
             template.addMainButton("New lesson", "/lessons/new");
         }
-        template.setSearchLessonsWidget(new SearchLessonsWidget(pageIndex, filterString));
-        return new ListLessonsView(template, lessons, filterString, profilesMap);
+        template.setSearchLessonsWidget(new SearchLessonsWidget(pageIndex, termFilter));
+        return new ListLessonsView(template, lessons, termFilter, profilesMap);
     }
 
     @GET

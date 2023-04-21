@@ -1,5 +1,9 @@
 package judgels.sandalphon.hibernate;
 
+import static judgels.persistence.CustomPredicateFilter.and;
+import static judgels.persistence.CustomPredicateFilter.literalTrue;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,11 +16,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
+import judgels.sandalphon.persistence.ProblemModel;
+import judgels.sandalphon.persistence.ProblemModel_;
 import judgels.sandalphon.persistence.ProblemTagDao;
 import judgels.sandalphon.persistence.ProblemTagModel;
 import judgels.sandalphon.persistence.ProblemTagModel_;
@@ -94,5 +101,31 @@ public class ProblemTagHibernateDao extends UnmodifiableHibernateDao<ProblemTagM
                 .putColumnsEq(ProblemTagModel_.problemJid, problemJid)
                 .putColumnsEq(ProblemTagModel_.tag, tag)
                 .build());
+    }
+
+    static CustomPredicateFilter<ProblemModel> hasTagsMatching(List<Set<String>> tagGroups) {
+        List<CustomPredicateFilter<ProblemModel>> predicates = new ArrayList<>();
+        for (Set<String> tagGroup : tagGroups) {
+            predicates.add(hasTagIn(tagGroup));
+        }
+        return and(predicates);
+    }
+
+    private static CustomPredicateFilter<ProblemModel> hasTagIn(Set<String> tags) {
+        if (tags.isEmpty()) {
+            return literalTrue();
+        }
+
+        return (cb, cq, root) -> {
+            Subquery<ProblemTagModel> sq = cq.subquery(ProblemTagModel.class);
+            Root<ProblemTagModel> subRoot = sq.from(ProblemTagModel.class);
+
+            sq.where(
+                    cb.equal(subRoot.get(ProblemTagModel_.problemJid), root.get(ProblemModel_.jid)),
+                    subRoot.get(ProblemTagModel_.tag).in(tags));
+            sq.select(subRoot);
+
+            return cb.exists(sq);
+        };
     }
 }

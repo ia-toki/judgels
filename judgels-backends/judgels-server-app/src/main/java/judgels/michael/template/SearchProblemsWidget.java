@@ -2,18 +2,19 @@ package judgels.michael.template;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import judgels.sandalphon.problem.base.tag.ProblemTags;
 
 public class SearchProblemsWidget {
     private final int pageIndex;
-    private final String filterString;
-    private final List<String> tags;
+    private final String termFilter;
+    private final Set<String> tagsFilter;
     private final Map<String, Integer> tagCounts;
 
-    public SearchProblemsWidget(int pageIndex, String filterString, List<String> tags, Map<String, Integer> tagCounts) {
+    public SearchProblemsWidget(int pageIndex, String termFilter, Set<String> tagsFilter, Map<String, Integer> tagCounts) {
         this.pageIndex = pageIndex;
-        this.filterString = filterString;
-        this.tags = tags;
+        this.termFilter = termFilter;
+        this.tagsFilter = tagsFilter;
         this.tagCounts = tagCounts;
     }
 
@@ -21,12 +22,12 @@ public class SearchProblemsWidget {
         return pageIndex;
     }
 
-    public String getFilterString() {
-        return filterString;
+    public String getTermFilter() {
+        return termFilter;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public Set<String> getTagsFilter() {
+        return tagsFilter;
     }
 
     public Map<String, Integer> getTagCounts() {

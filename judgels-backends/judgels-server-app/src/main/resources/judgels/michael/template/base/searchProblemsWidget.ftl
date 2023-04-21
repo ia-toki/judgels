@@ -20,31 +20,31 @@
     <form method="GET" action="/problems">
       <@forms.formGroup>
         <label>Slug / additional note</label>
-        <input type="search" class="form-control" name="filter" value="${data.filterString}">
+        <input type="search" class="form-control" name="term" value="${data.termFilter}">
       </@forms.formGroup>
 
       <hr class="tag-separator" />
 
       <@forms.formGroup>
         <label>Visibility</label>
-        <@checkboxView tag="visibility-private" text="private" tags=data.tags tagCounts=data.tagCounts/>
-        <@checkboxView tag="visibility-public" text="public" tags=data.tags tagCounts=data.tagCounts/>
+        <@checkboxView tag="visibility-private" text="private" tags=data.tagsFilter tagCounts=data.tagCounts/>
+        <@checkboxView tag="visibility-public" text="public" tags=data.tagsFilter tagCounts=data.tagCounts/>
       </@forms.formGroup>
 
       <hr class="tag-separator" />
 
       <@forms.formGroup>
         <label>Statement</label>
-        <@checkboxView tag="statement-en" text="has English statement" tags=data.tags tagCounts=data.tagCounts/>
+        <@checkboxView tag="statement-en" text="has English statement" tags=data.tagsFilter tagCounts=data.tagCounts/>
       </@forms.formGroup>
 
       <hr class="tag-separator" />
 
       <@forms.formGroup>
         <label>Editorial</label>
-        <@checkboxView tag="editorial-no" text="has no editorial" tags=data.tags tagCounts=data.tagCounts/>
-        <@checkboxView tag="editorial-yes" text="has editorial" tags=data.tags tagCounts=data.tagCounts/>
-        <@checkboxView tag="editorial-en" text="has English editorial" tags=data.tags tagCounts=data.tagCounts/>
+        <@checkboxView tag="editorial-no" text="has no editorial" tags=data.tagsFilter tagCounts=data.tagCounts/>
+        <@checkboxView tag="editorial-yes" text="has editorial" tags=data.tagsFilter tagCounts=data.tagCounts/>
+        <@checkboxView tag="editorial-en" text="has English editorial" tags=data.tagsFilter tagCounts=data.tagCounts/>
       </@forms.formGroup>
 
       <hr class="tag-separator" />
@@ -62,7 +62,7 @@
                     class="problemTag"
                     name="tags"
                     value="${tag}"
-                    <#if data.tags?seq_contains(tag)>checked</#if>
+                    <#if data.tagsFilter?seq_contains(tag)>checked</#if>
                   >
                   <#if tagName?contains(": ")>${tagName?split(": ")[1]}<#else>${tagName}</#if>
                   (${data.tagCounts[tag]})

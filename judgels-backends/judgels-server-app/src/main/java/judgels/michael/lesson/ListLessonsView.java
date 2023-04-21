@@ -9,13 +9,13 @@ import judgels.sandalphon.api.lesson.Lesson;
 
 public class ListLessonsView extends TemplateView {
     private final Page<Lesson> lessons;
-    private final String filterString;
+    private final String termFilter;
     private final Map<String, Profile> profilesMap;
 
-    public ListLessonsView(HtmlTemplate template, Page<Lesson> lessons, String filterString, Map<String, Profile> profilesMap) {
+    public ListLessonsView(HtmlTemplate template, Page<Lesson> lessons, String termFilter, Map<String, Profile> profilesMap) {
         super("listLessonsView.ftl", template);
         this.lessons = lessons;
-        this.filterString = filterString;
+        this.termFilter = termFilter;
         this.profilesMap = profilesMap;
     }
 
@@ -23,8 +23,8 @@ public class ListLessonsView extends TemplateView {
         return lessons;
     }
 
-    public String getFilterString() {
-        return filterString;
+    public String getTermFilter() {
+        return termFilter;
     }
 
     public Map<String, Profile> getProfilesMap() {

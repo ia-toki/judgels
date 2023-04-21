@@ -6,7 +6,7 @@
     <form method="GET" action="/lessons">
       <@forms.formGroup>
         <label>Slug / additional note</label>
-        <input type="search" class="form-control" name="filter" value="${data.filterString}">
+        <input type="search" class="form-control" name="term" value="${data.termFilter}">
       </@forms.formGroup>
 
       <div class="text-center">

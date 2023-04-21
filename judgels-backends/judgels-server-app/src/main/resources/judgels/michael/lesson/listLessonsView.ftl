@@ -28,5 +28,5 @@
       </#list>
     </tbody>
   </@ui.table>
-  <@ui.pagination page=lessons filterString=filterString/>
+  <@ui.pagination page=lessons termFilter=termFilter/>
 </@template.layout>

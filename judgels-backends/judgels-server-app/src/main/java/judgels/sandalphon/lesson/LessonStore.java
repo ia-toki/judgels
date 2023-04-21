@@ -138,6 +138,19 @@ public final class LessonStore extends BaseLessonStore {
         return createLessonPartnerFromModel(lessonPartnerModel);
     }
 
+    public Page<Lesson> getLessons(String userJid, boolean isAdmin, String termFilter, int pageIndex) {
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .orderBy("updatedAt")
+                .page(pageIndex)
+                .build();
+
+        Page<LessonModel> models = isAdmin
+                ? lessonDao.selectPaged(termFilter, selectionOptions)
+                : lessonDao.selectPagedByUserJid(userJid, termFilter, selectionOptions);
+        return models.mapPage(p -> Lists.transform(p, LessonStore::createLessonFromModel));
+    }
+
     public void updateLesson(String lessonJid, String slug, String additionalNote) {
         LessonModel lessonModel = lessonDao.findByJid(lessonJid);
         lessonModel.slug = slug;

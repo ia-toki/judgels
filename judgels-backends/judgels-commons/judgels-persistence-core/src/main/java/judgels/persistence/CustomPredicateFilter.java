@@ -1,5 +1,6 @@
 package judgels.persistence;
 
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -25,6 +26,16 @@ public interface CustomPredicateFilter<M> {
             Predicate[] predicates = new Predicate[predicateFilters.length];
             for (int i = 0; i < predicateFilters.length; i++) {
                 predicates[i] = predicateFilters[i].apply(cb, cq, root);
+            }
+            return cb.and(predicates);
+        };
+    }
+
+    static <M> CustomPredicateFilter<M> and(List<CustomPredicateFilter<M>> predicateFilters) {
+        return (cb, cq, root) -> {
+            Predicate[] predicates = new Predicate[predicateFilters.size()];
+            for (int i = 0; i < predicateFilters.size(); i++) {
+                predicates[i] = predicateFilters.get(i).apply(cb, cq, root);
             }
             return cb.and(predicates);
         };
