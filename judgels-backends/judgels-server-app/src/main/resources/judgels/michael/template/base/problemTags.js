@@ -7,6 +7,15 @@ function checkStates() {
           tag.indeterminate = true;
         }
       });
+
+      if (!tag.indeterminate) {
+        document.querySelectorAll('.problemTag').forEach(child => {
+          if (tag.value !== child.value && child.value.startsWith(tag.value)) {
+            child.checked = false;
+            child.disabled = true;
+          }
+        });
+      }
     }
   });
 }
