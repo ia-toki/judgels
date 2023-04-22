@@ -13,13 +13,13 @@ public final class BundleItemAdapters {
     public static BundleItemAdapter fromItemType(ItemType itemType, ObjectMapper mapper) {
         switch (itemType) {
             case STATEMENT:
-                return new StatementItemAdapter(mapper);
+                return new StatementItemAdapter();
             case MULTIPLE_CHOICE:
-                return new MultipleChoiceItemAdapter(mapper);
+                return new MultipleChoiceItemAdapter();
             case SHORT_ANSWER:
-                return new ShortAnswerItemAdapter(mapper);
+                return new ShortAnswerItemAdapter();
             case ESSAY:
-                return new EssayItemAdapter(mapper);
+                return new EssayItemAdapter();
         }
 
         return null;

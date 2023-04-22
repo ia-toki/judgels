@@ -1,9 +1,0 @@
-@(form: Form[_])
-
-@if(form.hasGlobalErrors) {
-    <div class="alert alert-danger" role="alert">
-        @for(error <- form.globalErrors) {
-            @error.message
-        }
-    </div>
-}

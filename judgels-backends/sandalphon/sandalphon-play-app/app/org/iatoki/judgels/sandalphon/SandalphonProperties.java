@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
-import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.service.api.client.Client;
 
@@ -34,16 +33,6 @@ public final class SandalphonProperties {
                         .gradingRequestQueueName(config.getString("gabriel.gradingRequestQueueName"))
                         .gradingResponseQueueName(config.getString("gabriel.gradingResponseQueueName"))
                         .build());
-
-        if (config.hasPath("rabbitmq.host")) {
-            sandalphonConfig.rabbitMQConfig(new RabbitMQConfiguration.Builder()
-                    .host(config.getString("rabbitmq.host"))
-                    .port(config.getInt("rabbitmq.port"))
-                    .username(config.getString("rabbitmq.username"))
-                    .password(config.getString("rabbitmq.password"))
-                    .virtualHost(config.getString("rabbitmq.virtualHost"))
-                    .build());
-        }
 
         return sandalphonConfig.build();
     }

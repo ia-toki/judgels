@@ -1,6 +1,0 @@
-@import org.iatoki.judgels.sandalphon.problem.bundle.partner.BundlePartnerUpsertForm
-
-@(bundlePartnerUpsertForm: Form[BundlePartnerUpsertForm])(implicit fieldConstructor: b3.B3FieldConstructor)
-
-@b3.checkbox(bundlePartnerUpsertForm("isAllowedToSubmit"), '_label -> "Allowed to submit?")
-@b3.checkbox(bundlePartnerUpsertForm("isAllowedToManageItems"), '_label -> "Allowed to manage bundle items?")
