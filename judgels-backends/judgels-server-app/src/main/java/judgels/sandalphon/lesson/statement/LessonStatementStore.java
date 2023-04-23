@@ -17,7 +17,6 @@ import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.lesson.BaseLessonStore;
 import judgels.sandalphon.lesson.LessonFs;
 import judgels.sandalphon.persistence.LessonDao;
-import judgels.sandalphon.persistence.LessonModel;
 import judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 
@@ -63,9 +62,8 @@ public class LessonStatementStore extends BaseLessonStore {
     }
 
     public void updateStatement(String userJid, String lessonJid, String languageCode, LessonStatement statement) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        lessonFs.writeToFile(getStatementTitleFilePath(userJid, lessonModel.jid, languageCode), statement.getTitle());
-        lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonModel.jid, languageCode), statement.getText());
+        lessonFs.writeToFile(getStatementTitleFilePath(userJid, lessonJid, languageCode), statement.getTitle());
+        lessonFs.writeToFile(getStatementTextFilePath(userJid, lessonJid, languageCode), statement.getText());
     }
 
     public Map<String, StatementLanguageStatus> getAvailableLanguages(String userJid, String lessonJid) {
@@ -132,14 +130,12 @@ public class LessonStatementStore extends BaseLessonStore {
     }
 
     public void uploadStatementMediaFile(String userJid, String lessonJid, InputStream mediaFile, String filename) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
+        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonJid);
         lessonFs.uploadPublicFile(mediaDirPath.resolve(filename), mediaFile);
     }
 
     public void uploadStatementMediaFileZipped(String userJid, String lessonJid, InputStream mediaFileZipped) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonModel.jid);
+        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonJid);
         lessonFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
     }
 

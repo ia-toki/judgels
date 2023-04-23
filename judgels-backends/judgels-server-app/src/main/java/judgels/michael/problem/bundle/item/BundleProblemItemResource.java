@@ -37,7 +37,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
     @UnitOfWork(readOnly = true)
     public View listItems(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         List<BundleItem> items = itemStore.getNumberedItems(actor.getUserJid(), problem.getJid());
@@ -54,7 +54,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
             @FormParam("type") String type) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         ItemType itemType = ItemType.valueOf(type);
@@ -77,7 +77,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
             @PathParam("itemJid") String itemJid) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         BundleItem item = checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
@@ -107,7 +107,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
             @BeanParam ItemConfigForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         BundleItem item = checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
@@ -133,7 +133,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
             @PathParam("itemJid") String itemJid) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
         checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
 
@@ -152,7 +152,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
             @PathParam("itemJid") String itemJid) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
         checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
 
@@ -171,7 +171,7 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
             @PathParam("itemJid") String itemJid) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
         checkFound(itemStore.getNumberedItem(actor.getUserJid(), problem.getJid(), itemJid));
 

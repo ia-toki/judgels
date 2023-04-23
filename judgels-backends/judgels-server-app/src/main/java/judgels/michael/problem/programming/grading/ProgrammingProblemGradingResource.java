@@ -44,7 +44,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
     @UnitOfWork(readOnly = true)
     public View editGradingEngine(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         EditGradingEngineForm form = new EditGradingEngineForm();
@@ -68,7 +68,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             @BeanParam EditGradingEngineForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
@@ -91,7 +91,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
     @UnitOfWork(readOnly = true)
     public View editGradingConfig(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         String engine = programmingProblemStore.getGradingEngine(actor.getUserJid(), problem.getJid());
@@ -116,7 +116,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             @BeanParam GradingConfigForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         String engine = programmingProblemStore.getGradingEngine(actor.getUserJid(), problem.getJid());
@@ -136,7 +136,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
     @UnitOfWork
     public Response autoPopulateGradingConfigTestData(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         String engine = programmingProblemStore.getGradingEngine(actor.getUserJid(), problem.getJid());
@@ -158,7 +158,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
     @UnitOfWork(readOnly = true)
     public View listGradingTestDataFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         List<FileInfo> testDataFiles = programmingProblemStore.getGradingTestDataFiles(actor.getUserJid(), problem.getJid());
@@ -180,7 +180,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             @FormDataParam("fileZipped") InputStream fileZippedStream) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (fileStream != null) {
@@ -203,7 +203,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             @PathParam("filename") String filename) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         String testDataFileUrl = programmingProblemStore.getGradingTestDataFileURL(actor.getUserJid(), problem.getJid(), filename);
@@ -215,7 +215,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
     @UnitOfWork(readOnly = true)
     public View listGradingHelperFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         List<FileInfo> helperFiles = programmingProblemStore.getGradingHelperFiles(actor.getUserJid(), problem.getJid());
@@ -237,7 +237,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             @FormDataParam("fileZipped") InputStream fileZippedStream) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (fileStream != null) {
@@ -260,7 +260,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             @PathParam("filename") String filename) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         String helperFileUrl = programmingProblemStore.getGradingHelperFileURL(actor.getUserJid(), problem.getJid(), filename);
@@ -272,7 +272,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
     @UnitOfWork(readOnly = true)
     public View editGradingLanguageRestriction(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         LanguageRestriction languageRestriction = programmingProblemStore.getLanguageRestriction(actor.getUserJid(), problem.getJid());
@@ -295,7 +295,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             @BeanParam EditGradingLanguageRestrictionForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());

@@ -17,7 +17,7 @@ import judgels.sandalphon.persistence.LessonPartnerDao;
 public final class LessonStore extends BaseLessonStore {
     private final Git lessonGit;
     private final LessonDao lessonDao;
-    private final LessonPartnerDao lessonPartnerDao;
+    private final LessonPartnerDao partnerDao;
 
     @Inject
     public LessonStore(
@@ -25,12 +25,12 @@ public final class LessonStore extends BaseLessonStore {
             @LessonFs FileSystem lessonFs,
             @LessonGit Git lessonGit,
             LessonDao lessonDao,
-            LessonPartnerDao lessonPartnerDao) {
+            LessonPartnerDao partnerDao) {
 
         super(mapper, lessonFs);
         this.lessonGit = lessonGit;
         this.lessonDao = lessonDao;
-        this.lessonPartnerDao = lessonPartnerDao;
+        this.partnerDao = partnerDao;
     }
 
     public Lesson createLesson(String slug, String additionalNote) {
@@ -41,7 +41,7 @@ public final class LessonStore extends BaseLessonStore {
         lessonDao.insert(model);
         lessonFs.createDirectory(getClonesDirPath(model.jid));
 
-        return createLessonFromModel(model);
+        return fromModel(model);
     }
 
     public boolean lessonExistsByJid(String lessonJid) {
@@ -49,27 +49,24 @@ public final class LessonStore extends BaseLessonStore {
     }
 
     public boolean lessonExistsBySlug(String slug) {
-        return lessonDao.existsBySlug(slug);
+        return lessonDao.selectBySlug(slug).isPresent();
     }
 
-    public Optional<Lesson> findLessonById(long lessonId) {
-        return lessonDao.select(lessonId).map(m -> createLessonFromModel(m));
+    public Optional<Lesson> getLessonById(long lessonId) {
+        return lessonDao.select(lessonId).map(LessonStore::fromModel);
     }
 
-    public Lesson findLessonByJid(String lessonJid) {
-        LessonModel model = lessonDao.findByJid(lessonJid);
-        return createLessonFromModel(model);
+    public Optional<Lesson> getLessonByJid(String lessonJid) {
+        return lessonDao.selectByJid(lessonJid).map(LessonStore::fromModel);
     }
 
-    public Lesson findLessonBySlug(String slug) {
-        LessonModel model = lessonDao.findBySlug(slug);
-        return createLessonFromModel(model);
+    public Optional<Lesson> getLessonBySlug(String slug) {
+        return lessonDao.selectBySlug(slug).map(LessonStore::fromModel);
     }
 
     public boolean isUserPartnerForLesson(String lessonJid, String userJid) {
-        return lessonPartnerDao.existsByLessonJidAndPartnerJid(lessonJid, userJid);
+        return partnerDao.existsByLessonJidAndPartnerJid(lessonJid, userJid);
     }
-
 
     public Page<Lesson> getLessons(String userJid, boolean isAdmin, String termFilter, int pageIndex) {
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
@@ -81,15 +78,15 @@ public final class LessonStore extends BaseLessonStore {
         Page<LessonModel> models = isAdmin
                 ? lessonDao.selectPaged(termFilter, selectionOptions)
                 : lessonDao.selectPagedByUserJid(userJid, termFilter, selectionOptions);
-        return models.mapPage(p -> Lists.transform(p, LessonStore::createLessonFromModel));
+        return models.mapPage(p -> Lists.transform(p, LessonStore::fromModel));
     }
 
     public void updateLesson(String lessonJid, String slug, String additionalNote) {
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        lessonModel.slug = slug;
-        lessonModel.additionalNote = additionalNote;
+        LessonModel model = lessonDao.findByJid(lessonJid);
+        model.slug = slug;
+        model.additionalNote = additionalNote;
 
-        lessonDao.update(lessonModel);
+        lessonDao.update(model);
     }
 
     public void initRepository(String userJid, String lessonJid) {
@@ -115,14 +112,14 @@ public final class LessonStore extends BaseLessonStore {
         }
     }
 
-    private static  Lesson createLessonFromModel(LessonModel lessonModel) {
+    private static Lesson fromModel(LessonModel model) {
         return new Lesson.Builder()
-                .id(lessonModel.id)
-                .jid(lessonModel.jid)
-                .slug(lessonModel.slug)
-                .authorJid(lessonModel.createdBy)
-                .additionalNote(lessonModel.additionalNote)
-                .lastUpdateTime(lessonModel.createdAt)
+                .id(model.id)
+                .jid(model.jid)
+                .slug(model.slug)
+                .authorJid(model.createdBy)
+                .additionalNote(model.additionalNote)
+                .lastUpdateTime(model.createdAt)
                 .build();
     }
 }

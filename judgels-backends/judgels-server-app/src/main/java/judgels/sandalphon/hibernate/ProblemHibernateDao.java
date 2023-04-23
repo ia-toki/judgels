@@ -5,11 +5,9 @@ import static judgels.sandalphon.hibernate.ProblemPartnerHibernateDao.hasPartner
 import static judgels.sandalphon.hibernate.ProblemTagHibernateDao.hasTagsMatching;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
@@ -24,6 +22,13 @@ public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel>
     @Inject
     public ProblemHibernateDao(HibernateDaoData data) {
         super(data);
+    }
+
+    @Override
+    public Optional<ProblemModel> selectBySlug(String slug) {
+        return selectByFilter(new FilterOptions.Builder<ProblemModel>()
+                .putColumnsEq(ProblemModel_.slug, slug)
+                .build());
     }
 
     @Override
@@ -43,30 +48,6 @@ public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel>
                 .putColumnsLike(ProblemModel_.additionalNote, termFilter)
                 .addCustomPredicates(hasTagsMatching(tagsFilterByType))
                 .build(), options);
-    }
-
-    @Override
-    public ProblemModel findBySlug(String slug) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<ProblemModel> query = cb.createQuery(ProblemModel.class);
-        Root<ProblemModel> root = query.from(getEntityClass());
-
-        query.where(cb.equal(root.get(ProblemModel_.slug), slug));
-
-        return currentSession().createQuery(query).getSingleResult();
-    }
-
-    @Override
-    public boolean existsBySlug(String slug) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<ProblemModel> root = query.from(getEntityClass());
-
-        query
-                .select(cb.count(root))
-                .where(cb.equal(root.get(ProblemModel_.slug), slug));
-
-        return currentSession().createQuery(query).getSingleResult() > 0;
     }
 
     static CustomPredicateFilter<ProblemModel> isVisible(String userJid) {

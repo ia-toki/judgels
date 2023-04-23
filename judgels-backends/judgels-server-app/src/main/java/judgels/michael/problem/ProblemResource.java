@@ -126,12 +126,12 @@ public class ProblemResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View viewProblem(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         Profile profile = profileStore.getProfile(problem.getAuthorJid());
 
-        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        Map<ProblemSetterRole, List<String>> setters = problemStore.getProblemSetters(problem.getJid());
         Map<String, Profile> profilesMap = profileStore.getProfiles(setters.values()
                 .stream()
                 .flatMap(List::stream)
@@ -154,10 +154,10 @@ public class ProblemResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View editProblem(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        Map<ProblemSetterRole, List<String>> setters = problemStore.getProblemSetters(problem.getJid());
         Map<String, Profile> profilesMap = profileStore.getProfiles(setters.values()
                 .stream()
                 .flatMap(List::stream)
@@ -190,7 +190,7 @@ public class ProblemResource extends BaseProblemResource {
             @BeanParam EditProblemForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!problem.getSlug().equals(form.slug) && problemStore.problemExistsBySlug(form.slug)) {
@@ -207,7 +207,7 @@ public class ProblemResource extends BaseProblemResource {
         usernames.addAll(Arrays.asList(form.editorialistUsernames.split(",")));
         Map<String, String> jidsMap = userStore.translateUsernamesToJids(usernames);
 
-        Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
+        Map<ProblemSetterRole, List<String>> setters = problemStore.getProblemSetters(problem.getJid());
         updateProblemSetters(problem.getJid(), ProblemSetterRole.WRITER, form.writerUsernames, setters, jidsMap);
         updateProblemSetters(problem.getJid(), ProblemSetterRole.DEVELOPER, form.developerUsernames, setters, jidsMap);
         updateProblemSetters(problem.getJid(), ProblemSetterRole.TESTER, form.testerUsernames, setters, jidsMap);
@@ -249,7 +249,7 @@ public class ProblemResource extends BaseProblemResource {
 
         List<String> userJids = usernamesToUserJids(usernames, jidsMap);
         if (!userJids.equals(setters.getOrDefault(role, ImmutableList.of()))) {
-            problemStore.updateProblemSettersByProblemJidAndRole(problemJid, role, userJids);
+            problemStore.updateProblemSetters(problemJid, role, userJids);
         }
     }
 

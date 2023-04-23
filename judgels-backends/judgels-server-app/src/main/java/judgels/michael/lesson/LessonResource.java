@@ -100,7 +100,7 @@ public class LessonResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View viewLesson(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
         Profile profile = profileStore.getProfile(lesson.getAuthorJid());
@@ -115,7 +115,7 @@ public class LessonResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View editLesson(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         EditLessonForm form = new EditLessonForm();
@@ -140,7 +140,7 @@ public class LessonResource extends BaseLessonResource {
             @BeanParam EditLessonForm form) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         if (!lesson.getSlug().equals(form.slug) && lessonStore.lessonExistsBySlug(form.slug)) {

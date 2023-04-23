@@ -45,7 +45,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View viewStatement(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
         Set<String> enabledLanguages = statementStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
@@ -62,7 +62,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View editStatement(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
         Set<String> enabledLanguages = statementStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
@@ -87,7 +87,7 @@ public class LessonStatementResource extends BaseLessonResource {
             @BeanParam EditStatementForm form) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         Set<String> enabledLanguages = statementStore.getEnabledLanguages(actor.getUserJid(), lesson.getJid());
@@ -107,7 +107,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View listStatementMediaFiles(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
         List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actor.getUserJid(), lesson.getJid());
@@ -129,7 +129,7 @@ public class LessonStatementResource extends BaseLessonResource {
             @FormDataParam("fileZipped") InputStream fileZippedStream) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         if (fileStream != null) {
@@ -152,7 +152,7 @@ public class LessonStatementResource extends BaseLessonResource {
             @PathParam("filename") String filename) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), filename);
@@ -164,7 +164,7 @@ public class LessonStatementResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View listStatementLanguages(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
         Map<String, StatementLanguageStatus>
@@ -185,7 +185,7 @@ public class LessonStatementResource extends BaseLessonResource {
             @FormParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
@@ -207,7 +207,7 @@ public class LessonStatementResource extends BaseLessonResource {
             @PathParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
@@ -229,7 +229,7 @@ public class LessonStatementResource extends BaseLessonResource {
             @PathParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
@@ -251,7 +251,7 @@ public class LessonStatementResource extends BaseLessonResource {
             @PathParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {

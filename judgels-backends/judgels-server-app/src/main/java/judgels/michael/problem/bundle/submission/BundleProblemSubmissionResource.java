@@ -46,7 +46,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
             @QueryParam("page") @DefaultValue("1") int pageIndex) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageIndex);
@@ -69,7 +69,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
             MultivaluedMap<String, String> form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
         Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
@@ -86,7 +86,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
     @UnitOfWork
     public Response regradeSubmissions(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
         for (int pageIndex = 1; ; pageIndex++) {
@@ -109,7 +109,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
             @PathParam("submissionId") int submissionId) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
@@ -129,7 +129,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
             @PathParam("submissionId") int submissionId) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));

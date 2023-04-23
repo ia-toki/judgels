@@ -38,31 +38,6 @@ public final class LessonPartnerHibernateDao extends HibernateDao<LessonPartnerM
     }
 
     @Override
-    public LessonPartnerModel findByLessonJidAndPartnerJid(String lessonJid, String partnerJid) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<LessonPartnerModel> query = cb.createQuery(getEntityClass());
-        Root<LessonPartnerModel> root = query.from(getEntityClass());
-
-        query
-                .where(cb.and(cb.equal(root.get(LessonPartnerModel_.lessonJid), lessonJid), cb.equal(root.get(LessonPartnerModel_.userJid), partnerJid)));
-
-        return currentSession().createQuery(query).getSingleResult();
-    }
-
-    @Override
-    public List<String> getLessonJidsByPartnerJid(String partnerJid) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<String> query = cb.createQuery(String.class);
-        Root<LessonPartnerModel> root = query.from(getEntityClass());
-
-        query
-                .select(root.get(LessonPartnerModel_.lessonJid))
-                .where(cb.equal(root.get(LessonPartnerModel_.userJid), partnerJid));
-
-        return currentSession().createQuery(query).getResultList();
-    }
-
-    @Override
     public Optional<LessonPartnerModel> selectByLessonJidAndUserJid(String lessonJid, String userJid) {
         return selectByFilter(new FilterOptions.Builder<LessonPartnerModel>()
                 .putColumnsEq(LessonPartnerModel_.lessonJid, lessonJid)

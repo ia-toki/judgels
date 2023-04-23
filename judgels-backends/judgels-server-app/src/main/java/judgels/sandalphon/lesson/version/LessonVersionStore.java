@@ -44,8 +44,8 @@ public class LessonVersionStore extends BaseLessonStore {
         if (!success) {
             lessonGit.resetToParent(root);
         } else {
-            LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-            lessonDao.update(lessonModel);
+            LessonModel model = lessonDao.findByJid(lessonJid);
+            lessonDao.update(model);
         }
 
         return success;
@@ -70,8 +70,8 @@ public class LessonVersionStore extends BaseLessonStore {
         if (lessonGit.push(root)) {
             lessonGit.resetHard(origin);
 
-            LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-            lessonDao.update(lessonModel);
+            LessonModel model = lessonDao.findByJid(lessonJid);
+            lessonDao.update(model);
 
             return true;
         }
@@ -95,7 +95,7 @@ public class LessonVersionStore extends BaseLessonStore {
 
         lessonGit.restore(root, hash);
 
-        LessonModel lessonModel = lessonDao.findByJid(lessonJid);
-        lessonDao.update(lessonModel);
+        LessonModel model = lessonDao.findByJid(lessonJid);
+        lessonDao.update(model);
     }
 }

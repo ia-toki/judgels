@@ -1,5 +1,7 @@
 package judgels.sandalphon.problem.base;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -8,7 +10,6 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
 import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
 import judgels.service.ServiceUtils;
@@ -34,8 +35,8 @@ public class ProblemResource {
             @PathParam("problemJid") String problemJid,
             @PathParam("mediaFilename") String mediaFilename) {
 
-        Problem problem = problemStore.findProblemByJid(problemJid);
-        String mediaUrl = statementStore.getStatementMediaFileURL(null, problem.getJid(), mediaFilename);
+        checkFound(problemStore.getProblemByJid(problemJid));
+        String mediaUrl = statementStore.getStatementMediaFileURL(null, problemJid, mediaFilename);
 
         return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }
@@ -48,8 +49,8 @@ public class ProblemResource {
             @PathParam("problemJid") String problemJid,
             @PathParam("mediaFilename") String mediaFilename) {
 
-        Problem problem = problemStore.findProblemByJid(problemJid);
-        String mediaUrl = editorialStore.getEditorialMediaFileURL(null, problem.getJid(), mediaFilename);
+        checkFound(problemStore.getProblemByJid(problemJid));
+        String mediaUrl = editorialStore.getEditorialMediaFileURL(null, problemJid, mediaFilename);
 
         return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }

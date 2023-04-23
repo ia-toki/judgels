@@ -3,10 +3,8 @@ package judgels.sandalphon.hibernate;
 import static judgels.persistence.CustomPredicateFilter.or;
 import static judgels.sandalphon.hibernate.LessonPartnerHibernateDao.hasPartner;
 
+import java.util.Optional;
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
@@ -18,10 +16,16 @@ import judgels.sandalphon.persistence.LessonModel;
 import judgels.sandalphon.persistence.LessonModel_;
 
 public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> implements LessonDao {
-
     @Inject
     public LessonHibernateDao(HibernateDaoData data) {
         super(data);
+    }
+
+    @Override
+    public Optional<LessonModel> selectBySlug(String slug) {
+        return selectByFilter(new FilterOptions.Builder<LessonModel>()
+                .putColumnsEq(LessonModel_.slug, slug)
+                .build());
     }
 
     @Override
@@ -39,30 +43,6 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
                 .putColumnsLike(LessonModel_.slug, termFilter)
                 .putColumnsLike(LessonModel_.additionalNote, termFilter)
                 .build(), options);
-    }
-
-    @Override
-    public LessonModel findBySlug(String slug) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<LessonModel> query = cb.createQuery(LessonModel.class);
-        Root<LessonModel> root = query.from(getEntityClass());
-
-        query.where(cb.equal(root.get(LessonModel_.slug), slug));
-
-        return currentSession().createQuery(query).getSingleResult();
-    }
-
-    @Override
-    public boolean existsBySlug(String slug) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<LessonModel> root = query.from(getEntityClass());
-
-        query
-                .select(cb.count(root))
-                .where(cb.equal(root.get(LessonModel_.slug), slug));
-
-        return currentSession().createQuery(query).getSingleResult() > 0;
     }
 
     static CustomPredicateFilter<LessonModel> isVisible(String userJid) {

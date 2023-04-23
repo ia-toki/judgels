@@ -26,7 +26,7 @@ public abstract class ProblemStatementRenderResources extends BaseProblemResourc
             @PathParam("mediaFilename") String mediaFilename) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);

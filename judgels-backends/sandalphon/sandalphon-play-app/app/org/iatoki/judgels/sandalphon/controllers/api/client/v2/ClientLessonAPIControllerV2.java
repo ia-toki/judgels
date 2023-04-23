@@ -93,7 +93,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
             if (!lessonStore.lessonExistsBySlug(slug)) {
                 continue;
             }
-            Lesson lesson = lessonStore.findLessonBySlug(slug);
+            Lesson lesson = lessonStore.getLessonBySlug(slug).get();
             if (isPartnerOrAbove(userJid, lesson)) {
                 result.put(slug, lesson.getJid());
             }
@@ -103,7 +103,7 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
     }
 
     private LessonInfo getLessonInfo(String lessonJid) {
-        Lesson lesson = lessonStore.findLessonByJid(lessonJid);
+        Lesson lesson = lessonStore.getLessonByJid(lessonJid).get();
 
         return new LessonInfo.Builder()
                 .slug(lesson.getSlug())

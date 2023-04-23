@@ -41,7 +41,7 @@ public class LessonVersionResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View viewVersionLocalChanges(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         CommitVersionForm form = new CommitVersionForm();
@@ -66,7 +66,7 @@ public class LessonVersionResource extends BaseLessonResource {
             @BeanParam CommitVersionForm form) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         String localChangesError = null;
@@ -93,7 +93,7 @@ public class LessonVersionResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View listVersionHistory(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         List<GitCommit> versions = versionStore.getVersions(actor.getUserJid(), lesson.getJid());
@@ -117,7 +117,7 @@ public class LessonVersionResource extends BaseLessonResource {
             @PathParam("versionHash") String versionHash) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         versionStore.restore(lesson.getJid(), versionHash);
@@ -130,7 +130,7 @@ public class LessonVersionResource extends BaseLessonResource {
     @UnitOfWork
     public Response rebaseVersionLocalChanges(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         versionStore.fetchUserClone(actor.getUserJid(), lesson.getJid());
@@ -150,7 +150,7 @@ public class LessonVersionResource extends BaseLessonResource {
     @UnitOfWork
     public Response discardVersionLocalChanges(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
         versionStore.discardUserClone(actor.getUserJid(), lesson.getJid());

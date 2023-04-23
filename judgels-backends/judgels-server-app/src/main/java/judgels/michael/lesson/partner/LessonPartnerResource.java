@@ -44,7 +44,7 @@ public class LessonPartnerResource extends BaseLessonResource {
             @PathParam("lessonId") int lessonId) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.isAuthor(actor, lesson));
 
         List<Partner> partners = partnerStore.getPartners(lesson.getJid());
@@ -61,7 +61,7 @@ public class LessonPartnerResource extends BaseLessonResource {
     @UnitOfWork(readOnly = true)
     public View editPartners(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.isAuthor(actor, lesson));
 
         List<Partner> partners = partnerStore.getPartners(lesson.getJid());
@@ -83,7 +83,7 @@ public class LessonPartnerResource extends BaseLessonResource {
             @BeanParam EditPartnersForm form) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.isAuthor(actor, lesson));
 
         Optional<List<Partner>> partners = PartnerUtils.csvToPartners(form.csv, userStore);

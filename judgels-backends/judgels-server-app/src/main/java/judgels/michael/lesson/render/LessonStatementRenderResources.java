@@ -26,7 +26,7 @@ public abstract class LessonStatementRenderResources extends BaseLessonResource 
             @PathParam("mediaFilename") String mediaFilename) {
 
         Actor actor = actorChecker.check(req);
-        Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), mediaFilename);

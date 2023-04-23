@@ -44,7 +44,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
             @PathParam("problemId") int problemId) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.isAuthor(actor, problem));
 
         List<Partner> partners = partnerStore.getPartners(problem.getJid());
@@ -61,7 +61,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View editPartners(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.isAuthor(actor, problem));
 
         List<Partner> partners = partnerStore.getPartners(problem.getJid());
@@ -83,7 +83,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
             @BeanParam EditPartnersForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.isAuthor(actor, problem));
 
         Optional<List<Partner>> partners = PartnerUtils.csvToPartners(form.csv, userStore);

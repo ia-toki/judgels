@@ -46,7 +46,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View editStatement(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
@@ -71,7 +71,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             @BeanParam EditStatementForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
@@ -91,7 +91,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View listStatementMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         List<FileInfo> mediaFiles = statementStore.getStatementMediaFiles(actor.getUserJid(), problem.getJid());
@@ -113,7 +113,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             @FormDataParam("fileZipped") InputStream fileZippedStream) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (fileStream != null) {
@@ -136,7 +136,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             @PathParam("filename") String filename) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
@@ -148,7 +148,7 @@ public class ProblemStatementResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View listStatementLanguages(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         Map<String, StatementLanguageStatus> availableLanguages = statementStore.getStatementAvailableLanguages(actor.getUserJid(), problem.getJid());
@@ -168,7 +168,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             @FormParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
@@ -190,7 +190,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             @PathParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
@@ -212,7 +212,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             @PathParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {
@@ -234,7 +234,7 @@ public class ProblemStatementResource extends BaseProblemResource {
             @PathParam("language") String language) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         if (!WorldLanguageRegistry.getInstance().getLanguages().containsKey(language)) {

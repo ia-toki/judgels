@@ -120,7 +120,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return Results.notFound();
         }
 
-        Problem problem = problemStore.findProblemByJid(problemJid);
+        Problem problem = problemStore.getProblemByJid(problemJid).get();
         if (ProblemType.valueOf(problem.getType().name()) != ProblemType.PROGRAMMING) {
             return notFound();
         }
@@ -144,7 +144,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return notFound();
         }
 
-        Problem problem = problemStore.findProblemByJid(problemJid);
+        Problem problem = problemStore.getProblemByJid(problemJid).get();
         if (ProblemType.valueOf(problem.getType().name()) != ProblemType.BUNDLE) {
             return notFound();
         }
@@ -230,7 +230,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             if (!problemStore.problemExistsBySlug(slug)) {
                 continue;
             }
-            Problem problem = problemStore.findProblemBySlug(slug);
+            Problem problem = problemStore.getProblemBySlug(slug).get();
             if (isPartnerOrAbove(userJid, problem)) {
                 result.put(slug, problem.getJid());
             }
@@ -266,7 +266,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
     }
 
     private ProblemInfo getProblemInfo(String problemJid) {
-        Problem problem = problemStore.findProblemByJid(problemJid);
+        Problem problem = problemStore.getProblemByJid(problemJid).get();
 
         return new ProblemInfo.Builder()
                 .slug(problem.getSlug())
@@ -282,7 +282,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return new ProblemMetadata.Builder()
                 .hasEditorial(editorialStore.hasEditorial(null, problemJid))
                 .tags(problemTagStore.findTopicTags(problemJid))
-                .settersMap(problemStore.findProblemSettersByProblemJid(problemJid))
+                .settersMap(problemStore.getProblemSetters(problemJid))
                 .build();
     }
 

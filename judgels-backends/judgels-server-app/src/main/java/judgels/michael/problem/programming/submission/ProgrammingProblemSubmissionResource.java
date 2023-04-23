@@ -59,7 +59,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
             @QueryParam("page") @DefaultValue("1") int pageIndex) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageIndex));
@@ -83,7 +83,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
             FormDataMultiPart parts) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
         String gradingEngine = parts.getField("gradingEngine").getValue();
@@ -114,7 +114,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
     @UnitOfWork
     public Response regradeSubmissions(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
         for (int pageIndex = 1; ; pageIndex++) {
@@ -137,7 +137,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
             @PathParam("submissionId") int submissionId) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
@@ -164,7 +164,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
             @PathParam("submissionId") int submissionId) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));

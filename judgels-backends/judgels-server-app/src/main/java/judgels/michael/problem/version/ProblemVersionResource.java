@@ -43,7 +43,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View viewVersionLocalChanges(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         CommitVersionForm form = new CommitVersionForm();
@@ -68,7 +68,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
             @BeanParam CommitVersionForm form) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         String localChangesError = null;
@@ -96,7 +96,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View listVersionHistory(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         List<GitCommit> versions = versionStore.getVersions(actor.getUserJid(), problem.getJid());
@@ -120,7 +120,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
             @PathParam("versionHash") String versionHash) {
 
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         versionStore.restore(problem.getJid(), versionHash);
@@ -133,7 +133,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
     @UnitOfWork
     public Response rebaseVersionLocalChanges(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         versionStore.fetchUserClone(actor.getUserJid(), problem.getJid());
@@ -153,7 +153,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
     @UnitOfWork
     public Response discardVersionLocalChanges(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
-        Problem problem = checkFound(problemStore.findProblemById(problemId));
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         versionStore.discardUserClone(actor.getUserJid(), problem.getJid());

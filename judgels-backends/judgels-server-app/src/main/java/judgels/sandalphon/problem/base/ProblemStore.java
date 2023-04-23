@@ -54,7 +54,7 @@ public class ProblemStore extends BaseProblemStore {
         problemDao.insertWithJid(JidGenerator.newChildJid(ProblemModel.class, type.ordinal()), model);
         problemFs.createDirectory(getClonesDirPath(model.jid));
 
-        return createProblemFromModel(model);
+        return fromModel(model);
     }
 
     public boolean problemExistsByJid(String problemJid) {
@@ -62,21 +62,19 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public boolean problemExistsBySlug(String slug) {
-        return problemDao.existsBySlug(slug);
+        return problemDao.selectBySlug(slug).isPresent();
     }
 
-    public Optional<Problem> findProblemById(long problemId) {
-        return problemDao.select(problemId).map(ProblemStore::createProblemFromModel);
+    public Optional<Problem> getProblemById(long problemId) {
+        return problemDao.select(problemId).map(ProblemStore::fromModel);
     }
 
-    public Problem findProblemByJid(String problemJid) {
-        ProblemModel model = problemDao.findByJid(problemJid);
-        return createProblemFromModel(model);
+    public Optional<Problem> getProblemByJid(String problemJid) {
+        return problemDao.selectByJid(problemJid).map(ProblemStore::fromModel);
     }
 
-    public Problem findProblemBySlug(String slug) {
-        ProblemModel model = problemDao.findBySlug(slug);
-        return createProblemFromModel(model);
+    public Optional<Problem> getProblemBySlug(String slug) {
+        return problemDao.selectBySlug(slug).map(ProblemStore::fromModel);
     }
 
     public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageIndex) {
@@ -91,10 +89,10 @@ public class ProblemStore extends BaseProblemStore {
         Page<ProblemModel> models = isAdmin
                 ? problemDao.selectPaged(termFilter, tagsFilterByType, selectionOptions)
                 : problemDao.selectPagedByUserJid(userJid, termFilter, tagsFilterByType, selectionOptions);
-        return models.mapPage(p -> Lists.transform(p, ProblemStore::createProblemFromModel));
+        return models.mapPage(p -> Lists.transform(p, ProblemStore::fromModel));
     }
 
-    public Map<ProblemSetterRole, List<String>> findProblemSettersByProblemJid(String problemJid) {
+    public Map<ProblemSetterRole, List<String>> getProblemSetters(String problemJid) {
         Map<ProblemSetterRole, List<String>> setters = Maps.newHashMap();
         for (ProblemSetterModel m : setterDao.selectAllByProblemJid(problemJid)) {
             ProblemSetterRole role = ProblemSetterRole.valueOf(m.role);
@@ -104,7 +102,7 @@ public class ProblemStore extends BaseProblemStore {
         return setters;
     }
 
-    public void updateProblemSettersByProblemJidAndRole(String problemJid, ProblemSetterRole role, List<String> userJids) {
+    public void updateProblemSetters(String problemJid, ProblemSetterRole role, List<String> userJids) {
         setterDao.selectAllByProblemJidAndRole(problemJid, role).forEach(setterDao::delete);
         setterDao.flush();
 
@@ -162,7 +160,7 @@ public class ProblemStore extends BaseProblemStore {
         }
     }
 
-    public static Problem createProblemFromModel(ProblemModel model) {
+    private static Problem fromModel(ProblemModel model) {
         return new Problem.Builder()
                 .id(model.id)
                 .jid(model.jid)

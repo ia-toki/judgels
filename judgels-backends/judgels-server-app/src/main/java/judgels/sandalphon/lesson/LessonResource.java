@@ -1,5 +1,7 @@
 package judgels.sandalphon.lesson;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -8,7 +10,6 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.lesson.statement.LessonStatementStore;
 import judgels.service.ServiceUtils;
 
@@ -31,8 +32,8 @@ public class LessonResource {
             @PathParam("lessonJid") String lessonJid,
             @PathParam("mediaFilename") String mediaFilename) {
 
-        Lesson lesson = lessonStore.findLessonByJid(lessonJid);
-        String mediaUrl = statementStore.getStatementMediaFileURL(null, lesson.getJid(), mediaFilename);
+        checkFound(lessonStore.getLessonByJid(lessonJid));
+        String mediaUrl = statementStore.getStatementMediaFileURL(null, lessonJid, mediaFilename);
 
         return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
     }
