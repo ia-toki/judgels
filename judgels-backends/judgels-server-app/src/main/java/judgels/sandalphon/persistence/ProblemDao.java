@@ -10,8 +10,6 @@ public interface ProblemDao extends JudgelsDao<ProblemModel> {
     Page<ProblemModel> selectPaged(String termFilter, List<Set<String>> tagsFilter, SelectionOptions options);
     Page<ProblemModel> selectPagedByUserJid(String userJid, String termFilter, List<Set<String>> tagsFilter, SelectionOptions options);
 
-    List<String> getJidsByAuthorJid(String authorJid);
-
     ProblemModel findBySlug(String slug);
 
     boolean existsBySlug(String slug);

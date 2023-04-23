@@ -8,10 +8,6 @@ public interface ProblemPartnerDao extends Dao<ProblemPartnerModel> {
 
     boolean existsByProblemJidAndPartnerJid(String problemJid, String partnerJid);
 
-    ProblemPartnerModel findByProblemJidAndPartnerJid(String problemJid, String partnerJid);
-
-    List<String> getProblemJidsByPartnerJid(String partnerJid);
-
     Optional<ProblemPartnerModel> selectByProblemJidAndUserJid(String problemJid, String userJid);
     List<ProblemPartnerModel> selectAllByProblemJid(String problemJid);
 }

@@ -46,19 +46,6 @@ public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel>
     }
 
     @Override
-    public List<String> getJidsByAuthorJid(String authorJid) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<String> query = cb.createQuery(String.class);
-        Root<ProblemModel> root = query.from(getEntityClass());
-
-        query
-                .select(root.get(ProblemModel_.jid))
-                .where(cb.equal(root.get(ProblemModel_.createdBy), authorJid));
-
-        return currentSession().createQuery(query).getResultList();
-    }
-
-    @Override
     public ProblemModel findBySlug(String slug) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<ProblemModel> query = cb.createQuery(ProblemModel.class);

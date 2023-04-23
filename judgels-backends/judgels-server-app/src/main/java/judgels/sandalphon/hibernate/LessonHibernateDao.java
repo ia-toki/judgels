@@ -3,7 +3,6 @@ package judgels.sandalphon.hibernate;
 import static judgels.persistence.CustomPredicateFilter.or;
 import static judgels.sandalphon.hibernate.LessonPartnerHibernateDao.hasPartner;
 
-import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -40,19 +39,6 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
                 .putColumnsLike(LessonModel_.slug, termFilter)
                 .putColumnsLike(LessonModel_.additionalNote, termFilter)
                 .build(), options);
-    }
-
-    @Override
-    public List<String> getJidsByAuthorJid(String authorJid) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<String> query = cb.createQuery(String.class);
-        Root<LessonModel> root = query.from(getEntityClass());
-
-        query
-                .select(root.get(LessonModel_.jid))
-                .where(cb.equal(root.get(LessonModel_.createdBy), authorJid));
-
-        return currentSession().createQuery(query).getResultList();
     }
 
     @Override

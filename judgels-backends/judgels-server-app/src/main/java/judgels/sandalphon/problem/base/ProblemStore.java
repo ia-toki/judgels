@@ -3,7 +3,6 @@ package judgels.sandalphon.problem.base;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -11,23 +10,16 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.JidGenerator;
-import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.Git;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.api.problem.partner.ProblemPartner;
-import judgels.sandalphon.api.problem.partner.ProblemPartnerChildConfig;
-import judgels.sandalphon.api.problem.partner.ProblemPartnerConfig;
 import judgels.sandalphon.persistence.ProblemDao;
 import judgels.sandalphon.persistence.ProblemModel;
 import judgels.sandalphon.persistence.ProblemPartnerDao;
-import judgels.sandalphon.persistence.ProblemPartnerModel;
-import judgels.sandalphon.persistence.ProblemPartnerModel_;
 import judgels.sandalphon.persistence.ProblemSetterDao;
 import judgels.sandalphon.persistence.ProblemSetterModel;
 import judgels.sandalphon.problem.base.tag.ProblemTags;
@@ -129,72 +121,6 @@ public class ProblemStore extends BaseProblemStore {
         return partnerDao.existsByProblemJidAndPartnerJid(problemJid, userJid);
     }
 
-    public void createProblemPartner(String problemJid, String userJid, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig) {
-        ProblemModel model = problemDao.findByJid(problemJid);
-
-        ProblemPartnerModel partnerModel = new ProblemPartnerModel();
-        partnerModel.problemJid = model.jid;
-        partnerModel.userJid = userJid;
-
-        try {
-            partnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
-            partnerModel.childConfig = mapper.writeValueAsString(childConfig);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        partnerDao.insert(partnerModel);
-        problemDao.update(model);
-    }
-
-    public void updateProblemPartner(long problemPartnerId, ProblemPartnerConfig baseConfig, ProblemPartnerChildConfig childConfig) {
-        ProblemPartnerModel partnerModel = partnerDao.find(problemPartnerId);
-
-        try {
-            partnerModel.baseConfig = mapper.writeValueAsString(baseConfig);
-            partnerModel.childConfig = mapper.writeValueAsString(childConfig);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        partnerDao.update(partnerModel);
-
-        ProblemModel model = problemDao.findByJid(partnerModel.problemJid);
-        problemDao.update(model);
-    }
-
-    public Page<ProblemPartner> getPageOfProblemPartners(String problemJid, long pageIndex, String orderBy, String orderDir) {
-        FilterOptions<ProblemPartnerModel> filterOptions = new FilterOptions.Builder<ProblemPartnerModel>()
-                .putColumnsEq(ProblemPartnerModel_.problemJid, problemJid)
-                .build();
-        SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .page((int) pageIndex)
-                .orderBy(orderBy)
-                .orderDir(OrderDir.of(orderDir))
-                .build();
-
-        long totalCount = partnerDao.selectCount(filterOptions);
-        List<ProblemPartnerModel> models = partnerDao.selectAll(filterOptions, selectionOptions);
-        List<ProblemPartner> partners = Lists.transform(models, this::createProblemPartnerFromModel);
-
-        return new Page.Builder<ProblemPartner>()
-                .page(partners)
-                .totalCount(totalCount)
-                .pageIndex(selectionOptions.getPage())
-                .pageSize(selectionOptions.getPageSize())
-                .build();
-    }
-
-    public Optional<ProblemPartner> findProblemPartnerById(long problemPartnerId) {
-        return partnerDao.select(problemPartnerId).map(this::createProblemPartnerFromModel);
-    }
-
-    public ProblemPartner findProblemPartnerByProblemJidAndPartnerJid(String problemJid, String partnerJid) {
-        ProblemPartnerModel model = partnerDao.findByProblemJidAndPartnerJid(problemJid, partnerJid);
-        return createProblemPartnerFromModel(model);
-    }
-
     public void updateProblem(String problemJid, String slug, String additionalNote) {
         ProblemModel model = problemDao.findByJid(problemJid);
         model.slug = slug;
@@ -246,19 +172,5 @@ public class ProblemStore extends BaseProblemStore {
                 .lastUpdateTime(model.updatedAt)
                 .type(getProblemType(model))
                 .build();
-    }
-
-    private ProblemPartner createProblemPartnerFromModel(ProblemPartnerModel model) {
-        try {
-            return new ProblemPartner.Builder()
-                    .id(model.id)
-                    .problemJid(model.problemJid)
-                    .userJid(model.userJid)
-                    .baseConfig(mapper.readValue(model.baseConfig, ProblemPartnerConfig.class))
-                    .childConfig(mapper.readValue(model.childConfig, ProblemPartnerChildConfig.class))
-                    .build();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
