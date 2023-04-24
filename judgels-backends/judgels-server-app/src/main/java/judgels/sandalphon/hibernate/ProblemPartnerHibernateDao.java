@@ -3,8 +3,6 @@ package judgels.sandalphon.hibernate;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import judgels.persistence.CustomPredicateFilter;
@@ -22,19 +20,6 @@ public final class ProblemPartnerHibernateDao extends HibernateDao<ProblemPartne
     @Inject
     public ProblemPartnerHibernateDao(HibernateDaoData data) {
         super(data);
-    }
-
-    @Override
-    public boolean existsByProblemJidAndPartnerJid(String problemJid, String partnerJid) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<ProblemPartnerModel> root = query.from(getEntityClass());
-
-        query
-                .select(cb.count(root))
-                .where(cb.and(cb.equal(root.get(ProblemPartnerModel_.problemJid), problemJid), cb.equal(root.get(ProblemPartnerModel_.userJid), partnerJid)));
-
-        return currentSession().createQuery(query).getSingleResult() != 0;
     }
 
     @Override

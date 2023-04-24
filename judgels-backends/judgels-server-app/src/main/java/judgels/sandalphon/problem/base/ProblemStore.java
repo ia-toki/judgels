@@ -116,7 +116,7 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public boolean isUserPartnerForProblem(String problemJid, String userJid) {
-        return partnerDao.existsByProblemJidAndPartnerJid(problemJid, userJid);
+        return partnerDao.selectByProblemJidAndUserJid(problemJid, userJid).isPresent();
     }
 
     public void updateProblem(String problemJid, String slug, String additionalNote) {

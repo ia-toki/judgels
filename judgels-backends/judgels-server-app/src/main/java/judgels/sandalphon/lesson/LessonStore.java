@@ -65,7 +65,7 @@ public final class LessonStore extends BaseLessonStore {
     }
 
     public boolean isUserPartnerForLesson(String lessonJid, String userJid) {
-        return partnerDao.existsByLessonJidAndPartnerJid(lessonJid, userJid);
+        return partnerDao.selectByLessonJidAndUserJid(lessonJid, userJid).isPresent();
     }
 
     public Page<Lesson> getLessons(String userJid, boolean isAdmin, String termFilter, int pageIndex) {
