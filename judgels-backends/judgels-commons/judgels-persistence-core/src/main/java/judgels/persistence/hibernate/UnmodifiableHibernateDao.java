@@ -1,6 +1,5 @@
 package judgels.persistence.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.time.Clock;
@@ -64,16 +63,6 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public List<M> insertAll(List<M> models) {
-        return Lists.transform(models, this::insert);
-    }
-
-    @Override
-    public M find(long id) {
-        return select(id).orElse(null);
-    }
-
-    @Override
     public Optional<M> select(long id) {
         return Optional.ofNullable(get(id));
     }
@@ -98,7 +87,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
     @Override
     public Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value) {
-        return selectByUniqueColumns(ImmutableMap.of(column, value));
+        return selectByUniqueColumns(Collections.singletonMap(column, value));
     }
 
     @Override

@@ -1,8 +1,6 @@
 package judgels.persistence.hibernate;
 
-import com.google.common.collect.Lists;
 import java.time.Clock;
-import java.util.List;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.Dao;
 import judgels.persistence.Model;
@@ -39,11 +37,6 @@ public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernat
         model.updatedIp = actorProvider.getIpAddress().orElse(null);
 
         return persist(model);
-    }
-
-    @Override
-    public List<M> updateAll(List<M> models) {
-        return Lists.transform(models, this::update);
     }
 
     @Override

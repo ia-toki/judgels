@@ -13,9 +13,7 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     void clear();
     M insert(M model);
     M persist(M model);
-    List<M> insertAll(List<M> models);
 
-    M find(long id);
     Optional<M> select(long id);
     Optional<M> selectByFilter(FilterOptions<M> filterOptions);
     Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value);
