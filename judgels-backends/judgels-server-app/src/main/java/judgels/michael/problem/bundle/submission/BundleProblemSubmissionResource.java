@@ -43,13 +43,13 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
     public View listSubmissions(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
-            @QueryParam("page") @DefaultValue("1") int pageIndex) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageIndex);
+        Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageNumber);
 
         Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -89,8 +89,8 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
-        for (int pageIndex = 1; ; pageIndex++) {
-            List<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageIndex).getPage();
+        for (int pageNumber = 1; ; pageNumber++) {
+            List<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageNumber).getPage();
             if (submissions.isEmpty()) {
                 break;
             }

@@ -37,14 +37,14 @@ public class BundleSubmissionStore {
         this.gradingDao = gradingDao;
     }
 
-    public Page<BundleSubmission> getSubmissions(String problemJid, int pageIndex) {
+    public Page<BundleSubmission> getSubmissions(String problemJid, int pageNumber) {
         FilterOptions<BundleSubmissionModel> filterOptions = new FilterOptions.Builder<BundleSubmissionModel>()
                 .putColumnsEq(BundleSubmissionModel_.problemJid, problemJid)
                 .build();
 
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)
-                .page(pageIndex)
+                .page(pageNumber)
                 .build();
 
         long totalCount = submissionDao.selectCount(filterOptions);
@@ -58,7 +58,7 @@ public class BundleSubmissionStore {
         return new Page.Builder<BundleSubmission>()
                 .page(submissions)
                 .totalCount(totalCount)
-                .pageIndex(selectionOptions.getPage())
+                .pageNumber(selectionOptions.getPage())
                 .pageSize(selectionOptions.getPageSize())
                 .build();
     }

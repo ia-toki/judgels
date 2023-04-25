@@ -68,11 +68,11 @@ public final class LessonStore extends BaseLessonStore {
         return partnerDao.selectByLessonJidAndUserJid(lessonJid, userJid).isPresent();
     }
 
-    public Page<Lesson> getLessons(String userJid, boolean isAdmin, String termFilter, int pageIndex) {
+    public Page<Lesson> getLessons(String userJid, boolean isAdmin, String termFilter, int pageNumber) {
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)
                 .orderBy("updatedAt")
-                .page(pageIndex)
+                .page(pageNumber)
                 .build();
 
         Page<LessonModel> models = isAdmin

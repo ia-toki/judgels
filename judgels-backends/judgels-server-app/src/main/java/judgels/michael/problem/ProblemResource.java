@@ -49,7 +49,7 @@ public class ProblemResource extends BaseProblemResource {
     @UnitOfWork(readOnly = true)
     public View listProblems(
             @Context HttpServletRequest req,
-            @QueryParam("page") @DefaultValue("1") int pageIndex,
+            @QueryParam("page") @DefaultValue("1") int pageNumber,
             @QueryParam("term") @DefaultValue("") String termFilter,
             @QueryParam("tags") Set<String> tagsFilter) {
 
@@ -57,7 +57,7 @@ public class ProblemResource extends BaseProblemResource {
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Problem> problems = problemStore.getProblems(actor.getUserJid(), isAdmin, termFilter, tagsFilter, pageIndex);
+        Page<Problem> problems = problemStore.getProblems(actor.getUserJid(), isAdmin, termFilter, tagsFilter, pageNumber);
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, Integer> tagCounts = tagStore.getTagCounts(isAdmin);
@@ -67,7 +67,7 @@ public class ProblemResource extends BaseProblemResource {
         if (isWriter) {
             template.addMainButton("New problem", "/problems/new");
         }
-        template.setSearchProblemsWidget(new SearchProblemsWidget(pageIndex, termFilter, tagsFilter, tagCounts));
+        template.setSearchProblemsWidget(new SearchProblemsWidget(pageNumber, termFilter, tagsFilter, tagCounts));
         return new ListProblemsView(template, problems, termFilter, tagsFilter, profilesMap);
     }
 

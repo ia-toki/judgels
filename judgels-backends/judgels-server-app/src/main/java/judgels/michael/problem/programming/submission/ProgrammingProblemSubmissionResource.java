@@ -56,13 +56,13 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
     public View listSubmissions(
             @Context HttpServletRequest req,
             @PathParam("problemId") int problemId,
-            @QueryParam("page") @DefaultValue("1") int pageIndex) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         Actor actor = actorChecker.check(req);
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageIndex));
+        Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageNumber));
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, String> gradingLanguageNamesMap = GradingLanguageRegistry.getInstance().getLanguages();
@@ -117,8 +117,8 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
-        for (int pageIndex = 1; ; pageIndex++) {
-            List<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageIndex)).getPage();
+        for (int pageNumber = 1; ; pageNumber++) {
+            List<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageNumber)).getPage();
             if (submissions.isEmpty()) {
                 break;
             }

@@ -77,11 +77,11 @@ public class ProblemStore extends BaseProblemStore {
         return problemDao.selectBySlug(slug).map(ProblemStore::fromModel);
     }
 
-    public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageIndex) {
+    public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageNumber) {
         SelectionOptions selectionOptions = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)
                 .orderBy("updatedAt")
-                .page(pageIndex)
+                .page(pageNumber)
                 .build();
 
         List<Set<String>> tagsFilterByType = ProblemTags.splitTagsFilterByType(tagsFilter);

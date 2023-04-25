@@ -1,16 +1,16 @@
 package judgels.michael.template;
 
 public class SearchLessonsWidget {
-    private final int pageIndex;
+    private final int pageNumber;
     private final String termFilter;
 
-    public SearchLessonsWidget(int pageIndex, String termFilter) {
-        this.pageIndex = pageIndex;
+    public SearchLessonsWidget(int pageNumber, String termFilter) {
+        this.pageNumber = pageNumber;
         this.termFilter = termFilter;
     }
 
-    public int getPageIndex() {
-        return pageIndex;
+    public int getPageNumber() {
+        return pageNumber;
     }
 
     public String getTermFilter() {

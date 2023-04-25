@@ -6,20 +6,20 @@ import java.util.Set;
 import judgels.sandalphon.problem.base.tag.ProblemTags;
 
 public class SearchProblemsWidget {
-    private final int pageIndex;
+    private final int pageNumber;
     private final String termFilter;
     private final Set<String> tagsFilter;
     private final Map<String, Integer> tagCounts;
 
-    public SearchProblemsWidget(int pageIndex, String termFilter, Set<String> tagsFilter, Map<String, Integer> tagCounts) {
-        this.pageIndex = pageIndex;
+    public SearchProblemsWidget(int pageNumber, String termFilter, Set<String> tagsFilter, Map<String, Integer> tagCounts) {
+        this.pageNumber = pageNumber;
         this.termFilter = termFilter;
         this.tagsFilter = tagsFilter;
         this.tagCounts = tagCounts;
     }
 
-    public int getPageIndex() {
-        return pageIndex;
+    public int getPageNumber() {
+        return pageNumber;
     }
 
     public String getTermFilter() {

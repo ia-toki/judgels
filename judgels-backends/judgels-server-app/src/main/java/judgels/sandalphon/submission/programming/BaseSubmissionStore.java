@@ -158,7 +158,7 @@ public class BaseSubmissionStore<
                 .from(submissionModels.mapPage(p ->
                         Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid)))))
                 .pageSize(options.getPageSize())
-                .pageIndex(options.getPage())
+                .pageNumber(options.getPage())
                 .build();
     }
 

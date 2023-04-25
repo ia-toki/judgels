@@ -15,7 +15,7 @@ public interface Page<M> {
 
     @Value.Default
     @JsonInclude(Include.NON_EMPTY)
-    default long getPageIndex() {
+    default long getPageNumber() {
         return 0;
     }
 
@@ -29,7 +29,7 @@ public interface Page<M> {
         return new Builder<R>()
                 .totalCount(getTotalCount())
                 .page(func.apply(getPage()))
-                .pageIndex(getPageIndex())
+                .pageNumber(getPageNumber())
                 .pageSize(getPageSize())
                 .build();
     }
