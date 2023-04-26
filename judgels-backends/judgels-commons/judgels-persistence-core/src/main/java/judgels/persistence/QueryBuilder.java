@@ -13,7 +13,7 @@ public interface QueryBuilder<M> {
     QueryBuilder<M> pageNumber(int pageNumber);
     QueryBuilder<M> pageSize(int pageSize);
 
-    int count();
-    List<M> list();
-    Page<M> listPaged();
+    int selectCount();
+    List<M> selectAll();
+    Page<M> selectPaged();
 }
