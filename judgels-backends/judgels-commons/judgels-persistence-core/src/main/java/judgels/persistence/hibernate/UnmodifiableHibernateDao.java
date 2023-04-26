@@ -15,6 +15,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.Model_;
 import judgels.persistence.UnmodifiableDao;
@@ -60,6 +61,11 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     @Override
     public M persist(M model) {
         return super.persist(model);
+    }
+
+    @Override
+    public HibernateQueryBuilder<M> select() {
+        return new HibernateQueryBuilder<>(currentSession(), getEntityClass());
     }
 
     @Override
@@ -127,7 +133,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         long totalCount = selectCount(filterOptions);
 
         return new Page.Builder<M>()
-                .totalCount(totalCount)
+                .totalCount((int) totalCount)
                 .page(page)
                 .pageNumber(selectionOptions.getPage())
                 .pageSize(selectionOptions.getPageSize())
@@ -194,6 +200,14 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
                     String.format("Unknown mode: %s", dump.getMode())
             );
         }
+    }
+
+    protected static <M> CriteriaPredicate<M> columnIs(SingularAttribute<M, String> column, String value) {
+        return (cb, cq, root) -> cb.equal(root.get(column), value);
+    }
+
+    protected static <M> CriteriaPredicate<M> columnIsLike(SingularAttribute<M, String> column, String value) {
+        return (cb, cq, root) -> cb.like(root.get(column), "%" + value + "%");
     }
 
     private void applyFilters(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root, FilterOptions<M> options) {

@@ -76,7 +76,7 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
 
         return new Page.Builder<UserRatingModel>()
                 .page(page)
-                .totalCount(count)
+                .totalCount((int) count)
                 .build();
     }
 

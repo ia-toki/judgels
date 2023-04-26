@@ -10,18 +10,18 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutablePage.class)
 public interface Page<M> {
-    long getTotalCount();
+    int getTotalCount();
     List<M> getPage();
 
     @Value.Default
     @JsonInclude(Include.NON_EMPTY)
-    default long getPageNumber() {
+    default int getPageNumber() {
         return 0;
     }
 
     @Value.Default
     @JsonInclude(Include.NON_EMPTY)
-    default long getPageSize() {
+    default int getPageSize() {
         return 0;
     }
 

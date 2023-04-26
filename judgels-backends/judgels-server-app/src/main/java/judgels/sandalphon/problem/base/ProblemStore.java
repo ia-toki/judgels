@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.Git;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
@@ -78,18 +77,14 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageNumber) {
-        SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .orderBy("updatedAt")
-                .page(pageNumber)
-                .build();
-
-        List<Set<String>> tagsFilterByType = ProblemTags.splitTagsFilterByType(tagsFilter);
-
-        Page<ProblemModel> models = isAdmin
-                ? problemDao.selectPaged(termFilter, tagsFilterByType, selectionOptions)
-                : problemDao.selectPagedByUserJid(userJid, termFilter, tagsFilterByType, selectionOptions);
-        return models.mapPage(p -> Lists.transform(p, ProblemStore::fromModel));
+        return problemDao
+                .select()
+                .where(problemDao.userCanView(userJid, isAdmin))
+                .where(problemDao.termsMatch(termFilter))
+                .where(problemDao.tagsMatch(ProblemTags.splitTagsFilterByType(tagsFilter)))
+                .pageNumber(pageNumber)
+                .listPaged()
+                .mapPage(p -> Lists.transform(p, ProblemStore::fromModel));
     }
 
     public Map<ProblemSetterRole, List<String>> getProblemSetters(String problemJid) {

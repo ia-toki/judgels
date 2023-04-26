@@ -57,7 +57,7 @@ public class BundleSubmissionStore {
 
         return new Page.Builder<BundleSubmission>()
                 .page(submissions)
-                .totalCount(totalCount)
+                .totalCount((int) totalCount)
                 .pageNumber(selectionOptions.getPage())
                 .pageSize(selectionOptions.getPageSize())
                 .build();

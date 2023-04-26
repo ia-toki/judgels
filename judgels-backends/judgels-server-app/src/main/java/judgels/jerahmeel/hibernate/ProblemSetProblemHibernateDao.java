@@ -139,7 +139,7 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
 
         return new Page.Builder<ProblemSetProblemModel>()
                 .page(page)
-                .totalCount(count)
+                .totalCount((int) count)
                 .build();
     }
 }
