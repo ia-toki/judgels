@@ -15,11 +15,10 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     M persist(M model);
 
     QueryBuilder<M> select();
-
     Optional<M> select(long id);
     Optional<M> selectByFilter(FilterOptions<M> filterOptions);
     Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value);
-    Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, ?>, ?> key);
+    Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, String>, String> keys);
 
     long selectCount(FilterOptions<M> filterOptions);
 

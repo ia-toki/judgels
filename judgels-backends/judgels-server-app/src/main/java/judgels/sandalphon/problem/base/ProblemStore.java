@@ -63,7 +63,7 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public boolean problemExistsBySlug(String slug) {
-        return problemDao.selectBySlug(slug).isPresent();
+        return problemDao.selectUniqueBySlug(slug).isPresent();
     }
 
     public Optional<Problem> getProblemById(long problemId) {
@@ -75,15 +75,15 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public Optional<Problem> getProblemBySlug(String slug) {
-        return problemDao.selectBySlug(slug).map(ProblemStore::fromModel);
+        return problemDao.selectUniqueBySlug(slug).map(ProblemStore::fromModel);
     }
 
     public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageNumber) {
         return problemDao
                 .select()
-                .where(problemDao.userCanView(userJid, isAdmin))
-                .where(problemDao.termsMatch(termFilter))
-                .where(problemDao.tagsMatch(ProblemTags.splitTagsFilterByType(tagsFilter)))
+                .whereUserCanView(userJid, isAdmin)
+                .whereTermsMatch(termFilter)
+                .whereTagsMatch(ProblemTags.splitTagsFilterByType(tagsFilter))
                 .orderBy(Model_.UPDATED_AT, OrderDir.DESC)
                 .pageNumber(pageNumber)
                 .paged()

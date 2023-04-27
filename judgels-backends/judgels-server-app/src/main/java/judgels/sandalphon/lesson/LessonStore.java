@@ -6,8 +6,9 @@ import java.nio.file.Path;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
+import judgels.persistence.Model_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.Git;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.persistence.LessonDao;
@@ -49,7 +50,7 @@ public final class LessonStore extends BaseLessonStore {
     }
 
     public boolean lessonExistsBySlug(String slug) {
-        return lessonDao.selectBySlug(slug).isPresent();
+        return lessonDao.selectUniqueBySlug(slug).isPresent();
     }
 
     public Optional<Lesson> getLessonById(long lessonId) {
@@ -61,7 +62,7 @@ public final class LessonStore extends BaseLessonStore {
     }
 
     public Optional<Lesson> getLessonBySlug(String slug) {
-        return lessonDao.selectBySlug(slug).map(LessonStore::fromModel);
+        return lessonDao.selectUniqueBySlug(slug).map(LessonStore::fromModel);
     }
 
     public boolean isUserPartnerForLesson(String lessonJid, String userJid) {
@@ -69,16 +70,14 @@ public final class LessonStore extends BaseLessonStore {
     }
 
     public Page<Lesson> getLessons(String userJid, boolean isAdmin, String termFilter, int pageNumber) {
-        SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .orderBy("updatedAt")
-                .page(pageNumber)
-                .build();
-
-        Page<LessonModel> models = isAdmin
-                ? lessonDao.selectPaged(termFilter, selectionOptions)
-                : lessonDao.selectPagedByUserJid(userJid, termFilter, selectionOptions);
-        return models.mapPage(p -> Lists.transform(p, LessonStore::fromModel));
+        return lessonDao
+                .select()
+                .whereUserCanView(userJid, isAdmin)
+                .whereTermsMatch(termFilter)
+                .orderBy(Model_.UPDATED_AT, OrderDir.DESC)
+                .pageNumber(pageNumber)
+                .paged()
+                .mapPage(p -> Lists.transform(p, LessonStore::fromModel));
     }
 
     public void updateLesson(String lessonJid, String slug, String additionalNote) {

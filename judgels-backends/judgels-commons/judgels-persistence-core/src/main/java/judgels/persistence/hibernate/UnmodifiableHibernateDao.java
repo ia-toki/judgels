@@ -18,6 +18,7 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.Model_;
+import judgels.persistence.QueryBuilder;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel;
 import judgels.persistence.api.OrderDir;
@@ -27,9 +28,7 @@ import judgels.persistence.api.dump.DumpImportMode;
 import judgels.persistence.api.dump.UnmodifiableDump;
 import org.hibernate.query.Query;
 
-public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M>
-        implements UnmodifiableDao<M> {
-
+public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M> implements UnmodifiableDao<M> {
     private final Clock clock;
     private final ActorProvider actorProvider;
 
@@ -97,15 +96,12 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, ?>, ?> key) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<M> cq = criteriaQuery();
-        Root<M> root = cq.from(getEntityClass());
-        cq.where(cb.and(key.entrySet()
-                .stream()
-                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
-                .toArray(Predicate[]::new)));
-        return currentSession().createQuery(cq).uniqueResultOptional();
+    public Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, String>, String> keys) {
+        QueryBuilder<M> query = select();
+        for (Map.Entry<SingularAttribute<M, String>, String> entry : keys.entrySet()) {
+            query.where(columnEq(entry.getKey(), entry.getValue()));
+        }
+        return query.unique();
     }
 
     @Override
@@ -202,11 +198,11 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         }
     }
 
-    protected static <M> CriteriaPredicate<M> columnIs(SingularAttribute<M, String> column, String value) {
+    protected static <M> CriteriaPredicate<M> columnEq(SingularAttribute<M, String> column, String value) {
         return (cb, cq, root) -> cb.equal(root.get(column), value);
     }
 
-    protected static <M> CriteriaPredicate<M> columnIsLike(SingularAttribute<M, String> column, String value) {
+    protected static <M> CriteriaPredicate<M> columnLike(SingularAttribute<M, String> column, String value) {
         return (cb, cq, root) -> cb.like(root.get(column), "%" + value + "%");
     }
 

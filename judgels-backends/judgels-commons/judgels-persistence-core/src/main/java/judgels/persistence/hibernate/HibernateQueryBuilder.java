@@ -2,6 +2,7 @@ package judgels.persistence.hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
@@ -71,6 +72,16 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
         cq.select(cb.count(root));
 
         return (int) (long) currentSession.createQuery(cq).getSingleResult();
+    }
+
+    @Override
+    public Optional<M> unique() {
+        CriteriaBuilder cb = currentSession.getCriteriaBuilder();
+        CriteriaQuery<M> cq = cb.createQuery(entityClass);
+        Root<M> root = cq.from(entityClass);
+
+        applyPredicates(cb, cq, root);
+        return currentSession.createQuery(cq).uniqueResultOptional();
     }
 
     @Override

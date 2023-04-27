@@ -1,6 +1,7 @@
 package judgels.persistence;
 
 import java.util.List;
+import java.util.Optional;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 
@@ -11,6 +12,7 @@ public interface QueryBuilder<M> {
     QueryBuilder<M> pageSize(int pageSize);
 
     int count();
+    Optional<M> unique();
     List<M> all();
     Page<M> paged();
 }
