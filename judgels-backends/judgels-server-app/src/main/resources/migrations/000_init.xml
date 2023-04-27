@@ -1,7 +1,5 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog context="v2_init" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet author="ia-toki" id="init-1">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jerahmeel_archive">
             <column autoIncrement="true" name="id" type="BIGINT">
@@ -566,22 +564,6 @@
         </createTable>
     </changeSet>
     <changeSet author="ia-toki" id="init-21">
-        <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_legacy_session">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="authCode" type="VARCHAR(50)">
-                <constraints unique="true"/>
-            </column>
-            <column name="token" type="VARCHAR(50)"/>
-            <column name="createdAt" type="datetime(3)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="createdBy" type="VARCHAR(32)"/>
-            <column name="createdIp" type="VARCHAR(100)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-22">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_role_admin">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -596,7 +578,7 @@
             <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-23">
+    <changeSet author="ia-toki" id="init-22">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_session">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -612,7 +594,7 @@
             <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-24">
+    <changeSet author="ia-toki" id="init-23">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -642,7 +624,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-25">
+    <changeSet author="ia-toki" id="init-24">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_info">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -671,7 +653,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-26">
+    <changeSet author="ia-toki" id="init-25">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_rating">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -693,7 +675,7 @@
             <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-27">
+    <changeSet author="ia-toki" id="init-26">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_rating_event">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -709,7 +691,7 @@
             <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-28">
+    <changeSet author="ia-toki" id="init-27">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_registration_email">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -735,7 +717,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-29">
+    <changeSet author="ia-toki" id="init-28">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_reset_password">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -759,7 +741,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-30">
+    <changeSet author="ia-toki" id="init-29">
         <createTable catalogName="judgels" schemaName="judgels" tableName="jophiel_user_role">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -783,7 +765,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-31">
+    <changeSet author="ia-toki" id="init-30">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_bundle_grading">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -810,7 +792,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-32">
+    <changeSet author="ia-toki" id="init-31">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_bundle_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -834,7 +816,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-33">
+    <changeSet author="ia-toki" id="init-32">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_lesson">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -860,7 +842,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-34">
+    <changeSet author="ia-toki" id="init-33">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_lesson_partner">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -886,7 +868,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-35">
+    <changeSet author="ia-toki" id="init-34">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_problem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -912,7 +894,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-36">
+    <changeSet author="ia-toki" id="init-35">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_problem_partner">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -941,7 +923,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-37">
+    <changeSet author="ia-toki" id="init-36">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_problem_setter">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -962,7 +944,7 @@
             <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-38">
+    <changeSet author="ia-toki" id="init-37">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_problem_tag">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -980,7 +962,7 @@
             <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-39">
+    <changeSet author="ia-toki" id="init-38">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_programming_grading">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1013,7 +995,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-40">
+    <changeSet author="ia-toki" id="init-39">
         <createTable catalogName="judgels" schemaName="judgels" tableName="sandalphon_programming_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1043,7 +1025,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-41">
+    <changeSet author="ia-toki" id="init-40">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1081,7 +1063,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-42">
+    <changeSet author="ia-toki" id="init-41">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_announcement">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1113,7 +1095,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-43">
+    <changeSet author="ia-toki" id="init-42">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_bundle_item_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1147,7 +1129,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-44">
+    <changeSet author="ia-toki" id="init-43">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_clarification">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1183,7 +1165,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-45">
+    <changeSet author="ia-toki" id="init-44">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_contestant">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1211,83 +1193,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-46">
-        <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_group">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="jid" type="VARCHAR(32)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="slug" type="VARCHAR(100)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="name" type="VARCHAR(150)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="createdAt" type="datetime(3)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="createdBy" type="VARCHAR(32)"/>
-            <column name="createdIp" type="VARCHAR(100)"/>
-            <column name="updatedAt" type="datetime(3)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updatedBy" type="VARCHAR(32)"/>
-            <column name="updatedIp" type="VARCHAR(100)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-47">
-        <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_group_contest">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="contestGroupJid" type="VARCHAR(32)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="contestJid" type="VARCHAR(32)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="alias" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="createdAt" type="datetime(3)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="createdBy" type="VARCHAR(32)"/>
-            <column name="createdIp" type="VARCHAR(100)"/>
-            <column name="updatedAt" type="datetime(3)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updatedBy" type="VARCHAR(32)"/>
-            <column name="updatedIp" type="VARCHAR(100)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-48">
-        <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_group_scoreboard">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="contestGroupJid" type="VARCHAR(32)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="type" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="scoreboard" type="LONGTEXT"/>
-            <column name="createdAt" type="datetime(3)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="createdBy" type="VARCHAR(32)"/>
-            <column name="createdIp" type="VARCHAR(100)"/>
-            <column name="updatedAt" type="datetime(3)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updatedBy" type="VARCHAR(32)"/>
-            <column name="updatedIp" type="VARCHAR(100)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-49">
+    <changeSet author="ia-toki" id="init-45">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_log">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1307,7 +1213,7 @@
             <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-50">
+    <changeSet author="ia-toki" id="init-46">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_manager">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1330,7 +1236,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-51">
+    <changeSet author="ia-toki" id="init-47">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_module">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1359,7 +1265,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-52">
+    <changeSet author="ia-toki" id="init-48">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_problem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1394,7 +1300,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-53">
+    <changeSet author="ia-toki" id="init-49">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_programming_grading">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1427,7 +1333,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-54">
+    <changeSet author="ia-toki" id="init-50">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_programming_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1459,7 +1365,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-55">
+    <changeSet author="ia-toki" id="init-51">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_scoreboard">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1483,7 +1389,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-56">
+    <changeSet author="ia-toki" id="init-52">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_style">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1506,7 +1412,7 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-57">
+    <changeSet author="ia-toki" id="init-53">
         <createTable catalogName="judgels" schemaName="judgels" tableName="uriel_contest_supervisor">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -1532,581 +1438,557 @@
             <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="ia-toki" id="init-58">
+    <changeSet author="ia-toki" id="init-54">
         <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, alias" constraintName="chapterJid_alias" schemaName="judgels" tableName="jerahmeel_chapter_lesson"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-59">
+    <changeSet author="ia-toki" id="init-55">
         <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, alias" constraintName="chapterJid_alias" schemaName="judgels" tableName="jerahmeel_chapter_problem"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-60">
+    <changeSet author="ia-toki" id="init-56">
         <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, dependedChapterJid" constraintName="chapterJid_dependedChapterJid" schemaName="judgels" tableName="jerahmeel_chapter_dependency"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-61">
+    <changeSet author="ia-toki" id="init-57">
         <addUniqueConstraint catalogName="judgels" columnNames="chapterJid, lessonJid" constraintName="chapterJid_lessonJid" schemaName="judgels" tableName="jerahmeel_chapter_lesson"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-62">
+    <changeSet author="ia-toki" id="init-58">
         <addUniqueConstraint catalogName="judgels" columnNames="containerJid, createdBy, problemJid, itemJid" constraintName="containerJid_createdBy_problemJid_itemJid" schemaName="judgels" tableName="jerahmeel_bundle_item_submission"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-63">
+    <changeSet author="ia-toki" id="init-59">
         <addUniqueConstraint catalogName="judgels" columnNames="containerJid, createdBy, problemJid, itemJid" constraintName="containerJid_createdBy_problemJid_itemJid" schemaName="judgels" tableName="uriel_contest_bundle_item_submission"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-64">
-        <addUniqueConstraint catalogName="judgels" columnNames="contestGroupJid, alias" constraintName="contestGroupJid_alias" schemaName="judgels" tableName="uriel_contest_group_contest"/>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-65">
-        <addUniqueConstraint catalogName="judgels" columnNames="contestGroupJid, contestJid" constraintName="contestGroupJid_contestJid" schemaName="judgels" tableName="uriel_contest_group_contest"/>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-66">
-        <addUniqueConstraint catalogName="judgels" columnNames="contestGroupJid, type" constraintName="contestGroupJid_type" schemaName="judgels" tableName="uriel_contest_group_scoreboard"/>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-67">
+    <changeSet author="ia-toki" id="init-60">
         <addUniqueConstraint catalogName="judgels" columnNames="contestJid, alias" constraintName="contestJid_alias" schemaName="judgels" tableName="uriel_contest_problem"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-68">
+    <changeSet author="ia-toki" id="init-61">
         <addUniqueConstraint catalogName="judgels" columnNames="contestJid, name" constraintName="contestJid_name" schemaName="judgels" tableName="uriel_contest_module"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-69">
+    <changeSet author="ia-toki" id="init-62">
         <addUniqueConstraint catalogName="judgels" columnNames="contestJid, problemJid" constraintName="contestJid_problemJid" schemaName="judgels" tableName="uriel_contest_problem"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-70">
+    <changeSet author="ia-toki" id="init-63">
         <addUniqueConstraint catalogName="judgels" columnNames="contestJid, type" constraintName="contestJid_type" schemaName="judgels" tableName="uriel_contest_scoreboard"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-71">
+    <changeSet author="ia-toki" id="init-64">
         <addUniqueConstraint catalogName="judgels" columnNames="contestJid, userJid" constraintName="contestJid_userJid" schemaName="judgels" tableName="uriel_contest_contestant"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-72">
+    <changeSet author="ia-toki" id="init-65">
         <addUniqueConstraint catalogName="judgels" columnNames="contestJid, userJid" constraintName="contestJid_userJid" schemaName="judgels" tableName="uriel_contest_manager"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-73">
+    <changeSet author="ia-toki" id="init-66">
         <addUniqueConstraint catalogName="judgels" columnNames="contestJid, userJid" constraintName="contestJid_userJid" schemaName="judgels" tableName="uriel_contest_supervisor"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-74">
+    <changeSet author="ia-toki" id="init-67">
         <addUniqueConstraint catalogName="judgels" columnNames="courseJid, alias" constraintName="courseJid_alias" schemaName="judgels" tableName="jerahmeel_course_chapter"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-75">
+    <changeSet author="ia-toki" id="init-68">
         <addUniqueConstraint catalogName="judgels" columnNames="courseJid, chapterJid" constraintName="courseJid_chapterJid" schemaName="judgels" tableName="jerahmeel_course_chapter"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-76">
+    <changeSet author="ia-toki" id="init-69">
         <addUniqueConstraint catalogName="judgels" columnNames="curriculumJid, alias" constraintName="curriculumJid_alias" schemaName="judgels" tableName="jerahmeel_curriculum_course"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-77">
+    <changeSet author="ia-toki" id="init-70">
         <addUniqueConstraint catalogName="judgels" columnNames="curriculumJid, courseJid" constraintName="curriculumJid_courseJid" schemaName="judgels" tableName="jerahmeel_curriculum_course"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-78">
+    <changeSet author="ia-toki" id="init-71">
         <addUniqueConstraint catalogName="judgels" columnNames="lessonJid, userJid" constraintName="lessonJid_userJid" schemaName="judgels" tableName="sandalphon_lesson_partner"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-79">
+    <changeSet author="ia-toki" id="init-72">
         <addUniqueConstraint catalogName="judgels" columnNames="problemJid, contestJid" constraintName="problemJid_contestJid" schemaName="judgels" tableName="jerahmeel_problem_contest"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-80">
+    <changeSet author="ia-toki" id="init-73">
         <addUniqueConstraint catalogName="judgels" columnNames="problemJid, role, userJid" constraintName="problemJid_role_userJid" schemaName="judgels" tableName="sandalphon_problem_setter"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-81">
+    <changeSet author="ia-toki" id="init-74">
         <addUniqueConstraint catalogName="judgels" columnNames="problemJid, tag" constraintName="problemJid_tag" schemaName="judgels" tableName="sandalphon_problem_tag"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-82">
+    <changeSet author="ia-toki" id="init-75">
         <addUniqueConstraint catalogName="judgels" columnNames="problemJid, userJid" constraintName="problemJid_userJid" schemaName="judgels" tableName="jerahmeel_problem_level"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-83">
+    <changeSet author="ia-toki" id="init-76">
         <addUniqueConstraint catalogName="judgels" columnNames="problemJid, userJid" constraintName="problemJid_userJid" schemaName="judgels" tableName="sandalphon_problem_partner"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-84">
+    <changeSet author="ia-toki" id="init-77">
         <addUniqueConstraint catalogName="judgels" columnNames="problemSetJid, alias" constraintName="problemSetJid_alias" schemaName="judgels" tableName="jerahmeel_problem_set_problem"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-85">
+    <changeSet author="ia-toki" id="init-78">
         <addUniqueConstraint catalogName="judgels" columnNames="problemSetJid, problemJid" constraintName="problemSetJid_problemJid" schemaName="judgels" tableName="jerahmeel_problem_set_problem"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-86">
+    <changeSet author="ia-toki" id="init-79">
         <addUniqueConstraint catalogName="judgels" columnNames="time, eventJid" constraintName="time_eventJid" schemaName="judgels" tableName="jophiel_user_rating_event"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-87">
+    <changeSet author="ia-toki" id="init-80">
         <addUniqueConstraint catalogName="judgels" columnNames="time, userJid" constraintName="time_userJid" schemaName="judgels" tableName="jophiel_user_rating"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-88">
+    <changeSet author="ia-toki" id="init-81">
         <addUniqueConstraint catalogName="judgels" columnNames="userJid, problemJid" constraintName="userJid_problemJid" schemaName="judgels" tableName="jerahmeel_stats_user_problem"/>
     </changeSet>
-    <changeSet author="ia-toki" id="init-89">
+    <changeSet author="ia-toki" id="init-82">
         <createIndex catalogName="judgels" indexName="archiveJid" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="archiveJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-90">
+    <changeSet author="ia-toki" id="init-83">
         <createIndex catalogName="judgels" indexName="beginTime" schemaName="judgels" tableName="uriel_contest">
             <column name="beginTime"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-91">
+    <changeSet author="ia-toki" id="init-84">
         <createIndex catalogName="judgels" indexName="category" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="category"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-92">
+    <changeSet author="ia-toki" id="init-85">
         <createIndex catalogName="judgels" indexName="containerJid_createdAt" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-93">
+    <changeSet author="ia-toki" id="init-86">
         <createIndex catalogName="judgels" indexName="containerJid_createdAt" schemaName="judgels" tableName="uriel_contest_programming_submission">
             <column name="containerJid"/>
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-94">
+    <changeSet author="ia-toki" id="init-87">
         <createIndex catalogName="judgels" indexName="containerJid_createdBy" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="containerJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-95">
+    <changeSet author="ia-toki" id="init-88">
         <createIndex catalogName="judgels" indexName="containerJid_createdBy" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-96">
+    <changeSet author="ia-toki" id="init-89">
         <createIndex catalogName="judgels" indexName="containerJid_createdBy" schemaName="judgels" tableName="uriel_contest_programming_submission">
             <column name="containerJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-97">
+    <changeSet author="ia-toki" id="init-90">
         <createIndex catalogName="judgels" indexName="containerJid_gradingLanguage" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="gradingLanguage"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-98">
+    <changeSet author="ia-toki" id="init-91">
         <createIndex catalogName="judgels" indexName="containerJid_gradingLanguage" schemaName="judgels" tableName="uriel_contest_programming_submission">
             <column name="containerJid"/>
             <column name="gradingLanguage"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-99">
+    <changeSet author="ia-toki" id="init-92">
         <createIndex catalogName="judgels" indexName="containerJid_problemJid" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="containerJid"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-100">
+    <changeSet author="ia-toki" id="init-93">
         <createIndex catalogName="judgels" indexName="containerJid_problemJid" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="containerJid"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-101">
+    <changeSet author="ia-toki" id="init-94">
         <createIndex catalogName="judgels" indexName="containerJid_problemJid" schemaName="judgels" tableName="uriel_contest_programming_submission">
             <column name="containerJid"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-102">
+    <changeSet author="ia-toki" id="init-95">
         <createIndex catalogName="judgels" indexName="contestJid" schemaName="judgels" tableName="jerahmeel_problem_contest">
             <column name="contestJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-103">
+    <changeSet author="ia-toki" id="init-96">
         <createIndex catalogName="judgels" indexName="contestJid" schemaName="judgels" tableName="uriel_contest_announcement">
             <column name="contestJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-104">
+    <changeSet author="ia-toki" id="init-97">
         <createIndex catalogName="judgels" indexName="contestJid_createdAt" schemaName="judgels" tableName="uriel_contest_log">
             <column name="contestJid"/>
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-105">
+    <changeSet author="ia-toki" id="init-98">
         <createIndex catalogName="judgels" indexName="contestJid_createdBy" schemaName="judgels" tableName="uriel_contest_clarification">
             <column name="contestJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-106">
+    <changeSet author="ia-toki" id="init-99">
         <createIndex catalogName="judgels" indexName="contestJid_createdBy" schemaName="judgels" tableName="uriel_contest_log">
             <column name="contestJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-107">
+    <changeSet author="ia-toki" id="init-100">
         <createIndex catalogName="judgels" indexName="contestJid_event" schemaName="judgels" tableName="uriel_contest_log">
             <column name="contestJid"/>
             <column name="event"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-108">
+    <changeSet author="ia-toki" id="init-101">
         <createIndex catalogName="judgels" indexName="contestJid_problemJid" schemaName="judgels" tableName="uriel_contest_log">
             <column name="contestJid"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-109">
+    <changeSet author="ia-toki" id="init-102">
         <createIndex catalogName="judgels" indexName="country" schemaName="judgels" tableName="jophiel_user_info">
             <column name="country"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-110">
+    <changeSet author="ia-toki" id="init-103">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-111">
+    <changeSet author="ia-toki" id="init-104">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-112">
+    <changeSet author="ia-toki" id="init-105">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_chapter">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-113">
+    <changeSet author="ia-toki" id="init-106">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_course">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-114">
+    <changeSet author="ia-toki" id="init-107">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_curriculum">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-115">
+    <changeSet author="ia-toki" id="init-108">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-116">
+    <changeSet author="ia-toki" id="init-109">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-117">
+    <changeSet author="ia-toki" id="init-110">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jophiel_user">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-118">
+    <changeSet author="ia-toki" id="init-111">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="jophiel_user_reset_password">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-119">
+    <changeSet author="ia-toki" id="init-112">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="sandalphon_bundle_submission">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-120">
+    <changeSet author="ia-toki" id="init-113">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="sandalphon_lesson">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-121">
+    <changeSet author="ia-toki" id="init-114">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="sandalphon_problem">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-122">
+    <changeSet author="ia-toki" id="init-115">
         <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="uriel_contest">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-123">
-        <createIndex catalogName="judgels" indexName="createdAt" schemaName="judgels" tableName="uriel_contest_group">
-            <column name="createdAt"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-124">
+    <changeSet author="ia-toki" id="init-116">
         <createIndex catalogName="judgels" indexName="createdBy" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-125">
+    <changeSet author="ia-toki" id="init-117">
         <createIndex catalogName="judgels" indexName="createdBy" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-126">
+    <changeSet author="ia-toki" id="init-118">
         <createIndex catalogName="judgels" indexName="createdBy" schemaName="judgels" tableName="sandalphon_bundle_submission">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-127">
+    <changeSet author="ia-toki" id="init-119">
         <createIndex catalogName="judgels" indexName="createdBy" schemaName="judgels" tableName="sandalphon_lesson">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-128">
+    <changeSet author="ia-toki" id="init-120">
         <createIndex catalogName="judgels" indexName="createdBy" schemaName="judgels" tableName="sandalphon_problem">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-129">
+    <changeSet author="ia-toki" id="init-121">
         <createIndex catalogName="judgels" indexName="gender" schemaName="judgels" tableName="jophiel_user_info">
             <column name="gender"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-130">
+    <changeSet author="ia-toki" id="init-122">
         <createIndex catalogName="judgels" indexName="gradingLanguage" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="gradingLanguage"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-131">
+    <changeSet author="ia-toki" id="init-123">
         <createIndex catalogName="judgels" indexName="institutionCity" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionCity"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-132">
+    <changeSet author="ia-toki" id="init-124">
         <createIndex catalogName="judgels" indexName="institutionCountry" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionCountry"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-133">
+    <changeSet author="ia-toki" id="init-125">
         <createIndex catalogName="judgels" indexName="institutionName" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionName"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-134">
+    <changeSet author="ia-toki" id="init-126">
         <createIndex catalogName="judgels" indexName="institutionProvince" schemaName="judgels" tableName="jophiel_user_info">
             <column name="institutionProvince"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-135">
+    <changeSet author="ia-toki" id="init-127">
         <createIndex catalogName="judgels" indexName="level" schemaName="judgels" tableName="jerahmeel_problem_level">
             <column name="level"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-136">
+    <changeSet author="ia-toki" id="init-128">
         <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-137">
+    <changeSet author="ia-toki" id="init-129">
         <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_chapter">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-138">
+    <changeSet author="ia-toki" id="init-130">
         <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_course">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-139">
+    <changeSet author="ia-toki" id="init-131">
         <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_curriculum">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-140">
+    <changeSet author="ia-toki" id="init-132">
         <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-141">
+    <changeSet author="ia-toki" id="init-133">
         <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="jophiel_user_info">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-142">
+    <changeSet author="ia-toki" id="init-134">
         <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="uriel_contest">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-143">
-        <createIndex catalogName="judgels" indexName="name" schemaName="judgels" tableName="uriel_contest_group">
-            <column name="name"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-144">
+    <changeSet author="ia-toki" id="init-135">
         <createIndex catalogName="judgels" indexName="parentJid" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="parentJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-145">
+    <changeSet author="ia-toki" id="init-136">
         <createIndex catalogName="judgels" indexName="problemJid" schemaName="judgels" tableName="jerahmeel_bundle_submission">
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-146">
+    <changeSet author="ia-toki" id="init-137">
         <createIndex catalogName="judgels" indexName="problemJid" schemaName="judgels" tableName="jerahmeel_problem_set_problem">
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-147">
+    <changeSet author="ia-toki" id="init-138">
         <createIndex catalogName="judgels" indexName="problemJid" schemaName="judgels" tableName="jerahmeel_programming_submission">
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-148">
+    <changeSet author="ia-toki" id="init-139">
         <createIndex catalogName="judgels" indexName="problemJid_createdAt" schemaName="judgels" tableName="sandalphon_bundle_submission">
             <column name="problemJid"/>
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-149">
+    <changeSet author="ia-toki" id="init-140">
         <createIndex catalogName="judgels" indexName="problemJid_createdAt" schemaName="judgels" tableName="sandalphon_programming_submission">
             <column name="problemJid"/>
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-150">
+    <changeSet author="ia-toki" id="init-141">
         <createIndex catalogName="judgels" indexName="problemJid_createdBy" schemaName="judgels" tableName="sandalphon_bundle_submission">
             <column name="problemJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-151">
+    <changeSet author="ia-toki" id="init-142">
         <createIndex catalogName="judgels" indexName="problemJid_createdBy" schemaName="judgels" tableName="sandalphon_programming_submission">
             <column name="problemJid"/>
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-152">
+    <changeSet author="ia-toki" id="init-143">
         <createIndex catalogName="judgels" indexName="problemJid_gradingLanguage" schemaName="judgels" tableName="sandalphon_programming_submission">
             <column name="problemJid"/>
             <column name="gradingLanguage"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-153">
+    <changeSet author="ia-toki" id="init-144">
         <createIndex catalogName="judgels" indexName="problemJid_memory" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="memory"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-154">
+    <changeSet author="ia-toki" id="init-145">
         <createIndex catalogName="judgels" indexName="problemJid_score" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="score"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-155">
+    <changeSet author="ia-toki" id="init-146">
         <createIndex catalogName="judgels" indexName="problemJid_time" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="time"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-156">
+    <changeSet author="ia-toki" id="init-147">
         <createIndex catalogName="judgels" indexName="problemJid_verdict" schemaName="judgels" tableName="jerahmeel_stats_user_problem">
             <column name="problemJid"/>
             <column name="verdict"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-157">
+    <changeSet author="ia-toki" id="init-148">
         <createIndex catalogName="judgels" indexName="score" schemaName="judgels" tableName="jerahmeel_stats_user">
             <column name="score"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-158">
+    <changeSet author="ia-toki" id="init-149">
         <createIndex catalogName="judgels" indexName="submissionJid" schemaName="judgels" tableName="jerahmeel_bundle_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-159">
+    <changeSet author="ia-toki" id="init-150">
         <createIndex catalogName="judgels" indexName="submissionJid" schemaName="judgels" tableName="jerahmeel_programming_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-160">
+    <changeSet author="ia-toki" id="init-151">
         <createIndex catalogName="judgels" indexName="submissionJid" schemaName="judgels" tableName="sandalphon_bundle_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-161">
+    <changeSet author="ia-toki" id="init-152">
         <createIndex catalogName="judgels" indexName="submissionJid" schemaName="judgels" tableName="sandalphon_programming_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-162">
+    <changeSet author="ia-toki" id="init-153">
         <createIndex catalogName="judgels" indexName="submissionJid" schemaName="judgels" tableName="uriel_contest_programming_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-163">
+    <changeSet author="ia-toki" id="init-154">
         <createIndex catalogName="judgels" indexName="tag" schemaName="judgels" tableName="sandalphon_problem_tag">
             <column name="tag"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-164">
+    <changeSet author="ia-toki" id="init-155">
         <createIndex catalogName="judgels" indexName="time_publicRating" schemaName="judgels" tableName="jophiel_user_rating">
             <column name="time"/>
             <column name="publicRating"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-165">
+    <changeSet author="ia-toki" id="init-156">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_archive">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-166">
+    <changeSet author="ia-toki" id="init-157">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_chapter">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-167">
+    <changeSet author="ia-toki" id="init-158">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_course">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-168">
+    <changeSet author="ia-toki" id="init-159">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_curriculum">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-169">
+    <changeSet author="ia-toki" id="init-160">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="jerahmeel_problem_set">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-170">
+    <changeSet author="ia-toki" id="init-161">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="sandalphon_lesson">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-171">
+    <changeSet author="ia-toki" id="init-162">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="sandalphon_problem">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-172">
+    <changeSet author="ia-toki" id="init-163">
         <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="uriel_contest">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-173">
-        <createIndex catalogName="judgels" indexName="updatedAt" schemaName="judgels" tableName="uriel_contest_group">
-            <column name="updatedAt"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="ia-toki" id="init-174">
+    <changeSet author="ia-toki" id="init-164">
         <createIndex catalogName="judgels" indexName="userJid" schemaName="judgels" tableName="jophiel_session">
             <column name="userJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-175">
+    <changeSet author="ia-toki" id="init-165">
         <createIndex catalogName="judgels" indexName="userJid" schemaName="judgels" tableName="jophiel_user_rating">
             <column name="userJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-176">
+    <changeSet author="ia-toki" id="init-166">
         <createIndex catalogName="judgels" indexName="userJid" schemaName="judgels" tableName="jophiel_user_reset_password">
             <column name="userJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-177">
+    <changeSet author="ia-toki" id="init-167">
         <createIndex catalogName="judgels" indexName="userJid_role" schemaName="judgels" tableName="sandalphon_problem_setter">
             <column name="userJid"/>
             <column name="role"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-178">
+    <changeSet author="ia-toki" id="init-168">
         <createIndex catalogName="judgels" indexName="verdictCode" schemaName="judgels" tableName="jerahmeel_programming_grading">
             <column name="verdictCode"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-179">
+    <changeSet author="ia-toki" id="init-169">
         <createIndex catalogName="judgels" indexName="verdictCode" schemaName="judgels" tableName="sandalphon_programming_grading">
             <column name="verdictCode"/>
         </createIndex>
     </changeSet>
-    <changeSet author="ia-toki" id="init-180">
+    <changeSet author="ia-toki" id="init-170">
         <createIndex catalogName="judgels" indexName="verdictCode" schemaName="judgels" tableName="uriel_contest_programming_grading">
             <column name="verdictCode"/>
         </createIndex>
