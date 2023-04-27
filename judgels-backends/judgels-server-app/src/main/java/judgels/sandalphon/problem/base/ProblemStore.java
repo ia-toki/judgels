@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
+import judgels.persistence.Model_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.Git;
 import judgels.sandalphon.api.problem.Problem;
@@ -82,6 +84,7 @@ public class ProblemStore extends BaseProblemStore {
                 .where(problemDao.userCanView(userJid, isAdmin))
                 .where(problemDao.termsMatch(termFilter))
                 .where(problemDao.tagsMatch(ProblemTags.splitTagsFilterByType(tagsFilter)))
+                .orderBy(Model_.UPDATED_AT, OrderDir.DESC)
                 .pageNumber(pageNumber)
                 .paged()
                 .mapPage(p -> Lists.transform(p, ProblemStore::fromModel));

@@ -20,10 +20,8 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     private final Class<M> entityClass;
 
     private final List<CriteriaPredicate<M>> predicates;
-    private String orderBy;
-    private OrderDir orderDir;
-    private String orderBy2;
-    private OrderDir orderDir2;
+    private final List<String> orderColumns;
+    private final List<OrderDir> orderDirs;
     private int pageNumber;
     private int pageSize;
 
@@ -32,8 +30,8 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
         this.entityClass = entityClass;
 
         this.predicates = new ArrayList<>();
-        this.orderBy = UnmodifiableModel_.ID;
-        this.orderDir = OrderDir.DESC;
+        this.orderColumns = new ArrayList<>();
+        this.orderDirs = new ArrayList<>();
         this.pageNumber = 0;
         this.pageSize = 0;
     }
@@ -45,26 +43,9 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     }
 
     @Override
-    public QueryBuilder<M> orderBy(String column) {
-        this.orderBy = column;
-        return this;
-    }
-
-    @Override
-    public QueryBuilder<M> orderDir(OrderDir dir) {
-        this.orderDir = dir;
-        return this;
-    }
-
-    @Override
-    public QueryBuilder<M> orderBy2(String column) {
-        this.orderBy2 = column;
-        return this;
-    }
-
-    @Override
-    public QueryBuilder<M> orderDir2(OrderDir dir) {
-        this.orderDir2 = dir;
+    public QueryBuilder<M> orderBy(String column, OrderDir dir) {
+        orderColumns.add(column);
+        orderDirs.add(dir);
         return this;
     }
 
@@ -137,17 +118,18 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     }
 
     private void applyOrders(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root) {
-        List<Order> orders = new ArrayList<>();
-        if (orderDir == OrderDir.ASC) {
-            orders.add(cb.asc(root.get(orderBy)));
-        } else {
-            orders.add(cb.desc(root.get(orderBy)));
+        if (orderColumns.isEmpty()) {
+            orderColumns.add(UnmodifiableModel_.ID);
+            orderDirs.add(OrderDir.DESC);
         }
-        if (orderBy2 != null) {
-            if (orderDir2 == OrderDir.ASC) {
-                orders.add(cb.asc(root.get(orderBy2)));
+
+        List<Order> orders = new ArrayList<>();
+
+        for (int i = 0; i < orderColumns.size(); i++) {
+            if (orderDirs.get(i) == OrderDir.ASC) {
+                orders.add(cb.asc(root.get(orderColumns.get(i))));
             } else {
-                orders.add(cb.desc(root.get(orderBy2)));
+                orders.add(cb.desc(root.get(orderColumns.get(i))));
             }
         }
         cq.orderBy(orders);
