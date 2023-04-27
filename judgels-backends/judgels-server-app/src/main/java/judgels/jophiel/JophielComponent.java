@@ -6,9 +6,7 @@ import judgels.fs.aws.AwsModule;
 import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.client.user.ClientUserResource;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
-import judgels.jophiel.legacy.user.LegacyUserResource;
 import judgels.jophiel.mailer.MailerModule;
-import judgels.jophiel.play.PlaySessionResource;
 import judgels.jophiel.profile.ProfileResource;
 import judgels.jophiel.session.SessionCleaner;
 import judgels.jophiel.session.SessionModule;
@@ -53,8 +51,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         WebModule.class})
 @Singleton
 public interface JophielComponent {
-    LegacyUserResource legacyUserResource();
-    PlaySessionResource playSessionResource();
     MyUserResource myUserResource();
     ProfileResource profileResource();
     SessionResource sessionResource();

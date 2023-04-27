@@ -28,13 +28,6 @@ public class UserHibernateDao extends JudgelsHibernateDao<UserModel> implements 
     }
 
     @Override
-    public List<UserModel> selectAllByTerm(String term) {
-        return selectAll(new FilterOptions.Builder<UserModel>()
-                .addCustomPredicates((cb, cq, root) -> cb.like(root.get(UserModel_.username), "%" + term + "%"))
-                .build());
-    }
-
-    @Override
     public List<UserModel> selectAllByUsernames(Set<String> usernames) {
         return selectAll(new FilterOptions.Builder<UserModel>()
                 .putColumnsIn(UserModel_.username, usernames)

@@ -24,7 +24,6 @@ import judgels.jophiel.persistence.UserRatingModel;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.jophiel.persistence.UserRoleModel;
-import judgels.jophiel.play.PlaySessionModel;
 import judgels.sandalphon.persistence.BundleGradingModel;
 import judgels.sandalphon.persistence.BundleSubmissionModel;
 import judgels.sandalphon.persistence.LessonModel;
@@ -52,7 +51,6 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
     public JudgelsServerHibernateBundle() {
         super(
                 // Jophiel
-                PlaySessionModel.class,
                 SessionModel.class,
                 UserModel.class,
                 UserInfoModel.class,

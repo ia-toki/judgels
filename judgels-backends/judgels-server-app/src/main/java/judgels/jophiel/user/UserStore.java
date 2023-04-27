@@ -3,7 +3,6 @@ package judgels.jophiel.user;
 import com.google.common.collect.Lists;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -76,10 +75,6 @@ public class UserStore {
 
     public Optional<User> getUserByEmail(String email) {
         return userDao.selectByEmail(email).map(UserStore::fromModel);
-    }
-
-    public List<User> getUsersByTerm(String term) {
-        return Lists.transform(userDao.selectAllByTerm(term), UserStore::fromModel);
     }
 
     public Page<User> getUsers(Optional<Integer> page, Optional<String> orderBy, Optional<OrderDir> orderDir) {

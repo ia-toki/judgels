@@ -10,17 +10,10 @@ import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserRoleDao;
-import judgels.jophiel.play.PlaySessionDao;
-import judgels.jophiel.play.PlaySessionHibernateDao;
 
 @Module
 public class JophielHibernateDaoModule {
     private JophielHibernateDaoModule() {}
-
-    @Provides
-    static PlaySessionDao playSessionDao(PlaySessionHibernateDao dao) {
-        return dao;
-    }
 
     @Provides
     static SessionDao sessionDao(SessionHibernateDao dao) {
