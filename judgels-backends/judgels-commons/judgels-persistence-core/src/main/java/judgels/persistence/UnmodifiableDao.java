@@ -14,7 +14,7 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     M insert(M model);
     M persist(M model);
 
-    QueryBuilder<M> query();
+    QueryBuilder<M> select();
 
     Optional<M> select(long id);
     Optional<M> selectByFilter(FilterOptions<M> filterOptions);

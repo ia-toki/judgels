@@ -81,7 +81,7 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     }
 
     @Override
-    public int selectCount() {
+    public int count() {
         CriteriaBuilder cb = currentSession.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<M> root = cq.from(entityClass);
@@ -93,7 +93,7 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     }
 
     @Override
-    public List<M> selectAll() {
+    public List<M> all() {
         CriteriaBuilder cb = currentSession.getCriteriaBuilder();
         CriteriaQuery<M> cq = cb.createQuery(entityClass);
         Root<M> root = cq.from(entityClass);
@@ -110,7 +110,7 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     }
 
     @Override
-    public Page<M> selectPaged() {
+    public Page<M> paged() {
         if (pageNumber == 0) {
             pageNumber = 1;
         }
@@ -118,8 +118,8 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
             pageSize = 20;
         }
 
-        List<M> page = selectAll();
-        int totalCount = selectCount();
+        List<M> page = all();
+        int totalCount = count();
 
         return new Page.Builder<M>()
                 .totalCount(totalCount)

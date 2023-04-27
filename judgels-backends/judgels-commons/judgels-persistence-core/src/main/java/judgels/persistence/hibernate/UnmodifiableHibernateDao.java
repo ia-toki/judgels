@@ -64,7 +64,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public HibernateQueryBuilder<M> query() {
+    public HibernateQueryBuilder<M> select() {
         return new HibernateQueryBuilder<>(currentSession(), getEntityClass());
     }
 

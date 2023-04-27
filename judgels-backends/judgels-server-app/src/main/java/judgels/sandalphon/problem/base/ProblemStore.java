@@ -78,12 +78,12 @@ public class ProblemStore extends BaseProblemStore {
 
     public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageNumber) {
         return problemDao
-                .query()
+                .select()
                 .where(problemDao.userCanView(userJid, isAdmin))
                 .where(problemDao.termsMatch(termFilter))
                 .where(problemDao.tagsMatch(ProblemTags.splitTagsFilterByType(tagsFilter)))
                 .pageNumber(pageNumber)
-                .selectPaged()
+                .paged()
                 .mapPage(p -> Lists.transform(p, ProblemStore::fromModel));
     }
 
