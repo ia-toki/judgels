@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import judgels.jerahmeel.api.curriculum.Curriculum;
 import judgels.jerahmeel.persistence.CurriculumDao;
 import judgels.jerahmeel.persistence.CurriculumModel;
-import judgels.persistence.api.SelectionOptions;
 
 public class CurriculumStore {
     private final CurriculumDao curriculumDao;
@@ -30,7 +29,7 @@ public class CurriculumStore {
 
     public List<Curriculum> getCurriculums() {
         return Lists.transform(
-                curriculumDao.selectAll(SelectionOptions.DEFAULT_ALL),
+                curriculumDao.select().all(),
                 CurriculumStore::fromModel);
     }
 

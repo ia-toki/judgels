@@ -1,16 +1,14 @@
 package judgels.uriel.hibernate;
 
-import java.util.Optional;
 import javax.inject.Inject;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.UnmodifiableModel_;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.uriel.persistence.ContestLogDao;
 import judgels.uriel.persistence.ContestLogModel;
 import judgels.uriel.persistence.ContestLogModel_;
+import org.hibernate.Session;
 
 public class ContestLogHibernateDao extends UnmodifiableHibernateDao<ContestLogModel> implements ContestLogDao {
     @Inject
@@ -19,17 +17,26 @@ public class ContestLogHibernateDao extends UnmodifiableHibernateDao<ContestLogM
     }
 
     @Override
-    public Page<ContestLogModel> selectPaged(
-            String contestJid,
-            Optional<String> userJid,
-            Optional<String> problemJid,
-            SelectionOptions options) {
+    public ContestLogQueryBuilder selectByContestJid(String contestJid) {
+        return new ContestLogHibernateQueryBuilder(currentSession(), contestJid);
+    }
 
-        FilterOptions.Builder<ContestLogModel> filterOptions = new FilterOptions.Builder<ContestLogModel>()
-                .putColumnsEq(ContestLogModel_.contestJid, contestJid);
-        userJid.ifPresent(jid -> filterOptions.putColumnsEq(UnmodifiableModel_.createdBy, jid));
-        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(ContestLogModel_.problemJid, jid));
+    private static class ContestLogHibernateQueryBuilder extends HibernateQueryBuilder<ContestLogModel> implements ContestLogQueryBuilder {
+        ContestLogHibernateQueryBuilder(Session currentSession, String contestJid) {
+            super(currentSession, ContestLogModel.class);
+            where(columnEq(ContestLogModel_.contestJid, contestJid));
+        }
 
-        return selectPaged(filterOptions.build(), options);
+        @Override
+        public ContestLogQueryBuilder whereUserIs(String userJid) {
+            where(columnEq(UnmodifiableModel_.createdBy, userJid));
+            return this;
+        }
+
+        @Override
+        public ContestLogQueryBuilder whereProblemIs(String problemJid) {
+            where(columnEq(ContestLogModel_.problemJid, problemJid));
+            return this;
+        }
     }
 }

@@ -31,8 +31,8 @@ public class UserStatsResource implements UserStatsService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public UserTopStatsResponse getTopUserStats(Optional<Integer> page, Optional<Integer> pageSize) {
-        Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(page, pageSize);
+    public UserTopStatsResponse getTopUserStats(Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+        Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(pageNumber.orElse(1), pageSize.orElse(50));
         Set<String> userJids = stats.getPage().stream().map(UserTopStatsEntry::getUserJid).collect(toSet());
         Map<String, Profile> profileMap = userClient.getProfiles(userJids);
 

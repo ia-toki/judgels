@@ -12,9 +12,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-import judgels.persistence.FilterOptions;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.sandalphon.persistence.ProblemTagDao;
@@ -30,19 +29,17 @@ public class ProblemTagHibernateDao extends UnmodifiableHibernateDao<ProblemTagM
 
     @Override
     public List<ProblemTagModel> selectAllByProblemJid(String problemJid) {
-        return selectAll(new FilterOptions.Builder<ProblemTagModel>()
-                .putColumnsEq(ProblemTagModel_.problemJid, problemJid)
-                .build(), new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_ALL)
-                .orderDir(OrderDir.ASC)
-                .build());
+        return select()
+                .where(columnEq(ProblemTagModel_.problemJid, problemJid))
+                .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
+                .all();
     }
 
     @Override
     public List<ProblemTagModel> selectAllByTags(Set<String> tags) {
-        return selectAll(new FilterOptions.Builder<ProblemTagModel>()
-                .putColumnsIn(ProblemTagModel_.tag, tags)
-                .build());
+        return select()
+                .where(columnIn(ProblemTagModel_.tag, tags))
+                .all();
     }
 
     @Override
@@ -72,14 +69,14 @@ public class ProblemTagHibernateDao extends UnmodifiableHibernateDao<ProblemTagM
                 root.get(ProblemTagModel_.tag),
                 cb.count(root)));
 
-        Subquery<ProblemTagModel> sq = cq.subquery(getEntityClass());
-        Root<ProblemTagModel> subroot = sq.from(getEntityClass());
-        sq.where(
+        Subquery<ProblemTagModel> subquery = cq.subquery(getEntityClass());
+        Root<ProblemTagModel> subroot = subquery.from(getEntityClass());
+        subquery.where(
                 cb.equal(subroot.get(ProblemTagModel_.problemJid), root.get(ProblemTagModel_.problemJid)),
                 cb.equal(subroot.get(ProblemTagModel_.tag), "visibility-public"));
-        sq.select(subroot);
+        subquery.select(subroot);
 
-        cq.where(cb.exists(sq));
+        cq.where(cb.exists(subquery));
 
         cq.groupBy(root.get(ProblemTagModel_.tag));
 
@@ -90,9 +87,9 @@ public class ProblemTagHibernateDao extends UnmodifiableHibernateDao<ProblemTagM
 
     @Override
     public Optional<ProblemTagModel> selectByProblemJidAndTag(String problemJid, String tag) {
-        return selectByFilter(new FilterOptions.Builder<ProblemTagModel>()
-                .putColumnsEq(ProblemTagModel_.problemJid, problemJid)
-                .putColumnsEq(ProblemTagModel_.tag, tag)
-                .build());
+        return select()
+                .where(columnEq(ProblemTagModel_.problemJid, problemJid))
+                .where(columnEq(ProblemTagModel_.tag, tag))
+                .unique();
     }
 }

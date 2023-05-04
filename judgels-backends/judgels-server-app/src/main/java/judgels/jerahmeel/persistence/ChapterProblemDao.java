@@ -4,15 +4,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import judgels.persistence.Dao;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.QueryBuilder;
 
 public interface ChapterProblemDao extends Dao<ChapterProblemModel> {
+    ChapterProblemQueryBuilder selectByChapterJid(String chapterJid);
+    ChapterProblemQueryBuilder selectByChapterJids(Set<String> chapterJids);
+
     Optional<ChapterProblemModel> selectByProblemJid(String problemJid);
     List<ChapterProblemModel> selectAllByProblemJids(Set<String> problemJids);
-    Optional<ChapterProblemModel> selectByChapterJidAndProblemAlias(String chapterJid, String lessonAlias);
-    List<ChapterProblemModel> selectAllByChapterJid(String chapterJid, SelectionOptions options);
-    List<ChapterProblemModel> selectAllBundleByChapterJid(String chapterJid, SelectionOptions options);
-    List<ChapterProblemModel> selectAllProgrammingByChapterJid(String chapterJid, SelectionOptions options);
-    List<ChapterProblemModel> selectAllProgrammingByChapterJids(Set<String> chapterJids);
-    int selectCountProgrammingByChapterJid(String chapterJid);
+    Optional<ChapterProblemModel> selectByChapterJidAndProblemAlias(String chapterJid, String problemAlias);
+
+    interface ChapterProblemQueryBuilder extends QueryBuilder<ChapterProblemModel> {
+        ChapterProblemQueryBuilder whereTypeIs(String type);
+    }
 }

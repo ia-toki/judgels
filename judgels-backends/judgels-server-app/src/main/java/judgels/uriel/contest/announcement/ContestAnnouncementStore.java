@@ -5,8 +5,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.persistence.Model_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
@@ -14,6 +15,7 @@ import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.uriel.api.contest.dump.ContestAnnouncementDump;
 import judgels.uriel.persistence.ContestAnnouncementDao;
+import judgels.uriel.persistence.ContestAnnouncementDao.ContestAnnouncementQueryBuilder;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 
 public class ContestAnnouncementStore {
@@ -30,20 +32,17 @@ public class ContestAnnouncementStore {
         return fromModel(announcementDao.insert(model));
     }
 
-    public Page<ContestAnnouncement> getAnnouncements(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        options.orderBy("updatedAt");
-        page.ifPresent(options::page);
-        return announcementDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
-                p -> Lists.transform(p, ContestAnnouncementStore::fromModel));
-    }
+    public Page<ContestAnnouncement> getAnnouncements(String contestJid, Optional<String> statusFilter, int pageNumber, int pageSize) {
+        ContestAnnouncementQueryBuilder query = announcementDao.selectByContestJid(contestJid);
 
-    public Page<ContestAnnouncement> getPublishedAnnouncements(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        options.orderBy("updatedAt");
-        page.ifPresent(options::page);
-        return announcementDao.selectPagedPublishedByContestJid(contestJid, options.build()).mapPage(
-                p -> Lists.transform(p, ContestAnnouncementStore::fromModel));
+        if (statusFilter.isPresent()) {
+            query.whereStatusIs(statusFilter.get());
+        }
+
+        return query
+                .orderBy(Model_.UPDATED_AT, OrderDir.DESC)
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, ContestAnnouncementStore::fromModel));
     }
 
     public ContestAnnouncement updateAnnouncement(
@@ -70,7 +69,7 @@ public class ContestAnnouncementStore {
     }
 
     public Set<ContestAnnouncementDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return announcementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+        return announcementDao.selectByContestJid(contestJid).all().stream().map(model -> {
             ContestAnnouncementDump.Builder builder = new ContestAnnouncementDump.Builder()
                     .mode(mode)
                     .title(model.title)

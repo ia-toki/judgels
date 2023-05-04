@@ -1,7 +1,8 @@
 package judgels.jerahmeel.stats;
 
 import static java.util.Collections.emptySet;
-import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
+import static java.util.stream.Collectors.toList;
+import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -11,9 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.api.chapter.ChapterProgress;
@@ -32,12 +31,13 @@ import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.StatsUserDao;
+import judgels.jerahmeel.persistence.StatsUserModel_;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
+import judgels.jerahmeel.persistence.StatsUserProblemModel_;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
-import judgels.sandalphon.api.problem.ProblemType;
 
 public class StatsStore {
     private final CourseChapterDao courseChapterDao;
@@ -65,12 +65,12 @@ public class StatsStore {
         Map<String, CourseProgress> progressesMap = new HashMap<>();
         for (String courseJid : courseJids) {
             Set<String> chapterJids = new HashSet<>();
-            for (CourseChapterModel model : courseChapterDao.selectAllByCourseJid(courseJid, DEFAULT_ALL)) {
+            for (CourseChapterModel model : courseChapterDao.selectByCourseJid(courseJid).all()) {
                 chapterJids.add(model.chapterJid);
             }
 
             Set<String> problemJids = new HashSet<>();
-            for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)) {
+            for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).whereTypeIs(PROGRAMMING.name()).all()) {
                 problemJids.add(model.problemJid);
             }
 
@@ -108,7 +108,7 @@ public class StatsStore {
         for (String chapterJid : chapterJids) {
             totalProblemsMap.put(chapterJid, 0);
         }
-        for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)) {
+        for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).whereTypeIs(PROGRAMMING.name()).all()) {
             totalProblemsMap.put(model.chapterJid, 1 + totalProblemsMap.get(model.chapterJid));
         }
         return ImmutableMap.copyOf(totalProblemsMap);
@@ -123,7 +123,7 @@ public class StatsStore {
             chapterProblemJidsMap.put(chapterJid, new HashSet<>());
         }
         Set<String> problemJids = new HashSet<>();
-        for (ChapterProblemModel model : chapterProblemDao.selectAllProgrammingByChapterJids(chapterJids)) {
+        for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).whereTypeIs(PROGRAMMING.name()).all()) {
             chapterProblemJidsMap.get(model.chapterJid).add(model.problemJid);
             problemJids.add(model.problemJid);
         }
@@ -189,39 +189,41 @@ public class StatsStore {
     }
 
     public ProblemTopStats getProblemTopStats(String problemJid) {
-        List<ProblemTopStatsEntry> topUsersByScore =
-                statsUserProblemDao.selectAllByProblemJid(problemJid, new SelectionOptions.Builder()
-                        .orderBy("score")
-                        .orderDir(OrderDir.DESC)
-                        .orderBy2("updatedAt")
-                        .orderDir2(OrderDir.ASC)
-                        .pageSize(5)
-                        .build()).stream().map(m -> new ProblemTopStatsEntry.Builder()
+        List<ProblemTopStatsEntry> topUsersByScore = statsUserProblemDao
+                .selectByProblemJid(problemJid)
+                .orderBy(StatsUserProblemModel_.SCORE, OrderDir.DESC)
+                .orderBy(Model_.UPDATED_AT, OrderDir.ASC)
+                .paged(1, 5)
+                .getPage()
+                .stream()
+                .map(m -> new ProblemTopStatsEntry.Builder()
                         .userJid(m.userJid)
                         .stats(m.score)
-                        .build()).collect(Collectors.toList());
+                        .build()).collect(toList());
 
-        List<ProblemTopStatsEntry> topUsersByTime =
-                statsUserProblemDao.selectAllAcceptedByProblemJid(problemJid, new SelectionOptions.Builder()
-                        .orderBy("time")
-                        .orderDir(OrderDir.ASC)
-                        .orderBy2("updatedAt")
-                        .pageSize(5)
-                        .build()).stream().map(m -> new ProblemTopStatsEntry.Builder()
+        List<ProblemTopStatsEntry> topUsersByTime = statsUserProblemDao
+                .selectAcceptedByProblemJid(problemJid)
+                .orderBy(StatsUserProblemModel_.TIME, OrderDir.ASC)
+                .orderBy(Model_.UPDATED_AT, OrderDir.ASC)
+                .paged(1, 5)
+                .getPage()
+                .stream()
+                .map(m -> new ProblemTopStatsEntry.Builder()
                         .userJid(m.userJid)
                         .stats(m.time)
-                        .build()).collect(Collectors.toList());
+                        .build()).collect(toList());
 
-        List<ProblemTopStatsEntry> topUsersByMemory =
-                statsUserProblemDao.selectAllAcceptedByProblemJid(problemJid, new SelectionOptions.Builder()
-                        .orderBy("memory")
-                        .orderDir(OrderDir.ASC)
-                        .orderBy2("updatedAt")
-                        .pageSize(5)
-                        .build()).stream().map(m -> new ProblemTopStatsEntry.Builder()
+        List<ProblemTopStatsEntry> topUsersByMemory = statsUserProblemDao
+                .selectAcceptedByProblemJid(problemJid)
+                .orderBy(StatsUserProblemModel_.MEMORY, OrderDir.ASC)
+                .orderBy(Model_.UPDATED_AT, OrderDir.ASC)
+                .paged(1, 5)
+                .getPage()
+                .stream()
+                .map(m -> new ProblemTopStatsEntry.Builder()
                         .userJid(m.userJid)
                         .stats(m.memory)
-                        .build()).collect(Collectors.toList());
+                        .build()).collect(toList());
 
         return new ProblemTopStats.Builder()
                 .topUsersByScore(topUsersByScore)
@@ -233,8 +235,8 @@ public class StatsStore {
     public Map<String, ProblemSetProgress> getProblemSetProgressesMap(String userJid, Set<String> problemSetJids) {
         Map<String, Set<String>> problemJidsMap = new HashMap<>();
         Set<String> problemJids = new HashSet<>();
-        for (ProblemSetProblemModel m : problemSetProblemDao.selectAllByProblemSetJids(problemSetJids, DEFAULT_ALL)) {
-            if (m.type.equals(ProblemType.PROGRAMMING.name())) {
+        for (ProblemSetProblemModel m : problemSetProblemDao.selectByProblemSetJids(problemSetJids).all()) {
+            if (m.type.equals(PROGRAMMING.name())) {
                 problemJidsMap.putIfAbsent(m.problemSetJid, new HashSet<>());
                 problemJidsMap.get(m.problemSetJid).add(m.problemJid);
                 problemJids.add(m.problemJid);
@@ -286,18 +288,12 @@ public class StatsStore {
                 .build();
     }
 
-    public Page<UserTopStatsEntry> getTopUserStats(Optional<Integer> page, Optional<Integer> pageSize) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .orderBy("score")
-                .orderDir(OrderDir.DESC)
-                .orderBy2("updatedAt")
-                .orderDir2(OrderDir.ASC);
-
-        page.ifPresent(options::page);
-        pageSize.ifPresent(options::pageSize);
-
-        return statsUserDao.selectPaged(options.build())
+    public Page<UserTopStatsEntry> getTopUserStats(int pageNumber, int pageSize) {
+        return statsUserDao
+                .select()
+                .orderBy(StatsUserModel_.SCORE, OrderDir.DESC)
+                .orderBy(Model_.UPDATED_AT, OrderDir.ASC)
+                .paged(pageNumber, pageSize)
                 .mapPage(models -> Lists.transform(models, m ->
                         new UserTopStatsEntry.Builder().userJid(m.userJid).totalScores(m.score).build()));
     }

@@ -16,6 +16,6 @@ public class ArchiveHibernateDao extends JudgelsHibernateDao<ArchiveModel> imple
 
     @Override
     public Optional<ArchiveModel> selectBySlug(String archiveSlug) {
-        return selectByUniqueColumn(ArchiveModel_.slug, archiveSlug);
+        return select().where(columnEq(ArchiveModel_.slug, archiveSlug)).unique();
     }
 }

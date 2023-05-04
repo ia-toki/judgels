@@ -1,14 +1,12 @@
 package judgels.jophiel.hibernate;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.persistence.UserInfoDao;
 import judgels.jophiel.persistence.UserInfoModel;
 import judgels.jophiel.persistence.UserInfoModel_;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 
@@ -20,15 +18,11 @@ public class UserInfoHibernateDao extends HibernateDao<UserInfoModel> implements
 
     @Override
     public Optional<UserInfoModel> selectByUserJid(String userJid) {
-        return selectByUniqueColumn(UserInfoModel_.userJid, userJid);
+        return select().where(columnEq(UserInfoModel_.userJid, userJid)).unique();
     }
 
     @Override
-    public Map<String, UserInfoModel> selectAllByUserJids(Set<String> userJids) {
-        return selectAll(new FilterOptions.Builder<UserInfoModel>()
-                .putColumnsIn(UserInfoModel_.userJid, userJids)
-                .build())
-                .stream()
-                .collect(Collectors.toMap(m -> m.userJid, m -> m));
+    public List<UserInfoModel> selectAllByUserJids(Set<String> userJids) {
+        return select().where(columnIn(UserInfoModel_.userJid, userJids)).all();
     }
 }

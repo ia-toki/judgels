@@ -57,6 +57,8 @@ import judgels.service.api.actor.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class SubmissionResource implements SubmissionService {
+    private static final int PAGE_SIZE = 20;
+
     private final ActorChecker actorChecker;
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
@@ -113,7 +115,7 @@ public class SubmissionResource implements SubmissionService {
             Optional<String> username,
             Optional<String> problemJid,
             Optional<String> problemAlias,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -123,7 +125,8 @@ public class SubmissionResource implements SubmissionService {
                 containerJid,
                 byUserJid(username),
                 byProblemJid(containerJid, problemJid, problemAlias),
-                page);
+                pageNumber.orElse(1),
+                PAGE_SIZE);
         Set<String> containerJids = submissions.getPage().stream().map(Submission::getContainerJid).collect(toSet());
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
 
@@ -296,12 +299,13 @@ public class SubmissionResource implements SubmissionService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
-        for (int page = 1;; page++) {
+        for (int pageNumber = 1;; pageNumber++) {
             List<Submission> submissions = submissionStore.getSubmissions(
                     containerJid,
                     byUserJid(username),
                     byProblemJid(containerJid, problemJid, problemAlias),
-                    Optional.of(page)).getPage();
+                    pageNumber,
+                    PAGE_SIZE).getPage();
 
             if (submissions.isEmpty()) {
                 break;

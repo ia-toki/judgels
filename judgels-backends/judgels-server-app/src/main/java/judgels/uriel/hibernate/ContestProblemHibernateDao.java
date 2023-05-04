@@ -4,16 +4,16 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.persistence.FilterOptions;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 import judgels.uriel.persistence.ContestProblemModel_;
+import org.hibernate.Session;
 
 public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel> implements ContestProblemDao {
     @Inject
@@ -22,44 +22,41 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     }
 
     @Override
+    public ContestProblemQueryBuilder selectByContestJid(String contestJid) {
+        return new ContestProblemHibernateQueryBuilder(currentSession(), contestJid);
+    }
+
+    @Override
     public Optional<ContestProblemModel> selectByContestJidAndProblemJid(String contestJid, String problemJid) {
-        return selectByFilter(new FilterOptions.Builder<ContestProblemModel>()
-                .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
-                .putColumnsEq(ContestProblemModel_.problemJid, problemJid)
-                .putColumnsIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name()))
-                .build());
+        return selectByContestJid(contestJid)
+                .where(columnEq(ContestProblemModel_.problemJid, problemJid))
+                .unique();
     }
 
     @Override
     public Optional<ContestProblemModel> selectByContestJidAndProblemAlias(String contestJid, String problemAlias) {
-        return selectByFilter(new FilterOptions.Builder<ContestProblemModel>()
-                .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
-                .putColumnsEq(ContestProblemModel_.alias, problemAlias)
-                .putColumnsIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name()))
-                .build());
+        return selectByContestJid(contestJid)
+                .where(columnEq(ContestProblemModel_.alias, problemAlias))
+                .unique();
     }
 
-    @Override
-    public List<ContestProblemModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ContestProblemModel>()
-                .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
-                .putColumnsIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name()))
-                .build(), options);
-    }
+    private static class ContestProblemHibernateQueryBuilder extends HibernateQueryBuilder<ContestProblemModel> implements ContestProblemQueryBuilder {
+        ContestProblemHibernateQueryBuilder(Session currentSession, String contestJid) {
+            super(currentSession, ContestProblemModel.class);
+            where(columnEq(ContestProblemModel_.contestJid, contestJid));
+            where(columnIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name())));
+        }
 
-    @Override
-    public List<ContestProblemModel> selectAllOpenByContestJid(String contestJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ContestProblemModel>()
-                .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
-                .putColumnsEq(ContestProblemModel_.status, OPEN.name())
-                .build(), options);
-    }
+        @Override
+        public ContestProblemHibernateQueryBuilder orderBy(String column, OrderDir dir) {
+            super.orderBy(column, dir);
+            return this;
+        }
 
-    @Override
-    public boolean hasClosedByContestJid(String contestJid) {
-        return select()
-                .where(columnEq(ContestProblemModel_.contestJid, contestJid))
-                .where(columnEq(ContestProblemModel_.status, CLOSED.name()))
-                .count() > 0;
+        @Override
+        public ContestProblemQueryBuilder whereStatusIs(String status) {
+            where(columnEq(ContestProblemModel_.status, status));
+            return this;
+        }
     }
 }

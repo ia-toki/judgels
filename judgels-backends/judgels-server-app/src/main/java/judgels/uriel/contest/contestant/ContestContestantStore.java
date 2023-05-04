@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
@@ -26,8 +25,6 @@ import judgels.uriel.persistence.ContestRoleDao;
 
 @Singleton
 public class ContestContestantStore {
-    private static final int PAGE_SIZE = 1000;
-
     private final ContestContestantDao contestantDao;
     private final ContestRoleDao roleDao;
     private final Clock clock;
@@ -91,7 +88,10 @@ public class ContestContestantStore {
     }
 
     public Map<String, Integer> getContestantFinalRanks(String userJid) {
-        return contestantDao.selectAllParticipated(userJid)
+        return contestantDao
+                .select()
+                .whereUserParticipated(userJid)
+                .all()
                 .stream()
                 .collect(Collectors.toMap(m -> m.contestJid, m -> m.finalRank));
     }
@@ -113,7 +113,7 @@ public class ContestContestantStore {
     }
 
     public void resetVirtualContest(String contestJid) {
-        contestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).forEach(model -> {
+        contestantDao.selectByContestJid(contestJid).all().forEach(model -> {
             model.contestStartTime = null;
             contestantDao.update(model);
 
@@ -122,28 +122,28 @@ public class ContestContestantStore {
         });
     }
 
-    public Page<ContestContestant> getContestants(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(PAGE_SIZE);
-        page.ifPresent(options::page);
-        return contestantDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
-                p -> Lists.transform(p, ContestContestantStore::fromModel));
+    public Page<ContestContestant> getContestants(String contestJid, int pageNumber, int pageSize) {
+        return contestantDao
+                .selectByContestJid(contestJid)
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, ContestContestantStore::fromModel));
     }
 
-    public long getApprovedContestantsCount(String contestJid) {
-        return contestantDao.selectCountApprovedByContestJid(contestJid);
+    public int getApprovedContestantsCount(String contestJid) {
+        return contestantDao.selectByContestJid(contestJid).count();
     }
 
     public Set<String> getApprovedContestantJids(String contestJid) {
-        return contestantDao.selectAllApprovedByContestJid(contestJid)
+        return contestantDao.selectByContestJid(contestJid)
+                .all()
                 .stream()
                 .map(model -> model.userJid)
                 .collect(Collectors.toSet());
     }
 
     public Set<ContestContestant> getApprovedContestants(String contestJid) {
-        return contestantDao.selectAllApprovedByContestJid(contestJid)
+        return contestantDao.selectByContestJid(contestJid)
+                .all()
                 .stream()
                 .map(ContestContestantStore::fromModel)
                 .collect(Collectors.toSet());
@@ -164,7 +164,7 @@ public class ContestContestantStore {
     }
 
     public Set<ContestContestantDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return contestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+        return contestantDao.selectByContestJid(contestJid).all().stream().map(model -> {
             ContestContestantDump.Builder builder = new ContestContestantDump.Builder()
                     .mode(mode)
                     .userJid(model.userJid)

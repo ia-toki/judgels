@@ -32,6 +32,8 @@ import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 
 public class ContestResource implements ContestService {
+    private static final int PAGE_SIZE = 20;
+
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
     private final ContestStore contestStore;
@@ -121,18 +123,21 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public ContestsResponse getContests(
             Optional<AuthHeader> authHeader,
-            Optional<String> name,
-            Optional<Integer> page) {
+            Optional<String> nameFilter,
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         boolean isAdmin = contestRoleChecker.canAdminister(actorJid);
 
-        Page<Contest> contests = contestStore.getContests(actorJid, isAdmin, name, page);
+        Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actorJid);
+        Page<Contest> contests = contestStore.getContests(userJid, nameFilter, pageNumber.orElse(1), PAGE_SIZE);
+
         Map<String, ContestRole> rolesMap = contests.getPage()
                 .stream()
                 .collect(Collectors.toMap(
                         Contest::getJid,
                         contest -> contestRoleChecker.getRole(actorJid, contest)));
+
         boolean canAdminister = contestRoleChecker.canAdminister(actorJid);
         ContestConfig config = new ContestConfig.Builder()
                 .canAdminister(canAdminister)
@@ -151,7 +156,9 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         boolean isAdmin = contestRoleChecker.canAdminister(actorJid);
 
-        List<Contest> contests = contestStore.getActiveContests(actorJid, isAdmin);
+        Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actorJid);
+        List<Contest> contests = contestStore.getActiveContests(userJid);
+
         Map<String, ContestRole> rolesMap = contests
                 .stream()
                 .collect(Collectors.toMap(

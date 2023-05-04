@@ -20,7 +20,6 @@ import judgels.jophiel.user.info.UserInfoStore;
 import judgels.jophiel.user.rating.UserRatingStore;
 import judgels.jophiel.user.rating.UserWithRating;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 
 public class ProfileStore {
     private static final Pattern USERNAME_PATTERN = Pattern.compile("\\[user:(\\S+)]");
@@ -71,12 +70,8 @@ public class ProfileStore {
         return getProfiles(userJids);
     }
 
-    public Page<Profile> getTopRatedProfiles(Instant time, Optional<Integer> page, Optional<Integer> pageSize) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(options::page);
-        pageSize.ifPresent(options::pageSize);
-
-        Page<UserWithRating> ratings = ratingStore.getTopRatings(time, options.build());
+    public Page<Profile> getTopRatedProfiles(Instant time, int pageNumber, int pageSize) {
+        Page<UserWithRating> ratings = ratingStore.getTopRatings(time, pageNumber, pageSize);
         Set<String> userJids = ratings.getPage().stream().map(UserWithRating::getUserJid).collect(Collectors.toSet());
         Map<String, User> users = userStore.getUsersByJids(userJids);
         Map<String, UserInfo> infos = infoStore.getInfos(userJids);

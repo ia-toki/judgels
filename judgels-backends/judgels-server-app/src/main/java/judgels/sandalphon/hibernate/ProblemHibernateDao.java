@@ -29,36 +29,32 @@ public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel>
 
     @Override
     public ProblemHibernateQueryBuilder select() {
-        return new ProblemHibernateQueryBuilder(currentSession(), ProblemModel.class);
+        return new ProblemHibernateQueryBuilder(currentSession());
     }
 
     @Override
-    public Optional<ProblemModel> selectUniqueBySlug(String slug) {
-        return selectByUniqueColumn(ProblemModel_.slug, slug);
+    public Optional<ProblemModel> selectBySlug(String slug) {
+        return select().where(columnEq(ProblemModel_.slug, slug)).unique();
     }
 
     private static class ProblemHibernateQueryBuilder extends HibernateQueryBuilder<ProblemModel> implements ProblemQueryBuilder {
-        ProblemHibernateQueryBuilder(Session currentSession, Class<ProblemModel> entityClass) {
-            super(currentSession, entityClass);
+        ProblemHibernateQueryBuilder(Session currentSession) {
+            super(currentSession, ProblemModel.class);
         }
 
         @Override
-        public ProblemQueryBuilder whereUserCanView(String userJid, boolean isAdmin) {
-            if (!isAdmin) {
-                where(or(
-                        userIsAuthor(userJid),
-                        userIsPartner(userJid)));
-            }
+        public ProblemQueryBuilder whereUserCanView(String userJid) {
+            where(or(
+                    userIsAuthor(userJid),
+                    userIsPartner(userJid)));
             return this;
         }
 
         @Override
         public ProblemQueryBuilder whereTermsMatch(String term) {
-            if (!term.isEmpty()) {
-                where(or(
-                        columnLike(ProblemModel_.slug, term),
-                        columnLike(ProblemModel_.additionalNote, term)));
-            }
+            where(or(
+                    columnLike(ProblemModel_.slug, term),
+                    columnLike(ProblemModel_.additionalNote, term)));
             return this;
         }
 
@@ -78,27 +74,27 @@ public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel>
 
         private CriteriaPredicate<ProblemModel> userIsPartner(String userJid) {
             return (cb, cq, root) -> {
-                Subquery<ProblemPartnerModel> sq = cq.subquery(ProblemPartnerModel.class);
-                Root<ProblemPartnerModel> subRoot = sq.from(ProblemPartnerModel.class);
+                Subquery<ProblemPartnerModel> subquery = cq.subquery(ProblemPartnerModel.class);
+                Root<ProblemPartnerModel> subroot = subquery.from(ProblemPartnerModel.class);
 
-                return cb.exists(sq
-                        .select(subRoot)
+                return cb.exists(subquery
+                        .select(subroot)
                         .where(
-                                cb.equal(subRoot.get(ProblemPartnerModel_.problemJid), root.get(ProblemModel_.jid)),
-                                cb.equal(subRoot.get(ProblemPartnerModel_.userJid), userJid)));
+                                cb.equal(subroot.get(ProblemPartnerModel_.problemJid), root.get(ProblemModel_.jid)),
+                                cb.equal(subroot.get(ProblemPartnerModel_.userJid), userJid)));
             };
         }
 
         private CriteriaPredicate<ProblemModel> tagsIntersect(Set<String> tags) {
             return (cb, cq, root) -> {
-                Subquery<ProblemTagModel> sq = cq.subquery(ProblemTagModel.class);
-                Root<ProblemTagModel> subRoot = sq.from(ProblemTagModel.class);
+                Subquery<ProblemTagModel> subquery = cq.subquery(ProblemTagModel.class);
+                Root<ProblemTagModel> subroot = subquery.from(ProblemTagModel.class);
 
-                return cb.exists(sq
-                        .select(subRoot)
+                return cb.exists(subquery
+                        .select(subroot)
                         .where(
-                                cb.equal(subRoot.get(ProblemTagModel_.problemJid), root.get(ProblemModel_.jid)),
-                                subRoot.get(ProblemTagModel_.tag).in(tags)));
+                                cb.equal(subroot.get(ProblemTagModel_.problemJid), root.get(ProblemModel_.jid)),
+                                subroot.get(ProblemTagModel_.tag).in(tags)));
             };
         }
     }

@@ -2,6 +2,7 @@ package judgels.uriel.contest.announcement;
 
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
+import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.PUBLISHED;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
@@ -24,6 +25,8 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestAnnouncementResource implements ContestAnnouncementService {
+    private static final int PAGE_SIZE = 20;
+
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestLogger contestLogger;
@@ -53,7 +56,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     public ContestAnnouncementsResponse getAnnouncements(
             Optional<AuthHeader> authHeader,
             String contestJid,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -66,15 +69,13 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 .canManage(canManage)
                 .build();
 
-        Page<ContestAnnouncement> announcements = canSupervise
-                ? announcementStore.getAnnouncements(contestJid, page)
-                : announcementStore.getPublishedAnnouncements(contestJid, page);
+        Optional<String> statusFilter = canSupervise ? Optional.empty() : Optional.of(PUBLISHED.name());
+        Page<ContestAnnouncement> announcements = announcementStore.getAnnouncements(contestJid, statusFilter, pageNumber.orElse(1), PAGE_SIZE);
 
         Set<String> userJids = announcements.getPage()
                 .stream()
                 .map(ContestAnnouncement::getUserJid)
                 .collect(Collectors.toSet());
-
         Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_ANNOUNCEMENTS");

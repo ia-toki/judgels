@@ -16,7 +16,6 @@ import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.persistence.UserRatingModel;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 
 public class UserRatingStore {
     private final UserRatingDao ratingDao;
@@ -29,13 +28,13 @@ public class UserRatingStore {
     }
 
     public Map<String, UserRating> getRatings(Instant time, Set<String> userJids) {
-        return ratingDao.selectAllByTimeAndUserJids(time, userJids).entrySet()
+        return ratingDao.selectAllByTimeAndUserJids(time, userJids)
                 .stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> fromModel(e.getValue())));
+                .collect(Collectors.toMap(m -> m.userJid, UserRatingStore::fromModel));
     }
 
-    public Page<UserWithRating> getTopRatings(Instant time, SelectionOptions options) {
-        return ratingDao.selectTopPagedByTime(time, options).mapPage(
+    public Page<UserWithRating> getTopRatings(Instant time, int pageNumber, int pageSize) {
+        return ratingDao.selectTopPagedByTime(time, pageNumber, pageSize).mapPage(
                 p -> Lists.transform(p, m -> UserWithRating.of(m.userJid, fromModel(m))));
     }
 
@@ -56,16 +55,19 @@ public class UserRatingStore {
     }
 
     public Optional<RatingEvent> getLatestRatingEvent() {
-        return ratingEventDao.selectLatest().map(UserRatingStore::fromModel);
+        return ratingEventDao.select().latest().map(UserRatingStore::fromModel);
     }
 
     public List<UserRatingEvent> getUserRatingEvents(String userJid) {
         List<UserRatingModel> ratings = ratingDao.selectAllByUserJid(userJid);
-        Map<Instant, UserRatingEventModel> ratingEventsMap =
-                ratingEventDao.selectAllByTimes(
+        Map<Instant, UserRatingEventModel> ratingEventsMap = ratingEventDao
+                .selectAllByTimes(
                         ratings.stream()
                                 .map(e -> e.time)
-                                .collect(Collectors.toSet()));
+                                .collect(Collectors.toSet()))
+                .stream()
+                .collect(Collectors.toMap(m -> m.time, m -> m));
+
         return ratings.stream()
                 .map(e -> new UserRatingEvent.Builder()
                         .time(e.time)

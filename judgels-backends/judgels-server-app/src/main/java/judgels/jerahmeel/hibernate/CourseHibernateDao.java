@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
 import judgels.jerahmeel.persistence.CourseModel_;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 
@@ -17,8 +16,6 @@ public class CourseHibernateDao extends JudgelsHibernateDao<CourseModel> impleme
 
     @Override
     public Optional<CourseModel> selectBySlug(String courseSlug) {
-        return selectByFilter(new FilterOptions.Builder<CourseModel>()
-                .putColumnsEq(CourseModel_.slug, courseSlug)
-                .build());
+        return select().where(columnEq(CourseModel_.slug, courseSlug)).unique();
     }
 }

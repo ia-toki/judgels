@@ -7,6 +7,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,8 @@ import judgels.sandalphon.api.lesson.Lesson;
 
 @Path("/lessons")
 public class LessonResource extends BaseLessonResource {
+    private static final int PAGE_SIZE = 20;
+
     @Inject public LessonResource() {}
 
     @GET
@@ -41,7 +44,9 @@ public class LessonResource extends BaseLessonResource {
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Lesson> lessons = lessonStore.getLessons(actor.getUserJid(), isAdmin, termFilter, pageNumber);
+        Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actor.getUserJid());
+        Page<Lesson> lessons = lessonStore.getLessons(userJid, termFilter, pageNumber, PAGE_SIZE);
+
         Set<String> userJids = lessons.getPage().stream().map(Lesson::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 

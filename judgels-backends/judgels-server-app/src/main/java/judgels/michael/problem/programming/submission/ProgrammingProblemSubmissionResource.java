@@ -44,6 +44,8 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 @Path("/problems/programming/{problemId}/submissions")
 public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblemResource {
+    private static final int PAGE_SIZE = 20;
+
     @Inject protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
     @Inject protected SubmissionClient submissionClient;
@@ -62,7 +64,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageNumber));
+        Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), pageNumber, PAGE_SIZE);
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, String> gradingLanguageNamesMap = GradingLanguageRegistry.getInstance().getLanguages();
@@ -118,7 +120,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
         for (int pageNumber = 1; ; pageNumber++) {
-            List<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageNumber)).getPage();
+            List<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), pageNumber, PAGE_SIZE).getPage();
             if (submissions.isEmpty()) {
                 break;
             }

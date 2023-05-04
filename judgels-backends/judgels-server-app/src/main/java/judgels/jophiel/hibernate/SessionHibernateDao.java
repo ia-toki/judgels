@@ -5,13 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.SessionModel_;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 
@@ -26,30 +22,23 @@ public class SessionHibernateDao extends UnmodifiableHibernateDao<SessionModel> 
         if (token == null) {
             return Optional.empty();
         }
-        return selectByUniqueColumn(SessionModel_.token, token);
+        return select().where(columnEq(SessionModel_.token, token)).unique();
     }
 
     @Override
     public List<SessionModel> selectAllByUserJid(String userJid) {
-        return selectAll(new FilterOptions.Builder<SessionModel>()
-                .putColumnsEq(SessionModel_.userJid, userJid)
-                .build());
+        return select().where(columnEq(SessionModel_.userJid, userJid)).all();
     }
 
     @Override
     public List<SessionModel> selectAllByUserJids(Set<String> userJids) {
-        return selectAll(new FilterOptions.Builder<SessionModel>()
-                .putColumnsIn(SessionModel_.userJid, userJids)
-                .build());
+        return select().where(columnIn(SessionModel_.userJid, userJids)).all();
     }
 
     @Override
     public List<SessionModel> selectAllOlderThan(Instant time) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<SessionModel> cq = cb.createQuery(SessionModel.class);
-        Root<SessionModel> root = cq.from(getEntityClass());
-
-        cq.where(cb.lessThan(root.get(SessionModel_.createdAt), time));
-        return currentSession().createQuery(cq).getResultList();
+        return select()
+                .where((cb, cq, root) -> cb.lessThan(root.get(SessionModel_.createdAt), time))
+                .all();
     }
 }

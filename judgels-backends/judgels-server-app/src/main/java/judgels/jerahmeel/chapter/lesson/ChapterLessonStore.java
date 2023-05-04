@@ -12,8 +12,8 @@ import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLesson;
 import judgels.jerahmeel.persistence.ChapterLessonDao;
 import judgels.jerahmeel.persistence.ChapterLessonModel;
+import judgels.jerahmeel.persistence.ChapterLessonModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 
 public class ChapterLessonStore {
     private final ChapterLessonDao lessonDao;
@@ -24,9 +24,10 @@ public class ChapterLessonStore {
     }
 
     public List<ChapterLesson> getLessons(String chapterJid) {
-        return Lists.transform(
-                lessonDao.selectAllByChapterJid(chapterJid, createOptions()),
-                ChapterLessonStore::fromModel);
+        return Lists.transform(lessonDao
+                .selectByChapterJid(chapterJid)
+                .orderBy(ChapterLessonModel_.ALIAS, OrderDir.ASC)
+                .all(), ChapterLessonStore::fromModel);
     }
 
     public Optional<ChapterLesson> getLessonByAlias(String chapterJid, String lessonAlias) {
@@ -34,11 +35,10 @@ public class ChapterLessonStore {
                 .map(ChapterLessonStore::fromModel);
     }
 
-
     public Set<ChapterLesson> setLessons(String chapterJid, List<ChapterLesson> data) {
         Map<String, ChapterLesson> setLessons = data.stream().collect(
                 Collectors.toMap(ChapterLesson::getLessonJid, Function.identity()));
-        for (ChapterLessonModel model : lessonDao.selectAllByChapterJid(chapterJid, createOptions())) {
+        for (ChapterLessonModel model : lessonDao.selectByChapterJid(chapterJid).all()) {
             ChapterLesson existingLesson = setLessons.get(model.lessonJid);
             if (existingLesson == null || !existingLesson.getAlias().equals(model.alias)) {
                 lessonDao.delete(model);
@@ -68,13 +68,6 @@ public class ChapterLessonStore {
             model.lessonJid = lessonJid;
             return fromModel(lessonDao.insert(model));
         }
-    }
-
-    private static SelectionOptions createOptions() {
-        return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("alias")
-                .orderDir(OrderDir.ASC)
-                .build();
     }
 
     private static ChapterLesson fromModel(ChapterLessonModel model) {

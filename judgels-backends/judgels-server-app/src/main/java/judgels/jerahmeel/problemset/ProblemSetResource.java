@@ -38,6 +38,8 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class ProblemSetResource implements ProblemSetService {
+    private static final int PAGE_SIZE = 20;
+
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final ProblemSetStore problemSetStore;
@@ -70,8 +72,8 @@ public class ProblemSetResource implements ProblemSetService {
     public ProblemSetsResponse getProblemSets(
             Optional<AuthHeader> authHeader,
             Optional<String> archiveSlug,
-            Optional<String> name,
-            Optional<Integer> page) {
+            Optional<String> nameFilter,
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -79,7 +81,7 @@ public class ProblemSetResource implements ProblemSetService {
         Optional<String> archiveJid = archiveSlug.isPresent()
                 ? Optional.of(archive.map(Archive::getJid).orElse(""))
                 : Optional.empty();
-        Page<ProblemSet> problemSets = problemSetStore.getProblemSets(archiveJid, name, page);
+        Page<ProblemSet> problemSets = problemSetStore.getProblemSets(archiveJid, nameFilter, pageNumber.orElse(1), PAGE_SIZE);
         Set<String> problemSetJids = problemSets.getPage().stream().map(ProblemSet::getJid).collect(toSet());
         Set<String> archiveJids = problemSets.getPage().stream().map(ProblemSet::getArchiveJid).collect(toSet());
         Map<String, Archive> archivesMap = archiveStore.getArchivesByJids(archiveJids);

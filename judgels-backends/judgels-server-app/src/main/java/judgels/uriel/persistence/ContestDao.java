@@ -1,22 +1,22 @@
 package judgels.uriel.persistence;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import judgels.persistence.JudgelsDao;
-import judgels.persistence.SearchOptions;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.QueryBuilder;
 
 public interface ContestDao extends JudgelsDao<ContestModel> {
+    ContestQueryBuilder select();
     Optional<ContestModel> selectBySlug(String contestSlug);
 
-    List<ContestModel> selectAllActive(SelectionOptions options);
-    List<ContestModel> selectAllRunning(SelectionOptions options);
-
-    Page<ContestModel> selectPaged(SearchOptions searchOptions, SelectionOptions options);
-    Page<ContestModel> selectPagedByUserJid(String userJid, SearchOptions searchOptions, SelectionOptions options);
-    List<ContestModel> selectAllActiveByUserJid(String userJid, SelectionOptions options);
-    List<ContestModel> selectAllPubliclyParticipatedByUserJid(String userJid, SelectionOptions options);
-    List<ContestModel> selectAllPublicAfter(Instant time);
+    interface ContestQueryBuilder extends QueryBuilder<ContestModel> {
+        ContestQueryBuilder wherePublic();
+        ContestQueryBuilder whereActive();
+        ContestQueryBuilder whereRunning();
+        ContestQueryBuilder whereBeginsAfter(Instant time);
+        ContestQueryBuilder whereEnded();
+        ContestQueryBuilder whereUserCanView(String userJid);
+        ContestQueryBuilder whereUserParticipated(String userJid);
+        ContestQueryBuilder whereNameLike(String name);
+    }
 }

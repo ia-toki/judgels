@@ -13,7 +13,8 @@ public interface ItemSubmissionStore {
             String containerJid,
             Optional<String> createdBy,
             Optional<String> problemJid,
-            Optional<Integer> page);
+            int pageNumber,
+            int pageSize);
 
     ItemSubmission upsertSubmission(
             String containerJid,

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.dump.ContestSupervisorDump;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
@@ -26,8 +25,6 @@ import judgels.uriel.persistence.ContestSupervisorModel;
 
 @Singleton
 public class ContestSupervisorStore {
-    private static final int PAGE_SIZE = 250;
-
     private final ContestSupervisorDao supervisorDao;
     private final ObjectMapper mapper;
 
@@ -99,19 +96,17 @@ public class ContestSupervisorStore {
         return true;
     }
 
-    public Page<ContestSupervisor> getSupervisors(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(PAGE_SIZE);
-        page.ifPresent(options::page);
-        return supervisorDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
-                p -> Lists.transform(p, this::fromModel));
+    public Page<ContestSupervisor> getSupervisors(String contestJid, int pageNumber, int pageSize) {
+        return supervisorDao
+                .selectByContestJid(contestJid)
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, this::fromModel));
     }
 
     public Set<String> getAllSupervisorJids(String contestJid) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder();
         return supervisorDao
-                .selectAllByContestJid(contestJid, options.build())
+                .selectByContestJid(contestJid)
+                .all()
                 .stream()
                 .map(model -> model.userJid)
                 .collect(Collectors.toSet());
@@ -139,7 +134,7 @@ public class ContestSupervisorStore {
     }
 
     public Set<ContestSupervisorDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return supervisorDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+        return supervisorDao.selectByContestJid(contestJid).all().stream().map(model -> {
             Set<SupervisorManagementPermission> permissions;
             try {
                 SupervisorManagementPermissions permissionsWrapper = mapper.readValue(

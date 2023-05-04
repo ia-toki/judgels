@@ -1,18 +1,14 @@
 package judgels.jophiel.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingModel;
 import judgels.jophiel.persistence.UserRatingModel_;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import org.hibernate.query.Query;
@@ -24,9 +20,9 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
     }
 
     @Override
-    public Map<String, UserRatingModel> selectAllByTimeAndUserJids(Instant time, Set<String> userJids) {
+    public List<UserRatingModel> selectAllByTimeAndUserJids(Instant time, Set<String> userJids) {
         if (userJids.isEmpty()) {
-            return ImmutableMap.of();
+            return Collections.emptyList();
         }
 
         // selects the row for each `userJid` with the latest `time` before the given time
@@ -41,13 +37,11 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
         query.setParameter("time", time);
         query.setParameterList("userJids", userJids);
 
-        return query.getResultList()
-                .stream()
-                .collect(Collectors.toMap(m -> m.userJid, m -> m));
+        return query.getResultList();
     }
 
     @Override
-    public Page<UserRatingModel> selectTopPagedByTime(Instant time, SelectionOptions options) {
+    public Page<UserRatingModel> selectTopPagedByTime(Instant time, int pageNumber, int pageSize) {
         Query<Long> countQuery = currentSession().createQuery(
                 "SELECT COUNT(*) FROM jophiel_user_rating t1 "
                         + "LEFT OUTER JOIN jophiel_user_rating t2 "
@@ -56,7 +50,7 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
                 Long.class);
 
         countQuery.setParameter("time", time);
-        long count = countQuery.getSingleResult();
+        int count = (int) (long) countQuery.getSingleResult();
 
         Query<UserRatingModel> dataQuery = currentSession().createQuery(
                 "SELECT t1 FROM jophiel_user_rating t1 "
@@ -67,23 +61,21 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
                 UserRatingModel.class);
 
         dataQuery.setParameter("time", time);
-        if (options.getPageSize() > 0) {
-            dataQuery.setFirstResult(options.getPageSize() * (options.getPage() - 1));
-            dataQuery.setMaxResults(options.getPageSize());
-        }
+        dataQuery.setFirstResult(pageSize * (pageNumber - 1));
+        dataQuery.setMaxResults(pageSize);
 
         List<UserRatingModel> page = dataQuery.getResultList();
 
         return new Page.Builder<UserRatingModel>()
                 .page(page)
-                .totalCount((int) count)
+                .totalCount(count)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
                 .build();
     }
 
     @Override
     public List<UserRatingModel> selectAllByUserJid(String userJid) {
-        return selectAll(new FilterOptions.Builder<UserRatingModel>()
-                .putColumnsEq(UserRatingModel_.userJid, userJid)
-                .build());
+        return select().where(columnEq(UserRatingModel_.userJid, userJid)).all();
     }
 }

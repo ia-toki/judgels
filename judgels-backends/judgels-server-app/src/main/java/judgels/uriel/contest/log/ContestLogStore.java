@@ -3,18 +3,20 @@ package judgels.uriel.contest.log;
 import com.google.common.collect.Lists;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.persistence.UnmodifiableModel_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.log.ContestLog;
 import judgels.uriel.persistence.ContestLogDao;
+import judgels.uriel.persistence.ContestLogDao.ContestLogQueryBuilder;
 import judgels.uriel.persistence.ContestLogModel;
 
 public class ContestLogStore {
-    private final ContestLogDao dao;
+    private final ContestLogDao logDao;
 
     @Inject
-    public ContestLogStore(ContestLogDao dao) {
-        this.dao = dao;
+    public ContestLogStore(ContestLogDao logDao) {
+        this.logDao = logDao;
     }
 
     public void createLog(ContestLog log) {
@@ -27,25 +29,32 @@ public class ContestLogStore {
         model.createdAt = log.getTime();
         model.createdIp = log.getIpAddress().orElse(null);
 
-        dao.persist(model);
+        logDao.persist(model);
     }
 
     public Page<ContestLog> getLogs(
             String contestJid,
             Optional<String> userJid,
             Optional<String> problemJid,
-            Optional<Integer> page) {
+            int pageNumber,
+            int pageSize) {
 
-        SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        selectionOptions.orderBy("createdAt");
-        selectionOptions.pageSize(100);
-        page.ifPresent(selectionOptions::page);
+        ContestLogQueryBuilder query = logDao.selectByContestJid(contestJid);
 
-        return dao.selectPaged(contestJid, userJid, problemJid, selectionOptions.build())
-                .mapPage(models -> Lists.transform(models, this::fromModel));
+        if (userJid.isPresent()) {
+            query.whereUserIs(userJid.get());
+        }
+        if (problemJid.isPresent()) {
+            query.whereProblemIs(problemJid.get());
+        }
+
+        return query
+                .orderBy(UnmodifiableModel_.CREATED_AT, OrderDir.DESC)
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, ContestLogStore::fromModel));
     }
 
-    private ContestLog fromModel(ContestLogModel model) {
+    private static ContestLog fromModel(ContestLogModel model) {
         return new ContestLog.Builder()
                 .contestJid(model.contestJid)
                 .event(model.event)

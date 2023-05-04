@@ -29,6 +29,8 @@ import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 
 public class ContestLogResource implements ContestLogService {
+    private static final int PAGE_SIZE = 100;
+
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
     private final ContestStore contestStore;
@@ -66,7 +68,7 @@ public class ContestLogResource implements ContestLogService {
             String contestJid,
             Optional<String> username,
             Optional<String> problemAlias,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -79,7 +81,7 @@ public class ContestLogResource implements ContestLogService {
                 .map(ContestProblem::getProblemJid)
                 .orElse(""));
 
-        Page<ContestLog> logs = logStore.getLogs(contestJid, userJid, problemJid, page);
+        Page<ContestLog> logs = logStore.getLogs(contestJid, userJid, problemJid, pageNumber.orElse(1), PAGE_SIZE);
 
         Set<String> userJids = ImmutableSet.<String>builder()
                 .addAll(Lists.transform(logs.getPage(), ContestLog::getUserJid))

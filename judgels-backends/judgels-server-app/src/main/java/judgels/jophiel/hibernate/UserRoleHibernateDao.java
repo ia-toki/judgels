@@ -16,6 +16,6 @@ public class UserRoleHibernateDao extends HibernateDao<UserRoleModel> implements
 
     @Override
     public Optional<UserRoleModel> selectByUserJid(String userJid) {
-        return selectByUniqueColumn(UserRoleModel_.userJid, userJid);
+        return select().where(columnEq(UserRoleModel_.userJid, userJid)).unique();
     }
 }

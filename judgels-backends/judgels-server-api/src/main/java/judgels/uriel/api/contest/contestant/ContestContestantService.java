@@ -24,7 +24,7 @@ public interface ContestContestantService {
     ContestContestantsResponse getContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("page") Optional<Integer> pageNumber);
 
     @GET
     @Path("/approved")

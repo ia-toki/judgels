@@ -20,5 +20,5 @@ public interface ProblemService {
     ProblemsResponse getProblems(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("tags") Set<String> tags,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("page") Optional<Integer> pageNumber);
 }

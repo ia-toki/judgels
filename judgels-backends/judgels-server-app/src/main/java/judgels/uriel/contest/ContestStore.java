@@ -15,10 +15,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.SearchOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
@@ -38,7 +36,9 @@ import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.ContestDao;
+import judgels.uriel.persistence.ContestDao.ContestQueryBuilder;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.ContestModel_;
 
 @Singleton
 public class ContestStore {
@@ -114,59 +114,62 @@ public class ContestStore {
         return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel).orElse(null);
     }
 
-    public Page<Contest> getContests(String userJid, boolean isAdmin, Optional<String> name, Optional<Integer> page) {
-        SearchOptions.Builder searchOptions = new SearchOptions.Builder();
-        name.ifPresent(e -> searchOptions.putTerms("name", e));
+    public Page<Contest> getContests(Optional<String> userJid, Optional<String> nameFilter, int pageNumber, int pageSize) {
+        ContestQueryBuilder query = contestDao.select();
 
-        SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        selectionOptions.orderBy("beginTime");
-        page.ifPresent(selectionOptions::page);
+        if (userJid.isPresent()) {
+            query.whereUserCanView(userJid.get());
+        }
+        if (nameFilter.isPresent()) {
+            query.whereNameLike(nameFilter.get());
+        }
 
-        Page<ContestModel> models = isAdmin
-                ? contestDao.selectPaged(searchOptions.build(), selectionOptions.build())
-                : contestDao.selectPagedByUserJid(userJid, searchOptions.build(), selectionOptions.build());
-        return models.mapPage(p -> Lists.transform(p, ContestStore::fromModel));
+        return query
+                .orderBy(ContestModel_.BEGIN_TIME, OrderDir.DESC)
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, ContestStore::fromModel));
     }
 
-    public List<Contest> getActiveContests(String userJid, boolean isAdmin) {
-        SelectionOptions options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("beginTime")
-                .orderDir(OrderDir.ASC)
-                .build();
+    public List<Contest> getActiveContests(Optional<String> userJid) {
+        ContestQueryBuilder query = contestDao
+                .select()
+                .whereActive();
 
-        List<ContestModel> models = isAdmin
-                ? contestDao.selectAllActive(options)
-                : contestDao.selectAllActiveByUserJid(userJid, options);
-        return Lists.transform(models, ContestStore::fromModel);
+        if (userJid.isPresent()) {
+            query.whereUserCanView(userJid.get());
+        }
+
+        return Lists.transform(query
+                .orderBy(ContestModel_.BEGIN_TIME, OrderDir.ASC)
+                .all(), ContestStore::fromModel);
     }
 
     public List<Contest> getRunningContests() {
-        SelectionOptions options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("beginTime")
-                .orderDir(OrderDir.ASC)
-                .build();
-
-        return Lists.transform(contestDao.selectAllRunning(options), ContestStore::fromModel);
+        return Lists.transform(contestDao
+                .select()
+                .whereRunning()
+                .orderBy(ContestModel_.BEGIN_TIME, OrderDir.ASC)
+                .all(), ContestStore::fromModel);
     }
 
     public List<Contest> getPubliclyParticipatedContests(String userJid) {
-        SelectionOptions options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("beginTime")
-                .orderDir(OrderDir.ASC)
-                .build();
-
-        return Lists.transform(
-                contestDao.selectAllPubliclyParticipatedByUserJid(userJid, options),
-                ContestStore::fromModel);
+        return Lists.transform(contestDao
+                .select()
+                .wherePublic()
+                .whereEnded()
+                .whereUserParticipated(userJid)
+                .orderBy(ContestModel_.BEGIN_TIME, OrderDir.ASC)
+                .all(), ContestStore::fromModel);
     }
 
     public List<Contest> getPublicContestsAfter(Instant time) {
-        return Lists.transform(
-                contestDao.selectAllPublicAfter(time),
-                ContestStore::fromModel);
+        return Lists.transform(contestDao
+                .select()
+                .wherePublic()
+                .whereEnded()
+                .whereBeginsAfter(time)
+                .orderBy(ContestModel_.BEGIN_TIME, OrderDir.ASC)
+                .all(), ContestStore::fromModel);
     }
 
     public Contest createContest(ContestCreateData contestCreateData) {

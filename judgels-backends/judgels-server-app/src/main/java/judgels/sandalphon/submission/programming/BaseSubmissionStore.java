@@ -16,9 +16,9 @@ import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
@@ -26,13 +26,12 @@ import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
 import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
 import judgels.sandalphon.persistence.BaseProgrammingGradingDao;
 import judgels.sandalphon.persistence.BaseProgrammingSubmissionDao;
+import judgels.sandalphon.persistence.BaseProgrammingSubmissionDao.BaseProgrammingSubmissionQueryBuilder;
 
 public class BaseSubmissionStore<
         SM extends AbstractProgrammingSubmissionModel,
         GM extends AbstractProgrammingGradingModel>
         implements SubmissionStore {
-
-    private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 5000;
 
     private final BaseProgrammingSubmissionDao<SM> submissionDao;
     private final BaseProgrammingGradingDao<GM> gradingDao;
@@ -50,7 +49,7 @@ public class BaseSubmissionStore<
 
     @Override
     public Optional<Submission> getSubmissionById(long submissionId) {
-        return submissionDao.select(submissionId).map(model -> {
+        return submissionDao.selectById(submissionId).map(model -> {
             Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
             return submissionFromModels(model, gradingModel.orElse(null));
         });
@@ -65,23 +64,18 @@ public class BaseSubmissionStore<
     }
 
     @Override
-    public List<Submission> getSubmissionByJids(List<String> submissionJids) {
-        Set<String> submissionJidsSet = ImmutableSet.copyOf(submissionJids);
-        Map<String, SM> submissionModels = submissionDao.selectByJids(submissionJidsSet);
-        Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJidsSet);
-        return submissionJids.stream()
-                .filter(submissionModels::containsKey)
-                .map(jid -> submissionFromModels(submissionModels.get(jid), gradingModels.get(jid)))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<Submission> getSubmissionsForScoreboard(
             String containerJid,
             boolean withGradingDetails,
             long lastSubmissionId) {
-        List<SM> submissionModels = submissionDao.selectAllByContainerJid(containerJid, Optional.of(lastSubmissionId));
+
+        List<SM> submissionModels = submissionDao
+                .select()
+                .whereContainerIs(containerJid)
+                .whereLastSubmissionIs(lastSubmissionId)
+                .all();
         Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());
+
         Map<String, GM> gradingModels = withGradingDetails
                 ? gradingDao.selectAllLatestWithDetailsBySubmissionJids(submissionJids)
                 : gradingDao.selectAllLatestBySubmissionJids(submissionJids);
@@ -97,31 +91,48 @@ public class BaseSubmissionStore<
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,
-            Optional<Integer> limit) {
+            int pageSize) {
 
-        SelectionOptions options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(Math.min(MAX_DOWNLOAD_SUBMISSIONS_LIMIT, limit.orElse(MAX_DOWNLOAD_SUBMISSIONS_LIMIT)))
-                .orderDir(OrderDir.ASC)
-                .build();
+        BaseProgrammingSubmissionQueryBuilder<SM> query = submissionDao.select();
 
-        return getSubmissions(containerJid, userJid, problemJid, lastSubmissionId, options);
+        if (containerJid.isPresent()) {
+            query.whereContainerIs(containerJid.get());
+        }
+        if (userJid.isPresent()) {
+            query.whereAuthorIs(userJid.get());
+        }
+        if (problemJid.isPresent()) {
+            query.whereProblemIs(problemJid.get());
+        }
+        if (lastSubmissionId.isPresent()) {
+            query.whereLastSubmissionIs(lastSubmissionId.get());
+        }
+
+        Page<SM> submissionModels = query
+                .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
+                .paged(1, pageSize);
+
+        return getSubmissions(submissionModels);
     }
 
     @Override
     public Page<Submission> getSubmissionsForStats(
             Optional<String> containerJid,
             Optional<Long> lastSubmissionId,
-            int limit) {
+            int pageSize) {
 
-        SelectionOptions options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(limit)
-                .orderDir(OrderDir.ASC)
-                .build();
+        BaseProgrammingSubmissionQueryBuilder<SM> query = submissionDao.select();
 
-        Page<SM> submissionModels = submissionDao
-                .selectPaged(containerJid, Optional.empty(), Optional.empty(), lastSubmissionId, options);
+        if (containerJid.isPresent()) {
+            query.whereContainerIs(containerJid.get());
+        }
+        if (lastSubmissionId.isPresent()) {
+            query.whereLastSubmissionIs(lastSubmissionId.get());
+        }
+
+        Page<SM> submissionModels = query
+                .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
+                .paged(1, pageSize);
         Set<String> submissionJids = submissionModels.getPage().stream().map(m -> m.jid).collect(Collectors.toSet());
         Map<String, GM> gradingModels = gradingDao.selectAllLatestWithDetailsBySubmissionJids(submissionJids);
 
@@ -134,32 +145,33 @@ public class BaseSubmissionStore<
             Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
-            Optional<Integer> page) {
+            int pageNumber,
+            int pageSize) {
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(options::page);
+        BaseProgrammingSubmissionQueryBuilder<SM> query = submissionDao.select();
 
-        return getSubmissions(containerJid, userJid, problemJid, Optional.empty(), options.build());
+        if (containerJid.isPresent()) {
+            query.whereContainerIs(containerJid.get());
+        }
+        if (userJid.isPresent()) {
+            query.whereAuthorIs(userJid.get());
+        }
+        if (problemJid.isPresent()) {
+            query.whereProblemIs(problemJid.get());
+        }
+
+        Page<SM> submissionModels = query
+                .paged(1, pageSize);
+
+        return getSubmissions(submissionModels);
     }
 
-    private Page<Submission> getSubmissions(
-            Optional<String> containerJid,
-            Optional<String> userJid,
-            Optional<String> problemJid,
-            Optional<Long> lastSubmissionId,
-            SelectionOptions options) {
-
-        Page<SM> submissionModels =
-                submissionDao.selectPaged(containerJid, userJid, problemJid, lastSubmissionId, options);
+    private Page<Submission> getSubmissions(Page<SM> submissionModels) {
         Set<String> submissionJids = submissionModels.getPage().stream().map(m -> m.jid).collect(Collectors.toSet());
         Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJids);
 
-        return new Page.Builder<Submission>()
-                .from(submissionModels.mapPage(p ->
-                        Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid)))))
-                .pageSize(options.getPageSize())
-                .pageNumber(options.getPage())
-                .build();
+        return submissionModels.mapPage(p ->
+                Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))));
     }
 
     @Override
@@ -167,9 +179,23 @@ public class BaseSubmissionStore<
             Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid) {
-        SelectionOptions options = new SelectionOptions.Builder().pageSize(1).build();
-        List<Submission> submissions = getSubmissions(containerJid, userJid, problemJid, Optional.empty(), options)
-                .getPage();
+
+        BaseProgrammingSubmissionQueryBuilder<SM> query = submissionDao.select();
+
+        if (containerJid.isPresent()) {
+            query.whereContainerIs(containerJid.get());
+        }
+        if (userJid.isPresent()) {
+            query.whereAuthorIs(userJid.get());
+        }
+        if (problemJid.isPresent()) {
+            query.whereProblemIs(problemJid.get());
+        }
+
+        Page<SM> submissionModels = query
+                .paged(1, 1);
+
+        List<Submission> submissions = getSubmissions(submissionModels).getPage();
         if (submissions.isEmpty()) {
             return Optional.empty();
         }

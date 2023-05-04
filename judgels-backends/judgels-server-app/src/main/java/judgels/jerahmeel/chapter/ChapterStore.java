@@ -25,7 +25,6 @@ import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
-import judgels.persistence.api.SelectionOptions;
 
 public class ChapterStore {
     private final ChapterDao chapterDao;
@@ -47,7 +46,7 @@ public class ChapterStore {
     }
 
     public List<Chapter> getChapters() {
-        return Lists.transform(chapterDao.selectAll(SelectionOptions.DEFAULT_ALL), ChapterStore::fromModel);
+        return Lists.transform(chapterDao.select().all(), ChapterStore::fromModel);
     }
 
     public Optional<Chapter> getChapterByJid(String chapterJid) {

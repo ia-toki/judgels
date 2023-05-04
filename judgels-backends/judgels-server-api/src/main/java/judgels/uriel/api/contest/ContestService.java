@@ -61,7 +61,7 @@ public interface ContestService {
     ContestsResponse getContests(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("name") Optional<String> name,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("page") Optional<Integer> pageNumber);
 
     @GET
     @Path("/active")

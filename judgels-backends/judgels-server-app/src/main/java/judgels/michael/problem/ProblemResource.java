@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -39,6 +40,8 @@ import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {
+    private static final int PAGE_SIZE = 20;
+
     @Inject protected BundleProblemStore bundleProblemStore;
     @Inject protected ProgrammingProblemStore programmingProblemStore;
     @Inject protected ProblemTagStore tagStore;
@@ -57,7 +60,9 @@ public class ProblemResource extends BaseProblemResource {
         boolean isAdmin = roleChecker.isAdmin(actor);
         boolean isWriter = roleChecker.isWriter(actor);
 
-        Page<Problem> problems = problemStore.getProblems(actor.getUserJid(), isAdmin, termFilter, tagsFilter, pageNumber);
+        Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actor.getUserJid());
+        Page<Problem> problems = problemStore.getProblems(userJid, termFilter, tagsFilter, pageNumber, PAGE_SIZE);
+
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, Integer> tagCounts = tagStore.getTagCounts(isAdmin);

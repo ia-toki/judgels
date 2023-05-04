@@ -28,6 +28,8 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestManagerResource implements ContestManagerService {
+    private static final int PAGE_SIZE = 250;
+
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestLogger contestLogger;
@@ -54,12 +56,12 @@ public class ContestManagerResource implements ContestManagerService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestManagersResponse getManagers(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
+    public ContestManagersResponse getManagers(AuthHeader authHeader, String contestJid, Optional<Integer> pageNumber) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(managerRoleChecker.canView(actorJid, contest));
 
-        Page<ContestManager> managers = managerStore.getManagers(contestJid, page);
+        Page<ContestManager> managers = managerStore.getManagers(contestJid, pageNumber.orElse(1), PAGE_SIZE);
         Set<String> userJids =
                 managers.getPage().stream().map(ContestManager::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());

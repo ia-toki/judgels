@@ -1,5 +1,7 @@
 package judgels.jerahmeel.archive;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,8 +14,8 @@ import judgels.jerahmeel.api.archive.ArchiveErrors;
 import judgels.jerahmeel.api.archive.ArchiveUpdateData;
 import judgels.jerahmeel.persistence.ArchiveDao;
 import judgels.jerahmeel.persistence.ArchiveModel;
+import judgels.jerahmeel.persistence.ArchiveModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 
 public class ArchiveStore {
     private final ArchiveDao archiveDao;
@@ -24,17 +26,16 @@ public class ArchiveStore {
     }
 
     public List<Archive> getArchives() {
-        SelectionOptions options = new SelectionOptions.Builder()
-                .orderBy("category")
-                .orderDir(OrderDir.ASC)
-                .orderBy2("name")
-                .orderDir2(OrderDir.ASC)
-                .build();
-        return archiveDao.selectAll(options).stream()
+        return archiveDao
+                .select()
+                .orderBy(ArchiveModel_.CATEGORY, OrderDir.ASC)
+                .orderBy(ArchiveModel_.NAME, OrderDir.ASC)
+                .all()
+                .stream()
                 .filter(m -> m.parentJid != null)
                 .filter(m -> !m.parentJid.equals(""))
                 .map(ArchiveStore::fromModel)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     public Optional<Archive> getArchiveBySlug(String archiveSlug) {

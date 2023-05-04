@@ -42,7 +42,7 @@ public interface ProfileService {
     @Path("/top")
     @Produces(APPLICATION_JSON)
     Page<Profile> getTopRatedProfiles(
-            @QueryParam("page") Optional<Integer> page,
+            @QueryParam("page") Optional<Integer> pageNumber,
             @QueryParam("pageSize") Optional<Integer> pageSize);
 
     @GET

@@ -53,6 +53,7 @@ import org.slf4j.MarkerFactory;
 public class ContestItemSubmissionResource implements ContestItemSubmissionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContestItemSubmissionResource.class);
     private static final Marker ITEM_SUBMISSION_MARKER = MarkerFactory.getMarker("ITEM_SUBMISSION");
+    private static final int PAGE_SIZE = 20;
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
@@ -103,7 +104,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             String contestJid,
             Optional<String> username,
             Optional<String> problemAlias,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -115,7 +116,8 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 contestJid,
                 canSupervise ? byUserJid(username) : Optional.of(actorJid),
                 byProblemJid(Optional.of(contestJid), Optional.empty(), problemAlias),
-                page);
+                pageNumber.orElse(1),
+                PAGE_SIZE);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
         if (!canManage) {

@@ -27,7 +27,7 @@ public interface ItemSubmissionService {
             @QueryParam("containerJid") String containerJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") Optional<String> problemAlias,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("page") Optional<Integer> pagNumber);
 
     @POST
     @Path("/")

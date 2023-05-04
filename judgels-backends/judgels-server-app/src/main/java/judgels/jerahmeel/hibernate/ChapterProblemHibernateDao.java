@@ -7,11 +7,10 @@ import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.ChapterProblemModel_;
-import judgels.persistence.FilterOptions;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
-import judgels.sandalphon.api.problem.ProblemType;
+import judgels.persistence.hibernate.HibernateQueryBuilder;
+import org.hibernate.Session;
 
 public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel> implements ChapterProblemDao {
     @Inject
@@ -20,60 +19,48 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     }
 
     @Override
-    public Optional<ChapterProblemModel> selectByProblemJid(String problemJid) {
-        return selectByFilter(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsEq(ChapterProblemModel_.problemJid, problemJid)
-                .build());
+    public ChapterProblemQueryBuilder selectByChapterJid(String chapterJid) {
+        return new ChapterProblemHibernateQueryBuilder(currentSession(), chapterJid);
     }
 
     @Override
-    public List<ChapterProblemModel> selectAllByProblemJids(Set<String> problemJids) {
-        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsIn(ChapterProblemModel_.problemJid, problemJids)
-                .build());
+    public ChapterProblemQueryBuilder selectByChapterJids(Set<String> chapterJids) {
+        return new ChapterProblemHibernateQueryBuilder(currentSession(), chapterJids);
+    }
+
+    @Override
+    public Optional<ChapterProblemModel> selectByProblemJid(String problemJid) {
+        return select().where(columnEq(ChapterProblemModel_.problemJid, problemJid)).unique();
     }
 
     @Override
     public Optional<ChapterProblemModel> selectByChapterJidAndProblemAlias(String chapterJid, String problemAlias) {
-        return selectByFilter(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterProblemModel_.alias, problemAlias)
-                .build());
+        return select()
+                .where(columnEq(ChapterProblemModel_.chapterJid, chapterJid))
+                .where(columnEq(ChapterProblemModel_.alias, problemAlias))
+                .unique();
     }
 
     @Override
-    public List<ChapterProblemModel> selectAllByChapterJid(String chapterJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .build(), options);
+    public List<ChapterProblemModel> selectAllByProblemJids(Set<String> problemJids) {
+        return select().where(columnIn(ChapterProblemModel_.problemJid, problemJids)).all();
     }
 
-    @Override
-    public List<ChapterProblemModel> selectAllBundleByChapterJid(String chapterJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterProblemModel_.type, ProblemType.BUNDLE.name())
-                .build(), options);
-    }
+    private static class ChapterProblemHibernateQueryBuilder extends HibernateQueryBuilder<ChapterProblemModel> implements ChapterProblemQueryBuilder {
+        ChapterProblemHibernateQueryBuilder(Session currentSession, String chapterJid) {
+            super(currentSession, ChapterProblemModel.class);
+            where(columnEq(ChapterProblemModel_.chapterJid, chapterJid));
+        }
 
-    @Override
-    public List<ChapterProblemModel> selectAllProgrammingByChapterJid(String chapterJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterProblemModel_.type, ProblemType.PROGRAMMING.name())
-                .build(), options);
-    }
+        ChapterProblemHibernateQueryBuilder(Session currentSession, Set<String> chapterJids) {
+            super(currentSession, ChapterProblemModel.class);
+            where(columnIn(ChapterProblemModel_.chapterJid, chapterJids));
+        }
 
-    @Override
-    public List<ChapterProblemModel> selectAllProgrammingByChapterJids(Set<String> chapterJids) {
-        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsEq(ChapterProblemModel_.type, ProblemType.PROGRAMMING.name())
-                .putColumnsIn(ChapterProblemModel_.chapterJid, chapterJids)
-                .build());
-    }
-
-    @Override
-    public int selectCountProgrammingByChapterJid(String chapterJid) {
-        return selectAllProgrammingByChapterJid(chapterJid, SelectionOptions.DEFAULT_ALL).size();
+        @Override
+        public ChapterProblemQueryBuilder whereTypeIs(String type) {
+            where(columnEq(ChapterProblemModel_.type, type));
+            return this;
+        }
     }
 }

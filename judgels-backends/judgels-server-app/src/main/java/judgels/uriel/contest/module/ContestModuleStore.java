@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.dump.ContestModuleDump;
@@ -101,7 +100,9 @@ public class ContestModuleStore {
     }
 
     public Set<ContestModuleType> getEnabledModules(String contestJid) {
-        return moduleDao.selectAllEnabledByContestJid(contestJid)
+        return moduleDao.selectByContestJid(contestJid)
+                .whereEnabled()
+                .all()
                 .stream()
                 .filter(model -> isValidModuleType(model.name))
                 .map(model -> ContestModuleType.valueOf(model.name))
@@ -430,7 +431,7 @@ public class ContestModuleStore {
     }
 
     public Set<ContestModuleDump> exportModuleDumps(String contestJid, DumpImportMode mode) {
-        return moduleDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+        return moduleDao.selectByContestJid(contestJid).all().stream().map(model -> {
             ContestModuleType moduleType = ContestModuleType.valueOf(model.name);
             ModuleConfig moduleConfig = null;
             try {

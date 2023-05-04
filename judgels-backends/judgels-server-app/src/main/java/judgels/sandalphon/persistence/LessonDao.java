@@ -6,10 +6,10 @@ import judgels.persistence.QueryBuilder;
 
 public interface LessonDao extends JudgelsDao<LessonModel> {
     LessonQueryBuilder select();
-    Optional<LessonModel> selectUniqueBySlug(String slug);
+    Optional<LessonModel> selectBySlug(String slug);
 
     interface LessonQueryBuilder extends QueryBuilder<LessonModel> {
-        LessonQueryBuilder whereUserCanView(String userJid, boolean isAdmin);
+        LessonQueryBuilder whereUserCanView(String userJid);
         LessonQueryBuilder whereTermsMatch(String term);
     }
 }

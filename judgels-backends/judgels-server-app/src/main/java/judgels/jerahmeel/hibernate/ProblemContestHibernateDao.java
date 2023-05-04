@@ -5,9 +5,8 @@ import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ProblemContestDao;
 import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemContestModel_;
-import judgels.persistence.FilterOptions;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 
@@ -21,15 +20,16 @@ public class ProblemContestHibernateDao extends UnmodifiableHibernateDao<Problem
 
     @Override
     public List<ProblemContestModel> selectAllByProblemJid(String problemJid) {
-        return selectAll(new FilterOptions.Builder<ProblemContestModel>()
-                .putColumnsEq(ProblemContestModel_.problemJid, problemJid)
-                .build(), new SelectionOptions.Builder().orderDir(OrderDir.ASC).build());
+        return select()
+                .where(columnEq(ProblemContestModel_.problemJid, problemJid))
+                .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
+                .all();
     }
 
     @Override
     public List<ProblemContestModel> selectAllByContestJid(String contestJid) {
-        return selectAll(new FilterOptions.Builder<ProblemContestModel>()
-                .putColumnsEq(ProblemContestModel_.contestJid, contestJid)
-                .build());
+        return select()
+                .where(columnEq(ProblemContestModel_.contestJid, contestJid))
+                .all();
     }
 }

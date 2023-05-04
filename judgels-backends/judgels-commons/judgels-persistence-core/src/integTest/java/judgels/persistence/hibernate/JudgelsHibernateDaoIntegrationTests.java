@@ -27,13 +27,13 @@ class JudgelsHibernateDaoIntegrationTests {
     void crud_flow(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
-        assertThat(dao.select(1)).isEmpty();
+        assertThat(dao.selectById(1)).isEmpty();
 
         ExampleModel model = new ExampleModel();
         model.column = "value1";
         dao.insert(model);
 
-        model = dao.select(1).get();
+        model = dao.selectById(1).get();
 
         assertThat(model.id).isEqualTo(1);
         assertThat(model.jid).startsWith("JID");
@@ -60,7 +60,7 @@ class JudgelsHibernateDaoIntegrationTests {
         assertThat(model.jid).isEqualTo(jid);
         assertThat(model.column).isEqualTo("value2");
 
-        model = dao.select(2).get();
+        model = dao.selectById(2).get();
 
         assertThat(model.jid).isNotEqualTo(jid);
         assertThat(model.column).isEqualTo("value3");

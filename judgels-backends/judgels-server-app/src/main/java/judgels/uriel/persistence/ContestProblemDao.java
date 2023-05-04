@@ -1,14 +1,17 @@
 package judgels.uriel.persistence;
 
-import java.util.List;
 import java.util.Optional;
 import judgels.persistence.Dao;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.QueryBuilder;
+import judgels.persistence.api.OrderDir;
 
 public interface ContestProblemDao extends Dao<ContestProblemModel> {
+    ContestProblemQueryBuilder selectByContestJid(String contestJid);
     Optional<ContestProblemModel> selectByContestJidAndProblemJid(String contestJid, String problemJid);
     Optional<ContestProblemModel> selectByContestJidAndProblemAlias(String contestJid, String problemAlias);
-    List<ContestProblemModel> selectAllByContestJid(String contestJid, SelectionOptions options);
-    List<ContestProblemModel> selectAllOpenByContestJid(String contestJid, SelectionOptions options);
-    boolean hasClosedByContestJid(String contestJid);
+
+    interface ContestProblemQueryBuilder extends QueryBuilder<ContestProblemModel> {
+        ContestProblemQueryBuilder orderBy(String column, OrderDir dir);
+        ContestProblemQueryBuilder whereStatusIs(String status);
+    }
 }

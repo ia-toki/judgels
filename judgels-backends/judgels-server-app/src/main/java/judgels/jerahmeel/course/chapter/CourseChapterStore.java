@@ -12,8 +12,8 @@ import javax.inject.Inject;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
+import judgels.jerahmeel.persistence.CourseChapterModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 
 public class CourseChapterStore {
     private final CourseChapterDao chapterDao;
@@ -26,7 +26,7 @@ public class CourseChapterStore {
     public Set<CourseChapter> setChapters(String courseJid, List<CourseChapter> data) {
         Map<String, CourseChapter> setChapters = data.stream().collect(
                 Collectors.toMap(CourseChapter::getChapterJid, Function.identity()));
-        for (CourseChapterModel model : chapterDao.selectAllByCourseJid(courseJid, createOptions())) {
+        for (CourseChapterModel model : chapterDao.selectByCourseJid(courseJid).all()) {
             CourseChapter existingChapter = setChapters.get(model.chapterJid);
             if (existingChapter == null || !existingChapter.getAlias().equals(model.alias)) {
                 chapterDao.delete(model);
@@ -59,21 +59,15 @@ public class CourseChapterStore {
     }
 
     public List<CourseChapter> getChapters(String courseJid) {
-        return Lists.transform(
-                chapterDao.selectAllByCourseJid(courseJid, createOptions()),
-                CourseChapterStore::fromModel);
+        return Lists.transform(chapterDao
+                .selectByCourseJid(courseJid)
+                .orderBy(CourseChapterModel_.ALIAS, OrderDir.ASC)
+                .all(), CourseChapterStore::fromModel);
     }
 
     public Optional<CourseChapter> getChapterByAlias(String courseJid, String chapterAlias) {
         return chapterDao.selectByCourseJidAndChapterAlias(courseJid, chapterAlias)
                 .map(CourseChapterStore::fromModel);
-    }
-
-    private static SelectionOptions createOptions() {
-        return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("alias")
-                .orderDir(OrderDir.ASC)
-                .build();
     }
 
     private static CourseChapter fromModel(CourseChapterModel model) {

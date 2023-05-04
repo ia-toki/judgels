@@ -33,6 +33,8 @@ import judgels.sandalphon.problem.bundle.submission.BundleSubmissionStore;
 
 @Path("/problems/bundle/{problemId}/submissions")
 public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
+    private static final int PAGE_SIZE = 20;
+
     @Inject protected BundleSubmissionStore submissionStore;
     @Inject protected BundleSubmissionClient submissionClient;
 
@@ -49,7 +51,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageNumber);
+        Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageNumber, PAGE_SIZE);
 
         Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(toSet());
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -90,7 +92,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         checkAllowed(roleChecker.canSubmit(actor, problem));
 
         for (int pageNumber = 1; ; pageNumber++) {
-            List<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageNumber).getPage();
+            List<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageNumber, PAGE_SIZE).getPage();
             if (submissions.isEmpty()) {
                 break;
             }

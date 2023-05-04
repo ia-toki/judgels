@@ -23,36 +23,32 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
 
     @Override
     public LessonHibernateQueryBuilder select() {
-        return new LessonHibernateQueryBuilder(currentSession(), LessonModel.class);
+        return new LessonHibernateQueryBuilder(currentSession());
     }
 
     @Override
-    public Optional<LessonModel> selectUniqueBySlug(String slug) {
-        return selectByUniqueColumn(LessonModel_.slug, slug);
+    public Optional<LessonModel> selectBySlug(String slug) {
+        return select().where(columnEq(LessonModel_.slug, slug)).unique();
     }
 
     private static class LessonHibernateQueryBuilder extends HibernateQueryBuilder<LessonModel> implements LessonQueryBuilder {
-        LessonHibernateQueryBuilder(Session currentSession, Class<LessonModel> entityClass) {
-            super(currentSession, entityClass);
+        LessonHibernateQueryBuilder(Session currentSession) {
+            super(currentSession, LessonModel.class);
         }
 
         @Override
-        public LessonQueryBuilder whereUserCanView(String userJid, boolean isAdmin) {
-            if (!isAdmin) {
-                where(CriteriaPredicate.or(
-                        userIsAuthor(userJid),
-                        userIsPartner(userJid)));
-            }
+        public LessonQueryBuilder whereUserCanView(String userJid) {
+            where(CriteriaPredicate.or(
+                    userIsAuthor(userJid),
+                    userIsPartner(userJid)));
             return this;
         }
 
         @Override
         public LessonQueryBuilder whereTermsMatch(String term) {
-            if (!term.isEmpty()) {
-                where(CriteriaPredicate.or(
-                        columnLike(LessonModel_.slug, term),
-                        columnLike(LessonModel_.additionalNote, term)));
-            }
+            where(CriteriaPredicate.or(
+                    columnLike(LessonModel_.slug, term),
+                    columnLike(LessonModel_.additionalNote, term)));
             return this;
         }
 
@@ -62,14 +58,14 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
 
         private CriteriaPredicate<LessonModel> userIsPartner(String userJid) {
             return (cb, cq, root) -> {
-                Subquery<LessonPartnerModel> sq = cq.subquery(LessonPartnerModel.class);
-                Root<LessonPartnerModel> subRoot = sq.from(LessonPartnerModel.class);
+                Subquery<LessonPartnerModel> subquery = cq.subquery(LessonPartnerModel.class);
+                Root<LessonPartnerModel> subroot = subquery.from(LessonPartnerModel.class);
 
-                return cb.exists(sq
-                        .select(subRoot)
+                return cb.exists(subquery
+                        .select(subroot)
                         .where(
-                                cb.equal(subRoot.get(LessonPartnerModel_.lessonJid), root.get(LessonModel_.jid)),
-                                cb.equal(subRoot.get(LessonPartnerModel_.userJid), userJid)));
+                                cb.equal(subroot.get(LessonPartnerModel_.lessonJid), root.get(LessonModel_.jid)),
+                                cb.equal(subroot.get(LessonPartnerModel_.userJid), userJid)));
             };
         }
     }

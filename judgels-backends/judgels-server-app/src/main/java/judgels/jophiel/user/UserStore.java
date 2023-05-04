@@ -13,13 +13,11 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
+import judgels.jophiel.persistence.UserModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 
 public class UserStore {
-    private static final int PAGE_SIZE = 250;
-
     private final UserDao userDao;
 
     @Inject
@@ -77,18 +75,11 @@ public class UserStore {
         return userDao.selectByEmail(email).map(UserStore::fromModel);
     }
 
-    public Page<User> getUsers(Optional<Integer> page, Optional<String> orderBy, Optional<OrderDir> orderDir) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(PAGE_SIZE)
-                .orderBy("username")
-                .orderDir(OrderDir.ASC);
-        page.ifPresent(options::page);
-        orderBy.ifPresent(options::orderBy);
-        orderDir.ifPresent(options::orderDir);
-
-        Page<UserModel> models = userDao.selectPaged(options.build());
-        return models.mapPage(p -> Lists.transform(p, UserStore::fromModel));
+    public Page<User> getUsers(int pageNumber, int pageSize, Optional<String> orderBy, Optional<OrderDir> orderDir) {
+        return userDao.select()
+                .orderBy(orderBy.orElse(UserModel_.USERNAME), orderDir.orElse(OrderDir.ASC))
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, UserStore::fromModel));
     }
 
     public Optional<User> updateUser(String userJid, UserUpdateData data) {

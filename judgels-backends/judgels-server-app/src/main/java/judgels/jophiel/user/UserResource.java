@@ -33,6 +33,8 @@ import liquibase.util.csv.CSVReader;
 import liquibase.util.csv.CSVWriter;
 
 public class UserResource implements UserService {
+    private static final int PAGE_SIZE = 250;
+
     private final ActorChecker actorChecker;
     private final UserRoleChecker roleChecker;
     private final UserStore userStore;
@@ -67,14 +69,14 @@ public class UserResource implements UserService {
     @UnitOfWork(readOnly = true)
     public UsersResponse getUsers(
             AuthHeader authHeader,
-            Optional<Integer> page,
+            Optional<Integer> pageNumber,
             Optional<String> orderBy,
             Optional<OrderDir> orderDir) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        Page<User> users = userStore.getUsers(page, orderBy, orderDir);
+        Page<User> users = userStore.getUsers(pageNumber.orElse(1), PAGE_SIZE, orderBy, orderDir);
         Set<String> userJids = users.getPage().stream().map(User::getJid).collect(Collectors.toSet());
         Map<String, Instant> lastSessionTimesMap = sessionStore.getLatestSessionTimeByUserJids(userJids);
         return new UsersResponse.Builder()

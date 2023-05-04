@@ -1,9 +1,8 @@
 package judgels.sandalphon.persistence;
 
-import java.time.Instant;
-import java.util.List;
 import judgels.persistence.JudgelsDao;
+import judgels.persistence.QueryBuilder;
 
 public interface BundleSubmissionDao extends JudgelsDao<BundleSubmissionModel> {
-    List<Instant> getAllSubmissionsSubmitTime();
+    QueryBuilder<BundleSubmissionModel> selectByProblemJid(String problemJid);
 }

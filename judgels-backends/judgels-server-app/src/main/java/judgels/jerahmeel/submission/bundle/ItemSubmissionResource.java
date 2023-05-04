@@ -43,6 +43,8 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class ItemSubmissionResource implements ItemSubmissionService {
+    private static final int PAGE_SIZE = 20;
+
     private final ActorChecker actorChecker;
     private final ItemSubmissionStore submissionStore;
     private final SubmissionRoleChecker submissionRoleChecker;
@@ -84,7 +86,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
             String containerJid,
             Optional<String> username,
             Optional<String> problemAlias,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -97,7 +99,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
             problemJid = Optional.of(getProblemJidByAlias(containerJid, problemAlias.get()).orElse(""));
         }
 
-        Page<ItemSubmission> submissions = submissionStore.getSubmissions(containerJid, userJid, problemJid, page);
+        Page<ItemSubmission> submissions = submissionStore.getSubmissions(containerJid, userJid, problemJid, pageNumber.orElse(1), 20);
 
         Set<String> userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(toSet());
         Set<String> problemJids = submissions.getPage().stream().map(ItemSubmission::getProblemJid).collect(toSet());

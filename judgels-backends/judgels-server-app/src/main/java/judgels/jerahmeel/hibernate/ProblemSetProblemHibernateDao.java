@@ -10,77 +10,60 @@ import javax.persistence.Tuple;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel_;
-import judgels.persistence.FilterOptions;
+import judgels.persistence.QueryBuilder;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 import org.hibernate.query.Query;
 
-public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProblemModel>
-        implements ProblemSetProblemDao {
-
+public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProblemModel> implements ProblemSetProblemDao {
     @Inject
     public ProblemSetProblemHibernateDao(HibernateDaoData data) {
         super(data);
     }
 
     @Override
+    public QueryBuilder<ProblemSetProblemModel> selectByProblemSetJid(String problemSetJid) {
+        return select()
+                .where(columnEq(ProblemSetProblemModel_.problemSetJid, problemSetJid));
+    }
+
+    @Override
+    public QueryBuilder<ProblemSetProblemModel> selectByProblemSetJids(Set<String> problemSetJids) {
+        return select().where(columnIn(ProblemSetProblemModel_.problemSetJid, problemSetJids));
+    }
+
+    @Override
     public List<ProblemSetProblemModel> selectAllByProblemJid(String problemJid) {
-        return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
-                .putColumnsEq(ProblemSetProblemModel_.problemJid, problemJid)
-                .build());
+        return select().where(columnEq(ProblemSetProblemModel_.problemJid, problemJid)).all();
     }
 
     @Override
     public List<ProblemSetProblemModel> selectAllByProblemJids(Set<String> problemJids) {
-        return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
-                .putColumnsIn(ProblemSetProblemModel_.problemJid, problemJids)
-                .build());
+        return select().where(columnIn(ProblemSetProblemModel_.problemJid, problemJids)).all();
     }
 
     @Override
-    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(
-            String problemSetJid,
-            String problemJid) {
-
-        return selectByFilter(new FilterOptions.Builder<ProblemSetProblemModel>()
-                .putColumnsEq(ProblemSetProblemModel_.problemSetJid, problemSetJid)
-                .putColumnsEq(ProblemSetProblemModel_.problemJid, problemJid)
-                .build());
+    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(String problemSetJid, String problemJid) {
+        return select()
+                .where(columnEq(ProblemSetProblemModel_.problemSetJid, problemSetJid))
+                .where(columnEq(ProblemSetProblemModel_.problemJid, problemJid))
+                .unique();
     }
 
     @Override
-    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(
-            String problemSetJid,
-            String problemAlias) {
-
-        return selectByFilter(new FilterOptions.Builder<ProblemSetProblemModel>()
-                .putColumnsEq(ProblemSetProblemModel_.problemSetJid, problemSetJid)
-                .putColumnsEq(ProblemSetProblemModel_.alias, problemAlias)
-                .build());
-    }
-
-    @Override
-    public List<ProblemSetProblemModel> selectAllByProblemSetJid(String problemSetJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
-                .putColumnsEq(ProblemSetProblemModel_.problemSetJid, problemSetJid)
-                .build(), options);
-    }
-
-    @Override
-    public List<ProblemSetProblemModel> selectAllByProblemSetJids(
-            Set<String> problemSetJids,
-            SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
-                .putColumnsIn(ProblemSetProblemModel_.problemSetJid, problemSetJids)
-                .build(), options);
+    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(String problemSetJid, String problemAlias) {
+        return select()
+                .where(columnEq(ProblemSetProblemModel_.problemSetJid, problemSetJid))
+                .where(columnEq(ProblemSetProblemModel_.alias, problemAlias))
+                .unique();
     }
 
     @Override
     public Page<ProblemSetProblemModel> selectPagedByDifficulty(
             Set<String> allowedProblemJids,
-            SelectionOptions options) {
+            int pageNumber,
+            int pageSize) {
 
         long count = 0;
         List<Tuple> data = ImmutableList.of();
@@ -105,7 +88,7 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
             where = "a.problemJid IN :problemJids";
         }
 
-        String orderDir = options.getOrderDir().name();
+        String orderDir = "ASC";
 
         countQ = String.format(countQ, where);
         dataQ = String.format(dataQ, where, orderDir, orderDir);
@@ -119,10 +102,8 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
                 dataQuery.setParameterList("problemJids", allowedProblemJids);
             }
 
-            if (options.getPageSize() > 0) {
-                dataQuery.setFirstResult(options.getPageSize() * (options.getPage() - 1));
-                dataQuery.setMaxResults(options.getPageSize());
-            }
+            dataQuery.setFirstResult(pageSize * (pageNumber - 1));
+            dataQuery.setMaxResults(pageSize);
 
             count = countQuery.getSingleResult();
             data = dataQuery.getResultList();
@@ -140,6 +121,8 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
         return new Page.Builder<ProblemSetProblemModel>()
                 .page(page)
                 .totalCount((int) count)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
                 .build();
     }
 }

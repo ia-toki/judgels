@@ -24,12 +24,13 @@ import judgels.jerahmeel.persistence.ArchiveModel;
 import judgels.jerahmeel.persistence.ProblemContestDao;
 import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemSetDao;
+import judgels.jerahmeel.persistence.ProblemSetDao.ProblemSetQueryBuilder;
 import judgels.jerahmeel.persistence.ProblemSetModel;
+import judgels.jerahmeel.persistence.ProblemSetModel_;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
-import judgels.persistence.SearchOptions;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 
 public class ProblemSetStore {
     private final ProblemSetDao problemSetDao;
@@ -103,21 +104,24 @@ public class ProblemSetStore {
         return null;
     }
 
-    public Page<ProblemSet> getProblemSets(Optional<String> archiveJid, Optional<String> name, Optional<Integer> page) {
-        SearchOptions.Builder searchOptions = new SearchOptions.Builder();
-        name.ifPresent(e -> searchOptions.putTerms("name", e));
+    public Page<ProblemSet> getProblemSets(Optional<String> archiveJid, Optional<String> nameFilter, int pageNumber, int pageSize) {
+        ProblemSetQueryBuilder query = problemSetDao.select();
 
-        SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(selectionOptions::page);
-
-        if (!name.orElse("").isEmpty() || archiveJid.isPresent()) {
-            selectionOptions.orderBy("contestTime");
-            selectionOptions.orderBy2("name");
+        if (archiveJid.isPresent()) {
+            query.whereArchiveIs(archiveJid.get());
+        }
+        if (nameFilter.isPresent()) {
+            query.whereNameLike(nameFilter.get());
         }
 
-        Page<ProblemSetModel> models =
-                problemSetDao.selectPaged(archiveJid, searchOptions.build(), selectionOptions.build());
-        return models.mapPage(p -> Lists.transform(p, ProblemSetStore::fromModel));
+        if (!nameFilter.orElse("").isEmpty() || archiveJid.isPresent()) {
+            query.orderBy(ProblemSetModel_.CONTEST_TIME, OrderDir.DESC);
+            query.orderBy(ProblemSetModel_.NAME, OrderDir.DESC);
+        }
+
+        return query
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, ProblemSetStore::fromModel));
     }
 
     public Map<String, String> getProblemSetNamesByJids(Set<String> problemSetJids) {

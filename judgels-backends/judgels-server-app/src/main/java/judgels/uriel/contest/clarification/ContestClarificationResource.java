@@ -31,6 +31,8 @@ import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.problem.ContestProblemStore;
 
 public class ContestClarificationResource implements ContestClarificationService {
+    private static final int PAGE_SIZE = 20;
+
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestLogger contestLogger;
@@ -85,16 +87,24 @@ public class ContestClarificationResource implements ContestClarificationService
             String contestJid,
             Optional<String> status,
             Optional<String> language,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = clarificationRoleChecker.canSupervise(actorJid, contest);
-        Page<ContestClarification> clarifications = canSupervise
-                ? clarificationStore.getClarifications(contestJid, status, page)
-                : clarificationStore.getClarifications(contestJid, actorJid, page);
+
+        Optional<String> userFilter = Optional.empty();
+        Optional<String> statusFilter = Optional.empty();
+
+        if (canSupervise) {
+            statusFilter = status;
+        } else {
+            userFilter = Optional.of(actorJid);
+        }
+
+        Page<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, userFilter, statusFilter, pageNumber.orElse(1), PAGE_SIZE);
 
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;

@@ -1,56 +1,35 @@
 package judgels.uriel.hibernate;
 
-import com.google.common.collect.ImmutableSet;
-import java.util.Set;
 import javax.inject.Inject;
-import judgels.persistence.FilterOptions;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 import judgels.uriel.persistence.ContestAnnouncementModel_;
+import org.hibernate.Session;
 
-public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<ContestAnnouncementModel> implements
-        ContestAnnouncementDao {
-
+public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<ContestAnnouncementModel> implements ContestAnnouncementDao {
     @Inject
     public ContestAnnouncementHibernateDao(HibernateDaoData data) {
         super(data);
     }
 
     @Override
-    public Page<ContestAnnouncementModel> selectPagedByContestJid(String contestJid, SelectionOptions options) {
-        return selectPaged(new FilterOptions.Builder<ContestAnnouncementModel>()
-                .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
-                .build(), options);
+    public ContestAnnouncementQueryBuilder selectByContestJid(String contestJid) {
+        return new ContestAnnouncementHibernateQueryBuilder(currentSession(), contestJid);
     }
 
-    @Override
-    public Page<ContestAnnouncementModel> selectPagedPublishedByContestJid(
-            String contestJid,
-            SelectionOptions options) {
+    private static class ContestAnnouncementHibernateQueryBuilder extends HibernateQueryBuilder<ContestAnnouncementModel> implements ContestAnnouncementQueryBuilder {
+        ContestAnnouncementHibernateQueryBuilder(Session currentSession, String contestJid) {
+            super(currentSession, ContestAnnouncementModel.class);
+            where(columnEq(ContestAnnouncementModel_.contestJid, contestJid));
+        }
 
-        return selectPaged(new FilterOptions.Builder<ContestAnnouncementModel>()
-                .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
-                .putColumnsEq(ContestAnnouncementModel_.status, ContestAnnouncementStatus.PUBLISHED.name())
-                .build(), options);
-    }
-
-    @Override
-    public Set<ContestAnnouncementModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
-        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestAnnouncementModel>()
-                .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
-                .build(), options));
-    }
-
-    @Override
-    public long selectCountPublishedByContestJid(String contestJid) {
-        return selectCount(new FilterOptions.Builder<ContestAnnouncementModel>()
-                .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
-                .putColumnsEq(ContestAnnouncementModel_.status, ContestAnnouncementStatus.PUBLISHED.name())
-                .build());
+        @Override
+        public ContestAnnouncementQueryBuilder whereStatusIs(String status) {
+            where(columnEq(ContestAnnouncementModel_.status, status));
+            return this;
+        }
     }
 }

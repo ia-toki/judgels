@@ -24,9 +24,9 @@ public class UserInfoStore {
     }
 
     public Map<String, UserInfo> getInfos(Set<String> userJids) {
-        return profileDao.selectAllByUserJids(userJids).entrySet()
+        return profileDao.selectAllByUserJids(userJids)
                 .stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> fromModel(e.getValue())));
+                .collect(Collectors.toMap(m -> m.userJid, UserInfoStore::fromModel));
     }
 
     public UserInfo upsertInfo(String userJid, UserInfo profile) {

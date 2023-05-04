@@ -1,5 +1,8 @@
 package judgels.uriel.contest.problem;
 
+import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
+import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -10,13 +13,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.dump.ContestProblemDump;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.persistence.ContestProblemDao;
+import judgels.uriel.persistence.ContestProblemDao.ContestProblemQueryBuilder;
 import judgels.uriel.persistence.ContestProblemModel;
+import judgels.uriel.persistence.ContestProblemModel_;
 
 public class ContestProblemStore {
     private final ContestProblemDao problemDao;
@@ -29,7 +33,7 @@ public class ContestProblemStore {
     public Set<ContestProblem> setProblems(String contestJid, List<ContestProblem> data) {
         Map<String, ContestProblem> setProblems = data.stream().collect(
                 Collectors.toMap(ContestProblem::getProblemJid, Function.identity()));
-        for (ContestProblemModel model : problemDao.selectAllByContestJid(contestJid, createOptions())) {
+        for (ContestProblemModel model : selectProblemsByContestJid(contestJid).all()) {
             ContestProblem existingProblem = setProblems.get(model.problemJid);
             if (existingProblem == null
                     || !existingProblem.getAlias().equals(model.alias)
@@ -93,26 +97,31 @@ public class ContestProblemStore {
 
     public List<ContestProblem> getProblems(String contestJid) {
         return Lists.transform(
-                problemDao.selectAllByContestJid(contestJid, createOptions()),
+                selectProblemsByContestJid(contestJid).all(),
                 ContestProblemStore::fromModel);
     }
 
     public List<String> getProblemJids(String contestJid) {
         return Lists.transform(
-                problemDao.selectAllByContestJid(contestJid, createOptions()), model -> model.problemJid);
+                selectProblemsByContestJid(contestJid).all(),
+                model -> model.problemJid);
     }
 
     public List<String> getOpenProblemJids(String contestJid) {
         return Lists.transform(
-                problemDao.selectAllOpenByContestJid(contestJid, createOptions()), model -> model.problemJid);
+                selectProblemsByContestJid(contestJid).whereStatusIs(OPEN.name()).all(),
+                model -> model.problemJid);
     }
 
     public boolean hasClosedProblems(String contestJid) {
-        return problemDao.hasClosedByContestJid(contestJid);
+        return problemDao
+                .selectByContestJid(contestJid)
+                .whereStatusIs(CLOSED.name())
+                .count() > 0;
     }
 
     public Map<String, String> getProblemAliasesByJids(String contestJid, Set<String> problemJids) {
-        Map<String, String> problemAliases = problemDao.selectAllByContestJid(contestJid, createOptions())
+        Map<String, String> problemAliases = problemDao.selectByContestJid(contestJid).all()
                 .stream()
                 .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));
         return problemJids
@@ -134,7 +143,7 @@ public class ContestProblemStore {
     }
 
     public Set<ContestProblemDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return problemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+        return problemDao.selectByContestJid(contestJid).all().stream().map(model -> {
             ContestProblemDump.Builder builder = new ContestProblemDump.Builder()
                     .mode(mode)
                     .alias(model.alias)
@@ -157,11 +166,10 @@ public class ContestProblemStore {
         }).collect(Collectors.toSet());
     }
 
-    private static SelectionOptions createOptions() {
-        return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("alias")
-                .orderDir(OrderDir.ASC)
-                .build();
+    private ContestProblemQueryBuilder selectProblemsByContestJid(String contestJid) {
+        return problemDao
+                .selectByContestJid(contestJid)
+                .orderBy(ContestProblemModel_.ALIAS, OrderDir.ASC);
     }
 
     private static ContestProblem fromModel(ContestProblemModel model) {

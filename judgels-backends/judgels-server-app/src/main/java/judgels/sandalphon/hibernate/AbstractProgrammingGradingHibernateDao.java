@@ -9,11 +9,10 @@ import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
@@ -29,11 +28,11 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
 
     @Override
     public Optional<M> selectLatestBySubmissionJid(String submissionJid) {
-        FilterOptions<M> filterOptions = new FilterOptions.Builder<M>()
-                .putColumnsEq(AbstractProgrammingGradingModel_.submissionJid, submissionJid)
-                .build();
-
-        return selectAll(filterOptions).stream().findFirst();
+        return select()
+                .where(columnEq(AbstractProgrammingGradingModel_.submissionJid, submissionJid))
+                .all()
+                .stream()
+                .findFirst();
     }
 
     @Override
@@ -78,11 +77,10 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
 
         Map<String, M> result = Maps.newHashMap();
 
-        List<M> models = selectAll(new FilterOptions.Builder<M>()
-                .putColumnsIn(AbstractProgrammingGradingModel_.submissionJid, submissionJids)
-                .build(), new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_ALL)
-                .orderDir(OrderDir.ASC).build());
+        List<M> models = select()
+                .where(columnIn(AbstractProgrammingGradingModel_.submissionJid, submissionJids))
+                .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
+                .all();
 
         for (M model : models) {
             result.put(model.submissionJid, model);

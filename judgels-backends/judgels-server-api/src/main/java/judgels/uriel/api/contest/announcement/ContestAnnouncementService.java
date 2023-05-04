@@ -23,7 +23,7 @@ public interface ContestAnnouncementService {
     ContestAnnouncementsResponse getAnnouncements(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("page") Optional<Integer> pageNumber);
 
     @POST
     @Path("/")

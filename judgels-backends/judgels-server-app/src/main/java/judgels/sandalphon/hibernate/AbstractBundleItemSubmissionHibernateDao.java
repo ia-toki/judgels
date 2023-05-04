@@ -1,92 +1,51 @@
 package judgels.sandalphon.hibernate;
 
-import java.util.List;
-import java.util.Optional;
-import judgels.persistence.FilterOptions;
-import judgels.persistence.JudgelsModel_;
-import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel;
 import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel_;
 import judgels.sandalphon.persistence.BaseBundleItemSubmissionDao;
+import org.hibernate.Session;
 
-public abstract class AbstractBundleItemSubmissionHibernateDao<M extends AbstractBundleItemSubmissionModel>
-        extends JudgelsHibernateDao<M>
-        implements BaseBundleItemSubmissionDao<M> {
-
+public abstract class AbstractBundleItemSubmissionHibernateDao<M extends AbstractBundleItemSubmissionModel> extends JudgelsHibernateDao<M> implements BaseBundleItemSubmissionDao<M> {
     public AbstractBundleItemSubmissionHibernateDao(HibernateDaoData data) {
         super(data);
     }
 
     @Override
-    public final Page<M> selectPaged(
-            String containerJid,
-            Optional<String> createdBy,
-            Optional<String> problemJid,
-            Optional<Long> lastSubmissionId,
-            SelectionOptions options) {
-
-        FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
-        filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid);
-        createdBy.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
-        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.problemJid, jid));
-        lastSubmissionId.ifPresent(filterOptions::lastId);
-
-        return selectPaged(filterOptions.build(), options);
+    public AbstractBundleItemSubmissionHibernateQueryBuilder<M> select() {
+        return new AbstractBundleItemSubmissionHibernateQueryBuilder<>(currentSession(), getEntityClass());
     }
 
-    @Override
-    public List<M> selectAllByContainerJid(String containerJid) {
-        return selectAll(new FilterOptions.Builder<M>()
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid)
-                .build());
-    }
+    private static class AbstractBundleItemSubmissionHibernateQueryBuilder<M extends AbstractBundleItemSubmissionModel> extends HibernateQueryBuilder<M> implements BaseBundleItemSubmissionQueryBuilder<M> {
+        AbstractBundleItemSubmissionHibernateQueryBuilder(Session currentSession, Class<M> entityClass) {
+            super(currentSession, entityClass);
+        }
 
-    @Override
-    public List<M> selectAllByContainerJidAndCreatedBy(
-            String containerJid, String createdBy) {
-        return selectAll(new FilterOptions.Builder<M>()
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid)
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.createdBy, createdBy)
-                .build());
-    }
+        @Override
+        public BaseBundleItemSubmissionQueryBuilder<M> whereContainerIs(String containerJid) {
+            where(columnEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid));
+            return this;
+        }
 
-    @Override
-    public List<M> selectAllByContainerJidAndProblemJidAndCreatedBy(
-            String containerJid, String problemJid, String createdBy) {
-        return selectAll(new FilterOptions.Builder<M>()
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid)
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.problemJid, problemJid)
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.createdBy, createdBy)
-                .build());
-    }
+        @Override
+        public BaseBundleItemSubmissionQueryBuilder<M> whereAuthorIs(String userJid) {
+            where(columnEq(UnmodifiableModel_.createdBy, userJid));
+            return this;
+        }
 
-    @Override
-    public List<M> selectAllForRegrade(
-            Optional<String> containerJid, Optional<String> problemJid, Optional<String> createdBy) {
+        @Override
+        public BaseBundleItemSubmissionQueryBuilder<M> whereProblemIs(String problemJid) {
+            where(columnEq(AbstractBundleItemSubmissionModel_.problemJid, problemJid));
+            return this;
+        }
 
-        FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
-        containerJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, jid));
-        createdBy.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
-        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.problemJid, jid));
-
-        return selectAll(
-                filterOptions.build(),
-                new SelectionOptions.Builder().orderBy("problemJid").orderDir(OrderDir.ASC).build()
-        );
-    }
-
-    @Override
-    public Optional<M> selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
-            String containerJid, String problemJid, String itemJid, String createdBy) {
-        return selectByFilter(new FilterOptions.Builder<M>()
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid)
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.problemJid, problemJid)
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.itemJid, itemJid)
-                .putColumnsEq(AbstractBundleItemSubmissionModel_.createdBy, createdBy)
-                .build());
+        @Override
+        public BaseBundleItemSubmissionQueryBuilder<M> whereItemIs(String itemJid) {
+            where(columnEq(AbstractBundleItemSubmissionModel_.itemJid, itemJid));
+            return this;
+        }
     }
 }

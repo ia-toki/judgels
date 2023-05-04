@@ -19,6 +19,7 @@ import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.persistence.ProblemDao;
+import judgels.sandalphon.persistence.ProblemDao.ProblemQueryBuilder;
 import judgels.sandalphon.persistence.ProblemModel;
 import judgels.sandalphon.persistence.ProblemPartnerDao;
 import judgels.sandalphon.persistence.ProblemSetterDao;
@@ -63,11 +64,11 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public boolean problemExistsBySlug(String slug) {
-        return problemDao.selectUniqueBySlug(slug).isPresent();
+        return problemDao.selectBySlug(slug).isPresent();
     }
 
     public Optional<Problem> getProblemById(long problemId) {
-        return problemDao.select(problemId).map(ProblemStore::fromModel);
+        return problemDao.selectById(problemId).map(ProblemStore::fromModel);
     }
 
     public Optional<Problem> getProblemByJid(String problemJid) {
@@ -75,18 +76,25 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public Optional<Problem> getProblemBySlug(String slug) {
-        return problemDao.selectUniqueBySlug(slug).map(ProblemStore::fromModel);
+        return problemDao.selectBySlug(slug).map(ProblemStore::fromModel);
     }
 
-    public Page<Problem> getProblems(String userJid, boolean isAdmin, String termFilter, Set<String> tagsFilter, int pageNumber) {
-        return problemDao
-                .select()
-                .whereUserCanView(userJid, isAdmin)
-                .whereTermsMatch(termFilter)
-                .whereTagsMatch(ProblemTags.splitTagsFilterByType(tagsFilter))
+    public Page<Problem> getProblems(Optional<String> userJid, String termFilter, Set<String> tagsFilter, int pageNumber, int pageSize) {
+        ProblemQueryBuilder query = problemDao.select();
+
+        if (userJid.isPresent()) {
+            query.whereUserCanView(userJid.get());
+        }
+        if (!termFilter.isEmpty()) {
+            query.whereTermsMatch(termFilter);
+        }
+        if (!tagsFilter.isEmpty()) {
+            query.whereTagsMatch(ProblemTags.splitTagsFilterByType(tagsFilter));
+        }
+
+        return query
                 .orderBy(Model_.UPDATED_AT, OrderDir.DESC)
-                .pageNumber(pageNumber)
-                .paged()
+                .paged(pageNumber, pageSize)
                 .mapPage(p -> Lists.transform(p, ProblemStore::fromModel));
     }
 

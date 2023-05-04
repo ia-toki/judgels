@@ -23,8 +23,6 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     private final List<CriteriaPredicate<M>> predicates;
     private final List<String> orderColumns;
     private final List<OrderDir> orderDirs;
-    private int pageNumber;
-    private int pageSize;
 
     public HibernateQueryBuilder(Session currentSession, Class<M> entityClass) {
         this.currentSession = currentSession;
@@ -33,8 +31,6 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
         this.predicates = new ArrayList<>();
         this.orderColumns = new ArrayList<>();
         this.orderDirs = new ArrayList<>();
-        this.pageNumber = 0;
-        this.pageSize = 0;
     }
 
     @Override
@@ -47,18 +43,6 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     public QueryBuilder<M> orderBy(String column, OrderDir dir) {
         orderColumns.add(column);
         orderDirs.add(dir);
-        return this;
-    }
-
-    @Override
-    public QueryBuilder<M> pageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-        return this;
-    }
-
-    @Override
-    public QueryBuilder<M> pageSize(int pageSize) {
-        this.pageSize = pageSize;
         return this;
     }
 
@@ -85,7 +69,29 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
     }
 
     @Override
+    public Optional<M> latest() {
+        return list(1, 1).stream().findFirst();
+    }
+
+    @Override
     public List<M> all() {
+        return list(0, 0);
+    }
+
+    @Override
+    public Page<M> paged(int pageNumber, int pageSize) {
+        List<M> page = list(pageNumber, pageSize);
+        int totalCount = count();
+
+        return new Page.Builder<M>()
+                .totalCount(totalCount)
+                .page(page)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .build();
+    }
+
+    private List<M> list(int pageNumber, int pageSize) {
         CriteriaBuilder cb = currentSession.getCriteriaBuilder();
         CriteriaQuery<M> cq = cb.createQuery(entityClass);
         Root<M> root = cq.from(entityClass);
@@ -99,26 +105,6 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
             query.setMaxResults(pageSize);
         }
         return query.list();
-    }
-
-    @Override
-    public Page<M> paged() {
-        if (pageNumber == 0) {
-            pageNumber = 1;
-        }
-        if (pageSize == 0) {
-            pageSize = 20;
-        }
-
-        List<M> page = all();
-        int totalCount = count();
-
-        return new Page.Builder<M>()
-                .totalCount(totalCount)
-                .page(page)
-                .pageNumber(pageNumber)
-                .pageSize(pageSize)
-                .build();
     }
 
     private void applyPredicates(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root) {

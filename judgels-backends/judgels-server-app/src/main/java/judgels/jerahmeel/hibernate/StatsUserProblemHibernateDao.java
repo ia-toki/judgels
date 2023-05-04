@@ -1,6 +1,5 @@
 package judgels.jerahmeel.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +15,7 @@ import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel_;
-import judgels.persistence.FilterOptions;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.QueryBuilder;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 
@@ -29,42 +27,39 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
 
     @Override
     public Optional<StatsUserProblemModel> selectByUserJidAndProblemJid(String userJid, String problemJid) {
-        return selectByUniqueColumns(ImmutableMap.of(
-                StatsUserProblemModel_.userJid, userJid,
-                StatsUserProblemModel_.problemJid, problemJid));
+        return select()
+                .where(columnEq(StatsUserProblemModel_.userJid, userJid))
+                .where(columnEq(StatsUserProblemModel_.problemJid, problemJid))
+                .unique();
     }
 
     @Override
     public List<StatsUserProblemModel> selectAllByUserJidAndProblemJids(String userJid, Set<String> problemJids) {
-        return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
-                .putColumnsEq(StatsUserProblemModel_.userJid, userJid)
-                .putColumnsIn(StatsUserProblemModel_.problemJid, problemJids)
-                .build());
+        return select()
+                .where(columnEq(StatsUserProblemModel_.userJid, userJid))
+                .where(columnIn(StatsUserProblemModel_.problemJid, problemJids))
+                .all();
     }
 
     @Override
-    public List<StatsUserProblemModel> selectAllByUserJidsAndProblemJids(
-            Set<String> userJids,
-            Set<String> problemJids) {
-        return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
-                .putColumnsIn(StatsUserProblemModel_.userJid, userJids)
-                .putColumnsIn(StatsUserProblemModel_.problemJid, problemJids)
-                .build());
+    public List<StatsUserProblemModel> selectAllByUserJidsAndProblemJids(Set<String> userJids, Set<String> problemJids) {
+        return select()
+                .where(columnIn(StatsUserProblemModel_.userJid, userJids))
+                .where(columnIn(StatsUserProblemModel_.problemJid, problemJids))
+                .all();
     }
 
     @Override
-    public List<StatsUserProblemModel> selectAllByProblemJid(String problemJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
-                .putColumnsEq(StatsUserProblemModel_.problemJid, problemJid)
-                .build(), options);
+    public QueryBuilder<StatsUserProblemModel> selectByProblemJid(String problemJid) {
+        return select()
+                .where(columnEq(StatsUserProblemModel_.problemJid, problemJid));
     }
 
     @Override
-    public List<StatsUserProblemModel> selectAllAcceptedByProblemJid(String problemJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
-                .putColumnsEq(StatsUserProblemModel_.problemJid, problemJid)
-                .putColumnsEq(StatsUserProblemModel_.verdict, Verdict.ACCEPTED.getCode())
-                .build(), options);
+    public QueryBuilder<StatsUserProblemModel> selectAcceptedByProblemJid(String problemJid) {
+        return select()
+                .where(columnEq(StatsUserProblemModel_.problemJid, problemJid))
+                .where(columnEq(StatsUserProblemModel_.verdict, Verdict.ACCEPTED.getCode()));
     }
 
     @Override
@@ -145,9 +140,9 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
 
     @Override
     public long selectCountTriedByUserJid(String userJid) {
-        return selectCount(new FilterOptions.Builder<StatsUserProblemModel>()
-                .putColumnsEq(StatsUserProblemModel_.userJid, userJid)
-                .build());
+        return select()
+                .where(columnEq(StatsUserProblemModel_.userJid, userJid))
+                .count();
     }
 
     @Override

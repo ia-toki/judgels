@@ -3,15 +3,16 @@ package judgels.sandalphon.submission.bundle;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Verdict;
 import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel;
+import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel_;
 import judgels.sandalphon.persistence.BaseBundleItemSubmissionDao;
+import judgels.sandalphon.persistence.BaseBundleItemSubmissionDao.BaseBundleItemSubmissionQueryBuilder;
 
 public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel> implements ItemSubmissionStore {
     private final BaseBundleItemSubmissionDao<M> submissionDao;
@@ -30,16 +31,22 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
             String containerJid,
             Optional<String> createdBy,
             Optional<String> problemJid,
-            Optional<Integer> page) {
+            int pageNumber,
+            int pageSize) {
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        options.orderBy("updatedAt");
-        options.orderDir(OrderDir.DESC);
-        page.ifPresent(options::page);
+        BaseBundleItemSubmissionQueryBuilder<M> query = submissionDao.select();
 
-        Page<M> submissionModels =
-                submissionDao.selectPaged(containerJid, createdBy, problemJid, Optional.empty(), options.build());
-        return submissionModels.mapPage(p -> Lists.transform(p, this::fromModel));
+        if (createdBy.isPresent()) {
+            query.whereAuthorIs(createdBy.get());
+        }
+        if (problemJid.isPresent()) {
+            query.whereProblemIs(problemJid.get());
+        }
+
+        return query
+                .orderBy(Model_.UPDATED_AT, OrderDir.DESC)
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, this::fromModel));
     }
 
     @Override
@@ -52,7 +59,12 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
             String userJid) {
 
         Optional<M> maybeModel = submissionDao
-                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(containerJid, problemJid, itemJid, userJid);
+                .select()
+                .whereContainerIs(containerJid)
+                .whereProblemIs(problemJid)
+                .whereItemIs(itemJid)
+                .whereAuthorIs(userJid)
+                .unique();
 
         if (maybeModel.isPresent()) {
             M model = maybeModel.get();
@@ -74,20 +86,23 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
 
     @Override
     public void deleteSubmission(String containerJid, String problemJid, String itemJid, String userJid) {
-        Optional<M> maybeModel = submissionDao
-                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(containerJid, problemJid, itemJid, userJid);
-        if (maybeModel.isPresent()) {
-            submissionDao.delete(maybeModel.get());
-        }
+        submissionDao
+                .select()
+                .whereContainerIs(containerJid)
+                .whereProblemIs(problemJid)
+                .whereItemIs(itemJid)
+                .whereAuthorIs(userJid)
+                .unique()
+                .ifPresent(submissionDao::delete);
     }
 
     @Override
     public List<ItemSubmission> getLatestSubmissionsByUserInContainer(String containerJid, String userJid) {
-        List<M> models =
-                submissionDao.selectAllByContainerJidAndCreatedBy(containerJid, userJid);
-        return models.stream()
-                .map(this::fromModel)
-                .collect(Collectors.toList());
+        return Lists.transform(submissionDao
+                .select()
+                .whereContainerIs(containerJid)
+                .whereAuthorIs(userJid)
+                .all(), this::fromModel);
     }
 
     @Override
@@ -96,20 +111,20 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
             String problemJid,
             String userJid) {
 
-        List<M> models =
-                submissionDao.selectAllByContainerJidAndProblemJidAndCreatedBy(containerJid, problemJid, userJid);
-        return models.stream()
-                .map(this::fromModel)
-                .collect(Collectors.toList());
+        return Lists.transform(submissionDao
+                .select()
+                .whereContainerIs(containerJid)
+                .whereProblemIs(problemJid)
+                .whereAuthorIs(userJid)
+                .all(), this::fromModel);
     }
 
     @Override
     public List<ItemSubmission> getSubmissionsForScoreboard(String containerJid) {
-        List<M> models =
-                submissionDao.selectAllByContainerJid(containerJid);
-        return models.stream()
-                .map(this::fromModel)
-                .collect(Collectors.toList());
+        return Lists.transform(submissionDao
+                .select()
+                .whereContainerIs(containerJid)
+                .all(), this::fromModel);
     }
 
     @Override
@@ -119,9 +134,22 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
             Optional<String> problemJid,
             Optional<Integer> batchSize) {
 
-        List<M> submissionModels = submissionDao.selectAllForRegrade(
-                containerJid, problemJid, userJid);
-        List<ItemSubmission> submissions = submissionModels.stream().map(this::fromModel).collect(Collectors.toList());
+        BaseBundleItemSubmissionQueryBuilder<M> query = submissionDao.select();
+
+        if (containerJid.isPresent()) {
+            query.whereContainerIs(containerJid.get());
+        }
+        if (userJid.isPresent()) {
+            query.whereAuthorIs(userJid.get());
+        }
+        if (problemJid.isPresent()) {
+            query.whereProblemIs(problemJid.get());
+        }
+
+        List<M> submissionModels = query
+                .orderBy(AbstractBundleItemSubmissionModel_.PROBLEM_JID, OrderDir.ASC)
+                .all();
+        List<ItemSubmission> submissions = Lists.transform(submissionModels, this::fromModel);
 
         int counter = 0;
         for (M submissionModel : submissionModels) {

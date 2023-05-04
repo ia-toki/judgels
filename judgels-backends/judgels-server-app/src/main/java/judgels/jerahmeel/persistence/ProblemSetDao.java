@@ -2,14 +2,15 @@ package judgels.jerahmeel.persistence;
 
 import java.util.Optional;
 import judgels.persistence.JudgelsDao;
-import judgels.persistence.SearchOptions;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.QueryBuilder;
 
 public interface ProblemSetDao extends JudgelsDao<ProblemSetModel> {
+    ProblemSetQueryBuilder select();
+
     Optional<ProblemSetModel> selectBySlug(String problemSetSlug);
-    Page<ProblemSetModel> selectPaged(
-            Optional<String> archiveJid,
-            SearchOptions searchOptions,
-            SelectionOptions options);
+
+    interface ProblemSetQueryBuilder extends QueryBuilder<ProblemSetModel> {
+        ProblemSetQueryBuilder whereArchiveIs(String archiveJid);
+        ProblemSetQueryBuilder whereNameLike(String name);
+    }
 }

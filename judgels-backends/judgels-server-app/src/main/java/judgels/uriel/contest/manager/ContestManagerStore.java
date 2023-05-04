@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.dump.ContestManagerDump;
 import judgels.uriel.api.contest.manager.ContestManager;
@@ -14,8 +13,6 @@ import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestManagerModel;
 
 public class ContestManagerStore {
-    private static final int PAGE_SIZE = 250;
-
     private final ContestManagerDao managerDao;
 
     @Inject
@@ -44,13 +41,11 @@ public class ContestManagerStore {
         return true;
     }
 
-    public Page<ContestManager> getManagers(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(PAGE_SIZE);
-        page.ifPresent(options::page);
-        return managerDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
-                p -> Lists.transform(p, ContestManagerStore::fromModel));
+    public Page<ContestManager> getManagers(String contestJid, int pageNumber, int pageSize) {
+        return managerDao
+                .selectByContestJid(contestJid)
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, ContestManagerStore::fromModel));
     }
 
     public void importDump(String contestJid, ContestManagerDump dump) {
@@ -62,7 +57,7 @@ public class ContestManagerStore {
     }
 
     public Set<ContestManagerDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return managerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+        return managerDao.selectByContestJid(contestJid).all().stream().map(model -> {
             ContestManagerDump.Builder builder = new ContestManagerDump.Builder()
                     .mode(mode)
                     .userJid(model.userJid);

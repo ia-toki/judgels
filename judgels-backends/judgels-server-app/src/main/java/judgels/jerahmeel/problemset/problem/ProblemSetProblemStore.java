@@ -1,7 +1,5 @@
 package judgels.jerahmeel.problemset.problem;
 
-import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -18,8 +16,8 @@ import judgels.jerahmeel.persistence.ProblemContestDao;
 import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
+import judgels.jerahmeel.persistence.ProblemSetProblemModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.problem.ProblemType;
 
 public class ProblemSetProblemStore {
@@ -34,12 +32,12 @@ public class ProblemSetProblemStore {
 
     public List<ProblemSetProblem> getProblems(String problemSetJid) {
         return Lists.transform(
-                problemDao.selectAllByProblemSetJid(problemSetJid, createOptions()),
+                problemDao.selectByProblemSetJid(problemSetJid).orderBy(ProblemSetProblemModel_.ALIAS, OrderDir.ASC).all(),
                 m -> fromModel(m, getContestJids(m.problemJid)));
     }
 
     public Map<String, List<ProblemSetProblem>> getProblems(Set<String> problemSetJids) {
-        return problemDao.selectAllByProblemSetJids(problemSetJids, createOptions())
+        return problemDao.selectByProblemSetJids(problemSetJids).orderBy(ProblemSetProblemModel_.ALIAS, OrderDir.ASC).all()
                 .stream()
                 .collect(Collectors.groupingBy(
                         m -> m.problemSetJid,
@@ -74,7 +72,7 @@ public class ProblemSetProblemStore {
             affectedProblemJids.add(p.getProblemJid());
         }
 
-        List<ProblemSetProblemModel> existingProblems = problemDao.selectAllByProblemSetJid(problemSetJid, DEFAULT_ALL);
+        List<ProblemSetProblemModel> existingProblems = problemDao.selectByProblemSetJid(problemSetJid).all();
         for (ProblemSetProblemModel model : existingProblems) {
             ProblemSetProblem problemToSet = problemsToSet.get(model.problemJid);
             if (problemToSet == null || !problemToSet.getAlias().equals(model.alias)) {
@@ -143,13 +141,6 @@ public class ProblemSetProblemStore {
 
     private List<String> getContestJids(String problemJid) {
         return Lists.transform(problemContestDao.selectAllByProblemJid(problemJid), m -> m.contestJid);
-    }
-
-    private static SelectionOptions createOptions() {
-        return new SelectionOptions.Builder().from(DEFAULT_ALL)
-                .orderBy("alias")
-                .orderDir(OrderDir.ASC)
-                .build();
     }
 
     private static ProblemSetProblem fromModel(ProblemSetProblemModel model, List<String> contestJids) {

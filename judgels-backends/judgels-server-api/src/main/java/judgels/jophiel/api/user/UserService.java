@@ -49,7 +49,7 @@ public interface UserService {
     @Produces(APPLICATION_JSON)
     UsersResponse getUsers(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("page") Optional<Integer> page,
+            @QueryParam("page") Optional<Integer> pageNumber,
             @QueryParam("orderBy") Optional<String> orderBy,
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
 }

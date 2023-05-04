@@ -22,8 +22,8 @@ public interface ProblemSetService {
     ProblemSetsResponse getProblemSets(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("archiveSlug") Optional<String> archiveSlug,
-            @QueryParam("name") Optional<String> name,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("name") Optional<String> nameFilter,
+            @QueryParam("page") Optional<Integer> pageNumber);
 
     @GET
     @Path("/{problemSetJid}/stats")

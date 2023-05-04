@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.clarification.ContestClarification;
@@ -14,6 +13,7 @@ import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.api.contest.dump.ContestClarificationDump;
 import judgels.uriel.persistence.ContestClarificationDao;
+import judgels.uriel.persistence.ContestClarificationDao.ContestClarificationQueryBuilder;
 import judgels.uriel.persistence.ContestClarificationModel;
 
 public class ContestClarificationStore {
@@ -51,33 +51,25 @@ public class ContestClarificationStore {
         });
     }
 
-    public Page<ContestClarification> getClarifications(String contestJid, String userJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(options::page);
-
-        return clarificationDao.selectPagedByContestJidAndUserJid(contestJid, userJid, options.build()).mapPage(
-                p -> Lists.transform(p, ContestClarificationStore::fromModel));
-    }
-
     public Page<ContestClarification> getClarifications(
             String contestJid,
-            Optional<String> status,
-            Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(options::page);
+            Optional<String> userFilter,
+            Optional<String> statusFilter,
+            int pageNumber,
+            int pageSize) {
 
-        Page<ContestClarificationModel> contestClarificationModelPage;
-        if (status.isPresent()) {
-            contestClarificationModelPage = clarificationDao.selectPagedByContestJidAndStatus(
-                    contestJid,
-                    status.get(),
-                    options.build());
-        } else {
-            contestClarificationModelPage = clarificationDao.selectPagedByContestJid(contestJid, options.build());
+        ContestClarificationQueryBuilder query = clarificationDao.selectByContestJid(contestJid);
+
+        if (userFilter.isPresent()) {
+            query.whereUserIsAsker(userFilter.get());
+        }
+        if (statusFilter.isPresent()) {
+            query.whereStatusIs(statusFilter.get());
         }
 
-        return contestClarificationModelPage.mapPage(
-                p -> Lists.transform(p, ContestClarificationStore::fromModel));
+        return query
+                .paged(pageNumber, pageSize)
+                .mapPage(p -> Lists.transform(p, ContestClarificationStore::fromModel));
     }
 
     public void importDump(String contestJid, ContestClarificationDump dump) {
@@ -102,7 +94,7 @@ public class ContestClarificationStore {
     }
 
     public Set<ContestClarificationDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return clarificationDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+        return clarificationDao.selectByContestJid(contestJid).all().stream().map(model -> {
             ContestClarificationDump.Builder builder = new ContestClarificationDump.Builder()
                     .mode(mode)
                     .topicJid(model.topicJid)

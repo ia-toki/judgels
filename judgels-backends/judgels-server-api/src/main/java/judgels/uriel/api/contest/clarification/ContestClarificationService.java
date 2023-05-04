@@ -34,7 +34,7 @@ public interface ContestClarificationService {
             @PathParam("contestJid") String contestJid,
             @QueryParam("status") Optional<String> status,
             @QueryParam("language") Optional<String> language,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("page") Optional<Integer> pageNumber);
 
     @PUT
     @Path("/{clarificationJid}/answer")

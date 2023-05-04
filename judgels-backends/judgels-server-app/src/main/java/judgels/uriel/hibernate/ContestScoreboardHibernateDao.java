@@ -1,6 +1,5 @@
 package judgels.uriel.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.hibernate.HibernateDao;
@@ -10,9 +9,7 @@ import judgels.uriel.persistence.ContestScoreboardDao;
 import judgels.uriel.persistence.ContestScoreboardModel;
 import judgels.uriel.persistence.ContestScoreboardModel_;
 
-public class ContestScoreboardHibernateDao extends HibernateDao<ContestScoreboardModel> implements
-        ContestScoreboardDao {
-
+public class ContestScoreboardHibernateDao extends HibernateDao<ContestScoreboardModel> implements ContestScoreboardDao {
     @Inject
     public ContestScoreboardHibernateDao(HibernateDaoData data) {
         super(data);
@@ -20,8 +17,9 @@ public class ContestScoreboardHibernateDao extends HibernateDao<ContestScoreboar
 
     @Override
     public Optional<ContestScoreboardModel> selectByContestJidAndType(String contestJid, ContestScoreboardType type) {
-        return selectByUniqueColumns(ImmutableMap.of(
-                ContestScoreboardModel_.contestJid, contestJid,
-                ContestScoreboardModel_.type, type.name()));
+        return select()
+                .where(columnEq(ContestScoreboardModel_.contestJid, contestJid))
+                .where(columnEq(ContestScoreboardModel_.type, type.name()))
+                .unique();
     }
 }

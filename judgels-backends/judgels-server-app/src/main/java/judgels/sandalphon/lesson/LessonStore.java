@@ -12,6 +12,7 @@ import judgels.persistence.api.Page;
 import judgels.sandalphon.Git;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.persistence.LessonDao;
+import judgels.sandalphon.persistence.LessonDao.LessonQueryBuilder;
 import judgels.sandalphon.persistence.LessonModel;
 import judgels.sandalphon.persistence.LessonPartnerDao;
 
@@ -50,11 +51,11 @@ public final class LessonStore extends BaseLessonStore {
     }
 
     public boolean lessonExistsBySlug(String slug) {
-        return lessonDao.selectUniqueBySlug(slug).isPresent();
+        return lessonDao.selectBySlug(slug).isPresent();
     }
 
     public Optional<Lesson> getLessonById(long lessonId) {
-        return lessonDao.select(lessonId).map(LessonStore::fromModel);
+        return lessonDao.selectById(lessonId).map(LessonStore::fromModel);
     }
 
     public Optional<Lesson> getLessonByJid(String lessonJid) {
@@ -62,21 +63,26 @@ public final class LessonStore extends BaseLessonStore {
     }
 
     public Optional<Lesson> getLessonBySlug(String slug) {
-        return lessonDao.selectUniqueBySlug(slug).map(LessonStore::fromModel);
+        return lessonDao.selectBySlug(slug).map(LessonStore::fromModel);
     }
 
     public boolean isUserPartnerForLesson(String lessonJid, String userJid) {
         return partnerDao.selectByLessonJidAndUserJid(lessonJid, userJid).isPresent();
     }
 
-    public Page<Lesson> getLessons(String userJid, boolean isAdmin, String termFilter, int pageNumber) {
-        return lessonDao
-                .select()
-                .whereUserCanView(userJid, isAdmin)
-                .whereTermsMatch(termFilter)
+    public Page<Lesson> getLessons(Optional<String> userJid, String termFilter, int pageNumber, int pageSize) {
+        LessonQueryBuilder query = lessonDao.select();
+
+        if (userJid.isPresent()) {
+            query.whereUserCanView(userJid.get());
+        }
+        if (!termFilter.isEmpty()) {
+            query.whereTermsMatch(termFilter);
+        }
+
+        return query
                 .orderBy(Model_.UPDATED_AT, OrderDir.DESC)
-                .pageNumber(pageNumber)
-                .paged()
+                .paged(pageNumber, pageSize)
                 .mapPage(p -> Lists.transform(p, LessonStore::fromModel));
     }
 

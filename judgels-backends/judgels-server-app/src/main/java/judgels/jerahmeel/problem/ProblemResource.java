@@ -16,6 +16,8 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class ProblemResource implements ProblemService {
+    private static final int PAGE_SIZE = 20;
+
     private final ActorChecker actorChecker;
     private final ProblemStore problemStore;
     private final StatsStore statsStore;
@@ -42,7 +44,7 @@ public class ProblemResource implements ProblemService {
     public ProblemsResponse getProblems(
             Optional<AuthHeader> authHeader,
             Set<String> tags,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -51,7 +53,7 @@ public class ProblemResource implements ProblemService {
             allowedProblemJids = problemClient.getProblemJidsByTags(tags);
         }
 
-        Page<ProblemSetProblemInfo> problems = problemStore.getProblems(allowedProblemJids, page);
+        Page<ProblemSetProblemInfo> problems = problemStore.getProblems(allowedProblemJids, pageNumber.orElse(1), PAGE_SIZE);
         Set<String> problemJids = problems.getPage().stream()
                 .map(ProblemSetProblemInfo::getProblemJid)
                 .collect(Collectors.toSet());

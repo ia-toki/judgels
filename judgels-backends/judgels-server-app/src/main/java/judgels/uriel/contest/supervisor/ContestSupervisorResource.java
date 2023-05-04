@@ -29,6 +29,8 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 
 public class ContestSupervisorResource implements ContestSupervisorService {
+    private static final int PAGE_SIZE = 250;
+
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestLogger contestLogger;
@@ -55,12 +57,12 @@ public class ContestSupervisorResource implements ContestSupervisorService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestSupervisorsResponse getSupervisors(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
+    public ContestSupervisorsResponse getSupervisors(AuthHeader authHeader, String contestJid, Optional<Integer> pageNumber) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(roleChecker.canSupervise(actorJid, contest));
 
-        Page<ContestSupervisor> supervisors = supervisorStore.getSupervisors(contestJid, page);
+        Page<ContestSupervisor> supervisors = supervisorStore.getSupervisors(contestJid, pageNumber.orElse(1), PAGE_SIZE);
         Set<String> userJids =
                 supervisors.getPage().stream().map(ContestSupervisor::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());

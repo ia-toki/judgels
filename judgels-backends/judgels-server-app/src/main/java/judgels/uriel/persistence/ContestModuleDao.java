@@ -1,14 +1,16 @@
 package judgels.uriel.persistence;
 
 import java.util.Optional;
-import java.util.Set;
 import judgels.persistence.Dao;
-import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.QueryBuilder;
 import judgels.uriel.api.contest.module.ContestModuleType;
 
 public interface ContestModuleDao extends Dao<ContestModuleModel> {
+    ContestModuleQueryBuilder selectByContestJid(String contestJid);
     Optional<ContestModuleModel> selectByContestJidAndType(String contestJid, ContestModuleType type);
     Optional<ContestModuleModel> selectEnabledByContestJidAndType(String contestJid, ContestModuleType type);
-    Set<ContestModuleModel> selectAllByContestJid(String contestJid, SelectionOptions options);
-    Set<ContestModuleModel> selectAllEnabledByContestJid(String contestJid);
+
+    interface ContestModuleQueryBuilder extends QueryBuilder<ContestModuleModel> {
+        ContestModuleQueryBuilder whereEnabled();
+    }
 }

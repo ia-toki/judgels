@@ -1,5 +1,9 @@
 package judgels.jerahmeel.chapter.problem;
 
+import static java.util.stream.Collectors.toMap;
+import static judgels.sandalphon.api.problem.ProblemType.BUNDLE;
+import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -7,13 +11,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
+import judgels.jerahmeel.persistence.ChapterProblemModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.problem.ProblemType;
 
 public class ChapterProblemStore {
@@ -25,9 +28,10 @@ public class ChapterProblemStore {
     }
 
     public List<ChapterProblem> getProblems(String chapterJid) {
-        return Lists.transform(
-                problemDao.selectAllByChapterJid(chapterJid, createOptions()),
-                ChapterProblemStore::fromModel);
+        return Lists.transform(problemDao
+                .selectByChapterJid(chapterJid)
+                .orderBy(ChapterProblemModel_.ALIAS, OrderDir.ASC)
+                .all(), ChapterProblemStore::fromModel);
     }
 
     public Optional<ChapterProblem> getProblem(String problemJid) {
@@ -35,13 +39,18 @@ public class ChapterProblemStore {
     }
 
     public List<String> getBundleProblemJids(String chapterJid) {
-        return Lists.transform(
-                problemDao.selectAllBundleByChapterJid(chapterJid, createOptions()), model -> model.problemJid);
+        return Lists.transform(problemDao
+                .selectByChapterJid(chapterJid)
+                .whereTypeIs(BUNDLE.name())
+                .orderBy(ChapterProblemModel_.ALIAS, OrderDir.ASC)
+                .all(), model -> model.problemJid);
     }
 
     public List<String> getProgrammingProblemJids(String chapterJid) {
-        return Lists.transform(
-                problemDao.selectAllProgrammingByChapterJid(chapterJid, createOptions()), model -> model.problemJid);
+        return Lists.transform(problemDao
+                .selectByChapterJid(chapterJid)
+                .whereTypeIs(PROGRAMMING.name())
+                .all(), model -> model.problemJid);
     }
 
     public Optional<ChapterProblem> getProblemByAlias(String chapterJid, String problemAlias) {
@@ -53,13 +62,13 @@ public class ChapterProblemStore {
         return problemDao.selectAllByProblemJids(problemJids)
                 .stream()
                 .filter(m -> problemJids.contains(m.problemJid))
-                .collect(Collectors.toMap(m -> m.chapterJid + "-" + m.problemJid, m -> m.alias));
+                .collect(toMap(m -> m.chapterJid + "-" + m.problemJid, m -> m.alias));
     }
 
     public Set<ChapterProblem> setProblems(String chapterJid, List<ChapterProblem> data) {
         Map<String, ChapterProblem> setProblems = data.stream().collect(
-                Collectors.toMap(ChapterProblem::getProblemJid, Function.identity()));
-        for (ChapterProblemModel model : problemDao.selectAllByChapterJid(chapterJid, createOptions())) {
+                toMap(ChapterProblem::getProblemJid, Function.identity()));
+        for (ChapterProblemModel model : problemDao.selectByChapterJid(chapterJid).all()) {
             ChapterProblem existingProblem = setProblems.get(model.problemJid);
             if (existingProblem == null || !existingProblem.getAlias().equals(model.alias)) {
                 problemDao.delete(model);
@@ -91,13 +100,6 @@ public class ChapterProblemStore {
             model.type = type.name();
             return fromModel(problemDao.insert(model));
         }
-    }
-
-    private static SelectionOptions createOptions() {
-        return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("alias")
-                .orderDir(OrderDir.ASC)
-                .build();
     }
 
     private static ChapterProblem fromModel(ChapterProblemModel model) {

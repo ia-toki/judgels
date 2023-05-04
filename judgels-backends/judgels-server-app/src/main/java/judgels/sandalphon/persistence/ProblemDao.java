@@ -8,10 +8,10 @@ import judgels.persistence.QueryBuilder;
 
 public interface ProblemDao extends JudgelsDao<ProblemModel> {
     ProblemQueryBuilder select();
-    Optional<ProblemModel> selectUniqueBySlug(String slug);
+    Optional<ProblemModel> selectBySlug(String slug);
 
     interface ProblemQueryBuilder extends QueryBuilder<ProblemModel> {
-        ProblemQueryBuilder whereUserCanView(String userJid, boolean isAdmin);
+        ProblemQueryBuilder whereUserCanView(String userJid);
         ProblemQueryBuilder whereTermsMatch(String term);
         ProblemQueryBuilder whereTagsMatch(List<Set<String>> tagGroups);
     }

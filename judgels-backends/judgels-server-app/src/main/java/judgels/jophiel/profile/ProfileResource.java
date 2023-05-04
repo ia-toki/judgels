@@ -32,8 +32,8 @@ public class ProfileResource implements ProfileService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<Profile> getTopRatedProfiles(Optional<Integer> page, Optional<Integer> pageSize) {
-        return profileStore.getTopRatedProfiles(clock.instant(), page, pageSize);
+    public Page<Profile> getTopRatedProfiles(Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+        return profileStore.getTopRatedProfiles(clock.instant(), pageNumber.orElse(1), pageSize.orElse(50));
     }
 
     @Override

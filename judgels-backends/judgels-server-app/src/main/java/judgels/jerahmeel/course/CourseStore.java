@@ -15,9 +15,7 @@ import judgels.jerahmeel.api.course.CourseUpdateData;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
 import judgels.jerahmeel.persistence.CourseModel_;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 
 public class CourseStore {
     private final CourseDao courseDao;
@@ -56,12 +54,11 @@ public class CourseStore {
     }
 
     public List<Course> getCourses() {
-        return Lists.transform(courseDao.selectAll(new FilterOptions.Builder<CourseModel>()
-                .addCustomPredicates((cb, cq, root) -> cb.isNotNull(root.get(CourseModel_.slug)))
-                .build(), new SelectionOptions.Builder()
-                .orderBy("slug")
-                .orderDir(OrderDir.ASC)
-                .build()), CourseStore::fromModel);
+        return Lists.transform(courseDao
+                .select()
+                .where((cb, cq, root) -> cb.isNotNull(root.get(CourseModel_.slug)))
+                .orderBy(CourseModel_.SLUG, OrderDir.ASC)
+                .all(), CourseStore::fromModel);
     }
 
     public Course createCourse(CourseCreateData data) {

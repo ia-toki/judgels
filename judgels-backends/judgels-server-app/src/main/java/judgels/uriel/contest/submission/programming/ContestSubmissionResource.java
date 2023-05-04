@@ -70,7 +70,9 @@ import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
+    private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 5000;
     private static final String LAST_SUBMISSION_ID_HEADER = "Last-Submission-Id";
+    private static final int PAGE_SIZE = 20;
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
@@ -136,7 +138,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             String contestJid,
             Optional<String> username,
             Optional<String> problemAlias,
-            Optional<Integer> page) {
+            Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -148,7 +150,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 Optional.of(contest.getJid()),
                 canSupervise ? byUserJid(username) : Optional.of(actorJid),
                 byProblemJid(contestJid, problemAlias),
-                page);
+                pageNumber.orElse(1),
+                PAGE_SIZE);
 
         List<String> userJidsSortedByUsername;
         Set<String> userJids;
@@ -332,12 +335,13 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         Optional<String> problemJid = byProblemJid(contestJid, problemAlias);
 
-        for (int page = 1;; page++) {
+        for (int pageNumber = 1;; pageNumber++) {
             List<Submission> submissions = submissionStore.getSubmissions(
                     Optional.of(contestJid),
                     byUserJid(username),
                     problemJid,
-                    Optional.of(page)).getPage();
+                    pageNumber,
+                    PAGE_SIZE).getPage();
 
             if (submissions.isEmpty()) {
                 break;
@@ -388,8 +392,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canSupervise(actorJid, contest));
 
+        int pageSize = Math.min(MAX_DOWNLOAD_SUBMISSIONS_LIMIT, limit.orElse(MAX_DOWNLOAD_SUBMISSIONS_LIMIT));
         List<Submission> submissions = submissionStore
-                .getSubmissionsForDownload(Optional.of(contestJid), userJid, problemJid, lastSubmissionId, limit)
+                .getSubmissionsForDownload(Optional.of(contestJid), userJid, problemJid, lastSubmissionId, pageSize)
                 .getPage();
 
         if (submissions.isEmpty()) {

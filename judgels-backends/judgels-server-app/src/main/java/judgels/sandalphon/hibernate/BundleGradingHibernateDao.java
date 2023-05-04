@@ -23,7 +23,14 @@ public final class BundleGradingHibernateDao extends JudgelsHibernateDao<BundleG
     }
 
     @Override
-    public Map<String, List<judgels.sandalphon.persistence.BundleGradingModel>> getBySubmissionJids(List<String> submissionJids) {
+    public List<BundleGradingModel> selectAllBySubmissionJid(String submissionJid) {
+        return select()
+                .where(columnEq(BundleGradingModel_.submissionJid, submissionJid))
+                .all();
+    }
+
+    @Override
+    public Map<String, List<BundleGradingModel>> getBySubmissionJids(List<String> submissionJids) {
         if (submissionJids.isEmpty()) {
             return ImmutableMap.of();
         }

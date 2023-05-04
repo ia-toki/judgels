@@ -5,14 +5,12 @@ import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetModel_;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.Model_;
-import judgels.persistence.SearchOptions;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.hibernate.Session;
 
 public class ProblemSetHibernateDao extends JudgelsHibernateDao<ProblemSetModel> implements ProblemSetDao {
     @Inject
@@ -21,35 +19,35 @@ public class ProblemSetHibernateDao extends JudgelsHibernateDao<ProblemSetModel>
     }
 
     @Override
-    public Optional<ProblemSetModel> selectBySlug(String problemSetSlug) {
-        // if no slug matches, treat it as ID for legacy reasons
-        return selectByFilter(new FilterOptions.Builder<ProblemSetModel>()
-                .addCustomPredicates((cb, cq, root) -> cb.or(
-                        cb.equal(root.get(ProblemSetModel_.slug), problemSetSlug),
-                        cb.equal(root.get(Model_.id), NumberUtils.toInt(problemSetSlug, 0))))
-                .build());
+    public ProblemSetHibernateQueryBuilder select() {
+        return new ProblemSetHibernateQueryBuilder(currentSession());
     }
 
     @Override
-    public Page<ProblemSetModel> selectPaged(
-            Optional<String> archiveJid,
-            SearchOptions searchOptions,
-            SelectionOptions options) {
-
-        return selectPaged(createFilterOptions(archiveJid, searchOptions).build(), options);
+    public Optional<ProblemSetModel> selectBySlug(String problemSetSlug) {
+        // if no slug matches, treat it as ID for legacy reasons
+        return select()
+                .where((cb, cq, root) -> cb.or(
+                        cb.equal(root.get(ProblemSetModel_.slug), problemSetSlug),
+                        cb.equal(root.get(Model_.id), NumberUtils.toInt(problemSetSlug, 0))))
+                .unique();
     }
 
-    private static FilterOptions.Builder<ProblemSetModel> createFilterOptions(
-            Optional<String> archiveJid,
-            SearchOptions searchOptions) {
-
-        FilterOptions.Builder<ProblemSetModel> filterOptions = new FilterOptions.Builder<>();
-
-        archiveJid.ifPresent(jid -> filterOptions.putColumnsEq(ProblemSetModel_.archiveJid, jid));
-        if (searchOptions.getTerms().containsKey("name")) {
-            filterOptions.putColumnsLike(ProblemSetModel_.name, searchOptions.getTerms().get("name"));
+    private static class ProblemSetHibernateQueryBuilder extends HibernateQueryBuilder<ProblemSetModel> implements ProblemSetQueryBuilder {
+        ProblemSetHibernateQueryBuilder(Session currentSession) {
+            super(currentSession, ProblemSetModel.class);
         }
 
-        return filterOptions;
+        @Override
+        public ProblemSetQueryBuilder whereArchiveIs(String archiveJid) {
+            where(columnEq(ProblemSetModel_.archiveJid, archiveJid));
+            return this;
+        }
+
+        @Override
+        public ProblemSetQueryBuilder whereNameLike(String name) {
+            where(columnLike(ProblemSetModel_.name, name));
+            return this;
+        }
     }
 }

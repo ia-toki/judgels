@@ -12,7 +12,6 @@ import judgels.sandalphon.api.submission.programming.SubmissionData;
 public interface SubmissionStore {
     Optional<Submission> getSubmissionById(long submissionId);
     Optional<Submission> getSubmissionByJid(String submissionJid);
-    List<Submission> getSubmissionByJids(List<String> submissionJids);
     List<Submission> getSubmissionsForScoreboard(
             String containerJid,
             boolean withGradingDetails,
@@ -22,16 +21,17 @@ public interface SubmissionStore {
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,
-            Optional<Integer> limit);
+            int pageSize);
     Page<Submission> getSubmissionsForStats(
             Optional<String> containerJid,
             Optional<Long> lastSubmissionId,
-            int limit);
+            int pageSize);
     Page<Submission> getSubmissions(
             Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
-            Optional<Integer> page);
+            int pageNumber,
+            int pageSize);
     Optional<Submission> getLatestSubmission(
             Optional<String> containerJid,
             Optional<String> userJid,

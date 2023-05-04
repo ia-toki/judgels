@@ -16,6 +16,6 @@ public class StatsUserHibernateDao extends HibernateDao<StatsUserModel> implemen
 
     @Override
     public Optional<StatsUserModel> selectByUserJid(String userJid) {
-        return selectByUniqueColumn(StatsUserModel_.userJid, userJid);
+        return select().where(columnEq(StatsUserModel_.userJid, userJid)).unique();
     }
 }

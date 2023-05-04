@@ -8,18 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.bundle.BundleGrading;
 import judgels.sandalphon.api.submission.bundle.BundleSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemGradingResult;
 import judgels.sandalphon.persistence.BundleGradingDao;
 import judgels.sandalphon.persistence.BundleGradingModel;
-import judgels.sandalphon.persistence.BundleGradingModel_;
 import judgels.sandalphon.persistence.BundleSubmissionDao;
 import judgels.sandalphon.persistence.BundleSubmissionModel;
-import judgels.sandalphon.persistence.BundleSubmissionModel_;
 
 public class BundleSubmissionStore {
     private final ObjectMapper mapper;
@@ -37,38 +33,26 @@ public class BundleSubmissionStore {
         this.gradingDao = gradingDao;
     }
 
-    public Page<BundleSubmission> getSubmissions(String problemJid, int pageNumber) {
-        FilterOptions<BundleSubmissionModel> filterOptions = new FilterOptions.Builder<BundleSubmissionModel>()
-                .putColumnsEq(BundleSubmissionModel_.problemJid, problemJid)
-                .build();
-
-        SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .page(pageNumber)
-                .build();
-
-        long totalCount = submissionDao.selectCount(filterOptions);
-        List<BundleSubmissionModel>
-                submissionModels = submissionDao.selectAll(filterOptions, selectionOptions);
+    public Page<BundleSubmission> getSubmissions(String problemJid, int pageNumber, int pageSize) {
+        Page<BundleSubmissionModel> submissionModels = submissionDao
+                .selectByProblemJid(problemJid)
+                .paged(pageNumber, pageSize);
         Map<String, List<BundleGradingModel>>
-                gradingModelsMap = gradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
+                gradingModelsMap = gradingDao.getBySubmissionJids(Lists.transform(submissionModels.getPage(), m -> m.jid));
 
-        List<BundleSubmission> submissions = Lists.transform(submissionModels, m -> createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
+        List<BundleSubmission> submissions = Lists.transform(submissionModels.getPage(), m -> createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
 
         return new Page.Builder<BundleSubmission>()
                 .page(submissions)
-                .totalCount((int) totalCount)
-                .pageNumber(selectionOptions.getPage())
-                .pageSize(selectionOptions.getPageSize())
+                .totalCount(submissionModels.getTotalCount())
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
                 .build();
     }
 
     public Optional<BundleSubmission> getSubmissionById(int submissionId) {
-        return submissionDao.select(submissionId).map(sm -> {
-            FilterOptions<BundleGradingModel> filterOptions = new FilterOptions.Builder<BundleGradingModel>()
-                    .putColumnsEq(BundleGradingModel_.submissionJid, sm.jid)
-                    .build();
-            List<BundleGradingModel> gradingModels = gradingDao.selectAll(filterOptions, SelectionOptions.DEFAULT_ALL);
+        return submissionDao.selectById(submissionId).map(sm -> {
+            List<BundleGradingModel> gradingModels = gradingDao.selectAllBySubmissionJid(sm.jid);
             return createSubmissionFromModels(sm, gradingModels);
         });
     }

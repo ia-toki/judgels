@@ -27,7 +27,7 @@ public interface ContestItemSubmissionService {
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") Optional<String> problemAlias,
-            @QueryParam("page") Optional<Integer> page);
+            @QueryParam("page") Optional<Integer> pageNumber);
 
     @POST
     @Path("/")
