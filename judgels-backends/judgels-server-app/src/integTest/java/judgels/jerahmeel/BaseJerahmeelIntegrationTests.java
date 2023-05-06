@@ -6,7 +6,7 @@ import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import org.hibernate.SessionFactory;
 
-public abstract class AbstractIntegrationTests {
+public abstract class BaseJerahmeelIntegrationTests {
     protected static JerahmeelIntegrationTestComponent createComponent(SessionFactory sessionFactory) {
         return DaggerJerahmeelIntegrationTestComponent.builder()
                 .judgelsHibernateModule(new JudgelsHibernateModule(sessionFactory))

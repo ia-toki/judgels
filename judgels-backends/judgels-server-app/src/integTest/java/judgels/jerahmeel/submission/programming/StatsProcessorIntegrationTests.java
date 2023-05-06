@@ -21,7 +21,7 @@ import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.TestCaseResult;
 import judgels.gabriel.api.TestGroupResult;
 import judgels.gabriel.api.Verdict;
-import judgels.jerahmeel.AbstractIntegrationTests;
+import judgels.jerahmeel.BaseJerahmeelIntegrationTests;
 import judgels.jerahmeel.JerahmeelIntegrationTestComponent;
 import judgels.jerahmeel.api.archive.Archive;
 import judgels.jerahmeel.api.archive.ArchiveCreateData;
@@ -79,7 +79,7 @@ import org.junit.jupiter.api.Test;
         ProblemContestModel.class,
         StatsUserModel.class,
         StatsUserProblemModel.class})
-class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
+class StatsProcessorIntegrationTests extends BaseJerahmeelIntegrationTests {
     private static final String USER_JID_1 = "JIDUSER-1";
     private static final String USER_JID_2 = "JIDUSER-2";
     private static final String PROBLEM_JID_1 = "JIDPROG-1";

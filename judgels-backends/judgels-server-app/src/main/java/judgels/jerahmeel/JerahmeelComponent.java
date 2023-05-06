@@ -12,7 +12,6 @@ import judgels.jerahmeel.course.chapter.CourseChapterResource;
 import judgels.jerahmeel.curriculum.CurriculumResource;
 import judgels.jerahmeel.gabriel.GabrielModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
-import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.messaging.MessagingModule;
 import judgels.jerahmeel.problem.ProblemResource;
 import judgels.jerahmeel.problem.ProblemTagResource;
@@ -28,6 +27,8 @@ import judgels.jerahmeel.submission.programming.StatsModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
 import judgels.jerahmeel.uriel.UrielModule;
+import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
@@ -36,11 +37,14 @@ import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
+        // Jophiel
+        JophielHibernateDaoModule.class,
+        UserAvatarModule.class,
+
         AwsModule.class,
         SubmissionModule.class,
         ItemSubmissionModule.class,
 
-        JophielModule.class,
         SandalphonModule.class,
         UrielModule.class,
         GabrielModule.class,

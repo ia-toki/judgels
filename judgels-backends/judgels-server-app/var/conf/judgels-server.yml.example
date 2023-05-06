@@ -127,9 +127,6 @@ sandalphon:
 uriel:
   baseDataDir: var/data
 
-  jophiel:
-    baseUrl: http://localhost:9101
-
   sandalphon:
     baseUrl: http://localhost:9002
     clientJid: JIDSACL-uriel-local
@@ -158,3 +155,37 @@ uriel:
   file:
     fs:
       type: local
+
+jerahmeel:
+  baseDataDir: var/data
+
+  sandalphon:
+    baseUrl: http://localhost:9002
+    clientJid: JIDSACL-jerahmeel-local
+    clientSecret: sandalphon-local
+
+  uriel:
+    baseUrl: http://localhost:9101
+
+  gabriel:
+    gradingRequestQueueName: gabriel-grading-request
+    gradingResponseQueueName: jerahmeel-grading-response
+
+  #  rabbitmq:
+  #    host: localhost
+  #    port: 5672
+  #    username: guest
+  #    password: guest
+  #    virtualHost: "/"
+
+  aws:
+    accessKey: xxx
+    secretKey: xxx
+    s3BucketRegionId: ap-southeast-1
+
+  submission:
+    fs:
+      type: local
+
+  stats:
+    enabled: false

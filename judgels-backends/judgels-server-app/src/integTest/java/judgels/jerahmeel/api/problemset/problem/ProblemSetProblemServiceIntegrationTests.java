@@ -1,7 +1,5 @@
 package judgels.jerahmeel.api.problemset.problem;
 
-import static judgels.jerahmeel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.jerahmeel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_JID;
@@ -16,36 +14,36 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
-import judgels.jerahmeel.api.AbstractTrainingServiceIntegrationTests;
+import judgels.jerahmeel.api.BaseJerahmeelServiceIntegrationTests;
 import judgels.jerahmeel.api.archive.ArchiveCreateData;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
 import judgels.jerahmeel.api.problemset.ProblemSetErrors;
 import org.junit.jupiter.api.Test;
 
-class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIntegrationTests {
+class ProblemSetProblemServiceIntegrationTests extends BaseJerahmeelServiceIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin
 
-        archiveService.createArchive(ADMIN_HEADER, new ArchiveCreateData.Builder()
+        archiveService.createArchive(adminHeader, new ArchiveCreateData.Builder()
                 .slug("archive")
                 .name("Archive")
                 .category("Category")
                 .build());
 
-        ProblemSet problemSetA = problemSetService.createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
+        ProblemSet problemSetA = problemSetService.createProblemSet(adminHeader, new ProblemSetCreateData.Builder()
                 .slug("problemset-a")
                 .name("ProblemSet A")
                 .archiveSlug("archive")
                 .build());
-        ProblemSet problemSetB = problemSetService.createProblemSet(ADMIN_HEADER, new ProblemSetCreateData.Builder()
+        ProblemSet problemSetB = problemSetService.createProblemSet(adminHeader, new ProblemSetCreateData.Builder()
                 .slug("problemset-b")
                 .name("ProblemSet B")
                 .archiveSlug("archive")
                 .build());
 
-        problemSetProblemService.setProblems(ADMIN_HEADER, problemSetA.getJid(), ImmutableList.of(
+        problemSetProblemService.setProblems(adminHeader, problemSetA.getJid(), ImmutableList.of(
                 new ProblemSetProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -56,7 +54,7 @@ class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIn
         );
 
         assertThatThrownBy(() -> problemSetProblemService
-                .setProblems(ADMIN_HEADER, problemSetA.getJid(), ImmutableList.of(
+                .setProblems(adminHeader, problemSetA.getJid(), ImmutableList.of(
                         new ProblemSetProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -67,7 +65,7 @@ class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIn
                 .hasMessageContaining(ProblemSetErrors.CONTEST_SLUGS_NOT_ALLOWED);
 
         ProblemSetProblemsResponse response =
-                problemSetProblemService.getProblems(Optional.of(ADMIN_HEADER), problemSetA.getJid());
+                problemSetProblemService.getProblems(Optional.of(adminHeader), problemSetA.getJid());
 
         assertThat(response.getData()).containsExactly(
                 new ProblemSetProblem.Builder()
@@ -79,16 +77,16 @@ class ProblemSetProblemServiceIntegrationTests extends AbstractTrainingServiceIn
                 new ProblemSetProblem.Builder().alias("B").problemJid(PROBLEM_2_JID).type(PROGRAMMING).build()
         );
 
-        response = problemSetProblemService.getProblems(Optional.of(ADMIN_HEADER), problemSetB.getJid());
+        response = problemSetProblemService.getProblems(Optional.of(adminHeader), problemSetB.getJid());
         assertThat(response.getData()).isEmpty();
 
         // as user
 
         assertThatThrownBy(() -> problemSetProblemService
-                .setProblems(USER_HEADER, problemSetA.getJid(), ImmutableList.of()))
+                .setProblems(userHeader, problemSetA.getJid(), ImmutableList.of()))
                 .hasFieldOrPropertyWithValue("code", 403);
 
-        response = problemSetProblemService.getProblems(Optional.of(USER_HEADER), problemSetA.getJid());
+        response = problemSetProblemService.getProblems(Optional.of(userHeader), problemSetA.getJid());
 
         assertThat(response.getData()).hasSize(2);
     }

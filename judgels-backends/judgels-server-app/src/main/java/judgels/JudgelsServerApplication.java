@@ -238,11 +238,14 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         }
     }
     private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        JophielConfiguration jophielConfig = config.getJophielConfig();
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
 
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
+                .userAvatarModule(new UserAvatarModule(
+                        Paths.get(jophielConfig.getBaseDataDir()),
+                        jophielConfig.getUserAvatarConfig()))
                 .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
-                .jophielModule(new judgels.jerahmeel.jophiel.JophielModule(jerahmeelConfig.getJophielConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new judgels.jerahmeel.sandalphon.SandalphonModule(jerahmeelConfig.getSandalphonConfig()))

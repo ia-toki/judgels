@@ -116,7 +116,6 @@ public abstract class BaseJudgelsServiceIntegrationTests {
 
         JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
                 .baseDataDir(baseDataDir.toString())
-                .jophielConfig(JophielClientConfiguration.DEFAULT)
                 .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
                 .urielConfig(UrielClientConfiguration.DEFAULT)
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
