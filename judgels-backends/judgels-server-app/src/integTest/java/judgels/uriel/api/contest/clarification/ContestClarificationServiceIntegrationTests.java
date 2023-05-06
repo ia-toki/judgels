@@ -6,19 +6,6 @@ import static judgels.uriel.api.contest.clarification.ContestClarificationStatus
 import static judgels.uriel.api.contest.clarification.ContestClarificationStatus.ASKED;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A_JID;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B_JID;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_JID;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
@@ -31,14 +18,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestClarificationServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestClarificationServiceIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestClarificationService clarificationService = createService(ContestClarificationService.class);
 
     private Contest contest;
@@ -58,7 +45,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
     @Test
     void create_answer_clarification() {
         ContestClarification clarification = clarificationService.createClarification(
-                CONTESTANT_A_HEADER,
+                contestantAHeader,
                 contest.getJid(),
                 new ContestClarificationData.Builder()
                         .topicJid(contest.getJid())
@@ -66,7 +53,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
                         .question("Is snack provided?")
                         .build());
 
-        assertThat(clarification.getUserJid()).isEqualTo(CONTESTANT_A_JID);
+        assertThat(clarification.getUserJid()).isEqualTo(contestantA.getJid());
         assertThat(clarification.getTopicJid()).isEqualTo(contest.getJid());
         assertThat(clarification.getTitle()).isEqualTo("Snack");
         assertThat(clarification.getQuestion()).isEqualTo("Is snack provided?");
@@ -76,7 +63,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
         assertThat(clarification.getAnsweredTime()).isEmpty();
 
         ContestClarification answeredClarification = clarificationService.answerClarification(
-                SUPERVISOR_A_HEADER,
+                supervisorAHeader,
                 contest.getJid(),
                 clarification.getJid(),
                 new ContestClarificationAnswerData.Builder()
@@ -85,11 +72,11 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         assertThat(answeredClarification.getStatus()).isEqualTo(ANSWERED);
         assertThat(answeredClarification.getAnswer()).contains("Yes!");
-        assertThat(answeredClarification.getAnswererJid()).contains(SUPERVISOR_A_JID);
+        assertThat(answeredClarification.getAnswererJid()).contains(supervisorA.getJid());
         assertThat(answeredClarification.getAnsweredTime()).isPresent();
 
         assertBadRequest(() -> clarificationService.answerClarification(
-                SUPERVISOR_A_HEADER,
+                supervisorAHeader,
                 contest.getJid(),
                 answeredClarification.getJid(),
                 new ContestClarificationAnswerData.Builder()
@@ -100,68 +87,68 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
     @Test
     void get_clarifications() {
-        ContestClarification clarification1 = createClarification(CONTESTANT_A_HEADER, PROBLEM_1_JID);
-        ContestClarification clarification2 = createAnsweredClarification(CONTESTANT_B_HEADER, contest.getJid());
+        ContestClarification clarification1 = createClarification(contestantAHeader, PROBLEM_1_JID);
+        ContestClarification clarification2 = createAnsweredClarification(contestantBHeader, contest.getJid());
 
         Map<AuthHeader, List<ContestClarification>> clarificationsMap = new LinkedHashMap<>();
-        clarificationsMap.put(ADMIN_HEADER, ImmutableList.of(clarification2, clarification1));
-        clarificationsMap.put(MANAGER_HEADER, ImmutableList.of(clarification2, clarification1));
-        clarificationsMap.put(SUPERVISOR_A_HEADER, ImmutableList.of(clarification2, clarification1));
-        clarificationsMap.put(SUPERVISOR_B_HEADER, ImmutableList.of(clarification2, clarification1));
-        clarificationsMap.put(CONTESTANT_A_HEADER, ImmutableList.of(clarification1));
-        clarificationsMap.put(CONTESTANT_B_HEADER, ImmutableList.of(clarification2));
+        clarificationsMap.put(adminHeader, ImmutableList.of(clarification2, clarification1));
+        clarificationsMap.put(managerHeader, ImmutableList.of(clarification2, clarification1));
+        clarificationsMap.put(supervisorAHeader, ImmutableList.of(clarification2, clarification1));
+        clarificationsMap.put(supervisorBHeader, ImmutableList.of(clarification2, clarification1));
+        clarificationsMap.put(contestantAHeader, ImmutableList.of(clarification1));
+        clarificationsMap.put(contestantBHeader, ImmutableList.of(clarification2));
 
         Map<AuthHeader, Boolean> canCreateMap = new LinkedHashMap<>();
-        canCreateMap.put(ADMIN_HEADER, false);
-        canCreateMap.put(MANAGER_HEADER, false);
-        canCreateMap.put(SUPERVISOR_A_HEADER, false);
-        canCreateMap.put(SUPERVISOR_B_HEADER, false);
-        canCreateMap.put(CONTESTANT_A_HEADER, true);
-        canCreateMap.put(CONTESTANT_B_HEADER, true);
+        canCreateMap.put(adminHeader, false);
+        canCreateMap.put(managerHeader, false);
+        canCreateMap.put(supervisorAHeader, false);
+        canCreateMap.put(supervisorBHeader, false);
+        canCreateMap.put(contestantAHeader, true);
+        canCreateMap.put(contestantBHeader, true);
 
         Map<AuthHeader, Boolean> canSuperviseMap = new LinkedHashMap<>();
-        canSuperviseMap.put(ADMIN_HEADER, true);
-        canSuperviseMap.put(MANAGER_HEADER, true);
-        canSuperviseMap.put(SUPERVISOR_A_HEADER, true);
-        canSuperviseMap.put(SUPERVISOR_B_HEADER, true);
-        canSuperviseMap.put(CONTESTANT_A_HEADER, false);
-        canSuperviseMap.put(CONTESTANT_B_HEADER, false);
+        canSuperviseMap.put(adminHeader, true);
+        canSuperviseMap.put(managerHeader, true);
+        canSuperviseMap.put(supervisorAHeader, true);
+        canSuperviseMap.put(supervisorBHeader, true);
+        canSuperviseMap.put(contestantAHeader, false);
+        canSuperviseMap.put(contestantBHeader, false);
 
         Map<AuthHeader, Boolean> canManageMap = new LinkedHashMap<>();
-        canManageMap.put(ADMIN_HEADER, true);
-        canManageMap.put(MANAGER_HEADER, true);
-        canManageMap.put(SUPERVISOR_A_HEADER, true);
-        canManageMap.put(SUPERVISOR_B_HEADER, false);
-        canManageMap.put(CONTESTANT_A_HEADER, false);
-        canManageMap.put(CONTESTANT_B_HEADER, false);
+        canManageMap.put(adminHeader, true);
+        canManageMap.put(managerHeader, true);
+        canManageMap.put(supervisorAHeader, true);
+        canManageMap.put(supervisorBHeader, false);
+        canManageMap.put(contestantAHeader, false);
+        canManageMap.put(contestantBHeader, false);
 
         Map<AuthHeader, List<String>> profilesKeysMap = new LinkedHashMap<>();
-        profilesKeysMap.put(ADMIN_HEADER, ImmutableList.of(CONTESTANT_A_JID, CONTESTANT_B_JID, SUPERVISOR_A_JID));
-        profilesKeysMap.put(MANAGER_HEADER, ImmutableList.of(CONTESTANT_A_JID, CONTESTANT_B_JID, SUPERVISOR_A_JID));
+        profilesKeysMap.put(adminHeader, ImmutableList.of(contestantA.getJid(), contestantB.getJid(), supervisorA.getJid()));
+        profilesKeysMap.put(managerHeader, ImmutableList.of(contestantA.getJid(), contestantB.getJid(), supervisorA.getJid()));
         profilesKeysMap.put(
-                SUPERVISOR_A_HEADER, ImmutableList.of(CONTESTANT_A_JID, CONTESTANT_B_JID, SUPERVISOR_A_JID));
+                supervisorAHeader, ImmutableList.of(contestantA.getJid(), contestantB.getJid(), supervisorA.getJid()));
         profilesKeysMap.put(
-                SUPERVISOR_B_HEADER, ImmutableList.of(CONTESTANT_A_JID, CONTESTANT_B_JID, SUPERVISOR_A_JID));
-        profilesKeysMap.put(CONTESTANT_A_HEADER, ImmutableList.of(CONTESTANT_A_JID));
-        profilesKeysMap.put(CONTESTANT_B_HEADER, ImmutableList.of(CONTESTANT_B_JID, SUPERVISOR_A_JID));
+                supervisorBHeader, ImmutableList.of(contestantA.getJid(), contestantB.getJid(), supervisorA.getJid()));
+        profilesKeysMap.put(contestantAHeader, ImmutableList.of(contestantA.getJid()));
+        profilesKeysMap.put(contestantBHeader, ImmutableList.of(contestantB.getJid(), supervisorA.getJid()));
 
         Map<AuthHeader, Map<String, String>> problemAliasesMapMap = new LinkedHashMap<>();
-        problemAliasesMapMap.put(ADMIN_HEADER, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(MANAGER_HEADER, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(SUPERVISOR_A_HEADER, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(SUPERVISOR_B_HEADER, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(CONTESTANT_A_HEADER, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
-        problemAliasesMapMap.put(CONTESTANT_B_HEADER, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
+        problemAliasesMapMap.put(adminHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
+        problemAliasesMapMap.put(managerHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
+        problemAliasesMapMap.put(supervisorAHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
+        problemAliasesMapMap.put(supervisorBHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
+        problemAliasesMapMap.put(contestantAHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
+        problemAliasesMapMap.put(contestantBHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
 
         Map<AuthHeader, Map<String, String>> problemNamesMapMap = new LinkedHashMap<>();
-        problemNamesMapMap.put(ADMIN_HEADER, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
-        problemNamesMapMap.put(MANAGER_HEADER, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
-        problemNamesMapMap.put(SUPERVISOR_A_HEADER, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
-        problemNamesMapMap.put(SUPERVISOR_B_HEADER, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
+        problemNamesMapMap.put(adminHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
+        problemNamesMapMap.put(managerHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
+        problemNamesMapMap.put(supervisorAHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
+        problemNamesMapMap.put(supervisorBHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
         problemNamesMapMap.put(
-                CONTESTANT_A_HEADER, ImmutableMap.of(PROBLEM_1_JID, "Problem 1", PROBLEM_2_JID, "Problem 2"));
+                contestantAHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1", PROBLEM_2_JID, "Problem 2"));
         problemNamesMapMap.put(
-                CONTESTANT_B_HEADER, ImmutableMap.of(PROBLEM_1_JID, "Problem 1", PROBLEM_2_JID, "Problem 2"));
+                contestantBHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1", PROBLEM_2_JID, "Problem 2"));
 
         for (AuthHeader authHeader : clarificationsMap.keySet()) {
             ContestClarificationsResponse response =
@@ -179,10 +166,10 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
     @Test
     void get_clarifications__with_status_filter() {
-        ContestClarification clarification1 = createClarification(CONTESTANT_A_HEADER, PROBLEM_1_JID);
-        ContestClarification clarification2 = createAnsweredClarification(CONTESTANT_B_HEADER, contest.getJid());
-        ContestClarification clarification3 = createClarification(CONTESTANT_A_HEADER, contest.getJid());
-        ContestClarification clarification4 = createAnsweredClarification(CONTESTANT_B_HEADER, PROBLEM_1_JID);
+        ContestClarification clarification1 = createClarification(contestantAHeader, PROBLEM_1_JID);
+        ContestClarification clarification2 = createAnsweredClarification(contestantBHeader, contest.getJid());
+        ContestClarification clarification3 = createClarification(contestantAHeader, contest.getJid());
+        ContestClarification clarification4 = createAnsweredClarification(contestantBHeader, PROBLEM_1_JID);
 
         Map<ContestClarificationStatus, List<ContestClarification>> clarificationsMap = new LinkedHashMap<>();
         clarificationsMap.put(ASKED, ImmutableList.of(clarification3, clarification1));
@@ -190,7 +177,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         for (ContestClarificationStatus status : clarificationsMap.keySet()) {
             ContestClarificationsResponse response = clarificationService
-                    .getClarifications(SUPERVISOR_A_HEADER, contest.getJid(), of(status.name()), empty(), empty());
+                    .getClarifications(supervisorAHeader, contest.getJid(), of(status.name()), empty(), empty());
 
             assertThat(response.getData().getPage()).hasSameElementsAs(clarificationsMap.get(status));
         }
@@ -210,7 +197,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
     private ContestClarification createAnsweredClarification(AuthHeader authHeader, String topicJid) {
         ContestClarification clarification = createClarification(authHeader, topicJid);
         return clarificationService.answerClarification(
-                SUPERVISOR_A_HEADER,
+                supervisorAHeader,
                 contest.getJid(),
                 clarification.getJid(),
                 new ContestClarificationAnswerData.Builder()

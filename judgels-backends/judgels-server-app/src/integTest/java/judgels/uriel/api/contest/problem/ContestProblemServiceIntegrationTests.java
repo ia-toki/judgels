@@ -4,14 +4,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
@@ -40,7 +32,7 @@ import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet;
@@ -48,7 +40,7 @@ import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationTests {
     private Contest contest;
 
     @BeforeEach
@@ -63,14 +55,14 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
     @Test
     void set_get_problems() {
-        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+        problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
                         .status(OPEN)
                         .build()));
 
-        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+        problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -91,12 +83,12 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .build()));
 
         Map<Optional<AuthHeader>, Boolean> canManageMap = new LinkedHashMap<>();
-        canManageMap.put(of(ADMIN_HEADER), true);
-        canManageMap.put(of(MANAGER_HEADER), true);
-        canManageMap.put(of(SUPERVISOR_A_HEADER), true);
-        canManageMap.put(of(SUPERVISOR_B_HEADER), false);
-        canManageMap.put(of(CONTESTANT_HEADER), false);
-        canManageMap.put(of(USER_HEADER), false);
+        canManageMap.put(of(adminHeader), true);
+        canManageMap.put(of(managerHeader), true);
+        canManageMap.put(of(supervisorAHeader), true);
+        canManageMap.put(of(supervisorBHeader), false);
+        canManageMap.put(of(contestantHeader), false);
+        canManageMap.put(of(userHeader), false);
         canManageMap.put(empty(), false);
 
         for (Optional<AuthHeader> authHeader : canManageMap.keySet()) {
@@ -141,14 +133,14 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .points(11)
                         .build());
 
-        assertThatThrownBy(() -> problemService.setProblems(MANAGER_HEADER, contest.getJid(), data))
+        assertThatThrownBy(() -> problemService.setProblems(managerHeader, contest.getJid(), data))
                 .hasFieldOrPropertyWithValue("code", 403)
                 .hasMessageContaining(ContestErrors.PROBLEM_SLUGS_NOT_ALLOWED);
     }
 
     @Test
     void get_programming_problem_worksheet() {
-        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+        problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -158,7 +150,7 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .build()));
 
         ContestProblemWorksheet worksheet = problemService.getProgrammingProblemWorksheet(
-                of(CONTESTANT_HEADER),
+                of(contestantHeader),
                 contest.getJid(),
                 "A",
                 Optional.empty());
@@ -195,7 +187,7 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
     @Test
     void get_bundle_problem_worksheet() {
-        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+        problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("D")
                         .slug(PROBLEM_3_SLUG)
@@ -204,7 +196,7 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
         judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet worksheet =
                 problemService.getBundleProblemWorksheet(
-                        of(CONTESTANT_HEADER),
+                        of(contestantHeader),
                         contest.getJid(),
                         "D",
                         Optional.empty());

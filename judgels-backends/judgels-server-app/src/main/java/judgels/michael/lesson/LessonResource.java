@@ -6,7 +6,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -47,7 +46,7 @@ public class LessonResource extends BaseLessonResource {
 
         Page<Lesson> lessons = lessonStore.getPageOfLessons(pageIndex, "updatedAt", "desc", filterString, actor.getUserJid(), isAdmin);
         Set<String> userJids = lessons.getPage().stream().map(Lesson::getAuthorJid).collect(toSet());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         HtmlTemplate template = newLessonsTemplate(actor);
         template.setTitle("Lessons");
@@ -109,7 +108,7 @@ public class LessonResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.findLessonById(lessonId));
         checkAllowed(roleChecker.canView(actor, lesson));
 
-        Profile profile = profileStore.getProfile(Instant.now(), lesson.getAuthorJid());
+        Profile profile = profileStore.getProfile(lesson.getAuthorJid());
 
         HtmlTemplate template = newLessonGeneralTemplate(actor, lesson);
         template.setActiveSecondaryTab("view");

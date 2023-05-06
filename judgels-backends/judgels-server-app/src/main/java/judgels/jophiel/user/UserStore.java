@@ -137,10 +137,13 @@ public class UserStore {
         });
     }
 
+    public Optional<String> translateUsernameToJid(String username) {
+        return userDao.selectByUsername(username).map(m -> m.jid);
+    }
+
     public Map<String, String> translateUsernamesToJids(Set<String> usernames) {
         return userDao.selectAllByUsernames(usernames).stream()
-                .map(UserStore::fromModel)
-                .collect(Collectors.toMap(User::getUsername, User::getJid));
+                .collect(Collectors.toMap(m -> m.username, m -> m.jid));
     }
 
     private static User fromModel(UserModel model) {

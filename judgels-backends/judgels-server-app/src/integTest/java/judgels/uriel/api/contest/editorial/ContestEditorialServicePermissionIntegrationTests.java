@@ -4,7 +4,7 @@ import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.module.ContestModuleType.EDITORIAL;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.EditorialModuleConfig;
@@ -12,7 +12,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestEditorialServicePermissionIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestEditorialServicePermissionIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestEditorialService editorialService = createService(ContestEditorialService.class);
 
     private Contest contest;

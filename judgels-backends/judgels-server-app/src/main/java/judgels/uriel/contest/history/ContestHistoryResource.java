@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
-import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.user.UserClient;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestInfo;
@@ -21,22 +20,19 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 
 public class ContestHistoryResource implements ContestHistoryService {
-    private final UserClient userClient;
-    private final UserRatingService userRatingService;
     private final ContestStore contestStore;
     private final ContestContestantStore contestantStore;
+    private final UserClient userClient;
 
     @Inject
     public ContestHistoryResource(
-            UserClient userClient,
-            UserRatingService userRatingService,
             ContestStore contestStore,
-            ContestContestantStore contestantStore) {
+            ContestContestantStore contestantStore,
+            UserClient userClient) {
 
-        this.userClient = userClient;
-        this.userRatingService = userRatingService;
         this.contestStore = contestStore;
         this.contestantStore = contestantStore;
+        this.userClient = userClient;
     }
 
     @Override
@@ -45,7 +41,7 @@ public class ContestHistoryResource implements ContestHistoryService {
         String userJid = checkFound(userClient.translateUsernameToJid(username));
 
         List<Contest> contests = contestStore.getPubliclyParticipatedContests(userJid);
-        Map<String, UserRating> ratingsMap = userRatingService.getRatingHistory(userJid)
+        Map<String, UserRating> ratingsMap = userClient.getUserRatingEvents(userJid)
                 .stream()
                 .collect(Collectors.toMap(UserRatingEvent::getEventJid, UserRatingEvent::getRating));
         Map<String, Integer> ranksMap = contestantStore.getContestantFinalRanks(userJid);

@@ -18,8 +18,9 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
-import judgels.jophiel.api.user.rating.UserRatingService;
-import judgels.jophiel.user.UserClient;
+import judgels.jophiel.profile.ProfileStore;
+import judgels.jophiel.user.UserStore;
+import judgels.jophiel.user.rating.UserRatingStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -40,32 +41,35 @@ import judgels.uriel.contest.scoreboard.RawContestScoreboard;
 public class ContestRatingResource implements ContestRatingService {
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
-    private final UserClient userClient;
-    private final UserRatingService userRatingService;
     private final ContestStore contestStore;
     private final ContestScoreboardStore scoreboardStore;
     private final ContestScoreboardBuilder scoreboardBuilder;
     private final ContestRatingComputer ratingComputer;
+    private final UserStore userStore;
+    private final UserRatingStore userRatingStore;
+    private final ProfileStore profileStore;
 
     @Inject
     public ContestRatingResource(
             ActorChecker actorChecker,
             ContestRoleChecker contestRoleChecker,
-            UserClient userClient,
-            UserRatingService userRatingService,
             ContestStore contestStore,
             ContestScoreboardStore scoreboardStore,
             ContestScoreboardBuilder scoreboardBuilder,
-            ContestRatingComputer ratingComputer) {
+            ContestRatingComputer ratingComputer,
+            UserStore userStore,
+            UserRatingStore userRatingStore,
+            ProfileStore profileStore) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
-        this.userClient = userClient;
-        this.userRatingService = userRatingService;
         this.contestStore = contestStore;
         this.scoreboardStore = scoreboardStore;
         this.scoreboardBuilder = scoreboardBuilder;
         this.ratingComputer = ratingComputer;
+        this.userStore = userStore;
+        this.userRatingStore = userRatingStore;
+        this.profileStore = profileStore;
     }
 
     @Override
@@ -74,7 +78,7 @@ public class ContestRatingResource implements ContestRatingService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
-        Optional<RatingEvent> latestEvent = userRatingService.getLatestRatingEvent();
+        Optional<RatingEvent> latestEvent = userRatingStore.getLatestRatingEvent();
         Instant latestTime = latestEvent.isPresent() ? latestEvent.get().getTime() : Instant.MIN;
 
         List<Contest> contests = contestStore.getPublicContestsAfter(latestTime);
@@ -90,9 +94,9 @@ public class ContestRatingResource implements ContestRatingService {
     @Override
     @UnitOfWork(readOnly = true)
     public ContestRatingHistoryResponse getRatingHistory(String username) {
-        String userJid = checkFound(userClient.translateUsernameToJid(username));
+        String userJid = checkFound(userStore.translateUsernameToJid(username));
 
-        List<UserRatingEvent> userRatingEvents = userRatingService.getRatingHistory(userJid);
+        List<UserRatingEvent> userRatingEvents = userRatingStore.getUserRatingEvents(userJid);
 
         Set<String> contestJids = userRatingEvents.stream()
                 .map(UserRatingEvent::getEventJid)
@@ -125,7 +129,7 @@ public class ContestRatingResource implements ContestRatingService {
                 .filter(ScoreboardEntry::hasSubmission)
                 .collect(Collectors.toMap(ScoreboardEntry::getContestantJid, ScoreboardEntry::getRank));
 
-        Map<String, Profile> profilesMap = userClient.getProfiles(ranksMap.keySet(), contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(ranksMap.keySet(), contest.getBeginTime());
 
         Map<String, Integer> publicRatingsMap = Maps.newHashMap();
         Map<String, Integer> hiddenRatingsMap = Maps.newHashMap();

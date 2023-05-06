@@ -3,7 +3,7 @@ package judgels.jophiel.user.account;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import judgels.jophiel.AbstractIntegrationTests;
+import judgels.jophiel.BaseJophielIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.persistence.TestClock;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserResetPasswordModel.class})
-public class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
+public class UserResetPasswordStoreIntegrationTests extends BaseJophielIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private TestClock clock;

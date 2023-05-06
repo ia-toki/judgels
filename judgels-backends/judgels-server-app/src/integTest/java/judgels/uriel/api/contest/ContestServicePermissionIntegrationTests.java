@@ -5,62 +5,58 @@ import static java.util.Optional.of;
 import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 
 import java.util.Optional;
 import judgels.service.api.actor.AuthHeader;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
-class ContestServicePermissionIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestServicePermissionIntegrationTests extends BaseUrielServiceIntegrationTests {
     private Contest contest;
 
     @Test
     void create_contest() {
-        assertPermitted(createContest(ADMIN_HEADER));
-        assertForbidden(createContest(USER_HEADER));
+        assertPermitted(createContest(adminHeader));
+        assertForbidden(createContest(userHeader));
     }
 
     @Test
     void get_contest() {
         contest = createContestWithRoles();
 
-        assertPermitted(getContest(of(ADMIN_HEADER)));
-        assertPermitted(getContest(of(MANAGER_HEADER)));
-        assertPermitted(getContest(of(SUPERVISOR_HEADER)));
-        assertPermitted(getContest(of(CONTESTANT_HEADER)));
-        assertForbidden(getContest(of(USER_HEADER)));
+        assertPermitted(getContest(of(adminHeader)));
+        assertPermitted(getContest(of(managerHeader)));
+        assertPermitted(getContest(of(supervisorHeader)));
+        assertPermitted(getContest(of(contestantHeader)));
+        assertForbidden(getContest(of(userHeader)));
         assertForbidden(getContest(empty()));
 
         enableModule(contest, REGISTRATION);
 
-        assertPermitted(getContest(of(ADMIN_HEADER)));
-        assertPermitted(getContest(of(MANAGER_HEADER)));
-        assertPermitted(getContest(of(SUPERVISOR_HEADER)));
-        assertPermitted(getContest(of(CONTESTANT_HEADER)));
-        assertPermitted(getContest(of(USER_HEADER)));
+        assertPermitted(getContest(of(adminHeader)));
+        assertPermitted(getContest(of(managerHeader)));
+        assertPermitted(getContest(of(supervisorHeader)));
+        assertPermitted(getContest(of(contestantHeader)));
+        assertPermitted(getContest(of(userHeader)));
         assertPermitted(getContest(empty()));
 
         enableModule(contest, HIDDEN);
 
-        assertPermitted(getContest(of(ADMIN_HEADER)));
-        assertPermitted(getContest(of(MANAGER_HEADER)));
-        assertForbidden(getContest(of(SUPERVISOR_HEADER)));
-        assertForbidden(getContest(of(CONTESTANT_HEADER)));
-        assertForbidden(getContest(of(USER_HEADER)));
+        assertPermitted(getContest(of(adminHeader)));
+        assertPermitted(getContest(of(managerHeader)));
+        assertForbidden(getContest(of(supervisorHeader)));
+        assertForbidden(getContest(of(contestantHeader)));
+        assertForbidden(getContest(of(userHeader)));
         assertForbidden(getContest(empty()));
 
         contest = createContest();
 
-        assertPermitted(getContest(of(ADMIN_HEADER)));
-        assertForbidden(getContest(of(MANAGER_HEADER)));
-        assertForbidden(getContest(of(SUPERVISOR_HEADER)));
-        assertForbidden(getContest(of(CONTESTANT_HEADER)));
-        assertForbidden(getContest(of(USER_HEADER)));
+        assertPermitted(getContest(of(adminHeader)));
+        assertForbidden(getContest(of(managerHeader)));
+        assertForbidden(getContest(of(supervisorHeader)));
+        assertForbidden(getContest(of(contestantHeader)));
+        assertForbidden(getContest(of(userHeader)));
         assertForbidden(getContest(empty()));
     }
 
@@ -68,40 +64,40 @@ class ContestServicePermissionIntegrationTests extends AbstractContestServiceInt
     void update_contest() {
         contest = createContestWithRoles();
 
-        assertPermitted(updateContest(ADMIN_HEADER));
-        assertPermitted(updateContest(MANAGER_HEADER));
-        assertForbidden(updateContest(SUPERVISOR_HEADER));
-        assertForbidden(updateContest(CONTESTANT_HEADER));
-        assertForbidden(updateContest(USER_HEADER));
+        assertPermitted(updateContest(adminHeader));
+        assertPermitted(updateContest(managerHeader));
+        assertForbidden(updateContest(supervisorHeader));
+        assertForbidden(updateContest(contestantHeader));
+        assertForbidden(updateContest(userHeader));
 
         contest = createContest();
 
-        assertPermitted(updateContest(ADMIN_HEADER));
-        assertForbidden(updateContest(MANAGER_HEADER));
-        assertForbidden(updateContest(SUPERVISOR_HEADER));
-        assertForbidden(updateContest(CONTESTANT_HEADER));
-        assertForbidden(updateContest(USER_HEADER));
+        assertPermitted(updateContest(adminHeader));
+        assertForbidden(updateContest(managerHeader));
+        assertForbidden(updateContest(supervisorHeader));
+        assertForbidden(updateContest(contestantHeader));
+        assertForbidden(updateContest(userHeader));
     }
 
     @Test
     void start_virtual_contest() {
         contest = createContestWithRoles();
 
-        assertForbidden(startVirtualContest(ADMIN_HEADER));
-        assertForbidden(startVirtualContest(MANAGER_HEADER));
-        assertForbidden(startVirtualContest(SUPERVISOR_HEADER));
-        assertForbidden(startVirtualContest(CONTESTANT_HEADER));
-        assertForbidden(startVirtualContest(USER_HEADER));
+        assertForbidden(startVirtualContest(adminHeader));
+        assertForbidden(startVirtualContest(managerHeader));
+        assertForbidden(startVirtualContest(supervisorHeader));
+        assertForbidden(startVirtualContest(contestantHeader));
+        assertForbidden(startVirtualContest(userHeader));
 
         enableModule(contest, VIRTUAL);
-        assertForbidden(startVirtualContest(CONTESTANT_HEADER));
+        assertForbidden(startVirtualContest(contestantHeader));
 
         endContest(contest);
-        assertForbidden(startVirtualContest(CONTESTANT_HEADER));
+        assertForbidden(startVirtualContest(contestantHeader));
 
         beginContest(contest);
-        assertPermitted(startVirtualContest(CONTESTANT_HEADER));
-        assertForbidden(startVirtualContest(CONTESTANT_HEADER));
+        assertPermitted(startVirtualContest(contestantHeader));
+        assertForbidden(startVirtualContest(contestantHeader));
     }
 
     private ThrowingCallable createContest(AuthHeader authHeader) {

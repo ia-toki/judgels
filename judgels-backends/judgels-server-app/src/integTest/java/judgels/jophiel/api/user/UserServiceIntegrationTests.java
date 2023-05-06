@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.Map;
-import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionService;
@@ -18,7 +18,7 @@ import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 
-class UserServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
+class UserServiceIntegrationTests extends BaseJophielServiceIntegrationTests {
     private final UserService userService = createService(UserService.class);
     private final UserInfoService userInfoService = createService(UserInfoService.class);
     private final UserSearchService userSearchService = createService(UserSearchService.class);

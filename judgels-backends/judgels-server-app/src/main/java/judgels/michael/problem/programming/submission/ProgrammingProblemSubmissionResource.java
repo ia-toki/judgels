@@ -7,7 +7,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,7 +64,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
 
         Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), Optional.of(pageIndex));
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, String> gradingLanguageNamesMap = GradingLanguageRegistry.getInstance().getLanguages();
 
         boolean canEdit = roleChecker.canEdit(actor, problem);
@@ -145,7 +144,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
 
         String gradingLanguageName = GradingLanguageRegistry.getInstance().get(submission.getGradingLanguage()).getName();
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
-        Profile profile = profileStore.getProfile(Instant.now(), submission.getUserJid());
+        Profile profile = profileStore.getProfile(submission.getUserJid());
 
         GradingResultDetails details = null;
         if (submission.getLatestGrading().isPresent() && submission.getLatestGrading().get().getDetails().isPresent()) {

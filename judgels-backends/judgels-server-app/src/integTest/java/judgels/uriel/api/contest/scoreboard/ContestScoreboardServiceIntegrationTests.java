@@ -8,14 +8,6 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
@@ -29,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.problem.ContestProblemData;
@@ -37,7 +29,7 @@ import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestScoreboardServiceIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestScoreboardService scoreboardService = createService(ContestScoreboardService.class);
 
     private Contest contest;
@@ -59,12 +51,12 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
         refreshUntilScoreboardPresent(ContestScoreboardType.OFFICIAL);
 
         Map<Optional<AuthHeader>, Boolean> canRefreshMap = new LinkedHashMap<>();
-        canRefreshMap.put(of(ADMIN_HEADER), true);
-        canRefreshMap.put(of(MANAGER_HEADER), true);
-        canRefreshMap.put(of(SUPERVISOR_A_HEADER), true);
-        canRefreshMap.put(of(SUPERVISOR_B_HEADER), false);
-        canRefreshMap.put(of(CONTESTANT_HEADER), false);
-        canRefreshMap.put(of(USER_HEADER), false);
+        canRefreshMap.put(of(adminHeader), true);
+        canRefreshMap.put(of(managerHeader), true);
+        canRefreshMap.put(of(supervisorAHeader), true);
+        canRefreshMap.put(of(supervisorBHeader), false);
+        canRefreshMap.put(of(contestantHeader), false);
+        canRefreshMap.put(of(userHeader), false);
         canRefreshMap.put(empty(), false);
 
         for (Optional<AuthHeader> authHeader : canRefreshMap.keySet()) {
@@ -87,21 +79,21 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
         refreshUntilScoreboardPresent(FROZEN);
 
         Map<Optional<AuthHeader>, Boolean> canRefreshMap = new LinkedHashMap<>();
-        canRefreshMap.put(of(ADMIN_HEADER), true);
-        canRefreshMap.put(of(MANAGER_HEADER), true);
-        canRefreshMap.put(of(SUPERVISOR_A_HEADER), true);
-        canRefreshMap.put(of(SUPERVISOR_B_HEADER), false);
-        canRefreshMap.put(of(CONTESTANT_HEADER), false);
-        canRefreshMap.put(of(USER_HEADER), false);
+        canRefreshMap.put(of(adminHeader), true);
+        canRefreshMap.put(of(managerHeader), true);
+        canRefreshMap.put(of(supervisorAHeader), true);
+        canRefreshMap.put(of(supervisorBHeader), false);
+        canRefreshMap.put(of(contestantHeader), false);
+        canRefreshMap.put(of(userHeader), false);
         canRefreshMap.put(empty(), false);
 
         Map<Optional<AuthHeader>, Boolean> canViewOfficialAndFrozenMap = new LinkedHashMap<>();
-        canViewOfficialAndFrozenMap.put(of(ADMIN_HEADER), true);
-        canViewOfficialAndFrozenMap.put(of(MANAGER_HEADER), true);
-        canViewOfficialAndFrozenMap.put(of(SUPERVISOR_A_HEADER), true);
-        canViewOfficialAndFrozenMap.put(of(SUPERVISOR_B_HEADER), true);
-        canViewOfficialAndFrozenMap.put(of(CONTESTANT_HEADER), false);
-        canViewOfficialAndFrozenMap.put(of(USER_HEADER), false);
+        canViewOfficialAndFrozenMap.put(of(adminHeader), true);
+        canViewOfficialAndFrozenMap.put(of(managerHeader), true);
+        canViewOfficialAndFrozenMap.put(of(supervisorAHeader), true);
+        canViewOfficialAndFrozenMap.put(of(supervisorBHeader), true);
+        canViewOfficialAndFrozenMap.put(of(contestantHeader), false);
+        canViewOfficialAndFrozenMap.put(of(userHeader), false);
         canViewOfficialAndFrozenMap.put(empty(), false);
 
         for (Optional<AuthHeader> authHeader : canRefreshMap.keySet()) {
@@ -118,7 +110,7 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
 
     @Test
     void get_scoreboard__closed_problems() {
-        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+        problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -133,22 +125,22 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
         refreshUntilScoreboardPresent(OFFICIAL);
 
         ContestScoreboardResponse response =
-                scoreboardService.getScoreboard(of(SUPERVISOR_A_HEADER), contest.getJid(), false, false, empty()).get();
+                scoreboardService.getScoreboard(of(supervisorAHeader), contest.getJid(), false, false, empty()).get();
 
         assertThat(response.getData().getScoreboard().getState().getProblemJids())
                 .containsExactly(PROBLEM_1_JID);
 
         response =
-                scoreboardService.getScoreboard(of(SUPERVISOR_A_HEADER), contest.getJid(), false, true, empty()).get();
+                scoreboardService.getScoreboard(of(supervisorAHeader), contest.getJid(), false, true, empty()).get();
 
         assertThat(response.getData().getScoreboard().getState().getProblemJids())
                 .containsExactly(PROBLEM_1_JID, PROBLEM_2_JID);
     }
 
     private void refreshUntilScoreboardPresent(ContestScoreboardType type) {
-        scoreboardService.refreshScoreboard(MANAGER_HEADER, contest.getJid());
+        scoreboardService.refreshScoreboard(managerHeader, contest.getJid());
         await().atMost(1, TimeUnit.SECONDS).pollInterval(300, TimeUnit.MILLISECONDS).until(() ->
-                scoreboardService.getScoreboard(of(CONTESTANT_HEADER), contest.getJid(), true, false, empty())
+                scoreboardService.getScoreboard(of(contestantHeader), contest.getJid(), true, false, empty())
                         .get().getData().getType() == type);
     }
 }

@@ -29,7 +29,7 @@ public class ProfileResource implements ProfileService {
     @Override
     @UnitOfWork(readOnly = true)
     public Map<String, Profile> getProfiles(Set<String> userJids, Optional<Long> time) {
-        return profileStore.getProfiles(time.map(Instant::ofEpochMilli).orElse(clock.instant()), userJids);
+        return profileStore.getProfiles(userJids, time.map(Instant::ofEpochMilli).orElse(clock.instant()));
     }
 
     @Override

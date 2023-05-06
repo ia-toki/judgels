@@ -6,13 +6,13 @@ import dagger.Provides;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.inject.Singleton;
-import judgels.jophiel.api.user.me.MyUserService;
+import judgels.jophiel.api.session.Session;
+import judgels.jophiel.session.SessionStore;
 import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
-import judgels.service.actor.CachingActorExtractor;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestProgrammingGradingDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
@@ -33,8 +33,9 @@ public class UrielModule {
 
     @Provides
     @Singleton
-    static ActorChecker actorChecker(MyUserService myUserService) {
-        return new ActorChecker(new CachingActorExtractor(myUserService));
+    static ActorChecker actorChecker(SessionStore sessionStore) {
+        return new ActorChecker(authHeader ->
+                sessionStore.getSessionByToken(authHeader.getBearerToken()).map(Session::getUserJid));
     }
 
     @Provides

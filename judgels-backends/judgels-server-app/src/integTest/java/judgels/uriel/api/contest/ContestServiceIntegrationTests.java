@@ -5,17 +5,6 @@ import static java.util.Optional.of;
 import static judgels.uriel.api.contest.ContestErrors.SLUG_ALREADY_EXISTS;
 import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
@@ -28,19 +17,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.service.api.actor.AuthHeader;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.role.ContestRole;
 import org.junit.jupiter.api.Test;
 
-class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestServiceIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestService contestService = createService(ContestService.class);
 
     @Test
     void create_update_get_contest() {
-        assertNotFound(() -> contestService.getContest(of(ADMIN_HEADER), "bogus"));
-        assertNotFound(() -> contestService.getContestBySlug(of(ADMIN_HEADER), "bogus"));
-        assertNotFound(() -> contestService.getContestDescription(of(ADMIN_HEADER), "bogus"));
+        assertNotFound(() -> contestService.getContest(of(adminHeader), "bogus"));
+        assertNotFound(() -> contestService.getContestBySlug(of(adminHeader), "bogus"));
+        assertNotFound(() -> contestService.getContestDescription(of(adminHeader), "bogus"));
 
-        Contest contest = contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
+        Contest contest = contestService.createContest(adminHeader, new ContestCreateData.Builder()
                 .slug("contest")
                 .build());
 
@@ -48,10 +38,10 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         assertThat(contest.getName()).isEqualTo("contest");
         assertThat(contest.getStyle()).isEqualTo(ContestStyle.ICPC);
         assertThat(contest.getBeginTime()).isAfter(Instant.now());
-        assertThat(contestService.getContest(of(ADMIN_HEADER), contest.getJid())).isEqualTo(contest);
-        assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), contest.getSlug())).isEqualTo(contest);
+        assertThat(contestService.getContest(of(adminHeader), contest.getJid())).isEqualTo(contest);
+        assertThat(contestService.getContestBySlug(of(adminHeader), contest.getSlug())).isEqualTo(contest);
 
-        contest = contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+        contest = contestService.updateContest(adminHeader, contest.getJid(), new ContestUpdateData.Builder()
                 .name("Judgels Open Contest")
                 .slug("contest-new")
                 .style(ContestStyle.IOI)
@@ -64,33 +54,33 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         assertThat(contest.getStyle()).isEqualTo(ContestStyle.IOI);
         assertThat(contest.getBeginTime()).isEqualTo(Instant.ofEpochSecond(42));
         assertThat(contest.getDuration()).isEqualTo(Duration.ofHours(5));
-        assertThat(contestService.getContest(of(ADMIN_HEADER), contest.getJid())).isEqualTo(contest);
+        assertThat(contestService.getContest(of(adminHeader), contest.getJid())).isEqualTo(contest);
     }
 
     @Test
     void update_get_contest_description() {
-        assertNotFound(() -> contestService.getContestDescription(of(ADMIN_HEADER), "bogus"));
+        assertNotFound(() -> contestService.getContestDescription(of(adminHeader), "bogus"));
 
         Contest contest = createContest();
 
-        ContestDescription description = contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid());
+        ContestDescription description = contestService.getContestDescription(of(adminHeader), contest.getJid());
         assertThat(description.getDescription()).isEmpty();
 
         description = contestService.updateContestDescription(
-                ADMIN_HEADER,
+                adminHeader,
                 contest.getJid(),
                 new ContestDescription.Builder()
                         .description("This is open contest")
                         .build());
 
         assertThat(description.getDescription()).contains("This is open contest");
-        assertThat(contestService.getContestDescription(of(ADMIN_HEADER), contest.getJid())).isEqualTo(description);
+        assertThat(contestService.getContestDescription(of(adminHeader), contest.getJid())).isEqualTo(description);
     }
 
     @Test
     void create_contest__bad_request() {
         createContest("contest");
-        assertBadRequest(() -> contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
+        assertBadRequest(() -> contestService.createContest(adminHeader, new ContestCreateData.Builder()
                 .slug("contest")
                 .build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
@@ -101,7 +91,7 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         createContest("contest-a");
         Contest contestB = createContest("contest-b");
         assertBadRequest(() ->
-                contestService.updateContest(ADMIN_HEADER, contestB.getJid(), new ContestUpdateData.Builder()
+                contestService.updateContest(adminHeader, contestB.getJid(), new ContestUpdateData.Builder()
                         .slug("contest-a")
                         .build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
@@ -140,33 +130,33 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 .build();
 
         Map<Optional<AuthHeader>, List<Contest>> contestsMap = new LinkedHashMap<>();
-        contestsMap.put(of(ADMIN_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
-        contestsMap.put(of(MANAGER_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD));
-        contestsMap.put(of(SUPERVISOR_HEADER), ImmutableList.of(contestB, contestD));
-        contestsMap.put(of(CONTESTANT_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
-        contestsMap.put(of(CONTESTANT_B_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(adminHeader), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
+        contestsMap.put(of(managerHeader), ImmutableList.of(contestA, contestB, contestC, contestD));
+        contestsMap.put(of(supervisorHeader), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(contestantAHeader), ImmutableList.of(contestA, contestB, contestD));
+        contestsMap.put(of(contestantBHeader), ImmutableList.of(contestB, contestD));
         contestsMap.put(empty(), ImmutableList.of(contestD));
 
         for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {
             ContestsResponse response = contestService.getContests(authHeader, empty(), empty());
             assertThat(response.getData().getPage()).containsExactlyElementsOf(contestsMap.get(authHeader));
-            assertThat(response.getConfig().getCanAdminister()).isEqualTo(authHeader.equals(of(ADMIN_HEADER)));
+            assertThat(response.getConfig().getCanAdminister()).isEqualTo(authHeader.equals(of(adminHeader)));
 
             ActiveContestsResponse activeResponse = contestService.getActiveContests(authHeader);
             assertThat(activeResponse.getData()).containsExactlyElementsOf(Lists.reverse(contestsMap.get(authHeader)));
         }
 
-        ContestsResponse response = contestService.getContests(of(USER_HEADER), empty(), empty());
+        ContestsResponse response = contestService.getContests(of(userHeader), empty(), empty());
         assertThat(response.getRolesMap()).isEqualTo(ImmutableMap.of(
                 contestA.getJid(), ContestRole.CONTESTANT,
                 contestB.getJid(), ContestRole.SUPERVISOR,
                 contestC.getJid(), ContestRole.MANAGER,
                 contestD.getJid(), ContestRole.NONE));
 
-        ActiveContestsResponse activeResponse = contestService.getActiveContests(of(USER_HEADER));
+        ActiveContestsResponse activeResponse = contestService.getActiveContests(of(userHeader));
         assertThat(activeResponse.getRolesMap()).isEqualTo(response.getRolesMap());
 
-        response = contestService.getContests(of(ADMIN_HEADER), empty(), empty());
+        response = contestService.getContests(of(adminHeader), empty(), empty());
         assertThat(response.getRolesMap()).isEqualTo(ImmutableMap.of(
                 contestA.getJid(), ContestRole.ADMIN,
                 contestB.getJid(), ContestRole.ADMIN,
@@ -174,7 +164,7 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 contestD.getJid(), ContestRole.ADMIN,
                 contestE.getJid(), ContestRole.ADMIN));
 
-        activeResponse = contestService.getActiveContests(of(ADMIN_HEADER));
+        activeResponse = contestService.getActiveContests(of(adminHeader));
         assertThat(activeResponse.getRolesMap()).isEqualTo(response.getRolesMap());
 
         // contests are now running, considered as active
@@ -185,11 +175,11 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         contestD = beginContest(contestD);
         contestE = beginContest(contestE);
 
-        contestsMap.put(of(ADMIN_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
-        contestsMap.put(of(MANAGER_HEADER), ImmutableList.of(contestA, contestB, contestC, contestD));
-        contestsMap.put(of(SUPERVISOR_HEADER), ImmutableList.of(contestB, contestD));
-        contestsMap.put(of(CONTESTANT_A_HEADER), ImmutableList.of(contestA, contestB, contestD));
-        contestsMap.put(of(CONTESTANT_B_HEADER), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(adminHeader), ImmutableList.of(contestA, contestB, contestC, contestD, contestE));
+        contestsMap.put(of(managerHeader), ImmutableList.of(contestA, contestB, contestC, contestD));
+        contestsMap.put(of(supervisorHeader), ImmutableList.of(contestB, contestD));
+        contestsMap.put(of(contestantAHeader), ImmutableList.of(contestA, contestB, contestD));
+        contestsMap.put(of(contestantBHeader), ImmutableList.of(contestB, contestD));
         contestsMap.put(empty(), ImmutableList.of(contestD));
 
         for (Optional<AuthHeader> authHeader : contestsMap.keySet()) {

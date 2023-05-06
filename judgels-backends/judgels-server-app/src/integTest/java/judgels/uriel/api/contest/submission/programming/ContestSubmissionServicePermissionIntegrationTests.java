@@ -6,13 +6,6 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_BEARER_TOKEN;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_BEARER_TOKEN;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_BEARER_TOKEN;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_BEARER_TOKEN;
-import static judgels.uriel.api.mocks.MockJophiel.USER_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
@@ -27,7 +20,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import judgels.service.api.JudgelsServiceException;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
@@ -40,7 +33,7 @@ import org.glassfish.jersey.media.multipart.MultiPart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestSubmissionServicePermissionIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestSubmissionServicePermissionIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final WebTarget webTarget = createWebTarget();
 
     private Contest contest;
@@ -51,7 +44,7 @@ class ContestSubmissionServicePermissionIntegrationTests extends AbstractContest
                 .modules(REGISTRATION)
                 .build();
 
-        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+        problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -74,42 +67,42 @@ class ContestSubmissionServicePermissionIntegrationTests extends AbstractContest
 
     @Test
     void create_submission() {
-        assertPermitted(submit(ADMIN_BEARER_TOKEN));
-        assertPermitted(submit(MANAGER_BEARER_TOKEN));
-        assertForbidden(submit(SUPERVISOR_BEARER_TOKEN))
+        assertPermitted(submit(adminHeader.getBearerToken()));
+        assertPermitted(submit(managerHeader.getBearerToken()));
+        assertForbidden(submit(supervisorHeader.getBearerToken()))
                 .hasMessageContaining("You are not a contestant");
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN))
+        assertForbidden(submit(contestantHeader.getBearerToken()))
                 .hasMessageContaining("Contest has not started yet.");
-        assertForbidden(submit(USER_BEARER_TOKEN))
+        assertForbidden(submit(userHeader.getBearerToken()))
                 .hasMessageContaining("You are not a contestant");
 
         beginContest(contest);
 
-        assertPermitted(submit(CONTESTANT_BEARER_TOKEN, PROBLEM_2_JID));
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN, PROBLEM_2_JID))
+        assertPermitted(submit(contestantHeader.getBearerToken(), PROBLEM_2_JID));
+        assertForbidden(submit(contestantHeader.getBearerToken(), PROBLEM_2_JID))
                 .hasMessageContaining("Submissions limit has been reached.");
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN, PROBLEM_3_JID))
+        assertForbidden(submit(contestantHeader.getBearerToken(), PROBLEM_3_JID))
                 .hasMessageContaining("Problem is closed.");
 
         enableModule(contest, PAUSE);
 
-        assertPermitted(submit(ADMIN_BEARER_TOKEN));
-        assertPermitted(submit(MANAGER_BEARER_TOKEN));
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN))
+        assertPermitted(submit(adminHeader.getBearerToken()));
+        assertPermitted(submit(managerHeader.getBearerToken()));
+        assertForbidden(submit(contestantHeader.getBearerToken()))
                 .hasMessageContaining("Contest is paused.");
 
         disableModule(contest, PAUSE);
 
         endContest(contest);
 
-        assertForbidden(submit(ADMIN_BEARER_TOKEN))
+        assertForbidden(submit(adminHeader.getBearerToken()))
                 .hasMessageContaining("Contest is over.");
-        assertForbidden(submit(MANAGER_BEARER_TOKEN))
+        assertForbidden(submit(managerHeader.getBearerToken()))
                 .hasMessageContaining("Contest is over.");
-        assertForbidden(submit(SUPERVISOR_BEARER_TOKEN));
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN))
+        assertForbidden(submit(supervisorHeader.getBearerToken()));
+        assertForbidden(submit(contestantHeader.getBearerToken()))
                 .hasMessageContaining("Contest is over.");
-        assertForbidden(submit(USER_BEARER_TOKEN));
+        assertForbidden(submit(userHeader.getBearerToken()));
     }
 
     @Test
@@ -118,20 +111,20 @@ class ContestSubmissionServicePermissionIntegrationTests extends AbstractContest
                 .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(2)).build())
                 .build());
 
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN))
+        assertForbidden(submit(contestantHeader.getBearerToken()))
                 .hasMessageContaining("Contest has not started yet.");
 
         beginContest(contest);
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN))
+        assertForbidden(submit(contestantHeader.getBearerToken()))
                 .hasMessageContaining("Contest has not started yet.");
 
-        contestService.startVirtualContest(CONTESTANT_HEADER, contest.getJid());
-        assertPermitted(submit(CONTESTANT_BEARER_TOKEN));
+        contestService.startVirtualContest(contestantHeader, contest.getJid());
+        assertPermitted(submit(contestantHeader.getBearerToken()));
 
         // TODO(fushar): test finishing virtual contest
 
         endContest(contest);
-        assertForbidden(submit(CONTESTANT_BEARER_TOKEN))
+        assertForbidden(submit(contestantHeader.getBearerToken()))
                 .hasMessageContaining("Contest is over.");
     }
 

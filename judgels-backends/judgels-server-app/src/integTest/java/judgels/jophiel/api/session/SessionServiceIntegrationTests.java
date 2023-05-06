@@ -2,13 +2,13 @@ package judgels.jophiel.api.session;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserService;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 
-public class SessionServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
+public class SessionServiceIntegrationTests extends BaseJophielServiceIntegrationTests {
     private final SessionService sessionService = createService(SessionService.class);
     private final UserService userService = createService(UserService.class);
 

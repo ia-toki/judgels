@@ -2,21 +2,20 @@ package judgels.uriel.api.contest.editorial;
 
 import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.module.ContestModuleType.EDITORIAL;
-import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.EditorialModuleConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ContestEditorialServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+public class ContestEditorialServiceIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestEditorialService editorialService = createService(ContestEditorialService.class);
 
     private Contest contest;
@@ -44,6 +43,6 @@ public class ContestEditorialServiceIntegrationTests extends AbstractContestServ
         assertThat(response.getProblemsMap()).containsOnlyKeys(PROBLEM_1_JID, PROBLEM_2_JID);
         assertThat(response.getProblemEditorialsMap()).containsKeys(PROBLEM_1_JID, PROBLEM_2_JID);
         assertThat(response.getProblemMetadatasMap()).containsKeys(PROBLEM_1_JID, PROBLEM_2_JID);
-        assertThat(response.getProfilesMap()).containsOnlyKeys(USER_A_JID);
+        assertThat(response.getProfilesMap()).containsOnlyKeys(userA.getJid());
     }
 }

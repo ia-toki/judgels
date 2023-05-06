@@ -13,14 +13,6 @@ import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
 import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
@@ -29,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.role.ContestRole;
@@ -37,7 +29,7 @@ import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestWebServiceIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestWebService webService = createService(ContestWebService.class);
 
     private Contest contest;
@@ -54,12 +46,12 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
     @Test
     void get_config__role() {
         Map<Optional<AuthHeader>, ContestRole> rolesMap = new LinkedHashMap<>();
-        rolesMap.put(of(ADMIN_HEADER), ContestRole.ADMIN);
-        rolesMap.put(of(MANAGER_HEADER), ContestRole.MANAGER);
-        rolesMap.put(of(SUPERVISOR_A_HEADER), ContestRole.SUPERVISOR);
-        rolesMap.put(of(SUPERVISOR_B_HEADER), ContestRole.SUPERVISOR);
-        rolesMap.put(of(CONTESTANT_HEADER), ContestRole.CONTESTANT);
-        rolesMap.put(of(USER_HEADER), ContestRole.NONE);
+        rolesMap.put(of(adminHeader), ContestRole.ADMIN);
+        rolesMap.put(of(managerHeader), ContestRole.MANAGER);
+        rolesMap.put(of(supervisorAHeader), ContestRole.SUPERVISOR);
+        rolesMap.put(of(supervisorBHeader), ContestRole.SUPERVISOR);
+        rolesMap.put(of(contestantHeader), ContestRole.CONTESTANT);
+        rolesMap.put(of(userHeader), ContestRole.NONE);
         rolesMap.put(empty(), ContestRole.NONE);
 
         for (Optional<AuthHeader> authHeader : rolesMap.keySet()) {
@@ -71,12 +63,12 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
     @Test
     void get_config__can_manage() {
         Map<Optional<AuthHeader>, Boolean> canManageMap = new LinkedHashMap<>();
-        canManageMap.put(of(ADMIN_HEADER), true);
-        canManageMap.put(of(MANAGER_HEADER), true);
-        canManageMap.put(of(SUPERVISOR_A_HEADER), false);
-        canManageMap.put(of(SUPERVISOR_B_HEADER), false);
-        canManageMap.put(of(CONTESTANT_HEADER), false);
-        canManageMap.put(of(USER_HEADER), false);
+        canManageMap.put(of(adminHeader), true);
+        canManageMap.put(of(managerHeader), true);
+        canManageMap.put(of(supervisorAHeader), false);
+        canManageMap.put(of(supervisorBHeader), false);
+        canManageMap.put(of(contestantHeader), false);
+        canManageMap.put(of(userHeader), false);
         canManageMap.put(empty(), false);
 
         for (Optional<AuthHeader> authHeader : canManageMap.keySet()) {
@@ -90,7 +82,7 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
         endContest(contest);
 
         Map<Optional<AuthHeader>, Set<ContestTab>> visibleTabsMap = new LinkedHashMap<>();
-        visibleTabsMap.put(of(ADMIN_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(adminHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 CONTESTANTS,
@@ -99,7 +91,7 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
                 SUBMISSIONS,
                 SCOREBOARD,
                 LOGS));
-        visibleTabsMap.put(of(MANAGER_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(managerHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 CONTESTANTS,
@@ -108,25 +100,25 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
                 SUBMISSIONS,
                 SCOREBOARD,
                 LOGS));
-        visibleTabsMap.put(of(SUPERVISOR_A_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(supervisorAHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 CONTESTANTS,
                 SUPERVISORS,
                 SUBMISSIONS,
                 SCOREBOARD));
-        visibleTabsMap.put(of(SUPERVISOR_B_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(supervisorBHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 CONTESTANTS,
                 SUBMISSIONS,
                 SCOREBOARD));
-        visibleTabsMap.put(of(CONTESTANT_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(contestantHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 SUBMISSIONS,
                 SCOREBOARD));
-        visibleTabsMap.put(of(USER_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(userHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 SCOREBOARD));
@@ -150,7 +142,7 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
         endContest(contest);
 
         Map<Optional<AuthHeader>, Set<ContestTab>> visibleTabsMap = new LinkedHashMap<>();
-        visibleTabsMap.put(of(ADMIN_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(adminHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 EDITORIAL,
@@ -162,7 +154,7 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
                 SCOREBOARD,
                 FILES,
                 LOGS));
-        visibleTabsMap.put(of(MANAGER_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(managerHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 EDITORIAL,
@@ -174,7 +166,7 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
                 SCOREBOARD,
                 FILES,
                 LOGS));
-        visibleTabsMap.put(of(SUPERVISOR_A_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(supervisorAHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 EDITORIAL,
@@ -184,7 +176,7 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
                 CLARIFICATIONS,
                 FILES,
                 SCOREBOARD));
-        visibleTabsMap.put(of(SUPERVISOR_B_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(supervisorBHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 EDITORIAL,
@@ -193,14 +185,14 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
                 CLARIFICATIONS,
                 FILES,
                 SCOREBOARD));
-        visibleTabsMap.put(of(CONTESTANT_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(contestantHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 EDITORIAL,
                 SUBMISSIONS,
                 CLARIFICATIONS,
                 SCOREBOARD));
-        visibleTabsMap.put(of(USER_HEADER), ImmutableSet.of(
+        visibleTabsMap.put(of(userHeader), ImmutableSet.of(
                 ANNOUNCEMENTS,
                 PROBLEMS,
                 EDITORIAL,
@@ -219,20 +211,20 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
 
     @Test
     void get_web_config__state() {
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.NOT_BEGUN);
 
         beginContest(contest);
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.STARTED);
 
         enableModule(contest, ContestModuleType.PAUSE);
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.PAUSED);
         disableModule(contest, ContestModuleType.PAUSE);
 
         endContest(contest);
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.FINISHED);
     }
 
@@ -240,19 +232,19 @@ class ContestWebServiceIntegrationTests extends AbstractContestServiceIntegratio
     void get_web_config__state__virtual() {
         enableModule(contest, ContestModuleType.VIRTUAL);
 
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.NOT_BEGUN);
 
         beginContest(contest);
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.BEGUN);
 
-        contestService.startVirtualContest(CONTESTANT_HEADER, contest.getJid());
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        contestService.startVirtualContest(contestantHeader, contest.getJid());
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.STARTED);
 
         endContest(contest);
-        assertThat(webService.getWebConfig(of(CONTESTANT_HEADER), contest.getJid()).getState())
+        assertThat(webService.getWebConfig(of(contestantHeader), contest.getJid()).getState())
                 .isEqualTo(ContestState.FINISHED);
     }
 }

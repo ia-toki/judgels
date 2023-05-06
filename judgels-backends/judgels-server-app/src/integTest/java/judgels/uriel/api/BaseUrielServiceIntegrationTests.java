@@ -1,12 +1,10 @@
-package judgels.uriel.api.contest;
+package judgels.uriel.api;
 
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR;
-import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
+import static org.hibernate.cfg.AvailableSettings.DIALECT;
+import static org.hibernate.cfg.AvailableSettings.DRIVER;
+import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
+import static org.hibernate.cfg.AvailableSettings.URL;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
@@ -20,8 +18,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.rating.UserRating;
+import judgels.jophiel.api.user.rating.UserRatingService;
+import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.AbstractServiceIntegrationTests;
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestService;
+import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.manager.ContestManagerService;
 import judgels.uriel.api.contest.module.ContestModuleService;
@@ -33,12 +40,50 @@ import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorService;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
+import org.h2.Driver;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 
-public abstract class AbstractContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private static WireMockServer mockJophiel;
+public abstract class BaseUrielServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
     private static WireMockServer mockSandalphon;
+
+    protected static final String ADMIN = "admin";
+    protected static final String MANAGER = "manager";
+    protected static final String SUPERVISOR = "supervisor";
+    protected static final String SUPERVISOR_A = "supervisorA";
+    protected static final String SUPERVISOR_B = "supervisorB";
+    protected static final String CONTESTANT = "contestant";
+    protected static final String CONTESTANT_A = "contestantA";
+    protected static final String CONTESTANT_B = "contestantB";
+    protected static final String USER = "user";
+    protected static final String USER_A = "userA";
+    protected static final String USER_B = "userB";
+
+    protected static User manager;
+    protected static User supervisor;
+    protected static User supervisorA;
+    protected static User supervisorB;
+    protected static User contestant;
+    protected static User contestantA;
+    protected static User contestantB;
+    protected static User userA;
+    protected static User userB;
+
+    protected static AuthHeader managerHeader;
+    protected static AuthHeader supervisorHeader;
+    protected static AuthHeader supervisorAHeader;
+    protected static AuthHeader supervisorBHeader;
+    protected static AuthHeader contestantHeader;
+    protected static AuthHeader contestantAHeader;
+    protected static AuthHeader contestantBHeader;
+    protected static AuthHeader userAHeader;
+    protected static AuthHeader userBHeader;
 
     protected ContestService contestService = createService(ContestService.class);
     protected ContestModuleService moduleService = createService(ContestModuleService.class);
@@ -48,27 +93,74 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     protected ContestProblemService problemService = createService(ContestProblemService.class);
 
     @BeforeAll
-    static void setUpMocks() {
-        mockJophiel = mockJophiel();
-        mockJophiel.start();
+    static void setUpUriel() {
+        manager = createUser("manager");
+        managerHeader = getHeader(manager);
+
+        supervisor = createUser("supervisor");
+        supervisorHeader = getHeader(supervisor);
+
+        supervisorA = createUser("supervisorA");
+        supervisorAHeader = getHeader(supervisorA);
+
+        supervisorB = createUser("supervisorB");
+        supervisorBHeader = getHeader(supervisorB);
+
+        contestant = createUser("contestant");
+        contestantHeader = getHeader(contestant);
+
+        contestantA = createUser("contestantA");
+        contestantAHeader = getHeader(contestantA);
+
+        contestantB = createUser("contestantB");
+        contestantBHeader = getHeader(contestantB);
+
+        userA = createUser("userA");
+        userAHeader = getHeader(userA);
+
+        userB = createUser("userB");
+        userBHeader = getHeader(userB);
+
+        createService(UserRatingService.class).updateRatings(adminHeader, new UserRatingUpdateData.Builder()
+                .time(Instant.now())
+                .eventJid("some-contest-jid")
+                .putRatingsMap(userA.getJid(), UserRating.of(2000, 2000))
+                .putRatingsMap(userB.getJid(), UserRating.of(1000, 1000))
+                .build());
+
         mockSandalphon = mockSandalphon();
         mockSandalphon.start();
     }
 
     @AfterAll
-    static void tearDownMocks() {
-        mockJophiel.shutdown();
+    static void tearDownUriel() {
         mockSandalphon.shutdown();
     }
 
+    @AfterEach
+    void afterEach() {
+        Configuration config = new Configuration();
+        config.setProperty(DIALECT, H2Dialect.class.getName());
+        config.setProperty(DRIVER, Driver.class.getName());
+        config.setProperty(URL, "jdbc:h2:mem:./judgels");
+        config.setProperty(GENERATE_STATISTICS, "false");
+
+        SessionFactory sessionFactory = config.buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction txn = session.beginTransaction();
+        session.createNativeQuery("delete from uriel_contest").executeUpdate();
+        txn.commit();
+        session.close();
+    }
+
     protected Contest createContest() {
-        return contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
+        return contestService.createContest(adminHeader, new ContestCreateData.Builder()
                 .slug(randomString())
                 .build());
     }
 
     protected Contest createContest(String slug) {
-        Contest contest = contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder()
+        Contest contest = contestService.createContest(adminHeader, new ContestCreateData.Builder()
                 .slug(slug)
                 .build());
         beginContest(contest);
@@ -76,13 +168,13 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     }
 
     protected Contest beginContest(Contest contest) {
-        return contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+        return contestService.updateContest(adminHeader, contest.getJid(), new ContestUpdateData.Builder()
                 .beginTime(Instant.now())
                 .build());
     }
 
     protected Contest endContest(Contest contest) {
-        return contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+        return contestService.updateContest(adminHeader, contest.getJid(), new ContestUpdateData.Builder()
                 .beginTime(Instant.now().minus(Duration.ofHours(3)))
                 .duration(Duration.ofHours(3).minus(Duration.ofSeconds(1)))
                 .build());
@@ -94,18 +186,18 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     }
 
     protected Contest enableModule(Contest contest, ContestModuleType type) {
-        moduleService.enableModule(ADMIN_HEADER, contest.getJid(), type);
+        moduleService.enableModule(adminHeader, contest.getJid(), type);
         return contest;
     }
 
     protected Contest enableModule(Contest contest, ContestModuleType type, ContestModulesConfig config) {
-        moduleService.enableModule(ADMIN_HEADER, contest.getJid(), type);
-        moduleService.upsertConfig(ADMIN_HEADER, contest.getJid(), config);
+        moduleService.enableModule(adminHeader, contest.getJid(), type);
+        moduleService.upsertConfig(adminHeader, contest.getJid(), config);
         return contest;
     }
 
     protected Contest disableModule(Contest contest, ContestModuleType type) {
-        moduleService.disableModule(ADMIN_HEADER, contest.getJid(), type);
+        moduleService.disableModule(adminHeader, contest.getJid(), type);
         return contest;
     }
 
@@ -198,21 +290,21 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                         .beginTime(beginTime)
                         .duration(duration)
                         .build();
-                contest = contestService.updateContest(ADMIN_HEADER, contest.getJid(), data);
+                contest = contestService.updateContest(adminHeader, contest.getJid(), data);
             }
 
-            AuthHeader managerHeader = ADMIN_HEADER;
+            AuthHeader headerForManager = adminHeader;
 
             if (!managers.isEmpty()) {
-                managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), managers);
-                managerHeader = MANAGER_HEADER;
+                managerService.upsertManagers(adminHeader, contest.getJid(), managers);
+                headerForManager = managerHeader;
             }
 
             if (!supervisors.isEmpty()) {
                 ContestSupervisorUpsertData data = new ContestSupervisorUpsertData.Builder()
                         .usernames(supervisors)
                         .build();
-                supervisorService.upsertSupervisors(managerHeader, contest.getJid(), data);
+                supervisorService.upsertSupervisors(headerForManager, contest.getJid(), data);
             }
 
             if (!supervisorsWithManagementPermissions.isEmpty()) {
@@ -221,12 +313,12 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                             .addUsernames(supervisor)
                             .addManagementPermissions(supervisorsWithManagementPermissions.get(supervisor))
                             .build();
-                    supervisorService.upsertSupervisors(managerHeader, contest.getJid(), data);
+                    supervisorService.upsertSupervisors(headerForManager, contest.getJid(), data);
                 }
             }
 
             if (!contestants.isEmpty()) {
-                contestantService.upsertContestants(managerHeader, contest.getJid(), contestants);
+                contestantService.upsertContestants(headerForManager, contest.getJid(), contestants);
             }
 
             if (!problems.isEmpty()) {
@@ -238,11 +330,11 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
                             .status(ContestProblemStatus.OPEN)
                             .build());
                 }
-                problemService.setProblems(managerHeader, contest.getJid(), data);
+                problemService.setProblems(headerForManager, contest.getJid(), data);
             }
 
             for (ContestModuleType module : modules) {
-                moduleService.enableModule(managerHeader, contest.getJid(), module);
+                moduleService.enableModule(headerForManager, contest.getJid(), module);
             }
 
             return contest;

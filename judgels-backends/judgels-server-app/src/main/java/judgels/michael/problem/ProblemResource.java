@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +65,7 @@ public class ProblemResource extends BaseProblemResource {
 
         Page<Problem> problems = searchStore.searchProblems(pageIndex, "updatedAt", "desc", filterString, tags, actor.getUserJid(), isAdmin);
         Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, Integer> tagCounts = tagStore.getTagCounts(isAdmin);
 
         HtmlTemplate template = newProblemsTemplate(actor);
@@ -147,10 +146,10 @@ public class ProblemResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.findProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
-        Profile profile = profileStore.getProfile(Instant.now(), problem.getAuthorJid());
+        Profile profile = profileStore.getProfile(problem.getAuthorJid());
 
         Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), setters.values()
+        Map<String, Profile> profilesMap = profileStore.getProfiles(setters.values()
                 .stream()
                 .flatMap(List::stream)
                 .collect(Collectors.toSet()));
@@ -176,7 +175,7 @@ public class ProblemResource extends BaseProblemResource {
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         Map<ProblemSetterRole, List<String>> setters = problemStore.findProblemSettersByProblemJid(problem.getJid());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), setters.values()
+        Map<String, Profile> profilesMap = profileStore.getProfiles(setters.values()
                 .stream()
                 .flatMap(List::stream)
                 .collect(Collectors.toSet()));

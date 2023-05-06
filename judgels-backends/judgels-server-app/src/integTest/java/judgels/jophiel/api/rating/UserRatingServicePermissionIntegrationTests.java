@@ -1,14 +1,14 @@
 package judgels.jophiel.api.rating;
 
 import java.time.Instant;
-import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.service.api.actor.AuthHeader;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
-public class UserRatingServicePermissionIntegrationTests extends BaseJudgelsServiceIntegrationTests {
+public class UserRatingServicePermissionIntegrationTests extends BaseJophielServiceIntegrationTests {
     private final UserRatingService userRatingService = createService(UserRatingService.class);
 
     @Test

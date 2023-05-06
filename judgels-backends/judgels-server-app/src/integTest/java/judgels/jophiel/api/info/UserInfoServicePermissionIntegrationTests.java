@@ -1,6 +1,6 @@
 package judgels.jophiel.api.info;
 
-import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.api.user.info.UserInfoService;
@@ -8,7 +8,7 @@ import judgels.service.api.actor.AuthHeader;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
-class UserInfoServicePermissionIntegrationTests extends BaseJudgelsServiceIntegrationTests {
+class UserInfoServicePermissionIntegrationTests extends BaseJophielServiceIntegrationTests {
     private final UserInfoService infoService = createService(UserInfoService.class);
 
     @Test

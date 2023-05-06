@@ -4,21 +4,13 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Optional;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
@@ -27,7 +19,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestProblemServicePermissionIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestProblemServicePermissionIntegrationTests extends BaseUrielServiceIntegrationTests {
     private Contest contest;
 
     @BeforeEach
@@ -41,54 +33,54 @@ class ContestProblemServicePermissionIntegrationTests extends AbstractContestSer
 
     @Test
     void set_problems() {
-        assertPermitted(setProblems(ADMIN_HEADER));
-        assertPermitted(setProblems(MANAGER_HEADER));
-        assertPermitted(setProblems(SUPERVISOR_A_HEADER));
-        assertForbidden(setProblems(SUPERVISOR_B_HEADER));
-        assertForbidden(setProblems(CONTESTANT_HEADER));
-        assertForbidden(setProblems(USER_HEADER));
+        assertPermitted(setProblems(adminHeader));
+        assertPermitted(setProblems(managerHeader));
+        assertPermitted(setProblems(supervisorAHeader));
+        assertForbidden(setProblems(supervisorBHeader));
+        assertForbidden(setProblems(contestantHeader));
+        assertForbidden(setProblems(userHeader));
     }
 
     @Test
     void get_problems() {
-        assertPermitted(getProblems(of(ADMIN_HEADER)));
-        assertPermitted(getProblems(of(MANAGER_HEADER)));
-        assertPermitted(getProblems(of(SUPERVISOR_A_HEADER)));
-        assertForbidden(getProblems(of(SUPERVISOR_B_HEADER)));
-        assertForbidden(getProblems(of(CONTESTANT_HEADER)));
-        assertForbidden(getProblems(of(USER_HEADER)));
+        assertPermitted(getProblems(of(adminHeader)));
+        assertPermitted(getProblems(of(managerHeader)));
+        assertPermitted(getProblems(of(supervisorAHeader)));
+        assertForbidden(getProblems(of(supervisorBHeader)));
+        assertForbidden(getProblems(of(contestantHeader)));
+        assertForbidden(getProblems(of(userHeader)));
         assertForbidden(getProblems(empty()));
 
         beginContest(contest);
 
-        assertPermitted(getProblems(of(ADMIN_HEADER)));
-        assertPermitted(getProblems(of(MANAGER_HEADER)));
-        assertPermitted(getProblems(of(SUPERVISOR_A_HEADER)));
-        assertPermitted(getProblems(of(SUPERVISOR_B_HEADER)));
-        assertPermitted(getProblems(of(CONTESTANT_HEADER)));
-        assertForbidden(getProblems(of(USER_HEADER)));
+        assertPermitted(getProblems(of(adminHeader)));
+        assertPermitted(getProblems(of(managerHeader)));
+        assertPermitted(getProblems(of(supervisorAHeader)));
+        assertPermitted(getProblems(of(supervisorBHeader)));
+        assertPermitted(getProblems(of(contestantHeader)));
+        assertForbidden(getProblems(of(userHeader)));
         assertForbidden(getProblems(empty()));
 
         enableModule(contest, REGISTRATION);
 
-        assertPermitted(getProblems(of(USER_HEADER)));
+        assertPermitted(getProblems(of(userHeader)));
         assertPermitted(getProblems(empty()));
 
         disableModule(contest, REGISTRATION);
 
         endContest(contest);
 
-        assertPermitted(getProblems(of(ADMIN_HEADER)));
-        assertPermitted(getProblems(of(MANAGER_HEADER)));
-        assertPermitted(getProblems(of(SUPERVISOR_A_HEADER)));
-        assertPermitted(getProblems(of(SUPERVISOR_B_HEADER)));
-        assertPermitted(getProblems(of(CONTESTANT_HEADER)));
-        assertForbidden(getProblems(of(USER_HEADER)));
+        assertPermitted(getProblems(of(adminHeader)));
+        assertPermitted(getProblems(of(managerHeader)));
+        assertPermitted(getProblems(of(supervisorAHeader)));
+        assertPermitted(getProblems(of(supervisorBHeader)));
+        assertPermitted(getProblems(of(contestantHeader)));
+        assertForbidden(getProblems(of(userHeader)));
         assertForbidden(getProblems(empty()));
 
         enableModule(contest, REGISTRATION);
 
-        assertPermitted(getProblems(of(USER_HEADER)));
+        assertPermitted(getProblems(of(userHeader)));
         assertPermitted(getProblems(empty()));
     }
 
@@ -98,19 +90,19 @@ class ContestProblemServicePermissionIntegrationTests extends AbstractContestSer
                 .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(2)).build())
                 .build());
 
-        assertForbidden(getProblems(of(CONTESTANT_HEADER)));
+        assertForbidden(getProblems(of(contestantHeader)));
 
         beginContest(contest);
-        assertForbidden(getProblems(of(CONTESTANT_HEADER)));
+        assertForbidden(getProblems(of(contestantHeader)));
 
-        contestService.startVirtualContest(CONTESTANT_HEADER, contest.getJid());
-        assertPermitted(getProblems(of(CONTESTANT_HEADER)));
+        contestService.startVirtualContest(contestantHeader, contest.getJid());
+        assertPermitted(getProblems(of(contestantHeader)));
 
-        contestService.resetVirtualContest(MANAGER_HEADER, contest.getJid());
-        assertForbidden(getProblems(of(CONTESTANT_HEADER)));
+        contestService.resetVirtualContest(managerHeader, contest.getJid());
+        assertForbidden(getProblems(of(contestantHeader)));
 
         endContest(contest);
-        assertPermitted(getProblems(of(CONTESTANT_HEADER)));
+        assertPermitted(getProblems(of(contestantHeader)));
     }
 
     private ThrowingCallable setProblems(AuthHeader authHeader) {

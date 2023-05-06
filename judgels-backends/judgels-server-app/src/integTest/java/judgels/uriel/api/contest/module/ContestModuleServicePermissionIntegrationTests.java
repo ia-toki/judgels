@@ -2,20 +2,15 @@ package judgels.uriel.api.contest.module;
 
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestModuleServicePermissionIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestModuleServicePermissionIntegrationTests extends BaseUrielServiceIntegrationTests {
     private Contest contest;
 
     @BeforeEach
@@ -25,32 +20,32 @@ class ContestModuleServicePermissionIntegrationTests extends AbstractContestServ
 
     @Test
     void enable_disable_module_upsert_config() {
-        assertPermitted(enableDisableModuleUpsertConfig(ADMIN_HEADER));
-        assertPermitted(enableDisableModuleUpsertConfig(MANAGER_HEADER));
-        assertForbidden(enableDisableModuleUpsertConfig(SUPERVISOR_HEADER));
-        assertForbidden(enableDisableModuleUpsertConfig(CONTESTANT_HEADER));
-        assertForbidden(enableDisableModuleUpsertConfig(USER_HEADER));
+        assertPermitted(enableDisableModuleUpsertConfig(adminHeader));
+        assertPermitted(enableDisableModuleUpsertConfig(managerHeader));
+        assertForbidden(enableDisableModuleUpsertConfig(supervisorHeader));
+        assertForbidden(enableDisableModuleUpsertConfig(contestantHeader));
+        assertForbidden(enableDisableModuleUpsertConfig(userHeader));
     }
 
     @Test
     void get_modules() {
-        assertPermitted(getModules(ADMIN_HEADER));
-        assertPermitted(getModules(MANAGER_HEADER));
-        assertPermitted(getModules(SUPERVISOR_HEADER));
-        assertPermitted(getModules(CONTESTANT_HEADER));
-        assertForbidden(getModules(USER_HEADER));
+        assertPermitted(getModules(adminHeader));
+        assertPermitted(getModules(managerHeader));
+        assertPermitted(getModules(supervisorHeader));
+        assertPermitted(getModules(contestantHeader));
+        assertForbidden(getModules(userHeader));
 
         enableModule(contest, REGISTRATION);
-        assertPermitted(getModules(USER_HEADER));
+        assertPermitted(getModules(userHeader));
     }
 
     @Test
     void get_config() {
-        assertPermitted(getConfig(ADMIN_HEADER));
-        assertPermitted(getConfig(MANAGER_HEADER));
-        assertPermitted(getConfig(SUPERVISOR_HEADER));
-        assertForbidden(getConfig(CONTESTANT_HEADER));
-        assertForbidden(getConfig(USER_HEADER));
+        assertPermitted(getConfig(adminHeader));
+        assertPermitted(getConfig(managerHeader));
+        assertPermitted(getConfig(supervisorHeader));
+        assertForbidden(getConfig(contestantHeader));
+        assertForbidden(getConfig(userHeader));
     }
 
     private ThrowingCallable enableDisableModuleUpsertConfig(AuthHeader authHeader) {

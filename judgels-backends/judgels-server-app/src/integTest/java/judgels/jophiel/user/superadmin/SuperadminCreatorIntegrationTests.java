@@ -3,7 +3,7 @@ package judgels.jophiel.user.superadmin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
-import judgels.jophiel.AbstractIntegrationTests;
+import judgels.jophiel.BaseJophielIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.persistence.UserModel;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserModel.class})
-public class SuperadminCreatorIntegrationTests extends AbstractIntegrationTests {
+public class SuperadminCreatorIntegrationTests extends BaseJophielIntegrationTests {
     private static final SuperadminCreatorConfiguration CONFIG = new SuperadminCreatorConfiguration.Builder()
             .initialPassword("superpass")
             .build();

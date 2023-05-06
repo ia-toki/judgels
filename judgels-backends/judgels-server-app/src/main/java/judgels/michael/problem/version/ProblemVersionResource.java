@@ -6,7 +6,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -101,7 +100,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
         List<GitCommit> versions = problemStore.getVersions(actor.getUserJid(), problem.getJid());
 
         Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(toSet());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         boolean isClean = !problemStore.userCloneExists(actor.getUserJid(), problem.getJid());
 

@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import org.junit.jupiter.api.Test;
 
-public class LegacyUserServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
+public class LegacyUserServiceIntegrationTests extends BaseJophielServiceIntegrationTests {
     private final WebTarget webTarget = createWebTarget();
 
     @Test

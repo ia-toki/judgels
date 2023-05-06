@@ -7,7 +7,7 @@ import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import org.hibernate.SessionFactory;
 
-public abstract class AbstractIntegrationTests {
+public abstract class BaseJophielIntegrationTests {
     protected static JophielIntegrationTestComponent createComponent(SessionFactory sessionFactory) {
         return createComponent(sessionFactory, new TestClock());
     }

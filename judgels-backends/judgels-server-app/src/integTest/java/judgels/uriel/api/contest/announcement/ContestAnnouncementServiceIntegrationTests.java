@@ -5,17 +5,6 @@ import static java.util.Optional.of;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.DRAFT;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.PUBLISHED;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_A;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_B;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_JID;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
@@ -24,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestAnnouncementServiceIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestAnnouncementService announcementService = createService(ContestAnnouncementService.class);
 
     private Contest contest;
@@ -49,7 +38,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
     @Test
     void create_update_announcement() {
         ContestAnnouncement announcement = announcementService.createAnnouncement(
-                SUPERVISOR_A_HEADER,
+                supervisorAHeader,
                 contest.getJid(),
                 new ContestAnnouncementData.Builder()
                         .title("this is title 1")
@@ -57,13 +46,13 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
                         .status(PUBLISHED)
                         .build());
 
-        assertThat(announcement.getUserJid()).isEqualTo(SUPERVISOR_A_JID);
+        assertThat(announcement.getUserJid()).isEqualTo(supervisorA.getJid());
         assertThat(announcement.getTitle()).isEqualTo("this is title 1");
         assertThat(announcement.getContent()).isEqualTo("this is content 1");
         assertThat(announcement.getStatus()).isEqualTo(PUBLISHED);
 
         announcement = announcementService.updateAnnouncement(
-                MANAGER_HEADER,
+                managerHeader,
                 contest.getJid(),
                 announcement.getJid(),
                 new ContestAnnouncementData.Builder()
@@ -72,7 +61,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
                         .status(DRAFT)
                         .build());
 
-        assertThat(announcement.getUserJid()).isEqualTo(SUPERVISOR_A_JID);
+        assertThat(announcement.getUserJid()).isEqualTo(supervisorA.getJid());
         assertThat(announcement.getTitle()).isEqualTo("this is new title");
         assertThat(announcement.getContent()).isEqualTo("this is new content");
         assertThat(announcement.getStatus()).isEqualTo(DRAFT);
@@ -85,37 +74,37 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
         ContestAnnouncement announcement3 = createAnnouncement(PUBLISHED);
 
         Map<Optional<AuthHeader>, List<ContestAnnouncement>> announcementsMap = new LinkedHashMap<>();
-        announcementsMap.put(of(ADMIN_HEADER), ImmutableList.of(announcement3, announcement2, announcement1));
-        announcementsMap.put(of(MANAGER_HEADER), ImmutableList.of(announcement3, announcement2, announcement1));
-        announcementsMap.put(of(SUPERVISOR_A_HEADER), ImmutableList.of(announcement3, announcement2, announcement1));
-        announcementsMap.put(of(SUPERVISOR_B_HEADER), ImmutableList.of(announcement3, announcement2, announcement1));
-        announcementsMap.put(of(CONTESTANT_HEADER), ImmutableList.of(announcement3, announcement1));
-        announcementsMap.put(of(USER_HEADER), ImmutableList.of(announcement3, announcement1));
+        announcementsMap.put(of(adminHeader), ImmutableList.of(announcement3, announcement2, announcement1));
+        announcementsMap.put(of(managerHeader), ImmutableList.of(announcement3, announcement2, announcement1));
+        announcementsMap.put(of(supervisorAHeader), ImmutableList.of(announcement3, announcement2, announcement1));
+        announcementsMap.put(of(supervisorBHeader), ImmutableList.of(announcement3, announcement2, announcement1));
+        announcementsMap.put(of(contestantHeader), ImmutableList.of(announcement3, announcement1));
+        announcementsMap.put(of(userHeader), ImmutableList.of(announcement3, announcement1));
         announcementsMap.put(empty(), ImmutableList.of(announcement3, announcement1));
 
         Map<Optional<AuthHeader>, Boolean> canSuperviseMap = new LinkedHashMap<>();
-        canSuperviseMap.put(of(ADMIN_HEADER), true);
-        canSuperviseMap.put(of(MANAGER_HEADER), true);
-        canSuperviseMap.put(of(SUPERVISOR_A_HEADER), true);
-        canSuperviseMap.put(of(SUPERVISOR_B_HEADER), true);
-        canSuperviseMap.put(of(CONTESTANT_HEADER), false);
-        canSuperviseMap.put(of(USER_HEADER), false);
+        canSuperviseMap.put(of(adminHeader), true);
+        canSuperviseMap.put(of(managerHeader), true);
+        canSuperviseMap.put(of(supervisorAHeader), true);
+        canSuperviseMap.put(of(supervisorBHeader), true);
+        canSuperviseMap.put(of(contestantHeader), false);
+        canSuperviseMap.put(of(userHeader), false);
         canSuperviseMap.put(empty(), false);
 
         Map<Optional<AuthHeader>, Boolean> canManageMap = new LinkedHashMap<>();
-        canManageMap.put(of(ADMIN_HEADER), true);
-        canManageMap.put(of(MANAGER_HEADER), true);
-        canManageMap.put(of(SUPERVISOR_A_HEADER), true);
-        canManageMap.put(of(SUPERVISOR_B_HEADER), false);
-        canManageMap.put(of(CONTESTANT_HEADER), false);
-        canManageMap.put(of(USER_HEADER), false);
+        canManageMap.put(of(adminHeader), true);
+        canManageMap.put(of(managerHeader), true);
+        canManageMap.put(of(supervisorAHeader), true);
+        canManageMap.put(of(supervisorBHeader), false);
+        canManageMap.put(of(contestantHeader), false);
+        canManageMap.put(of(userHeader), false);
         canManageMap.put(empty(), false);
 
         for (Optional<AuthHeader> authHeader : announcementsMap.keySet()) {
             ContestAnnouncementsResponse response =
                     announcementService.getAnnouncements(authHeader, contest.getJid(), empty());
             assertThat(response.getData().getPage()).containsExactlyElementsOf(announcementsMap.get(authHeader));
-            assertThat(response.getProfilesMap()).containsOnlyKeys(SUPERVISOR_A_JID);
+            assertThat(response.getProfilesMap()).containsOnlyKeys(supervisorA.getJid());
             assertThat(response.getConfig().getCanSupervise()).isEqualTo(canSuperviseMap.get(authHeader));
             assertThat(response.getConfig().getCanManage()).isEqualTo(canManageMap.get(authHeader));
         }
@@ -123,7 +112,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
 
     private ContestAnnouncement createAnnouncement(ContestAnnouncementStatus status) {
         return announcementService.createAnnouncement(
-                SUPERVISOR_A_HEADER,
+                supervisorAHeader,
                 contest.getJid(),
                 new ContestAnnouncementData.Builder()
                         .title(randomString())

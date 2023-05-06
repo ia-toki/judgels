@@ -186,12 +186,15 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     }
 
     private void runUriel(JudgelsServerApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+        JophielConfiguration jophielConfig = config.getJophielConfig();
         UrielConfiguration urielConfig = config.getUrielConfig();
 
         UrielComponent component = DaggerUrielComponent.builder()
+                .userAvatarModule(new UserAvatarModule(
+                        Paths.get(jophielConfig.getBaseDataDir()),
+                        jophielConfig.getUserAvatarConfig()))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
                 .fileModule(new FileModule(urielConfig.getFileConfig()))
-                .jophielModule(new judgels.uriel.jophiel.JophielModule(urielConfig.getJophielConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new judgels.uriel.sandalphon.SandalphonModule(urielConfig.getSandalphonConfig()))

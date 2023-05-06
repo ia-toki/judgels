@@ -3,7 +3,7 @@ package judgels.jophiel.session;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import judgels.jophiel.AbstractIntegrationTests;
+import judgels.jophiel.BaseJophielIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.persistence.TestClock;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {SessionModel.class})
-public class SessionCleanerIntegrationTests extends AbstractIntegrationTests {
+public class SessionCleanerIntegrationTests extends BaseJophielIntegrationTests {
     private TestClock clock;
     private SessionStore store;
     private SessionCleaner cleaner;

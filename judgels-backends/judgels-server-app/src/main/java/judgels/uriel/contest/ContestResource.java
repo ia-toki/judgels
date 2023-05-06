@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jophiel.user.UserClient;
+import judgels.jophiel.profile.ProfileStore;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -38,7 +38,7 @@ public class ContestResource implements ContestService {
     private final ContestLogger contestLogger;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
-    private final UserClient userClient;
+    private final ProfileStore profileStore;
 
     @Inject
     public ContestResource(
@@ -48,7 +48,7 @@ public class ContestResource implements ContestService {
             ContestLogger contestLogger,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
-            UserClient userClient) {
+            ProfileStore profileStore) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
@@ -56,7 +56,7 @@ public class ContestResource implements ContestService {
         this.contestLogger = contestLogger;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
-        this.userClient = userClient;
+        this.profileStore = profileStore;
     }
 
     @Override
@@ -190,7 +190,7 @@ public class ContestResource implements ContestService {
         String description = checkFound(contestStore.getContestDescription(contest.getJid()));
         return new ContestDescription.Builder()
                 .description(description)
-                .profilesMap(userClient.parseProfiles(description))
+                .profilesMap(profileStore.parseProfiles(description))
                 .build();
     }
 

@@ -6,7 +6,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +52,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageIndex);
 
         Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(toSet());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         boolean canEdit = roleChecker.canEdit(actor, problem);
         boolean canSubmit = !roleChecker.canSubmit(actor, problem).isPresent();
@@ -115,7 +114,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
 
         BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
         BundleAnswer answer = submissionClient.createBundleAnswerFromPastSubmission(submission.getJid());
-        Profile profile = profileStore.getProfile(Instant.now(), submission.getAuthorJid());
+        Profile profile = profileStore.getProfile(submission.getAuthorJid());
 
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
         return new ViewSubmissionView(template, submission, answer, profile);

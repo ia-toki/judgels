@@ -6,11 +6,11 @@ import com.google.common.collect.ImmutableSet;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Set;
-import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import org.junit.jupiter.api.Test;
 
-class UserSearchServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
+class UserSearchServiceIntegrationTests extends BaseJophielServiceIntegrationTests {
     private final UserSearchService searchService = createService(UserSearchService.class);
 
     @Test

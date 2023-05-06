@@ -6,7 +6,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +49,7 @@ public class LessonPartnerResource extends BaseLessonResource {
 
         List<Partner> partners = partnerStore.getPartners(lesson.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         HtmlTemplate template = newLessonPartnerTemplate(actor, lesson);
         template.setActiveSecondaryTab("view");
@@ -67,7 +66,7 @@ public class LessonPartnerResource extends BaseLessonResource {
 
         List<Partner> partners = partnerStore.getPartners(lesson.getJid());
         Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
-        Map<String, Profile> profilesMap = profileStore.getProfiles(Instant.now(), userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         EditPartnersForm form = new EditPartnersForm();
         form.csv = PartnerUtils.partnersToCsv(partners, profilesMap);

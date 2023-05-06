@@ -15,7 +15,6 @@ import io.dropwizard.testing.DropwizardTestSupport;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 import javax.ws.rs.client.WebTarget;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -23,6 +22,7 @@ import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jophiel.JophielConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.jophiel.api.session.Credentials;
+import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
@@ -54,16 +54,17 @@ public abstract class BaseJudgelsServiceIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;
     private static Path baseDataDir;
 
+    protected static User admin;
     protected static User user;
 
     protected static AuthHeader adminHeader;
     protected static AuthHeader userHeader;
 
     @BeforeAll
-    static void beforeAll() throws Exception {
+    static void startApp() throws Exception {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
-        dbConfig.setUrl("jdbc:h2:mem:./" + UUID.randomUUID());
+        dbConfig.setUrl("jdbc:h2:mem:./judgels");
         dbConfig.setProperties(ImmutableMap.<String, String>builder()
                 .put(DIALECT, H2Dialect.class.getName())
                 .put(HBM2DDL_AUTO, "create")
@@ -101,7 +102,6 @@ public abstract class BaseJudgelsServiceIntegrationTests {
 
         UrielConfiguration urielConfig = new UrielConfiguration.Builder()
                 .baseDataDir(baseDataDir.toString())
-                .jophielConfig(JophielClientConfiguration.DEFAULT)
                 .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .submissionConfig(judgels.uriel.submission.programming.SubmissionConfiguration.DEFAULT)
@@ -136,16 +136,16 @@ public abstract class BaseJudgelsServiceIntegrationTests {
         support = new DropwizardTestSupport<>(JudgelsServerApplication.class, config);
         support.before();
 
-        adminHeader = AuthHeader.of(createService(SessionService.class)
-                .logIn(Credentials.of("superadmin", "superadmin"))
-                .getToken());
+        Session adminSession = createService(SessionService.class).logIn(Credentials.of("superadmin", "superadmin"));
+        adminHeader = AuthHeader.of(adminSession.getToken());
+        admin = createService(UserService.class).getUser(adminHeader, adminSession.getUserJid());
 
         user = createUser("user");
         userHeader = getHeader(user);
     }
 
     @AfterAll
-    static void afterAll() throws IOException {
+    static void stopApp() throws IOException {
         support.after();
         MoreFiles.deleteRecursively(baseDataDir, RecursiveDeleteOption.ALLOW_INSECURE);
     }
@@ -166,8 +166,8 @@ public abstract class BaseJudgelsServiceIntegrationTests {
         assertThatCode(callable).doesNotThrowAnyException();
     }
 
-    protected static void assertBadRequest(ThrowingCallable callable) {
-        assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 400);
+    protected static AbstractThrowableAssert<?, ? extends Throwable> assertBadRequest(ThrowingCallable callable) {
+        return assertThatThrownBy(callable).hasFieldOrPropertyWithValue("code", 400);
     }
 
     protected static void assertUnauthorized(ThrowingCallable callable) {
@@ -198,5 +198,29 @@ public abstract class BaseJudgelsServiceIntegrationTests {
 
     protected static String randomString() {
         return "string" + (Math.random() * 1000000000);
+    }
+
+    protected static ThrowingCallable callAll(ThrowingCallable... callables) {
+        return () -> {
+            Throwable throwable = null;
+            int throwables = 0;
+
+            for (ThrowingCallable callable : callables) {
+                try {
+                    callable.call();
+                } catch (Throwable t) {
+                    throwables++;
+                    throwable = t;
+                }
+            }
+
+            if (throwables != 0 && throwables != callables.length) {
+                throw new IllegalStateException();
+            }
+
+            if (throwable != null) {
+                throw throwable;
+            }
+        };
     }
 }

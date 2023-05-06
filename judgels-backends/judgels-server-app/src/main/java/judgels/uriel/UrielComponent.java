@@ -3,6 +3,8 @@ package judgels.uriel;
 import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
+import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
@@ -33,19 +35,21 @@ import judgels.uriel.contest.web.ContestWebResource;
 import judgels.uriel.file.FileModule;
 import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
-import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.messaging.MessagingModule;
 import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
 @Component(modules = {
+        // Jophiel
+        JophielHibernateDaoModule.class,
+        UserAvatarModule.class,
+
         AwsModule.class,
         FileModule.class,
         SubmissionModule.class,
         ItemSubmissionModule.class,
 
-        JophielModule.class,
         SandalphonModule.class,
         GabrielModule.class,
         MessagingModule.class,

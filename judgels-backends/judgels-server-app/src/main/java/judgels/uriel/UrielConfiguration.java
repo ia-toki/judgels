@@ -6,7 +6,6 @@ import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
-import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.uriel.file.FileConfiguration;
@@ -17,9 +16,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableUrielConfiguration.class)
 public interface UrielConfiguration {
     String getBaseDataDir();
-
-    @JsonProperty("jophiel")
-    JophielClientConfiguration getJophielConfig();
 
     @JsonProperty("sandalphon")
     SandalphonClientConfiguration getSandalphonConfig();

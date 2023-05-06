@@ -4,19 +4,11 @@ import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 
 import java.time.Duration;
 import java.time.Instant;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
@@ -26,7 +18,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestClarificationServicePermissionIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestClarificationServicePermissionIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestClarificationService clarificationService = createService(ContestClarificationService.class);
 
     private Contest contest;
@@ -41,43 +33,43 @@ class ContestClarificationServicePermissionIntegrationTests extends AbstractCont
 
     @Test
     void create_clarification() {
-        contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+        contestService.updateContest(adminHeader, contest.getJid(), new ContestUpdateData.Builder()
                 .beginTime(Instant.now().minus(Duration.ofHours(3)))
                 .duration(Duration.ofHours(5))
                 .build());
 
-        assertForbidden(createClarification(ADMIN_HEADER));
-        assertForbidden(createClarification(MANAGER_HEADER));
-        assertForbidden(createClarification(SUPERVISOR_A_HEADER));
-        assertForbidden(createClarification(SUPERVISOR_B_HEADER));
-        assertForbidden(createClarification(CONTESTANT_HEADER));
-        assertForbidden(createClarification(USER_HEADER));
+        assertForbidden(createClarification(adminHeader));
+        assertForbidden(createClarification(managerHeader));
+        assertForbidden(createClarification(supervisorAHeader));
+        assertForbidden(createClarification(supervisorBHeader));
+        assertForbidden(createClarification(contestantHeader));
+        assertForbidden(createClarification(userHeader));
 
         enableModule(contest, CLARIFICATION);
 
-        assertForbidden(createClarification(ADMIN_HEADER));
-        assertForbidden(createClarification(MANAGER_HEADER));
-        assertForbidden(createClarification(SUPERVISOR_A_HEADER));
-        assertForbidden(createClarification(SUPERVISOR_B_HEADER));
-        assertPermitted(createClarification(CONTESTANT_HEADER));
-        assertForbidden(createClarification(USER_HEADER));
+        assertForbidden(createClarification(adminHeader));
+        assertForbidden(createClarification(managerHeader));
+        assertForbidden(createClarification(supervisorAHeader));
+        assertForbidden(createClarification(supervisorBHeader));
+        assertPermitted(createClarification(contestantHeader));
+        assertForbidden(createClarification(userHeader));
 
         enableModule(contest, PAUSE);
-        assertForbidden(createClarification(CONTESTANT_HEADER));
+        assertForbidden(createClarification(contestantHeader));
         disableModule(contest, PAUSE);
-        assertPermitted(createClarification(CONTESTANT_HEADER));
+        assertPermitted(createClarification(contestantHeader));
 
         enableModule(contest, CLARIFICATION_TIME_LIMIT, new ContestModulesConfig.Builder()
                 .clarificationTimeLimit(new ClarificationTimeLimitModuleConfig.Builder()
                         .clarificationDuration(Duration.ofHours(2))
                         .build())
                 .build());
-        assertForbidden(createClarification(CONTESTANT_HEADER));
+        assertForbidden(createClarification(contestantHeader));
         disableModule(contest, CLARIFICATION_TIME_LIMIT);
-        assertPermitted(createClarification(CONTESTANT_HEADER));
+        assertPermitted(createClarification(contestantHeader));
 
         endContest(contest);
-        assertForbidden(createClarification(CONTESTANT_HEADER));
+        assertForbidden(createClarification(contestantHeader));
     }
 
     @Test
@@ -85,41 +77,41 @@ class ContestClarificationServicePermissionIntegrationTests extends AbstractCont
         beginContest(contest);
         enableModule(contest, CLARIFICATION);
 
-        assertPermitted(answerClarification(ADMIN_HEADER));
-        assertPermitted(answerClarification(MANAGER_HEADER));
-        assertPermitted(answerClarification(SUPERVISOR_A_HEADER));
-        assertForbidden(answerClarification(SUPERVISOR_B_HEADER));
-        assertForbidden(answerClarification(CONTESTANT_HEADER));
-        assertForbidden(answerClarification(USER_HEADER));
+        assertPermitted(answerClarification(adminHeader));
+        assertPermitted(answerClarification(managerHeader));
+        assertPermitted(answerClarification(supervisorAHeader));
+        assertForbidden(answerClarification(supervisorBHeader));
+        assertForbidden(answerClarification(contestantHeader));
+        assertForbidden(answerClarification(userHeader));
     }
 
     @Test
     void get_clarifications() {
         beginContest(contest);
 
-        assertForbidden(getClarifications(ADMIN_HEADER));
-        assertForbidden(getClarifications(MANAGER_HEADER));
-        assertForbidden(getClarifications(SUPERVISOR_A_HEADER));
-        assertForbidden(getClarifications(SUPERVISOR_B_HEADER));
-        assertForbidden(getClarifications(CONTESTANT_HEADER));
-        assertForbidden(getClarifications(USER_HEADER));
+        assertForbidden(getClarifications(adminHeader));
+        assertForbidden(getClarifications(managerHeader));
+        assertForbidden(getClarifications(supervisorAHeader));
+        assertForbidden(getClarifications(supervisorBHeader));
+        assertForbidden(getClarifications(contestantHeader));
+        assertForbidden(getClarifications(userHeader));
 
         enableModule(contest, CLARIFICATION);
 
-        assertPermitted(getClarifications(ADMIN_HEADER));
-        assertPermitted(getClarifications(MANAGER_HEADER));
-        assertPermitted(getClarifications(SUPERVISOR_A_HEADER));
-        assertPermitted(getClarifications(SUPERVISOR_B_HEADER));
-        assertPermitted(getClarifications(CONTESTANT_HEADER));
-        assertForbidden(getClarifications(USER_HEADER));
+        assertPermitted(getClarifications(adminHeader));
+        assertPermitted(getClarifications(managerHeader));
+        assertPermitted(getClarifications(supervisorAHeader));
+        assertPermitted(getClarifications(supervisorBHeader));
+        assertPermitted(getClarifications(contestantHeader));
+        assertForbidden(getClarifications(userHeader));
 
         enableModule(contest, PAUSE);
 
-        assertPermitted(getClarifications(ADMIN_HEADER));
-        assertPermitted(getClarifications(MANAGER_HEADER));
-        assertPermitted(getClarifications(SUPERVISOR_A_HEADER));
-        assertPermitted(getClarifications(SUPERVISOR_B_HEADER));
-        assertForbidden(getClarifications(CONTESTANT_HEADER));
+        assertPermitted(getClarifications(adminHeader));
+        assertPermitted(getClarifications(managerHeader));
+        assertPermitted(getClarifications(supervisorAHeader));
+        assertPermitted(getClarifications(supervisorBHeader));
+        assertForbidden(getClarifications(contestantHeader));
     }
 
     private ThrowingCallable createClarification(AuthHeader authHeader) {
@@ -139,7 +131,7 @@ class ContestClarificationServicePermissionIntegrationTests extends AbstractCont
                     .question(randomString())
                     .build();
             ContestClarification clarification =
-                    clarificationService.createClarification(CONTESTANT_HEADER, contest.getJid(), data);
+                    clarificationService.createClarification(contestantHeader, contest.getJid(), data);
             ContestClarificationAnswerData answerData = new ContestClarificationAnswerData.Builder()
                     .answer(randomString())
                     .build();

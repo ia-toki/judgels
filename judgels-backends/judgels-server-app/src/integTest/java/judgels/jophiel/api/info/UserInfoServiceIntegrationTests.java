@@ -2,12 +2,12 @@ package judgels.jophiel.api.info;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.BaseJudgelsServiceIntegrationTests;
+import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.api.user.info.UserInfoService;
 import org.junit.jupiter.api.Test;
 
-class UserInfoServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
+class UserInfoServiceIntegrationTests extends BaseJophielServiceIntegrationTests {
     private final UserInfoService infoService = createService(UserInfoService.class);
 
     @Test

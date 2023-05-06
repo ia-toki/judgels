@@ -3,20 +3,12 @@ package judgels.uriel.api.contest.scoreboard;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 
 import java.util.Optional;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
+import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
@@ -24,7 +16,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestScoreboardServicePermissionIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestScoreboardServicePermissionIntegrationTests extends BaseUrielServiceIntegrationTests {
     private final ContestScoreboardService scoreboardService = createService(ContestScoreboardService.class);
 
     private Contest contest;
@@ -41,27 +33,27 @@ class ContestScoreboardServicePermissionIntegrationTests extends AbstractContest
 
     @Test
     void get_scoreboard() {
-        assertPermitted(getScoreboard(of(ADMIN_HEADER)));
-        assertPermitted(getScoreboard(of(MANAGER_HEADER)));
-        assertPermitted(getScoreboard(of(SUPERVISOR_A_HEADER)));
-        assertPermitted(getScoreboard(of(SUPERVISOR_B_HEADER)));
-        assertForbidden(getScoreboard(of(CONTESTANT_HEADER)));
-        assertForbidden(getScoreboard(of(USER_HEADER)));
+        assertPermitted(getScoreboard(of(adminHeader)));
+        assertPermitted(getScoreboard(of(managerHeader)));
+        assertPermitted(getScoreboard(of(supervisorAHeader)));
+        assertPermitted(getScoreboard(of(supervisorBHeader)));
+        assertForbidden(getScoreboard(of(contestantHeader)));
+        assertForbidden(getScoreboard(of(userHeader)));
         assertForbidden(getScoreboard(empty()));
 
         beginContest(contest);
 
-        assertPermitted(getScoreboard(of(ADMIN_HEADER)));
-        assertPermitted(getScoreboard(of(MANAGER_HEADER)));
-        assertPermitted(getScoreboard(of(SUPERVISOR_A_HEADER)));
-        assertPermitted(getScoreboard(of(SUPERVISOR_B_HEADER)));
-        assertPermitted(getScoreboard(of(CONTESTANT_HEADER)));
-        assertForbidden(getScoreboard(of(USER_HEADER)));
+        assertPermitted(getScoreboard(of(adminHeader)));
+        assertPermitted(getScoreboard(of(managerHeader)));
+        assertPermitted(getScoreboard(of(supervisorAHeader)));
+        assertPermitted(getScoreboard(of(supervisorBHeader)));
+        assertPermitted(getScoreboard(of(contestantHeader)));
+        assertForbidden(getScoreboard(of(userHeader)));
         assertForbidden(getScoreboard(empty()));
 
         enableModule(contest, REGISTRATION);
 
-        assertPermitted(getScoreboard(of(USER_HEADER)));
+        assertPermitted(getScoreboard(of(userHeader)));
         assertPermitted(getScoreboard(empty()));
     }
 
@@ -69,23 +61,23 @@ class ContestScoreboardServicePermissionIntegrationTests extends AbstractContest
     void get_scoreboard__show_closed_problems() {
         beginContest(contest);
 
-        assertPermitted(getScoreboardShowClosedProblems(of(ADMIN_HEADER)));
-        assertPermitted(getScoreboardShowClosedProblems(of(MANAGER_HEADER)));
-        assertPermitted(getScoreboardShowClosedProblems(of(SUPERVISOR_A_HEADER)));
-        assertPermitted(getScoreboardShowClosedProblems(of(SUPERVISOR_B_HEADER)));
-        assertForbidden(getScoreboardShowClosedProblems(of(CONTESTANT_HEADER)));
-        assertForbidden(getScoreboardShowClosedProblems(of(USER_HEADER)));
+        assertPermitted(getScoreboardShowClosedProblems(of(adminHeader)));
+        assertPermitted(getScoreboardShowClosedProblems(of(managerHeader)));
+        assertPermitted(getScoreboardShowClosedProblems(of(supervisorAHeader)));
+        assertPermitted(getScoreboardShowClosedProblems(of(supervisorBHeader)));
+        assertForbidden(getScoreboardShowClosedProblems(of(contestantHeader)));
+        assertForbidden(getScoreboardShowClosedProblems(of(userHeader)));
         assertForbidden(getScoreboardShowClosedProblems(empty()));
     }
 
     @Test
     void refresh_scoreboard() {
-        assertPermitted(refreshScoreboard(ADMIN_HEADER));
-        assertPermitted(refreshScoreboard(MANAGER_HEADER));
-        assertPermitted(refreshScoreboard(SUPERVISOR_A_HEADER));
-        assertForbidden(refreshScoreboard(SUPERVISOR_B_HEADER));
-        assertForbidden(refreshScoreboard(CONTESTANT_HEADER));
-        assertForbidden(refreshScoreboard(USER_HEADER));
+        assertPermitted(refreshScoreboard(adminHeader));
+        assertPermitted(refreshScoreboard(managerHeader));
+        assertPermitted(refreshScoreboard(supervisorAHeader));
+        assertForbidden(refreshScoreboard(supervisorBHeader));
+        assertForbidden(refreshScoreboard(contestantHeader));
+        assertForbidden(refreshScoreboard(userHeader));
     }
 
     private ThrowingCallable getScoreboard(Optional<AuthHeader> authHeader) {
