@@ -35,31 +35,31 @@ import judgels.uriel.contest.module.ContestModuleStore;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
-    private final ContestStore contestStore;
+    private final ContestProblemRoleChecker roleChecker;
     private final ContestLogger contestLogger;
-    private final ContestModuleStore moduleStore;
-    private final ContestProblemRoleChecker problemRoleChecker;
+    private final ContestStore contestStore;
     private final ContestProblemStore problemStore;
+    private final ContestModuleStore moduleStore;
     private final SubmissionStore submissionStore;
     private final ProblemClient problemClient;
 
     @Inject
     public ContestProblemResource(
             ActorChecker actorChecker,
-            ContestStore contestStore,
+            ContestProblemRoleChecker roleChecker,
             ContestLogger contestLogger,
-            ContestModuleStore moduleStore,
-            ContestProblemRoleChecker problemRoleChecker,
+            ContestStore contestStore,
             ContestProblemStore problemStore,
+            ContestModuleStore moduleStore,
             SubmissionStore submissionStore,
             ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
-        this.contestStore = contestStore;
+        this.roleChecker = roleChecker;
         this.contestLogger = contestLogger;
-        this.moduleStore = moduleStore;
-        this.problemRoleChecker = problemRoleChecker;
+        this.contestStore = contestStore;
         this.problemStore = problemStore;
+        this.moduleStore = moduleStore;
         this.submissionStore = submissionStore;
         this.problemClient = problemClient;
     }
@@ -73,7 +73,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canManage(actorJid, contest));
+        checkAllowed(roleChecker.canManage(actorJid, contest));
 
         Set<String> aliases = data.stream().map(ContestProblemData::getAlias).collect(Collectors.toSet());
         Set<String> slugs = data.stream().map(ContestProblemData::getSlug).collect(Collectors.toSet());
@@ -113,7 +113,7 @@ public class ContestProblemResource implements ContestProblemService {
     public ContestProblemsResponse getProblems(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canView(actorJid, contest));
+        checkAllowed(roleChecker.canView(actorJid, contest));
 
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
@@ -121,12 +121,12 @@ public class ContestProblemResource implements ContestProblemService {
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 
-        boolean canManage = problemRoleChecker.canManage(actorJid, contest);
+        boolean canManage = roleChecker.canManage(actorJid, contest);
         ContestProblemConfig config = new ContestProblemConfig.Builder()
                 .canManage(canManage)
                 .build();
 
-        if (!canManage && !problemRoleChecker.canView(GUEST, contest)) {
+        if (!canManage && !roleChecker.canView(GUEST, contest)) {
             // hide slugs in non-public contests from non-managers.
             problemsMap = problemsMap.entrySet().stream()
                     .collect(Collectors.toMap(
@@ -157,7 +157,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canView(actorJid, contest));
+        checkAllowed(roleChecker.canView(actorJid, contest));
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
@@ -170,7 +170,7 @@ public class ContestProblemResource implements ContestProblemService {
         long totalSubmissions = submissionStore.getTotalSubmissions(contestJid, actorJid, problemJid);
 
         Optional<String> reasonNotAllowedToSubmit =
-                problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
+                roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         ProblemWorksheet worksheet = problemClient.getProgrammingProblemWorksheet(problemJid, language);
 
@@ -211,7 +211,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canView(actorJid, contest));
+        checkAllowed(roleChecker.canView(actorJid, contest));
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
@@ -224,7 +224,7 @@ public class ContestProblemResource implements ContestProblemService {
         long totalSubmissions = submissionStore.getTotalSubmissions(contestJid, actorJid, problemJid);
 
         Optional<String> reasonNotAllowedToSubmit =
-                problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
+                roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet =
                 problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language);

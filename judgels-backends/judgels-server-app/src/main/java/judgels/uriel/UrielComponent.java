@@ -4,6 +4,8 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.sandalphon.SandalphonModule;
+import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
@@ -35,7 +37,6 @@ import judgels.uriel.file.FileModule;
 import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.messaging.MessagingModule;
-import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
@@ -43,12 +44,15 @@ import judgels.uriel.submission.programming.SubmissionModule;
         // Jophiel
         JophielHibernateDaoModule.class,
 
+        // Sandalphon
+        SandalphonModule.class,
+        SandalphonHibernateDaoModule.class,
+
         AwsModule.class,
         FileModule.class,
         SubmissionModule.class,
         ItemSubmissionModule.class,
 
-        SandalphonModule.class,
         GabrielModule.class,
         MessagingModule.class,
 

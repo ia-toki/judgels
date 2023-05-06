@@ -68,6 +68,12 @@ public final class ProblemHibernateDao extends JudgelsHibernateDao<ProblemModel>
             return this;
         }
 
+        @Override
+        public ProblemQueryBuilder whereSlugIn(Set<String> slugs) {
+            where(columnIn(ProblemModel_.slug, slugs));
+            return this;
+        }
+
         private CriteriaPredicate<ProblemModel> userIsAuthor(String userJid) {
             return (cb, cq, root) -> cb.equal(root.get(ProblemModel_.createdBy), userJid);
         }

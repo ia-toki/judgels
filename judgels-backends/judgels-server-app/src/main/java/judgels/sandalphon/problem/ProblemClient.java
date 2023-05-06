@@ -1,102 +1,128 @@
 package judgels.sandalphon.problem;
 
-import com.github.benmanes.caffeine.cache.CacheLoader;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import java.time.Duration;
+import static java.util.stream.Collectors.toMap;
+import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
+import judgels.JudgelsAppConfiguration;
+import judgels.gabriel.api.GradingConfig;
 import judgels.sandalphon.SandalphonUtils;
-import judgels.sandalphon.api.SandalphonClientConfiguration;
-import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemEditorial;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemMetadata;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.Item;
+import judgels.sandalphon.api.problem.bundle.ItemConfig;
+import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
-import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
+import judgels.sandalphon.problem.base.ProblemStore;
+import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
+import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
+import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
-import judgels.service.api.client.BasicAuthHeader;
+import judgels.sandalphon.problem.bundle.item.BundleItemStore;
+import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
+import judgels.sandalphon.resource.StatementLanguageStatus;
+import judgels.sandalphon.role.RoleChecker;
 
 @Singleton
 public class ProblemClient {
-    private final SandalphonClientConfiguration sandalphonConfig;
-    private final BasicAuthHeader sandalphonClientAuthHeader;
-    private final ClientProblemService clientProblemService;
+    private final JudgelsAppConfiguration appConfig;
+    private final RoleChecker roleChecker;
+    private final ProblemStore problemStore;
+    private final ProblemStatementStore statementStore;
+    private final ProblemEditorialStore editorialStore;
+    private final ProblemTagStore tagStore;
+    private final ProgrammingProblemStore programmingProblemStore;
+    private final BundleItemStore bundleItemStore;
     private final ItemProcessorRegistry itemProcessorRegistry;
-
-    private final LoadingCache<String, ProblemInfo> problemCache;
-    private final LoadingCache<String, ProblemMetadata> problemMetadataCache;
 
     @Inject
     public ProblemClient(
-            SandalphonClientConfiguration sandalphonConfig,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ClientProblemService clientProblemService,
+            JudgelsAppConfiguration appConfig,
+            RoleChecker roleChecker,
+            ProblemStore problemStore,
+            ProblemStatementStore statementStore,
+            ProblemEditorialStore editorialStore,
+            ProblemTagStore tagStore,
+            ProgrammingProblemStore programmingProblemStore,
+            BundleItemStore bundleItemStore,
             ItemProcessorRegistry itemProcessorRegistry) {
 
-        this.sandalphonConfig = sandalphonConfig;
-        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
-        this.clientProblemService = clientProblemService;
+        this.appConfig = appConfig;
+        this.roleChecker = roleChecker;
+        this.problemStore = problemStore;
+        this.statementStore = statementStore;
+        this.editorialStore = editorialStore;
+        this.tagStore = tagStore;
+        this.programmingProblemStore = programmingProblemStore;
+        this.bundleItemStore = bundleItemStore;
         this.itemProcessorRegistry = itemProcessorRegistry;
-
-        this.problemCache = Caffeine.newBuilder()
-                .maximumSize(1_000)
-                .expireAfterWrite(Duration.ofSeconds(10))
-                .build(new ProblemCacheLoader());
-
-        this.problemMetadataCache = Caffeine.newBuilder()
-                .maximumSize(1_000)
-                .expireAfterWrite(Duration.ofSeconds(10))
-                .build(new ProblemMetadataCacheLoader());
     }
 
     public Map<String, String> translateAllowedSlugsToJids(String actorJid, Set<String> slugs) {
-        return slugs.isEmpty()
-                ? ImmutableMap.of()
-                : clientProblemService.translateAllowedSlugsToJids(sandalphonClientAuthHeader, actorJid, slugs);
+        Optional<String> userJid = roleChecker.isAdmin(actorJid)
+                ? Optional.empty()
+                : Optional.of(actorJid);
+        return problemStore.translateAllowedSlugsToJids(userJid, slugs);
     }
 
     public Set<String> getProblemJidsByTags(Set<String> tags) {
-        return clientProblemService.getProblemJidsByTags(sandalphonClientAuthHeader, tags);
+        return tagStore.filterProblemJidsByTags(null, tags);
     }
 
     public void setProblemVisibilityTagsByJids(Map<String, Boolean> problemVisibilitiesMap) {
-        clientProblemService.setProblemVisibilityTagsByJids(sandalphonClientAuthHeader, problemVisibilitiesMap);
+        for (Map.Entry<String, Boolean> entry : problemVisibilitiesMap.entrySet()) {
+            tagStore.updateVisibilityTag(entry.getKey(), entry.getValue());
+        }
     }
 
     public ProblemInfo getProblem(String problemJid) {
-        return problemCache.get(problemJid);
+        Problem problem = problemStore.getProblemByJid(problemJid).get();
+
+        return new ProblemInfo.Builder()
+                .slug(problem.getSlug())
+                .type(ProblemType.valueOf(problem.getType().name()))
+                .defaultLanguage(simplifyLanguageCode(statementStore.getStatementDefaultLanguage(null, problemJid)))
+                .titlesByLanguage(statementStore.getTitlesByLanguage(null, problemJid).entrySet()
+                        .stream()
+                        .collect(toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
+                .build();
     }
 
     public ProblemMetadata getProblemMetadata(String problemJid) {
-        return problemMetadataCache.get(problemJid);
+        return new ProblemMetadata.Builder()
+                .hasEditorial(editorialStore.hasEditorial(null, problemJid))
+                .tags(tagStore.findTopicTags(problemJid))
+                .settersMap(problemStore.getProblemSetters(problemJid))
+                .build();
     }
 
     public Map<String, ProblemMetadata> getProblemMetadatas(Set<String> problemJids) {
-        return problemMetadataCache.getAll(problemJids);
+        return problemJids.stream().collect(toMap(jid -> jid, this::getProblemMetadata));
     }
 
     public Map<String, ProblemInfo> getProblems(Set<String> problemJids) {
-        return problemCache.getAll(problemJids);
+        return problemJids.stream().collect(toMap(jid -> jid, this::getProblem));
     }
 
     public Map<String, String> getProblemNames(Set<String> problemJids, Optional<String> language) {
         return getProblems(problemJids)
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(
+                .collect(toMap(
                         Map.Entry::getKey,
                         e -> SandalphonUtils.getProblemName(e.getValue(), language)
                 ));
@@ -123,23 +149,31 @@ public class ProblemClient {
     }
 
     public ProblemSubmissionConfig getProgrammingProblemSubmissionConfig(String problemJid) {
-        return clientProblemService.getProgrammingProblemSubmissionConfig(
-                sandalphonClientAuthHeader, problemJid);
+        return new ProblemSubmissionConfig.Builder()
+                .gradingEngine(programmingProblemStore.getGradingEngine(null, problemJid))
+                .gradingLanguageRestriction(programmingProblemStore.getLanguageRestriction(null, problemJid))
+                .sourceKeys(programmingProblemStore.getGradingConfig(null, problemJid).getSourceFileFields())
+                .build();
     }
 
-    public ProblemWorksheet getProgrammingProblemWorksheet(String problemJid, Optional<String> language) {
-        ProblemWorksheet worksheet = clientProblemService.getProgrammingProblemWorksheet(
-                sandalphonClientAuthHeader, problemJid, language);
+    public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(
+            String problemJid,
+            Optional<String> language) {
 
-        return new ProblemWorksheet.Builder()
-                .from(worksheet)
+        GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
+        String sanitizedLanguage = sanitizeStatementLanguage(problemJid, language);
+        ProblemStatement statement = statementStore.getStatement(null, problemJid, sanitizedLanguage);
+
+        return new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
-                        .from(worksheet.getStatement())
-                        .text(SandalphonUtils.replaceProblemRenderUrls(
-                                worksheet.getStatement().getText(),
-                                sandalphonConfig.getBaseUrl(),
-                                problemJid))
+                        .from(statement)
+                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), appConfig.getBaseUrl(), problemJid))
                         .build())
+                .limits(new ProblemLimits.Builder()
+                        .timeLimit(config.getTimeLimit())
+                        .memoryLimit(config.getMemoryLimit())
+                        .build())
+                .submissionConfig(getProgrammingProblemSubmissionConfig(problemJid))
                 .build();
     }
 
@@ -147,21 +181,33 @@ public class ProblemClient {
             String problemJid,
             Optional<String> language) {
 
-        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = clientProblemService
-                .getBundleProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
+        String sanitizedLanguage = sanitizeStatementLanguage(problemJid, language);
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(null, problemJid);
+
+        List<BundleItem> items = bundleItemStore.getNumberedItems(problemJid, null);
+        List<Item> itemsWithConfig = new ArrayList<>();
+        for (BundleItem item : items) {
+            ItemConfig config = bundleItemStore.getItemConfig(null, problemJid, item, sanitizedLanguage, defaultLanguage);
+            Item itemWithConfig = new Item.Builder()
+                    .jid(item.getJid())
+                    .type(item.getType())
+                    .number(item.getNumber())
+                    .meta(item.getMeta())
+                    .config(config)
+                    .build();
+            itemsWithConfig.add(itemWithConfig);
+        }
+
+        ProblemStatement statement = statementStore.getStatement(null, problemJid, sanitizedLanguage);
 
         return new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                .from(worksheet)
                 .statement(new ProblemStatement.Builder()
-                        .from(worksheet.getStatement())
-                        .text(SandalphonUtils.replaceProblemRenderUrls(
-                                worksheet.getStatement().getText(),
-                                sandalphonConfig.getBaseUrl(),
-                                problemJid))
+                        .from(statement)
+                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), appConfig.getBaseUrl(), problemJid))
                         .build())
-                .items(worksheet.getItems().stream()
-                        .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(
-                                item, sandalphonConfig.getBaseUrl(), problemJid))
+                .items(itemsWithConfig
+                        .stream()
+                        .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(item, appConfig.getBaseUrl(), problemJid))
                         .collect(Collectors.toList())
                 )
                 .build();
@@ -184,57 +230,47 @@ public class ProblemClient {
     }
 
     public ProblemEditorialInfo getProblemEditorial(String problemJid, Optional<String> language) {
-        ProblemEditorialInfo editorial =
-                clientProblemService.getProblemEditorial(sandalphonClientAuthHeader, problemJid, language);
+        String sanitizedLanguage = sanitizeEditorialLanguage(problemJid, language);
+        ProblemEditorial editorial = editorialStore.getEditorial(null, problemJid, sanitizedLanguage);
+
         return new ProblemEditorialInfo.Builder()
-                .from(editorial)
-                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(
-                        editorial.getText(),
-                        sandalphonConfig.getBaseUrl(),
-                        problemJid))
+                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), appConfig.getBaseUrl(), problemJid))
+                .defaultLanguage(simplifyLanguageCode(editorialStore.getEditorialDefaultLanguage(null, problemJid)))
+                .languages(editorialStore.getEditorialLanguages(null, problemJid).stream()
+                        .map(lang -> simplifyLanguageCode(lang))
+                        .collect(Collectors.toSet()))
                 .build();
     }
 
     public Map<String, ProblemEditorialInfo> getProblemEditorials(Set<String> problemJids, Optional<String> language) {
-        return clientProblemService.getProblemEditorials(sandalphonClientAuthHeader, problemJids, language)
-                .entrySet()
+        return problemJids.stream().collect(toMap(jid -> jid, jid -> getProblemEditorial(jid, language)));
+    }
+
+    private String sanitizeStatementLanguage(String problemJid, Optional<String> language) {
+        Map<String, StatementLanguageStatus> availableLanguages = statementStore.getStatementAvailableLanguages(null, problemJid);
+        Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
                 .stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> new ProblemEditorialInfo.Builder()
-                        .from(e.getValue())
-                        .text(SandalphonUtils.replaceProblemEditorialRenderUrls(
-                                e.getValue().getText(),
-                                sandalphonConfig.getBaseUrl(),
-                                e.getKey()))
-                        .build()));
+                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
+
+        String lang = language.orElse("");
+        if (!simplifiedLanguages.containsKey(lang) || availableLanguages.get(simplifiedLanguages.get(lang)) == StatementLanguageStatus.DISABLED) {
+            lang = simplifyLanguageCode(statementStore.getStatementDefaultLanguage(null, problemJid));
+        }
+
+        return simplifiedLanguages.get(lang);
     }
 
-    private class ProblemCacheLoader implements CacheLoader<String, ProblemInfo> {
-        @Nullable
-        @Override
-        public ProblemInfo load(@Nonnull String problemJid) {
-            return clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+    private String sanitizeEditorialLanguage(String problemJid, Optional<String> language) {
+        Map<String, StatementLanguageStatus> availableLanguages = editorialStore.getEditorialAvailableLanguages(null, problemJid);
+        Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
+
+        String lang = language.orElse("");
+        if (!simplifiedLanguages.containsKey(lang) || availableLanguages.get(simplifiedLanguages.get(lang)) == StatementLanguageStatus.DISABLED) {
+            lang = simplifyLanguageCode(editorialStore.getEditorialDefaultLanguage(null, problemJid));
         }
 
-        @Nonnull
-        @Override
-        public Map<String, ProblemInfo> loadAll(@Nonnull Iterable<? extends String> problemJids) {
-            return clientProblemService.getProblems(sandalphonClientAuthHeader, ImmutableSet.copyOf(problemJids));
-        }
-    }
-
-    private class ProblemMetadataCacheLoader implements CacheLoader<String, ProblemMetadata> {
-        @Nullable
-        @Override
-        public ProblemMetadata load(@Nonnull String problemJid) {
-            return clientProblemService.getProblemMetadata(sandalphonClientAuthHeader, problemJid);
-        }
-
-        @Nonnull
-        @Override
-        public Map<String, ProblemMetadata> loadAll(@Nonnull Iterable<? extends String> problemJids) {
-            return clientProblemService.getProblemMetadatas(
-                    sandalphonClientAuthHeader,
-                    ImmutableSet.copyOf(problemJids));
-        }
+        return simplifiedLanguages.get(lang);
     }
 }

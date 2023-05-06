@@ -17,7 +17,6 @@ import judgels.jerahmeel.problem.ProblemResource;
 import judgels.jerahmeel.problem.ProblemTagResource;
 import judgels.jerahmeel.problemset.ProblemSetResource;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemResource;
-import judgels.jerahmeel.sandalphon.SandalphonModule;
 import judgels.jerahmeel.stats.UserStatsResource;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
@@ -28,6 +27,7 @@ import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
 import judgels.jerahmeel.uriel.UrielModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
@@ -40,6 +40,8 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         // Jophiel
         JophielHibernateDaoModule.class,
 
+        // Sandalphon
+        SandalphonModule.class,
         SandalphonHibernateDaoModule.class,
 
         AwsModule.class,

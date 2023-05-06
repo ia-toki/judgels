@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableJudgelsAppConfiguration.class)
 public interface JudgelsAppConfiguration {
     String getName();
+    String getBaseUrl();
 
     class Builder extends ImmutableJudgelsAppConfiguration.Builder {}
 }

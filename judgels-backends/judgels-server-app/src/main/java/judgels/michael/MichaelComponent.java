@@ -24,6 +24,7 @@ import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
+import judgels.sandalphon.submission.SandalphonSubmissionModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -34,14 +35,14 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
-        MichaelModule.class,
 
         // Jophiel
         JophielHibernateDaoModule.class,
 
         // Sandalphon
         SandalphonHibernateDaoModule.class,
-        SandalphonModule.class})
+        SandalphonModule.class,
+        SandalphonSubmissionModule.class})
 @Singleton
 public interface MichaelComponent {
     IndexResource indexResource();

@@ -1,6 +1,7 @@
 package judgels.sandalphon.hibernate;
 
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -49,6 +50,12 @@ public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> i
             where(CriteriaPredicate.or(
                     columnLike(LessonModel_.slug, term),
                     columnLike(LessonModel_.additionalNote, term)));
+            return this;
+        }
+
+        @Override
+        public LessonQueryBuilder whereSlugIn(Set<String> slugs) {
+            where(columnIn(LessonModel_.slug, slugs));
             return this;
         }
 

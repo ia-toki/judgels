@@ -1,83 +1,84 @@
 package judgels.sandalphon.lesson;
 
-import com.github.benmanes.caffeine.cache.CacheLoader;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import java.time.Duration;
+import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
+
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Named;
+import judgels.JudgelsAppConfiguration;
 import judgels.sandalphon.SandalphonUtils;
-import judgels.sandalphon.api.SandalphonClientConfiguration;
-import judgels.sandalphon.api.client.lesson.ClientLessonService;
+import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.sandalphon.api.lesson.LessonStatement;
-import judgels.service.api.client.BasicAuthHeader;
+import judgels.sandalphon.lesson.statement.LessonStatementStore;
+import judgels.sandalphon.resource.StatementLanguageStatus;
+import judgels.sandalphon.role.RoleChecker;
 
 public class LessonClient {
-    private final SandalphonClientConfiguration sandalphonConfig;
-    private final BasicAuthHeader sandalphonClientAuthHeader;
-    private final ClientLessonService clientLessonService;
-
-    private final LoadingCache<String, LessonInfo> lessonCache;
+    private final JudgelsAppConfiguration appConfig;
+    private final RoleChecker roleChecker;
+    private final LessonStore lessonStore;
+    private final LessonStatementStore statementStore;
 
     @Inject
     public LessonClient(
-            SandalphonClientConfiguration sandalphonConfig,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ClientLessonService clientLessonService) {
+            JudgelsAppConfiguration appConfig,
+            RoleChecker roleChecker,
+            LessonStore lessonStore,
+            LessonStatementStore statementStore) {
 
-        this.sandalphonConfig = sandalphonConfig;
-        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
-        this.clientLessonService = clientLessonService;
-
-        this.lessonCache = Caffeine.newBuilder()
-                .maximumSize(1_000)
-                .expireAfterWrite(Duration.ofSeconds(10))
-                .build(new LessonCacheLoader());
+        this.appConfig = appConfig;
+        this.roleChecker = roleChecker;
+        this.lessonStore = lessonStore;
+        this.statementStore = statementStore;
     }
 
     public Map<String, String> translateAllowedSlugsToJids(String actorJid, Set<String> slugs) {
-        return slugs.isEmpty()
-                ? ImmutableMap.of()
-                : clientLessonService.translateAllowedSlugsToJids(sandalphonClientAuthHeader, actorJid, slugs);
+        Optional<String> userJid = roleChecker.isAdmin(actorJid)
+                ? Optional.empty()
+                : Optional.of(actorJid);
+        return lessonStore.translateAllowedSlugsToJids(userJid, slugs);
     }
 
     public LessonInfo getLesson(String lessonJid) {
-        return lessonCache.get(lessonJid);
-    }
+        Lesson lesson = lessonStore.getLessonByJid(lessonJid).get();
 
-    public Map<String, LessonInfo> getLessons(Set<String> lessonJids) {
-        return lessonCache.getAll(lessonJids);
-    }
-
-    public LessonStatement getLessonStatement(String lessonJid) {
-        LessonStatement statement = clientLessonService.getLessonStatement(sandalphonClientAuthHeader, lessonJid);
-        return new LessonStatement.Builder()
-                .from(statement)
-                .text(SandalphonUtils.replaceLessonRenderUrls(
-                        statement.getText(),
-                        sandalphonConfig.getBaseUrl(),
-                        lessonJid))
+        return new LessonInfo.Builder()
+                .slug(lesson.getSlug())
+                .defaultLanguage(simplifyLanguageCode(statementStore.getDefaultLanguage(null, lessonJid)))
+                .titlesByLanguage(statementStore.getTitlesByLanguage(null, lessonJid).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
                 .build();
     }
 
-    private class LessonCacheLoader implements CacheLoader<String, LessonInfo> {
-        @Nullable
-        @Override
-        public LessonInfo load(@Nonnull String lessonJid) {
-            return clientLessonService.getLesson(sandalphonClientAuthHeader, lessonJid);
+    public Map<String, LessonInfo> getLessons(Set<String> lessonJids) {
+        return lessonJids.stream().collect(Collectors.toMap(jid -> jid, this::getLesson));
+    }
+
+    public LessonStatement getLessonStatement(String lessonJid, Optional<String> language) {
+        String sanitizedLanguage = sanitizeLanguage(lessonJid, language);
+        LessonStatement statement = statementStore.getStatement(null, lessonJid, sanitizedLanguage);
+
+        return new LessonStatement.Builder()
+                .from(statement)
+                .text(SandalphonUtils.replaceLessonRenderUrls(statement.getText(), appConfig.getBaseUrl(), lessonJid))
+                .build();
+    }
+
+    private String sanitizeLanguage(String problemJid, Optional<String> language) {
+        Map<String, StatementLanguageStatus> availableLanguages = statementStore.getAvailableLanguages(null, problemJid);
+        Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
+
+        String lang = language.orElse("");
+        if (!simplifiedLanguages.containsKey(lang) || availableLanguages.get(simplifiedLanguages.get(lang)) == StatementLanguageStatus.DISABLED) {
+            lang = simplifyLanguageCode(statementStore.getDefaultLanguage(null, problemJid));
         }
 
-        @Nonnull
-        @Override
-        public Map<String, LessonInfo> loadAll(@Nonnull Iterable<? extends String> lessonJids) {
-            return clientLessonService.getLessons(sandalphonClientAuthHeader, ImmutableSet.copyOf(lessonJids));
-        }
+        return simplifiedLanguages.get(lang);
     }
 }

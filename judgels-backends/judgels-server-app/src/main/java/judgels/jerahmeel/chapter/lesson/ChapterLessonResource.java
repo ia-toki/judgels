@@ -93,7 +93,8 @@ public class ChapterLessonResource implements ChapterLessonService {
     public ChapterLessonStatement getLessonStatement(
             Optional<AuthHeader> authHeader,
             String chapterJid,
-            String lessonAlias) {
+            String lessonAlias,
+            Optional<String> language) {
 
         actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
@@ -101,7 +102,7 @@ public class ChapterLessonResource implements ChapterLessonService {
         ChapterLesson lesson = checkFound(lessonStore.getLessonByAlias(chapterJid, lessonAlias));
         String lessonJid = lesson.getLessonJid();
         LessonInfo lessonInfo = lessonClient.getLesson(lessonJid);
-        LessonStatement statement = lessonClient.getLessonStatement(lesson.getLessonJid());
+        LessonStatement statement = lessonClient.getLessonStatement(lesson.getLessonJid(), language);
 
         return new ChapterLessonStatement.Builder()
                 .defaultLanguage(lessonInfo.getDefaultLanguage())

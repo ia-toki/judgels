@@ -14,5 +14,6 @@ public interface ProblemDao extends JudgelsDao<ProblemModel> {
         ProblemQueryBuilder whereUserCanView(String userJid);
         ProblemQueryBuilder whereTermsMatch(String term);
         ProblemQueryBuilder whereTagsMatch(List<Set<String>> tagGroups);
+        ProblemQueryBuilder whereSlugIn(Set<String> slugs);
     }
 }

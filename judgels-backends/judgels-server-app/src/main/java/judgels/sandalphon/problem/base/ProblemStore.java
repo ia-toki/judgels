@@ -1,5 +1,7 @@
 package judgels.sandalphon.problem.base;
 
+import static java.util.stream.Collectors.toMap;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -154,6 +156,18 @@ public class ProblemStore extends BaseProblemStore {
         if (!problemFs.directoryExists(root)) {
             problemGit.clone(origin, root);
         }
+    }
+
+    public Map<String, String> translateAllowedSlugsToJids(Optional<String> userJid, Set<String> slugs) {
+        ProblemQueryBuilder query = problemDao
+                .select()
+                .whereSlugIn(slugs);
+
+        if (userJid.isPresent()) {
+            query.whereUserCanView(userJid.get());
+        }
+
+        return query.all().stream().collect(toMap(m -> m.slug, m -> m.jid));
     }
 
     private static ProblemType getProblemType(ProblemModel model) {

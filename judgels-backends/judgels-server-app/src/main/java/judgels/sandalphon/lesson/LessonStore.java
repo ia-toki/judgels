@@ -1,9 +1,13 @@
 package judgels.sandalphon.lesson;
 
+import static java.util.stream.Collectors.toMap;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.Model_;
@@ -115,6 +119,18 @@ public final class LessonStore extends BaseLessonStore {
         if (!lessonFs.directoryExists(root)) {
             lessonGit.clone(origin, root);
         }
+    }
+
+    public Map<String, String> translateAllowedSlugsToJids(Optional<String> userJid, Set<String> slugs) {
+        LessonQueryBuilder query = lessonDao
+                .select()
+                .whereSlugIn(slugs);
+
+        if (userJid.isPresent()) {
+            query.whereUserCanView(userJid.get());
+        }
+
+        return query.all().stream().collect(toMap(m -> m.slug, m -> m.jid));
     }
 
     private static Lesson fromModel(LessonModel model) {
