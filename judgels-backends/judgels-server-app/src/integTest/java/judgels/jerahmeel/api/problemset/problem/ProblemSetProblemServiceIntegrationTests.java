@@ -1,9 +1,5 @@
 package judgels.jerahmeel.api.problemset.problem;
 
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_JID;
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_SLUG;
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_JID;
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_SLUG;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -15,9 +11,16 @@ import judgels.jerahmeel.api.archive.ArchiveCreateData;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
 import judgels.jerahmeel.api.problemset.ProblemSetErrors;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ProblemSetProblemServiceIntegrationTests extends BaseJerahmeelServiceIntegrationTests {
+    @BeforeEach
+    void before() {
+        contest1 = createContest(CONTEST_1_SLUG);
+        contest2 = createContest(CONTEST_2_SLUG);
+    }
+
     @Test
     void end_to_end_flow() {
         // as admin
@@ -68,7 +71,7 @@ class ProblemSetProblemServiceIntegrationTests extends BaseJerahmeelServiceInteg
                         .alias("A")
                         .problemJid(problem1.getJid())
                         .type(PROGRAMMING)
-                        .contestJids(ImmutableList.of(CONTEST_1_JID, CONTEST_2_JID))
+                        .contestJids(ImmutableList.of(contest1.getJid(), contest2.getJid()))
                         .build(),
                 new ProblemSetProblem.Builder().alias("B").problemJid(problem2.getJid()).type(PROGRAMMING).build()
         );

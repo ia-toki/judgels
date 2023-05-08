@@ -35,6 +35,7 @@ import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
 @Component(modules = {
         // Jophiel
@@ -43,6 +44,9 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         // Sandalphon
         SandalphonModule.class,
         SandalphonHibernateDaoModule.class,
+
+        // Uriel
+        UrielHibernateDaoModule.class,
 
         AwsModule.class,
         SubmissionModule.class,

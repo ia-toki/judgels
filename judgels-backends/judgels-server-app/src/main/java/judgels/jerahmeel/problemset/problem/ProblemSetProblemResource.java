@@ -225,7 +225,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, problemJids).get(problemJid);
 
-        Map<String, ContestInfo> contestsMap = contestClient.getContestsByJids(problem.getContestJids());
+        Map<String, ContestInfo> contestsMap = contestClient.getContestsByJids(ImmutableSet.copyOf(problem.getContestJids()));
         List<ContestInfo> contests = problem.getContestJids().stream()
                 .filter(contestsMap::containsKey)
                 .map(contestsMap::get)

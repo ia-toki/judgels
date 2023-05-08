@@ -1,6 +1,7 @@
 package judgels.uriel.contest;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.stream.Collectors.toMap;
 import static judgels.uriel.UrielCacheUtils.getShortDuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -93,7 +94,7 @@ public class ContestStore {
         return contestDao.selectByJids(contestJids)
                 .values()
                 .stream()
-                .collect(Collectors.toMap(
+                .collect(toMap(
                         c -> c.jid,
                         c -> new ContestInfo.Builder()
                                 .slug(c.slug)
@@ -112,6 +113,11 @@ public class ContestStore {
 
     private Contest getContestBySlugUncached(String contestSlug) {
         return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel).orElse(null);
+    }
+
+    public Map<String, String> translateSlugsToJids(Set<String> slugs) {
+        return contestDao.selectAllBySlugs(slugs).stream()
+                .collect(toMap(m -> m.slug, m -> m.jid));
     }
 
     public Page<Contest> getContests(Optional<String> userJid, Optional<String> nameFilter, int pageNumber, int pageSize) {

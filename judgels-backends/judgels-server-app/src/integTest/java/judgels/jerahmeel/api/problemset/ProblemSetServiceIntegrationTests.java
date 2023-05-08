@@ -1,9 +1,5 @@
 package judgels.jerahmeel.api.problemset;
 
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_JID;
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_SLUG;
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_JID;
-import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_SLUG;
 import static judgels.jerahmeel.api.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT_FOUND;
 import static judgels.jerahmeel.api.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
@@ -17,9 +13,16 @@ import judgels.jerahmeel.api.BaseJerahmeelServiceIntegrationTests;
 import judgels.jerahmeel.api.archive.Archive;
 import judgels.jerahmeel.api.archive.ArchiveCreateData;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ProblemSetServiceIntegrationTests extends BaseJerahmeelServiceIntegrationTests {
+    @BeforeEach
+    void before() {
+        contest1 = createContest(CONTEST_1_SLUG);
+        contest2 = createContest(CONTEST_2_SLUG);
+    }
+
     @Test
     void end_to_end_flow() {
         // as admin
@@ -168,8 +171,8 @@ class ProblemSetServiceIntegrationTests extends BaseJerahmeelServiceIntegrationT
                 Optional.of(adminHeader), Optional.empty(), Optional.of("Set 2"), Optional.empty());
         assertThat(response.getData().getPage()).containsExactly(problemSet2B, problemSet2A);
 
-        assertThat(problemSetService.searchProblemSet(CONTEST_1_JID)).isEqualTo(problemSet1);
-        assertThat(problemSetService.searchProblemSet(CONTEST_2_JID)).isEqualTo(problemSet2A);
+        assertThat(problemSetService.searchProblemSet(contest1.getJid())).isEqualTo(problemSet1);
+        assertThat(problemSetService.searchProblemSet(contest2.getJid())).isEqualTo(problemSet2A);
         assertThatThrownBy(() -> problemSetService.searchProblemSet("bogus"))
                 .hasFieldOrPropertyWithValue("code", 404);
     }

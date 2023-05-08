@@ -1,8 +1,5 @@
 package judgels.jerahmeel.api;
 
-import static judgels.jerahmeel.api.mocks.MockUriel.mockUriel;
-
-import com.github.tomakehurst.wiremock.WireMockServer;
 import judgels.BaseJudgelsServiceIntegrationTests;
 import judgels.jerahmeel.api.archive.ArchiveService;
 import judgels.jerahmeel.api.chapter.ChapterService;
@@ -16,12 +13,12 @@ import judgels.jophiel.api.user.User;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.service.api.actor.AuthHeader;
-import org.junit.jupiter.api.AfterAll;
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestService;
 import org.junit.jupiter.api.BeforeAll;
 
 public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
-    private static WireMockServer mockUriel;
-
     protected static final String ADMIN = "admin";
     protected static final String USER = "user";
     protected static final String USER_A = "userA";
@@ -34,6 +31,9 @@ public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsSe
     protected static final String LESSON_1_SLUG = "lesson1Slug";
     protected static final String LESSON_2_SLUG = "lesson2Slug";
     protected static final String LESSON_3_SLUG = "lesson3Slug";
+
+    public static final String CONTEST_1_SLUG = "contest1Slug";
+    public static final String CONTEST_2_SLUG = "contest2Slug";
 
     protected static User userA;
     protected static User userB;
@@ -48,6 +48,9 @@ public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsSe
     protected static Lesson lesson1;
     protected static Lesson lesson2;
     protected static Lesson lesson3;
+
+    protected static Contest contest1;
+    protected static Contest contest2;
 
     protected CourseService courseService = createService(CourseService.class);
     protected ChapterService chapterService = createService(ChapterService.class);
@@ -75,13 +78,11 @@ public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsSe
         lesson1 = createLesson(adminHeader, LESSON_1_SLUG);
         lesson2 = createLesson(adminHeader, LESSON_2_SLUG);
         lesson3 = createLesson(adminHeader, LESSON_3_SLUG);
-
-        mockUriel = mockUriel();
-        mockUriel.start();
     }
 
-    @AfterAll
-    static void tearDownJerahmeel() {
-        mockUriel.shutdown();
+    protected static Contest createContest(String slug) {
+        return createService(ContestService.class).createContest(adminHeader, new ContestCreateData.Builder()
+                .slug(slug)
+                .build());
     }
 }

@@ -7,7 +7,9 @@ import static judgels.uriel.hibernate.ContestRoleHibernateDao.userParticipated;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.criteria.Expression;
 import judgels.persistence.CriteriaPredicate;
@@ -44,6 +46,11 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
                         cb.equal(root.get(ContestModel_.slug), contestSlug),
                         cb.equal(root.get(Model_.id), NumberUtils.toInt(contestSlug, 0))))
                 .unique();
+    }
+
+    @Override
+    public List<ContestModel> selectAllBySlugs(Set<String> contestSlugs) {
+        return select().where(columnIn(ContestModel_.slug, contestSlugs)).all();
     }
 
     private static class ContestHibernateQueryBuilder extends HibernateQueryBuilder<ContestModel> implements ContestQueryBuilder {
