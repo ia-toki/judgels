@@ -15,5 +15,3 @@ include ':judgels-server-app'
 include ':judgels-grader-api'
 include ':judgels-grader-app'
 include ':judgels-grader-engines'
-
-include ':sandalphon:sandalphon-play-app'

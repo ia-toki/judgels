@@ -20,8 +20,6 @@ MODULES = OrderedDict([
     (':judgels-server-app', {':judgels-grader-engines', ':judgels-server-api'}),
     (':judgels-server', {':judgels-server-app', ':judgels-server-api'}),
 
-    (':sandalphon', {':judgels-commons', ':judgels-grader-engines', ':judgels-server-app'}),
-
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})
 ])
@@ -30,7 +28,6 @@ SERVICES = [
     ':judgels-commons',
     ':judgels-grader',
     ':judgels-server',
-    ':sandalphon',
     ':raphael'
 ]
 

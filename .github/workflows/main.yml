@@ -64,10 +64,6 @@ jobs:
         if: steps.changed-files.outputs.judgels-server == '1'
         run: ./judgels-backends/gradlew -p judgels-backends/judgels-server-app check
 
-      - name: Test sandalphon
-        if: steps.changed-files.outputs.sandalphon == '1'
-        run: ./judgels-backends/gradlew -p judgels-backends/sandalphon check
-
       - name: Set up Node
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/setup-node@v1.4.4

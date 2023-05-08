@@ -1,8 +1,0 @@
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.BatchGradingEngineAdapter
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.BatchWithSubtasksGradingEngineAdapter
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.FunctionalGradingEngineAdapter
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.FunctionalWithSubtasksGradingEngineAdapter
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.InteractiveGradingEngineAdapter
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.InteractiveWithSubtasksGradingEngineAdapter
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.OutputOnlyGradingEngineAdapter
-org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.OutputOnlyWithSubtasksGradingEngineAdapter
