@@ -1,9 +1,5 @@
 package judgels.jerahmeel.api.course.chapter;
 
-import static judgels.jerahmeel.api.mocks.MockSandalphon.LESSON_1_SLUG;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.LESSON_2_SLUG;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;

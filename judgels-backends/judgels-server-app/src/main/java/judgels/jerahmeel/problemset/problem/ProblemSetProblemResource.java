@@ -258,7 +258,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
-        ProblemEditorialInfo editorial = problemClient.getProblemEditorial(problem.getProblemJid(), language);
+        ProblemEditorialInfo editorial = checkFound(problemClient.getProblemEditorial(problem.getProblemJid(), language));
         return new ProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();

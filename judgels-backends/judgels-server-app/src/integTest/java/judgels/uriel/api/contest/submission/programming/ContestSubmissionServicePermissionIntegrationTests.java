@@ -6,12 +6,6 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_3_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_3_SLUG;
 
 import com.google.common.collect.ImmutableList;
 import java.time.Duration;
@@ -78,10 +72,10 @@ class ContestSubmissionServicePermissionIntegrationTests extends BaseUrielServic
 
         beginContest(contest);
 
-        assertPermitted(submit(contestantHeader.getBearerToken(), PROBLEM_2_JID));
-        assertForbidden(submit(contestantHeader.getBearerToken(), PROBLEM_2_JID))
+        assertPermitted(submit(contestantHeader.getBearerToken(), problem2.getJid()));
+        assertForbidden(submit(contestantHeader.getBearerToken(), problem2.getJid()))
                 .hasMessageContaining("Submissions limit has been reached.");
-        assertForbidden(submit(contestantHeader.getBearerToken(), PROBLEM_3_JID))
+        assertForbidden(submit(contestantHeader.getBearerToken(), problem3.getJid()))
                 .hasMessageContaining("Problem is closed.");
 
         enableModule(contest, PAUSE);
@@ -129,7 +123,7 @@ class ContestSubmissionServicePermissionIntegrationTests extends BaseUrielServic
     }
 
     private ThrowingCallable submit(String token) {
-        return submit(token, PROBLEM_1_JID);
+        return submit(token, problem1.getJid());
     }
 
     private ThrowingCallable submit(String token, String problemJid) {

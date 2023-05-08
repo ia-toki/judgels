@@ -8,10 +8,6 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
@@ -54,12 +50,14 @@ class ContestSubmissionServiceIntegrationTests extends BaseUrielServiceIntegrati
                         "B", PROBLEM_2_SLUG)
                 .modules(REGISTRATION)
                 .build();
+
+        updateProblemStatement(managerHeader, problem1, "Problem 1", "text");
     }
 
     @Test
     void get_submissions() {
-        submit(contestantAHeader.getBearerToken(), PROBLEM_1_JID);
-        submit(contestantBHeader.getBearerToken(), PROBLEM_2_JID);
+        submit(contestantAHeader.getBearerToken(), problem1.getJid());
+        submit(contestantBHeader.getBearerToken(), problem2.getJid());
 
         Map<AuthHeader, List<String>> submissionsMap = new LinkedHashMap<>();
         submissionsMap.put(adminHeader, ImmutableList.of(contestantB.getJid(), contestantA.getJid()));
@@ -102,12 +100,12 @@ class ContestSubmissionServiceIntegrationTests extends BaseUrielServiceIntegrati
         profilesKeysMap.put(contestantBHeader, ImmutableList.of(contestantB.getJid()));
 
         Map<AuthHeader, Map<String, String>> problemAliasesMapMap = new LinkedHashMap<>();
-        problemAliasesMapMap.put(adminHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
-        problemAliasesMapMap.put(managerHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
-        problemAliasesMapMap.put(supervisorAHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
-        problemAliasesMapMap.put(supervisorBHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
-        problemAliasesMapMap.put(contestantAHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(contestantBHeader, ImmutableMap.of(PROBLEM_2_JID, "B"));
+        problemAliasesMapMap.put(adminHeader, ImmutableMap.of(problem1.getJid(), "A", problem2.getJid(), "B"));
+        problemAliasesMapMap.put(managerHeader, ImmutableMap.of(problem1.getJid(), "A", problem2.getJid(), "B"));
+        problemAliasesMapMap.put(supervisorAHeader, ImmutableMap.of(problem1.getJid(), "A", problem2.getJid(), "B"));
+        problemAliasesMapMap.put(supervisorBHeader, ImmutableMap.of(problem1.getJid(), "A", problem2.getJid(), "B"));
+        problemAliasesMapMap.put(contestantAHeader, ImmutableMap.of(problem1.getJid(), "A"));
+        problemAliasesMapMap.put(contestantBHeader, ImmutableMap.of(problem2.getJid(), "B"));
 
         Map<AuthHeader, List<String>> userJidsMap = new LinkedHashMap<>();
         userJidsMap.put(
@@ -126,10 +124,10 @@ class ContestSubmissionServiceIntegrationTests extends BaseUrielServiceIntegrati
         userJidsMap.put(contestantBHeader, ImmutableList.of());
 
         Map<AuthHeader, List<String>> problemJidsMap = new LinkedHashMap<>();
-        problemJidsMap.put(adminHeader, ImmutableList.of(PROBLEM_1_JID, PROBLEM_2_JID));
-        problemJidsMap.put(managerHeader, ImmutableList.of(PROBLEM_1_JID, PROBLEM_2_JID));
-        problemJidsMap.put(supervisorAHeader, ImmutableList.of(PROBLEM_1_JID, PROBLEM_2_JID));
-        problemJidsMap.put(supervisorBHeader, ImmutableList.of(PROBLEM_1_JID, PROBLEM_2_JID));
+        problemJidsMap.put(adminHeader, ImmutableList.of(problem1.getJid(), problem2.getJid()));
+        problemJidsMap.put(managerHeader, ImmutableList.of(problem1.getJid(), problem2.getJid()));
+        problemJidsMap.put(supervisorAHeader, ImmutableList.of(problem1.getJid(), problem2.getJid()));
+        problemJidsMap.put(supervisorBHeader, ImmutableList.of(problem1.getJid(), problem2.getJid()));
         problemJidsMap.put(contestantAHeader, ImmutableList.of());
         problemJidsMap.put(contestantBHeader, ImmutableList.of());
 
@@ -152,10 +150,10 @@ class ContestSubmissionServiceIntegrationTests extends BaseUrielServiceIntegrati
 
     @Test
     void get_submissions__with_filters() {
-        submit(contestantAHeader.getBearerToken(), PROBLEM_1_JID); // .get(3)
-        submit(contestantBHeader.getBearerToken(), PROBLEM_2_JID); // .get(2)
-        submit(contestantAHeader.getBearerToken(), PROBLEM_2_JID); // .get(1)
-        submit(contestantBHeader.getBearerToken(), PROBLEM_1_JID); // .get(0)
+        submit(contestantAHeader.getBearerToken(), problem1.getJid()); // .get(3)
+        submit(contestantBHeader.getBearerToken(), problem2.getJid()); // .get(2)
+        submit(contestantAHeader.getBearerToken(), problem2.getJid()); // .get(1)
+        submit(contestantBHeader.getBearerToken(), problem1.getJid()); // .get(0)
 
         ContestSubmissionsResponse response = submissionService
                 .getSubmissions(adminHeader, contest.getJid(), empty(), empty(), empty());
@@ -189,11 +187,11 @@ class ContestSubmissionServiceIntegrationTests extends BaseUrielServiceIntegrati
 
     @Test
     void get_submission_with_source() {
-        submit(contestantAHeader.getBearerToken(), PROBLEM_1_JID);
+        submit(contestantAHeader.getBearerToken(), problem1.getJid());
         Submission submission = getSubmission(contestantAHeader);
 
         assertThat(submission.getUserJid()).isEqualTo(contestantA.getJid());
-        assertThat(submission.getProblemJid()).isEqualTo(PROBLEM_1_JID);
+        assertThat(submission.getProblemJid()).isEqualTo(problem1.getJid());
         assertThat(submission.getContainerJid()).isEqualTo(contest.getJid());
         assertThat(submission.getGradingEngine()).isEqualTo("Batch");
         assertThat(submission.getGradingLanguage()).isEqualTo("Cpp11");
@@ -210,19 +208,19 @@ class ContestSubmissionServiceIntegrationTests extends BaseUrielServiceIntegrati
 
     @Test
     void get_submission_info_image() {
-        submit(contestantAHeader.getBearerToken(), PROBLEM_1_JID);
+        submit(contestantAHeader.getBearerToken(), problem1.getJid());
         Submission submission = getSubmission(contestantAHeader);
 
         endContest(contest);
 
-        SubmissionInfo info = submissionService.getSubmissionInfo(contest.getJid(), contestantA.getJid(), PROBLEM_1_JID);
+        SubmissionInfo info = submissionService.getSubmissionInfo(contest.getJid(), contestantA.getJid(), problem1.getJid());
         assertThat(info.getId()).isEqualTo(submission.getId());
         assertThat(info.getProfile().getUsername()).isEqualTo(CONTESTANT_A);
 
         Response response = webTarget.path("/api/v2/contests/submissions/programming/image")
                 .queryParam("contestJid", contest.getJid())
                 .queryParam("userJid", contestantA.getJid())
-                .queryParam("problemJid", PROBLEM_1_JID)
+                .queryParam("problemJid", problem1.getJid())
                 .request()
                 .get();
         assertThat(response.getHeaders().getFirst(CONTENT_TYPE)).isEqualTo("image/jpg");
@@ -230,7 +228,7 @@ class ContestSubmissionServiceIntegrationTests extends BaseUrielServiceIntegrati
         response = webTarget.path("/api/v2/contests/submissions/programming/image/dark")
                 .queryParam("contestJid", contest.getJid())
                 .queryParam("userJid", contestantA.getJid())
-                .queryParam("problemJid", PROBLEM_1_JID)
+                .queryParam("problemJid", problem1.getJid())
                 .request()
                 .get();
         assertThat(response.getHeaders().getFirst(CONTENT_TYPE)).isEqualTo("image/jpg");

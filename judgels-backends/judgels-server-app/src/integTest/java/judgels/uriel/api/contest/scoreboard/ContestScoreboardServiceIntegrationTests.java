@@ -8,10 +8,6 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -128,13 +124,13 @@ class ContestScoreboardServiceIntegrationTests extends BaseUrielServiceIntegrati
                 scoreboardService.getScoreboard(of(supervisorAHeader), contest.getJid(), false, false, empty()).get();
 
         assertThat(response.getData().getScoreboard().getState().getProblemJids())
-                .containsExactly(PROBLEM_1_JID);
+                .containsExactly(problem1.getJid());
 
         response =
                 scoreboardService.getScoreboard(of(supervisorAHeader), contest.getJid(), false, true, empty()).get();
 
         assertThat(response.getData().getScoreboard().getState().getProblemJids())
-                .containsExactly(PROBLEM_1_JID, PROBLEM_2_JID);
+                .containsExactly(problem1.getJid(), problem2.getJid());
     }
 
     private void refreshUntilScoreboardPresent(ContestScoreboardType type) {

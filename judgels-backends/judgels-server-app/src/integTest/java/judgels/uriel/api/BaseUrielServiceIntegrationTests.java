@@ -1,12 +1,10 @@
 package judgels.uriel.api;
 
-import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.DRIVER;
 import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.URL;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -23,6 +21,7 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
@@ -46,13 +45,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.H2Dialect;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 
 public abstract class BaseUrielServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
-    private static WireMockServer mockSandalphon;
-
     protected static final String ADMIN = "admin";
     protected static final String MANAGER = "manager";
     protected static final String SUPERVISOR = "supervisor";
@@ -64,6 +60,10 @@ public abstract class BaseUrielServiceIntegrationTests extends BaseJudgelsServic
     protected static final String USER = "user";
     protected static final String USER_A = "userA";
     protected static final String USER_B = "userB";
+
+    protected static final String PROBLEM_1_SLUG = "problem1Slug";
+    protected static final String PROBLEM_2_SLUG = "problem2Slug";
+    protected static final String PROBLEM_3_SLUG = "problem3Slug";
 
     protected static User manager;
     protected static User supervisor;
@@ -84,6 +84,10 @@ public abstract class BaseUrielServiceIntegrationTests extends BaseJudgelsServic
     protected static AuthHeader contestantBHeader;
     protected static AuthHeader userAHeader;
     protected static AuthHeader userBHeader;
+
+    protected static Problem problem1;
+    protected static Problem problem2;
+    protected static Problem problem3;
 
     protected ContestService contestService = createService(ContestService.class);
     protected ContestModuleService moduleService = createService(ContestModuleService.class);
@@ -121,20 +125,18 @@ public abstract class BaseUrielServiceIntegrationTests extends BaseJudgelsServic
         userB = createUser("userB");
         userBHeader = getHeader(userB);
 
-        createService(UserRatingService.class).updateRatings(adminHeader, new UserRatingUpdateData.Builder()
+        updateRatings(new UserRatingUpdateData.Builder()
                 .time(Instant.now())
                 .eventJid("some-contest-jid")
                 .putRatingsMap(userA.getJid(), UserRating.of(2000, 2000))
                 .putRatingsMap(userB.getJid(), UserRating.of(1000, 1000))
                 .build());
 
-        mockSandalphon = mockSandalphon();
-        mockSandalphon.start();
-    }
+        webTarget = createWebTarget();
 
-    @AfterAll
-    static void tearDownUriel() {
-        mockSandalphon.shutdown();
+        problem1 = createProblem(managerHeader, PROBLEM_1_SLUG);
+        problem2 = createProblem(managerHeader, PROBLEM_2_SLUG);
+        problem3 = createBundleProblem(managerHeader, PROBLEM_3_SLUG);
     }
 
     @AfterEach
@@ -339,5 +341,9 @@ public abstract class BaseUrielServiceIntegrationTests extends BaseJudgelsServic
 
             return contest;
         }
+    }
+
+    private static void updateRatings(UserRatingUpdateData data) {
+        createService(UserRatingService.class).updateRatings(adminHeader, data);
     }
 }

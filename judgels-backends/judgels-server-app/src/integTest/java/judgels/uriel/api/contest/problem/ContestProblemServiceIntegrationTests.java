@@ -4,12 +4,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_3_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_3_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -20,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.ws.rs.core.Form;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.bundle.EssayItemConfig;
@@ -96,24 +91,24 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
             assertThat(response.getData()).containsOnly(
                     new ContestProblem.Builder()
                             .alias("A")
-                            .problemJid(PROBLEM_1_JID)
+                            .problemJid(problem1.getJid())
                             .status(OPEN)
                             .submissionsLimit(10)
                             .points(11)
                             .build(),
                     new ContestProblem.Builder()
                             .alias("C")
-                            .problemJid(PROBLEM_2_JID)
+                            .problemJid(problem2.getJid())
                             .status(ContestProblemStatus.CLOSED)
                             .points(23)
                             .build(),
                     new ContestProblem.Builder()
                             .alias("D")
-                            .problemJid(PROBLEM_3_JID)
+                            .problemJid(problem3.getJid())
                             .status(ContestProblemStatus.OPEN)
                             .build());
-            assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).contains(PROBLEM_1_SLUG);
-            assertThat(response.getTotalSubmissionsMap()).containsOnlyKeys(PROBLEM_1_JID, PROBLEM_2_JID, PROBLEM_3_JID);
+            assertThat(response.getProblemsMap().get(problem1.getJid()).getSlug()).contains(PROBLEM_1_SLUG);
+            assertThat(response.getTotalSubmissionsMap()).containsOnlyKeys(problem1.getJid(), problem2.getJid(), problem3.getJid());
             assertThat(response.getConfig().getCanManage()).isEqualTo(canManageMap.get(authHeader));
         }
     }
@@ -140,6 +135,10 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
 
     @Test
     void get_programming_problem_worksheet() {
+        updateProblemStatement(managerHeader, problem1,
+                "Problem 1",
+                "Statement 1. <img src=\"render/image.png\"/>");
+
         problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("A")
@@ -159,7 +158,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                 .languages(ImmutableSet.of("en"))
                 .problem(new ContestProblem.Builder()
                         .alias("A")
-                        .problemJid(PROBLEM_1_JID)
+                        .problemJid(problem1.getJid())
                         .status(OPEN)
                         .submissionsLimit(10)
                         .points(11)
@@ -168,15 +167,14 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                 .worksheet(new ProblemWorksheet.Builder()
                         .statement(new ProblemStatement.Builder()
                                 .title("Problem 1")
-                                .text("Statement for problem 1. <a href=\"http://localhost:9002/api/v2/problems/"
-                                        + PROBLEM_1_JID + "/render/document\">link</a>")
+                                .text("Statement 1. <img src=\"http://localhost:9101/api/v2/problems/" + problem1.getJid() + "/render/image.png\"/>")
                                 .build())
                         .limits(new ProblemLimits.Builder()
                                 .timeLimit(2000)
                                 .memoryLimit(65536)
                                 .build())
                         .submissionConfig(new ProblemSubmissionConfig.Builder()
-                                .sourceKeys(ImmutableMap.of("source", "Source"))
+                                .sourceKeys(ImmutableMap.of("source", "Source code"))
                                 .gradingEngine("Batch")
                                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                                 .build())
@@ -187,6 +185,52 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
 
     @Test
     void get_bundle_problem_worksheet() {
+        updateProblemStatement(managerHeader, problem3,
+                "Problem 3",
+                "Statement 3. <img src=\"render/image.png\"/>");
+
+        Form form = new Form();
+        form.param("meta", "1-2");
+        form.param("statement", "<p>STATEMENT 1-2</p> <img src=\"render/statement.png\"/>");
+        String item1Jid = createBundleProblemItem(managerHeader, problem3, ItemType.STATEMENT, form);
+
+        form = new Form();
+        form.param("meta", "1");
+        form.param("statement", "<p>QUESTION 1</p>");
+        form.param("score", "1");
+        form.param("penalty", "0");
+        form.param("choiceAliases", "a");
+        form.param("choiceContents", "answer a <img src=\"render/a.png\"/>");
+        form.param("choiceAliases", "b");
+        form.param("choiceContents", "answer b");
+        String item2Jid = createBundleProblemItem(managerHeader, problem3, ItemType.MULTIPLE_CHOICE, form);
+
+        form = new Form();
+        form.param("meta", "2");
+        form.param("statement", "<p>QUESTION 2</p>");
+        form.param("score", "4");
+        form.param("penalty", "-1");
+        form.param("choiceAliases", "a");
+        form.param("choiceContents", "answer a");
+        form.param("choiceAliases", "b");
+        form.param("choiceContents", "answer b");
+        String item3Jid = createBundleProblemItem(managerHeader, problem3, ItemType.MULTIPLE_CHOICE, form);
+
+        form = new Form();
+        form.param("meta", "3");
+        form.param("statement", "<p>QUESTION 3</p>");
+        form.param("score", "4");
+        form.param("penalty", "-1");
+        form.param("inputValidationRegex", "\\d+");
+        form.param("gradingRegex", "123");
+        String item4Jid = createBundleProblemItem(managerHeader, problem3, ItemType.SHORT_ANSWER, form);
+
+        form = new Form();
+        form.param("meta", "4");
+        form.param("statement", "<p>QUESTION 4</p>");
+        form.param("score", "12");
+        String item5Jid = createBundleProblemItem(managerHeader, problem3, ItemType.ESSAY, form);
+
         problemService.setProblems(managerHeader, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
                         .alias("D")
@@ -207,93 +251,85 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                         .languages(ImmutableSet.of("en"))
                         .problem(new ContestProblem.Builder()
                                 .alias("D")
-                                .problemJid(PROBLEM_3_JID)
+                                .problemJid(problem3.getJid())
                                 .status(OPEN)
                                 .build())
                         .totalSubmissions(0)
                         .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                                 .statement(new ProblemStatement.Builder()
                                         .title("Problem 3")
-                                        .text("<h3>Statement 3</h3> <img src=\"http://localhost:9002/api/v2/problems/"
-                                                + PROBLEM_3_JID + "/render/image\"/>\r\n")
+                                        .text("Statement 3. <img src=\"http://localhost:9101/api/v2/problems/" + problem3.getJid() + "/render/image.png\"/>")
                                         .build())
                                 .addItems(
                                         new Item.Builder()
-                                                .jid("JIDITEMwcAjhP4KZurUE2F5LdSb")
+                                                .jid(item1Jid)
                                                 .type(ItemType.STATEMENT)
                                                 .meta("1-2")
                                                 .config(new StatementItemConfig.Builder()
-                                                        .statement(
-                                                                "<p>ini statement 1</p><img src=\"http://localhost:9002"
-                                                                        + "/api/v2/problems/" + PROBLEM_3_JID
-                                                                        + "/render/i\"/>")
+                                                        .statement("<p>STATEMENT 1-2</p> <img src=\"http://localhost:9101/api/v2/problems/" + problem3.getJid() + "/render/statement.png\"/>")
                                                         .build())
                                                 .build(),
                                         new Item.Builder()
-                                                .jid("JIDITEMPeKuqUA0Q7zvJjTQXXVD")
+                                                .jid(item2Jid)
                                                 .type(ItemType.MULTIPLE_CHOICE)
                                                 .number(1)
                                                 .meta("1")
                                                 .config(new MultipleChoiceItemConfig.Builder()
-                                                        .statement("<p>ini soal 1</p>\r\n")
+                                                        .statement("<p>QUESTION 1</p>")
                                                         .score(1)
                                                         .penalty(0)
                                                         .addChoices(
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("a")
-                                                                        .content(
-                                                                                "jawaban a <img src=\"http://localhost:9002"
-                                                                                        + "/api/v2/problems/"
-                                                                                        + PROBLEM_3_JID
-                                                                                        + "/render/choiceimage\"/>")
+                                                                        .content("answer a <img src=\"http://localhost:9101/api/v2/problems/" + problem3.getJid() + "/render/a.png\"/>")
                                                                         .build(),
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("b")
-                                                                        .content("jawaban b")
+                                                                        .content("answer b")
                                                                         .build()
                                                         )
                                                         .build())
                                                 .build(),
                                         new Item.Builder()
-                                                .jid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
+                                                .jid(item3Jid)
                                                 .type(ItemType.MULTIPLE_CHOICE)
                                                 .number(2)
                                                 .meta("2")
                                                 .config(new MultipleChoiceItemConfig.Builder()
-                                                        .statement("<p>ini soal kedua</p>\r\n")
+                                                        .statement("<p>QUESTION 2</p>")
                                                         .score(4.0)
                                                         .penalty(-1.0)
                                                         .addChoices(
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("a")
-                                                                        .content("pilihan a")
+                                                                        .content("answer a")
                                                                         .build(),
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("b")
-                                                                        .content("pilihan b")
+                                                                        .content("answer b")
                                                                         .build()
                                                         )
                                                         .build())
                                                 .build(),
                                         new Item.Builder()
-                                                .jid("JIDITEMcD1oSDFJLadFSsMddfsf")
+                                                .jid(item4Jid)
                                                 .type(ItemType.SHORT_ANSWER)
                                                 .number(3)
                                                 .meta("3")
                                                 .config(new ShortAnswerItemConfig.Builder()
-                                                        .statement("<p>ini soal short answer</p>\r\n")
+                                                        .statement("<p>QUESTION 3</p>")
                                                         .score(4.0)
                                                         .penalty(-1.0)
                                                         .inputValidationRegex("\\d+")
                                                         .build())
                                                 .build(),
                                         new Item.Builder()
-                                                .jid("JIDITEMkhUulUkbUkYGBKYkfLHUh")
+                                                .jid(item5Jid)
                                                 .type(ItemType.ESSAY)
                                                 .number(4)
                                                 .meta("4")
                                                 .config(new EssayItemConfig.Builder()
-                                                        .statement("<p>buat program hello world</p>\r\n")
+                                                        .statement("<p>QUESTION 4</p>")
                                                         .score(12.0)
                                                         .build())
                                                 .build()

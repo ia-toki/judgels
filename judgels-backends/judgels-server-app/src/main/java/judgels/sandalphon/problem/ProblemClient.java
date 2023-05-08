@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toMap;
 import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -184,7 +185,7 @@ public class ProblemClient {
         String sanitizedLanguage = sanitizeStatementLanguage(problemJid, language);
         String defaultLanguage = statementStore.getStatementDefaultLanguage(null, problemJid);
 
-        List<BundleItem> items = bundleItemStore.getNumberedItems(problemJid, null);
+        List<BundleItem> items = bundleItemStore.getNumberedItems(null, problemJid);
         List<Item> itemsWithConfig = new ArrayList<>();
         for (BundleItem item : items) {
             ItemConfig config = bundleItemStore.getItemConfig(null, problemJid, item, sanitizedLanguage, defaultLanguage);
@@ -229,21 +230,32 @@ public class ProblemClient {
                 .build();
     }
 
-    public ProblemEditorialInfo getProblemEditorial(String problemJid, Optional<String> language) {
+    public Optional<ProblemEditorialInfo> getProblemEditorial(String problemJid, Optional<String> language) {
+        if (!editorialStore.hasEditorial(null, problemJid)) {
+            return Optional.empty();
+        }
+
         String sanitizedLanguage = sanitizeEditorialLanguage(problemJid, language);
         ProblemEditorial editorial = editorialStore.getEditorial(null, problemJid, sanitizedLanguage);
 
-        return new ProblemEditorialInfo.Builder()
+        return Optional.of(new ProblemEditorialInfo.Builder()
                 .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), appConfig.getBaseUrl(), problemJid))
                 .defaultLanguage(simplifyLanguageCode(editorialStore.getEditorialDefaultLanguage(null, problemJid)))
                 .languages(editorialStore.getEditorialLanguages(null, problemJid).stream()
                         .map(lang -> simplifyLanguageCode(lang))
                         .collect(Collectors.toSet()))
-                .build();
+                .build());
     }
 
     public Map<String, ProblemEditorialInfo> getProblemEditorials(Set<String> problemJids, Optional<String> language) {
-        return problemJids.stream().collect(toMap(jid -> jid, jid -> getProblemEditorial(jid, language)));
+        Map<String, ProblemEditorialInfo> editorialsMap = new HashMap<>();
+        for (String problemJid : problemJids) {
+            Optional<ProblemEditorialInfo> editorial = getProblemEditorial(problemJid, language);
+            if (editorial.isPresent()) {
+                editorialsMap.put(problemJid, editorial.get());
+            }
+        }
+        return Collections.unmodifiableMap(editorialsMap);
     }
 
     private String sanitizeStatementLanguage(String problemJid, Optional<String> language) {

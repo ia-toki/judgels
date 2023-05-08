@@ -1,6 +1,5 @@
 package judgels.jerahmeel.api;
 
-import static judgels.jerahmeel.api.mocks.MockSandalphon.mockSandalphon;
 import static judgels.jerahmeel.api.mocks.MockUriel.mockUriel;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -14,12 +13,13 @@ import judgels.jerahmeel.api.course.chapter.CourseChapterService;
 import judgels.jerahmeel.api.problemset.ProblemSetService;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemService;
 import judgels.jophiel.api.user.User;
+import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.problem.Problem;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
 public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsServiceIntegrationTests {
-    private static WireMockServer mockSandalphon;
     private static WireMockServer mockUriel;
 
     protected static final String ADMIN = "admin";
@@ -27,11 +27,27 @@ public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsSe
     protected static final String USER_A = "userA";
     protected static final String USER_B = "userB";
 
+    protected static final String PROBLEM_1_SLUG = "problem1Slug";
+    protected static final String PROBLEM_2_SLUG = "problem2Slug";
+    protected static final String PROBLEM_3_SLUG = "problem3Slug";
+
+    protected static final String LESSON_1_SLUG = "lesson1Slug";
+    protected static final String LESSON_2_SLUG = "lesson2Slug";
+    protected static final String LESSON_3_SLUG = "lesson3Slug";
+
     protected static User userA;
     protected static User userB;
 
     protected static AuthHeader userAHeader;
     protected static AuthHeader userBHeader;
+
+    protected static Problem problem1;
+    protected static Problem problem2;
+    protected static Problem problem3;
+
+    protected static Lesson lesson1;
+    protected static Lesson lesson2;
+    protected static Lesson lesson3;
 
     protected CourseService courseService = createService(CourseService.class);
     protected ChapterService chapterService = createService(ChapterService.class);
@@ -50,8 +66,15 @@ public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsSe
         userB = createUser("userB");
         userBHeader = getHeader(userB);
 
-        mockSandalphon = mockSandalphon();
-        mockSandalphon.start();
+        webTarget = createWebTarget();
+
+        problem1 = createProblem(adminHeader, PROBLEM_1_SLUG);
+        problem2 = createProblem(adminHeader, PROBLEM_2_SLUG);
+        problem3 = createBundleProblem(adminHeader, PROBLEM_3_SLUG);
+
+        lesson1 = createLesson(adminHeader, LESSON_1_SLUG);
+        lesson2 = createLesson(adminHeader, LESSON_2_SLUG);
+        lesson3 = createLesson(adminHeader, LESSON_3_SLUG);
 
         mockUriel = mockUriel();
         mockUriel.start();
@@ -59,7 +82,6 @@ public abstract class BaseJerahmeelServiceIntegrationTests extends BaseJudgelsSe
 
     @AfterAll
     static void tearDownJerahmeel() {
-        mockSandalphon.shutdown();
         mockUriel.shutdown();
     }
 }

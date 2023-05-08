@@ -2,8 +2,6 @@ package judgels.uriel.api.contest.log;
 
 import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -41,7 +39,7 @@ class ContestLogServiceIntegrationTests extends BaseUrielServiceIntegrationTests
                 .createClarification(contestantHeader, contest1.getJid(), new ContestClarificationData.Builder()
                 .title("Title")
                 .question("Question")
-                .topicJid(PROBLEM_1_JID)
+                .topicJid(problem1.getJid())
                 .build());
 
         createContest();
@@ -58,7 +56,7 @@ class ContestLogServiceIntegrationTests extends BaseUrielServiceIntegrationTests
                 manager.getJid(),
                 admin.getJid());
 
-        assertThat(response.getConfig().getProblemJids()).containsExactlyInAnyOrder(PROBLEM_1_JID);
+        assertThat(response.getConfig().getProblemJids()).containsExactlyInAnyOrder(problem1.getJid());
 
         List<ContestLog> logs = response.getData().getPage();
 
@@ -103,7 +101,7 @@ class ContestLogServiceIntegrationTests extends BaseUrielServiceIntegrationTests
                 empty());
 
         assertThat(logs.stream().map(ContestLog::getProblemJid).collect(Collectors.toList())).containsExactly(
-                Optional.of(PROBLEM_1_JID),
+                Optional.of(problem1.getJid()),
                 empty(),
                 empty(),
                 empty(),
@@ -122,6 +120,6 @@ class ContestLogServiceIntegrationTests extends BaseUrielServiceIntegrationTests
         response = logService.getLogs(
                 managerHeader, contest1.getJid(), empty(), Optional.of("A"), empty());
         assertThat(Lists.transform(response.getData().getPage(), ContestLog::getProblemJid)).containsExactly(
-                Optional.of(PROBLEM_1_JID));
+                Optional.of(problem1.getJid()));
     }
 }

@@ -4,7 +4,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 
 import java.time.Duration;
 import java.util.Collections;

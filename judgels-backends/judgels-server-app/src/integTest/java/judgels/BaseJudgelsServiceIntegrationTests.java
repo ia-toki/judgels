@@ -1,5 +1,6 @@
 package judgels;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
@@ -15,7 +16,14 @@ import io.dropwizard.testing.DropwizardTestSupport;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.Response;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
@@ -36,6 +44,10 @@ import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.jophiel.user.web.WebConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
+import judgels.sandalphon.api.lesson.Lesson;
+import judgels.sandalphon.api.problem.Problem;
+import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.jaxrs.JaxRsClients;
 import judgels.uriel.UrielConfiguration;
@@ -60,6 +72,8 @@ public abstract class BaseJudgelsServiceIntegrationTests {
     protected static AuthHeader adminHeader;
     protected static AuthHeader userHeader;
 
+    protected static WebTarget webTarget;
+
     @BeforeAll
     static void startApp() throws Exception {
         DataSourceFactory dbConfig = new DataSourceFactory();
@@ -74,6 +88,7 @@ public abstract class BaseJudgelsServiceIntegrationTests {
         baseDataDir = Files.createTempDirectory("judgels");
 
         JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
+                .baseUrl("http://localhost:9101")
                 .name("Judgels")
                 .build();
 
@@ -151,6 +166,7 @@ public abstract class BaseJudgelsServiceIntegrationTests {
 
     protected static WebTarget createWebTarget() {
         return JerseyClientBuilder.createClient()
+                .property("jersey.config.client.followRedirects", false)
                 .register(MultiPartFeature.class)
                 .target("http://localhost:" + support.getLocalPort());
     }
@@ -193,6 +209,183 @@ public abstract class BaseJudgelsServiceIntegrationTests {
         return AuthHeader.of(createService(SessionService.class)
                 .logIn(Credentials.of(user.getUsername(), "pass"))
                 .getToken());
+    }
+
+    protected static Problem createBundleProblem(AuthHeader authHeader, String slug) {
+        return createProblem(authHeader, slug, "Bundle");
+    }
+
+    protected static Problem createProblem(AuthHeader authHeader, String slug) {
+        return createProblem(authHeader, slug, "Batch");
+    }
+
+    protected static Problem createProblem(AuthHeader authHeader, String slug, String gradingEngine) {
+        Form form = new Form();
+        form.param("slug", slug);
+        form.param("gradingEngine", gradingEngine);
+        form.param("additionalNote", "");
+        form.param("initialLanguage", "en-US");
+
+        Response response = webTarget
+                .path("/problems/new")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+
+        String redirect = response.getLocation().toString();
+
+        Pattern pattern = Pattern.compile("/(\\d+)/");
+        Matcher matcher = pattern.matcher(redirect);
+        matcher.find();
+
+        long problemId = Long.valueOf(matcher.group(1));
+
+        response = webTarget
+                .path("/problems/" + problemId)
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .get();
+
+        String html = response.readEntity(String.class);
+
+        pattern = Pattern.compile("(JID(?:BUND|PROG)[a-zA-Z0-9]+)");
+        matcher = pattern.matcher(html);
+        matcher.find();
+
+        String problemJid = matcher.group(1);
+
+        return new Problem.Builder()
+                .id(problemId)
+                .jid(problemJid)
+                .slug(slug)
+                .authorJid("JIDUSERxxx")
+                .additionalNote("")
+                .lastUpdateTime(Instant.now())
+                .type(gradingEngine.equals("Bundle") ? ProblemType.BUNDLE : ProblemType.PROGRAMMING)
+                .build();
+    }
+
+    protected static void updateProblemStatement(AuthHeader authHeader, Problem problem, String title, String text) {
+        Form form = new Form();
+        form.param("title", title);
+        form.param("text", text);
+
+        webTarget
+                .path("/problems/" + problem.getId() + "/statements/edit")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+
+        form = new Form();
+        form.param("title", "Update title");
+        form.param("description", "");
+
+        webTarget
+                .path("/problems/" + problem.getId() + "/versions/local")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+    }
+
+    protected static String createBundleProblemItem(AuthHeader authHeader, Problem problem, ItemType type, Form config) {
+        Form form = new Form();
+        form.param("type", type.name());
+
+        Response response = webTarget
+                .path("/problems/bundle/" + problem.getId() + "/items")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+
+        String redirect = response.getLocation().toString();
+        Pattern pattern = Pattern.compile("(JIDITEM[a-zA-Z0-9]+)");
+        Matcher matcher = pattern.matcher(redirect);
+        matcher.find();
+
+        String itemJid = matcher.group(1);
+
+        webTarget
+                .path("/problems/bundle/" + problem.getId() + "/items/" + itemJid)
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(config, APPLICATION_FORM_URLENCODED));
+
+        form = new Form();
+        form.param("title", "Add item");
+        form.param("description", "");
+
+        webTarget
+                .path("/problems/" + problem.getId() + "/versions/local")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+
+        return itemJid;
+    }
+
+    protected static void createProblemEditorial(AuthHeader authHeader, Problem problem) {
+        Form form = new Form();
+        form.param("initialLanguage", "en-US");
+
+        webTarget
+                .path("/problems/" + problem.getId() + "/editorials")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+
+        form = new Form();
+        form.param("title", "Add editorial");
+        form.param("description", "");
+
+        webTarget
+                .path("/problems/" + problem.getId() + "/versions/local")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+    }
+
+    protected static Lesson createLesson(AuthHeader authHeader, String slug) {
+        Form form = new Form();
+        form.param("slug", slug);
+        form.param("additionalNote", "");
+        form.param("initialLanguage", "en-US");
+
+        Response response = webTarget
+                .path("/lessons/new")
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+
+        String redirect = response.getLocation().toString();
+
+        Pattern pattern = Pattern.compile("/(\\d+)/");
+        Matcher matcher = pattern.matcher(redirect);
+        matcher.find();
+
+        long lessonId = Long.valueOf(matcher.group(1));
+
+        response = webTarget
+                .path("/lessons/" + lessonId)
+                .request()
+                .cookie(new Cookie("JUDGELS_TOKEN", authHeader.getBearerToken()))
+                .get();
+
+        String html = response.readEntity(String.class);
+
+        pattern = Pattern.compile("(JIDLESS[a-zA-Z0-9]+)");
+        matcher = pattern.matcher(html);
+        matcher.find();
+
+        String lessonJid = matcher.group(1);
+
+        return new Lesson.Builder()
+                .id(lessonId)
+                .jid(lessonJid)
+                .slug(slug)
+                .authorJid("JIDUSERxxx")
+                .additionalNote("")
+                .lastUpdateTime(Instant.now())
+                .build();
     }
 
     protected static String randomString() {

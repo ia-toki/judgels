@@ -2,7 +2,6 @@ package judgels.uriel.api.contest.editorial;
 
 import static java.util.Optional.empty;
 import static judgels.uriel.api.contest.module.ContestModuleType.EDITORIAL;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 
 import judgels.uriel.api.BaseUrielServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;

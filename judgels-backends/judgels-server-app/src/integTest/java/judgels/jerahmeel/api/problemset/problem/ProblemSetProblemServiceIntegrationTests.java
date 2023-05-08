@@ -1,9 +1,5 @@
 package judgels.jerahmeel.api.problemset.problem;
 
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_JID;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_JID;
 import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_SLUG;
 import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_JID;
@@ -70,11 +66,11 @@ class ProblemSetProblemServiceIntegrationTests extends BaseJerahmeelServiceInteg
         assertThat(response.getData()).containsExactly(
                 new ProblemSetProblem.Builder()
                         .alias("A")
-                        .problemJid(PROBLEM_1_JID)
+                        .problemJid(problem1.getJid())
                         .type(PROGRAMMING)
                         .contestJids(ImmutableList.of(CONTEST_1_JID, CONTEST_2_JID))
                         .build(),
-                new ProblemSetProblem.Builder().alias("B").problemJid(PROBLEM_2_JID).type(PROGRAMMING).build()
+                new ProblemSetProblem.Builder().alias("B").problemJid(problem2.getJid()).type(PROGRAMMING).build()
         );
 
         response = problemSetProblemService.getProblems(Optional.of(adminHeader), problemSetB.getJid());

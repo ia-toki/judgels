@@ -1,9 +1,5 @@
 package judgels.jerahmeel.api.chapter.problem;
 
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_JID;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -36,8 +32,8 @@ class ChapterProblemServiceIntegrationTests extends BaseJerahmeelServiceIntegrat
                 chapterProblemService.getProblems(Optional.of(adminHeader), chapterA.getJid());
 
         assertThat(response.getData()).containsExactly(
-                new ChapterProblem.Builder().alias("A").problemJid(PROBLEM_1_JID).type(ProblemType.PROGRAMMING).build(),
-                new ChapterProblem.Builder().alias("B").problemJid(PROBLEM_2_JID).type(ProblemType.PROGRAMMING).build()
+                new ChapterProblem.Builder().alias("A").problemJid(problem1.getJid()).type(ProblemType.PROGRAMMING).build(),
+                new ChapterProblem.Builder().alias("B").problemJid(problem2.getJid()).type(ProblemType.PROGRAMMING).build()
         );
 
         response = chapterProblemService.getProblems(Optional.of(adminHeader), chapterB.getJid());

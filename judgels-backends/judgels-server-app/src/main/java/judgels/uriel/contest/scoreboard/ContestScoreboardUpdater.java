@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.profile.ProfileStore;
 import judgels.jophiel.user.UserClient;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;

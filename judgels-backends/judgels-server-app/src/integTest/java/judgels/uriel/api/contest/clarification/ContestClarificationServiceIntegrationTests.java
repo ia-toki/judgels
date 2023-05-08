@@ -6,10 +6,6 @@ import static judgels.uriel.api.contest.clarification.ContestClarificationStatus
 import static judgels.uriel.api.contest.clarification.ContestClarificationStatus.ASKED;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
@@ -40,6 +36,9 @@ class ContestClarificationServiceIntegrationTests extends BaseUrielServiceIntegr
                 .modules(REGISTRATION, CLARIFICATION)
                 .problems("A", PROBLEM_1_SLUG, "B", PROBLEM_2_SLUG)
                 .build();
+
+        updateProblemStatement(managerHeader, problem1, "Problem 1", "text");
+        updateProblemStatement(managerHeader, problem2, "Problem 2", "text");
     }
 
     @Test
@@ -87,7 +86,7 @@ class ContestClarificationServiceIntegrationTests extends BaseUrielServiceIntegr
 
     @Test
     void get_clarifications() {
-        ContestClarification clarification1 = createClarification(contestantAHeader, PROBLEM_1_JID);
+        ContestClarification clarification1 = createClarification(contestantAHeader, problem1.getJid());
         ContestClarification clarification2 = createAnsweredClarification(contestantBHeader, contest.getJid());
 
         Map<AuthHeader, List<ContestClarification>> clarificationsMap = new LinkedHashMap<>();
@@ -133,22 +132,22 @@ class ContestClarificationServiceIntegrationTests extends BaseUrielServiceIntegr
         profilesKeysMap.put(contestantBHeader, ImmutableList.of(contestantB.getJid(), supervisorA.getJid()));
 
         Map<AuthHeader, Map<String, String>> problemAliasesMapMap = new LinkedHashMap<>();
-        problemAliasesMapMap.put(adminHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(managerHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(supervisorAHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(supervisorBHeader, ImmutableMap.of(PROBLEM_1_JID, "A"));
-        problemAliasesMapMap.put(contestantAHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
-        problemAliasesMapMap.put(contestantBHeader, ImmutableMap.of(PROBLEM_1_JID, "A", PROBLEM_2_JID, "B"));
+        problemAliasesMapMap.put(adminHeader, ImmutableMap.of(problem1.getJid(), "A"));
+        problemAliasesMapMap.put(managerHeader, ImmutableMap.of(problem1.getJid(), "A"));
+        problemAliasesMapMap.put(supervisorAHeader, ImmutableMap.of(problem1.getJid(), "A"));
+        problemAliasesMapMap.put(supervisorBHeader, ImmutableMap.of(problem1.getJid(), "A"));
+        problemAliasesMapMap.put(contestantAHeader, ImmutableMap.of(problem1.getJid(), "A", problem2.getJid(), "B"));
+        problemAliasesMapMap.put(contestantBHeader, ImmutableMap.of(problem1.getJid(), "A", problem2.getJid(), "B"));
 
         Map<AuthHeader, Map<String, String>> problemNamesMapMap = new LinkedHashMap<>();
-        problemNamesMapMap.put(adminHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
-        problemNamesMapMap.put(managerHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
-        problemNamesMapMap.put(supervisorAHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
-        problemNamesMapMap.put(supervisorBHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1"));
+        problemNamesMapMap.put(adminHeader, ImmutableMap.of(problem1.getJid(), "Problem 1"));
+        problemNamesMapMap.put(managerHeader, ImmutableMap.of(problem1.getJid(), "Problem 1"));
+        problemNamesMapMap.put(supervisorAHeader, ImmutableMap.of(problem1.getJid(), "Problem 1"));
+        problemNamesMapMap.put(supervisorBHeader, ImmutableMap.of(problem1.getJid(), "Problem 1"));
         problemNamesMapMap.put(
-                contestantAHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1", PROBLEM_2_JID, "Problem 2"));
+                contestantAHeader, ImmutableMap.of(problem1.getJid(), "Problem 1", problem2.getJid(), "Problem 2"));
         problemNamesMapMap.put(
-                contestantBHeader, ImmutableMap.of(PROBLEM_1_JID, "Problem 1", PROBLEM_2_JID, "Problem 2"));
+                contestantBHeader, ImmutableMap.of(problem1.getJid(), "Problem 1", problem2.getJid(), "Problem 2"));
 
         for (AuthHeader authHeader : clarificationsMap.keySet()) {
             ContestClarificationsResponse response =
@@ -166,10 +165,10 @@ class ContestClarificationServiceIntegrationTests extends BaseUrielServiceIntegr
 
     @Test
     void get_clarifications__with_status_filter() {
-        ContestClarification clarification1 = createClarification(contestantAHeader, PROBLEM_1_JID);
+        ContestClarification clarification1 = createClarification(contestantAHeader, problem1.getJid());
         ContestClarification clarification2 = createAnsweredClarification(contestantBHeader, contest.getJid());
         ContestClarification clarification3 = createClarification(contestantAHeader, contest.getJid());
-        ContestClarification clarification4 = createAnsweredClarification(contestantBHeader, PROBLEM_1_JID);
+        ContestClarification clarification4 = createAnsweredClarification(contestantBHeader, problem1.getJid());
 
         Map<ContestClarificationStatus, List<ContestClarification>> clarificationsMap = new LinkedHashMap<>();
         clarificationsMap.put(ASKED, ImmutableList.of(clarification3, clarification1));

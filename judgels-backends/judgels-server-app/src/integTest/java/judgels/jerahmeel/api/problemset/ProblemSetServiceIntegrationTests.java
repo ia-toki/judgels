@@ -1,7 +1,5 @@
 package judgels.jerahmeel.api.problemset;
 
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.jerahmeel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_JID;
 import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_1_SLUG;
 import static judgels.jerahmeel.api.mocks.MockUriel.CONTEST_2_JID;

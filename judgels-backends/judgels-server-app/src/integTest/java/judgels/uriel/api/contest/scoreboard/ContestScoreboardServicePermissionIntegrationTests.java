@@ -3,8 +3,6 @@ package judgels.uriel.api.contest.scoreboard;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
-import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_SLUG;
 
 import java.util.Optional;
 import judgels.service.api.actor.AuthHeader;
