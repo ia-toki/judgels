@@ -4,7 +4,6 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.auth.AuthModule;
-import judgels.jophiel.client.user.ClientUserResource;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.profile.ProfileResource;
@@ -63,7 +62,6 @@ public interface JophielComponent {
     UserRatingResource userRatingResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
-    ClientUserResource clientUserResource();
 
     JudgelsScheduler scheduler();
     SessionCleaner sessionCleaner();

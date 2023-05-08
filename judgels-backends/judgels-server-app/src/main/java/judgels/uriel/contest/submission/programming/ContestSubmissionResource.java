@@ -419,22 +419,6 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .build();
     }
 
-    @Override
-    @UnitOfWork(readOnly = true)
-    public List<Submission> getSubmissionsForStats(
-            String contestJid,
-            Optional<Long> lastSubmissionId,
-            Optional<Integer> limit) {
-
-
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAll(contest));
-
-        return submissionStore
-                .getSubmissionsForStats(Optional.of(contestJid), lastSubmissionId, limit.orElse(100))
-                .getPage();
-    }
-
     private Optional<String> byUserJid(Optional<String> username) {
         return username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
     }

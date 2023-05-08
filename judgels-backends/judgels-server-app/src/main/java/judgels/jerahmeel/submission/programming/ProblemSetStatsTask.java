@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
@@ -17,7 +18,10 @@ public class ProblemSetStatsTask extends Task {
     private final SubmissionStore submissionStore;
     private final StatsProcessor statsProcessor;
 
-    public ProblemSetStatsTask(SubmissionStore submissionStore, StatsProcessor statsProcessor) {
+    public ProblemSetStatsTask(
+            @JerahmeelSubmissionStore SubmissionStore submissionStore,
+            StatsProcessor statsProcessor) {
+
         super("jerahmeel-stats-problemset");
 
         this.submissionStore = submissionStore;

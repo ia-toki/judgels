@@ -152,7 +152,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userRatingResource());
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
-        env.jersey().register(component.clientUserResource());
 
         component.scheduler().scheduleWithFixedDelay(
                 "jophiel-session-cleaner",
@@ -234,7 +233,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .sandalphonModule(new SandalphonModule(judgelsConfig.getAppConfig(), sandalphonConfig))
-                .urielModule(new judgels.jerahmeel.uriel.UrielModule(jerahmeelConfig.getUrielConfig()))
                 .gabrielModule(new judgels.jerahmeel.gabriel.GabrielModule(jerahmeelConfig.getGabrielConfig()))
                 .messagingModule(new judgels.jerahmeel.messaging.MessagingModule(jerahmeelConfig.getRabbitMQConfig()))
                 .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(

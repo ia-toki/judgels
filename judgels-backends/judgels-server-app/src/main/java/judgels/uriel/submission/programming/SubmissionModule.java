@@ -13,6 +13,9 @@ import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.messaging.MessageClient;
+import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
+import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
+import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
 import judgels.sandalphon.submission.programming.NoOpSubmissionConsumer;
@@ -24,6 +27,9 @@ import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.JudgelsScheduler;
 import judgels.uriel.UrielBaseDataDir;
+import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
+import judgels.uriel.persistence.ContestProgrammingGradingDao;
+import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 
 @Module
 public class SubmissionModule {
@@ -42,13 +48,29 @@ public class SubmissionModule {
 
     @Provides
     @Singleton
-    SubmissionSourceBuilder submissionSourceBuilder(@SubmissionFs FileSystem submissionFs) {
+    static SubmissionStore submissionStore(
+            ContestProgrammingSubmissionDao submissionDao,
+            ContestProgrammingGradingDao gradingDao,
+            ObjectMapper mapper) {
+
+        return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
+    }
+
+    @Provides
+    @Singleton
+    static ItemSubmissionStore itemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
+        return new BaseItemSubmissionStore<>(submissionDao);
+    }
+
+    @Provides
+    @Singleton
+    static SubmissionSourceBuilder submissionSourceBuilder(@SubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 
     @Provides
     @Singleton
-    SubmissionClient submissionClient(
+    static SubmissionClient submissionClient(
             SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
@@ -65,7 +87,7 @@ public class SubmissionModule {
 
     @Provides
     @Singleton
-    SubmissionRegrader submissionRegrader(
+    static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
             SubmissionStore submissionStore,
             SubmissionRegradeProcessor processor) {

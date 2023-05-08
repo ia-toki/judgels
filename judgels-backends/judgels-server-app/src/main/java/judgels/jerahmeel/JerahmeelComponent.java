@@ -25,7 +25,6 @@ import judgels.jerahmeel.submission.programming.ProblemSetStatsTask;
 import judgels.jerahmeel.submission.programming.StatsModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
-import judgels.jerahmeel.uriel.UrielModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
@@ -52,8 +51,6 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         SubmissionModule.class,
         ItemSubmissionModule.class,
 
-        SandalphonModule.class,
-        UrielModule.class,
         GabrielModule.class,
         MessagingModule.class,
 

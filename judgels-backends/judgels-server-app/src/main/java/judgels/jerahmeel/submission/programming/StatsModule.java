@@ -3,10 +3,10 @@ package judgels.jerahmeel.submission.programming;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import java.util.Optional;
 import javax.inject.Singleton;
+import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
+import judgels.jerahmeel.uriel.ContestClient;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.uriel.api.contest.submission.programming.ContestSubmissionService;
 
 @Module
 public class StatsModule {
@@ -16,7 +16,7 @@ public class StatsModule {
     @Singleton
     static ProblemSetStatsTask problemSetStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            SubmissionStore submissionStore,
+            @JerahmeelSubmissionStore SubmissionStore submissionStore,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -33,16 +33,16 @@ public class StatsModule {
     @Singleton
     static ContestStatsTask contestStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            Optional<ContestSubmissionService> contestSubmissionService,
+            ContestClient contestClient,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestStatsTask.class,
                 new Class<?>[] {
-                        Optional.class,
+                        ContestClient.class,
                         StatsProcessor.class},
                 new Object[] {
-                        contestSubmissionService,
+                        contestClient,
                         statsProcessor});
     }
 }

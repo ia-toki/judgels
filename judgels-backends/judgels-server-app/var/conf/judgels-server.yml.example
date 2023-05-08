@@ -110,28 +110,12 @@ jophiel:
 sandalphon:
   baseDataDir: var/data
 
-  clients:
-    - jid: JIDSACL-uriel-local
-      secret: sandalphon-local
-    - jid: JIDSACL-gabriel-local
-      secret: sandalphon-local
-    - jid: JIDSACL-jerahmeel-local
-      secret: sandalphon-local
-
-  jophiel:
-    baseUrl: http://localhost:9101
-
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: sandalphon-grading-response
 
 uriel:
   baseDataDir: var/data
-
-  sandalphon:
-    baseUrl: http://localhost:9002
-    clientJid: JIDSACL-uriel-local
-    clientSecret: sandalphon-local
 
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
@@ -159,14 +143,6 @@ uriel:
 
 jerahmeel:
   baseDataDir: var/data
-
-  sandalphon:
-    baseUrl: http://localhost:9002
-    clientJid: JIDSACL-jerahmeel-local
-    clientSecret: sandalphon-local
-
-  uriel:
-    baseUrl: http://localhost:9101
 
   gabriel:
     gradingRequestQueueName: gabriel-grading-request

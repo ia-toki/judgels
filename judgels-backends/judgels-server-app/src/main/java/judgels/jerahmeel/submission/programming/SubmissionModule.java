@@ -13,8 +13,16 @@ import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.jerahmeel.JerahmeelBaseDataDir;
+import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
+import judgels.jerahmeel.persistence.ProgrammingGradingDao;
+import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.stats.StatsConfiguration;
+import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
+import judgels.jerahmeel.submission.UrielSubmissionStore;
 import judgels.messaging.MessageClient;
+import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
+import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
+import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
 import judgels.sandalphon.submission.programming.NoOpSubmissionConsumer;
@@ -25,6 +33,8 @@ import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.JudgelsScheduler;
+import judgels.uriel.persistence.ContestProgrammingGradingDao;
+import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 
 @Module
 public class SubmissionModule {
@@ -45,14 +55,43 @@ public class SubmissionModule {
 
     @Provides
     @Singleton
-    SubmissionSourceBuilder submissionSourceBuilder(@SubmissionFs FileSystem submissionFs) {
+    @JerahmeelSubmissionStore
+    static SubmissionStore jerahmeelSubmissionStore(
+            ProgrammingSubmissionDao submissionDao,
+            ProgrammingGradingDao gradingDao,
+            ObjectMapper mapper) {
+
+        return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
+    }
+
+    @Provides
+    @Singleton
+    @UrielSubmissionStore
+    static SubmissionStore urielSubmissionStore(
+            ContestProgrammingSubmissionDao submissionDao,
+            ContestProgrammingGradingDao gradingDao,
+            ObjectMapper mapper) {
+
+        return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
+    }
+
+    @Provides
+    @Singleton
+    static ItemSubmissionStore itemSubmissionStore(BundleItemSubmissionDao submissionDao) {
+        return new BaseItemSubmissionStore<>(submissionDao);
+    }
+
+
+    @Provides
+    @Singleton
+    static SubmissionSourceBuilder submissionSourceBuilder(@SubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 
     @Provides
     @Singleton
-    SubmissionClient submissionClient(
-            SubmissionStore submissionStore,
+    static SubmissionClient submissionClient(
+            @JerahmeelSubmissionStore SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             MessageClient messageClient,
@@ -68,9 +107,9 @@ public class SubmissionModule {
 
     @Provides
     @Singleton
-    SubmissionRegrader submissionRegrader(
+    static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
-            SubmissionStore submissionStore,
+            @JerahmeelSubmissionStore SubmissionStore submissionStore,
             SubmissionRegradeProcessor processor) {
 
         ExecutorService executorService = scheduler.createExecutorService("jerahmeel-submission-regrade-processor-%d", 5);
@@ -94,7 +133,7 @@ public class SubmissionModule {
     GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
-            SubmissionStore submissionStore,
+            @JerahmeelSubmissionStore SubmissionStore submissionStore,
             MessageClient messageClient,
             StatsProcessor statsProcessor) {
 

@@ -1,18 +1,9 @@
 package judgels.uriel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import javax.inject.Singleton;
-import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
-import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
-import judgels.sandalphon.submission.programming.BaseSubmissionStore;
-import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
-import judgels.uriel.persistence.ContestProgrammingGradingDao;
-import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 
 @Module
 public class UrielModule {
@@ -26,21 +17,5 @@ public class UrielModule {
     @UrielBaseDataDir
     Path urielBaseDataDir() {
         return Paths.get(config.getBaseDataDir());
-    }
-
-    @Provides
-    @Singleton
-    static SubmissionStore submissionStore(
-            ContestProgrammingSubmissionDao submissionDao,
-            ContestProgrammingGradingDao gradingDao,
-            ObjectMapper mapper) {
-
-        return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
-    }
-
-    @Provides
-    @Singleton
-    static ItemSubmissionStore itemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
-        return new BaseItemSubmissionStore<>(submissionDao);
     }
 }

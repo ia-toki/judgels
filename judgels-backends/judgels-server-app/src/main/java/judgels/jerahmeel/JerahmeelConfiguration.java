@@ -8,20 +8,12 @@ import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
-import judgels.sandalphon.api.SandalphonClientConfiguration;
-import judgels.uriel.api.UrielClientConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJerahmeelConfiguration.class)
 public interface JerahmeelConfiguration {
     String getBaseDataDir();
-
-    @JsonProperty("sandalphon")
-    SandalphonClientConfiguration getSandalphonConfig();
-
-    @JsonProperty("uriel")
-    Optional<UrielClientConfiguration> getUrielConfig();
 
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();

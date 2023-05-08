@@ -28,7 +28,6 @@ import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jophiel.JophielConfiguration;
-import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionService;
@@ -43,7 +42,6 @@ import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.jophiel.user.web.WebConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
-import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -51,7 +49,6 @@ import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.jaxrs.JaxRsClients;
 import judgels.uriel.UrielConfiguration;
-import judgels.uriel.api.UrielClientConfiguration;
 import judgels.uriel.file.FileConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -117,7 +114,6 @@ public abstract class BaseJudgelsServiceIntegrationTests {
 
         UrielConfiguration urielConfig = new UrielConfiguration.Builder()
                 .baseDataDir(baseDataDir.toString())
-                .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .submissionConfig(judgels.uriel.submission.programming.SubmissionConfiguration.DEFAULT)
                 .fileConfig(FileConfiguration.DEFAULT)
@@ -125,14 +121,11 @@ public abstract class BaseJudgelsServiceIntegrationTests {
 
         SandalphonConfiguration sandalphonConfig = new SandalphonConfiguration.Builder()
                 .baseDataDir(baseDataDir.toString())
-                .jophielConfig(JophielClientConfiguration.DEFAULT)
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .build();
 
         JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
                 .baseDataDir(baseDataDir.toString())
-                .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
-                .urielConfig(UrielClientConfiguration.DEFAULT)
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .submissionConfig(judgels.jerahmeel.submission.programming.SubmissionConfiguration.DEFAULT)
                 .statsConfig(StatsConfiguration.DEFAULT)
