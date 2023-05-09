@@ -46,6 +46,12 @@ judgels:
   app:
     baseUrl: http://localhost:9101
     name: Judgels
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest
+#    virtualHost: "/"
 
 jophiel:
   mailer:
@@ -115,13 +121,6 @@ uriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: uriel-grading-response
 
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    virtualHost: "/"
-
   aws:
     accessKey: xxx
     secretKey: xxx
@@ -139,13 +138,6 @@ jerahmeel:
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: jerahmeel-grading-response
-
-  #  rabbitmq:
-  #    host: localhost
-  #    port: 5672
-  #    username: guest
-  #    password: guest
-  #    virtualHost: "/"
 
   aws:
     accessKey: xxx

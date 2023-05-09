@@ -7,7 +7,6 @@ import judgels.fs.aws.AwsConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
-import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -15,9 +14,6 @@ import org.immutables.value.Value;
 public interface JerahmeelConfiguration {
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
-
-    @JsonProperty("rabbitmq")
-    Optional<RabbitMQConfiguration> getRabbitMQConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

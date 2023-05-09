@@ -55,13 +55,13 @@ import judgels.uriel.submission.programming.SubmissionModule;
         UrielHibernateDaoModule.class,
 
         // 3rd parties
-        AwsModule.class,
-        FileModule.class,
         RabbitMQModule.class,
+        AwsModule.class,
         SandalphonClientModule.class,
         GabrielClientModule.class,
 
         // Features
+        FileModule.class,
         SubmissionModule.class,
         ItemSubmissionModule.class,
         ContestLogModule.class,

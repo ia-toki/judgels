@@ -6,7 +6,6 @@ import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
-import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.uriel.file.FileConfiguration;
 import judgels.uriel.submission.programming.SubmissionConfiguration;
 import org.immutables.value.Value;
@@ -16,9 +15,6 @@ import org.immutables.value.Value;
 public interface UrielConfiguration {
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
-
-    @JsonProperty("rabbitmq")
-    Optional<RabbitMQConfiguration> getRabbitMQConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

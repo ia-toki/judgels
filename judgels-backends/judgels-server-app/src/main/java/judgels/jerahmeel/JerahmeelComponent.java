@@ -52,8 +52,8 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         JerahmeelHibernateDaoModule.class,
 
         // 3rd parties
-        AwsModule.class,
         RabbitMQModule.class,
+        AwsModule.class,
         SandalphonClientModule.class,
         GabrielClientModule.class,
 

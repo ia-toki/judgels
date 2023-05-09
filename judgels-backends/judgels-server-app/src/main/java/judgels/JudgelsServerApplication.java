@@ -80,7 +80,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .rabbitMQModule(new RabbitMQModule(sandalphonConfig.getRabbitMQConfig()))
+                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(sandalphonConfig.getGabrielConfig()))
                 .build();
 
@@ -162,14 +162,14 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .rabbitMQModule(new RabbitMQModule(sandalphonConfig.getRabbitMQConfig()))
+                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(sandalphonConfig.getGabrielConfig()))
                 .build();
 
         env.jersey().register(component.problemResource());
         env.jersey().register(component.lessonResource());
 
-        if (sandalphonConfig.getRabbitMQConfig().isPresent()) {
+        if (judgelsConfig.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
                     "sandalphon-grading-response-poller",
                     component.gradingResponsePoller());
@@ -184,10 +184,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
+                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
-                .fileModule(new FileModule(urielConfig.getFileConfig()))
-                .rabbitMQModule(new RabbitMQModule(urielConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(urielConfig.getGabrielConfig()))
+                .fileModule(new FileModule(urielConfig.getFileConfig()))
                 .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(urielConfig.getSubmissionConfig()))
                 .build();
 
@@ -219,12 +219,13 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 component.contestLogPoller(),
                 Duration.ofSeconds(3));
 
-        if (urielConfig.getRabbitMQConfig().isPresent()) {
+        if (judgelsConfig.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
                     "uriel-grading-response-poller",
                     component.gradingResponsePoller());
         }
     }
+
     private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
@@ -233,8 +234,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
+                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
-                .rabbitMQModule(new RabbitMQModule(jerahmeelConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(jerahmeelConfig.getGabrielConfig()))
                 .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),
@@ -256,7 +257,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.submissionResource());
         env.jersey().register(component.userStatsResource());
 
-        if (jerahmeelConfig.getRabbitMQConfig().isPresent()) {
+        if (judgelsConfig.getRabbitMQConfig().isPresent()) {
             component.scheduler().scheduleOnce(
                     "jerahmeel-grading-response-poller",
                     component.gradingResponsePoller());
