@@ -4,6 +4,7 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.index.IndexResource;
 import judgels.michael.lesson.LessonResource;
 import judgels.michael.lesson.partner.LessonPartnerResource;
@@ -23,26 +24,34 @@ import judgels.michael.problem.render.ProblemEditorialRenderResources;
 import judgels.michael.problem.render.ProblemStatementRenderResources;
 import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
-import judgels.sandalphon.SandalphonModule;
+import judgels.sandalphon.SandalphonClientModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
-import judgels.sandalphon.submission.SandalphonSubmissionModule;
+import judgels.sandalphon.submission.SubmissionModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
+import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
+        // Judgels service
         JudgelsModule.class,
         JudgelsServerModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
 
+        // Database
         JudgelsHibernateModule.class,
         JophielHibernateDaoModule.class,
         SandalphonHibernateDaoModule.class,
 
-        SandalphonModule.class,
-        SandalphonSubmissionModule.class})
+        // 3rd parties
+        RabbitMQModule.class,
+        GabrielClientModule.class,
+        SandalphonClientModule.class,
+
+        // Features
+        SubmissionModule.class})
 @Singleton
 public interface MichaelComponent {
     IndexResource indexResource();

@@ -6,7 +6,7 @@ import judgels.JudgelsServerModule;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
-import judgels.sandalphon.SandalphonModule;
+import judgels.sandalphon.SandalphonClientModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
@@ -42,23 +42,26 @@ import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
 @Component(modules = {
+        // Judgels service
         JudgelsModule.class,
         JudgelsServerModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
 
+        // Database
         JudgelsHibernateModule.class,
         JophielHibernateDaoModule.class,
         SandalphonHibernateDaoModule.class,
         UrielHibernateDaoModule.class,
 
-        SandalphonModule.class,
-        GabrielClientModule.class,
-
+        // 3rd parties
         AwsModule.class,
         FileModule.class,
         RabbitMQModule.class,
+        SandalphonClientModule.class,
+        GabrielClientModule.class,
 
+        // Features
         SubmissionModule.class,
         ItemSubmissionModule.class,
         ContestLogModule.class,

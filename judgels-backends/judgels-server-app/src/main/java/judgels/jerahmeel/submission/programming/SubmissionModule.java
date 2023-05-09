@@ -124,7 +124,7 @@ public class SubmissionModule {
             MessageClient messageClient,
             GradingResponseProcessor processor) {
 
-        ExecutorService executorService = scheduler.createExecutorService("grading-response-processor-%d", 10);
+        ExecutorService executorService = scheduler.createExecutorService("jerahmeel-grading-response-processor-%d", 10);
         return new GradingResponsePoller(gradingResponseQueueName, messageClient, executorService, processor);
     }
 

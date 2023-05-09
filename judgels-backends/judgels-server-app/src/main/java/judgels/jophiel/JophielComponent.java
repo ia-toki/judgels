@@ -34,18 +34,23 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
+        // Judgels service
         JudgelsModule.class,
         JudgelsServerModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
 
+        // Database
         JudgelsHibernateModule.class,
         JophielHibernateDaoModule.class,
 
+        // 3rd parties
         AuthModule.class,
         AwsModule.class,
         MailerModule.class,
         RecaptchaModule.class,
+
+        // Features
         SuperadminModule.class,
         UserAvatarModule.class,
         UserRegistrationModule.class,

@@ -13,8 +13,8 @@ import judgels.sandalphon.problem.base.ProblemFs;
 import judgels.sandalphon.problem.base.ProblemGit;
 
 @Module
-public class SandalphonModule {
-    private SandalphonModule() {}
+public class SandalphonClientModule {
+    private SandalphonClientModule() {}
 
     @Provides
     @Singleton
