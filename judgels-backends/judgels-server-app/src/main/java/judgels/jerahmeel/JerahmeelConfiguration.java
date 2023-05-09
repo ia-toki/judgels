@@ -13,8 +13,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJerahmeelConfiguration.class)
 public interface JerahmeelConfiguration {
-    String getBaseDataDir();
-
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
 

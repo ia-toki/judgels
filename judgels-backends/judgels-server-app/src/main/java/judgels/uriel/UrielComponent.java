@@ -2,6 +2,7 @@ package judgels.uriel;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.JudgelsServerModule;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.sandalphon.SandalphonModule;
@@ -41,29 +42,25 @@ import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
 @Component(modules = {
-        // Jophiel
-        JophielHibernateDaoModule.class,
-
-        // Sandalphon
-        SandalphonModule.class,
-        SandalphonHibernateDaoModule.class,
-
-        AwsModule.class,
-        FileModule.class,
-        SubmissionModule.class,
-        ItemSubmissionModule.class,
-
-        GabrielModule.class,
-        MessagingModule.class,
-
         JudgelsModule.class,
-        JudgelsHibernateModule.class,
+        JudgelsServerModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
 
-        UrielModule.class,
+        JudgelsHibernateModule.class,
+        JophielHibernateDaoModule.class,
+        SandalphonHibernateDaoModule.class,
         UrielHibernateDaoModule.class,
 
+        SandalphonModule.class,
+        GabrielModule.class,
+        MessagingModule.class,
+
+        AwsModule.class,
+        FileModule.class,
+
+        SubmissionModule.class,
+        ItemSubmissionModule.class,
         ContestLogModule.class,
         ContestScoreboardUpdaterModule.class})
 @Singleton

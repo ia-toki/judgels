@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import judgels.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
@@ -26,7 +27,6 @@ import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.JudgelsScheduler;
-import judgels.uriel.UrielBaseDataDir;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestProgrammingGradingDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
@@ -42,7 +42,7 @@ public class SubmissionModule {
     @Provides
     @Singleton
     @SubmissionFs
-    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig, @UrielBaseDataDir Path baseDataDir) {
+    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig, @JudgelsBaseDataDir Path baseDataDir) {
         return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("submissions"));
     }
 

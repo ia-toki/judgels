@@ -1,4 +1,4 @@
-package judgels.uriel;
+package judgels;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -7,4 +7,4 @@ import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RUNTIME)
-public @interface UrielBaseDataDir {}
+public @interface JudgelsBaseDataDir {}

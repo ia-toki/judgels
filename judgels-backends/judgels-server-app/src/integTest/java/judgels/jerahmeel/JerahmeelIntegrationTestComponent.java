@@ -20,7 +20,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         JudgelsModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
-        JerahmeelModule.class,
         JerahmeelHibernateDaoModule.class})
 @Singleton
 public interface JerahmeelIntegrationTestComponent {

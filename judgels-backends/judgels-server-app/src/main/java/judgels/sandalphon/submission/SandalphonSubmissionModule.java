@@ -3,10 +3,11 @@ package judgels.sandalphon.submission;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import judgels.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.messaging.MessageClient;
@@ -35,8 +36,8 @@ public class SandalphonSubmissionModule {
     @Provides
     @Singleton
     @SubmissionFs
-    FileSystem submissionFs() {
-        return new LocalFileSystem(Paths.get(config.getBaseDataDir(), "submissions"));
+    FileSystem submissionFs(@JudgelsBaseDataDir Path baseDataDir) {
+        return new LocalFileSystem(baseDataDir.resolve("submissions"));
     }
 
     @Provides

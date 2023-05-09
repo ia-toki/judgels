@@ -19,8 +19,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJophielConfiguration.class)
 public interface JophielConfiguration {
-    String getBaseDataDir();
-
     @JsonProperty("auth")
     Optional<AuthConfiguration> getAuthConfig();
 

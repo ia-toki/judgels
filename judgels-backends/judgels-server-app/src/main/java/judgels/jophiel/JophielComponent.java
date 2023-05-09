@@ -2,6 +2,7 @@ package judgels.jophiel;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.JudgelsServerModule;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
@@ -33,13 +34,16 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
-        AuthModule.class,
-        AwsModule.class,
-        JophielHibernateDaoModule.class,
         JudgelsModule.class,
-        JudgelsHibernateModule.class,
+        JudgelsServerModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
+
+        JudgelsHibernateModule.class,
+        JophielHibernateDaoModule.class,
+
+        AuthModule.class,
+        AwsModule.class,
         MailerModule.class,
         RecaptchaModule.class,
         SuperadminModule.class,

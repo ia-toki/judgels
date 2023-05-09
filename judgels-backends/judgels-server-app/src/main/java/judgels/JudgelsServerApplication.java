@@ -8,13 +8,11 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.nio.file.Paths;
 import java.time.Duration;
 import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
-import judgels.jerahmeel.JerahmeelModule;
 import judgels.jophiel.DaggerJophielComponent;
 import judgels.jophiel.JophielComponent;
 import judgels.jophiel.JophielConfiguration;
@@ -33,7 +31,6 @@ import judgels.recaptcha.RecaptchaModule;
 import judgels.sandalphon.DaggerSandalphonComponent;
 import judgels.sandalphon.SandalphonComponent;
 import judgels.sandalphon.SandalphonConfiguration;
-import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.submission.SandalphonSubmissionModule;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -42,7 +39,6 @@ import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.uriel.DaggerUrielComponent;
 import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
-import judgels.uriel.UrielModule;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 
@@ -80,13 +76,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
+                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
-
-                // Sandalphon
-                .sandalphonModule(new SandalphonModule(judgelsConfig.getAppConfig(), sandalphonConfig))
                 .sandalphonSubmissionModule(new SandalphonSubmissionModule(sandalphonConfig))
-
                 .build();
 
         env.servlets().setSessionHandler(new SessionHandler());
@@ -118,18 +111,19 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     }
 
     private void runJophiel(JudgelsServerApplicationConfiguration config, Environment env) {
+        JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JophielConfiguration jophielConfig = config.getJophielConfig();
 
         JophielComponent component = DaggerJophielComponent.builder()
-                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
-                .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
+                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
+
+                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
+                .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
-                .userAvatarModule(new UserAvatarModule(
-                        Paths.get(jophielConfig.getBaseDataDir()),
-                        jophielConfig.getUserAvatarConfig()))
+                .userAvatarModule(new UserAvatarModule(jophielConfig.getUserAvatarConfig()))
                 .userRegistrationModule(new UserRegistrationModule(
                         jophielConfig.getUserRegistrationConfig(),
                         UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
@@ -161,11 +155,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runSandalphon(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         SandalphonComponent component = DaggerSandalphonComponent.builder()
+                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .sandalphonModule(new SandalphonModule(judgelsConfig.getAppConfig(), sandalphonConfig))
                 .build();
 
         env.jersey().register(component.problemResource());
@@ -175,18 +168,16 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     private void runUriel(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         UrielConfiguration urielConfig = config.getUrielConfig();
-        SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         UrielComponent component = DaggerUrielComponent.builder()
-                .awsModule(new AwsModule(urielConfig.getAwsConfig()))
-                .fileModule(new FileModule(urielConfig.getFileConfig()))
+                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
-                .sandalphonModule(new SandalphonModule(judgelsConfig.getAppConfig(), sandalphonConfig))
+                .awsModule(new AwsModule(urielConfig.getAwsConfig()))
+                .fileModule(new FileModule(urielConfig.getFileConfig()))
                 .gabrielModule(new judgels.uriel.gabriel.GabrielModule(urielConfig.getGabrielConfig()))
                 .messagingModule(new judgels.uriel.messaging.MessagingModule(urielConfig.getRabbitMQConfig()))
                 .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(urielConfig.getSubmissionConfig()))
-                .urielModule(new UrielModule(urielConfig))
                 .build();
 
         env.jersey().register(component.contestResource());
@@ -226,19 +217,17 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
-        SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
-                .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
+                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
-                .sandalphonModule(new SandalphonModule(judgelsConfig.getAppConfig(), sandalphonConfig))
+                .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
                 .gabrielModule(new judgels.jerahmeel.gabriel.GabrielModule(jerahmeelConfig.getGabrielConfig()))
                 .messagingModule(new judgels.jerahmeel.messaging.MessagingModule(jerahmeelConfig.getRabbitMQConfig()))
                 .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),
                         jerahmeelConfig.getStatsConfig()))
-                .jerahmeelModule(new JerahmeelModule(jerahmeelConfig))
                 .build();
 
         env.jersey().register(component.archiveResource());

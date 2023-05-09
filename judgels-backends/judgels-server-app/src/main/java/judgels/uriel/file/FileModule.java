@@ -5,10 +5,10 @@ import dagger.Provides;
 import java.nio.file.Path;
 import java.util.Optional;
 import javax.inject.Singleton;
+import judgels.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
-import judgels.uriel.UrielBaseDataDir;
 
 @Module
 public class FileModule {
@@ -21,7 +21,7 @@ public class FileModule {
     @Provides
     @Singleton
     @FileFs
-    FileSystem fileFs(Optional<AwsConfiguration> awsConfig, @UrielBaseDataDir Path baseDataDir) {
+    FileSystem fileFs(Optional<AwsConfiguration> awsConfig, @JudgelsBaseDataDir Path baseDataDir) {
         return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("files"));
     }
 }

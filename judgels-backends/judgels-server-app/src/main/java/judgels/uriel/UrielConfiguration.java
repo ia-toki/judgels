@@ -14,8 +14,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUrielConfiguration.class)
 public interface UrielConfiguration {
-    String getBaseDataDir();
-
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
 

@@ -10,8 +10,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSandalphonConfiguration.class)
 public interface SandalphonConfiguration {
-    String getBaseDataDir();
-
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
 

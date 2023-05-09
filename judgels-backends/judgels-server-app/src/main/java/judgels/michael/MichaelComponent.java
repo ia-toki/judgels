@@ -2,6 +2,7 @@ package judgels.michael;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.JudgelsServerModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.michael.index.IndexResource;
 import judgels.michael.lesson.LessonResource;
@@ -32,15 +33,14 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
         JudgelsModule.class,
-        JudgelsHibernateModule.class,
+        JudgelsServerModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
 
-        // Jophiel
+        JudgelsHibernateModule.class,
         JophielHibernateDaoModule.class,
-
-        // Sandalphon
         SandalphonHibernateDaoModule.class,
+
         SandalphonModule.class,
         SandalphonSubmissionModule.class})
 @Singleton

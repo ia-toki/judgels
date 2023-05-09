@@ -2,6 +2,7 @@ package judgels.sandalphon;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.JudgelsServerModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.lesson.LessonResource;
 import judgels.sandalphon.problem.base.ProblemResource;
@@ -11,10 +12,13 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 
 @Component(modules = {
         JudgelsModule.class,
-        JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
-        SandalphonModule.class,
-        SandalphonHibernateDaoModule.class})
+        JudgelsServerModule.class,
+
+        JudgelsHibernateModule.class,
+        SandalphonHibernateDaoModule.class,
+
+        SandalphonModule.class})
 @Singleton
 public interface SandalphonComponent {
     ProblemResource problemResource();

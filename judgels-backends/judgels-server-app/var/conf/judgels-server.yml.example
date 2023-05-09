@@ -48,8 +48,6 @@ judgels:
     name: Judgels
 
 jophiel:
-  baseDataDir: var/data
-
   mailer:
     host: smtp.mailtrap.io
     port: 2525
@@ -108,15 +106,11 @@ jophiel:
     announcements: []
 
 sandalphon:
-  baseDataDir: var/data
-
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: sandalphon-grading-response
 
 uriel:
-  baseDataDir: var/data
-
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: uriel-grading-response
@@ -142,8 +136,6 @@ uriel:
       type: local
 
 jerahmeel:
-  baseDataDir: var/data
-
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: jerahmeel-grading-response

@@ -2,9 +2,9 @@ package judgels.sandalphon;
 
 import dagger.Module;
 import dagger.Provides;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import javax.inject.Singleton;
-import judgels.JudgelsAppConfiguration;
+import judgels.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.sandalphon.lesson.LessonFs;
@@ -14,36 +14,20 @@ import judgels.sandalphon.problem.base.ProblemGit;
 
 @Module
 public class SandalphonModule {
-    private final JudgelsAppConfiguration appConfig;
-    private final SandalphonConfiguration config;
-
-    public SandalphonModule(JudgelsAppConfiguration appConfig, SandalphonConfiguration config) {
-        this.appConfig = appConfig;
-        this.config = config;
-    }
-
-    @Provides
-    JudgelsAppConfiguration appConfig() {
-        return appConfig;
-    }
-
-    @Provides
-    SandalphonConfiguration sandalphonConfig() {
-        return config;
-    }
+    private SandalphonModule() {}
 
     @Provides
     @Singleton
     @ProblemFs
-    FileSystem problemFs() {
-        return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
+    static FileSystem problemFs(@JudgelsBaseDataDir Path baseDataDir) {
+        return new LocalFileSystem(baseDataDir);
     }
 
     @Provides
     @Singleton
     @LessonFs
-    FileSystem lessonFs() {
-        return new LocalFileSystem(Paths.get(config.getBaseDataDir()));
+    static FileSystem lessonFs(@JudgelsBaseDataDir Path baseDataDir) {
+        return new LocalFileSystem(baseDataDir);
     }
 
     @Provides

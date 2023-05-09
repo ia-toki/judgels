@@ -2,6 +2,7 @@ package judgels.jerahmeel;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.JudgelsServerModule;
 import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.archive.ArchiveResource;
 import judgels.jerahmeel.chapter.ChapterResource;
@@ -37,31 +38,25 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
 @Component(modules = {
-        // Jophiel
-        JophielHibernateDaoModule.class,
-
-        // Sandalphon
-        SandalphonModule.class,
-        SandalphonHibernateDaoModule.class,
-
-        // Uriel
-        UrielHibernateDaoModule.class,
-
-        AwsModule.class,
-        SubmissionModule.class,
-        ItemSubmissionModule.class,
-
-        GabrielModule.class,
-        MessagingModule.class,
-
         JudgelsModule.class,
-        JudgelsHibernateModule.class,
+        JudgelsServerModule.class,
         JudgelsPersistenceModule.class,
         JudgelsSchedulerModule.class,
 
-        JerahmeelModule.class,
+        JudgelsHibernateModule.class,
+        JophielHibernateDaoModule.class,
+        SandalphonHibernateDaoModule.class,
+        UrielHibernateDaoModule.class,
         JerahmeelHibernateDaoModule.class,
 
+        SandalphonModule.class,
+        GabrielModule.class,
+        MessagingModule.class,
+
+        AwsModule.class,
+
+        SubmissionModule.class,
+        ItemSubmissionModule.class,
         StatsModule.class
 })
 @Singleton

@@ -90,12 +90,11 @@ public abstract class BaseJudgelsServiceIntegrationTests {
                 .build();
 
         JudgelsServerConfiguration judgelsConfig = new JudgelsServerConfiguration.Builder()
-                .baseDataDir(baseDataDir.toString())
+                .baseDataDir(baseDataDir.toAbsolutePath())
                 .appConfig(judgelsAppConfig)
                 .build();
 
         JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
-                .baseDataDir(baseDataDir.toString())
                 .mailerConfig(new MailerConfiguration.Builder()
                         .host("localhost")
                         .port(2500)
@@ -113,19 +112,16 @@ public abstract class BaseJudgelsServiceIntegrationTests {
                 .build();
 
         UrielConfiguration urielConfig = new UrielConfiguration.Builder()
-                .baseDataDir(baseDataDir.toString())
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .submissionConfig(judgels.uriel.submission.programming.SubmissionConfiguration.DEFAULT)
                 .fileConfig(FileConfiguration.DEFAULT)
                 .build();
 
         SandalphonConfiguration sandalphonConfig = new SandalphonConfiguration.Builder()
-                .baseDataDir(baseDataDir.toString())
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .build();
 
         JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
-                .baseDataDir(baseDataDir.toString())
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .submissionConfig(judgels.jerahmeel.submission.programming.SubmissionConfiguration.DEFAULT)
                 .statsConfig(StatsConfiguration.DEFAULT)

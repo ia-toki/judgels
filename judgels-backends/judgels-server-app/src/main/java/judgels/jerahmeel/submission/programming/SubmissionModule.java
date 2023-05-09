@@ -9,10 +9,10 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import judgels.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
-import judgels.jerahmeel.JerahmeelBaseDataDir;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
@@ -49,7 +49,7 @@ public class SubmissionModule {
     @Provides
     @Singleton
     @SubmissionFs
-    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig, @JerahmeelBaseDataDir Path baseDataDir) {
+    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig, @JudgelsBaseDataDir Path baseDataDir) {
         return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("submissions"));
     }
 
