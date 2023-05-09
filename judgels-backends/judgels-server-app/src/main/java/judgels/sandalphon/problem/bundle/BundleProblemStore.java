@@ -19,10 +19,10 @@ public final class BundleProblemStore extends BaseBundleProblemStore {
     }
 
     public void initBundleProblem(String problemJid) {
-        problemFs.createDirectory(getItemsDirPath(problemJid, null));
+        problemFs.createDirectory(getItemsDirPath(null, problemJid));
 
         BundleItemsConfig config = new BundleItemsConfig.Builder().build();
-        problemFs.writeToFile(getItemsConfigFilePath(problemJid, null), writeItemsConfig(config));
+        problemFs.writeToFile(getItemsConfigFilePath(null, problemJid), writeItemsConfig(config));
     }
 
     private String writeItemsConfig(BundleItemsConfig config) {

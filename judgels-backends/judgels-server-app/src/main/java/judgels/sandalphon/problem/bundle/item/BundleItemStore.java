@@ -41,10 +41,10 @@ public class BundleItemStore extends BaseBundleProblemStore {
         items.add(createdItem);
 
         BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
-        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+        problemFs.writeToFile(getItemsConfigFilePath(userJid, problemJid), writeObj(itemsConfig));
 
-        problemFs.createDirectory(getItemDirPath(problemJid, userJid, itemJid));
-        problemFs.writeToFile(getItemConfigFilePath(problemJid, userJid, itemJid, language), writeObj(config));
+        problemFs.createDirectory(getItemDirPath(userJid, problemJid, itemJid));
+        problemFs.writeToFile(getItemConfigFilePath(userJid, problemJid, itemJid, language), writeObj(config));
 
         return createdItem;
     }
@@ -83,9 +83,9 @@ public class BundleItemStore extends BaseBundleProblemStore {
         }
 
         BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
-        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+        problemFs.writeToFile(getItemsConfigFilePath(userJid, problemJid), writeObj(itemsConfig));
 
-        problemFs.writeToFile(getItemConfigFilePath(problemJid, userJid, item.getJid(), language), writeObj(config));
+        problemFs.writeToFile(getItemConfigFilePath(userJid, problemJid, item.getJid(), language), writeObj(config));
     }
 
     public void moveItemUp(String userJid, String problemJid, String itemJid) {
@@ -102,7 +102,7 @@ public class BundleItemStore extends BaseBundleProblemStore {
         }
 
         BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
-        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+        problemFs.writeToFile(getItemsConfigFilePath(userJid, problemJid), writeObj(itemsConfig));
     }
 
     public void moveItemDown(String userJid, String problemJid, String itemJid) {
@@ -119,7 +119,7 @@ public class BundleItemStore extends BaseBundleProblemStore {
         }
 
         BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
-        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+        problemFs.writeToFile(getItemsConfigFilePath(userJid, problemJid), writeObj(itemsConfig));
     }
 
     public void removeItem(String userJid, String problemJid, String itemJid) {
@@ -132,18 +132,18 @@ public class BundleItemStore extends BaseBundleProblemStore {
         }
 
         BundleItemsConfig itemsConfig = new BundleItemsConfig.Builder().itemList(items).build();
-        problemFs.writeToFile(getItemsConfigFilePath(problemJid, userJid), writeObj(itemsConfig));
+        problemFs.writeToFile(getItemsConfigFilePath(userJid, problemJid), writeObj(itemsConfig));
     }
 
     public ItemConfig getItemConfig(String userJid, String problemJid, BundleItem item, String language, String defaultLanguage) {
         String config;
 
         try {
-            config = problemFs.readFromFile(getItemConfigFilePath(problemJid, userJid, item.getJid(), language));
+            config = problemFs.readFromFile(getItemConfigFilePath(userJid, problemJid, item.getJid(), language));
         } catch (RuntimeException e) {
             if (e.getCause() instanceof IOException) {
                 try {
-                    config = problemFs.readFromFile(getItemConfigFilePath(problemJid, userJid, item.getJid(), defaultLanguage));
+                    config = problemFs.readFromFile(getItemConfigFilePath(userJid, problemJid, item.getJid(), defaultLanguage));
                 } catch (RuntimeException e2) {
                     if (e2.getCause() instanceof IOException) {
                         return ItemEngineRegistry.getByType(item.getType()).createDefaultConfig();
@@ -162,7 +162,7 @@ public class BundleItemStore extends BaseBundleProblemStore {
         }
     }
     private List<BundleItem> getItems(String userJid, String problemJid) {
-        Path itemsConfigPath = getItemsConfigFilePath(problemJid, userJid);
+        Path itemsConfigPath = getItemsConfigFilePath(userJid, problemJid);
         try {
             return mapper.readValue(problemFs.readFromFile(itemsConfigPath), BundleItemsConfig.class).getItemList();
         } catch (IOException e) {

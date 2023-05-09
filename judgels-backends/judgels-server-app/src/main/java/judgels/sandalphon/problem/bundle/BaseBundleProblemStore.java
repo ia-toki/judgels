@@ -10,19 +10,19 @@ public abstract class BaseBundleProblemStore extends BaseProblemStore {
         super(mapper, fs);
     }
 
-    protected Path getItemsDirPath(String problemJid, String userJid) {
+    protected Path getItemsDirPath(String userJid, String problemJid) {
         return getRootDirPath(userJid, problemJid).resolve("items");
     }
 
-    protected Path getItemsConfigFilePath(String problemJid, String userJid) {
-        return getItemsDirPath(problemJid, userJid).resolve("items.json");
+    protected Path getItemsConfigFilePath(String userJid, String problemJid) {
+        return getItemsDirPath(userJid, problemJid).resolve("items.json");
     }
 
-    protected Path getItemDirPath(String problemJid, String userJid, String itemJid) {
-        return getItemsDirPath(problemJid, userJid).resolve(itemJid);
+    protected Path getItemDirPath(String userJid, String problemJid, String itemJid) {
+        return getItemsDirPath(userJid, problemJid).resolve(itemJid);
     }
 
-    protected Path getItemConfigFilePath(String problemJid, String userJid, String itemJid, String language) {
-        return getItemDirPath(problemJid, userJid, itemJid).resolve(language + ".json");
+    protected Path getItemConfigFilePath(String userJid, String problemJid, String itemJid, String language) {
+        return getItemDirPath(userJid, problemJid, itemJid).resolve(language + ".json");
     }
 }
