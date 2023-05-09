@@ -1,13 +1,17 @@
 apply from: '../../gradle/java.gradle'
 
 dependencies {
+    api "com.google.dagger:dagger:$daggerVersion"
+
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"
 
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
 
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

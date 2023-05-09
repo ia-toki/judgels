@@ -25,6 +25,7 @@ import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.WebModule;
+import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
 import judgels.recaptcha.RecaptchaModule;
@@ -33,6 +34,7 @@ import judgels.sandalphon.SandalphonComponent;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.sandalphon.submission.SandalphonSubmissionModule;
 import judgels.service.JudgelsSchedulerModule;
+import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
@@ -175,8 +177,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
                 .fileModule(new FileModule(urielConfig.getFileConfig()))
-                .gabrielModule(new judgels.uriel.gabriel.GabrielModule(urielConfig.getGabrielConfig()))
-                .messagingModule(new judgels.uriel.messaging.MessagingModule(urielConfig.getRabbitMQConfig()))
+                .rabbitMQModule(new RabbitMQModule(urielConfig.getRabbitMQConfig()))
+                .gabrielClientModule(new GabrielClientModule(urielConfig.getGabrielConfig()))
                 .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(urielConfig.getSubmissionConfig()))
                 .build();
 
@@ -223,8 +225,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
-                .gabrielModule(new judgels.jerahmeel.gabriel.GabrielModule(jerahmeelConfig.getGabrielConfig()))
-                .messagingModule(new judgels.jerahmeel.messaging.MessagingModule(jerahmeelConfig.getRabbitMQConfig()))
+                .rabbitMQModule(new RabbitMQModule(jerahmeelConfig.getRabbitMQConfig()))
+                .gabrielClientModule(new GabrielClientModule(jerahmeelConfig.getGabrielConfig()))
                 .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),
                         jerahmeelConfig.getStatsConfig()))

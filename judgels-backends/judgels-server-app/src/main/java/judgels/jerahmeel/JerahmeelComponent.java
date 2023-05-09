@@ -11,9 +11,7 @@ import judgels.jerahmeel.chapter.problem.ChapterProblemResource;
 import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
 import judgels.jerahmeel.curriculum.CurriculumResource;
-import judgels.jerahmeel.gabriel.GabrielModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
-import judgels.jerahmeel.messaging.MessagingModule;
 import judgels.jerahmeel.problem.ProblemResource;
 import judgels.jerahmeel.problem.ProblemTagResource;
 import judgels.jerahmeel.problemset.ProblemSetResource;
@@ -27,12 +25,14 @@ import judgels.jerahmeel.submission.programming.StatsModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
+import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
@@ -50,10 +50,10 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         JerahmeelHibernateDaoModule.class,
 
         SandalphonModule.class,
-        GabrielModule.class,
-        MessagingModule.class,
+        GabrielClientModule.class,
 
         AwsModule.class,
+        RabbitMQModule.class,
 
         SubmissionModule.class,
         ItemSubmissionModule.class,

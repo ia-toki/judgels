@@ -1,4 +1,4 @@
-package judgels.uriel.gabriel;
+package judgels.service.gabriel;
 
 import dagger.Module;
 import dagger.Provides;
@@ -6,10 +6,10 @@ import javax.inject.Named;
 import judgels.gabriel.api.GabrielClientConfiguration;
 
 @Module
-public final class GabrielModule {
+public final class GabrielClientModule {
     private final GabrielClientConfiguration config;
 
-    public GabrielModule(GabrielClientConfiguration config) {
+    public GabrielClientModule(GabrielClientConfiguration config) {
         this.config = config;
     }
 

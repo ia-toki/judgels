@@ -1,4 +1,4 @@
-package judgels.uriel.messaging;
+package judgels.messaging.rabbitmq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
@@ -6,14 +6,12 @@ import dagger.Provides;
 import java.util.Optional;
 import javax.inject.Singleton;
 import judgels.messaging.MessageClient;
-import judgels.messaging.rabbitmq.RabbitMQ;
-import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 
 @Module
-public class MessagingModule {
+public class RabbitMQModule {
     private final RabbitMQConfiguration config;
 
-    public MessagingModule(Optional<RabbitMQConfiguration> config) {
+    public RabbitMQModule(Optional<RabbitMQConfiguration> config) {
         this.config = config.orElse(RabbitMQConfiguration.DEFAULT);
     }
 

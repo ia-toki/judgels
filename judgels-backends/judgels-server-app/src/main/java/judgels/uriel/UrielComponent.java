@@ -5,12 +5,14 @@ import javax.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
+import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.contest.ContestResource;
@@ -35,9 +37,7 @@ import judgels.uriel.contest.submission.programming.ContestSubmissionResource;
 import judgels.uriel.contest.supervisor.ContestSupervisorResource;
 import judgels.uriel.contest.web.ContestWebResource;
 import judgels.uriel.file.FileModule;
-import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
-import judgels.uriel.messaging.MessagingModule;
 import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
@@ -53,11 +53,11 @@ import judgels.uriel.submission.programming.SubmissionModule;
         UrielHibernateDaoModule.class,
 
         SandalphonModule.class,
-        GabrielModule.class,
-        MessagingModule.class,
+        GabrielClientModule.class,
 
         AwsModule.class,
         FileModule.class,
+        RabbitMQModule.class,
 
         SubmissionModule.class,
         ItemSubmissionModule.class,
