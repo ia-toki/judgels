@@ -1,0 +1,60 @@
+- block:
+    - name: Install cgroup
+      apt:
+        name: cgroup-tools
+        state: present
+        install_recommends: no
+
+    - name: Run isolate recommendations # https://github.com/ioi/isolate/blob/master/isolate-check-environment
+      copy:
+        dest: /etc/rc.local
+        mode: 0755
+        content: |
+          #!/bin/bash
+
+          echo 0 > /proc/sys/kernel/randomize_va_space
+          echo never > /sys/kernel/mm/transparent_hugepage/enabled
+          echo never > /sys/kernel/mm/transparent_hugepage/defrag
+          echo 0 > /sys/kernel/mm/transparent_hugepage/khugepaged/defrag
+
+    - name: Create judgels grader container mount volume
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0777"
+      with_items:
+        - /judgels/grader/var
+        - /judgels/grader/var/conf
+        - /judgels/grader/var/data
+
+    - name: Generate judgels grader config
+      template:
+        src: "{{ playbook_dir }}/../conf/judgels-grader.yml.j2"
+        dest: /judgels/grader/var/conf/judgels-grader.yml
+        mode: '0644'
+
+    - name: Pull judgels grader image
+      docker_image:
+        name: ghcr.io/ia-toki/judgels/grader
+        tag: "{{ judgels_version | default('latest', true) }}"
+        source: pull
+        force_source: yes
+
+    - name: Run a judgels grader container
+      docker_container:
+        name: judgels-grader
+        image: "ghcr.io/ia-toki/judgels/grader:{{ judgels_version | default('latest', true) }}"
+        privileged: yes
+        restart: yes
+        restart_policy: always
+        log_driver: json-file
+        log_options:
+          max-size: 256m
+          max-file: "2"
+        network_mode: host
+        volumes:
+          - "/judgels/grader/var:/judgels/grader/var"
+          - "/judgels/server/var:/judgels/server/var"
+        env:
+          JAVA_OPTS: "-Xmx{{ judgels_grader_xmx }}"
+          JUDGELS_GRADER_APP_OPTS: "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/grader/var/log"

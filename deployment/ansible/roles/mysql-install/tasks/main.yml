@@ -15,11 +15,13 @@
       - DROP DATABASE IF EXISTS test;
       - DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
     changed_when: false
+    ignore_errors: yes
 
   - name: Change mysql root password
     shell: > 
       mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH caching_sha2_password BY "{{ db_root_password }}";'
     changed_when: false
+    ignore_errors: yes
 
   - name: Change mysql bind-address to allow connection from phpmyadmin
     ini_file:
@@ -59,10 +61,10 @@
       collation: utf8mb4_unicode_ci
       state: present
 
-  - name: Allow MySQL access from Docker containers
+  - name: Allow mysql access from docker containers
     ufw:
       rule: allow
       to_port: "3306"
       src: 172.17.0.0/24
       proto: tcp
-      comment: MySQL access from Docker containers
+      comment: mysql access from docker containers

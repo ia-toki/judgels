@@ -1,4 +1,0 @@
-- hosts: michael
-  gather_facts: false
-  roles:
-    - name: michael-deploy

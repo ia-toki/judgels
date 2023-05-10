@@ -1,32 +1,12 @@
 [local]
 localhost
 
-[judgels]
+[judgels:children]
+core
+grader
+
+[core]
 1.2.3.4 ansible_user=root
 
-[nginx]
-1.2.3.4 ansible_user=root
-
-[database]
-1.2.3.4 ansible_user=root
-
-[raphael]
-1.2.3.4 ansible_user=root
-
-[jophiel]
-1.2.3.4 ansible_user=root
-
-[sandalphon]
-1.2.3.4 ansible_user=root
-
-[rabbitmq]
-1.2.3.4 ansible_user=root
-
-[uriel]
-1.2.3.4 ansible_user=root
-
-[gabriel]
-1.2.3.4 ansible_user=root
-
-[scoreboard_receiver]
+[grader]
 1.2.3.4 ansible_user=root

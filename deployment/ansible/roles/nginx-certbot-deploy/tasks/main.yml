@@ -37,7 +37,7 @@
     proto: tcp
     comment: judgels nginx https
 
-- name: Setup certbot
+- name: Set up certbot
   include_tasks: setup_certbot.yml
   tags: always
 

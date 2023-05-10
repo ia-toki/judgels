@@ -1,0 +1,35 @@
+- hosts: judgels
+  pre_tasks:
+    - name: Install python for ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python3 python3-pip)
+      changed_when: false
+  gather_facts: false
+  roles:
+    - name: machine-provision
+
+- hosts: core
+  gather_facts: false
+  roles:
+    - name: mysql-install
+    - name: phpmyadmin-deploy
+    - name: rabbitmq-deploy
+    - name: judgels-server-migrate
+    - name: judgels-server-deploy
+    - name: judgels-client-deploy
+    - name: nginx-certbot-deploy
+      vars:
+        domains:
+          - name: judgels-server-api
+            fqdn: "{{ judgels_server_api_url }}"
+            config_template: "{{ playbook_dir }}/../conf/nginx-judgels-server-api.conf.j2"
+          - name: judgels-server-admin
+            fqdn: "{{ judgels_server_admin_url }}"
+            config_template: "{{ playbook_dir }}/../conf/nginx-judgels-server-admin.conf.j2"
+          - name: judgels-client
+            fqdn: "{{ judgels_client_url }}"
+            config_template: "{{ playbook_dir }}/../conf/nginx-judgels-client.conf.j2"
+
+- hosts: grader
+  gather_facts: false
+  roles:
+    - name: judgels-grader-deploy

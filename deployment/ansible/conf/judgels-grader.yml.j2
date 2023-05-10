@@ -1,3 +1,8 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9007
+
 logging:
   appenders:
     - type: console
@@ -11,20 +16,18 @@ logging:
 
 judgels:
   baseDataDir: var/data
-
   rabbitmq:
-    host: localhost
+    host: {{ rabbitmq_host }}
     port: 5672
-    username: guest
-    password: guest
+    username: {{ rabbitmq_username }}
+    password: {{ rabbitmq_password }}
     virtualHost: "/"
 
 gabriel:
   grading:
     gradingRequestQueueName: gabriel-grading-request
-    localSandalphonBaseDataDir: ../judgels-server-app/var/data
-    numWorkerThreads: 2
-
-#  moe:
-#    isolatePath: /judgels/moe/isolate
-#    iwrapperPath: /judgels/moe/iwrapper
+    localSandalphonBaseDataDir: /judgels/server/var/data
+    numWorkerThreads: {{ gabriel_grading_numWorkerThreads }}
+  moe:
+    isolatePath: /judgels/moe/isolate
+    iwrapperPath: /judgels/moe/iwrapper

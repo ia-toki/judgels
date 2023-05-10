@@ -1,4 +1,0 @@
-- hosts: rabbitmq
-  gather_facts: false
-  roles:
-    - name: rabbitmq-deploy

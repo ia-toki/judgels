@@ -1,14 +1,8 @@
 window.conf = {
-  mode: '{{ judgels_mode }}',
+  mode: '{{ judgels_mode | default('JUDGELS', true) }}',
   name: '{{ judgels_name }}',
   slogan: '{{ judgels_slogan }}',
-  apiUrls: {
-    jophiel: '{{ judgels_scheme }}://{{ jophiel_url }}/v2',
-    uriel: '{{ judgels_scheme }}://{{ uriel_url }}/v2',
-{% if jerahmeel_url is defined %}
-    jerahmeel: '{{ judgels_scheme }}://{{ jerahmeel_url }}/v2',
-{% endif %}
-  },
+  apiUrl: '{{ judgels_scheme }}://{{ judgels_server_api_url }}/v2',
   welcomeBanner: {
     title: '{{ judgels_title }}',
     description: '{{ judgels_description }}',

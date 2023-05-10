@@ -25,20 +25,11 @@ jobs:
 
       - name: Set up JDK
         if: steps.changed-files.outputs.gradle == '1'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
-
-      - name: Use Gradle cache
-        if: steps.changed-files.outputs.gradle == '1'
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'gradle'
 
       - name: Test judgels-commons
         if: steps.changed-files.outputs.judgels-commons == '1'
@@ -64,18 +55,18 @@ jobs:
         if: steps.changed-files.outputs.judgels-server == '1'
         run: ./judgels-backends/gradlew -p judgels-backends/judgels-server-app check
 
-      - name: Set up Node
+      - name: Set up node
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/setup-node@v1.4.4
         with:
           node-version: 10.16
 
-      - name: Get Yarn cache directory path
+      - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Use Yarn cache
+      - name: Use yarn cache
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/cache@v2
         id: yarn-cache
@@ -85,9 +76,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Test raphael
-        if: steps.changed-files.outputs.raphael == '1'
-        run: yarn --cwd=`pwd`/judgels-frontends/raphael install && yarn --cwd=`pwd`/judgels-frontends/raphael ci
+      - name: Test judgels-client
+        if: steps.changed-files.outputs.judgels-client == '1'
+        run: yarn --cwd=`pwd`/judgels-client/raphael install && yarn --cwd=`pwd`/judgels-client/raphael ci
 
   build:
     needs: test
@@ -101,8 +92,10 @@ jobs:
         with:
           fetch-depth: 50
 
-      - name: Set up Docker
-        run: pipx inject ansible-core docker six
+      - name: Install docker for ansible
+        run: |
+          ansible-galaxy collection install community.docker:3.4.5
+          pipx inject ansible-core docker six
 
       - id: changed-files
         name: Check changed files
@@ -110,33 +103,24 @@ jobs:
 
       - name: Set up JDK
         if: steps.changed-files.outputs.gradle == '1'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'gradle'
 
-      - name: Use Gradle cache
-        if: steps.changed-files.outputs.gradle == '1'
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Set up Node
+      - name: Set up node
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/setup-node@v1.4.4
         with:
           node-version: 10.16
 
-      - name: Get Yarn cache directory path
+      - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Use Yarn cache
+      - name: Use yarn cache
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/cache@v2
         id: yarn-cache
@@ -146,9 +130,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Build Raphael
-        if: steps.changed-files.outputs.raphael == '1'
-        run: ./deployment/scripts/build_raphael.sh
+      - name: Build judgels-server
+        if: steps.changed-files.outputs.judgels-server == '1'
+        run: ./deployment/scripts/build_judgels_server.sh
+
+      - name: Build judgels-client
+        if: steps.changed-files.outputs.judgels-client == '1'
+        run: ./deployment/scripts/build_judgels_client.sh
+
+      - name: Build judgels-grader
+        if: steps.changed-files.outputs.judgels-grader == '1'
+        run: ./deployment/scripts/build_judgels_grader.sh
 
   deploy-tlx-staging:
     needs: build
@@ -173,9 +165,23 @@ jobs:
         name: Check changed files
         run: python3 ci/check-changed-files.py | bash
 
-      - name: Deploy Raphael
-        if: steps.changed-files.outputs.raphael == '1'
+      - name: Deploy judgels-server
+        if: steps.changed-files.outputs.judgels-server == '1'
         run: |
           eval "$(ssh-agent -s)"
           ssh-add deployment/ansible/dist/deployment_rsa
-          ./deployment/scripts/deploy_raphael.sh
+          ./deployment/scripts/deploy_judgels_server.sh
+
+      - name: Deploy judgels-client
+        if: steps.changed-files.outputs.judgels-client == '1'
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add deployment/ansible/dist/deployment_rsa
+          ./deployment/scripts/deploy_judgels_client.sh
+
+      - name: Deploy judgels-grader
+        if: steps.changed-files.outputs.judgels-grader == '1'
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add deployment/ansible/dist/deployment_rsa
+          ./deployment/scripts/deploy_judgels_grader.sh

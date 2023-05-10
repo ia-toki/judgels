@@ -1,0 +1,37 @@
+upstream judgels_server_admin {
+    {% for host in groups['core'] %}
+    server {{ host }}:9101;
+    {% endfor %}
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    ssl_certificate /etc/letsencrypt/live/{{ domain.fqdn }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ domain.fqdn }}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    server_name {{ domain.fqdn }};
+    access_log off;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://judgels_server_admin;
+        proxy_set_header Connection "";
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        client_max_body_size 512M;
+    }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name {{ domain.fqdn }};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}

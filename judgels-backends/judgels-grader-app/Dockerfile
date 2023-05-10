@@ -39,11 +39,11 @@ RUN apt-get update \
     && curl -sSf https://sh.rustup.rs/ | bash -s -- -y -q --default-toolchain=1.57.0 \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /judgels/gabriel
+WORKDIR /judgels/grader
 
 ARG VCS_REF
 
-LABEL org.opencontainers.image.title judgels/gabriel
+LABEL org.opencontainers.image.title judgels/grader
 LABEL org.opencontainers.image.source https://github.com/ia-toki/judgels
 LABEL org.opencontainers.image.revision $VCS_REF
 

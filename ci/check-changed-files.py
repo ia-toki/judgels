@@ -21,14 +21,15 @@ MODULES = OrderedDict([
     (':judgels-server', {':judgels-server-app', ':judgels-server-api'}),
 
     (':raphael:package.json', set()),
-    (':raphael', {':raphael:package.json'})
+    (':raphael', {':raphael:package.json'}),
+    (':judgels-client', {':raphael'})
 ])
 
 SERVICES = [
     ':judgels-commons',
     ':judgels-grader',
     ':judgels-server',
-    ':raphael'
+    ':judgels-client'
 ]
 
 def flatten_dependencies():
@@ -57,7 +58,7 @@ def get_changed_modules(head_sha, base_sha, force_ci):
             if 'judgels-backends' + module.replace(':', '/') in file:
                 changed_modules.add(module)
                 break
-            if 'judgels-frontends' + module.replace(':', '/') in file:
+            if 'judgels-client' + module.replace(':', '/') in file:
                 changed_modules.add(module)
                 break
     return changed_modules
@@ -68,7 +69,7 @@ def check(head_sha, base_sha, force_ci):
     for service in SERVICES:
         if MODULES[service].intersection(changed_modules):
             print('echo ::set-output name={}::1'.format(service[1:]))
-            if service == ':raphael':
+            if service == ':judgels-client':
                 print('echo ::set-output name=yarn::1')
             else:
                 print('echo ::set-output name=gradle::1')

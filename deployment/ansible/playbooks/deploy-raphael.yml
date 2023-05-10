@@ -1,4 +1,0 @@
-- hosts: raphael
-  gather_facts: false
-  roles:
-    - name: raphael-deploy

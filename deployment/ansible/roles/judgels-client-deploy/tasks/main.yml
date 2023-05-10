@@ -1,0 +1,44 @@
+- block:
+    - name: Create judgels client container mount volume
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0777"
+      with_items:
+        - /judgels/client/var
+        - /judgels/client/var/conf
+
+    - name: Generate raphael config
+      template:
+        src: "{{ playbook_dir }}/../conf/raphael.js.j2"
+        dest: /judgels/client/var/conf/raphael-v9.js
+        mode: '0644'
+
+    - name: Pull judgels client image
+      docker_image:
+        name: ghcr.io/ia-toki/judgels/client
+        tag: "{{ judgels_version | default('latest', true) }}"
+        source: pull
+        force_source: yes
+
+    - name: Run a judgels client container
+      docker_container:
+        name: judgels-client
+        image: "ghcr.io/ia-toki/judgels/client:{{ judgels_version | default('latest', true) }}"
+        restart: yes
+        restart_policy: always
+        log_driver: json-file
+        log_options:
+          max-size: 256m
+          max-file: "2"
+        ports:
+          - "5000:5000"
+        volumes:
+          - "/judgels/client/var:/judgels/client/var"
+
+    - name: Allow judgels client traffic through the firewall
+      ufw:
+        rule: allow
+        to_port: "5000"
+        proto: tcp
+        comment: judgels client

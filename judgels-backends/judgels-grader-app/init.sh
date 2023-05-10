@@ -2,4 +2,4 @@
 
 set -ex
 
-exec ./bin/gabriel-dist server var/conf/gabriel.yml
+exec ./bin/judgels-grader-app server var/conf/judgels-grader.yml

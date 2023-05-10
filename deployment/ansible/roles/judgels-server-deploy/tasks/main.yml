@@ -1,0 +1,47 @@
+- block:
+    - name: Create judgels server container mount volume
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0777"
+      with_items:
+        - /judgels/server/var
+        - /judgels/server/var/conf
+        - /judgels/server/var/data
+
+    - name: Generate judgels server config
+      template:
+        src: "{{ playbook_dir }}/../conf/judgels-server.yml.j2"
+        dest: /judgels/server/var/conf/judgels-server.yml
+        mode: '0644'
+
+    - name: Pull judgels server image
+      docker_image:
+        name: ghcr.io/ia-toki/judgels/server
+        tag: "{{ judgels_version | default('latest', true) }}"
+        source: pull
+        force_source: yes
+
+    - name: Run a judgels server container
+      docker_container:
+        name: judgels-server
+        image: "ghcr.io/ia-toki/judgels/server:{{ judgels_version | default('latest', true) }}"
+        restart: yes
+        restart_policy: always
+        log_driver: json-file
+        log_options:
+          max-size: 256m
+          max-file: "2"
+        network_mode: host
+        volumes:
+          - "/judgels/server/var:/judgels/server/var"
+        env:
+          JAVA_OPTS: "-Xmx{{ judgels_server_xmx }}"
+          JUDGELS_SERVER_APP_OPTS: "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/server/var/log"
+
+    - name: Allow judgels server traffic through the firewall
+      ufw:
+        rule: allow
+        to_port: "9101"
+        proto: tcp
+        comment: judgels server
