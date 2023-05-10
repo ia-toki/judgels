@@ -43,7 +43,6 @@ dependencies {
 
     testImplementation project(':judgels-commons:judgels-persistence-testing')
 
-    testImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
     testImplementation "org.awaitility:awaitility:$awaitilityVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
