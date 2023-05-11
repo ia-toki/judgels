@@ -25,6 +25,6 @@ gabriel:
     localSandalphonBaseDataDir: ../judgels-server-app/var/data
     numWorkerThreads: 2
 
-#  moe:
-#    isolatePath: /judgels/moe/isolate
-#    iwrapperPath: /judgels/moe/iwrapper
+#  isolate:
+#    isolatePath: /judgels/isolate/isolate
+#    iwrapperPath: /judgels/isolate/iwrapper

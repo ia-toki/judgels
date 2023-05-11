@@ -1,4 +1,4 @@
-package judgels.gabriel.sandboxes.moe;
+package judgels.gabriel.sandboxes.isolate;
 
 class IsolateBoxIdFactory {
     private static int boxId;

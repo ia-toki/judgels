@@ -47,10 +47,10 @@ LABEL org.opencontainers.image.title judgels/grader
 LABEL org.opencontainers.image.source https://github.com/ia-toki/judgels
 LABEL org.opencontainers.image.revision $VCS_REF
 
-COPY --from=0 /isolate/isolate /judgels/moe/
-COPY --from=0 /isolate/isolate-check-environment /judgels/moe/
+COPY --from=0 /isolate/isolate /judgels/isolate/
+COPY --from=0 /isolate/isolate-check-environment /judgels/isolate/
 COPY --from=0 /usr/local/etc/isolate /usr/local/etc/
-COPY --from=0 /moe/eval/iwrapper /judgels/moe/
+COPY --from=0 /moe/eval/iwrapper /judgels/isolate/
 COPY build/distributions .
 
 ENTRYPOINT ["./init.sh"]

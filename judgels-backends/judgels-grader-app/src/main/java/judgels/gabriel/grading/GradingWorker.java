@@ -30,7 +30,7 @@ import judgels.gabriel.api.Verdict;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
-import judgels.gabriel.sandboxes.moe.MoeSandboxFactory;
+import judgels.gabriel.sandboxes.isolate.IsolateSandboxFactory;
 import judgels.messaging.MessageClient;
 import judgels.messaging.api.Message;
 import org.apache.commons.io.FileUtils;
@@ -46,7 +46,7 @@ public class GradingWorker {
     private final Path workersDir;
     private final Path problemsDir;
     private final MessageClient messageClient;
-    private final Optional<MoeSandboxFactory> moeSandboxFactory;
+    private final Optional<IsolateSandboxFactory> isolateSandboxFactory;
 
     private Message message;
     private GradingRequest request;
@@ -73,13 +73,13 @@ public class GradingWorker {
             @Named("workersDir") Path workersDir,
             @Named("problemsDir") Path problemsDir,
             MessageClient messageClient,
-            Optional<MoeSandboxFactory> moeSandboxFactory) {
+            Optional<IsolateSandboxFactory> isolateSandboxFactory) {
 
         this.gradingConfig = gradingConfig;
         this.workersDir = workersDir;
         this.problemsDir = problemsDir;
         this.messageClient = messageClient;
-        this.moeSandboxFactory = moeSandboxFactory;
+        this.isolateSandboxFactory = isolateSandboxFactory;
     }
 
     public void process(Message message) {
@@ -190,8 +190,8 @@ public class GradingWorker {
     }
 
     private SandboxFactory getSandboxFactory(File workerDir) throws IOException {
-        if (moeSandboxFactory.isPresent()) {
-            return moeSandboxFactory.get();
+        if (isolateSandboxFactory.isPresent()) {
+            return isolateSandboxFactory.get();
         } else {
             File sandboxesDir = new File(workerDir, "sandboxes");
             FileUtils.forceMkdir(sandboxesDir);

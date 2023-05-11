@@ -1,4 +1,4 @@
-package judgels.gabriel.sandboxes.moe;
+package judgels.gabriel.sandboxes.isolate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;

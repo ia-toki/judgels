@@ -1,15 +1,15 @@
-package judgels.gabriel.sandboxes.moe;
+package judgels.gabriel.sandboxes.isolate;
 
 import java.nio.file.Path;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.SandboxInteractor;
 
-public class MoeSandboxFactory implements SandboxFactory {
+public class IsolateSandboxFactory implements SandboxFactory {
     private final String isolatePath;
     private final String iwrapperPath;
 
-    public MoeSandboxFactory(Path isolatePath, Path iwrapperPath) {
+    public IsolateSandboxFactory(Path isolatePath, Path iwrapperPath) {
         this.isolatePath = isolatePath.toString();
         this.iwrapperPath = iwrapperPath.toString();
     }

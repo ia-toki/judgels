@@ -4,7 +4,7 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.grading.GradingRequestPoller;
-import judgels.gabriel.moe.MoeModule;
+import judgels.gabriel.isolate.IsolateModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.service.JudgelsModule;
 
@@ -13,7 +13,7 @@ import judgels.service.JudgelsModule;
         GabrielModule.class,
 
         RabbitMQModule.class,
-        MoeModule.class,
+        IsolateModule.class,
 
         GradingModule.class})
 @Singleton
