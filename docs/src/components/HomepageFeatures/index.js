@@ -4,44 +4,37 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Various problem types',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Batch, interactive, output-only, and functional / grader (IOI 2010+) problem types,
+        with and without subtasks. Supports multilanguage problem statement.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Rich contest features',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        IOI- and ICPC-style contests. Supports virtual contests where contestants can start at different times.
+        Various user roles such as contest managers and supervisors.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Easy to deploy',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Packaged as Docker images. Can be easily deployed using our Ansible scripts.
       </>
     ),
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({title, description}) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
+      <div className="padding-horiz--md">
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
