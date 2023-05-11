@@ -6,8 +6,8 @@ import judgels.gabriel.DaggerGabrielComponent;
 import judgels.gabriel.GabrielComponent;
 import judgels.gabriel.GabrielConfiguration;
 import judgels.gabriel.grading.GradingModule;
-import judgels.gabriel.messaging.MessagingModule;
 import judgels.gabriel.moe.MoeModule;
+import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.service.JudgelsScheduler;
 
 public class JudgelsGraderApplication extends Application<JudgelsGraderApplicationConfiguration> {
@@ -26,9 +26,9 @@ public class JudgelsGraderApplication extends Application<JudgelsGraderApplicati
         GabrielConfiguration gabrielConfig = config.getGabrielConfig();
 
         GabrielComponent component = DaggerGabrielComponent.builder()
-                .gradingModule(new GradingModule(judgelsConfig.getBaseDataDir(), env.lifecycle(), gabrielConfig.getGradingConfig()))
-                .messagingModule(new MessagingModule(judgelsConfig.getRabbitMQConfig()))
+                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .moeModule(new MoeModule(gabrielConfig.getMoeConfig()))
+                .gradingModule(new GradingModule(judgelsConfig.getBaseDataDir(), env.lifecycle(), gabrielConfig.getGradingConfig()))
                 .build();
 
         scheduler.scheduleOnce(

@@ -11,6 +11,10 @@ import judgels.messaging.MessageClient;
 public class RabbitMQModule {
     private final RabbitMQConfiguration config;
 
+    public RabbitMQModule(RabbitMQConfiguration config) {
+        this.config = config;
+    }
+
     public RabbitMQModule(Optional<RabbitMQConfiguration> config) {
         this.config = config.orElse(RabbitMQConfiguration.DEFAULT);
     }
