@@ -11,10 +11,7 @@ SET time_zone = "+00:00";
 -- Dumping data for table `jophiel_user`
 --
 
-DELETE FROM `jophiel_user` WHERE `username`='superadmin';
-
 INSERT INTO `jophiel_user` (`jid`, `username`, `email`, `password`, `avatarFilename`, `createdAt`, `updatedAt`) VALUES
-('JIDUSERGBsbuD2EJ9jYMlGclISJ', 'superadmin', 'superadmin@jophiel.judgels', '1000:ffe7adbe30cf950f3dfaf7036ec80cd30dc19f034a8301bb:51452bbf71298b8090fbf07dbfc945386bcc508f83a29b99', NULL, '2018-08-05 16:37:57.305', '2018-08-05 16:37:57.305'),
 ('JIDUSER7uMucIkm1exJTu7sJvxR', 'andi', 'andi@jophiel.judgels', '1000:060ce62731682f2a43de103418b1afad8af98bd6f399b569:cbe47b1335de632a21c7a4b56e04214b7c3a349d120867b3', NULL, '2018-08-05 17:03:33.504', '2018-08-05 17:11:29.127'),
 ('JIDUSERDMZOs8UHqjsw9DGbB31z', 'budi', 'budi@jophiel.judgels', '1000:cdbd48d2ab492347a83ba0e8351ff4068f8109d7f77a371a:277f5b263e855fcd59cf3006f7b1c5bfac3de02ba24452f5', NULL, '2018-08-05 17:15:23.586', '2018-08-05 17:15:23.586'),
 ('JIDUSERVfszUmquMh0Ae2laygDp', 'caca', 'caca@jophiel.judgels', '1000:f6d2c169f4ed162e7078065e3c83baee8e07c80eb4c3ab19:66660990bc19491f9b60e6bf0912d74da45c94da524750b4', NULL, '2018-08-05 17:16:27.740', '2018-08-05 17:16:27.740'),
@@ -186,19 +183,19 @@ INSERT INTO `jerahmeel_chapter` (`jid`, `name`, `description`, `createdAt`, `cre
 -- Dumping data for table `jerahmeel_chapter_lesson`
 --
 
-INSERT INTO `jerahmeel_chapter_lesson` (`chapterJid`, `lessonJid`, `alias`, `status`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDLESSBQMkZlaJlfafbwDLHoP1', '1', 'VISIBLE', '2019-10-20 20:50:02.112', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-20 20:50:02.112', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+INSERT INTO `jerahmeel_chapter_lesson` (`chapterJid`, `lessonJid`, `alias`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDLESSBQMkZlaJlfafbwDLHoP1', '1', '2019-10-20 20:50:02.112', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-20 20:50:02.112', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
 
 --
 -- Dumping data for table `jerahmeel_chapter_problem`
 --
 
-INSERT INTO `jerahmeel_chapter_problem` (`chapterJid`, `problemJid`, `type`, `alias`, `status`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', 'VISIBLE', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'X', 'VISIBLE', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'B', 'VISIBLE', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSpB4nAdte4tUwgSiihTFq', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', 'VISIBLE', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSx2sksHzyQNHvMn0yBzLr', 'JIDBUNDKkmglB5WGpSyTTFGScVk', 'BUNDLE', 'X', 'VISIBLE', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+INSERT INTO `jerahmeel_chapter_problem` (`chapterJid`, `problemJid`, `type`, `alias`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'X', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'B', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDSESSpB4nAdte4tUwgSiihTFq', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDSESSx2sksHzyQNHvMn0yBzLr', 'JIDBUNDKkmglB5WGpSyTTFGScVk', 'BUNDLE', 'X', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
 
 --
 -- Dumping data for table `jerahmeel_course`
@@ -237,11 +234,11 @@ INSERT INTO `jerahmeel_problem_set` (`jid`, `slug`, `archiveJid`, `name`, `descr
 -- Dumping data for table `jerahmeel_problem_set_problem`
 --
 
-INSERT INTO `jerahmeel_problem_set_problem` (`problemSetJid`, `problemJid`, `type`, `alias`, `status`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', 'VISIBLE', '2019-11-17 15:56:58.616', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-17 15:56:58.616', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'B', 'VISIBLE', '2019-11-27 20:55:12.768', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-27 20:55:12.768', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'C', 'VISIBLE', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEqfVvs19a3IaOwWYE9M35', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', 'VISIBLE', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+INSERT INTO `jerahmeel_problem_set_problem` (`problemSetJid`, `problemJid`, `type`, `alias`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
+('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', '2019-11-17 15:56:58.616', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-17 15:56:58.616', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'B', '2019-11-27 20:55:12.768', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-27 20:55:12.768', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'C', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDPRSEqfVvs19a3IaOwWYE9M35', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
 
 --
 -- Dumping data for table `jerahmeel_programming_grading`
@@ -284,26 +281,6 @@ INSERT INTO `jerahmeel_stats_user` (`userJid`, `score`, `createdAt`, `createdBy`
 ('JIDUSER5QiWnVJWzKdjtWtgEfN3', 0, '2020-01-18 22:35:36.131', NULL, '2020-01-18 22:35:36.131', NULL);
 
 --
--- Dumping data for table `jerahmeel_stats_user_chapter`
---
-
-INSERT INTO `jerahmeel_stats_user_chapter` (`userJid`, `chapterJid`, `progress`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDUSER7uMucIkm1exJTu7sJvxR', 'JIDSESSpB4nAdte4tUwgSiihTFq', 1, '2020-01-18 22:25:46.021', NULL, '2020-01-18 22:25:46.021', NULL),
-('JIDUSER7uMucIkm1exJTu7sJvxR', 'JIDSESSjboijeXaXam4wM7zwIkA', 2, '2020-01-18 22:25:46.060', NULL, '2020-01-18 22:25:46.079', NULL),
-('JIDUSERDMZOs8UHqjsw9DGbB31z', 'JIDSESSjboijeXaXam4wM7zwIkA', 1, '2020-01-18 22:31:26.722', NULL, '2020-01-18 22:31:26.722', NULL),
-('JIDUSERDMZOs8UHqjsw9DGbB31z', 'JIDSESSpB4nAdte4tUwgSiihTFq', 1, '2020-01-18 22:31:53.584', NULL, '2020-01-18 22:31:53.584', NULL),
-('JIDUSERVfszUmquMh0Ae2laygDp', 'JIDSESSpB4nAdte4tUwgSiihTFq', 1, '2020-01-18 22:32:30.761', NULL, '2020-01-18 22:32:30.761', NULL);
-
---
--- Dumping data for table `jerahmeel_stats_user_course`
---
-
-INSERT INTO `jerahmeel_stats_user_course` (`userJid`, `courseJid`, `progress`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDUSER7uMucIkm1exJTu7sJvxR', 'JIDCOURElTynLFh3mPVc9d7oWFx', 2, '2020-01-18 22:25:46.037', NULL, '2020-01-18 22:25:46.084', NULL),
-('JIDUSERDMZOs8UHqjsw9DGbB31z', 'JIDCOURElTynLFh3mPVc9d7oWFx', 1, '2020-01-18 22:31:53.589', NULL, '2020-01-18 22:31:53.589', NULL),
-('JIDUSERVfszUmquMh0Ae2laygDp', 'JIDCOURElTynLFh3mPVc9d7oWFx', 1, '2020-01-18 22:32:30.764', NULL, '2020-01-18 22:32:30.764', NULL);
-
---
 -- Dumping data for table `jerahmeel_stats_user_problem`
 --
 
@@ -316,19 +293,6 @@ INSERT INTO `jerahmeel_stats_user_problem` (`userJid`, `problemJid`, `submission
 ('JIDUSERVfszUmquMh0Ae2laygDp', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'JIDSUBM5fPqSOLoRHsssdgMI93a', 'AC', 100, 0, 0, '2020-01-18 22:32:30.758', NULL, '2020-01-18 22:32:30.758', NULL),
 ('JIDUSERVfszUmquMh0Ae2laygDp', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'JIDSUBMxm6eXnTKxDj046l6yD7Z', 'WA', 30, 0, 0, '2020-01-18 22:33:22.351', NULL, '2020-01-18 22:33:22.351', NULL),
 ('JIDUSER5QiWnVJWzKdjtWtgEfN3', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'JIDSUBMtXWk5Sh2Vuw2KyoPVaeG', 'WA', 0, 0, 0, '2020-01-18 22:35:36.124', NULL, '2020-01-18 22:35:36.124', NULL);
-
---
--- Dumping data for table `jerahmeel_stats_user_problem_set`
---
-
-INSERT INTO `jerahmeel_stats_user_problem_set` (`userJid`, `problemSetJid`, `score`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDUSER7uMucIkm1exJTu7sJvxR', 'JIDPRSEqfVvs19a3IaOwWYE9M35', 100, '2020-01-18 22:25:46.046', NULL, '2020-01-18 22:25:46.046', NULL),
-('JIDUSER7uMucIkm1exJTu7sJvxR', 'JIDPRSEjboijeXaXam4wM7zwIkA', 200, '2020-01-18 22:25:46.068', NULL, '2020-01-18 22:25:46.103', NULL),
-('JIDUSERDMZOs8UHqjsw9DGbB31z', 'JIDPRSEjboijeXaXam4wM7zwIkA', 100, '2020-01-18 22:31:26.728', NULL, '2020-01-18 22:31:26.728', NULL),
-('JIDUSERDMZOs8UHqjsw9DGbB31z', 'JIDPRSEqfVvs19a3IaOwWYE9M35', 100, '2020-01-18 22:31:53.591', NULL, '2020-01-18 22:31:53.591', NULL),
-('JIDUSERVfszUmquMh0Ae2laygDp', 'JIDPRSEqfVvs19a3IaOwWYE9M35', 100, '2020-01-18 22:32:30.766', NULL, '2020-01-18 22:32:30.766', NULL),
-('JIDUSERVfszUmquMh0Ae2laygDp', 'JIDPRSEjboijeXaXam4wM7zwIkA', 30, '2020-01-18 22:33:22.355', NULL, '2020-01-18 22:33:22.355', NULL),
-('JIDUSER5QiWnVJWzKdjtWtgEfN3', 'JIDPRSEjboijeXaXam4wM7zwIkA', 0, '2020-01-18 22:35:36.129', NULL, '2020-01-18 22:35:36.129', NULL);
 
 --
 -- Dumping data for table `sandalphon_lesson`
