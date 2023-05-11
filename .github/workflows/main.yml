@@ -82,7 +82,7 @@ jobs:
 
   build:
     needs: test
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/v2'
     runs-on: ubuntu-latest
     env:
       CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
@@ -144,7 +144,7 @@ jobs:
 
   deploy-tlx-staging:
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/v2'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
