@@ -1,11 +1,11 @@
 window.conf = {
   mode: 'JUDGELS',
   name: 'Judgels',
-  slogan: 'Competitive Programming Platform',
+  slogan: 'Programming Contest System',
   apiUrl: 'http://localhost:9101/api/v2',
   welcomeBanner: {
     title: '<h1>Welcome to Judgels</h1>',
     description:
-      '<h2>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</h2>',
+      '<h2>This is a programming contest system.</h2>',
   },
 };
