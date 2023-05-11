@@ -68,11 +68,11 @@ def check(head_sha, base_sha, force_ci):
 
     for service in SERVICES:
         if MODULES[service].intersection(changed_modules):
-            print('echo ::set-output name={}::1'.format(service[1:]))
+            print('echo "{}=1" >> $GITHUB_OUTPUT'.format(service[1:]))
             if service == ':judgels-client':
-                print('echo ::set-output name=yarn::1')
+                print('echo "yarn=1" >> $GITHUB_OUTPUT')
             else:
-                print('echo ::set-output name=gradle::1')
+                print('echo "gradle=1" >> $GITHUB_OUTPUT')
 
 flatten_dependencies()
 

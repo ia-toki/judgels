@@ -64,7 +64,7 @@ jobs:
       - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Use yarn cache
         if: steps.changed-files.outputs.yarn == '1'
@@ -118,7 +118,7 @@ jobs:
       - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Use yarn cache
         if: steps.changed-files.outputs.yarn == '1'
