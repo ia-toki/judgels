@@ -57,9 +57,9 @@ jobs:
 
       - name: Set up node
         if: steps.changed-files.outputs.yarn == '1'
-        uses: actions/setup-node@v1.4.4
+        uses: actions/setup-node@v3
         with:
-          node-version: 10.16
+          node-version: '16'
 
       - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
@@ -111,9 +111,9 @@ jobs:
 
       - name: Set up node
         if: steps.changed-files.outputs.yarn == '1'
-        uses: actions/setup-node@v1.4.4
+        uses: actions/setup-node@v3
         with:
-          node-version: 10.16
+          node-version: '16'
 
       - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
