@@ -142,6 +142,46 @@ jobs:
         if: steps.changed-files.outputs.judgels-grader == '1'
         run: ./deployment/scripts/build_judgels_grader.sh
 
+  deploy-docs:
+    if: github.ref == 'refs/heads/v2'
+    runs-on: ubuntu-latest
+    env:
+      DOCS_HOST: ${{ secrets.DOCS_HOST }}
+      DOCS_KNOWN_HOSTS: ${{ secrets.DOCS_KNOWN_HOSTS }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 50
+
+      - id: changed-files
+        name: Check changed files
+        run: python3 ci/check-changed-files.py | bash
+
+      - name: Set up node
+        if: steps.changed-files.outputs.docs == '1'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Build docs
+        if: steps.changed-files.outputs.docs == '1'
+        run: |
+          cd docs
+          yarn install
+          yarn build
+
+      - name: Install SSH key
+        if: steps.changed-files.outputs.docs == '1'
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DOCS_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.DOCS_KNOWN_HOSTS }}
+
+      - name: Rsync docs
+        if: steps.changed-files.outputs.docs == '1'
+        run: rsync -avzh docs/build/ root@${DOCS_HOST}:/var/www/html/judgels --delete
+
   deploy-tlx-staging:
     needs: build
     if: github.ref == 'refs/heads/v2'

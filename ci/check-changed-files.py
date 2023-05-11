@@ -9,27 +9,30 @@ from collections import OrderedDict
 FORCE_CI = '[force ci]'
 
 MODULES = OrderedDict([
-    (':judgels-commons', set()),
+    ('judgels-commons', set()),
 
-    (':judgels-grader-api', set()),
-    (':judgels-grader-engines', {':judgels-commons', ':judgels-grader-api'}),
-    (':judgels-grader-app', {':judgels-grader-engines', ':judgels-grader-api'}),
-    (':judgels-grader', {':judgels-grader-app', ':judgels-grader-engines', ':judgels-grader-api'}),
+    ('judgels-grader-api', set()),
+    ('judgels-grader-engines', {'judgels-commons', 'judgels-grader-api'}),
+    ('judgels-grader-app', {'judgels-grader-engines', 'judgels-grader-api'}),
+    ('judgels-grader', {'judgels-grader-app', 'judgels-grader-engines', 'judgels-grader-api'}),
 
-    (':judgels-server-api', {':judgels-commons', ':judgels-grader-api'}),
-    (':judgels-server-app', {':judgels-grader-engines', ':judgels-server-api'}),
-    (':judgels-server', {':judgels-server-app', ':judgels-server-api'}),
+    ('judgels-server-api', {'judgels-commons', 'judgels-grader-api'}),
+    ('judgels-server-app', {'judgels-grader-engines', 'judgels-server-api'}),
+    ('judgels-server', {'judgels-server-app', 'judgels-server-api'}),
 
-    (':raphael:package.json', set()),
-    (':raphael', {':raphael:package.json'}),
-    (':judgels-client', {':raphael'})
+    ('raphael/package.json', set()),
+    ('raphael', {'raphael/package.json'}),
+    ('judgels-client', {'raphael'}),
+
+    ('docs', set())
 ])
 
 SERVICES = [
-    ':judgels-commons',
-    ':judgels-grader',
-    ':judgels-server',
-    ':judgels-client'
+    'judgels-commons',
+    'judgels-grader',
+    'judgels-server',
+    'judgels-client',
+    'docs'
 ]
 
 def flatten_dependencies():
@@ -55,10 +58,7 @@ def get_changed_modules(head_sha, base_sha, force_ci):
     changed_modules = set()
     for module in MODULES.keys():
         for file in changed_files:
-            if 'judgels-backends' + module.replace(':', '/') in file:
-                changed_modules.add(module)
-                break
-            if 'judgels-client' + module.replace(':', '/') in file:
+            if module in file:
                 changed_modules.add(module)
                 break
     return changed_modules
@@ -68,10 +68,10 @@ def check(head_sha, base_sha, force_ci):
 
     for service in SERVICES:
         if MODULES[service].intersection(changed_modules):
-            print('echo "{}=1" >> $GITHUB_OUTPUT'.format(service[1:]))
+            print('echo "{}=1" >> $GITHUB_OUTPUT'.format(service))
             if service == ':judgels-client':
                 print('echo "yarn=1" >> $GITHUB_OUTPUT')
-            else:
+            elif service == ':judgels-server':
                 print('echo "gradle=1" >> $GITHUB_OUTPUT')
 
 flatten_dependencies()
