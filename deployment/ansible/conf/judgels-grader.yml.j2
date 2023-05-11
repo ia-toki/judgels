@@ -16,6 +16,7 @@ logging:
 
 judgels:
   baseDataDir: var/data
+
   rabbitmq:
     host: {{ rabbitmq_host }}
     port: 5672
@@ -28,6 +29,7 @@ gabriel:
     gradingRequestQueueName: gabriel-grading-request
     localSandalphonBaseDataDir: /judgels/server/var/data
     numWorkerThreads: {{ gabriel_grading_numWorkerThreads }}
+
   isolate:
     isolatePath: /judgels/isolate/isolate
     iwrapperPath: /judgels/isolate/iwrapper
