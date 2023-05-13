@@ -196,10 +196,10 @@ jobs:
         with:
           repository: ${{ secrets.TLX_STAGING_DEPLOYMENT_REPOSITORY }}
           token: ${{ secrets.TLX_STAGING_DEPLOYMENT_TOKEN }}
-          path: deployment/ansible/dist
+          path: deployment/ansible/env
 
       - name: Prepare staging environment SSH key
-        run: chmod 600 deployment/ansible/dist/deployment_rsa
+        run: chmod 600 deployment/ansible/env/deployment_rsa
 
       - id: changed-files
         name: Check changed files
@@ -209,19 +209,19 @@ jobs:
         if: steps.changed-files.outputs.judgels-server == '1'
         run: |
           eval "$(ssh-agent -s)"
-          ssh-add deployment/ansible/dist/deployment_rsa
+          ssh-add deployment/ansible/env/deployment_rsa
           ./deployment/scripts/deploy_judgels_server.sh
 
       - name: Deploy judgels-client
         if: steps.changed-files.outputs.judgels-client == '1'
         run: |
           eval "$(ssh-agent -s)"
-          ssh-add deployment/ansible/dist/deployment_rsa
+          ssh-add deployment/ansible/env/deployment_rsa
           ./deployment/scripts/deploy_judgels_client.sh
 
       - name: Deploy judgels-grader
         if: steps.changed-files.outputs.judgels-grader == '1'
         run: |
           eval "$(ssh-agent -s)"
-          ssh-add deployment/ansible/dist/deployment_rsa
+          ssh-add deployment/ansible/env/deployment_rsa
           ./deployment/scripts/deploy_judgels_grader.sh

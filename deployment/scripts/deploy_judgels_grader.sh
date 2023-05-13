@@ -5,4 +5,4 @@ set -ex
 cd deployment/ansible
 
 ansible --version
-ansible-playbook -e @dist/env.yml playbooks/deploy-judgels-grader.yml
+ansible-playbook -e @env/vars.yml playbooks/deploy-judgels-grader.yml
