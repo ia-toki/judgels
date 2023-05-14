@@ -1,0 +1,8 @@
+{
+  "label": "Deployment",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "How to deploy a Judgels instance."
+  }
+}

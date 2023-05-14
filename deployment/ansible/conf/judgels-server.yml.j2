@@ -2,9 +2,11 @@ server:
   applicationConnectors:
     - type: http
       port: 9101
+
   adminConnectors:
     - type: http
       port: 9111
+
   requestLog:
     appenders:
     - type: file
@@ -44,6 +46,7 @@ webSecurity:
 
 judgels:
   baseDataDir: var/data
+
   app:
     name: {{ judgels_name }}
     baseUrl: {{ judgels_scheme }}://{{ judgels_server_api_url }}
