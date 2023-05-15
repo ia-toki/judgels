@@ -14,7 +14,7 @@ export class TinyMCETextArea extends PureComponent {
       tinymce.init({
         selector: '.tinymce',
         skin_url: '/skins/lightgray',
-        content_css: '/skins/raphael/content.css',
+        content_css: '/skins/judgels/content.css',
         branding: false,
         menubar: false,
         plugins: 'code image link lists',

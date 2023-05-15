@@ -2,14 +2,12 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../../judgels-client/raphael
+cd "$(dirname "$0")"/../../judgels-client
 
 yarn
 yarn build
 
-cd ..
-
-rm -rf dist/build && mv raphael/build dist/
+rm -rf dist/build && mv build dist/
 
 cd ../deployment/ansible
 

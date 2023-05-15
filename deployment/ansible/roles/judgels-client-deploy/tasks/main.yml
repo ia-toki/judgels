@@ -8,10 +8,10 @@
         - /judgels/client/var
         - /judgels/client/var/conf
 
-    - name: Generate raphael config
+    - name: Generate judgels client config
       template:
-        src: "{{ playbook_dir }}/../conf/raphael.js.j2"
-        dest: /judgels/client/var/conf/raphael-v9.js
+        src: "{{ playbook_dir }}/../conf/judgels-client.js.j2"
+        dest: /judgels/client/var/conf/judgels-client.js
         mode: '0644'
       tags: config
       register: judgels_client_config

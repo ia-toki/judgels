@@ -1,1 +1,14 @@
-.idea
+.DS_STORE
+
+build/
+node_modules/
+
+judgels-client.js
+
+*.css
+*.css.map
+!public/skins/**/*.css
+
+.idea/
+
+*.retry
