@@ -13,19 +13,23 @@
         src: "{{ playbook_dir }}/../conf/raphael.js.j2"
         dest: /judgels/client/var/conf/raphael-v9.js
         mode: '0644'
+      tags: config
+      register: judgels_client_config
 
     - name: Pull judgels client image
+      when: judgels_client_config.changed
       docker_image:
         name: ghcr.io/ia-toki/judgels/client
         tag: "{{ judgels_version | default('latest', true) }}"
         source: pull
         force_source: yes
+      tags: config
 
     - name: Run a judgels client container
       docker_container:
         name: judgels-client
         image: "ghcr.io/ia-toki/judgels/client:{{ judgels_version | default('latest', true) }}"
-        restart: yes
+        restart: "{{ judgels_client_config.changed }}"
         restart_policy: always
         log_driver: json-file
         log_options:
@@ -35,6 +39,7 @@
           - "5000:5000"
         volumes:
           - "/judgels/client/var:/judgels/client/var"
+      tags: config
 
     - name: Allow judgels client traffic through the firewall
       ufw:

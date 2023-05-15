@@ -13,14 +13,12 @@
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  tags: config
   notify: Restart nginx
 
 - name: Generate judgels nginx config
   template:
     src: "{{ playbook_dir}}/../conf/nginx.conf.j2"
     dest: /etc/nginx/conf.d/judgels.conf
-  tags: config
   notify: Restart nginx
 
 - name: Allow nginx HTTP traffic through the firewall

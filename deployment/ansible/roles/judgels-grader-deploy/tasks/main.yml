@@ -32,20 +32,24 @@
         src: "{{ playbook_dir }}/../conf/judgels-grader.yml.j2"
         dest: /judgels/grader/var/conf/judgels-grader.yml
         mode: '0644'
+      tags: config
+      register: judgels_grader_config
 
     - name: Pull judgels grader image
+      when: judgels_grader_config.changed
       docker_image:
         name: ghcr.io/ia-toki/judgels/grader
         tag: "{{ judgels_version | default('latest', true) }}"
         source: pull
         force_source: yes
+      tags: config
 
     - name: Run a judgels grader container
       docker_container:
         name: judgels-grader
         image: "ghcr.io/ia-toki/judgels/grader:{{ judgels_version | default('latest', true) }}"
         privileged: yes
-        restart: yes
+        restart: "{{ judgels_grader_config.changed }}"
         restart_policy: always
         log_driver: json-file
         log_options:
@@ -58,3 +62,4 @@
         env:
           JAVA_OPTS: "-Xmx{{ judgels_grader_xmx }}"
           JUDGELS_GRADER_APP_OPTS: "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/grader/var/log"
+      tags: config

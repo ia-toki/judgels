@@ -5,7 +5,6 @@
     owner: www-data
     group: www-data
     mode: 0644
-  tags: config
   notify: Restart nginx
 
 - name: Configure letsencrypt for the domain
@@ -25,7 +24,6 @@
       command: "certbot certonly --webroot --email {{ letsencrypt_email | mandatory }} --agree-tos --webroot-path={{ letsencrypt_webroot_directory | mandatory }} -d {{ domain.fqdn | mandatory }} --non-interactive"
       when: not letsencrypt_certificate.stat.exists
       notify: Restart nginx
-  tags: config
 
 - name: Enable nginx domain config
   file:
@@ -34,5 +32,4 @@
     owner: www-data
     group: www-data
     state: link
-  tags: config
   notify: Restart nginx
