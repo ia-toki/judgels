@@ -52,7 +52,7 @@ def get_changed_modules(head_sha, base_sha, force_ci):
     if force_ci:
         return MODULES.keys()
 
-    run('git fetch origin v2')
+    run('git fetch origin master')
     changed_files = run('git diff --name-only {} {}'.format(base_sha, head_sha)).split('\n')
 
     changed_modules = set()
@@ -87,7 +87,7 @@ with open(os.environ['GITHUB_EVENT_PATH']) as event_path:
         force_ci = False
     else:
         head_sha = event['after']
-        base_sha = event['before'] if event['ref'] == 'refs/heads/v2' else 'origin/v2'
+        base_sha = event['before'] if event['ref'] == 'refs/heads/master' else 'origin/master'
         force_ci = FORCE_CI in event['head_commit']['message']
 
     check(head_sha, base_sha, force_ci)

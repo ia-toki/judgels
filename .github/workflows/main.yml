@@ -82,7 +82,7 @@ jobs:
 
   build:
     needs: test
-    if: github.ref == 'refs/heads/v2'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
       CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
@@ -143,7 +143,7 @@ jobs:
         run: ./deployment/scripts/build_judgels_grader.sh
 
   deploy-docs:
-    if: github.ref == 'refs/heads/v2'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
       DOCS_HOST: ${{ secrets.DOCS_HOST }}
@@ -184,7 +184,7 @@ jobs:
 
   deploy-tlx-staging:
     needs: build
-    if: github.ref == 'refs/heads/v2'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
