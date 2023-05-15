@@ -6,21 +6,11 @@ sidebar_position: 2
 
 This page explains how to install Judgels, step-by-step. These steps will install Judgels using our Ansible scripts, which will deploy the Docker images of the apps.
 
-### A. Spinning up VMs
+### A. Preparing local workstation
 
-As mentioned in the [Concepts](/docs/deployment/concepts) page, we need to spin up 1 core VM and 1 or more grader VMs. The VMs have the following hard requirements:
+We will install Judgels by running an Ansible playbook from a local workstation, which could be your own laptop or another VM. Make sure that the local workstation has Ansible installed.
 
-- Ubuntu 20.04. Judgels, particularly the grader app, unfortunately currently **WON'T** work on newer version of Ubuntu! (We're trying to support newer versions.)
-- Root user access.
-
-### B. Preparing local workstation
-
-We will install Judgels by running an Ansible playbook from a local workstation, which could be your own laptop or another VM. Make sure that the local workstation:
-
-- Has Ansible installed.
-- Can connect to the core and grader VMs via SSH.
-
-### C. Setting up deployment env directory
+### B. Setting up deployment env directory
 
 1. On the local workstation, clone the Judgels repository (https://github.com/ia-toki/judgels).
    - We'll assume that we clone to `~/judgels`.
@@ -40,6 +30,18 @@ This directory consists of two files: `hosts.ini` and `vars.yml`. They describe 
 - `vars.yml` is a file containing environment variables, which will be used in for Ansible playbook [roles](https://github.com/ia-toki/judgels/tree/master/deployment/ansible/roles) during deployment.
 
 It is recommended to track this env directory in a version control as the source of truth of our Judgels deployment. We will fill the values in both files in the next steps.
+
+### C. Spinning up VMs
+
+As mentioned in the [Concepts](/docs/deployment/concepts) page, we need to spin up 1 core VM and 1 or more grader VMs. The VMs have the following hard requirements:
+
+- Ubuntu 20.04. Judgels, particularly the grader app, unfortunately currently **WON'T** work on newer version of Ubuntu! (We're still trying to support newer versions.)
+- Can be accessed from the local workstation to a root user via SSH.
+
+Now, open `hosts.ini`:
+
+1. Fill the public IP of the core VM under the `[core]` section.
+1. Fill the public IP(s) of grader VM(s) under the `[grader]` section. Note that we can add multiple lines, one for each IP.
 
 ### D. Generating passwords
 
@@ -77,18 +79,9 @@ ansible-playbook -e @env/vars.yml playbooks/deploy.yml
 
 Wait until everything is done. When the playbook finishes, do these verifications:
 
-1. Verify that we can access the admin web interface at `admin.mycontest.org`.
+1. Verify that we can access the admin web interface at `https://admin.mycontest.org`.
 1. Verify that we can log in as `superadmin`, with the password that we just set above.
-1. Verify that we can access the contestant web interface at `mycontest.org`.
-1. Verify that the contestant web interface does not show any error (which means it can successfully access the API server `api.mycontest.org`).
-1. SSH to the core VM.
-   1. Run `docker ps`, verify that these containers are running:
-      * `judgels-server`
-      * `judgels-client`
-      * `rabbitmq`
-   1. Run `docker logs --tail=100 -f judgels-server`, verify that there are no errors.
-1. SSH to (one of the) grader VMs.
-   1. Run `docker ps`, verify that the `judgels-grader` container is running.
-   1. Run `docker logs --tail=100 -f judgels-grader`, verify that there are no errors.
+1. Verify that we can access the contestant web interface at `https://mycontest.org`.
+1. Verify that the contestant web interface does not show any error (which means it can successfully access the API server `https://api.mycontest.org`).
 
 Congratulations, you have just deployed Judgels successfully!

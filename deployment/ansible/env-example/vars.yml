@@ -9,7 +9,7 @@ judgels_scheme: https
 judgels_client_url: judgels.com
 judgels_server_api_url: api.judgels.com
 judgels_server_admin_url: admin.judgels.com
-letsencrypt_email: xxx@yyy.com
+letsencrypt_email: xxx@yyy.com # !!! CHANGE THIS !!!
 
 ###################################################################################################
 
@@ -19,15 +19,15 @@ judgels_grader_xmx: 1g
 ###################################################################################################
 
 db_root_home: /root
-db_root_password: xxx
+db_root_password: pass # !!! CHANGE THIS !!!
 db_host: localhost
 db_username: judgels
-db_password: xxx
+db_password: pass # !!! CHANGE THIS !!!
 db_options: "?useSSL=false"
 
 ###################################################################################################
 
-jophiel_superadminCreator_initialPassword: xxx
+jophiel_superadminCreator_initialPassword: superadmin # !!! CHANGE THIS !!!
 jophiel_session_maxConcurrentSessionsPerUser: -1
 jophiel_session_disableLogout: false
 
@@ -39,4 +39,4 @@ gabriel_grading_numWorkerThreads: 2
 
 rabbitmq_host: localhost
 rabbitmq_username: judgels
-rabbitmq_password: xxx
+rabbitmq_password: pass # !!! CHANGE THIS !!!
