@@ -78,7 +78,7 @@ jobs:
 
       - name: Test judgels-client
         if: steps.changed-files.outputs.judgels-client == '1'
-        run: yarn --cwd=`pwd`/judgels-client/raphael install && yarn --cwd=`pwd`/judgels-client/raphael ci
+        run: yarn --cwd=`pwd`/judgels-client/raphael install && NODE_OPTIONS="--max-old-space-size=2048" yarn --cwd=`pwd`/judgels-client/raphael ci
 
   build:
     needs: test
