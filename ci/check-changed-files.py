@@ -22,7 +22,7 @@ MODULES = OrderedDict([
 
     ('judgels-client', set()),
 
-    ('docs', set())
+    ('web', set())
 ])
 
 SERVICES = [
@@ -30,7 +30,7 @@ SERVICES = [
     'judgels-grader',
     'judgels-server',
     'judgels-client',
-    'docs'
+    'web'
 ]
 
 def flatten_dependencies():
