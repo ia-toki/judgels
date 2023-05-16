@@ -35,12 +35,11 @@
       register: judgels_grader_config
 
     - name: Pull judgels grader image
-      when: judgels_grader_config.changed
       docker_image:
         name: ghcr.io/ia-toki/judgels/grader
         tag: "{{ judgels_version | default('latest', true) }}"
         source: pull
-        force_source: yes
+        force_source: "{{ judgels_version | default('latest', true) == 'latest' }}"
       tags: config
 
     - name: Run a judgels grader container
