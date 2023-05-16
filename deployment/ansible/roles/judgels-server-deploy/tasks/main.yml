@@ -7,7 +7,6 @@
       with_items:
         - /judgels/server/var
         - /judgels/server/var/conf
-        - /judgels/server/var/data
 
     - name: Generate judgels server config
       template:

@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,6 +35,8 @@ public final class LocalFileSystem implements FileSystem {
             "__MACOSX"
     );
 
+    private static final Set<PosixFilePermission> PERMISSION_700 = PosixFilePermissions.fromString("rwx------");
+
     private final Path baseDir;
 
     public LocalFileSystem(Path baseDir) {
@@ -42,7 +46,7 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void createDirectory(Path dirPath) {
         try {
-            Files.createDirectories(baseDir.resolve(dirPath));
+            Files.createDirectories(baseDir.resolve(dirPath), PosixFilePermissions.asFileAttribute(PERMISSION_700));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,8 +79,9 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void uploadPublicFile(Path filePath, InputStream content) {
         try {
-            MoreFiles.createParentDirectories(baseDir.resolve(filePath));
+            createDirectory(baseDir.resolve(filePath).getParent());
             Files.copy(content, baseDir.resolve(filePath), StandardCopyOption.REPLACE_EXISTING);
+            Files.setPosixFilePermissions(baseDir.resolve(filePath), PERMISSION_700);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -186,12 +191,7 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void writeByteArrayToFile(Path filePath, byte[] content) {
         InputStream stream = new ByteArrayInputStream(content);
-        try {
-            MoreFiles.createParentDirectories(baseDir.resolve(filePath));
-            Files.copy(stream, baseDir.resolve(filePath), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        uploadPublicFile(filePath, stream);
     }
 
     @Override
