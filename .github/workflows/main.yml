@@ -150,8 +150,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
-      DOCS_HOST: ${{ secrets.DOCS_HOST }}
-      DOCS_KNOWN_HOSTS: ${{ secrets.DOCS_KNOWN_HOSTS }}
+      WEB_HOST: ${{ secrets.WEB_HOST }}
+      WEB_KNOWN_HOSTS: ${{ secrets.WEB_KNOWN_HOSTS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -179,12 +179,12 @@ jobs:
         if: steps.changed-files.outputs.web == '1'
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.DOCS_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.DOCS_KNOWN_HOSTS }}
+          key: ${{ secrets.WEB_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.WEB_KNOWN_HOSTS }}
 
       - name: Rsync web
         if: steps.changed-files.outputs.web == '1'
-        run: rsync -avzh web/build/ root@${DOCS_HOST}:/var/www/html/judgels --delete
+        run: rsync -avzh web/build/ root@${WEB_HOST}:/var/www/html/judgels --delete
 
   deploy-tlx-staging:
     needs: build
