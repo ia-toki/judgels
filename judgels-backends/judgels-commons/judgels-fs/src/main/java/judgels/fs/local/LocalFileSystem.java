@@ -36,6 +36,7 @@ public final class LocalFileSystem implements FileSystem {
     );
 
     private static final Set<PosixFilePermission> PERMISSION_700 = PosixFilePermissions.fromString("rwx------");
+    private static final Set<PosixFilePermission> PERMISSION_600 = PosixFilePermissions.fromString("rw-------");
 
     private final Path baseDir;
 
@@ -79,9 +80,9 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void uploadPublicFile(Path filePath, InputStream content) {
         try {
-            createDirectory(baseDir.resolve(filePath).getParent());
+            createDirectory(filePath.getParent());
             Files.copy(content, baseDir.resolve(filePath), StandardCopyOption.REPLACE_EXISTING);
-            Files.setPosixFilePermissions(baseDir.resolve(filePath), PERMISSION_700);
+            Files.setPosixFilePermissions(baseDir.resolve(filePath), PERMISSION_600);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

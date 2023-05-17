@@ -21,7 +21,7 @@
       file:
         path: "{{ item }}"
         state: directory
-        mode: "0777"
+        mode: '0700'
       with_items:
         - /judgels/grader/var
         - /judgels/grader/var/conf
@@ -30,7 +30,7 @@
       template:
         src: "{{ playbook_dir }}/../conf/judgels-grader.yml.j2"
         dest: /judgels/grader/var/conf/judgels-grader.yml
-        mode: '0644'
+        mode: '0600'
       tags: config
       register: judgels_grader_config
 
