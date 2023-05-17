@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Judgels',
-  tagline: 'A modern programming contest system.',
+  tagline: 'A modern programming contest system',
   favicon: 'img/favicon.ico',
   url: 'https://judgels.toki.id',
   baseUrl: '/',
@@ -49,9 +49,9 @@ const config = {
         respectPrefersColorScheme: false,
       },
       navbar: {
-        title: 'Judgels',
+        title: 'Judgels 2.x',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Judgels logo',
           src: 'img/logo.png',
         },
         items: [
