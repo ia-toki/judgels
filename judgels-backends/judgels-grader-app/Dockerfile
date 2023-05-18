@@ -54,4 +54,4 @@ COPY --from=0 /moe/eval/iwrapper /judgels/isolate/
 COPY build/distributions .
 
 ENTRYPOINT ["./init.sh"]
-CMD ["console"]
+CMD ["server"]

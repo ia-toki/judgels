@@ -29,4 +29,4 @@
         network_mode: host
         volumes:
           - "/judgels/server/var:/judgels/server/var"
-        command: dbMigrate
+        command: db migrate

@@ -18,4 +18,4 @@ LABEL org.opencontainers.image.revision $VCS_REF
 COPY build/distributions .
 
 ENTRYPOINT ["./init.sh"]
-CMD ["console"]
+CMD ["server"]
