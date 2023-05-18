@@ -21,7 +21,7 @@
       when: not letsencrypt_certificate.stat.exists
 
     - name: Generate SSL certificate using certbot
-      command: "certbot certonly --webroot --email {{ letsencrypt_email | mandatory }} --agree-tos --webroot-path={{ letsencrypt_webroot_directory | mandatory }} -d {{ domain.fqdn | mandatory }} --non-interactive"
+      command: "certbot certonly --webroot --email {{ letsencrypt_email | mandatory }} --agree-tos --webroot-path=/var/lib/letsencrypt -d {{ domain.fqdn | mandatory }} --non-interactive"
       when: not letsencrypt_certificate.stat.exists
       notify: Restart nginx
 

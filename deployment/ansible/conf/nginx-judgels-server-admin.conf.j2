@@ -31,6 +31,14 @@ server {
 
     server_name {{ domain.fqdn }};
 
+    location /.well-known/acme-challenge/ {
+        allow all;
+        autoindex off;
+        root /var/lib/letsencrypt/;
+        default_type "text/plain";
+        try_files $uri =404;
+    }
+
     location / {
         return 301 https://$host$request_uri;
     }
