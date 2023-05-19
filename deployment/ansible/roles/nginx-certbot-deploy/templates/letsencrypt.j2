@@ -1,0 +1,13 @@
+server {
+    server_name _;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    location /.well-known/acme-challenge/ {
+        allow all;
+        autoindex off;
+        root /var/lib/letsencrypt/;
+        default_type "text/plain";
+        try_files $uri =404;
+    }
+}

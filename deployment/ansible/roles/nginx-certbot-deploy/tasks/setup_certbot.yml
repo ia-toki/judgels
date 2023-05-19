@@ -26,6 +26,23 @@
     mode: 0644
   notify: Restart nginx
 
+- name: Add nginx configuration for letsencrypt domain validation
+  template:
+    src: letsencrypt.j2
+    dest: /etc/nginx/sites-available/letsencrypt
+    owner: www-data
+    group: www-data
+    mode: 0644
+
+- name: Enable nginx configuration for letsencrypt domain validation
+  file:
+    src: /etc/nginx/sites-available/letsencrypt
+    dest: /etc/nginx/sites-enabled/letsencrypt
+    owner: www-data
+    group: www-data
+    state: link
+  notify: Restart nginx
+
 - name: Add crontab to renew certificates
   cron:
     name: certbot-renew
