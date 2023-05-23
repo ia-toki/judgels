@@ -22,7 +22,7 @@ dependencies {
 }
 
 application {
-    mainClassName = 'judgels.JudgelsGraderApplication'
+    mainClass = 'judgels.JudgelsGraderApplication'
 }
 
 run {

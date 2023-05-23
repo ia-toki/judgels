@@ -1,8 +1,13 @@
 apply plugin: 'idea'
 apply plugin: 'java-library'
+apply plugin: 'checkstyle'
 
 tasks.withType(Test) {
     useJUnitPlatform()
+}
+
+tasks.withType(Copy) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 dependencies {

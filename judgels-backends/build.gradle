@@ -19,8 +19,6 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'checkstyle'
-
     configurations.all {
         it.resolutionStrategy {
             eachDependency { details ->

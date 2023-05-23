@@ -39,7 +39,7 @@ dependencies {
     implementation 'org.webjars.bower:roboto-fontface:0.7.0'
     implementation 'org.webjars.npm:katex:0.16.4'
 
-    runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
+    runtimeOnly "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 
     testImplementation project(':judgels-commons:judgels-persistence-testing')
 
@@ -65,7 +65,7 @@ dependencies {
 }
 
 application {
-    mainClassName = 'judgels.JudgelsServerApplication'
+    mainClass = 'judgels.JudgelsServerApplication'
 }
 
 run {
@@ -77,7 +77,7 @@ task dbDump(type: JavaExec, dependsOn: jar) {
     description 'Dumps current database schema.'
 
     classpath = sourceSets.main.runtimeClasspath
-    main = 'judgels.JudgelsServerApplication'
+    mainClass = 'judgels.JudgelsServerApplication'
     args = [ 'db', 'dump', 'var/conf/judgels-server.yml' ]
 }
 
@@ -86,7 +86,7 @@ task dbMigrate(type: JavaExec, dependsOn: jar) {
     description 'Migrates database to the latest version.'
 
     classpath = sourceSets.main.runtimeClasspath
-    main = 'judgels.JudgelsServerApplication'
+    mainClass = 'judgels.JudgelsServerApplication'
     args = [ 'db', 'migrate', 'var/conf/judgels-server.yml' ]
 }
 
@@ -95,7 +95,7 @@ task dbFastForward(type: JavaExec, dependsOn: jar) {
     description 'Fast fowards database to the latest version.'
 
     classpath = sourceSets.main.runtimeClasspath
-    main = 'judgels.JudgelsServerApplication'
+    mainClass = 'judgels.JudgelsServerApplication'
     args = [ 'db', 'fast-forward', '--all', 'var/conf/judgels-server.yml' ]
 }
 
