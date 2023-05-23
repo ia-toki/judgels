@@ -1,0 +1,7 @@
+- block:
+    - name: Install python
+      apt:
+        name:
+          - python3
+          - python3-pip
+        update_cache: true

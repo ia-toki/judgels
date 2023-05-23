@@ -69,15 +69,21 @@ In `vars.yml`, generate different random strings for these values:
    - `judgels_server_admin_url`: `admin.mycontest.org`
    - `letsencrypt_email`: your email, used for obtaining SSL certificates from Let's Encrypt.
 
-### F. Running Ansible playbook
+### F. Running Ansible playbooks
 
-In `deployment/ansible`, run:
+1. Go to `deployment/ansible`.
+1. Run the provision playbook:
+   ```
+   ansible-playbook -e @env/vars.yml playbooks/provision.yml
+   ```
+   This will install the prerequisites packages in the VMs. We only need to do the above provision playbook once.
+1. Run the deploy playbook:
+   ```
+   ansible-playbook -e @env/vars.yml playbooks/deploy.yml
+   ```
+   This will actually install Judgels. We can rerun this playbook e.g. if we want to deploy new version.
 
-```
-ansible-playbook -e @env/vars.yml playbooks/deploy.yml
-```
-
-Wait until everything is done. When the playbook finishes, do these verifications:
+Wait until everything is done. After the playbooks finished, do these verifications:
 
 1. Verify that we can access the admin web interface at `https://admin.mycontest.org`.
 1. Verify that we can log in as `superadmin`, with the password that we just set above.

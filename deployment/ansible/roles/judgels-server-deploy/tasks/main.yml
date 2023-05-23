@@ -1,13 +1,4 @@
 - block:
-    - name: Create judgels server container mount volume
-      file:
-        path: "{{ item }}"
-        state: directory
-        mode: "0777"
-      with_items:
-        - /judgels/server/var
-        - /judgels/server/var/conf
-
     - name: Generate judgels server config
       template:
         src: "{{ playbook_dir }}/../conf/judgels-server.yml.j2"
@@ -56,10 +47,3 @@
             group: "{{ var_log_stat.stat.gid }}"
             mode: 'g-r,g-w,g-x,o-r,o-w,o-x'
             recurse: true
-
-    - name: Allow judgels server traffic through the firewall
-      ufw:
-        rule: allow
-        to_port: "9101"
-        proto: tcp
-        comment: judgels server
