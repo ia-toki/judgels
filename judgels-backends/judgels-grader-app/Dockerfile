@@ -1,9 +1,9 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt-get update \
     && apt-get install -y git make gcc libcap-dev
 
-ENV ISOLATE_VERSION v1.8.1
+ENV ISOLATE_VERSION v1.10.1
 RUN git clone --branch $ISOLATE_VERSION --depth 1 https://github.com/ioi/isolate; \
     cd isolate; \
     make install
@@ -12,16 +12,16 @@ RUN git clone --depth 1 git://git.ucw.cz/moe.git; \
     gcc -o iwrapper iwrapper.c
 
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV CARGO_HOME /usr
 ENV RUSTUP_HOME /usr
 ENV XDG_CACHE_HOME /tmp
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 ENV PATH $JAVA_HOME/bin:$PATH
 
 RUN apt-get update \
-    && apt-get -y --no-install-recommends install software-properties-common \
+    && apt-get -y --no-install-recommends install software-properties-common gpg-agent \
     && add-apt-repository -y ppa:pypy/ppa \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get -y --no-install-recommends install \
@@ -30,8 +30,8 @@ RUN apt-get update \
        g++-11 \
        golang \
        libcap-dev \
-       openjdk-8-jdk-headless \
-       openjdk-8-jre \
+       openjdk-11-jdk-headless \
+       openjdk-11-jre \
        pypy3 \
        python3 \
     && ln -s /usr/bin/gcc-11 /usr/bin/gcc \

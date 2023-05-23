@@ -1,4 +1,18 @@
-FROM openjdk:8u181-jre-alpine3.8
+FROM alpine:3.18.0
+
+RUN apk --no-cache add openjdk11-jdk openjdk11-jmods
+RUN /usr/lib/jvm/java-11-openjdk/bin/jlink \
+    --add-modules \
+        java.base,java.desktop,java.naming,java.sql,java.management,java.instrument \
+    --compress 2 --strip-debug --no-header-files --no-man-pages \
+    --output "/opt/java-judgels"
+
+
+FROM alpine:3.18.0
+
+ENV JAVA_HOME=/opt/java-judgels
+ENV PATH="$PATH:$JAVA_HOME/bin"
+COPY --from=0 "$JAVA_HOME" "$JAVA_HOME"
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels
 RUN apk add --no-cache bash procps

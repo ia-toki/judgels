@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     services:
       rabbitmq:
         image: rabbitmq
@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '11'
           cache: 'gradle'
 
       - name: Test judgels-commons
@@ -110,7 +110,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '11'
           cache: 'gradle'
 
       - name: Set up node
