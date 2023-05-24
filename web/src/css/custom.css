@@ -61,3 +61,7 @@
 .table-of-contents__link--active {
   color: var(--ifm-link-color);
 }
+
+pre.prism-code {
+  background-color: var(--ifm-code-background);
+}
