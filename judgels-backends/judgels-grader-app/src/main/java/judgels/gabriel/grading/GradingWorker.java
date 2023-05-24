@@ -206,20 +206,11 @@ public class GradingWorker {
     }
 
     private File getProblemGradingDir(String problemJid) throws IOException {
-        File problemGradingDir;
-
-        if (gradingConfig.getLocalSandalphonBaseDataDir().isPresent()) {
-            problemGradingDir = Paths.get(
-                    gradingConfig.getLocalSandalphonBaseDataDir().get(),
-                    "problems",
-                    problemJid,
-                    "grading").toFile();
-        } else {
-            problemGradingDir = new File(problemsDir.toFile(), problemJid);
-            FileUtils.forceMkdir(problemGradingDir);
-        }
-
-        return problemGradingDir;
+        return Paths.get(
+                gradingConfig.getCacheBaseDataDir(),
+                "problems",
+                problemJid,
+                "grading").toFile();
     }
 
     private Map<String, File> generateHelperFiles(File problemGradingDir) throws FileNotFoundException {

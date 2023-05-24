@@ -1,14 +1,13 @@
 package judgels.gabriel.grading;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableGradingConfiguration.class)
 public interface GradingConfiguration {
     String getGradingRequestQueueName();
-    Optional<String> getLocalSandalphonBaseDataDir();
+    String getCacheBaseDataDir();
     int getNumWorkerThreads();
 
     class Builder extends ImmutableGradingConfiguration.Builder {}

@@ -22,7 +22,7 @@ judgels:
 gabriel:
   grading:
     gradingRequestQueueName: gabriel-grading-request
-    localSandalphonBaseDataDir: ../judgels-server-app/var/data
+    cacheBaseDataDir: ../judgels-server-app/var/data
     numWorkerThreads: 2
 
 #  isolate:
