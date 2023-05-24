@@ -33,9 +33,9 @@ It is recommended to track this env directory in a version control as the source
 
 ### C. Spinning up VMs
 
-As mentioned in the [Concepts](/docs/deployment/concepts) page, we need to spin up 1 core VM and 1 or more grader VMs. The VMs have the following hard requirements:
+As mentioned in the [Concepts](/docs/deployment/concepts) page, we need to spin up 1 core VM and 1 or more grader VMs. The VMs have the following requirements:
 
-- Ubuntu 20.04. Judgels, particularly the grader app, unfortunately currently **WON'T** work on newer version of Ubuntu! (We're still trying to support newer versions.)
+- Linux. In particular, we have tested that Judgels works on Ubuntu 20.04 LTS and 22.04 LTS.
 - Can be accessed from the local workstation to a root user via SSH.
 
 Now, open `hosts.ini`:
