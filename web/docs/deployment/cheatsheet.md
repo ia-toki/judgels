@@ -69,7 +69,5 @@ This page lists some technical details that Judgels admins should know in order 
   - The Isolate boxes are located at `/var/local/lib/isolate/<box id>` in the Docker container.
   - For example, to check active boxes:
     ```
-    docker exec -it judgels-grader bash
-    cd /var/local/lib/isolate
-    ls
+    docker exec -it judgels-grader ls /var/local/lib/isolate
     ```

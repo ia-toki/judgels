@@ -11,6 +11,5 @@ Database migration is powered by [Liquibase](https://www.liquibase.org/).
 To migrate the database, run this command in the core VM:
 
 ```
-docker exec -it judgels-server bash
-./init.sh db migrate
+docker exec -it judgels-server ./init.sh db migrate
 ```
