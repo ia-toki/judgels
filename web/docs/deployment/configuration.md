@@ -31,13 +31,15 @@ For example, in an on-site contest setting, we can set the following combination
 
 ### Grading worker threads per machine
 
-By default, there will be 2 worker threads per grader VM:
+By default, there will be one worker threads per grader VM:
+
+- `gabriel_grading_numWorkerThreads: 1`
+
+If the number of CPUs in each of the grader VMs is lower/higher, we can set a different number appropriately, e.g.:
 
 - `gabriel_grading_numWorkerThreads: 2`
 
 It means that each grader VM can have 2 concurrent grading executions.
-
-If the number of CPUs in each of the grader VMs is lower/higher, we can set a different number appropriately.
 
 ### Redeploying Judgels
 
