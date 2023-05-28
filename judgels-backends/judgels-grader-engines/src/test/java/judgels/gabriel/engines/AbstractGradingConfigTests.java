@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
-import judgels.gabriel.api.GabrielObjectMapper;
+import judgels.JudgelsObjectMappers;
 import judgels.gabriel.api.GradingConfig;
 
 public abstract class AbstractGradingConfigTests {
-    private static final ObjectMapper MAPPER = GabrielObjectMapper.getInstance();
+    private static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
 
     protected void assertConfig(
             String filename,

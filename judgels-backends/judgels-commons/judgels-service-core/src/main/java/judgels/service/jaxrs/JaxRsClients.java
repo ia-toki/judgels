@@ -4,6 +4,7 @@ import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
+import judgels.JudgelsObjectMappers;
 
 public class JaxRsClients {
     private JaxRsClients() {}

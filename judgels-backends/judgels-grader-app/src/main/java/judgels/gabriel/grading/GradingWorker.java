@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
-import judgels.gabriel.api.GabrielObjectMapper;
+import judgels.JudgelsObjectMappers;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingEngine;
 import judgels.gabriel.api.GradingException;
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 public class GradingWorker {
-    private static final ObjectMapper MAPPER = GabrielObjectMapper.getInstance();
+    private static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
     private static final Logger LOGGER = LoggerFactory.getLogger(GradingWorker.class);
 
     private final GradingConfiguration gradingConfig;

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import judgels.gabriel.api.GabrielObjectMapper;
+import judgels.JudgelsObjectMappers;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingEngine;
 import judgels.gabriel.api.GradingException;
@@ -37,7 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 public class BlackboxGradingEngineIntegrationTests {
-    protected static final ObjectMapper MAPPER = GabrielObjectMapper.getInstance();
+    protected static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
 
     private GradingEngine engine;
     private GradingLanguage language;

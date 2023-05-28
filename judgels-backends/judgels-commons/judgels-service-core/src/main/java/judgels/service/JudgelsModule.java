@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
-import judgels.service.jaxrs.JudgelsObjectMappers;
+import judgels.JudgelsObjectMappers;
 
 @Module
 public class JudgelsModule {

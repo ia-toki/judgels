@@ -5,10 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
+import judgels.JudgelsObjectMappers;
 import org.junit.jupiter.api.Test;
 
 class GradingResultDetailsTests {
-    private static final ObjectMapper MAPPER = GabrielObjectMapper.getInstance();
+    private static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
 
     @Test
     void v1_deserializes_and_serializes() throws IOException {

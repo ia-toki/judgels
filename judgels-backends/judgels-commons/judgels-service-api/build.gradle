@@ -1,7 +1,8 @@
 apply from: '../../gradle/java.gradle'
 
 dependencies {
-    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api project(':judgels-commons:judgels-mapper')
+
     api "com.google.code.findbugs:jsr305:$findbugsJsr305Version"
     api "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
 

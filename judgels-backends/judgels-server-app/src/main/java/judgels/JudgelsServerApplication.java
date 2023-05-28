@@ -35,7 +35,6 @@ import judgels.sandalphon.SandalphonConfiguration;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
-import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.uriel.DaggerUrielComponent;
 import judgels.uriel.UrielComponent;

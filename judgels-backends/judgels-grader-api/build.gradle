@@ -1,10 +1,7 @@
 apply from: '../gradle/java.gradle'
 
 dependencies {
-    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    api project(':judgels-commons:judgels-mapper')
 
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 

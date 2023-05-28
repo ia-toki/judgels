@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import judgels.JudgelsObjectMappers;
 import judgels.gabriel.aggregators.SubtaskAggregator;
 import judgels.gabriel.api.AggregationResult;
 import judgels.gabriel.api.Aggregator;
@@ -18,7 +19,6 @@ import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.EvaluationResult;
 import judgels.gabriel.api.Evaluator;
-import judgels.gabriel.api.GabrielObjectMapper;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingEngine;
 import judgels.gabriel.api.GradingException;
@@ -44,7 +44,7 @@ import org.slf4j.MDC;
 
 public abstract class BlackboxGradingEngine implements GradingEngine {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlackboxGradingEngine.class);
-    private static final ObjectMapper MAPPER = GabrielObjectMapper.getInstance();
+    private static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
 
     private File gradingDir;
     private File compilationDir;
