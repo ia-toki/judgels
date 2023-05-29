@@ -15,8 +15,3 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
 }
 
-idea.module {
-    generatedSourceDirs += file('generated')
-    sourceDirs += file('generated')
-    testSourceDirs += file('generated_tests')
-}
