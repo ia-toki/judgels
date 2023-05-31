@@ -54,10 +54,8 @@ judgels:
 {% if rabbitmq_host is defined %}
   rabbitmq:
     host: {{ rabbitmq_host }}
-    port: 5672
     username: {{ rabbitmq_username }}
     password: {{ rabbitmq_password }}
-    virtualHost: "/"
 {% endif %}
 
 jophiel:
