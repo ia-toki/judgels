@@ -6,6 +6,7 @@ import judgels.gabriel.DaggerGabrielComponent;
 import judgels.gabriel.GabrielComponent;
 import judgels.gabriel.GabrielConfiguration;
 import judgels.gabriel.JudgelsGraderModule;
+import judgels.gabriel.cache.CacheModule;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.isolate.IsolateModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
@@ -31,6 +32,7 @@ public class JudgelsGraderApplication extends Application<JudgelsGraderApplicati
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .isolateModule(new IsolateModule(gabrielConfig.getIsolateConfig()))
                 .gradingModule(new GradingModule(env.lifecycle(), gabrielConfig.getGradingConfig()))
+                .cacheModule(new CacheModule(gabrielConfig.getCacheConfig()))
                 .build();
 
         scheduler.scheduleOnce(

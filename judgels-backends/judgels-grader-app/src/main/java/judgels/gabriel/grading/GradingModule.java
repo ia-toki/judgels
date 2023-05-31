@@ -33,12 +33,6 @@ public class GradingModule {
     }
 
     @Provides
-    @Named("problemsDir")
-    static Path gradingProblemsDir(@JudgelsBaseDataDir Path baseDataDir) {
-        return baseDataDir.resolve("problems");
-    }
-
-    @Provides
     @Singleton
     GradingRequestPoller gradingRequestPoller(
             MessageClient messageClient,

@@ -2,6 +2,7 @@ package judgels.gabriel;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.gabriel.cache.CacheModule;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.grading.GradingRequestPoller;
 import judgels.gabriel.isolate.IsolateModule;
@@ -20,6 +21,7 @@ import judgels.service.JudgelsModule;
 
         // Features
         GradingModule.class,
+        CacheModule.class,
         SandboxModule.class})
 @Singleton
 public interface GabrielComponent {

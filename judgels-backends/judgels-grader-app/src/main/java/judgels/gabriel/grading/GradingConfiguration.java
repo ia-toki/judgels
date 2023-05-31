@@ -7,7 +7,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableGradingConfiguration.class)
 public interface GradingConfiguration {
     String getGradingRequestQueueName();
-    String getCacheBaseDataDir();
     int getNumWorkerThreads();
 
     class Builder extends ImmutableGradingConfiguration.Builder {}

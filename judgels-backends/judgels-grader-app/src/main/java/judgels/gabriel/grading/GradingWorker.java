@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +25,7 @@ import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
+import judgels.gabriel.cache.ProblemCache;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.messaging.MessageClient;
@@ -41,7 +41,7 @@ public class GradingWorker {
 
     private final GradingConfiguration gradingConfig;
     private final Path workersDir;
-    private final Path problemsDir;
+    private final ProblemCache problemCache;
     private final MessageClient messageClient;
     private final SandboxFactory sandboxFactory;
 
@@ -66,13 +66,13 @@ public class GradingWorker {
     public GradingWorker(
             GradingConfiguration gradingConfig,
             @Named("workersDir") Path workersDir,
-            @Named("problemsDir") Path problemsDir,
+            ProblemCache problemCache,
             MessageClient messageClient,
             SandboxFactory sandboxFactory) {
 
         this.gradingConfig = gradingConfig;
         this.workersDir = workersDir;
-        this.problemsDir = problemsDir;
+        this.problemCache = problemCache;
         this.messageClient = messageClient;
         this.sandboxFactory = sandboxFactory;
     }
@@ -109,7 +109,6 @@ public class GradingWorker {
         MDC.clear();
     }
 
-
     private void initializeWorker() {
         LOGGER.info("Worker initialization started.");
 
@@ -122,7 +121,8 @@ public class GradingWorker {
             sourceFiles = generateSourceFiles(workerDir);
             engineDir = getEngineDir(workerDir);
 
-            File problemGradingDir = getProblemGradingDir(request.getProblemJid());
+            File problemGradingDir = problemCache.getProblemGradingDir(request.getProblemJid());
+
             helperFiles = generateHelperFiles(problemGradingDir);
             testDataFiles = generateTestDataFiles(problemGradingDir);
             config = parseGradingConfig(problemGradingDir, engine);
@@ -187,14 +187,6 @@ public class GradingWorker {
         File engineDir = new File(workerDir, "engine");
         FileUtils.forceMkdir(engineDir);
         return engineDir;
-    }
-
-    private File getProblemGradingDir(String problemJid) throws IOException {
-        return Paths.get(
-                gradingConfig.getCacheBaseDataDir(),
-                "problems",
-                problemJid,
-                "grading").toFile();
     }
 
     private Map<String, File> generateHelperFiles(File problemGradingDir) throws FileNotFoundException {

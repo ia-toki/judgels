@@ -20,8 +20,10 @@ judgels:
 gabriel:
   grading:
     gradingRequestQueueName: gabriel-grading-request
-    cacheBaseDataDir: ../judgels-server-app/var/data
     numWorkerThreads: 2
+
+  cache:
+    cachedBaseDataDir: ../judgels-server/var/data
 
 #  isolate:
 #    baseDir: /judgels/isolate

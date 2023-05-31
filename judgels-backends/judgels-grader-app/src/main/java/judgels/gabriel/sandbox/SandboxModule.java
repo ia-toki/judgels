@@ -5,6 +5,7 @@ import dagger.Provides;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
+import javax.inject.Singleton;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
 import judgels.gabriel.sandboxes.isolate.IsolateSandboxFactory;
@@ -14,6 +15,7 @@ public class SandboxModule {
     private SandboxModule() {}
 
     @Provides
+    @Singleton
     static SandboxFactory sandboxFactory(Optional<IsolateSandboxFactory> isolateSandboxFactory) {
         if (isolateSandboxFactory.isPresent()) {
             return isolateSandboxFactory.get();
