@@ -9,7 +9,6 @@ dependencies {
     implementation project(':judgels-grader-api')
     implementation project(':judgels-grader-engines')
 
-    implementation "commons-io:commons-io:$apacheCommonsIoVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.guava:guava:$guavaVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"

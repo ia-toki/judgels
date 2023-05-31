@@ -1,15 +1,16 @@
 package judgels.gabriel.grading;
 
+import static java.util.stream.Collectors.toMap;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 import judgels.JudgelsObjectMappers;
@@ -30,7 +31,6 @@ import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.messaging.MessageClient;
 import judgels.messaging.api.Message;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -48,8 +48,8 @@ public class GradingWorker {
     private Message message;
     private GradingRequest request;
 
-    private File engineDir;
-    private File workerDir;
+    private Path engineDir;
+    private Path workerDir;
 
     private GradingEngine engine;
     private GradingConfig config;
@@ -121,7 +121,7 @@ public class GradingWorker {
             sourceFiles = generateSourceFiles(workerDir);
             engineDir = getEngineDir(workerDir);
 
-            File problemGradingDir = problemCache.getProblemGradingDir(request.getProblemJid());
+            Path problemGradingDir = problemCache.getProblemGradingDir(request.getProblemJid());
 
             helperFiles = generateHelperFiles(problemGradingDir);
             testDataFiles = generateTestDataFiles(problemGradingDir);
@@ -139,7 +139,7 @@ public class GradingWorker {
                 .testDataFiles(testDataFiles)
                 .helperFiles(helperFiles)
                 .build();
-        result = engine.grade(engineDir, config, language, source, sandboxFactory);
+        result = engine.grade(engineDir.toFile(), config, language, source, sandboxFactory);
 
         LOGGER.info("Grading finished. Result: {} {}", result.getVerdict().getCode(), result.getScore());
     }
@@ -167,8 +167,8 @@ public class GradingWorker {
 
     private void finalizeWorker() {
         LOGGER.info("Worker finalization started.");
-        try {
-            FileUtils.forceDelete(workerDir);
+        try (var files = Files.walk(workerDir)) {
+            files.sorted(Comparator.reverseOrder()).forEach(f -> f.toFile().delete());
         } catch (IOException e) {
             throw new RuntimeException("Worker finalization failed!", e);
         }
@@ -176,57 +176,52 @@ public class GradingWorker {
         LOGGER.info("Worker finalization finished.");
     }
 
-
-    private File getWorkerDir() throws IOException {
-        File dir = new File(workersDir.toFile(), request.getGradingJid());
-        FileUtils.forceMkdir(dir);
-        return dir;
+    private Path getWorkerDir() throws IOException {
+        Path workerDir = workersDir.resolve(request.getGradingJid());
+        Files.createDirectories(workerDir);
+        return workerDir;
     }
 
-    private File getEngineDir(File workerDir) throws IOException {
-        File engineDir = new File(workerDir, "engine");
-        FileUtils.forceMkdir(engineDir);
+    private Path getEngineDir(Path workerDir) throws IOException {
+        Path engineDir = workerDir.resolve("engine");
+        Files.createDirectories(engineDir);
         return engineDir;
     }
 
-    private Map<String, File> generateHelperFiles(File problemGradingDir) throws FileNotFoundException {
-        File helperDir = new File(problemGradingDir, "helpers");
+    private Map<String, File> generateHelperFiles(Path problemGradingDir) throws IOException {
+        Path helperDir = problemGradingDir.resolve("helpers");
         return listFilesAsMap(helperDir);
     }
 
-    private Map<String, File> generateTestDataFiles(File problemGradingDir) throws FileNotFoundException {
-        File testDatDir = new File(problemGradingDir, "testdata");
-        return listFilesAsMap(testDatDir);
+    private Map<String, File> generateTestDataFiles(Path problemGradingDir) throws IOException {
+        Path testDataDir = problemGradingDir.resolve("testdata");
+        return listFilesAsMap(testDataDir);
     }
 
-    private GradingConfig parseGradingConfig(File problemGradingDir, GradingEngine engine) throws IOException {
-        File gradingConfig = new File(problemGradingDir, "config.json");
-        String configAsJson = FileUtils.readFileToString(gradingConfig, StandardCharsets.UTF_8);
+    private GradingConfig parseGradingConfig(Path problemGradingDir, GradingEngine engine) throws IOException {
+        Path gradingConfig = problemGradingDir.resolve("config.json");
+        String configAsJson = Files.readString(gradingConfig, StandardCharsets.UTF_8);
         return engine.parseConfig(MAPPER, configAsJson);
     }
 
-    private Map<String, File> generateSourceFiles(File runnerDir) throws IOException {
-        File sourceDir = new File(runnerDir, "source");
-        FileUtils.forceMkdir(sourceDir);
+    private Map<String, File> generateSourceFiles(Path workerDir) throws IOException {
+        Path sourceDir = workerDir.resolve("source");
+        Files.createDirectories(sourceDir);
 
         ImmutableMap.Builder<String, File> sourceFilesBuilder = ImmutableMap.builder();
 
         for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
-            File file = new File(sourceDir, entry.getValue().getName());
+            Path file = sourceDir.resolve(entry.getValue().getName());
 
-            FileUtils.writeByteArrayToFile(file, entry.getValue().getContent());
-            sourceFilesBuilder.put(entry.getKey(), file);
+            Files.write(file, entry.getValue().getContent());
+            sourceFilesBuilder.put(entry.getKey(), file.toFile());
         }
         return sourceFilesBuilder.build();
     }
 
-    private Map<String, File> listFilesAsMap(File dir) throws FileNotFoundException {
-        File[] files = dir.listFiles();
-
-        if (files == null) {
-            throw new FileNotFoundException(dir.getAbsolutePath() + " not found");
+    private Map<String, File> listFilesAsMap(Path dir) throws IOException {
+        try (var files = Files.list(dir)) {
+            return files.map(Path::toFile).collect(toMap(File::getName, f -> f));
         }
-
-        return Arrays.asList(files).stream().collect(Collectors.toMap(e -> e.getName(), e -> e));
     }
 }

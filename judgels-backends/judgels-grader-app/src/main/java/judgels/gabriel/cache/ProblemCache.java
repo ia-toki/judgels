@@ -1,6 +1,6 @@
 package judgels.gabriel.cache;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ProblemCache {
@@ -10,7 +10,7 @@ public class ProblemCache {
         this.config = config;
     }
 
-    public File getProblemGradingDir(String problemJid) {
-        return config.getCachedBaseDataDir().resolve(Paths.get("problems", problemJid, "grading")).toFile();
+    public Path getProblemGradingDir(String problemJid) {
+        return config.getCachedBaseDataDir().resolve(Paths.get("problems", problemJid, "grading"));
     }
 }
