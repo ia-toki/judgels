@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.grading.GradingRequestPoller;
 import judgels.gabriel.isolate.IsolateModule;
+import judgels.gabriel.sandbox.SandboxModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.service.JudgelsModule;
 
@@ -18,7 +19,8 @@ import judgels.service.JudgelsModule;
         IsolateModule.class,
 
         // Features
-        GradingModule.class})
+        GradingModule.class,
+        SandboxModule.class})
 @Singleton
 public interface GabrielComponent {
     GradingRequestPoller gradingRequestPoller();

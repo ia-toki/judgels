@@ -6,21 +6,21 @@ import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.SandboxInteractor;
 
 public class IsolateSandboxFactory implements SandboxFactory {
-    private final String isolatePath;
-    private final String iwrapperPath;
+    private final Path isolatePath;
+    private final Path iwrapperPath;
 
-    public IsolateSandboxFactory(Path isolatePath, Path iwrapperPath) {
-        this.isolatePath = isolatePath.toString();
-        this.iwrapperPath = iwrapperPath.toString();
+    public IsolateSandboxFactory(Path baseIsolateDir) {
+        this.isolatePath = baseIsolateDir.resolve("isolate");
+        this.iwrapperPath = baseIsolateDir.resolve("iwrapper");
     }
 
     @Override
     public Sandbox newSandbox() {
-        return new IsolateSandbox(isolatePath, IsolateBoxIdFactory.newBoxId());
+        return new IsolateSandbox(isolatePath.toString(), IsolateBoxIdFactory.newBoxId());
     }
 
     @Override
     public SandboxInteractor newSandboxInteractor() {
-        return new IwrapperSandboxInteractor(iwrapperPath);
+        return new IwrapperSandboxInteractor(iwrapperPath.toString());
     }
 }

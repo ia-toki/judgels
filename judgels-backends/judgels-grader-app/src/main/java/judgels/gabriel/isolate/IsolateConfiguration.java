@@ -7,8 +7,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableIsolateConfiguration.class)
 public interface IsolateConfiguration {
-    Path getIsolatePath();
-    Path getIwrapperPath();
+    Path getBaseDir();
 
     class Builder extends ImmutableIsolateConfiguration.Builder {}
 }

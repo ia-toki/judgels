@@ -15,6 +15,6 @@ public class IsolateModule {
 
     @Provides
     Optional<IsolateSandboxFactory> sandboxFactory() {
-        return config.map(config -> new IsolateSandboxFactory(config.getIsolatePath(), config.getIwrapperPath()));
+        return config.map(config -> new IsolateSandboxFactory(config.getBaseDir()));
     }
 }

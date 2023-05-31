@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,8 +28,6 @@ import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
-import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
-import judgels.gabriel.sandboxes.isolate.IsolateSandboxFactory;
 import judgels.messaging.MessageClient;
 import judgels.messaging.api.Message;
 import org.apache.commons.io.FileUtils;
@@ -46,7 +43,7 @@ public class GradingWorker {
     private final Path workersDir;
     private final Path problemsDir;
     private final MessageClient messageClient;
-    private final Optional<IsolateSandboxFactory> isolateSandboxFactory;
+    private final SandboxFactory sandboxFactory;
 
     private Message message;
     private GradingRequest request;
@@ -58,8 +55,6 @@ public class GradingWorker {
     private GradingConfig config;
     private GradingLanguage language;
     private SubmissionSource source;
-
-    private SandboxFactory sandboxFactory;
 
     private Map<String, File> sourceFiles;
     private Map<String, File> helperFiles;
@@ -73,13 +68,13 @@ public class GradingWorker {
             @Named("workersDir") Path workersDir,
             @Named("problemsDir") Path problemsDir,
             MessageClient messageClient,
-            Optional<IsolateSandboxFactory> isolateSandboxFactory) {
+            SandboxFactory sandboxFactory) {
 
         this.gradingConfig = gradingConfig;
         this.workersDir = workersDir;
         this.problemsDir = problemsDir;
         this.messageClient = messageClient;
-        this.isolateSandboxFactory = isolateSandboxFactory;
+        this.sandboxFactory = sandboxFactory;
     }
 
     public void process(Message message) {
@@ -125,7 +120,6 @@ public class GradingWorker {
             language = GradingLanguageRegistry.getInstance().get(request.getGradingLanguage());
             workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);
-            sandboxFactory = getSandboxFactory(workerDir);
             engineDir = getEngineDir(workerDir);
 
             File problemGradingDir = getProblemGradingDir(request.getProblemJid());
@@ -187,16 +181,6 @@ public class GradingWorker {
         File dir = new File(workersDir.toFile(), request.getGradingJid());
         FileUtils.forceMkdir(dir);
         return dir;
-    }
-
-    private SandboxFactory getSandboxFactory(File workerDir) throws IOException {
-        if (isolateSandboxFactory.isPresent()) {
-            return isolateSandboxFactory.get();
-        } else {
-            File sandboxesDir = new File(workerDir, "sandboxes");
-            FileUtils.forceMkdir(sandboxesDir);
-            return new FakeSandboxFactory(sandboxesDir);
-        }
     }
 
     private File getEngineDir(File workerDir) throws IOException {

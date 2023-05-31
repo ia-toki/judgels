@@ -26,5 +26,4 @@ gabriel:
     numWorkerThreads: 2
 
 #  isolate:
-#    isolatePath: /judgels/isolate/isolate
-#    iwrapperPath: /judgels/isolate/iwrapper
+#    baseDir: /judgels/isolate
