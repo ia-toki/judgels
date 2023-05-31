@@ -1,24 +1,12 @@
 apply from: '../../gradle/java.gradle'
 
 dependencies {
-    api project(':judgels-commons:judgels-service-api')
+    api project(':judgels-commons:judgels-mapper')
 
     api "com.google.dagger:dagger:$daggerVersion"
-    api "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
     api "io.dropwizard:dropwizard-core:$dropwizardVersion"
 
-    implementation "io.github.openfeign:feign-core:$feignVersion"
-    implementation "io.github.openfeign:feign-jackson:$feignVersion"
-    implementation "io.github.openfeign:feign-jaxrs:$feignVersion"
-    implementation "io.github.openfeign:feign-okhttp:$feignVersion"
-
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
-    compileOnly "org.immutables:value-annotations:$immutablesVersion"
-
-    testImplementation "com.google.guava:guava:$guavaVersion"
-    testImplementation "org.assertj:assertj-core:$assertJVersion"
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-    annotationProcessor "org.immutables:value:$immutablesVersion"
 }

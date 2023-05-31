@@ -7,7 +7,6 @@ include ':judgels-commons:judgels-persistence-api'
 include ':judgels-commons:judgels-persistence-core'
 include ':judgels-commons:judgels-persistence-testing'
 include ':judgels-commons:judgels-recaptcha'
-include ':judgels-commons:judgels-service-api'
 include ':judgels-commons:judgels-service-core'
 
 include ':judgels-server-api'

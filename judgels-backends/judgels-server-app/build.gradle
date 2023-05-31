@@ -25,8 +25,8 @@ dependencies {
         exclude group: "joda-time", module: "joda-time"
     }
     implementation "io.dropwizard:dropwizard-assets:$dropwizardVersion"
-    implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-views-freemarker:$dropwizardVersion"
 
@@ -53,6 +53,11 @@ dependencies {
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestImplementation "io.github.openfeign:feign-core:$feignVersion"
+    integTestImplementation "io.github.openfeign:feign-jackson:$feignVersion"
+    integTestImplementation "io.github.openfeign:feign-jaxrs:$feignVersion"
+    integTestImplementation "io.github.openfeign:feign-okhttp:$feignVersion"
+    integTestImplementation "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
     integTestImplementation "org.subethamail:subethasmtp-wiser:$wiserVersion"
 
     integTestRuntimeOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
