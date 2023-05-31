@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import judgels.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.messaging.MessageClient;
@@ -25,6 +24,7 @@ import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
+import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
 
 @Module

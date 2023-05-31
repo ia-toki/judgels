@@ -1,4 +1,4 @@
-package judgels;
+package judgels.service;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

@@ -5,10 +5,10 @@ import dagger.Provides;
 import java.nio.file.Path;
 import java.util.Optional;
 import javax.inject.Singleton;
-import judgels.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
+import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class UserAvatarModule {

@@ -3,6 +3,7 @@ package judgels;
 import dagger.Module;
 import dagger.Provides;
 import java.nio.file.Path;
+import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class JudgelsServerModule {

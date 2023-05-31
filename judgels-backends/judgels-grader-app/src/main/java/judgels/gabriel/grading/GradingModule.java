@@ -8,8 +8,8 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import judgels.JudgelsBaseDataDir;
 import judgels.messaging.MessageClient;
+import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class GradingModule {
