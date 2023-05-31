@@ -4,21 +4,19 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import judgels.JudgelsBaseDataDir;
 import judgels.messaging.MessageClient;
 
 @Module
 public class GradingModule {
-    private final String baseDataDir;
     private final LifecycleEnvironment lifecycleEnv;
     private final GradingConfiguration config;
 
-    public GradingModule(String baseDataDir, LifecycleEnvironment lifecycleEnv, GradingConfiguration config) {
-        this.baseDataDir = baseDataDir;
+    public GradingModule(LifecycleEnvironment lifecycleEnv, GradingConfiguration config) {
         this.lifecycleEnv = lifecycleEnv;
         this.config = config;
     }
@@ -30,14 +28,14 @@ public class GradingModule {
 
     @Provides
     @Named("workersDir")
-    Path gradingWorkersDir() {
-        return Paths.get(baseDataDir, "workers");
+    static Path gradingWorkersDir(@JudgelsBaseDataDir Path baseDataDir) {
+        return baseDataDir.resolve("workers");
     }
 
     @Provides
     @Named("problemsDir")
-    Path gradingProblemsDir() {
-        return Paths.get(baseDataDir, "problems");
+    static Path gradingProblemsDir(@JudgelsBaseDataDir Path baseDataDir) {
+        return baseDataDir.resolve("problems");
     }
 
     @Provides

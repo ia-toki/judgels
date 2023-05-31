@@ -9,12 +9,15 @@ import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.service.JudgelsModule;
 
 @Component(modules = {
+        // Judgels service
         JudgelsModule.class,
-        GabrielModule.class,
+        JudgelsGraderModule.class,
 
+        // 3rd parties
         RabbitMQModule.class,
         IsolateModule.class,
 
+        // Features
         GradingModule.class})
 @Singleton
 public interface GabrielComponent {

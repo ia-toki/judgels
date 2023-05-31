@@ -5,6 +5,7 @@ import io.dropwizard.setup.Environment;
 import judgels.gabriel.DaggerGabrielComponent;
 import judgels.gabriel.GabrielComponent;
 import judgels.gabriel.GabrielConfiguration;
+import judgels.gabriel.JudgelsGraderModule;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.isolate.IsolateModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
@@ -26,9 +27,10 @@ public class JudgelsGraderApplication extends Application<JudgelsGraderApplicati
         GabrielConfiguration gabrielConfig = config.getGabrielConfig();
 
         GabrielComponent component = DaggerGabrielComponent.builder()
+                .judgelsGraderModule(new JudgelsGraderModule(judgelsConfig))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .isolateModule(new IsolateModule(gabrielConfig.getIsolateConfig()))
-                .gradingModule(new GradingModule(judgelsConfig.getBaseDataDir(), env.lifecycle(), gabrielConfig.getGradingConfig()))
+                .gradingModule(new GradingModule(env.lifecycle(), gabrielConfig.getGradingConfig()))
                 .build();
 
         scheduler.scheduleOnce(
