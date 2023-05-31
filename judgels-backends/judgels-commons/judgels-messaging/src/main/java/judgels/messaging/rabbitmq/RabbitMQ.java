@@ -19,10 +19,10 @@ public class RabbitMQ {
     public RabbitMQ(RabbitMQConfiguration config) {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(config.getHost());
-        factory.setPort(config.getPort());
+        factory.setPort(5672);
         factory.setUsername(config.getUsername());
         factory.setPassword(config.getPassword());
-        factory.setVirtualHost(config.getVirtualHost());
+        factory.setVirtualHost("/");
 
         this.connectionFactory = factory;
     }
