@@ -6,7 +6,6 @@ import judgels.gabriel.cache.CacheModule;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.grading.GradingRequestPoller;
 import judgels.gabriel.isolate.IsolateModule;
-import judgels.gabriel.sandbox.SandboxModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.service.JudgelsModule;
 
@@ -21,8 +20,7 @@ import judgels.service.JudgelsModule;
 
         // Features
         GradingModule.class,
-        CacheModule.class,
-        SandboxModule.class})
+        CacheModule.class})
 @Singleton
 public interface GabrielComponent {
     GradingRequestPoller gradingRequestPoller();

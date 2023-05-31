@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import judgels.JudgelsObjectMappers;
@@ -29,6 +30,8 @@ import judgels.gabriel.api.Verdict;
 import judgels.gabriel.cache.ProblemCache;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
+import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
+import judgels.gabriel.sandboxes.isolate.IsolateSandboxFactory;
 import judgels.messaging.MessageClient;
 import judgels.messaging.api.Message;
 import org.slf4j.Logger;
@@ -43,7 +46,7 @@ public class GradingWorker {
     private final Path workersDir;
     private final ProblemCache problemCache;
     private final MessageClient messageClient;
-    private final SandboxFactory sandboxFactory;
+    private final Optional<IsolateSandboxFactory> isolateSandboxFactory;
 
     private Message message;
     private GradingRequest request;
@@ -55,6 +58,8 @@ public class GradingWorker {
     private GradingConfig config;
     private GradingLanguage language;
     private SubmissionSource source;
+
+    private SandboxFactory sandboxFactory;
 
     private Map<String, File> sourceFiles;
     private Map<String, File> helperFiles;
@@ -68,13 +73,13 @@ public class GradingWorker {
             @Named("workersDir") Path workersDir,
             ProblemCache problemCache,
             MessageClient messageClient,
-            SandboxFactory sandboxFactory) {
+            Optional<IsolateSandboxFactory> isolateSandboxFactory) {
 
         this.gradingConfig = gradingConfig;
         this.workersDir = workersDir;
         this.problemCache = problemCache;
         this.messageClient = messageClient;
-        this.sandboxFactory = sandboxFactory;
+        this.isolateSandboxFactory = isolateSandboxFactory;
     }
 
     public void process(Message message) {
@@ -118,8 +123,9 @@ public class GradingWorker {
             engine = GradingEngineRegistry.getInstance().get(request.getGradingEngine());
             language = GradingLanguageRegistry.getInstance().get(request.getGradingLanguage());
             workerDir = getWorkerDir();
-            sourceFiles = generateSourceFiles(workerDir);
             engineDir = getEngineDir(workerDir);
+            sourceFiles = generateSourceFiles(workerDir);
+            sandboxFactory = getSandboxFactory(workerDir);
 
             Path problemGradingDir = problemCache.getProblemGradingDir(request.getProblemJid());
 
@@ -188,6 +194,31 @@ public class GradingWorker {
         return engineDir;
     }
 
+    private Map<String, File> generateSourceFiles(Path workerDir) throws IOException {
+        Path sourceDir = workerDir.resolve("source");
+        Files.createDirectories(sourceDir);
+
+        ImmutableMap.Builder<String, File> sourceFilesBuilder = ImmutableMap.builder();
+
+        for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
+            Path file = sourceDir.resolve(entry.getValue().getName());
+
+            Files.write(file, entry.getValue().getContent());
+            sourceFilesBuilder.put(entry.getKey(), file.toFile());
+        }
+        return sourceFilesBuilder.build();
+    }
+
+    private SandboxFactory getSandboxFactory(Path workerDir) throws IOException {
+        if (isolateSandboxFactory.isPresent()) {
+            return isolateSandboxFactory.get();
+        } else {
+            Path sandboxesDir = workerDir.resolve("sandboxes");
+            Files.createDirectories(sandboxesDir);
+            return new FakeSandboxFactory(sandboxesDir.toFile());
+        }
+    }
+
     private Map<String, File> generateHelperFiles(Path problemGradingDir) throws IOException {
         Path helperDir = problemGradingDir.resolve("helpers");
         return listFilesAsMap(helperDir);
@@ -202,21 +233,6 @@ public class GradingWorker {
         Path gradingConfig = problemGradingDir.resolve("config.json");
         String configAsJson = Files.readString(gradingConfig, StandardCharsets.UTF_8);
         return engine.parseConfig(MAPPER, configAsJson);
-    }
-
-    private Map<String, File> generateSourceFiles(Path workerDir) throws IOException {
-        Path sourceDir = workerDir.resolve("source");
-        Files.createDirectories(sourceDir);
-
-        ImmutableMap.Builder<String, File> sourceFilesBuilder = ImmutableMap.builder();
-
-        for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
-            Path file = sourceDir.resolve(entry.getValue().getName());
-
-            Files.write(file, entry.getValue().getContent());
-            sourceFilesBuilder.put(entry.getKey(), file.toFile());
-        }
-        return sourceFilesBuilder.build();
     }
 
     private Map<String, File> listFilesAsMap(Path dir) throws IOException {
