@@ -8,7 +8,6 @@ dependencies {
     implementation project(':judgels-commons:judgels-messaging')
     implementation project(':judgels-commons:judgels-recaptcha')
     implementation project(':judgels-commons:judgels-service-core')
-    implementation project(':judgels-commons:judgels-persistence-core')
     implementation project(':judgels-grader-api')
     implementation project(':judgels-grader-engines')
     implementation project(':judgels-server-api')
@@ -20,12 +19,16 @@ dependencies {
     implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
     implementation "org.apache.commons:commons-email:$apacheCommonsEmailVersion"
     implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
+    implementation "org.apache.commons:commons-rng-core:$apacheCommonsRngVersion"
+    implementation "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
+    implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r"
     implementation ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
         exclude group: "joda-time", module: "joda-time"
     }
     implementation "io.dropwizard:dropwizard-assets:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-views-freemarker:$dropwizardVersion"
@@ -41,8 +44,11 @@ dependencies {
 
     runtimeOnly "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 
-    testImplementation project(':judgels-commons:judgels-persistence-testing')
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
 
+    testImplementation "com.h2database:h2:$h2Version"
     testImplementation "org.awaitility:awaitility:$awaitilityVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
@@ -63,10 +69,8 @@ dependencies {
     integTestRuntimeOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
 
     integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
-    annotationProcessor "org.immutables:value:$immutablesVersion"
+    integTestAnnotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    integTestAnnotationProcessor "org.immutables:value:$immutablesVersion"
 }
 
 application {

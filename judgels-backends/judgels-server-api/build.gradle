@@ -2,7 +2,6 @@ apply from: '../gradle/java.gradle'
 
 dependencies {
     api project(':judgels-commons:judgels-mapper')
-    api project(':judgels-commons:judgels-persistence-api')
     api project(':judgels-grader-api')
 
     api "com.google.code.findbugs:jsr305:$findbugsJsr305Version"
