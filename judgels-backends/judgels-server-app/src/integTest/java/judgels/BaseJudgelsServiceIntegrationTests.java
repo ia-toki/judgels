@@ -85,7 +85,6 @@ public abstract class BaseJudgelsServiceIntegrationTests {
         baseDataDir = Files.createTempDirectory("judgels");
 
         JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
-                .baseUrl("http://localhost:9101")
                 .name("Judgels")
                 .build();
 

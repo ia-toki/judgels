@@ -2,6 +2,7 @@ package judgels.sandalphon.lesson;
 
 import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -58,13 +59,13 @@ public class LessonClient {
         return lessonJids.stream().collect(Collectors.toMap(jid -> jid, this::getLesson));
     }
 
-    public LessonStatement getLessonStatement(String lessonJid, Optional<String> language) {
+    public LessonStatement getLessonStatement(String lessonJid, URI baseUri, Optional<String> language) {
         String sanitizedLanguage = sanitizeLanguage(lessonJid, language);
         LessonStatement statement = statementStore.getStatement(null, lessonJid, sanitizedLanguage);
 
         return new LessonStatement.Builder()
                 .from(statement)
-                .text(SandalphonUtils.replaceLessonRenderUrls(statement.getText(), appConfig.getBaseUrl(), lessonJid))
+                .text(SandalphonUtils.replaceLessonRenderUrls(statement.getText(), baseUri.toString(), lessonJid))
                 .build();
     }
 

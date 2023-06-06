@@ -9,8 +9,13 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 public class JudgelsContract extends JAXRSContract {
+    public JudgelsContract() {
+        super.registerParameterAnnotation(Context.class, (ann, data, i) -> data.ignoreParamater(i));
+    }
+
     @Override
     protected MethodMetadata parseAndValidateMetadata(Class<?> targetType, Method method) {
         MethodMetadata metadata = super.parseAndValidateMetadata(targetType, method);

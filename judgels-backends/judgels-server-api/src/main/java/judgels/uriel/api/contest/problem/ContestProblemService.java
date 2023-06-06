@@ -13,6 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/{contestJid}/problems")
@@ -36,6 +38,7 @@ public interface ContestProblemService {
     @Path("/{problemAlias}/programming/worksheet")
     @Produces(APPLICATION_JSON)
     judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet getProgrammingProblemWorksheet(
+            @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("problemAlias") String problemAlias,
@@ -45,6 +48,7 @@ public interface ContestProblemService {
     @Path("/{problemAlias}/bundle/worksheet")
     @Produces(APPLICATION_JSON)
     judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet getBundleProblemWorksheet(
+            @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("problemAlias") String problemAlias,

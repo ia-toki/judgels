@@ -111,6 +111,6 @@ class ContestProblemServicePermissionIntegrationTests extends BaseUrielServiceIn
     private ThrowingCallable getProblems(Optional<AuthHeader> authHeader) {
         return callAll(
                 () -> problemService.getProblems(authHeader, contest.getJid()),
-                () -> problemService.getProgrammingProblemWorksheet(authHeader, contest.getJid(), "A", empty()));
+                () -> problemService.getProgrammingProblemWorksheet(null, authHeader, contest.getJid(), "A", empty()));
     }
 }

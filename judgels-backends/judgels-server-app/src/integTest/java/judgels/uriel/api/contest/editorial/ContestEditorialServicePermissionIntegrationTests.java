@@ -36,6 +36,6 @@ class ContestEditorialServicePermissionIntegrationTests extends BaseUrielService
     }
 
     private ThrowingCallable getEditorial() {
-        return () -> editorialService.getEditorial(contest.getJid(), empty());
+        return () -> editorialService.getEditorial(null, contest.getJid(), empty());
     }
 }

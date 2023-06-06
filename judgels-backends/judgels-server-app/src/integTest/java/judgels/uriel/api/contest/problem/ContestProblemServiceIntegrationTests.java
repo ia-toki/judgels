@@ -149,6 +149,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                         .build()));
 
         ContestProblemWorksheet worksheet = problemService.getProgrammingProblemWorksheet(
+                null,
                 of(contestantHeader),
                 contest.getJid(),
                 "A",
@@ -167,7 +168,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                 .worksheet(new ProblemWorksheet.Builder()
                         .statement(new ProblemStatement.Builder()
                                 .title("Problem 1")
-                                .text("Statement 1. <img src=\"http://localhost:9101/api/v2/problems/" + problem1.getJid() + "/render/image.png\"/>")
+                                .text("Statement 1. <img src=\"http://localhost:8080/api/v2/problems/" + problem1.getJid() + "/render/image.png\"/>")
                                 .build())
                         .limits(new ProblemLimits.Builder()
                                 .timeLimit(2000)
@@ -240,6 +241,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
 
         judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet worksheet =
                 problemService.getBundleProblemWorksheet(
+                        null,
                         of(contestantHeader),
                         contest.getJid(),
                         "D",
@@ -258,7 +260,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                         .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                                 .statement(new ProblemStatement.Builder()
                                         .title("Problem 3")
-                                        .text("Statement 3. <img src=\"http://localhost:9101/api/v2/problems/" + problem3.getJid() + "/render/image.png\"/>")
+                                        .text("Statement 3. <img src=\"http://localhost:8080/api/v2/problems/" + problem3.getJid() + "/render/image.png\"/>")
                                         .build())
                                 .addItems(
                                         new Item.Builder()
@@ -266,7 +268,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                                                 .type(ItemType.STATEMENT)
                                                 .meta("1-2")
                                                 .config(new StatementItemConfig.Builder()
-                                                        .statement("<p>STATEMENT 1-2</p> <img src=\"http://localhost:9101/api/v2/problems/" + problem3.getJid() + "/render/statement.png\"/>")
+                                                        .statement("<p>STATEMENT 1-2</p> <img src=\"http://localhost:8080/api/v2/problems/" + problem3.getJid() + "/render/statement.png\"/>")
                                                         .build())
                                                 .build(),
                                         new Item.Builder()
@@ -281,7 +283,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                                                         .addChoices(
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("a")
-                                                                        .content("answer a <img src=\"http://localhost:9101/api/v2/problems/" + problem3.getJid() + "/render/a.png\"/>")
+                                                                        .content("answer a <img src=\"http://localhost:8080/api/v2/problems/" + problem3.getJid() + "/render/a.png\"/>")
                                                                         .build(),
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("b")

@@ -14,6 +14,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import judgels.jerahmeel.api.problem.ProblemDifficulty;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemTopStats;
@@ -51,6 +53,8 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     private final ProblemClient problemClient;
     private final ContestClient contestClient;
     private final StatsStore statsStore;
+
+    @Context UriInfo baseUriInfo;
 
     @Inject
     public ProblemSetProblemResource(
@@ -167,6 +171,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     @Override
     @UnitOfWork(readOnly = true)
     public ProblemSetProblemWorksheet getProblemWorksheet(
+            UriInfo uriInfo,
             Optional<AuthHeader> authHeader,
             String problemSetJid,
             String problemAlias,
@@ -189,7 +194,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
-                            .from(problemClient.getProgrammingProblemWorksheet(problemJid, language))
+                            .from(problemClient.getProgrammingProblemWorksheet(problemJid, uriInfo.getBaseUri(), language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -199,7 +204,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, uriInfo.getBaseUri(), language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -251,6 +256,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     @Override
     @UnitOfWork(readOnly = true)
     public ProblemEditorialResponse getProblemEditorial(
+            UriInfo uriInfo,
             String problemSetJid,
             String problemAlias,
             Optional<String> language) {
@@ -258,7 +264,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
-        ProblemEditorialInfo editorial = checkFound(problemClient.getProblemEditorial(problem.getProblemJid(), language));
+        ProblemEditorialInfo editorial = checkFound(problemClient.getProblemEditorial(problem.getProblemJid(), uriInfo.getBaseUri(), language));
         return new ProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();

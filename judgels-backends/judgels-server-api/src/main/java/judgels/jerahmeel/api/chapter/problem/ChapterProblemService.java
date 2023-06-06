@@ -13,6 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/chapters/{chapterJid}/problems")
@@ -36,6 +38,7 @@ public interface ChapterProblemService {
     @Path("/{problemAlias}/worksheet")
     @Produces(APPLICATION_JSON)
     ChapterProblemWorksheet getProblemWorksheet(
+            @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("chapterJid") String chapterJid,
             @PathParam("problemAlias") String problemAlias,

@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriInfo;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemData;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemService;
@@ -99,6 +100,7 @@ public class ChapterProblemResource implements ChapterProblemService {
     @Override
     @UnitOfWork(readOnly = true)
     public ChapterProblemWorksheet getProblemWorksheet(
+            UriInfo uriInfo,
             Optional<AuthHeader> authHeader,
             String chapterJid,
             String problemAlias,
@@ -121,7 +123,7 @@ public class ChapterProblemResource implements ChapterProblemService {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
-                            .from(problemClient.getProgrammingProblemWorksheet(problemJid, language))
+                            .from(problemClient.getProgrammingProblemWorksheet(problemJid, uriInfo.getBaseUri(), language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -131,7 +133,7 @@ public class ChapterProblemResource implements ChapterProblemService {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, uriInfo.getBaseUri(), language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();

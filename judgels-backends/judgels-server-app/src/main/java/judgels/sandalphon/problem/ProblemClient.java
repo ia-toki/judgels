@@ -3,6 +3,7 @@ package judgels.sandalphon.problem;
 import static java.util.stream.Collectors.toMap;
 import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.JudgelsAppConfiguration;
 import judgels.gabriel.api.GradingConfig;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.Problem;
@@ -40,7 +40,6 @@ import judgels.sandalphon.role.RoleChecker;
 
 @Singleton
 public class ProblemClient {
-    private final JudgelsAppConfiguration appConfig;
     private final RoleChecker roleChecker;
     private final ProblemStore problemStore;
     private final ProblemStatementStore statementStore;
@@ -52,7 +51,6 @@ public class ProblemClient {
 
     @Inject
     public ProblemClient(
-            JudgelsAppConfiguration appConfig,
             RoleChecker roleChecker,
             ProblemStore problemStore,
             ProblemStatementStore statementStore,
@@ -62,7 +60,6 @@ public class ProblemClient {
             BundleItemStore bundleItemStore,
             ItemProcessorRegistry itemProcessorRegistry) {
 
-        this.appConfig = appConfig;
         this.roleChecker = roleChecker;
         this.problemStore = problemStore;
         this.statementStore = statementStore;
@@ -130,8 +127,7 @@ public class ProblemClient {
     }
 
     public Optional<Item> getItem(String problemJid, String itemJid) {
-        judgels.sandalphon.api.problem.bundle.ProblemWorksheet
-                worksheet = getBundleProblemWorksheet(problemJid, Optional.empty());
+        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(problemJid, URI.create(""), Optional.empty());
         return worksheet.getItems().stream()
                 .filter(item -> itemJid.equals(item.getJid()))
                 .findAny();
@@ -140,8 +136,7 @@ public class ProblemClient {
     public Map<String, Item> getItems(Set<String> problemJids, Set<String> itemJids) {
         Map<String, Item> itemsByItemJid = new HashMap<>();
         for (String problemJid : problemJids) {
-            judgels.sandalphon.api.problem.bundle.ProblemWorksheet
-                    worksheet = getBundleProblemWorksheet(problemJid, Optional.empty());
+            judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(problemJid, URI.create(""), Optional.empty());
             worksheet.getItems().stream()
                     .filter(item -> itemJids.contains(item.getJid()))
                     .forEach(item -> itemsByItemJid.put(item.getJid(), item));
@@ -157,10 +152,7 @@ public class ProblemClient {
                 .build();
     }
 
-    public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(
-            String problemJid,
-            Optional<String> language) {
-
+    public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(String problemJid, URI baseUri, Optional<String> language) {
         GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
         String sanitizedLanguage = sanitizeStatementLanguage(problemJid, language);
         ProblemStatement statement = statementStore.getStatement(null, problemJid, sanitizedLanguage);
@@ -168,7 +160,7 @@ public class ProblemClient {
         return new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), appConfig.getBaseUrl(), problemJid))
+                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), baseUri.toString(), problemJid))
                         .build())
                 .limits(new ProblemLimits.Builder()
                         .timeLimit(config.getTimeLimit())
@@ -178,10 +170,7 @@ public class ProblemClient {
                 .build();
     }
 
-    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(
-            String problemJid,
-            Optional<String> language) {
-
+    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(String problemJid, URI baseUri, Optional<String> language) {
         String sanitizedLanguage = sanitizeStatementLanguage(problemJid, language);
         String defaultLanguage = statementStore.getStatementDefaultLanguage(null, problemJid);
 
@@ -204,23 +193,18 @@ public class ProblemClient {
         return new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), appConfig.getBaseUrl(), problemJid))
+                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), baseUri.toString(), problemJid))
                         .build())
                 .items(itemsWithConfig
                         .stream()
-                        .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(item, appConfig.getBaseUrl(), problemJid))
+                        .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(item, baseUri.toString(), problemJid))
                         .collect(Collectors.toList())
                 )
                 .build();
     }
 
-    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheetWithoutAnswerKey(
-            String problemJid,
-            Optional<String> language) {
-
-        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet =
-                getBundleProblemWorksheet(problemJid, language);
-
+    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheetWithoutAnswerKey(String problemJid, URI baseUri, Optional<String> language) {
+        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(problemJid, baseUri, language);
         return new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                 .from(worksheet)
                 .items(worksheet.getItems().stream()
@@ -230,7 +214,7 @@ public class ProblemClient {
                 .build();
     }
 
-    public Optional<ProblemEditorialInfo> getProblemEditorial(String problemJid, Optional<String> language) {
+    public Optional<ProblemEditorialInfo> getProblemEditorial(String problemJid, URI baseUri, Optional<String> language) {
         if (!editorialStore.hasEditorial(null, problemJid)) {
             return Optional.empty();
         }
@@ -239,7 +223,7 @@ public class ProblemClient {
         ProblemEditorial editorial = editorialStore.getEditorial(null, problemJid, sanitizedLanguage);
 
         return Optional.of(new ProblemEditorialInfo.Builder()
-                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), appConfig.getBaseUrl(), problemJid))
+                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), baseUri.toString(), problemJid))
                 .defaultLanguage(simplifyLanguageCode(editorialStore.getEditorialDefaultLanguage(null, problemJid)))
                 .languages(editorialStore.getEditorialLanguages(null, problemJid).stream()
                         .map(lang -> simplifyLanguageCode(lang))
@@ -247,10 +231,10 @@ public class ProblemClient {
                 .build());
     }
 
-    public Map<String, ProblemEditorialInfo> getProblemEditorials(Set<String> problemJids, Optional<String> language) {
+    public Map<String, ProblemEditorialInfo> getProblemEditorials(Set<String> problemJids, URI baseUri, Optional<String> language) {
         Map<String, ProblemEditorialInfo> editorialsMap = new HashMap<>();
         for (String problemJid : problemJids) {
-            Optional<ProblemEditorialInfo> editorial = getProblemEditorial(problemJid, language);
+            Optional<ProblemEditorialInfo> editorial = getProblemEditorial(problemJid, baseUri, language);
             if (editorial.isPresent()) {
                 editorialsMap.put(problemJid, editorial.get());
             }

@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriInfo;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLesson;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonData;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonService;
@@ -91,6 +92,7 @@ public class ChapterLessonResource implements ChapterLessonService {
     @Override
     @UnitOfWork(readOnly = true)
     public ChapterLessonStatement getLessonStatement(
+            UriInfo uriInfo,
             Optional<AuthHeader> authHeader,
             String chapterJid,
             String lessonAlias,
@@ -102,7 +104,7 @@ public class ChapterLessonResource implements ChapterLessonService {
         ChapterLesson lesson = checkFound(lessonStore.getLessonByAlias(chapterJid, lessonAlias));
         String lessonJid = lesson.getLessonJid();
         LessonInfo lessonInfo = lessonClient.getLesson(lessonJid);
-        LessonStatement statement = lessonClient.getLessonStatement(lesson.getLessonJid(), language);
+        LessonStatement statement = lessonClient.getLessonStatement(lesson.getLessonJid(), uriInfo.getBaseUri(), language);
 
         return new ChapterLessonStatement.Builder()
                 .defaultLanguage(lessonInfo.getDefaultLanguage())

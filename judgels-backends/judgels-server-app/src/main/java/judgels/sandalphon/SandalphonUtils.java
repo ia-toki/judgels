@@ -27,38 +27,38 @@ public class SandalphonUtils {
         return text
                 .replaceAll(
                         "src=\"render/",
-                        String.format("src=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid))
+                        String.format("src=\"%sapi/v2/problems/%s/render/", baseUrl, problemJid))
                 .replaceAll(
                         "url=render/",
-                        String.format("url=%s/api/v2/problems/%s/render/", baseUrl, problemJid))
+                        String.format("url=%sapi/v2/problems/%s/render/", baseUrl, problemJid))
                 .replaceAll(
                         "href=\"render/",
-                        String.format("href=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid));
+                        String.format("href=\"%sapi/v2/problems/%s/render/", baseUrl, problemJid));
     }
 
     public static String replaceProblemEditorialRenderUrls(String text, String baseUrl, String problemJid) {
         return text
                 .replaceAll(
                         "src=\"render/",
-                        String.format("src=\"%s/api/v2/problems/%s/editorials/render/", baseUrl, problemJid))
+                        String.format("src=\"%sapi/v2/problems/%s/editorials/render/", baseUrl, problemJid))
                 .replaceAll(
                         "url=render/",
-                        String.format("url=%s/api/v2/problems/%s/editorials/render/", baseUrl, problemJid))
+                        String.format("url=%sapi/v2/problems/%s/editorials/render/", baseUrl, problemJid))
                 .replaceAll(
                         "href=\"render/",
-                        String.format("href=\"%s/api/v2/problems/%s/editorials/render/", baseUrl, problemJid));
+                        String.format("href=\"%sapi/v2/problems/%s/editorials/render/", baseUrl, problemJid));
     }
 
     public static String replaceLessonRenderUrls(String text, String baseUrl, String lessonJid) {
         return text
                 .replaceAll(
                         "src=\"render/",
-                        String.format("src=\"%s/api/v2/lessons/%s/render/", baseUrl, lessonJid))
+                        String.format("src=\"%sapi/v2/lessons/%s/render/", baseUrl, lessonJid))
                 .replaceAll(
                         "url=render/",
-                        String.format("url=%s/api/v2/lessons/%s/render/", baseUrl, lessonJid))
+                        String.format("url=%sapi/v2/lessons/%s/render/", baseUrl, lessonJid))
                 .replaceAll(
                         "href=\"render/",
-                        String.format("href=\"%s/api/v2/lessons/%s/render/", baseUrl, lessonJid));
+                        String.format("href=\"%sapi/v2/lessons/%s/render/", baseUrl, lessonJid));
     }
 }

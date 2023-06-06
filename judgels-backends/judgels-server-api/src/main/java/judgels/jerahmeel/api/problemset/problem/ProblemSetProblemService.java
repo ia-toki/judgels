@@ -13,6 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/problemsets/{problemSetJid}/problems")
@@ -44,6 +46,7 @@ public interface ProblemSetProblemService {
     @Path("/{problemAlias}/worksheet")
     @Produces(APPLICATION_JSON)
     ProblemSetProblemWorksheet getProblemWorksheet(
+            @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("problemSetJid") String problemSetJid,
             @PathParam("problemAlias") String problemAlias,
@@ -61,6 +64,7 @@ public interface ProblemSetProblemService {
     @Path("/{problemAlias}/editorial")
     @Produces(APPLICATION_JSON)
     ProblemEditorialResponse getProblemEditorial(
+            @Context UriInfo uriInfo,
             @PathParam("problemSetJid") String problemSetJid,
             @PathParam("problemAlias") String problemAlias,
             @QueryParam("language") Optional<String> language);

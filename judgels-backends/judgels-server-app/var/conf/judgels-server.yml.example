@@ -47,7 +47,6 @@ judgels:
   baseDataDir: var/data
 
   app:
-    baseUrl: http://localhost:9101
     name: Judgels
 
 #  rabbitmq:

@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriInfo;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.user.UserClient;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
@@ -56,7 +57,7 @@ public class ContestEditorialResource implements ContestEditorialService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestEditorialResponse getEditorial(String contestJid, Optional<String> language) {
+    public ContestEditorialResponse getEditorial(UriInfo uriInfo, String contestJid, Optional<String> language) {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(roleChecker.canView(contest));
 
@@ -67,8 +68,7 @@ public class ContestEditorialResource implements ContestEditorialService {
 
         Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
         Map<String, ProblemMetadata> problemMetadatasMap = problemClient.getProblemMetadatas(problemJids);
-        Map<String, ProblemEditorialInfo> problemEditorialsMap =
-                problemClient.getProblemEditorials(problemJids, language);
+        Map<String, ProblemEditorialInfo> problemEditorialsMap = problemClient.getProblemEditorials(problemJids, uriInfo.getBaseUri(), language);
 
         Map<String, Profile> profilesMap = Maps.newHashMap();
         profilesMap.putAll(userClient.parseProfiles(config.getPreface().orElse("")));

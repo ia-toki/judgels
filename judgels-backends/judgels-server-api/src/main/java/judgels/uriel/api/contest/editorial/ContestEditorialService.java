@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
 @Path("/api/v2/contests/{contestJid}/editorial")
 public interface ContestEditorialService {
@@ -15,6 +17,7 @@ public interface ContestEditorialService {
     @Path("/")
     @Produces(APPLICATION_JSON)
     ContestEditorialResponse getEditorial(
+            @Context UriInfo uriInfo,
             @PathParam("contestJid") String contestJid,
             @QueryParam("language") Optional<String> language);
 }

@@ -36,7 +36,7 @@ public class ContestEditorialServiceIntegrationTests extends BaseUrielServiceInt
                         .build())
                 .build());
 
-        ContestEditorialResponse response = editorialService.getEditorial(contest.getJid(), empty());
+        ContestEditorialResponse response = editorialService.getEditorial(null, contest.getJid(), empty());
         assertThat(response.getPreface()).contains("<p>This contest brought to you by [user:userA]</p>");
         assertThat(response.getProblemsMap()).containsOnlyKeys(problem1.getJid(), problem2.getJid());
         assertThat(response.getProblemEditorialsMap()).containsKeys(problem1.getJid());

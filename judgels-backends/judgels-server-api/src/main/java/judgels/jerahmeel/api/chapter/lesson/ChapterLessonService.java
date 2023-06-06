@@ -13,6 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/chapters/{chapterJid}/lessons")
@@ -36,6 +38,7 @@ public interface ChapterLessonService {
     @Path("/{lessonAlias}/statement")
     @Produces(APPLICATION_JSON)
     ChapterLessonStatement getLessonStatement(
+            @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("chapterJid") String chapterJid,
             @PathParam("lessonAlias") String lessonAlias,

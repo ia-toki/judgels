@@ -12,11 +12,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriInfo;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
-import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
@@ -28,7 +28,6 @@ import judgels.uriel.api.contest.problem.ContestProblemConfig;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemsResponse;
-import judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -150,6 +149,7 @@ public class ContestProblemResource implements ContestProblemService {
     @Override
     @UnitOfWork(readOnly = true)
     public judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet getProgrammingProblemWorksheet(
+            UriInfo uriInfo,
             Optional<AuthHeader> authHeader,
             String contestJid,
             String problemAlias,
@@ -172,7 +172,8 @@ public class ContestProblemResource implements ContestProblemService {
         Optional<String> reasonNotAllowedToSubmit =
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
-        ProblemWorksheet worksheet = problemClient.getProgrammingProblemWorksheet(problemJid, language);
+        judgels.sandalphon.api.problem.programming.ProblemWorksheet worksheet =
+                problemClient.getProgrammingProblemWorksheet(problemJid, uriInfo.getBaseUri(), language);
 
         LanguageRestriction contestGradingLanguageRestriction =
                 moduleStore.getStyleModuleConfig(contestJid, contest.getStyle()).getGradingLanguageRestriction();
@@ -181,7 +182,7 @@ public class ContestProblemResource implements ContestProblemService {
         LanguageRestriction combinedGradingLanguageRestriction =
                 LanguageRestriction.combine(contestGradingLanguageRestriction, problemGradingLanguageRestriction);
 
-        ProblemWorksheet finalWorksheet = new ProblemWorksheet.Builder()
+        judgels.sandalphon.api.problem.programming.ProblemWorksheet finalWorksheet = new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
                 .from(worksheet)
                 .submissionConfig(new ProblemSubmissionConfig.Builder()
                         .from(worksheet.getSubmissionConfig())
@@ -203,7 +204,8 @@ public class ContestProblemResource implements ContestProblemService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestProblemWorksheet getBundleProblemWorksheet(
+    public judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet getBundleProblemWorksheet(
+            UriInfo uriInfo,
             Optional<AuthHeader> authHeader,
             String contestJid,
             String problemAlias,
@@ -227,7 +229,7 @@ public class ContestProblemResource implements ContestProblemService {
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet =
-                problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language);
+                problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, uriInfo.getBaseUri(), language);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet
                 finalWorksheet = new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
@@ -237,7 +239,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         contestLogger.log(contestJid, "OPEN_PROBLEM", null, problemJid);
 
-        return new ContestProblemWorksheet.Builder()
+        return new judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet.Builder()
                 .defaultLanguage(problemInfo.getDefaultLanguage())
                 .languages(problemInfo.getTitlesByLanguage().keySet())
                 .problem(problem)
