@@ -36,42 +36,42 @@ INSERT INTO `jophiel_user_info` (`userJid`, `name`, `gender`, `country`, `homeAd
 --
 
 INSERT INTO `jophiel_user_rating` (`time`, `userJid`, `hiddenRating`, `publicRating`, `createdAt`, `createdBy`) VALUES
-('1970-01-18 20:30:43.200', 'JIDUSERDMZOs8UHqjsw9DGbB31z', 2300, 2300, '2018-08-05 18:30:24.011', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('1970-01-18 20:30:43.200', 'JIDUSER7uMucIkm1exJTu7sJvxR', 3100, 3100, '2018-08-05 18:30:24.032', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('1970-01-18 20:30:43.200', 'JIDUSERVfszUmquMh0Ae2laygDp', 1700, 1700, '2018-08-05 18:30:24.033', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('1970-01-18 20:30:43.200', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 1651, 1651, '2018-08-05 18:30:24.033', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('1970-01-18 20:30:43.200', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 1800, 1800, '2018-08-05 18:30:24.033', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('1970-01-18 20:30:43.200', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 2600, 2600, '2018-08-05 18:30:24.033', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('1970-01-18 20:30:43.200', 'JIDUSERDMZOs8UHqjsw9DGbB31z', 2300, 2300, '2018-08-05 18:30:24.011', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('1970-01-18 20:30:43.200', 'JIDUSER7uMucIkm1exJTu7sJvxR', 3100, 3100, '2018-08-05 18:30:24.032', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('1970-01-18 20:30:43.200', 'JIDUSERVfszUmquMh0Ae2laygDp', 1700, 1700, '2018-08-05 18:30:24.033', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('1970-01-18 20:30:43.200', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 1651, 1651, '2018-08-05 18:30:24.033', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('1970-01-18 20:30:43.200', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 1800, 1800, '2018-08-05 18:30:24.033', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('1970-01-18 20:30:43.200', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 2600, 2600, '2018-08-05 18:30:24.033', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jophiel_user_rating_event`
 --
 
 INSERT INTO `jophiel_user_rating_event` (`time`, `eventJid`, `createdAt`, `createdBy`) VALUES
-('1970-01-18 20:30:43.200', 'JIDCONT89YMatMq7GqaPQCyyUHU', '2018-08-05 18:30:23.968', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('1970-01-18 20:30:43.200', 'JIDCONT89YMatMq7GqaPQCyyUHU', '2018-08-05 18:30:23.968', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `uriel_contest`
 --
 
 INSERT INTO `uriel_contest` (`jid`, `slug`, `name`, `style`, `description`, `beginTime`, `duration`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'joc-1', 'Judgels Open Contest #1', 'ICPC', '<p>Welcome to the first Judgels open contest!</p>\r\n', '2020-01-01 12:00:00.000', 18000000000, '2018-08-05 17:30:35.297', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:15:28.710', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'joc-old', 'Judgels Old Contest', 'IOI', '<p>This is an old contest.</p>\r\n', '2018-01-01 00:00:00.000', 18000000, '2018-08-05 18:11:40.024', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:35:50.263', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'joq', 'Judgels Open Quiz', 'BUNDLE', '', '2020-01-01 07:00:00.000', 86400000000, '2020-01-18 19:20:22.052', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:21:12.435', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'joc-1', 'Judgels Open Contest #1', 'ICPC', '<p>Welcome to the first Judgels open contest!</p>\r\n', '2020-01-01 12:00:00.000', 18000000000, '2018-08-05 17:30:35.297', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:15:28.710', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'joc-old', 'Judgels Old Contest', 'IOI', '<p>This is an old contest.</p>\r\n', '2018-01-01 00:00:00.000', 18000000, '2018-08-05 18:11:40.024', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:35:50.263', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'joq', 'Judgels Open Quiz', 'BUNDLE', '', '2020-01-01 07:00:00.000', 86400000000, '2020-01-18 19:20:22.052', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:21:12.435', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `uriel_contest_announcement`
 --
 
 INSERT INTO `uriel_contest_announcement` (`jid`, `contestJid`, `title`, `content`, `status`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCOANOtLvAkjKzbAw3vWaZI3t', 'JIDCONTYsWkzwPy8wCF3maJfxqN', 'Good luck', '<p>And have fun!</p>\r\n', 'PUBLISHED', '2018-08-05 17:39:58.816', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 17:39:58.816', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCOANOtLvAkjKzbAw3vWaZI3t', 'JIDCONTYsWkzwPy8wCF3maJfxqN', 'Good luck', '<p>And have fun!</p>\r\n', 'PUBLISHED', '2018-08-05 17:39:58.816', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 17:39:58.816', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `uriel_contest_clarification`
 --
 
 INSERT INTO `uriel_contest_clarification` (`jid`, `contestJid`, `topicJid`, `title`, `question`, `answer`, `status`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCOCLskqUDQZdvWIRbKgNDFFP', 'JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDCONTYsWkzwPy8wCF3maJfxqN', 'Lunch', 'Will lunch be provided?', 'Yes.', 'ANSWERED', '2018-08-05 18:24:04.866', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 18:24:26.258', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCOCLskqUDQZdvWIRbKgNDFFP', 'JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDCONTYsWkzwPy8wCF3maJfxqN', 'Lunch', 'Will lunch be provided?', 'Yes.', 'ANSWERED', '2018-08-05 18:24:04.866', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 18:24:26.258', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `uriel_contest_contestant`
@@ -81,47 +81,47 @@ INSERT INTO `uriel_contest_contestant` (`contestJid`, `userJid`, `status`, `crea
 ('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSERVfszUmquMh0Ae2laygDp', 'APPROVED', '2018-08-05 17:32:08.186', 'JIDUSERVfszUmquMh0Ae2laygDp', '2018-08-05 17:32:08.186', 'JIDUSERVfszUmquMh0Ae2laygDp'),
 ('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSERDMZOs8UHqjsw9DGbB31z', 'APPROVED', '2018-08-05 17:32:25.052', 'JIDUSERDMZOs8UHqjsw9DGbB31z', '2018-08-05 17:32:25.052', 'JIDUSERDMZOs8UHqjsw9DGbB31z'),
 ('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSER7uMucIkm1exJTu7sJvxR', 'APPROVED', '2018-08-05 17:32:38.079', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 17:32:38.079', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 'APPROVED', '2018-08-20 15:15:21.928', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:15:21.928', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 'APPROVED', '2018-08-20 15:15:26.677', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:15:26.677', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 'APPROVED', '2018-08-20 15:15:28.708', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:15:28.708', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSER7uMucIkm1exJTu7sJvxR', 'APPROVED', '2018-08-20 15:17:43.929', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:17:43.929', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERDMZOs8UHqjsw9DGbB31z', 'APPROVED', '2018-08-20 15:17:47.499', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:17:47.499', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERVfszUmquMh0Ae2laygDp', 'APPROVED', '2018-08-20 15:17:50.373', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:17:50.373', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 'APPROVED', '2018-08-20 15:17:53.406', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:17:53.406', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 'APPROVED', '2018-08-20 15:17:56.161', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:17:56.161', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 'APPROVED', '2018-08-20 15:17:59.518', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:17:59.518', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERVfszUmquMh0Ae2laygDp', 'APPROVED', '2020-01-18 19:21:24.490', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:21:24.490', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 'APPROVED', '2020-01-18 19:21:24.493', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:21:24.493', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERDMZOs8UHqjsw9DGbB31z', 'APPROVED', '2020-01-18 19:21:24.495', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:21:24.495', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 'APPROVED', '2020-01-18 19:21:24.496', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:21:24.496', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 'APPROVED', '2020-01-18 19:21:24.498', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:21:24.498', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSER7uMucIkm1exJTu7sJvxR', 'APPROVED', '2020-01-18 19:21:24.500', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:21:24.500', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 'APPROVED', '2018-08-20 15:15:21.928', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:15:21.928', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 'APPROVED', '2018-08-20 15:15:26.677', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:15:26.677', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 'APPROVED', '2018-08-20 15:15:28.708', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:15:28.708', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSER7uMucIkm1exJTu7sJvxR', 'APPROVED', '2018-08-20 15:17:43.929', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:17:43.929', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERDMZOs8UHqjsw9DGbB31z', 'APPROVED', '2018-08-20 15:17:47.499', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:17:47.499', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERVfszUmquMh0Ae2laygDp', 'APPROVED', '2018-08-20 15:17:50.373', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:17:50.373', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 'APPROVED', '2018-08-20 15:17:53.406', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:17:53.406', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 'APPROVED', '2018-08-20 15:17:56.161', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:17:56.161', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 'APPROVED', '2018-08-20 15:17:59.518', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:17:59.518', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERVfszUmquMh0Ae2laygDp', 'APPROVED', '2020-01-18 19:21:24.490', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:21:24.490', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERP1gi91MNc1XbXLbPx3dq', 'APPROVED', '2020-01-18 19:21:24.493', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:21:24.493', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERDMZOs8UHqjsw9DGbB31z', 'APPROVED', '2020-01-18 19:21:24.495', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:21:24.495', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSER5QiWnVJWzKdjtWtgEfN3', 'APPROVED', '2020-01-18 19:21:24.496', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:21:24.496', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSERXCcE36qmrr8Tm46k3hSV', 'APPROVED', '2020-01-18 19:21:24.498', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:21:24.498', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDUSER7uMucIkm1exJTu7sJvxR', 'APPROVED', '2020-01-18 19:21:24.500', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:21:24.500', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `uriel_contest_module`
 --
 
 INSERT INTO `uriel_contest_module` (`contestJid`, `name`, `config`, `enabled`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'CLARIFICATION', '{}', b'1', '2018-08-05 19:59:23.330', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:23.330', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'SCOREBOARD', '{\"isIncognitoScoreboard\":false}', b'1', '2018-08-05 19:59:25.602', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:25.602', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'SUPERVISOR', '{}', b'1', '2018-08-05 19:59:28.084', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:28.084', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'REGISTRATION', '{\"registerStartTime\":1533473972812,\"manualApproval\":false,\"registerDuration\":432000000,\"maxRegistrants\":0}', b'1', '2018-08-05 19:59:32.812', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:32.812', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'CLARIFICATION', '{}', b'1', '2018-08-05 19:59:50.281', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:50.281', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'SUPERVISOR', '{}', b'1', '2018-08-05 19:59:52.148', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:52.148', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'SCOREBOARD', '{\"isIncognitoScoreboard\":false}', b'1', '2018-08-05 19:59:54.004', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:54.004', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'REGISTRATION', '{\"registerStartTime\":1533473997175,\"manualApproval\":false,\"registerDuration\":432000000,\"maxRegistrants\":0}', b'1', '2018-08-05 19:59:57.175', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 19:59:57.175', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'CLARIFICATION', '{}', b'1', '2018-08-05 19:59:23.330', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:23.330', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'SCOREBOARD', '{\"isIncognitoScoreboard\":false}', b'1', '2018-08-05 19:59:25.602', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:25.602', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'SUPERVISOR', '{}', b'1', '2018-08-05 19:59:28.084', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:28.084', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'REGISTRATION', '{\"registerStartTime\":1533473972812,\"manualApproval\":false,\"registerDuration\":432000000,\"maxRegistrants\":0}', b'1', '2018-08-05 19:59:32.812', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:32.812', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'CLARIFICATION', '{}', b'1', '2018-08-05 19:59:50.281', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:50.281', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'SUPERVISOR', '{}', b'1', '2018-08-05 19:59:52.148', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:52.148', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'SCOREBOARD', '{\"isIncognitoScoreboard\":false}', b'1', '2018-08-05 19:59:54.004', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:54.004', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'REGISTRATION', '{\"registerStartTime\":1533473997175,\"manualApproval\":false,\"registerDuration\":432000000,\"maxRegistrants\":0}', b'1', '2018-08-05 19:59:57.175', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 19:59:57.175', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `uriel_contest_problem`
 --
 
 INSERT INTO `uriel_contest_problem` (`contestJid`, `problemJid`, `alias`, `submissionsLimit`, `status`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'A', 0, 'OPEN', '2018-08-20 00:00:00.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 00:00:00.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'B', 0, 'OPEN', '2018-08-20 00:00:00.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 00:00:00.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'A', 0, 'OPEN', '2018-08-20 15:23:43.499', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:23:43.499', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'B', 0, 'OPEN', '2018-08-20 15:24:55.672', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-20 15:24:55.672', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'A', 0, 'OPEN', '2020-01-18 19:24:07.036', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:24:07.036', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDBUNDKkmglB5WGpSyTTFGScVk', 'B', 0, 'OPEN', '2020-01-18 19:24:07.038', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:24:07.038', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'A', 0, 'OPEN', '2018-08-20 00:00:00.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 00:00:00.000', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'B', 0, 'OPEN', '2018-08-20 00:00:00.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 00:00:00.000', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'A', 0, 'OPEN', '2018-08-20 15:23:43.499', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:23:43.499', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'B', 0, 'OPEN', '2018-08-20 15:24:55.672', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-20 15:24:55.672', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'A', 0, 'OPEN', '2020-01-18 19:24:07.036', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:24:07.036', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', 'JIDBUNDKkmglB5WGpSyTTFGScVk', 'B', 0, 'OPEN', '2020-01-18 19:24:07.038', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:24:07.038', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `uriel_contest_scoreboard`
@@ -137,9 +137,9 @@ INSERT INTO `uriel_contest_scoreboard` (`contestJid`, `scoreboard`, `type`, `cre
 --
 
 INSERT INTO `uriel_contest_style` (`contestJid`, `config`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCONTYsWkzwPy8wCF3maJfxqN', '{\"wrongSubmissionPenalty\":20,\"languageRestriction\":{\"allowedLanguageNames\":[]}}', '2018-08-05 17:30:35.327', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 17:30:35.327', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONT89YMatMq7GqaPQCyyUHU', '{\"usingLastAffectingPenalty\":false,\"languageRestriction\":{\"allowedLanguageNames\":[]}}', '2018-08-05 18:11:40.037', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2018-08-05 18:11:40.037', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCONTLaAppdjyu94dGgzpnKqY', '{\"languageRestriction\":{\"allowedLanguageNames\":[]},\"wrongSubmissionPenalty\":20}', '2020-01-18 19:20:22.068', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 19:20:22.068', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCONTYsWkzwPy8wCF3maJfxqN', '{\"wrongSubmissionPenalty\":20,\"languageRestriction\":{\"allowedLanguageNames\":[]}}', '2018-08-05 17:30:35.327', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 17:30:35.327', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONT89YMatMq7GqaPQCyyUHU', '{\"usingLastAffectingPenalty\":false,\"languageRestriction\":{\"allowedLanguageNames\":[]}}', '2018-08-05 18:11:40.037', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2018-08-05 18:11:40.037', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCONTLaAppdjyu94dGgzpnKqY', '{\"languageRestriction\":{\"allowedLanguageNames\":[]},\"wrongSubmissionPenalty\":20}', '2020-01-18 19:20:22.068', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 19:20:22.068', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_archive`
@@ -174,28 +174,28 @@ INSERT INTO `jerahmeel_bundle_submission` (`jid`, `containerJid`, `problemJid`, 
 --
 
 INSERT INTO `jerahmeel_chapter` (`jid`, `name`, `description`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDSESSjboijeXaXam4wM7zwIkA', 'Input/Output', '<p>This is input/output</p>\r\n', '2019-10-19 18:52:44.931', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-19 18:52:44.931', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSpB4nAdte4tUwgSiihTFq', 'Branching', '', '2020-01-18 17:02:07.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:02:07.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSx2sksHzyQNHvMn0yBzLr', 'Review', '', '2020-01-18 17:02:53.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:02:53.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSnDc5JXrqXDUdPgqhrZXQ', 'Pre-Quiz', '', '2020-01-18 17:04:05.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:04:05.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDSESSjboijeXaXam4wM7zwIkA', 'Input/Output', '<p>This is input/output</p>\r\n', '2019-10-19 18:52:44.931', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-19 18:52:44.931', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDSESSpB4nAdte4tUwgSiihTFq', 'Branching', '', '2020-01-18 17:02:07.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 17:02:07.000', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDSESSx2sksHzyQNHvMn0yBzLr', 'Review', '', '2020-01-18 17:02:53.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 17:02:53.000', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDSESSnDc5JXrqXDUdPgqhrZXQ', 'Pre-Quiz', '', '2020-01-18 17:04:05.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 17:04:05.000', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_chapter_lesson`
 --
 
 INSERT INTO `jerahmeel_chapter_lesson` (`chapterJid`, `lessonJid`, `alias`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDLESSBQMkZlaJlfafbwDLHoP1', '1', '2019-10-20 20:50:02.112', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-20 20:50:02.112', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDLESSBQMkZlaJlfafbwDLHoP1', '1', '2019-10-20 20:50:02.112', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-20 20:50:02.112', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_chapter_problem`
 --
 
 INSERT INTO `jerahmeel_chapter_problem` (`chapterJid`, `problemJid`, `type`, `alias`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'X', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'B', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSpB4nAdte4tUwgSiihTFq', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-24 22:17:26.071', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDSESSx2sksHzyQNHvMn0yBzLr', 'JIDBUNDKkmglB5WGpSyTTFGScVk', 'BUNDLE', 'X', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-29 07:37:25.180', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', '2019-10-24 22:17:26.071', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-24 22:17:26.071', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'X', '2019-10-29 07:37:25.180', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-29 07:37:25.180', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDSESSjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'B', '2019-10-29 07:37:25.180', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-29 07:37:25.180', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDSESSpB4nAdte4tUwgSiihTFq', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', '2019-10-24 22:17:26.071', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-24 22:17:26.071', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDSESSx2sksHzyQNHvMn0yBzLr', 'JIDBUNDKkmglB5WGpSyTTFGScVk', 'BUNDLE', 'X', '2019-10-29 07:37:25.180', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-29 07:37:25.180', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_course`
@@ -210,35 +210,35 @@ INSERT INTO `jerahmeel_course` (`jid`, `slug`, `name`, `description`, `createdAt
 --
 
 INSERT INTO `jerahmeel_course_chapter` (`courseJid`, `chapterJid`, `alias`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCOURElTynLFh3mPVc9d7oWFx', 'JIDSESSjboijeXaXam4wM7zwIkA', 'A', '2019-10-19 18:53:03.789', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-19 18:53:03.789', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCOURElTynLFh3mPVc9d7oWFx', 'JIDSESSpB4nAdte4tUwgSiihTFq', 'B', '2019-10-19 18:53:03.789', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-19 18:53:03.789', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDCOURElTynLFh3mPVc9d7oWFx', 'JIDSESSx2sksHzyQNHvMn0yBzLr', 'C', '2019-10-19 18:53:03.789', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-19 18:53:03.789', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCOURElTynLFh3mPVc9d7oWFx', 'JIDSESSjboijeXaXam4wM7zwIkA', 'A', '2019-10-19 18:53:03.789', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-19 18:53:03.789', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCOURElTynLFh3mPVc9d7oWFx', 'JIDSESSpB4nAdte4tUwgSiihTFq', 'B', '2019-10-19 18:53:03.789', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-19 18:53:03.789', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDCOURElTynLFh3mPVc9d7oWFx', 'JIDSESSx2sksHzyQNHvMn0yBzLr', 'C', '2019-10-19 18:53:03.789', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-10-19 18:53:03.789', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_curriculum`
 --
 
 INSERT INTO `jerahmeel_curriculum` (`jid`, `name`, `description`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDCURR6UjDpTowryGRWXvEJlap', 'Main', 'Report if you find any mistake!', '2019-11-02 19:32:36.391', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-02 19:32:36.391', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDCURR6UjDpTowryGRWXvEJlap', 'Main', 'Report if you find any mistake!', '2019-11-02 19:32:36.391', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-11-02 19:32:36.391', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_problem_set`
 --
 
 INSERT INTO `jerahmeel_problem_set` (`jid`, `slug`, `archiveJid`, `name`, `description`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDPRSEjboijeXaXam4wM7zwIkA', 'ioi-2020', 'JIDARCHElTynLFh3mPVc9d7oWFx', 'IOI 2020', '<p>Indonesia</p>', '2019-11-15 23:15:01.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-15 23:15:01.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEqfVvs19a3IaOwWYE9M35', 'ioi-2021', 'JIDARCHElTynLFh3mPVc9d7oWFx', 'IOI 2021', '', '2019-11-15 23:15:01.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-15 23:15:01.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEWW7fhFFtagpfHEodXRJw', 'icpc-jakarta', 'JIDARCHxmGjLvIwXXdqFhngdOrG', 'ICPC Jakarta', '<p>Jakarta</p>', '2019-11-15 23:15:01.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-15 23:15:01.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDPRSEjboijeXaXam4wM7zwIkA', 'ioi-2020', 'JIDARCHElTynLFh3mPVc9d7oWFx', 'IOI 2020', '<p>Indonesia</p>', '2019-11-15 23:15:01.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-11-15 23:15:01.000', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDPRSEqfVvs19a3IaOwWYE9M35', 'ioi-2021', 'JIDARCHElTynLFh3mPVc9d7oWFx', 'IOI 2021', '', '2019-11-15 23:15:01.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-11-15 23:15:01.000', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDPRSEWW7fhFFtagpfHEodXRJw', 'icpc-jakarta', 'JIDARCHxmGjLvIwXXdqFhngdOrG', 'ICPC Jakarta', '<p>Jakarta</p>', '2019-11-15 23:15:01.000', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-11-15 23:15:01.000', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_problem_set_problem`
 --
 
 INSERT INTO `jerahmeel_problem_set_problem` (`problemSetJid`, `problemJid`, `type`, `alias`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', '2019-11-17 15:56:58.616', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-17 15:56:58.616', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'B', '2019-11-27 20:55:12.768', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-11-27 20:55:12.768', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'C', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPRSEqfVvs19a3IaOwWYE9M35', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-12-14 10:58:01.522', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGSxtSvuGAW4IKreFasSY0', 'PROGRAMMING', 'A', '2019-11-17 15:56:58.616', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-11-17 15:56:58.616', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'BUNDLE', 'B', '2019-11-27 20:55:12.768', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-11-27 20:55:12.768', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDPRSEjboijeXaXam4wM7zwIkA', 'JIDPROGw21Ya31fwCuEnNJLlVwO', 'PROGRAMMING', 'C', '2019-12-14 10:58:01.522', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-12-14 10:58:01.522', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDPRSEqfVvs19a3IaOwWYE9M35', 'JIDPROGcKIp3DeCOcLRdz9TX5n9', 'PROGRAMMING', 'A', '2019-12-14 10:58:01.522', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2019-12-14 10:58:01.522', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `jerahmeel_programming_grading`
@@ -299,17 +299,17 @@ INSERT INTO `jerahmeel_stats_user_problem` (`userJid`, `problemJid`, `submission
 --
 
 INSERT INTO `sandalphon_lesson` (`jid`, `slug`, `additionalNote`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDLESSBQMkZlaJlfafbwDLHoP1', 'lesson-1', '', '2019-10-20 20:44:47.315', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 18:02:05.893', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDLESSBQMkZlaJlfafbwDLHoP1', 'lesson-1', '', '2019-10-20 20:44:47.315', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 18:02:05.893', 'JIDUSER7uMucIkm1exJTu7sJvxR');
 
 --
 -- Dumping data for table `sandalphon_problem`
 --
 
 INSERT INTO `sandalphon_problem` (`jid`, `slug`, `additionalNote`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
-('JIDPROGSxtSvuGAW4IKreFasSY0', 'batch-1', '', '2019-10-24 22:15:14.603', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 10:35:37.635', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'bundle-1', '', '2019-10-29 07:33:16.638', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 11:52:35.854', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPROGw21Ya31fwCuEnNJLlVwO', 'batch-with-subtasks-1', '', '2019-12-14 10:49:25.770', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 11:40:39.001', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDBUNDKkmglB5WGpSyTTFGScVk', 'bundle-2', '', '2020-01-18 11:56:13.741', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 11:59:04.140', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-('JIDPROGcKIp3DeCOcLRdz9TX5n9', 'batch-2', '', '2020-01-18 17:53:13.053', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:55:40.082', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDPROGSxtSvuGAW4IKreFasSY0', 'batch-1', '', '2019-10-24 22:15:14.603', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 10:35:37.635', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDBUNDcdQcvQ4sB6RgNQ9ryOsp', 'bundle-1', '', '2019-10-29 07:33:16.638', 'JIDUSER7uMucIkm1exJTu7sJvxR', '2020-01-18 11:52:35.854', 'JIDUSER7uMucIkm1exJTu7sJvxR'),
+('JIDPROGw21Ya31fwCuEnNJLlVwO', 'batch-with-subtasks-1', '', '2019-12-14 10:49:25.770', 'JIDUSERDMZOs8UHqjsw9DGbB31z', '2020-01-18 11:40:39.001', 'JIDUSERDMZOs8UHqjsw9DGbB31z'),
+('JIDBUNDKkmglB5WGpSyTTFGScVk', 'bundle-2', '', '2020-01-18 11:56:13.741', 'JIDUSERDMZOs8UHqjsw9DGbB31z', '2020-01-18 11:59:04.140', 'JIDUSERDMZOs8UHqjsw9DGbB31z'),
+('JIDPROGcKIp3DeCOcLRdz9TX5n9', 'batch-2', '', '2020-01-18 17:53:13.053', 'JIDUSERDMZOs8UHqjsw9DGbB31z', '2020-01-18 17:55:40.082', 'JIDUSERDMZOs8UHqjsw9DGbB31z');
 
 COMMIT;
