@@ -26,6 +26,9 @@ RUN apt-get update \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get -y --no-install-recommends install \
        curl \
+       openssh-client \
+       rsync \
+    && apt-get -y --no-install-recommends install \
        fp-compiler \
        g++-11 \
        golang \

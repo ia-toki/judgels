@@ -29,6 +29,8 @@ gabriel:
 
   cache:
     cachedBaseDataDir: /judgels/server/var/data
+    serverBaseDataDir: {{ ansible_user }}@{{ groups['core'][0] }}:/judgels/server/var/data
+    rsyncIdentityFile: var/conf/judgels-grader
 
   isolate:
     baseDir: /judgels/isolate

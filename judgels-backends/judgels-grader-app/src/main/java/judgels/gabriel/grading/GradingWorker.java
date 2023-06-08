@@ -120,19 +120,20 @@ public class GradingWorker {
         source = request.getSubmissionSource();
 
         try {
-            engine = GradingEngineRegistry.getInstance().get(request.getGradingEngine());
             language = GradingLanguageRegistry.getInstance().get(request.getGradingLanguage());
             workerDir = getWorkerDir();
             engineDir = getEngineDir(workerDir);
             sourceFiles = generateSourceFiles(workerDir);
             sandboxFactory = getSandboxFactory(workerDir);
 
-            Path problemGradingDir = problemCache.getProblemGradingDir(request.getProblemJid());
+            Path problemGradingDir = problemCache.getProblemGradingDir(request.getProblemJid(), request.getGradingLastUpdateTime());
 
             helperFiles = generateHelperFiles(problemGradingDir);
             testDataFiles = generateTestDataFiles(problemGradingDir);
+
+            engine = getGradingEngine(problemGradingDir);
             config = parseGradingConfig(problemGradingDir, engine);
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException | InterruptedException e) {
             throw new RuntimeException("Worker initialization failed!", e);
         }
 
@@ -227,6 +228,12 @@ public class GradingWorker {
     private Map<String, File> generateTestDataFiles(Path problemGradingDir) throws IOException {
         Path testDataDir = problemGradingDir.resolve("testdata");
         return listFilesAsMap(testDataDir);
+    }
+
+    private GradingEngine getGradingEngine(Path problemGradingDir) throws IOException {
+        Path engineFile = problemGradingDir.resolve("engine.txt");
+        String engineString = Files.readString(engineFile, StandardCharsets.UTF_8);
+        return GradingEngineRegistry.getInstance().get(engineString);
     }
 
     private GradingConfig parseGradingConfig(Path problemGradingDir, GradingEngine engine) throws IOException {

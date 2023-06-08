@@ -1,5 +1,6 @@
 package judgels.michael.problem.programming.submission;
 
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
@@ -7,6 +8,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -91,6 +93,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         String gradingEngine = parts.getField("gradingEngine").getValue();
         String gradingLanguage = parts.getField("gradingLanguage").getValue();
 
+        Instant gradingLastUpdateTime = programmingProblemStore.getGradingLastUpdateTime(null, problem.getJid());
         GradingConfig gradingConfig = programmingProblemStore.getGradingConfig(null, problem.getJid());
         LanguageRestriction gradingLanguageRestriction = programmingProblemStore.getLanguageRestriction(null, problem.getJid());
 
@@ -104,6 +107,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
                 .sourceKeys(gradingConfig.getSourceFileFields())
                 .gradingEngine(gradingEngine)
                 .gradingLanguageRestriction(gradingLanguageRestriction)
+                .gradingLastUpdateTime(gradingLastUpdateTime)
                 .build();
         Submission submission = submissionClient.submit(data, source, config);
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
@@ -124,7 +128,10 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
             if (submissions.isEmpty()) {
                 break;
             }
-            submissionRegrader.regradeSubmissions(submissions);
+
+            Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
+            Map<String, ProblemSubmissionConfig> configsMap = problemJids.stream().collect(toMap(jid -> jid, programmingProblemStore::getProgrammingProblemSubmissionConfig));
+            submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
 
         return redirect("/problems/programming/" + problemId + "/submissions");
@@ -170,7 +177,9 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         checkAllowed(roleChecker.canView(actor, problem));
 
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
-        submissionRegrader.regradeSubmission(submission);
+        ProblemSubmissionConfig config = programmingProblemStore.getProgrammingProblemSubmissionConfig(problem.getJid());
+
+        submissionRegrader.regradeSubmission(submission, config);
 
         return redirect("/problems/programming/" + problemId + "/submissions");
     }

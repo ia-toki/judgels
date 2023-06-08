@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,7 +155,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                 contest.getJid(),
                 "A",
                 Optional.empty());
-        assertThat(worksheet).isEqualTo(new ContestProblemWorksheet.Builder()
+        assertThat(worksheet).usingRecursiveComparison().ignoringFieldsOfTypes(Instant.class).isEqualTo(new ContestProblemWorksheet.Builder()
                 .defaultLanguage("en")
                 .languages(ImmutableSet.of("en"))
                 .problem(new ContestProblem.Builder()
@@ -178,6 +179,7 @@ class ContestProblemServiceIntegrationTests extends BaseUrielServiceIntegrationT
                                 .sourceKeys(ImmutableMap.of("source", "Source code"))
                                 .gradingEngine("Batch")
                                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
+                                .gradingLastUpdateTime(Instant.now()) // ignored
                                 .build())
                         .reasonNotAllowedToSubmit(Optional.empty())
                         .build())

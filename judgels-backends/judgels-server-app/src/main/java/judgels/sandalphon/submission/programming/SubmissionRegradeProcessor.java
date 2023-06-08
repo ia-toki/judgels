@@ -3,6 +3,7 @@ package judgels.sandalphon.submission.programming;
 import java.util.Map;
 import javax.inject.Inject;
 import judgels.gabriel.api.SubmissionSource;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 
 public class SubmissionRegradeProcessor {
@@ -18,10 +19,11 @@ public class SubmissionRegradeProcessor {
         this.submissionClient = submissionClient;
     }
 
-    public void process(Map<String, Submission> submissionsMap) {
+    public void process(Map<String, Submission> submissionsMap, Map<String, ProblemSubmissionConfig> configsMap) {
         submissionsMap.forEach((gradingJid, submission) -> {
             SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
-            submissionClient.requestGrading(gradingJid, submission, source);
+            ProblemSubmissionConfig config = configsMap.get(submission.getProblemJid());
+            submissionClient.regrade(gradingJid, submission, source, config);
         });
     }
 }

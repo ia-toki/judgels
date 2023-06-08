@@ -34,11 +34,7 @@ public class SubmissionClient {
         this.mapper = mapper;
     }
 
-    public Submission submit(
-            SubmissionData data,
-            SubmissionSource source,
-            ProblemSubmissionConfig config) {
-
+    public Submission submit(SubmissionData data, SubmissionSource source, ProblemSubmissionConfig config) {
         LanguageRestriction restriction = config.getGradingLanguageRestriction();
         if (data.getAdditionalGradingLanguageRestriction().isPresent()) {
             restriction = LanguageRestriction.combine(
@@ -52,19 +48,26 @@ public class SubmissionClient {
                 data.getGradingLanguage(),
                 restriction);
 
-        Submission submission = submissionStore.createSubmission(data, config.getGradingEngine());
+        Submission submission = submissionStore.createSubmission(data, config);
         String gradingJid = submissionStore.createGrading(submission);
-        requestGrading(gradingJid, submission, source);
+        requestGrading(gradingJid, submission, source, config);
 
         return submission;
     }
 
-    public void requestGrading(String gradingJid, Submission submission, SubmissionSource source) {
+    public void regrade(String gradingJid, Submission submission, SubmissionSource source, ProblemSubmissionConfig config) {
+        if (config.getGradingLastUpdateTime().isAfter(submission.getTime())) {
+            // TODO(fushar): update submission's grading engine
+        }
+        requestGrading(gradingJid, submission, source, config);
+    }
+
+    public void requestGrading(String gradingJid, Submission submission, SubmissionSource source, ProblemSubmissionConfig config) {
         GradingRequest gradingRequest = new GradingRequest.Builder()
                 .gradingJid(gradingJid)
                 .problemJid(submission.getProblemJid())
-                .gradingEngine(submission.getGradingEngine())
                 .gradingLanguage(submission.getGradingLanguage())
+                .gradingLastUpdateTime(config.getGradingLastUpdateTime())
                 .submissionSource(source)
                 .build();
 

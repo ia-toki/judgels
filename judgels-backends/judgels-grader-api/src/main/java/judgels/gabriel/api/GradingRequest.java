@@ -1,6 +1,7 @@
 package judgels.gabriel.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.Instant;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -8,8 +9,8 @@ import org.immutables.value.Value;
 public interface GradingRequest {
     String getGradingJid();
     String getProblemJid();
-    String getGradingEngine();
     String getGradingLanguage();
+    Instant getGradingLastUpdateTime();
     SubmissionSource getSubmissionSource();
 
     class Builder extends ImmutableGradingRequest.Builder {}

@@ -1,12 +1,10 @@
 package judgels.sandalphon.problem.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import javax.inject.Inject;
 import judgels.fs.FileInfo;
@@ -14,6 +12,7 @@ import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.base.BaseProblemStore;
 import judgels.sandalphon.problem.base.ProblemFs;
 
@@ -41,9 +40,9 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
         updateGradingLastUpdateTime(null, problemJid);
     }
 
-    public Date getGradingLastUpdateTime(String userJid, String problemJid) {
+    public Instant getGradingLastUpdateTime(String userJid, String problemJid) {
         String lastUpdateTime = problemFs.readFromFile(getGradingLastUpdateTimeFilePath(userJid, problemJid));
-        return new Date(Long.parseLong(lastUpdateTime));
+        return Instant.ofEpochMilli(Long.parseLong(lastUpdateTime));
     }
 
     public GradingConfig getGradingConfig(String userJid, String problemJid) {
@@ -129,8 +128,13 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
         return problemFs.getPublicFileUrl(getGradingHelpersDirPath(userJid, problemJid).resolve(filename));
     }
 
-    public ByteArrayOutputStream getZippedGradingFilesStream(String problemJid) throws IOException {
-        throw new UnsupportedEncodingException();
+    public ProblemSubmissionConfig getProgrammingProblemSubmissionConfig(String problemJid) {
+        return new ProblemSubmissionConfig.Builder()
+                .sourceKeys(getGradingConfig(null, problemJid).getSourceFileFields())
+                .gradingEngine(getGradingEngine(null, problemJid))
+                .gradingLanguageRestriction(getLanguageRestriction(null, problemJid))
+                .gradingLastUpdateTime(getGradingLastUpdateTime(null, problemJid))
+                .build();
     }
 
     private void updateGradingLastUpdateTime(String userJid, String problemJid) {

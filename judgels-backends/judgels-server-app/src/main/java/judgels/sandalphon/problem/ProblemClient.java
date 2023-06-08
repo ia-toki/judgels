@@ -145,11 +145,11 @@ public class ProblemClient {
     }
 
     public ProblemSubmissionConfig getProgrammingProblemSubmissionConfig(String problemJid) {
-        return new ProblemSubmissionConfig.Builder()
-                .gradingEngine(programmingProblemStore.getGradingEngine(null, problemJid))
-                .gradingLanguageRestriction(programmingProblemStore.getLanguageRestriction(null, problemJid))
-                .sourceKeys(programmingProblemStore.getGradingConfig(null, problemJid).getSourceFileFields())
-                .build();
+        return programmingProblemStore.getProgrammingProblemSubmissionConfig(problemJid);
+    }
+
+    public Map<String, ProblemSubmissionConfig> getProgrammingProblemSubmissionConfigs(Set<String> problemJids) {
+        return problemJids.stream().collect(toMap(jid -> jid, this::getProgrammingProblemSubmissionConfig));
     }
 
     public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(String problemJid, URI baseUri, Optional<String> language) {

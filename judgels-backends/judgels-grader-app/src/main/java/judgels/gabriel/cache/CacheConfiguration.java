@@ -8,6 +8,8 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableCacheConfiguration.class)
 public interface CacheConfiguration {
     Path getCachedBaseDataDir();
+    String getServerBaseDataDir();
+    String getRsyncIdentityFile();
 
     class Builder extends ImmutableCacheConfiguration.Builder {}
 }

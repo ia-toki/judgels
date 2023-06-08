@@ -285,7 +285,8 @@ public class SubmissionResource implements SubmissionService {
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
-        submissionRegrader.regradeSubmission(submission);
+        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
+        submissionRegrader.regradeSubmission(submission, config);
     }
 
     @Override
@@ -311,7 +312,10 @@ public class SubmissionResource implements SubmissionService {
             if (submissions.isEmpty()) {
                 break;
             }
-            submissionRegrader.regradeSubmissions(submissions);
+
+            Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
+            Map<String, ProblemSubmissionConfig> configsMap = problemClient.getProgrammingProblemSubmissionConfigs(problemJids);
+            submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
     }
 

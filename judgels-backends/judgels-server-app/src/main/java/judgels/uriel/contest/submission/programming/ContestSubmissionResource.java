@@ -1,6 +1,8 @@
 package judgels.uriel.contest.submission.programming;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
@@ -18,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -159,7 +160,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;
 
-        userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
+        userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
         if (canSupervise) {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
             userJids.addAll(supervisorStore.getAllSupervisorJids(contestJid));
@@ -173,7 +174,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             problemJidsSortedByAlias = Collections.emptyList();
             problemJids = submissions.getPage().stream()
                     .map(Submission::getProblemJid)
-                    .collect(Collectors.toSet());
+                    .collect(toSet());
         }
 
         Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
@@ -315,7 +316,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
 
-        submissionRegrader.regradeSubmission(submission);
+        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
+        submissionRegrader.regradeSubmission(submission, config);
+
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
 
         contestLogger.log(contest.getJid(), "REGRADE_SUBMISSION", submissionJid, submission.getProblemJid());
@@ -346,7 +349,10 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             if (submissions.isEmpty()) {
                 break;
             }
-            submissionRegrader.regradeSubmissions(submissions);
+
+            Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
+            Map<String, ProblemSubmissionConfig> configsMap = problemClient.getProgrammingProblemSubmissionConfigs(problemJids);
+            submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
 
@@ -404,11 +410,11 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
         Map<String, String> usernamesMap = userClient.getProfiles(userJids).entrySet()
                 .stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
+                .collect(toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
 
         Set<String> problemJids = submissions.stream()
                 .map(Submission::getProblemJid)
-                .collect(Collectors.toSet());
+                .collect(toSet());
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
         StreamingOutput stream =

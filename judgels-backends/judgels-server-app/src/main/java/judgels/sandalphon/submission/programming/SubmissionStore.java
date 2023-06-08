@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.GradingResult;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
 
@@ -40,7 +41,7 @@ public interface SubmissionStore {
     long getTotalSubmissions(String containerJid, String userJid, String problemJid);
     Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Set<String> problemJids);
 
-    Submission createSubmission(SubmissionData data, String gradingEngine);
+    Submission createSubmission(SubmissionData data, ProblemSubmissionConfig config);
     String createGrading(Submission submission);
     Optional<Submission> updateGrading(String gradingJid, GradingResult result);
 }

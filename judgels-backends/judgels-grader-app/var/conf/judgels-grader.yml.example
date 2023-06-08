@@ -23,7 +23,10 @@ gabriel:
     numWorkerThreads: 2
 
   cache:
-    cachedBaseDataDir: ../judgels-server/var/data
+    cachedBaseDataDir: ../judgels-server/var/data              # development mode; cache data = actual server data
+    # cachedBaseDataDir: var/data
+    serverBaseDataDir: root@1.2.3.4:/judgels/server/var/data   # not used in development mode
+    rsyncIdentityFile: var/conf/judgels-grader                 # not used in development mode
 
 #  isolate:
 #    baseDir: /judgels/isolate

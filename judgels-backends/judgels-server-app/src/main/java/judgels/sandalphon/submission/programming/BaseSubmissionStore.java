@@ -19,6 +19,7 @@ import judgels.gabriel.api.Verdicts;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
@@ -216,9 +217,9 @@ public class BaseSubmissionStore<
     }
 
     @Override
-    public Submission createSubmission(SubmissionData data, String gradingEngine) {
+    public Submission createSubmission(SubmissionData data, ProblemSubmissionConfig config) {
         SM model = submissionDao.createSubmissionModel();
-        toModel(data, gradingEngine, model);
+        toModel(data, config, model);
         return submissionFromModels(submissionDao.insert(model), null);
     }
 
@@ -272,10 +273,10 @@ public class BaseSubmissionStore<
                 .build();
     }
 
-    private void toModel(SubmissionData data, String gradingEngine, SM model) {
+    private void toModel(SubmissionData data, ProblemSubmissionConfig config, SM model) {
         model.problemJid = data.getProblemJid();
         model.containerJid = data.getContainerJid();
-        model.gradingEngine = gradingEngine;
+        model.gradingEngine = config.getGradingEngine();
         model.gradingLanguage = data.getGradingLanguage();
     }
 
