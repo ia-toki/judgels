@@ -1,32 +1,15 @@
 - block:
-    - name: Install cgroup
-      apt:
-        name: cgroup-tools
-        state: present
-        install_recommends: no
-    
-    - name: Disable cgroup v2
-      block: 
-        - name: Edit /etc/default/grub
-          lineinfile:
-            dest: "/etc/default/grub"
-            regexp: "^GRUB_CMDLINE_LINUX="
-            line: "GRUB_CMDLINE_LINUX=\"systemd.unified_cgroup_hierarchy=false systemd.legacy_systemd_cgroup_controller=false\""
+    - name: Create judgels grader container mount volume
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0700
+      with_items:
+        - /judgels/grader/var
+        - /judgels/grader/var/conf
 
-        - name: Update grub
-          shell: update-grub
-
-    - name: Run isolate recommendations # https://github.com/ioi/isolate/blob/master/isolate-check-environment
+    - name: Copy judgels grader private key
       copy:
-        dest: /etc/rc.local
-        mode: 0755
-        content: |
-          #!/bin/bash
-
-          echo 0 > /proc/sys/kernel/randomize_va_space
-          echo never > /sys/kernel/mm/transparent_hugepage/enabled
-          echo never > /sys/kernel/mm/transparent_hugepage/defrag
-          echo 0 > /sys/kernel/mm/transparent_hugepage/khugepaged/defrag
-
-    - name: Reboot to apply grub and kernel changes
-      reboot:
+        src: "{{ playbook_dir }}/../env/judgels-grader"
+        dest: /judgels/grader/var/conf/judgels-grader
+        mode: 0400

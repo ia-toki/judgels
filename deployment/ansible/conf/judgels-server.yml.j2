@@ -50,9 +50,9 @@ judgels:
   app:
     name: {{ judgels_name }}
 
-{% if rabbitmq_host is defined %}
+{% if rabbitmq_username is defined %}
   rabbitmq:
-    host: {{ rabbitmq_host }}
+    host: localhost
     username: {{ rabbitmq_username }}
     password: {{ rabbitmq_password }}
 {% endif %}

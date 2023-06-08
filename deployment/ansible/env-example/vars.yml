@@ -37,6 +37,5 @@ gabriel_grading_numWorkerThreads: 1
 
 ###################################################################################################
 
-rabbitmq_host: localhost
 rabbitmq_username: judgels
 rabbitmq_password: pass # !!! CHANGE THIS !!!

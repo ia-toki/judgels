@@ -18,7 +18,7 @@ judgels:
   baseDataDir: var/data
 
   rabbitmq:
-    host: {{ rabbitmq_host }}
+    host: {{ groups['core'][0] }}
     username: {{ rabbitmq_username }}
     password: {{ rabbitmq_password }}
 

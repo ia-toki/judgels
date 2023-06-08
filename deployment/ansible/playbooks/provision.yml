@@ -5,6 +5,11 @@
     - name: docker-install
     - name: ufw-install
 
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - name: judgels-grader-keypair
+
 - hosts: core
   gather_facts: false
   roles:
@@ -14,4 +19,5 @@
 - hosts: grader
   gather_facts: false
   roles:
+    - name: isolate-provision
     - name: judgels-grader-provision
