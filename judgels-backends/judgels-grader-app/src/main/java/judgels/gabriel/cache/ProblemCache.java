@@ -75,7 +75,7 @@ public class ProblemCache {
         command.add("rsync");
         command.add("-avzh");
         command.add("--delete");
-        command.addAll(List.of("--rsh", "ssh -i " + config.getRsyncIdentityFile()));
+        command.addAll(List.of("--rsh", "ssh -o StrictHostKeyChecking=no -i " + config.getRsyncIdentityFile()));
 
         if (excludeLastUpdateTime) {
             command.addAll(List.of("--exclude", "lastUpdateTime.txt"));
