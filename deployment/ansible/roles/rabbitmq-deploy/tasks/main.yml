@@ -9,7 +9,8 @@
       name: rabbitmq
       image: rabbitmq:3.11.16-management-alpine
       restart: yes
-      restart_policy: always
+      restart_policy: on-failure
+      restart_retries: 3
       log_driver: json-file
       log_options:
         max-size: 256m

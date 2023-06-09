@@ -21,7 +21,8 @@
         image: "ghcr.io/ia-toki/judgels/grader:{{ judgels_version | default('latest', true) }}"
         privileged: yes
         restart: "{{ judgels_grader_config.changed }}"
-        restart_policy: always
+        restart_policy: on-failure
+        restart_retries: 3
         log_driver: json-file
         log_options:
           max-size: 256m

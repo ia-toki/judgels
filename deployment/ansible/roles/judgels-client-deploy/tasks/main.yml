@@ -20,7 +20,8 @@
         name: judgels-client
         image: "ghcr.io/ia-toki/judgels/client:{{ judgels_version | default('latest', true) }}"
         restart: "{{ judgels_client_config.changed }}"
-        restart_policy: always
+        restart_policy: on-failure
+        restart_retries: 3
         log_driver: json-file
         log_options:
           max-size: 256m
