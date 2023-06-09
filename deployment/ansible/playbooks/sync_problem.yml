@@ -1,6 +1,0 @@
-- name: "Rsync problem {{ problemJid }}"
-  synchronize:
-    src: "/judgels/sandalphon/var/data/problems/{{ problemJid }}"
-    dest: /judgels/sandalphon/var/data/problems/
-  delegate_to: "{{ item }}"
-  with_inventory_hostnames: sandalphon
