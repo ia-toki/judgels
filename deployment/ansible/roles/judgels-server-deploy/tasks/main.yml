@@ -2,7 +2,7 @@
     - name: Generate judgels server config
       template:
         src: "{{ playbook_dir }}/../conf/judgels-server.yml.j2"
-        dest: /judgels/server/var/conf/judgels-server.yml
+        dest: /opt/judgels/server/var/conf/judgels-server.yml
         mode: '0644'
       tags: config
       register: judgels_server_config
@@ -27,22 +27,22 @@
           max-file: "2"
         network_mode: host
         volumes:
-          - "/judgels/server/var:/judgels/server/var"
+          - "/opt/judgels/server/var:/judgels/server/var"
         env:
           JAVA_OPTS: "-Xmx{{ judgels_server_xmx }}"
           JUDGELS_SERVER_APP_OPTS: "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/server/var/log"
       tags: config
 
-    - name: Set ownership on /judgels/server to that of the container's var/log's and permission to 0*00
+    - name: Set ownership on /opt/judgels/server to that of the container's var/log's and permission to 0*00
       block:
         - name: Get var/log file attributes
           stat:
-            path: /judgels/server/var/log
+            path: /opt/judgels/server/var/log
           register: var_log_stat
 
         - name: Set destination ownership
           file:
-            path: /judgels/server
+            path: /opt/judgels/server
             owner: "{{ var_log_stat.stat.uid }}"
             group: "{{ var_log_stat.stat.gid }}"
             mode: 'g-r,g-w,g-x,o-r,o-w,o-x'

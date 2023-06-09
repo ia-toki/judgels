@@ -1,12 +1,12 @@
 - block:
-    - name: Create judgels client container mount volume
+    - name: Create judgels client persistence mount source
       file:
         path: "{{ item }}"
         state: directory
         mode: 0755
       with_items:
-        - /judgels/client/var
-        - /judgels/client/var/conf
+        - /opt/judgels/client/var
+        - /opt/judgels/client/var/conf
 
     - name: Allow judgels client traffic through the firewall
       ufw:

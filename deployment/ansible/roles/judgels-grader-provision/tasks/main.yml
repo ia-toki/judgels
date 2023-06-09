@@ -1,15 +1,15 @@
 - block:
-    - name: Create judgels grader container mount volume
+    - name: Create judgels grader persistence mount source
       file:
         path: "{{ item }}"
         state: directory
         mode: 0700
       with_items:
-        - /judgels/grader/var
-        - /judgels/grader/var/conf
+        - /opt/judgels/grader/var
+        - /opt/judgels/grader/var/conf
 
     - name: Copy judgels grader private key
       copy:
         src: "{{ playbook_dir }}/../env/judgels-grader"
-        dest: /judgels/grader/var/conf/judgels-grader
+        dest: /opt/judgels/grader/var/conf/judgels-grader
         mode: 0400

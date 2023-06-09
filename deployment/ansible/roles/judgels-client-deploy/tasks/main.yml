@@ -2,7 +2,7 @@
     - name: Generate judgels client config
       template:
         src: "{{ playbook_dir }}/../conf/judgels-client.js.j2"
-        dest: /judgels/client/var/conf/judgels-client.js
+        dest: /opt/judgels/client/var/conf/judgels-client.js
         mode: '0644'
       tags: config
       register: judgels_client_config
@@ -28,5 +28,5 @@
         ports:
           - "5000:5000"
         volumes:
-          - "/judgels/client/var:/judgels/client/var"
+          - "/opt/judgels/client/var:/judgels/client/var"
       tags: config

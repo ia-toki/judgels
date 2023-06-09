@@ -2,7 +2,7 @@
     - name: Generate judgels server config
       template:
         src: "{{ playbook_dir }}/../conf/judgels-server.yml.j2"
-        dest: /judgels/server/var/conf/judgels-server.yml
+        dest: /opt/judgels/server/var/conf/judgels-server.yml
         mode: '0644'
 
     - name: Pull judgels server image
@@ -19,5 +19,5 @@
         restart: yes
         network_mode: host
         volumes:
-          - "/judgels/server/var:/judgels/server/var"
+          - "/opt/judgels/server/var:/judgels/server/var"
         command: db migrate
