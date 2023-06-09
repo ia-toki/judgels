@@ -16,7 +16,7 @@ server:
 
 database:
   driverClass: com.mysql.jdbc.Driver
-  url: jdbc:mysql://{{ db_host }}/judgels{{ db_options }}
+  url: jdbc:mysql://{{ db_host }}/judgels?useSSL=false
   user: {{ db_username }}
   password: {{ db_password }}
   properties:
