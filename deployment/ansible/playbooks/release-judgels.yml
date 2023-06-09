@@ -1,0 +1,28 @@
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Log in to Docker Container Registry
+      include_role:
+        name: docker-login
+    
+    - name: Tag latest judgels client image with the release version
+      docker_image:
+        name: ghcr.io/ia-toki/judgels/client
+        repository: ghcr.io/ia-toki/judgels/client:{{ judgels_version }}
+        source: pull
+        push: yes
+
+    - name: Tag latest judgels server image with the release version
+      docker_image:
+        name: ghcr.io/ia-toki/judgels/server
+        repository: ghcr.io/ia-toki/judgels/server:{{ judgels_version }}
+        source: pull
+        push: yes
+
+    - name: Tag latest judgels grader image with the release version
+      docker_image:
+        name: ghcr.io/ia-toki/judgels/grader
+        repository: ghcr.io/ia-toki/judgels/grader:{{ judgels_version }}
+        source: pull
+        push: yes
