@@ -14,8 +14,8 @@ allprojects {
         mavenCentral()
     }
 
-    group 'org.iatoki.judgels'
-    version '0.0.0'
+    group 'judgels'
+    version getGitVersion()
 }
 
 subprojects {
@@ -28,4 +28,10 @@ subprojects {
             }
         }
     }
+}
+
+static def getGitVersion() {
+    def proc = "git describe --tags --always --first-parent".execute()
+    proc.waitFor()
+    return proc.text.trim()
 }
