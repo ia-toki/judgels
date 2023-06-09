@@ -10,8 +10,8 @@ public class IsolateSandboxFactory implements SandboxFactory {
     private final Path iwrapperPath;
 
     public IsolateSandboxFactory(Path baseIsolateDir) {
-        this.isolatePath = baseIsolateDir.resolve("isolate");
-        this.iwrapperPath = baseIsolateDir.resolve("iwrapper");
+        this.isolatePath = baseIsolateDir.resolve("bin").resolve("isolate");
+        this.iwrapperPath = baseIsolateDir.resolve("bin").resolve("iwrapper");
     }
 
     @Override
