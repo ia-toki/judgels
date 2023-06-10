@@ -105,7 +105,7 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
         @Override
         public ContestQueryBuilder whereNameLike(String name) {
-            where(columnEq(ContestModel_.name, name));
+            where(columnLike(ContestModel_.name, name));
             return this;
         }
     }
