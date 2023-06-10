@@ -3,7 +3,8 @@
       docker_image:
         source: build
         force_source: yes
-        name: "ghcr.io/ia-toki/judgels/grader:{{ app_version | default('latest', true) }}"
+        name: ghcr.io/ia-toki/judgels/grader
+        tag: osnp-2024
         push: yes
         build:
           path: "{{ playbook_dir }}/../../../judgels-backends/judgels-grader-app"

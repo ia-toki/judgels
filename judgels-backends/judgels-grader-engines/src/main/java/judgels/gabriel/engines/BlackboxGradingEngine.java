@@ -3,12 +3,10 @@ package judgels.gabriel.engines;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import judgels.JudgelsObjectMappers;
 import judgels.gabriel.aggregators.SubtaskAggregator;
 import judgels.gabriel.api.AggregationResult;
@@ -188,8 +186,6 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
             testCaseIndicesBySubtaskIds.add(Lists.newArrayList());
         }
 
-        Set<Integer> alreadyFailedSubtaskIds = Sets.newHashSet();
-
         for (int i = 0; i < config.getTestData().size(); i++) {
             TestGroup testGroup = config.getTestData().get(i);
 
@@ -203,19 +199,8 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
                 File testCaseInput = source.getTestDataFiles().get(testCase.getInput());
                 File testCaseOutput = source.getTestDataFiles().get(testCase.getOutput());
 
-                EvaluationResult evaluationResult;
-                if (alreadyFailedSubtaskIds.containsAll(testCase.getSubtaskIds())) {
-                    evaluationResult = EvaluationResult.skippedResult();
-                } else {
-                    evaluationResult = getEvaluator().evaluate(testCaseInput, testCaseOutput);
-                }
-
+                EvaluationResult evaluationResult = getEvaluator().evaluate(testCaseInput, testCaseOutput);
                 TestCaseVerdict testCaseVerdict = evaluationResult.getVerdict();
-                if (testCaseVerdict.getVerdict() != Verdict.ACCEPTED && testCaseVerdict.getVerdict() != Verdict.OK) {
-                    alreadyFailedSubtaskIds.addAll(testCase.getSubtaskIds());
-                    alreadyFailedSubtaskIds.remove(0);
-                    alreadyFailedSubtaskIds.remove(-1);
-                }
 
                 testGroupVerdicts.get(i).add(testCaseVerdict);
                 testGroupPoints.get(i).add("");
