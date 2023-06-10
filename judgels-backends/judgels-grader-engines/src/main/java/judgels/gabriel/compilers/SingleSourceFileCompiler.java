@@ -49,6 +49,9 @@ public class SingleSourceFileCompiler implements Compiler {
             File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
                 String compilationOutput = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
+                if (compilationOutput.length() > 2048) {
+                    compilationOutput = "(truncated)";
+                }
                 FileUtils.forceDelete(outputFile);
                 FileUtils.copyFileToDirectory(sandbox.getFile(executableFilename), compilationDir);
 
@@ -64,6 +67,9 @@ public class SingleSourceFileCompiler implements Compiler {
             File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
                 String compilationOutput = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
+                if (compilationOutput.length() > 2048) {
+                    compilationOutput = "(truncated)";
+                }
                 FileUtils.forceDelete(outputFile);
 
                 return new CompilationResult.Builder()

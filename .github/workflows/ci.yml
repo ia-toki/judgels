@@ -136,13 +136,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Build judgels-server
-        if: false
-        run: ./deployment/scripts/build_judgels_server.sh
+      # - name: Build judgels-server
+      #   if: steps.changed-files.outputs.judgels-server == '1'
+      #   run: ./deployment/scripts/build_judgels_server.sh
 
-      - name: Build judgels-client
-        if: false
-        run: ./deployment/scripts/build_judgels_client.sh
+      # - name: Build judgels-client
+      #   if: steps.changed-files.outputs.judgels-client == '1'
+      #   run: ./deployment/scripts/build_judgels_client.sh
 
       - name: Build judgels-grader
         if: steps.changed-files.outputs.judgels-grader == '1'
