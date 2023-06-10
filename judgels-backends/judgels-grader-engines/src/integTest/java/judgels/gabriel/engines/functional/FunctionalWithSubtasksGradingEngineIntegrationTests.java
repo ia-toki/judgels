@@ -1,12 +1,10 @@
 package judgels.gabriel.engines.functional;
 
 import static judgels.gabriel.api.Verdict.ACCEPTED;
-import static judgels.gabriel.api.Verdict.SKIPPED;
 import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import java.util.Optional;
 import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
@@ -85,8 +83,8 @@ class FunctionalWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                         testGroupResult(
                                 2,
                                 testCaseResult(WRONG_ANSWER, "X", 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "*", 2),
+                                testCaseResult(ACCEPTED, "*", 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, WRONG_ANSWER, 0)));
@@ -114,8 +112,8 @@ class FunctionalWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                         testGroupResult(
                                 2,
                                 testCaseResult(WRONG_ANSWER, "X", 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "*", 2),
+                                testCaseResult(ACCEPTED, "*", 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, WRONG_ANSWER, 0)));

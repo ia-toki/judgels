@@ -3,7 +3,6 @@ package judgels.gabriel.engines.interactive;
 import static judgels.gabriel.api.SandboxExecutionStatus.NONZERO_EXIT_CODE;
 import static judgels.gabriel.api.Verdict.ACCEPTED;
 import static judgels.gabriel.api.Verdict.RUNTIME_ERROR;
-import static judgels.gabriel.api.Verdict.SKIPPED;
 import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
 
 import com.google.common.collect.ImmutableList;
@@ -87,9 +86,9 @@ class InteractiveWithSubtasksGradingEngineIntegrationTests extends BlackboxGradi
                                 testCaseResult(ACCEPTED, "* [8]", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(WRONG_ANSWER, "X [11]", 2),
+                                testCaseResult(WRONG_ANSWER, "X [11]", 2),
+                                testCaseResult(WRONG_ANSWER, "X [11]", 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, WRONG_ANSWER, 0)));
@@ -115,9 +114,9 @@ class InteractiveWithSubtasksGradingEngineIntegrationTests extends BlackboxGradi
                                 testCaseResult(ACCEPTED, "* [8]", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(RUNTIME_ERROR, "X", Optional.of(NONZERO_EXIT_CODE), 2),
+                                testCaseResult(RUNTIME_ERROR, "X", Optional.of(NONZERO_EXIT_CODE), 2),
+                                testCaseResult(RUNTIME_ERROR, "X", Optional.of(NONZERO_EXIT_CODE), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, RUNTIME_ERROR, 0)));

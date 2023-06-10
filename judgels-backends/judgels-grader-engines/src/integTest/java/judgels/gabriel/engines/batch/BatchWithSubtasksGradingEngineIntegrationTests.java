@@ -3,7 +3,6 @@ package judgels.gabriel.engines.batch;
 import static judgels.gabriel.api.SandboxExecutionStatus.TIMED_OUT;
 import static judgels.gabriel.api.Verdict.ACCEPTED;
 import static judgels.gabriel.api.Verdict.OK;
-import static judgels.gabriel.api.Verdict.SKIPPED;
 import static judgels.gabriel.api.Verdict.TIME_LIMIT_EXCEEDED;
 import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -115,9 +114,9 @@ class BatchWithSubtasksGradingEngineIntegrationTests extends BlackboxGradingEngi
                                 testCaseResult(ACCEPTED, "*", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "*", 2),
+                                testCaseResult(ACCEPTED, "*", 2),
+                                testCaseResult(ACCEPTED, "*", 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, WRONG_ANSWER, 0)));
@@ -166,12 +165,12 @@ class BatchWithSubtasksGradingEngineIntegrationTests extends BlackboxGradingEngi
                         testGroupResult(
                                 1,
                                 testCaseResult(WRONG_ANSWER, "X", 1, 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "*", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "*", 2),
+                                testCaseResult(ACCEPTED, "*", 2),
+                                testCaseResult(ACCEPTED, "*", 2))),
                 ImmutableList.of(
                         subtaskResult(1, WRONG_ANSWER, 0),
                         subtaskResult(2, WRONG_ANSWER, 0)));
