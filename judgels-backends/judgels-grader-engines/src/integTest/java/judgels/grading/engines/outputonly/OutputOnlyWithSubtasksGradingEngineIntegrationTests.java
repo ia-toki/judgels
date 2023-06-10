@@ -110,9 +110,9 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                                 testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, WRONG_ANSWER, 0)));
@@ -161,12 +161,12 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                         testGroupResult(
                                 1,
                                 testCaseResult(WRONG_ANSWER, "X", Optional.empty(), 1, 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2),
-                                testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, WRONG_ANSWER, 0),
                         subtaskResult(2, WRONG_ANSWER, 0)));
