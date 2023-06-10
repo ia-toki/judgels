@@ -46,4 +46,5 @@ by Jordan Fernando and Inggriani Liem.
 
 ## License
 
-GNU GPL version 2.
+GNU GPL version 2. 
+
