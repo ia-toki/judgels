@@ -162,7 +162,7 @@ public class BaseSubmissionStore<
         }
 
         Page<SM> submissionModels = query
-                .paged(1, pageSize);
+                .paged(pageNumber, pageSize);
 
         return getSubmissions(submissionModels);
     }
