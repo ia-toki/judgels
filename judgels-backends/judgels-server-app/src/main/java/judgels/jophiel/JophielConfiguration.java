@@ -40,7 +40,7 @@ public interface JophielConfiguration {
     @JsonProperty("userResetPassword")
     UserResetPasswordConfiguration getUserResetPasswordConfig();
 
-    @JsonProperty("superadminCreator")
+    @JsonProperty("superadmin")
     Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();
 
     @JsonProperty("session")

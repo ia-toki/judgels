@@ -81,7 +81,7 @@ jophiel:
         <p>Dear {{username}},</p>
         <p>Your password has been reset.</p>
 
-  superadminCreator:
+  superadmin:
     initialPassword: superadmin
 
   session:

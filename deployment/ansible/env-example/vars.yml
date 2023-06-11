@@ -25,7 +25,7 @@ db_password: pass # !!! CHANGE THIS !!!
 
 ###################################################################################################
 
-jophiel_superadminCreator_initialPassword: superadmin # !!! CHANGE THIS !!!
+jophiel_superadmin_initialPassword: superadmin # !!! CHANGE THIS !!!
 jophiel_session_maxConcurrentSessionsPerUser: -1
 jophiel_session_disableLogout: false
 
