@@ -12,8 +12,8 @@ nginx_certbot_email: admin@judgels.com
 
 ###################################################################################################
 
-judgels_server_xmx: 1g
-judgels_grader_xmx: 1g
+java_opts_judgels_server: -Xmx1g
+java_opts_judgels_grader: -Xmx1g
 
 ###################################################################################################
 

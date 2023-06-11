@@ -31,6 +31,8 @@
         volumes:
           - "/opt/judgels/grader/var:/judgels/grader/var"
         env:
-          JAVA_OPTS: "-Xmx{{ judgels_grader_xmx }}"
-          JUDGELS_GRADER_APP_OPTS: "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/grader/var/log"
+          JAVA_OPTS: "{{ java_opts_judgels_grader | default('', true) }}"
+          JUDGELS_GRADER_APP_OPTS: >-
+            -XX:+HeapDumpOnOutOfMemoryError
+            -XX:HeapDumpPath=/judgels/grader/var/log
       tags: config

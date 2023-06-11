@@ -30,8 +30,10 @@
         volumes:
           - "/opt/judgels/server/var:/judgels/server/var"
         env:
-          JAVA_OPTS: "-Xmx{{ judgels_server_xmx }}"
-          JUDGELS_SERVER_APP_OPTS: "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/server/var/log"
+          JAVA_OPTS: "{{ java_opts_judgels_server | default('', true) }}"
+          JUDGELS_SERVER_APP_OPTS: >-
+            -XX:+HeapDumpOnOutOfMemoryError
+            -XX:HeapDumpPath=/judgels/server/var/log
       tags: config
 
     - name: Set ownership on /opt/judgels/server to that of the container's var/log's and permission to 0*00
