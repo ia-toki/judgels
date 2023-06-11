@@ -1,11 +1,11 @@
 window.conf = {
-  mode: '{{ judgels_mode | default('JUDGELS', true) }}',
-  name: '{{ judgels_name }}',
-  slogan: '{{ judgels_slogan }}',
+  mode: '{{ app_mode | default('JUDGELS', true) }}',
+  name: '{{ app_name }}',
+  slogan: '{{ app_slogan }}',
   apiUrl: '{{ judgels_scheme }}://{{ judgels_server_api_url }}/v2',
   welcomeBanner: {
-    title: '{{ judgels_title }}',
-    description: '{{ judgels_description }}',
+    title: '{{ app_title }}',
+    description: '{{ app_description }}',
   },
 {% if googleAnalytics_trackingId is defined %}
   googleAnalytics: {
