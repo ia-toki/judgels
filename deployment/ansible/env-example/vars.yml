@@ -5,11 +5,10 @@ app_description: <h2>This is a programming contest system.</h2>
 
 ###################################################################################################
 
-judgels_scheme: https
-judgels_client_url: judgels.com
-judgels_server_api_url: api.judgels.com
-judgels_server_admin_url: admin.judgels.com
-letsencrypt_email: xxx@yyy.com # !!! CHANGE THIS !!!
+nginx_domain_judgels_client: judgels.com
+nginx_domain_judgels_server_api: api.judgels.com
+nginx_domain_judgels_server_admin: admin.judgels.com
+nginx_certbot_email: admin@judgels.com
 
 ###################################################################################################
 

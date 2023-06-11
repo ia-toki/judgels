@@ -11,13 +11,13 @@
       vars:
         domains:
           - name: judgels-server-api
-            fqdn: "{{ judgels_server_api_url }}"
+            fqdn: "{{ nginx_domain_judgels_server_api }}"
             config_template: "{{ playbook_dir }}/../conf/nginx-judgels-server-api.conf.j2"
           - name: judgels-server-admin
-            fqdn: "{{ judgels_server_admin_url }}"
+            fqdn: "{{ nginx_domain_judgels_server_admin }}"
             config_template: "{{ playbook_dir }}/../conf/nginx-judgels-server-admin.conf.j2"
           - name: judgels-client
-            fqdn: "{{ judgels_client_url }}"
+            fqdn: "{{ nginx_domain_judgels_client }}"
             config_template: "{{ playbook_dir }}/../conf/nginx-judgels-client.conf.j2"
 
 - hosts: grader
