@@ -11,7 +11,7 @@
     - name: Dump judgels database to file
       mysql_db:
         state: dump
-        login_host: "{{ db_host }}"
+        login_host: localhost
         login_user: "{{ db_username }}"
         login_password: "{{ db_password }}"
         name:

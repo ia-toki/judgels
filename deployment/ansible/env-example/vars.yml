@@ -18,7 +18,6 @@ judgels_grader_xmx: 1g
 ###################################################################################################
 
 db_root_password: pass # !!! CHANGE THIS !!!
-db_host: localhost
 db_username: judgels
 db_password: pass # !!! CHANGE THIS !!!
 
