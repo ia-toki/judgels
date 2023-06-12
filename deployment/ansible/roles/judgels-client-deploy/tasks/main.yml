@@ -10,15 +10,15 @@
     - name: Pull judgels client image
       docker_image:
         name: ghcr.io/ia-toki/judgels/client
-        tag: "{{ judgels_version | default('latest', true) }}"
+        tag: "{{ app_version | default('latest', true) }}"
         source: pull
-        force_source: "{{ judgels_version | default('latest', true) == 'latest' }}"
+        force_source: "{{ app_version | default('latest', true) == 'latest' }}"
       tags: config
 
     - name: Run a judgels client container
       docker_container:
         name: judgels-client
-        image: "ghcr.io/ia-toki/judgels/client:{{ judgels_version | default('latest', true) }}"
+        image: "ghcr.io/ia-toki/judgels/client:{{ app_version | default('latest', true) }}"
         restart: "{{ judgels_client_config.changed }}"
         restart_policy: on-failure
         restart_retries: 3
