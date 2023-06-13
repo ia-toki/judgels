@@ -36,15 +36,15 @@
 
     <li class="active"><a>${page.pageNumber}</a></li>
 
-    <#if ((page.pageNumber + 1) <= [(page.totalCount + page.pageSize - 1) / page.pageSize, page.pageNumber + 9]?min)>
-      <#list (page.pageNumber + 1)..[(page.totalCount + page.pageSize - 1) / page.pageSize, page.pageNumber + 9]?min as i>
+    <#if (page.pageNumber + 1 <= [((page.totalCount + page.pageSize - 1) / page.pageSize)?int, page.pageNumber + 9]?min)>
+      <#list (page.pageNumber + 1)..[((page.totalCount + page.pageSize - 1) / page.pageSize)?int, page.pageNumber + 9]?min as i>
         <li><a href="${newPageLink(i, termFilter, tagsFilter)}">${i}</a></li>
       </#list>
     </#if>
 
-    <#if (page.pageNumber + 1 <= (page.totalCount + page.pageSize - 1) / page.pageSize)>
+    <#if (page.pageNumber + 1 <= ((page.totalCount + page.pageSize - 1) / page.pageSize)?int)>
       <li><a href="${newPageLink(page.pageNumber + 1, termFilter, tagsFilter)}">&rarr;</a></li>
-      <li><a href="${newPageLink((page.totalCount + page.pageSize - 1) / page.pageSize, termFilter, tagsFilter)}">&raquo;</a></li>
+      <li><a href="${newPageLink(((page.totalCount + page.pageSize - 1) / page.pageSize)?int, termFilter, tagsFilter)}">&raquo;</a></li>
     <#else>
       <li class="disabled"><a>&rarr;</a></li>
       <li class="disabled"><a>&raquo;</a></li>
