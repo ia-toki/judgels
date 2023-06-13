@@ -88,7 +88,7 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
             where = "a.problemJid IN :problemJids";
         }
 
-        String orderDir = "ASC";
+        String orderDir = "DESC";
 
         countQ = String.format(countQ, where);
         dataQ = String.format(dataQ, where, orderDir, orderDir);
