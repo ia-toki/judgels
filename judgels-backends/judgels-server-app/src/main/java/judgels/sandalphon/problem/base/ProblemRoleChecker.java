@@ -53,7 +53,7 @@ public class ProblemRoleChecker {
         return problem.getAuthorJid().equals(actor.getUserJid());
     }
 
-    private boolean isAuthorOrAbove(Actor actor, Problem problem) {
+    public boolean isAuthorOrAbove(Actor actor, Problem problem) {
         return roleChecker.isAdmin(actor) || isAuthor(actor, problem);
     }
 
