@@ -8,14 +8,20 @@ This page explain how to further configure the Judgels deployment.
 
 These configs are available in `vars.yml`.
 
-### Java max heap sizes
+### Java JVM options
 
-These are the default Java `-Xmx` max heap size for Judgels server and grader:
+Uncomment the following lines to set JVM options for the judgels server and grader apps:
 
-- `judgels_server_xmx`: `1g`
-- `judgels_grader_xmx`: `1g`
+```
+# java_opts_judgels_server: -Xmx1g
+# java_opts_judgels_grader: -Xmx1g
+```
 
-We feel that the above sizes are sufficient, but they are configurable just in case.
+For example:
+
+```
+java_opts_judgels_server: -Xms512m -Xmx1g
+```
 
 ### User session limits
 

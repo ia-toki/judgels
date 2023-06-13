@@ -51,7 +51,7 @@ In `vars.yml`, generate different random strings for these values:
    * The root password of the MySQL installation.
 - `db_password`
    * The password of the `judgels` database.
-- `jophiel_superadminCreator_initialPassword`:
+- `jophiel_superadmin_initialPassword`:
    * The password for the auto-generated initial `superadmin` user.
 - `rabbitmq_password`
    * The password for the server and grader apps to connect to RabbitMQ.
@@ -64,14 +64,19 @@ In `vars.yml`, generate different random strings for these values:
    - `admin.mycontest.org`
 1. For each of the subdomains above, set up an A record pointing to the core VM's public IP.
 1. Open `vars.yml`, and modify the following config:
-   - `judgels_client_url`: `mycontest.org`
-   - `judgels_server_api_url`: `api.mycontest.org`
-   - `judgels_server_admin_url`: `admin.mycontest.org`
-   - `letsencrypt_email`: your email, used for obtaining SSL certificates from Let's Encrypt.
+   - `nginx_domain_judgels_client`: `mycontest.org`
+   - `nginx_domain_judgels_server_api`: `api.mycontest.org`
+   - `nginx_domain_judgels_server_admin`: `admin.mycontest.org`
+   - `nginx_certbot_email`: your email, used for obtaining SSL certificates from Let's Encrypt.
 
 ### F. Running Ansible playbooks
 
 1. Go to `deployment/ansible`.
+1. Edit the app version value in `env/vars.yml`:
+   ```
+   app_version: '2.0'
+   ```
+   You can get the latest version from https://github.com/ia-toki/judgels/tags. Enter the version without the `v` prefix.
 1. Run the provision playbook:
    ```
    ansible-playbook -e @env/vars.yml playbooks/provision.yml
@@ -82,6 +87,7 @@ In `vars.yml`, generate different random strings for these values:
    ansible-playbook -e @env/vars.yml playbooks/deploy.yml
    ```
    This will actually install Judgels. We can rerun this playbook e.g. if we want to deploy new version.
+1. You will notice that there are two new files in your `env/` directory: `judgels-grader` and `judgels-grader.pub`. These are the keypair used for the graders to retrieve test cases from the server when grading submissions. Please commit these files to your version control as well.
 
 Wait until everything is done. After the playbooks finished, do these verifications:
 
@@ -91,3 +97,18 @@ Wait until everything is done. After the playbooks finished, do these verificati
 1. Verify that the contestant web interface does not show any error (which means it can successfully access the API server `https://api.mycontest.org`).
 
 Congratulations, you have just deployed Judgels successfully!
+
+### G. Deploying more graders
+
+If you want to add more graders:
+
+1. Add/update the IP of the graders under the `[grader]` section in the `hosts.ini` file.
+   - Let's say that the new IPs are `1.2.3.4` and `5.6.7.8`.
+1. Run the provision playbook, only for the new grader VMs:
+   ```
+   ansible-playbook -e @env/vars.yml playbooks/provision.yml --limit=1.2.3.4,5.6.7.8
+   ```
+1. Run the deploy playbook, only for the new grader VMs:
+   ```
+   ansible-playbook -e @env/vars.yml playbooks/deploy.yml --limit=1.2.3.4,5.6.7.8
+   ```

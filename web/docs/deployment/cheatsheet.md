@@ -19,18 +19,18 @@ This page lists some technical details that Judgels admins should know in order 
 ### Judgels client
 
 - Judgels client serves a static React app as the contestant web interface.
-- `/judgels/client/var/` is a mounted volume:
-  - Config file is located at `/judgels/client/var/conf/judgels-client.js`.
+- `/opt/judgels/client/var/` is a mounted volume:
+  - Config file is located at `/opt/judgels/client/var/conf/judgels-client.js`.
     - Values are populated from `vars.yml` during deployment.
 
 ### Judgels server
 
 - Judgels server serves the admin web interface and the API server endpoints.
-- `/judgels/server/var/` is a mounted volume:
-  - Config file is located at `/judgels/server/var/conf/judgels-server.yml`.
+- `/opt/judgels/server/var/` is a mounted volume:
+  - Config file is located at `/opt/judgels/server/var/conf/judgels-server.yml`.
     - Values are populated from `vars.yml` during deployment.
-  - Data files are located at `/judgels/server/var/data/`.
-  - Log files are located at `/judgels/server/var/log/`.
+  - Data files are located at `/opt/judgels/server/var/data/`.
+  - Log files are located at `/opt/judgels/server/var/log/`.
 
 ### Nginx
 
@@ -60,12 +60,12 @@ This page lists some technical details that Judgels admins should know in order 
 
 ### Judgels grader 
 
-- `/judgels/grader/var/` is a mounted volume:
-  - Config file is located at `/judgels/grader/var/conf/judgels-grader.yml`.
+- `/opt/judgels/grader/var/` is a mounted volume:
+  - Config file is located at `/opt/judgels/grader/var/conf/judgels-grader.yml`.
     - Values are populated from `vars.yml` during deployment.
-  - Log files are located at `/judgels/grader/var/log/`.
+  - Log files are located at `/opt/judgels/grader/var/log/`.
 - Judgels grader uses [Isolate](https://www.ucw.cz/moe/isolate.1.html) as the sandbox for grading submissions:
-  - The Isolate binaries are located at `/judgels/isolate/` in the Docker container.
+  - The Isolate binaries are located at `/judgels/isolate/bin` in the Docker container.
   - The Isolate boxes are located at `/var/local/lib/isolate/<box id>` in the Docker container.
   - For example, to check active boxes:
     ```
