@@ -35,18 +35,3 @@
             -XX:+HeapDumpOnOutOfMemoryError
             -XX:HeapDumpPath=/judgels/server/var/log
       tags: config
-
-    - name: Set ownership on /opt/judgels/server to that of the container's var/log's and permission to 0*00
-      block:
-        - name: Get var/log file attributes
-          stat:
-            path: /opt/judgels/server/var/log
-          register: var_log_stat
-
-        - name: Set destination ownership
-          file:
-            path: /opt/judgels/server
-            owner: "{{ var_log_stat.stat.uid }}"
-            group: "{{ var_log_stat.stat.gid }}"
-            mode: 'g-r,g-w,g-x,o-r,o-w,o-x'
-            recurse: true
