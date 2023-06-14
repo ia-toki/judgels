@@ -49,6 +49,7 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
 
         @Override
         public ContestContestantQueryBuilder whereUserParticipated(String userJid) {
+            where(columnEq(ContestContestantModel_.userJid, userJid));
             where((cb, cq, root) -> cb.isNotNull(root.get(ContestContestantModel_.finalRank)));
             return this;
         }
