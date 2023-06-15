@@ -17,6 +17,6 @@ public class RoleChecker {
     public boolean isAdmin(String userJid) {
         UserRole role = userRoleStore.getRole(userJid);
         return role.getJophiel() == JophielRole.SUPERADMIN
-                || role.getUriel().orElse("").equals(JerahmeelRole.ADMIN.name());
+                || role.getJerahmeel().orElse("").equals(JerahmeelRole.ADMIN.name());
     }
 }
