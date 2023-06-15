@@ -30,7 +30,7 @@ public abstract class ProblemEditorialRenderResources extends BaseProblemResourc
         checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = editorialStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
-        return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
+        return ServiceUtils.buildMediaResponse(mediaUrl, Optional.empty());
     }
 
     // page path: /problems/{problemId}/editorials/edit

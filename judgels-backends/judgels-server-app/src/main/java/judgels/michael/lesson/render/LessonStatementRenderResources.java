@@ -30,7 +30,7 @@ public abstract class LessonStatementRenderResources extends BaseLessonResource 
         checkAllowed(roleChecker.canView(actor, lesson));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), mediaFilename);
-        return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
+        return ServiceUtils.buildMediaResponse(mediaUrl, Optional.empty());
     }
 
     // page path: /lessons/{lessonId}/statements/edit

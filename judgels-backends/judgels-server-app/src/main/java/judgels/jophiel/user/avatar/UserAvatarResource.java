@@ -4,7 +4,6 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.IF_MODIFIED_SINCE;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.service.ServiceUtils.buildImageResponse;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -27,6 +26,7 @@ import judgels.jophiel.api.user.avatar.UserAvatarService;
 import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.RandomCodeGenerator;
+import judgels.service.ServiceUtils;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -76,11 +76,11 @@ public class UserAvatarResource implements UserAvatarService {
 
         Optional<String> avatarFilename = userStore.getUserAvatarFilename(userJid);
         if (avatarFilename.isPresent()) {
-            return buildImageResponse(avatarFs.getPublicFileUrl(Paths.get(avatarFilename.get())), ifModifiedSince);
+            return ServiceUtils.buildMediaResponse(avatarFs.getPublicFileUrl(Paths.get(avatarFilename.get())), ifModifiedSince);
         }
-        return buildImageResponse(
+        return ServiceUtils.buildMediaResponse(
                 UserAvatarResource.class.getClassLoader().getResourceAsStream(DEFAULT_AVATAR),
-                "png",
+                "image/png",
                 new Date(1532822400),
                 ifModifiedSince);
     }

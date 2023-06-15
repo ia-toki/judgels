@@ -30,7 +30,7 @@ public abstract class ProblemStatementRenderResources extends BaseProblemResourc
         checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
-        return ServiceUtils.buildImageResponse(mediaUrl, Optional.empty());
+        return ServiceUtils.buildMediaResponse(mediaUrl, Optional.empty());
     }
 
     // page path: /problems/{problemId}/statements/edit

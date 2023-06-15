@@ -38,7 +38,7 @@ public class ProblemResource {
         checkFound(problemStore.getProblemByJid(problemJid));
         String mediaUrl = statementStore.getStatementMediaFileURL(null, problemJid, mediaFilename);
 
-        return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
+        return ServiceUtils.buildMediaResponse(mediaUrl, ifModifiedSince);
     }
 
     @GET
@@ -52,6 +52,6 @@ public class ProblemResource {
         checkFound(problemStore.getProblemByJid(problemJid));
         String mediaUrl = editorialStore.getEditorialMediaFileURL(null, problemJid, mediaFilename);
 
-        return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
+        return ServiceUtils.buildMediaResponse(mediaUrl, ifModifiedSince);
     }
 }

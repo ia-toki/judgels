@@ -35,6 +35,6 @@ public class LessonResource {
         checkFound(lessonStore.getLessonByJid(lessonJid));
         String mediaUrl = statementStore.getStatementMediaFileURL(null, lessonJid, mediaFilename);
 
-        return ServiceUtils.buildImageResponse(mediaUrl, ifModifiedSince);
+        return ServiceUtils.buildMediaResponse(mediaUrl, ifModifiedSince);
     }
 }
