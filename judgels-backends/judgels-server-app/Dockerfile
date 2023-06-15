@@ -5,12 +5,12 @@ RUN /usr/lib/jvm/java-11-openjdk/bin/jlink \
     --add-modules \
         java.base,java.desktop,java.naming,java.sql,java.management,java.instrument \
     --compress 2 --strip-debug --no-header-files --no-man-pages \
-    --output "/opt/judgels/java"
+    --output "/judgels/java"
 
 
 FROM alpine:3.18.0
 
-ENV JAVA_HOME=/opt/judgels/java
+ENV JAVA_HOME=/judgels/java
 ENV PATH="$PATH:$JAVA_HOME/bin"
 COPY --from=0 "$JAVA_HOME" "$JAVA_HOME"
 
