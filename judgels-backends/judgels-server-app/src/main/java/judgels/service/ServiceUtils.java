@@ -131,7 +131,7 @@ public class ServiceUtils {
         response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
         response.header(LAST_MODIFIED, lastModifiedStream);
 
-        return buildImageResponse(response, img, "image/jpg");
+        return buildImageResponse(response, img);
     }
 
     public static Response buildMediaResponse(String imageUrl, Optional<String> ifModifiedSince) {
@@ -203,12 +203,12 @@ public class ServiceUtils {
         return response.build();
     }
 
-    private static Response buildImageResponse(Response.ResponseBuilder response, BufferedImage img, String type) {
-        response.header(CONTENT_TYPE, type);
+    private static Response buildImageResponse(Response.ResponseBuilder response, BufferedImage img) {
+        response.header(CONTENT_TYPE, "image/jpg");
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(img, type, baos);
+            ImageIO.write(img, "jpg", baos);
             response.entity(baos.toByteArray());
         } catch (IOException e) {
             return Response.serverError().build();
