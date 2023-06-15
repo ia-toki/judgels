@@ -15,7 +15,7 @@ ENV PATH="$PATH:$JAVA_HOME/bin"
 COPY --from=0 "$JAVA_HOME" "$JAVA_HOME"
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels
-RUN apk add --no-cache bash procps ttf-dejavu
+RUN apk add --no-cache bash procps ttf-dejavu libjpeg-turbo-dev
 
 USER judgels
 
