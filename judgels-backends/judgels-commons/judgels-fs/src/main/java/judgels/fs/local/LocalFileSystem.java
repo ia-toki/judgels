@@ -47,7 +47,9 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void createDirectory(Path dirPath) {
         try {
-            Files.createDirectories(baseDir.resolve(dirPath), PosixFilePermissions.asFileAttribute(PERMISSION_700));
+            Files.createDirectories(
+                    dirPath == null ? baseDir : baseDir.resolve(dirPath),
+                    PosixFilePermissions.asFileAttribute(PERMISSION_700));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
