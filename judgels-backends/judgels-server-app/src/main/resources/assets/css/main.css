@@ -271,7 +271,7 @@ input[type="text"], input[type="password"], textarea {
 }
 
 .content-text .spoiler {
-  margin-top: 5px;
+  margin-bottom: 5px;
   background-color: #f8f8f8;
   padding: 10px;
   border: 2px dashed #e7e7e7;
