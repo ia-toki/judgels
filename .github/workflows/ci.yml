@@ -149,7 +149,7 @@ jobs:
         run: ./deployment/scripts/build_judgels_grader.sh
 
   deploy-web:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/force-web'
     runs-on: ubuntu-22.04
     env:
       WEB_HOST: ${{ secrets.WEB_HOST }}
@@ -171,21 +171,18 @@ jobs:
           node-version: '16'
 
       - name: Build web
-        if: steps.changed-files.outputs.web == '1'
         run: |
           cd web
           yarn install
           yarn build
 
       - name: Install SSH key
-        if: steps.changed-files.outputs.web == '1'
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.WEB_PRIVATE_KEY }}
           known_hosts: ${{ secrets.WEB_KNOWN_HOSTS }}
 
       - name: Rsync web
-        if: steps.changed-files.outputs.web == '1'
         run: rsync -avzh --delete web/build/ root@${WEB_HOST}:/var/www/html/judgels --delete
 
   deploy-tlx-staging:
