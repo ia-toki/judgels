@@ -3,7 +3,7 @@ FROM alpine:3.18.0
 RUN apk --no-cache add openjdk11-jdk openjdk11-jmods
 RUN /usr/lib/jvm/java-11-openjdk/bin/jlink \
     --add-modules \
-        java.base,java.desktop,java.naming,java.sql,java.management,java.instrument \
+        java.base,java.desktop,java.naming,java.sql,java.management,java.instrument,jdk.crypto.ec \
     --compress 2 --strip-debug --no-header-files --no-man-pages \
     --output "/judgels/java"
 
