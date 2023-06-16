@@ -8,6 +8,7 @@
 
 <@template.layout>
   <#include "/judgels/michael/resource/katex.ftl">
+  <#include "/judgels/michael/resource/statement.ftl">
   <@switchLanguage.view languages=enabledLanguages language=language/>
 
   <#if reasonNotAllowedToSubmit?has_content>
