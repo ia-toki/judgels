@@ -4,6 +4,7 @@
         source: build
         force_source: yes
         name: ghcr.io/ia-toki/judgels/grader
+        tag: gabriel-stress-test
         push: yes
         build:
           path: "{{ playbook_dir }}/../../../judgels-backends/judgels-grader-app"
