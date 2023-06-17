@@ -9,13 +9,14 @@ import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.api.Verdict;
 
 public class DiffScorer implements Scorer {
-    private static final String DIFF_COMMAND = "/usr/bin/diff --brief";
-    private static final String TOKENIZER_COMMAND = " <(cat \"%s\" | tr '[\\t\\r\\n]' ' ' | xargs)";
-
     @Override
     public ScoringResult score(File input, File output, File evaluationOutput) throws ScoringException {
-        String[] scoringCommand = new String[]{"bash", "-c", String.format(
-                DIFF_COMMAND + TOKENIZER_COMMAND + TOKENIZER_COMMAND,
+        String[] scoringCommand = new String[]{"/bin/bash", "-c", String.format(""
+                + "cat \"%s\" | tr '[\\t\\r\\n]' ' ' | xargs > _output_tokenized.out; "
+                + "cat \"%s\" | tr '[\\t\\r\\n]' ' ' | xargs > _evaluation_tokenized.out; "
+                + "diff --brief _output_tokenized.out _evaluation_tokenized.out; result=$?; "
+                + "rm _output_tokenized.out _evaluation_tokenized.out; "
+                + "exit $result;",
                 output.getAbsolutePath(),
                 evaluationOutput.getAbsolutePath())};
 
