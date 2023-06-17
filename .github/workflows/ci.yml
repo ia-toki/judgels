@@ -186,7 +186,7 @@ jobs:
 
       - name: Rsync web
         if: steps.changed-files.outputs.web == '1'
-        run: rsync -avzh --delete web/build/ root@${WEB_HOST}:/var/www/html/judgels --delete
+        run: rsync -avzh web/build/ root@${WEB_HOST}:/var/www/html/judgels --delete
 
   deploy-tlx-staging:
     needs: build
