@@ -22,6 +22,11 @@ server {
         proxy_buffering off;
         client_max_body_size 512M;
     }
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/lib/letsencrypt;
+        default_type "text/plain";
+    }
 }
 
 server {
@@ -30,12 +35,9 @@ server {
 
     server_name {{ domain.fqdn }};
 
-    location /.well-known/acme-challenge/ {
-        allow all;
-        autoindex off;
-        root /var/lib/letsencrypt/;
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/lib/letsencrypt;
         default_type "text/plain";
-        try_files $uri =404;
     }
 
     location / {
