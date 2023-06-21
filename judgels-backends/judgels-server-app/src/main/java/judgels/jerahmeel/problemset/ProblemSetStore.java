@@ -1,9 +1,7 @@
 package judgels.jerahmeel.problemset;
 
-import static judgels.jerahmeel.JerahmeelCacheUtils.getShortDuration;
+import static java.util.stream.Collectors.toMap;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
@@ -38,10 +35,6 @@ public class ProblemSetStore {
     private final ProblemContestDao problemContestDao;
     private final ArchiveDao archiveDao;
 
-    private final LoadingCache<String, ProblemSet> problemSetByJidCache;
-    private final LoadingCache<String, ProblemSet> problemSetBySlugCache;
-    private final LoadingCache<String, ProblemSet> problemSetByContestJidCache;
-
     @Inject
     public ProblemSetStore(
             ProblemSetDao problemSetDao,
@@ -53,55 +46,31 @@ public class ProblemSetStore {
         this.problemSetProblemDao = problemSetProblemDao;
         this.problemContestDao = problemContestDao;
         this.archiveDao = archiveDao;
-
-        this.problemSetByJidCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getProblemSetByJidUncached);
-        this.problemSetBySlugCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getProblemSetBySlugUncached);
-        this.problemSetByContestJidCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getProblemSetByContestJidUncached);
     }
 
     public Optional<ProblemSet> getProblemSetByJid(String problemSetJid) {
-        return Optional.ofNullable(problemSetByJidCache.get(problemSetJid));
-    }
-
-    private ProblemSet getProblemSetByJidUncached(String problemSetJid) {
-        return problemSetDao.selectByJid(problemSetJid).map(ProblemSetStore::fromModel).orElse(null);
+        return problemSetDao.selectByJid(problemSetJid).map(ProblemSetStore::fromModel);
     }
 
     public Optional<ProblemSet> getProblemSetBySlug(String problemSetSlug) {
-        return Optional.ofNullable(problemSetBySlugCache.get(problemSetSlug));
+        return problemSetDao.selectBySlug(problemSetSlug).map(ProblemSetStore::fromModel);
     }
 
     public Map<String, ProblemSet> getProblemSetsBySlugs(Set<String> problemSetSlugs) {
-        return problemSetBySlugCache.getAll(problemSetSlugs);
-    }
-
-    private ProblemSet getProblemSetBySlugUncached(String problemSetSlug) {
-        return problemSetDao.selectBySlug(problemSetSlug).map(ProblemSetStore::fromModel).orElse(null);
+        return problemSetDao.selectAllBySlugs(problemSetSlugs).stream().collect(toMap(
+                m -> m.slug, ProblemSetStore::fromModel));
     }
 
     public Optional<ProblemSet> getProblemSetByContestJid(String contestJid) {
-        return Optional.ofNullable(problemSetByContestJidCache.get(contestJid));
-    }
-
-    private ProblemSet getProblemSetByContestJidUncached(String contestJid) {
         for (ProblemContestModel pcm : problemContestDao.selectAllByContestJid(contestJid)) {
             for (ProblemSetProblemModel pspm : problemSetProblemDao.selectAllByProblemJid(pcm.problemJid)) {
                 Optional<ProblemSetModel> m = problemSetDao.selectByJid(pspm.problemSetJid);
                 if (m.isPresent()) {
-                    return fromModel(m.get());
+                    return Optional.of(fromModel(m.get()));
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public Page<ProblemSet> getProblemSets(Optional<String> archiveJid, Optional<String> nameFilter, int pageNumber, int pageSize) {
@@ -128,7 +97,7 @@ public class ProblemSetStore {
         return problemSetDao.selectByJids(problemSetJids)
                 .values()
                 .stream()
-                .collect(Collectors.toMap(
+                .collect(toMap(
                         c -> c.jid,
                         c -> c.name));
     }
@@ -185,13 +154,6 @@ public class ProblemSetStore {
                 model.archiveJid = archiveModel.get().jid;
             }
 
-            problemSetByJidCache.invalidate(problemSetJid);
-            if (model.slug != null) {
-                problemSetBySlugCache.invalidate(model.slug);
-            }
-            if (data.getSlug().isPresent()) {
-                problemSetBySlugCache.invalidate(data.getSlug().get());
-            }
 
             data.getSlug().ifPresent(slug -> model.slug = slug);
             data.getName().ifPresent(name -> model.name = name);

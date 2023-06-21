@@ -2,10 +2,7 @@ package judgels.uriel.contest;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.stream.Collectors.toMap;
-import static judgels.uriel.UrielCacheUtils.getShortDuration;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
@@ -53,9 +50,6 @@ public class ContestStore {
     private final ContestAnnouncementStore announcementStore;
     private final ContestClarificationStore clarificationStore;
 
-    private final LoadingCache<String, Contest> contestByJidCache;
-    private final LoadingCache<String, Contest> contestBySlugCache;
-
     @Inject
     public ContestStore(
             ContestDao contestDao,
@@ -75,19 +69,10 @@ public class ContestStore {
         this.managerStore = managerStore;
         this.announcementStore = announcementStore;
         this.clarificationStore = clarificationStore;
-
-        this.contestByJidCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getContestByJidUncached);
-        this.contestBySlugCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getContestBySlugUncached);
     }
 
     public Optional<Contest> getContestByJid(String contestJid) {
-        return Optional.ofNullable(contestByJidCache.get(contestJid));
+        return contestDao.selectByJid(contestJid).map(ContestStore::fromModel);
     }
 
     public Map<String, ContestInfo> getContestInfosByJids(Set<String> contestJids) {
@@ -103,16 +88,8 @@ public class ContestStore {
                                 .build()));
     }
 
-    private Contest getContestByJidUncached(String contestJid) {
-        return contestDao.selectByJid(contestJid).map(ContestStore::fromModel).orElse(null);
-    }
-
     public Optional<Contest> getContestBySlug(String contestSlug) {
-        return Optional.ofNullable(contestBySlugCache.get(contestSlug));
-    }
-
-    private Contest getContestBySlugUncached(String contestSlug) {
-        return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel).orElse(null);
+        return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel);
     }
 
     public Map<String, String> translateSlugsToJids(Set<String> slugs) {
@@ -205,14 +182,6 @@ public class ContestStore {
                 }
             }
 
-            contestByJidCache.invalidate(contestJid);
-            if (model.slug != null) {
-                contestBySlugCache.invalidate(model.slug);
-            }
-            if (contestUpdateData.getSlug().isPresent()) {
-                contestBySlugCache.invalidate(contestUpdateData.getSlug().get());
-            }
-
             contestUpdateData.getSlug().ifPresent(slug -> model.slug = slug);
             contestUpdateData.getName().ifPresent(name -> model.name = name);
             contestUpdateData.getStyle().ifPresent(style -> model.style = style.name());
@@ -251,8 +220,6 @@ public class ContestStore {
         model.description = dump.getDescription();
         contestDao.setModelMetadataFromDump(model, dump);
         model = contestDao.persist(model);
-        contestByJidCache.invalidate(model.jid);
-        contestBySlugCache.invalidate(model.slug);
 
         String contestJid = model.jid;
         moduleStore.importStyleDump(contestJid, dump.getStyle());

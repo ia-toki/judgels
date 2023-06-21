@@ -1,11 +1,7 @@
 package judgels.uriel.contest.contestant;
 
-import static judgels.uriel.UrielCacheUtils.SEPARATOR;
-import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.Lists;
 import java.time.Clock;
 import java.util.Map;
@@ -21,26 +17,16 @@ import judgels.uriel.api.contest.contestant.ContestContestantStatus;
 import judgels.uriel.api.contest.dump.ContestContestantDump;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
-import judgels.uriel.persistence.ContestRoleDao;
 
 @Singleton
 public class ContestContestantStore {
     private final ContestContestantDao contestantDao;
-    private final ContestRoleDao roleDao;
     private final Clock clock;
 
-    private final Cache<String, ContestContestant> contestantCache;
-
     @Inject
-    public ContestContestantStore(ContestContestantDao contestantDao, ContestRoleDao roleDao, Clock clock) {
+    public ContestContestantStore(ContestContestantDao contestantDao, Clock clock) {
         this.contestantDao = contestantDao;
-        this.roleDao = roleDao;
         this.clock = clock;
-
-        this.contestantCache = Caffeine.newBuilder()
-                .maximumSize(1_000)
-                .expireAfterWrite(getShortDuration())
-                .build();
     }
 
     public boolean upsertContestant(String contestJid, String userJid) {
@@ -54,10 +40,6 @@ public class ContestContestantStore {
             toModel(contestJid, userJid, model);
             contestantDao.insert(model);
         }
-
-        contestantCache.invalidate(contestJid + SEPARATOR + userJid);
-        roleDao.invalidateCaches(userJid, contestJid);
-
         return !maybeModel.isPresent();
     }
 
@@ -74,17 +56,13 @@ public class ContestContestantStore {
         Optional<ContestContestantModel> maybeModel = contestantDao.selectByContestJidAndUserJid(contestJid, userJid);
         if (maybeModel.isPresent()) {
             contestantDao.delete(maybeModel.get());
-            contestantCache.invalidate(contestJid + SEPARATOR + userJid);
-            roleDao.invalidateCaches(userJid, contestJid);
             return true;
         }
         return false;
     }
 
     public Optional<ContestContestant> getContestant(String contestJid, String userJid) {
-        return Optional.ofNullable(contestantCache.get(
-                contestJid + SEPARATOR + userJid,
-                $ -> getContestantUncached(contestJid, userJid)));
+        return contestantDao.selectByContestJidAndUserJid(contestJid, userJid).map(ContestContestantStore::fromModel);
     }
 
     public Map<String, Integer> getContestantFinalRanks(String userJid) {
@@ -96,19 +74,10 @@ public class ContestContestantStore {
                 .collect(Collectors.toMap(m -> m.contestJid, m -> m.finalRank));
     }
 
-    private ContestContestant getContestantUncached(String contestJid, String userJid) {
-        return contestantDao.selectByContestJidAndUserJid(contestJid, userJid)
-                .map(ContestContestantStore::fromModel)
-                .orElse(null);
-    }
-
     public void startVirtualContest(String contestJid, String userJid) {
         contestantDao.selectByContestJidAndUserJid(contestJid, userJid).ifPresent(model -> {
             model.contestStartTime = clock.instant();
             contestantDao.update(model);
-
-            contestantCache.invalidate(contestJid + SEPARATOR + userJid);
-            roleDao.invalidateCaches(userJid, contestJid);
         });
     }
 
@@ -116,9 +85,6 @@ public class ContestContestantStore {
         contestantDao.selectByContestJid(contestJid).all().forEach(model -> {
             model.contestStartTime = null;
             contestantDao.update(model);
-
-            contestantCache.invalidate(contestJid + SEPARATOR + model.userJid);
-            roleDao.invalidateCaches(model.userJid, contestJid);
         });
     }
 
@@ -160,7 +126,6 @@ public class ContestContestantStore {
         model.finalRank = dump.getFinalRank().orElse(null);
         contestantDao.setModelMetadataFromDump(model, dump);
         contestantDao.persist(model);
-        contestantCache.invalidate(contestJid + SEPARATOR + model.userJid);
     }
 
     public Set<ContestContestantDump> exportDumps(String contestJid, DumpImportMode mode) {
