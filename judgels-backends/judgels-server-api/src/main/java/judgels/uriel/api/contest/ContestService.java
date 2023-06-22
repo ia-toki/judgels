@@ -14,9 +14,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.dump.ContestsDump;
-import judgels.uriel.api.contest.dump.ExportContestsDumpData;
-import judgels.uriel.api.contest.dump.ImportContestsDumpResponse;
 
 @Path("/api/v2/contests")
 public interface ContestService {
@@ -89,16 +86,4 @@ public interface ContestService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             ContestDescription description);
-
-    @POST
-    @Path("/export")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    ContestsDump exportDump(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ExportContestsDumpData data);
-
-    @POST
-    @Path("/import")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    ImportContestsDumpResponse importDump(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestsDump contestsDump);
 }

@@ -11,8 +11,6 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel;
-import judgels.persistence.api.dump.DumpImportMode;
-import judgels.persistence.api.dump.UnmodifiableDump;
 
 public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M> implements UnmodifiableDao<M> {
     private final Clock clock;
@@ -61,25 +59,6 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     @Override
     public Optional<M> selectById(long id) {
         return Optional.ofNullable(get(id));
-    }
-
-    @Override
-    public void setModelMetadataFromDump(M model, UnmodifiableDump dump) {
-        if (dump.getMode() == DumpImportMode.RESTORE) {
-            model.createdBy = dump.getCreatedBy().orElse(null);
-            model.createdIp = dump.getCreatedIp().orElse(null);
-            model.createdAt = dump.getCreatedAt().orElseThrow(
-                    () -> new IllegalArgumentException("createdAt must be set if using RESTORE mode")
-            );
-        } else if (dump.getMode() == DumpImportMode.CREATE) {
-            model.createdBy = actorProvider.getJid().orElse(null);
-            model.createdIp = actorProvider.getIpAddress().orElse(null);
-            model.createdAt = clock.instant();
-        } else {
-            throw new IllegalArgumentException(
-                    String.format("Unknown mode: %s", dump.getMode())
-            );
-        }
     }
 
     protected static <M> CriteriaPredicate<M> columnEq(SingularAttribute<? super M, ?> column, Object value) {

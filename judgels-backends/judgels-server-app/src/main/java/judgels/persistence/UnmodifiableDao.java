@@ -1,7 +1,6 @@
 package judgels.persistence;
 
 import java.util.Optional;
-import judgels.persistence.api.dump.UnmodifiableDump;
 
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
     void flush();
@@ -13,6 +12,4 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
 
     QueryBuilder<M> select();
     Optional<M> selectById(long id);
-
-    void setModelMetadataFromDump(M model, UnmodifiableDump dump);
 }

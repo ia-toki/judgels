@@ -2,10 +2,8 @@ package judgels.persistence.hibernate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
-import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 import javax.persistence.Column;
@@ -15,10 +13,7 @@ import judgels.persistence.JidPrefix;
 import judgels.persistence.JudgelsModel;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.TestClock;
-import judgels.persistence.api.dump.DumpImportMode;
-import judgels.persistence.api.dump.JudgelsDump;
 import org.hibernate.SessionFactory;
-import org.immutables.value.Value;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {JudgelsHibernateDaoIntegrationTests.ExampleModel.class})
@@ -111,57 +106,11 @@ class JudgelsHibernateDaoIntegrationTests {
         assertThat(models).isEmpty();
     }
 
-    @Test
-    void set_metadata_from_dump(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
-
-        TestJudgelsDump testRestoreDump = new TestJudgelsDump.Builder()
-                .mode(DumpImportMode.RESTORE)
-                .jid("JIDEXAMtest1")
-                .createdBy("createdBy1")
-                .createdIp("createdIp1")
-                .createdAt(Instant.ofEpochSecond(23))
-                .updatedBy("updatedBy1")
-                .updatedIp("updatedIp1")
-                .updatedAt(Instant.ofEpochSecond(77))
-                .build();
-
-        ExampleModel model = new ExampleModel();
-        dao.setModelMetadataFromDump(model, testRestoreDump);
-
-        assertThat(model.jid).isEqualTo("JIDEXAMtest1");
-        assertThat(model.createdBy).isEqualTo("createdBy1");
-        assertThat(model.createdIp).isEqualTo("createdIp1");
-        assertThat(model.createdAt).isEqualTo(Instant.ofEpochSecond(23));
-        assertThat(model.updatedBy).isEqualTo("updatedBy1");
-        assertThat(model.updatedIp).isEqualTo("updatedIp1");
-        assertThat(model.updatedAt).isEqualTo(Instant.ofEpochSecond(77));
-
-        dao.setModelMetadataFromDump(model, new TestJudgelsDump.Builder()
-                .from(testRestoreDump)
-                .mode(DumpImportMode.CREATE)
-                .build());
-
-        assertThat(model.jid).startsWith("JIDEXAM");
-        assertThat(model.createdBy).isEqualTo("actorJid");
-        assertThat(model.createdIp).isEqualTo("actorIp");
-        assertThat(model.createdAt).isEqualTo(TestClock.NOW);
-        assertThat(model.updatedBy).isEqualTo("actorJid");
-        assertThat(model.updatedIp).isEqualTo("actorIp");
-        assertThat(model.updatedAt).isEqualTo(TestClock.NOW);
-    }
-
     @Entity
     @JidPrefix("EXAM")
     static class ExampleModel extends JudgelsModel {
         @Column
         String column;
-    }
-
-    @Value.Immutable
-    @JsonDeserialize(as = ImmutableTestJudgelsDump.class)
-    public interface TestJudgelsDump extends JudgelsDump {
-        class Builder extends ImmutableTestJudgelsDump.Builder {}
     }
 
     private static class ExampleHibernateDao extends JudgelsHibernateDao<ExampleModel> {

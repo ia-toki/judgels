@@ -27,10 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestStyle;
-import judgels.uriel.api.contest.dump.ContestModuleDump;
-import judgels.uriel.api.contest.dump.ContestStyleDump;
 import judgels.uriel.api.contest.module.BundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
@@ -43,7 +40,6 @@ import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.MergedScoreboardModuleConfig;
-import judgels.uriel.api.contest.module.ModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.module.TrocStyleModuleConfig;
@@ -329,128 +325,6 @@ public class ContestModuleStore {
 
     public Optional<VirtualModuleConfig> getVirtualModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, VIRTUAL, VirtualModuleConfig.class);
-    }
-
-    public void importStyleDump(String contestJid, ContestStyleDump dump) {
-        String configString;
-        try {
-            StyleModuleConfig config = dump.getConfig();
-            configString = mapper.writeValueAsString(config);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        ContestStyleModel model = new ContestStyleModel();
-        model.contestJid = contestJid;
-        model.config = configString;
-        styleDao.setModelMetadataFromDump(model, dump);
-        styleDao.persist(model);
-    }
-
-    public void importModuleDump(String contestJid, ContestModuleDump dump) {
-        String configString;
-        try {
-            ModuleConfig config = dump.getConfig();
-            configString = mapper.writeValueAsString(config == null ? ImmutableMap.of() : config);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        ContestModuleModel model = new ContestModuleModel();
-        model.contestJid = contestJid;
-        model.name = dump.getName().name();
-        model.enabled = dump.getEnabled();
-        model.config = configString;
-        moduleDao.setModelMetadataFromDump(model, dump);
-        moduleDao.persist(model);
-    }
-
-    public ContestStyleDump exportStyleDump(String contestJid, DumpImportMode mode, ContestStyle contestStyle) {
-        Class<? extends StyleModuleConfig> styleModuleConfigClass;
-        if (contestStyle == ContestStyle.TROC) {
-            styleModuleConfigClass = TrocStyleModuleConfig.class;
-        } else if (contestStyle == ContestStyle.IOI) {
-            styleModuleConfigClass = IoiStyleModuleConfig.class;
-        } else if (contestStyle == ContestStyle.ICPC) {
-            styleModuleConfigClass = IcpcStyleModuleConfig.class;
-        } else if (contestStyle == ContestStyle.GCJ) {
-            styleModuleConfigClass = GcjStyleModuleConfig.class;
-        } else if (contestStyle == ContestStyle.BUNDLE) {
-            styleModuleConfigClass = BundleStyleModuleConfig.class;
-        } else {
-            throw new IllegalArgumentException();
-        }
-
-        ContestStyleModel model = styleDao.selectByContestJid(contestJid).get();
-        try {
-            ContestStyleDump.Builder builder = new ContestStyleDump.Builder()
-                    .mode(mode)
-                    .name(contestStyle)
-                    .config(mapper.readValue(model.config, styleModuleConfigClass));
-
-            if (mode == DumpImportMode.RESTORE) {
-                builder
-                        .createdAt(model.createdAt)
-                        .createdBy(Optional.ofNullable(model.createdBy))
-                        .createdIp(Optional.ofNullable(model.createdIp))
-                        .updatedAt(model.updatedAt)
-                        .updatedBy(Optional.ofNullable(model.updatedBy))
-                        .updatedIp(Optional.ofNullable(model.updatedIp));
-            }
-
-            return builder.build();
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    String.format(
-                            "Failed to parse style config JSON in contest %s:\n%s", contestJid, model.config
-                    ),
-                    e
-            );
-        }
-    }
-
-    public Set<ContestModuleDump> exportModuleDumps(String contestJid, DumpImportMode mode) {
-        return moduleDao.selectByContestJid(contestJid).all().stream().map(model -> {
-            ContestModuleType moduleType = ContestModuleType.valueOf(model.name);
-            ModuleConfig moduleConfig = null;
-            try {
-                if (moduleType == ContestModuleType.SCOREBOARD) {
-                    moduleConfig = mapper.readValue(model.config, ScoreboardModuleConfig.class);
-                } else if (moduleType == ContestModuleType.CLARIFICATION_TIME_LIMIT) {
-                    moduleConfig = mapper.readValue(model.config, ClarificationTimeLimitModuleConfig.class);
-                } else if (moduleType == ContestModuleType.FROZEN_SCOREBOARD) {
-                    moduleConfig = mapper.readValue(model.config, FrozenScoreboardModuleConfig.class);
-                } else if (moduleType == ContestModuleType.VIRTUAL) {
-                    moduleConfig = mapper.readValue(model.config, VirtualModuleConfig.class);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(
-                        String.format(
-                                "Failed to parse module config JSON in contest %s:\n%s",
-                                contestJid, model.config
-                        ),
-                        e
-                );
-            }
-
-            ContestModuleDump.Builder builder = new ContestModuleDump.Builder()
-                    .mode(mode)
-                    .name(ContestModuleType.valueOf(model.name))
-                    .enabled(model.enabled)
-                    .config(moduleConfig);
-
-            if (mode == DumpImportMode.RESTORE) {
-                builder
-                        .createdAt(model.createdAt)
-                        .createdBy(Optional.ofNullable(model.createdBy))
-                        .createdIp(Optional.ofNullable(model.createdIp))
-                        .updatedAt(model.updatedAt)
-                        .updatedBy(Optional.ofNullable(model.updatedBy))
-                        .updatedIp(Optional.ofNullable(model.updatedIp));
-            }
-
-            return builder.build();
-        }).collect(Collectors.toSet());
     }
 
     private void upsertModule(String contestJid, ContestModuleType type, Object config) {
