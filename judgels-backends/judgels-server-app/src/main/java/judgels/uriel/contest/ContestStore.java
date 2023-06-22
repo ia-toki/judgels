@@ -21,13 +21,6 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.ContestUpdateData;
-import judgels.uriel.contest.announcement.ContestAnnouncementStore;
-import judgels.uriel.contest.clarification.ContestClarificationStore;
-import judgels.uriel.contest.contestant.ContestContestantStore;
-import judgels.uriel.contest.manager.ContestManagerStore;
-import judgels.uriel.contest.module.ContestModuleStore;
-import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestDao.ContestQueryBuilder;
 import judgels.uriel.persistence.ContestModel;
@@ -37,33 +30,9 @@ import judgels.uriel.persistence.ContestModel_;
 public class ContestStore {
     private final ContestDao contestDao;
 
-    private final ContestModuleStore moduleStore;
-    private final ContestProblemStore problemStore;
-    private final ContestContestantStore contestantStore;
-    private final ContestSupervisorStore supervisorStore;
-    private final ContestManagerStore managerStore;
-    private final ContestAnnouncementStore announcementStore;
-    private final ContestClarificationStore clarificationStore;
-
     @Inject
-    public ContestStore(
-            ContestDao contestDao,
-            ContestModuleStore moduleStore,
-            ContestProblemStore problemStore,
-            ContestContestantStore contestantStore,
-            ContestSupervisorStore supervisorStore,
-            ContestManagerStore managerStore,
-            ContestAnnouncementStore announcementStore,
-            ContestClarificationStore clarificationStore) {
-
+    public ContestStore(ContestDao contestDao) {
         this.contestDao = contestDao;
-        this.moduleStore = moduleStore;
-        this.problemStore = problemStore;
-        this.contestantStore = contestantStore;
-        this.supervisorStore = supervisorStore;
-        this.managerStore = managerStore;
-        this.announcementStore = announcementStore;
-        this.clarificationStore = clarificationStore;
     }
 
     public Optional<Contest> getContestByJid(String contestJid) {
