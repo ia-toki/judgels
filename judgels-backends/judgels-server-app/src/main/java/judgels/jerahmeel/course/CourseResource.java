@@ -82,8 +82,9 @@ public class CourseResource implements CourseService {
     @UnitOfWork
     public Course updateCourse(AuthHeader authHeader, String courseJid, CourseUpdateData data) {
         String actorJid = actorChecker.check(authHeader);
+        checkFound(courseStore.getCourseByJid(courseJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
 
-        return checkFound(courseStore.updateCourse(courseJid, data));
+        return courseStore.updateCourse(courseJid, data);
     }
 }

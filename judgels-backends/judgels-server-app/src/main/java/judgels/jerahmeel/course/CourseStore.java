@@ -49,22 +49,21 @@ public class CourseStore {
         return fromModel(courseDao.insert(model));
     }
 
-    public Optional<Course> updateCourse(String courseJid, CourseUpdateData data) {
-        return courseDao.selectByJid(courseJid).map(model -> {
-            if (data.getSlug().isPresent()) {
-                String newSlug = data.getSlug().get();
-                if (model.slug == null || !model.slug.equals(newSlug)) {
-                    if (courseDao.selectBySlug(newSlug).isPresent()) {
-                        throw CourseErrors.slugAlreadyExists(newSlug);
-                    }
+    public Course updateCourse(String courseJid, CourseUpdateData data) {
+        CourseModel model = courseDao.findByJid(courseJid);
+        if (data.getSlug().isPresent()) {
+            String newSlug = data.getSlug().get();
+            if (model.slug == null || !model.slug.equals(newSlug)) {
+                if (courseDao.selectBySlug(newSlug).isPresent()) {
+                    throw CourseErrors.slugAlreadyExists(newSlug);
                 }
             }
+        }
 
-            data.getSlug().ifPresent(slug -> model.slug = slug);
-            data.getName().ifPresent(name -> model.name = name);
-            data.getDescription().ifPresent(description -> model.description = description);
-            return fromModel(courseDao.update(model));
-        });
+        data.getSlug().ifPresent(slug -> model.slug = slug);
+        data.getName().ifPresent(name -> model.name = name);
+        data.getDescription().ifPresent(description -> model.description = description);
+        return fromModel(courseDao.update(model));
     }
 
     private static Course fromModel(CourseModel model) {

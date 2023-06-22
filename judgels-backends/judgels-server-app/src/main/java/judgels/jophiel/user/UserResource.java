@@ -157,7 +157,7 @@ public class UserResource implements UserService {
                         .email(getCsvValue(headerMap, line, "email"))
                         .build();
 
-                user = userStore.updateUser(existingUser.get().getJid(), data).get();
+                user = userStore.updateUser(existingUser.get().getJid(), data);
                 updatedUsernames.add(username);
                 existingInfo = infoStore.getInfo(user.getJid());
             } else {

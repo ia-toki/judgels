@@ -95,12 +95,10 @@ public class ChapterStore {
         return fromModel(chapterDao.insert(model));
     }
 
-
-    public Optional<Chapter> updateChapter(String chapterJid, ChapterUpdateData data) {
-        return chapterDao.selectByJid(chapterJid).map(model -> {
-            data.getName().ifPresent(name -> model.name = name);
-            return fromModel(chapterDao.update(model));
-        });
+    public Chapter updateChapter(String chapterJid, ChapterUpdateData data) {
+        ChapterModel model = chapterDao.findByJid(chapterJid);
+        data.getName().ifPresent(name -> model.name = name);
+        return fromModel(chapterDao.update(model));
     }
 
     private static Chapter fromModel(ChapterModel model) {
