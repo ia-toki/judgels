@@ -7,7 +7,6 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.profile.ProfileStore;
@@ -22,9 +21,6 @@ import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.ContestsResponse;
-import judgels.uriel.api.contest.dump.ContestsDump;
-import judgels.uriel.api.contest.dump.ExportContestsDumpData;
-import judgels.uriel.api.contest.dump.ImportContestsDumpResponse;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -217,31 +213,5 @@ public class ContestResource implements ContestService {
         contestLogger.log(contest.getJid(), "UPDATE_DESCRIPTION");
 
         return newDescription;
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public ContestsDump exportDump(AuthHeader authHeader, ExportContestsDumpData data) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(contestRoleChecker.canAdminister(actorJid));
-
-        return new ContestsDump.Builder()
-                .contests(contestStore.exportDumps(data.getContests()))
-                .build();
-    }
-
-    @Override
-    @UnitOfWork
-    public ImportContestsDumpResponse importDump(AuthHeader authHeader, ContestsDump contestsDump) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(contestRoleChecker.canAdminister(actorJid));
-
-        Set<String> createdContestJids = contestsDump.getContests().stream()
-                .map(contestStore::importDump)
-                .collect(Collectors.toSet());
-
-        return new ImportContestsDumpResponse.Builder()
-                .addAllCreatedContestJids(createdContestJids)
-                .build();
     }
 }

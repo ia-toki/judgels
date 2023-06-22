@@ -11,10 +11,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
-import judgels.uriel.api.contest.dump.ContestContestantDump;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 
@@ -112,42 +110,6 @@ public class ContestContestantStore {
                 .stream()
                 .map(ContestContestantStore::fromModel)
                 .collect(Collectors.toSet());
-    }
-
-    public void importDump(String contestJid, ContestContestantDump dump) {
-        String status = dump.getStatus().orElse(ContestContestantStatus.APPROVED).name();
-
-        ContestContestantModel model = new ContestContestantModel();
-        model.contestJid = contestJid;
-        model.userJid = dump.getUserJid();
-        model.status = status;
-        model.contestStartTime = dump.getContestStartTime().orElse(null);
-        model.finalRank = dump.getFinalRank().orElse(null);
-        contestantDao.setModelMetadataFromDump(model, dump);
-        contestantDao.persist(model);
-    }
-
-    public Set<ContestContestantDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return contestantDao.selectByContestJid(contestJid).all().stream().map(model -> {
-            ContestContestantDump.Builder builder = new ContestContestantDump.Builder()
-                    .mode(mode)
-                    .userJid(model.userJid)
-                    .status(ContestContestantStatus.valueOf(model.status))
-                    .contestStartTime(Optional.ofNullable(model.contestStartTime))
-                    .finalRank(Optional.ofNullable(model.finalRank));
-
-            if (mode == DumpImportMode.RESTORE) {
-                builder
-                        .createdAt(model.createdAt)
-                        .createdBy(Optional.ofNullable(model.createdBy))
-                        .createdIp(Optional.ofNullable(model.createdIp))
-                        .updatedAt(model.updatedAt)
-                        .updatedBy(Optional.ofNullable(model.updatedBy))
-                        .updatedIp(Optional.ofNullable(model.updatedIp));
-            }
-
-            return builder.build();
-        }).collect(Collectors.toSet());
     }
 
     private static void toModel(String contestJid, String userJid, ContestContestantModel model) {

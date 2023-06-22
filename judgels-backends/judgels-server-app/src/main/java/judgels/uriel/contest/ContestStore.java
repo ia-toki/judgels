@@ -10,12 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
@@ -23,9 +21,6 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.ContestUpdateData;
-import judgels.uriel.api.contest.dump.ContestDump;
-import judgels.uriel.api.contest.dump.ContestDumpComponent;
-import judgels.uriel.api.contest.dump.ExportContestsDumpData;
 import judgels.uriel.contest.announcement.ContestAnnouncementStore;
 import judgels.uriel.contest.clarification.ContestClarificationStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -199,87 +194,6 @@ public class ContestStore {
         model.description = description.getDescription();
         contestDao.update(model);
         return description;
-    }
-
-    public String importDump(ContestDump dump) {
-        if (dump.getJid().isPresent() && contestDao.existsByJid(dump.getJid().get())) {
-            throw ContestErrors.jidAlreadyExists(dump.getJid().get());
-        }
-        if (contestDao.selectBySlug(dump.getSlug()).isPresent()) {
-            throw ContestErrors.slugAlreadyExists(dump.getSlug());
-        }
-
-        ContestModel model = new ContestModel();
-        model.slug = dump.getSlug();
-        model.name = dump.getName();
-        model.style = dump.getStyle().getName().name();
-        model.beginTime = dump.getBeginTime();
-        model.duration = dump.getDuration().toMillis();
-        model.description = dump.getDescription();
-        contestDao.setModelMetadataFromDump(model, dump);
-        model = contestDao.persist(model);
-
-        String contestJid = model.jid;
-        moduleStore.importStyleDump(contestJid, dump.getStyle());
-
-        dump.getModules().forEach(d -> moduleStore.importModuleDump(contestJid, d));
-        dump.getProblems().forEach(d -> problemStore.importDump(contestJid, d));
-        dump.getContestants().forEach(d -> contestantStore.importDump(contestJid, d));
-        dump.getSupervisors().forEach(d -> supervisorStore.importDump(contestJid, d));
-        dump.getManagers().forEach(d -> managerStore.importDump(contestJid, d));
-        dump.getAnnouncements().forEach(d -> announcementStore.importDump(contestJid, d));
-        dump.getClarifications().forEach(d -> clarificationStore.importDump(contestJid, d));
-
-        return contestJid;
-    }
-
-    public Set<ContestDump> exportDumps(Map<String, ExportContestsDumpData.ContestDumpEntry> contestsToExport) {
-        return contestDao.selectByJids(contestsToExport.keySet()).values().stream().map(model -> {
-            DumpImportMode mode = contestsToExport.get(model.jid).getMode();
-            Set<ContestDumpComponent> components = contestsToExport.get(model.jid).getComponents();
-
-            ContestDump.Builder builder = new ContestDump.Builder()
-                    .mode(mode)
-                    .slug(model.slug)
-                    .name(model.name)
-                    .beginTime(model.beginTime)
-                    .duration(Duration.ofMillis(model.duration))
-                    .description(model.description)
-                    .style(moduleStore.exportStyleDump(model.jid, mode, ContestStyle.valueOf(model.style)))
-                    .modules(moduleStore.exportModuleDumps(model.jid, mode));
-
-            if (components.contains(ContestDumpComponent.PROBLEMS)) {
-                builder.problems(problemStore.exportDumps(model.jid, mode));
-            }
-            if (components.contains(ContestDumpComponent.CONTESTANTS)) {
-                builder.contestants(contestantStore.exportDumps(model.jid, mode));
-            }
-            if (components.contains(ContestDumpComponent.SUPERVISORS)) {
-                builder.supervisors(supervisorStore.exportDumps(model.jid, mode));
-            }
-            if (components.contains(ContestDumpComponent.MANAGERS)) {
-                builder.managers(managerStore.exportDumps(model.jid, mode));
-            }
-            if (components.contains(ContestDumpComponent.ANNOUNCEMENTS)) {
-                builder.announcements(announcementStore.exportDumps(model.jid, mode));
-            }
-            if (components.contains(ContestDumpComponent.CLARIFICATIONS)) {
-                builder.clarifications(clarificationStore.exportDumps(model.jid, mode));
-            }
-
-            if (mode == DumpImportMode.RESTORE) {
-                builder
-                        .jid(model.jid)
-                        .createdAt(model.createdAt)
-                        .createdBy(Optional.ofNullable(model.createdBy))
-                        .createdIp(Optional.ofNullable(model.createdIp))
-                        .updatedAt(model.updatedAt)
-                        .updatedBy(Optional.ofNullable(model.updatedBy))
-                        .updatedIp(Optional.ofNullable(model.updatedIp));
-            }
-
-            return builder.build();
-        }).collect(Collectors.toSet());
     }
 
     private static Contest fromModel(ContestModel model) {

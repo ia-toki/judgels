@@ -2,16 +2,12 @@ package judgels.uriel.contest.clarification;
 
 import com.google.common.collect.Lists;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.clarification.ContestClarification;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
-import judgels.uriel.api.contest.dump.ContestClarificationDump;
 import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestClarificationDao.ContestClarificationQueryBuilder;
 import judgels.uriel.persistence.ContestClarificationModel;
@@ -65,52 +61,6 @@ public class ContestClarificationStore {
         return query
                 .paged(pageNumber, pageSize)
                 .mapPage(p -> Lists.transform(p, ContestClarificationStore::fromModel));
-    }
-
-    public void importDump(String contestJid, ContestClarificationDump dump) {
-        if (dump.getJid().isPresent() && clarificationDao.existsByJid(dump.getJid().get())) {
-            throw ContestErrors.jidAlreadyExists(dump.getJid().get());
-        }
-
-        Optional<String> answer = dump.getAnswer();
-        String status = answer.isPresent() && !answer.get().isEmpty()
-                ? ContestClarificationStatus.ANSWERED.name()
-                : ContestClarificationStatus.ASKED.name();
-
-        ContestClarificationModel model = new ContestClarificationModel();
-        model.contestJid = contestJid;
-        model.topicJid = dump.getTopicJid();
-        model.title = dump.getTitle();
-        model.question = dump.getQuestion();
-        model.answer = answer.orElse(null);
-        model.status = status;
-        clarificationDao.setModelMetadataFromDump(model, dump);
-        clarificationDao.persist(model);
-    }
-
-    public Set<ContestClarificationDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return clarificationDao.selectByContestJid(contestJid).all().stream().map(model -> {
-            ContestClarificationDump.Builder builder = new ContestClarificationDump.Builder()
-                    .mode(mode)
-                    .topicJid(model.topicJid)
-                    .title(model.title)
-                    .question(model.question)
-                    .answer(Optional.ofNullable(model.answer))
-                    .title(model.title);
-
-            if (mode == DumpImportMode.RESTORE) {
-                builder
-                        .jid(model.jid)
-                        .createdAt(model.createdAt)
-                        .createdBy(Optional.ofNullable(model.createdBy))
-                        .createdIp(Optional.ofNullable(model.createdIp))
-                        .updatedAt(model.updatedAt)
-                        .updatedBy(Optional.ofNullable(model.updatedBy))
-                        .updatedIp(Optional.ofNullable(model.updatedIp));
-            }
-
-            return builder.build();
-        }).collect(Collectors.toSet());
     }
 
     private static ContestClarification fromModel(ContestClarificationModel model) {

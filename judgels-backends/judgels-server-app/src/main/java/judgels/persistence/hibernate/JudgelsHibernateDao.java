@@ -13,8 +13,6 @@ import judgels.persistence.JidGenerator;
 import judgels.persistence.JudgelsDao;
 import judgels.persistence.JudgelsModel;
 import judgels.persistence.JudgelsModel_;
-import judgels.persistence.api.dump.DumpImportMode;
-import judgels.persistence.api.dump.JudgelsDump;
 
 public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends HibernateDao<M> implements JudgelsDao<M> {
     public JudgelsHibernateDao(HibernateDaoData data) {
@@ -72,22 +70,5 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     @Override
     public M findByJid(String jid) {
         return selectByJid(jid).orElse(null);
-    }
-
-    @Override
-    public void setModelMetadataFromDump(M model, JudgelsDump dump) {
-        super.setModelMetadataFromDump(model, dump);
-
-        if (dump.getMode() == DumpImportMode.RESTORE) {
-            model.jid = dump.getJid().orElseThrow(
-                    () -> new IllegalArgumentException("jid must be set if using RESTORE mode")
-            );
-        } else if (dump.getMode() == DumpImportMode.CREATE) {
-            model.jid = JidGenerator.newJid(getEntityClass());
-        } else {
-            throw new IllegalArgumentException(
-                    String.format("Unknown mode: %s", dump.getMode())
-            );
-        }
     }
 }
