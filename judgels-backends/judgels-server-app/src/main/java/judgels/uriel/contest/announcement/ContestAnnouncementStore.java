@@ -45,11 +45,8 @@ public class ContestAnnouncementStore {
                 .mapPage(p -> Lists.transform(p, ContestAnnouncementStore::fromModel));
     }
 
-    public ContestAnnouncement updateAnnouncement(
-            String contestJid,
-            String announcementJid,
-            ContestAnnouncementData data) {
-        ContestAnnouncementModel model = announcementDao.selectByJid(announcementJid).get();
+    public ContestAnnouncement updateAnnouncement(String contestJid, String announcementJid, ContestAnnouncementData data) {
+        ContestAnnouncementModel model = announcementDao.findByJid(announcementJid);
         toModel(contestJid, data, model);
         return fromModel(announcementDao.update(model));
     }

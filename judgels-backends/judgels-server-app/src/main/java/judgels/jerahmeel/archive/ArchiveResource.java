@@ -53,8 +53,9 @@ public class ArchiveResource implements ArchiveService {
     @UnitOfWork
     public Archive updateArchive(AuthHeader authHeader, String archiveJid, ArchiveUpdateData data) {
         String actorJid = actorChecker.check(authHeader);
+        checkFound(archiveStore.getArchiveByJid(archiveJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
 
-        return checkFound(archiveStore.updateArchive(archiveJid, data));
+        return archiveStore.updateArchive(archiveJid, data);
     }
 }

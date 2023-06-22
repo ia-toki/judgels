@@ -171,36 +171,34 @@ public class ContestStore {
         return fromModel(contestDao.insert(model));
     }
 
-    public Optional<Contest> updateContest(String contestJid, ContestUpdateData contestUpdateData) {
-        return contestDao.selectByJid(contestJid).map(model -> {
-            if (contestUpdateData.getSlug().isPresent()) {
-                String newSlug = contestUpdateData.getSlug().get();
-                if (model.slug == null || !model.slug.equals(newSlug)) {
-                    if (contestDao.selectBySlug(newSlug).isPresent()) {
-                        throw ContestErrors.slugAlreadyExists(newSlug);
-                    }
+    public Contest updateContest(String contestJid, ContestUpdateData data) {
+        ContestModel model = contestDao.findByJid(contestJid);
+        if (data.getSlug().isPresent()) {
+            String newSlug = data.getSlug().get();
+            if (model.slug == null || !model.slug.equals(newSlug)) {
+                if (contestDao.selectBySlug(newSlug).isPresent()) {
+                    throw ContestErrors.slugAlreadyExists(newSlug);
                 }
             }
+        }
 
-            contestUpdateData.getSlug().ifPresent(slug -> model.slug = slug);
-            contestUpdateData.getName().ifPresent(name -> model.name = name);
-            contestUpdateData.getStyle().ifPresent(style -> model.style = style.name());
-            contestUpdateData.getBeginTime().ifPresent(time -> model.beginTime = time);
-            contestUpdateData.getDuration().ifPresent(duration -> model.duration = duration.toMillis());
-            return fromModel(contestDao.update(model));
-        });
+        data.getSlug().ifPresent(slug -> model.slug = slug);
+        data.getName().ifPresent(name -> model.name = name);
+        data.getStyle().ifPresent(style -> model.style = style.name());
+        data.getBeginTime().ifPresent(time -> model.beginTime = time);
+        data.getDuration().ifPresent(duration -> model.duration = duration.toMillis());
+        return fromModel(contestDao.update(model));
     }
 
-    public Optional<String> getContestDescription(String contestJid) {
-        return contestDao.selectByJid(contestJid).map(model -> model.description);
+    public String getContestDescription(String contestJid) {
+        return contestDao.findByJid(contestJid).description;
     }
 
-    public Optional<ContestDescription> updateContestDescription(String contestJid, ContestDescription description) {
-        return contestDao.selectByJid(contestJid).map(model -> {
-            model.description = description.getDescription();
-            contestDao.update(model);
-            return description;
-        });
+    public ContestDescription updateContestDescription(String contestJid, ContestDescription description) {
+        ContestModel model = contestDao.findByJid(contestJid);
+        model.description = description.getDescription();
+        contestDao.update(model);
+        return description;
     }
 
     public String importDump(ContestDump dump) {

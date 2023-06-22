@@ -142,9 +142,10 @@ public class ProblemSetResource implements ProblemSetService {
     @UnitOfWork
     public ProblemSet updateProblemSet(AuthHeader authHeader, String problemSetJid, ProblemSetUpdateData data) {
         String actorJid = actorChecker.check(authHeader);
+        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
 
-        return checkFound(problemSetStore.updateProblemSet(problemSetJid, data));
+        return problemSetStore.updateProblemSet(problemSetJid, data);
     }
 
     @Override

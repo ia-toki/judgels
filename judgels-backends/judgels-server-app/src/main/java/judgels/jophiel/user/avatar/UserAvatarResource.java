@@ -59,7 +59,7 @@ public class UserAvatarResource implements UserAvatarService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canManage(actorJid, userJid));
 
-        checkFound(userStore.updateUserAvatar(userJid, null));
+        userStore.updateUserAvatar(userJid, null);
     }
 
     @Override

@@ -82,28 +82,25 @@ public class UserStore {
                 .mapPage(p -> Lists.transform(p, UserStore::fromModel));
     }
 
-    public Optional<User> updateUser(String userJid, UserUpdateData data) {
-        return userDao.selectByJid(userJid).map(model -> {
-            toModel(data, model);
-            return fromModel(userDao.updateByJid(userJid, model));
-        });
+    public User updateUser(String userJid, UserUpdateData data) {
+        UserModel model = userDao.findByJid(userJid);
+        toModel(data, model);
+        return fromModel(userDao.updateByJid(userJid, model));
     }
 
     public void validateUserPassword(String userJid, String password) {
-        userDao.selectByJid(userJid).ifPresent(model -> {
-            if (!validatePassword(password, model.password)) {
-                throw new IllegalArgumentException();
-            }
-        });
+        UserModel model = userDao.findByJid(userJid);
+        if (!validatePassword(password, model.password)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void updateUserPassword(String userJid, String newPassword) {
-        userDao.selectByJid(userJid).ifPresent(model -> {
-            updateUser(userJid, new UserUpdateData.Builder()
-                    .username(model.username)
-                    .password(newPassword)
-                    .build());
-        });
+        UserModel model = userDao.findByJid(userJid);
+        updateUser(userJid, new UserUpdateData.Builder()
+                .username(model.username)
+                .password(newPassword)
+                .build());
     }
 
     public Optional<String> getUserAvatarFilename(String userJid) {
@@ -111,11 +108,10 @@ public class UserStore {
                 Optional.ofNullable(model.avatarFilename));
     }
 
-    public Optional<User> updateUserAvatar(String userJid, @Nullable String newAvatarFilename) {
-        return userDao.selectByJid(userJid).map(model -> {
-            model.avatarFilename = newAvatarFilename;
-            return fromModel(userDao.update(model));
-        });
+    public void updateUserAvatar(String userJid, @Nullable String newAvatarFilename) {
+        UserModel model = userDao.findByJid(userJid);
+        model.avatarFilename = newAvatarFilename;
+        userDao.update(model);
     }
 
     public Optional<String> translateUsernameToJid(String username) {

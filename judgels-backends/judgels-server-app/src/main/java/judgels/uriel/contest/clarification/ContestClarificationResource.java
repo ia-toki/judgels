@@ -163,12 +163,13 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkFound(clarificationStore.getClarification(contestJid, clarificationJid));
         checkAllowed(clarificationRoleChecker.canManage(actorJid, contest));
 
-        ContestClarification clarification = checkFound(clarificationStore.answerClarification(
+        ContestClarification clarification = clarificationStore.answerClarification(
                 contestJid,
                 clarificationJid,
-                data.getAnswer()));
+                data.getAnswer());
 
         contestLogger.log(contestJid, "ANSWER_CLARIFICATION", clarificationJid, clarification.getTopicJid());
 

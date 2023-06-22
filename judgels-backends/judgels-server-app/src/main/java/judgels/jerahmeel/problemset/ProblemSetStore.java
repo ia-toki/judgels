@@ -134,33 +134,32 @@ public class ProblemSetStore {
         return fromModel(problemSetDao.insert(model));
     }
 
-    public Optional<ProblemSet> updateProblemSet(String problemSetJid, ProblemSetUpdateData data) {
-        return problemSetDao.selectByJid(problemSetJid).map(model -> {
-            if (data.getSlug().isPresent()) {
-                String newSlug = data.getSlug().get();
-                if (model.slug == null || !model.slug.equals(newSlug)) {
-                    if (problemSetDao.selectBySlug(newSlug).isPresent()) {
-                        throw ProblemSetErrors.slugAlreadyExists(newSlug);
-                    }
+    public ProblemSet updateProblemSet(String problemSetJid, ProblemSetUpdateData data) {
+        ProblemSetModel model = problemSetDao.findByJid(problemSetJid);
+        if (data.getSlug().isPresent()) {
+            String newSlug = data.getSlug().get();
+            if (model.slug == null || !model.slug.equals(newSlug)) {
+                if (problemSetDao.selectBySlug(newSlug).isPresent()) {
+                    throw ProblemSetErrors.slugAlreadyExists(newSlug);
                 }
             }
+        }
 
-            if (data.getArchiveSlug().isPresent()) {
-                String newArchiveSlug = data.getArchiveSlug().get();
-                Optional<ArchiveModel> archiveModel = archiveDao.selectBySlug(newArchiveSlug);
-                if (!archiveModel.isPresent()) {
-                    throw ProblemSetErrors.archiveSlugNotFound(newArchiveSlug);
-                }
-                model.archiveJid = archiveModel.get().jid;
+        if (data.getArchiveSlug().isPresent()) {
+            String newArchiveSlug = data.getArchiveSlug().get();
+            Optional<ArchiveModel> archiveModel = archiveDao.selectBySlug(newArchiveSlug);
+            if (!archiveModel.isPresent()) {
+                throw ProblemSetErrors.archiveSlugNotFound(newArchiveSlug);
             }
+            model.archiveJid = archiveModel.get().jid;
+        }
 
 
-            data.getSlug().ifPresent(slug -> model.slug = slug);
-            data.getName().ifPresent(name -> model.name = name);
-            data.getDescription().ifPresent(description -> model.description = description);
-            data.getContestTime().ifPresent(contestTime -> model.contestTime = contestTime);
-            return fromModel(problemSetDao.update(model));
-        });
+        data.getSlug().ifPresent(slug -> model.slug = slug);
+        data.getName().ifPresent(name -> model.name = name);
+        data.getDescription().ifPresent(description -> model.description = description);
+        data.getContestTime().ifPresent(contestTime -> model.contestTime = contestTime);
+        return fromModel(problemSetDao.update(model));
     }
 
     private static ProblemSet fromModel(ProblemSetModel model) {

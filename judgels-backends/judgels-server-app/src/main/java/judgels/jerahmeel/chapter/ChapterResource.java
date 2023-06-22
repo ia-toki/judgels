@@ -52,8 +52,9 @@ public class ChapterResource implements ChapterService {
     @UnitOfWork
     public Chapter updateChapter(AuthHeader authHeader, String chapterJid, ChapterUpdateData data) {
         String actorJid = actorChecker.check(authHeader);
+        checkFound(chapterStore.getChapterByJid(chapterJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
 
-        return checkFound(chapterStore.updateChapter(chapterJid, data));
+        return chapterStore.updateChapter(chapterJid, data);
     }
 }

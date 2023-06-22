@@ -38,6 +38,10 @@ public class ArchiveStore {
                 .collect(toList());
     }
 
+    public Optional<Archive> getArchiveByJid(String archiveJid) {
+        return archiveDao.selectByJid(archiveJid).map(ArchiveStore::fromModel);
+    }
+
     public Optional<Archive> getArchiveBySlug(String archiveSlug) {
         return archiveDao.selectBySlug(archiveSlug).map(ArchiveStore::fromModel);
     }
@@ -61,23 +65,22 @@ public class ArchiveStore {
         return fromModel(archiveDao.insert(model));
     }
 
-    public Optional<Archive> updateArchive(String archiveJid, ArchiveUpdateData data) {
-        return archiveDao.selectByJid(archiveJid).map(model -> {
-            if (data.getSlug().isPresent()) {
-                String newSlug = data.getSlug().get();
-                if (model.slug == null || !model.slug.equals(newSlug)) {
-                    if (archiveDao.selectBySlug(newSlug).isPresent()) {
-                        throw ArchiveErrors.slugAlreadyExists(newSlug);
-                    }
+    public Archive updateArchive(String archiveJid, ArchiveUpdateData data) {
+        ArchiveModel model = archiveDao.findByJid(archiveJid);
+        if (data.getSlug().isPresent()) {
+            String newSlug = data.getSlug().get();
+            if (model.slug == null || !model.slug.equals(newSlug)) {
+                if (archiveDao.selectBySlug(newSlug).isPresent()) {
+                    throw ArchiveErrors.slugAlreadyExists(newSlug);
                 }
             }
+        }
 
-            data.getSlug().ifPresent(slug -> model.slug = slug);
-            data.getName().ifPresent(name -> model.name = name);
-            data.getCategory().ifPresent(category -> model.category = category);
-            data.getDescription().ifPresent(description -> model.description = description);
-            return fromModel(archiveDao.update(model));
-        });
+        data.getSlug().ifPresent(slug -> model.slug = slug);
+        data.getName().ifPresent(name -> model.name = name);
+        data.getCategory().ifPresent(category -> model.category = category);
+        data.getDescription().ifPresent(description -> model.description = description);
+        return fromModel(archiveDao.update(model));
     }
 
     private static Archive fromModel(ArchiveModel model) {

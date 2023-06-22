@@ -30,25 +30,20 @@ public class ContestClarificationStore {
         return fromModel(clarificationDao.insert(model));
     }
 
-    public Optional<ContestClarification> answerClarification(
-            String contestJid,
-            String clarificationJid,
-            String answer) {
+    public Optional<ContestClarification> getClarification(String contestJid, String clarificationJid) {
+        return clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid)
+                .map(ContestClarificationStore::fromModel);
+    }
 
-        Optional<ContestClarificationModel> maybeClarification =
-                clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid);
+    public ContestClarification answerClarification(String contestJid, String clarificationJid, String answer) {
+        ContestClarificationModel model = clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid).get();
+        if (model.status.equals(ContestClarificationStatus.ANSWERED.name())) {
+            throw ContestErrors.clarificationAlreadyAnswered(clarificationJid);
+        }
 
-        maybeClarification.ifPresent(clarification -> {
-            if (clarification.status.equals(ContestClarificationStatus.ANSWERED.name())) {
-                throw ContestErrors.clarificationAlreadyAnswered(clarification.jid);
-            }
-        });
-
-        return maybeClarification.map(model -> {
-            model.answer = answer;
-            model.status = ContestClarificationStatus.ANSWERED.name();
-            return fromModel(clarificationDao.update(model));
-        });
+        model.answer = answer;
+        model.status = ContestClarificationStatus.ANSWERED.name();
+        return fromModel(clarificationDao.update(model));
     }
 
     public Page<ContestClarification> getClarifications(

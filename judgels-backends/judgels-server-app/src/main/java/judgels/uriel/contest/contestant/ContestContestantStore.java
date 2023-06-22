@@ -75,17 +75,16 @@ public class ContestContestantStore {
     }
 
     public void startVirtualContest(String contestJid, String userJid) {
-        contestantDao.selectByContestJidAndUserJid(contestJid, userJid).ifPresent(model -> {
-            model.contestStartTime = clock.instant();
-            contestantDao.update(model);
-        });
+        ContestContestantModel model = contestantDao.selectByContestJidAndUserJid(contestJid, userJid).get();
+        model.contestStartTime = clock.instant();
+        contestantDao.update(model);
     }
 
     public void resetVirtualContest(String contestJid) {
-        contestantDao.selectByContestJid(contestJid).all().forEach(model -> {
+        for (ContestContestantModel model : contestantDao.selectByContestJid(contestJid).all()) {
             model.contestStartTime = null;
             contestantDao.update(model);
-        });
+        }
     }
 
     public Page<ContestContestant> getContestants(String contestJid, int pageNumber, int pageSize) {

@@ -78,7 +78,7 @@ public class ContestResource implements ContestService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
-        contest = checkFound(contestStore.updateContest(contestJid, data));
+        contest = contestStore.updateContest(contestJid, data);
 
         contestLogger.log(contestJid, "UPDATE_CONTEST");
 
@@ -194,7 +194,7 @@ public class ContestResource implements ContestService {
 
         contestLogger.log(contest.getJid(), "OPEN_CONTEST");
 
-        String description = checkFound(contestStore.getContestDescription(contest.getJid()));
+        String description = contestStore.getContestDescription(contest.getJid());
         return new ContestDescription.Builder()
                 .description(description)
                 .profilesMap(profileStore.parseProfiles(description))
@@ -212,8 +212,7 @@ public class ContestResource implements ContestService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
 
-        ContestDescription newDescription =
-                checkFound(contestStore.updateContestDescription(contest.getJid(), description));
+        ContestDescription newDescription = contestStore.updateContestDescription(contest.getJid(), description);
 
         contestLogger.log(contest.getJid(), "UPDATE_DESCRIPTION");
 
