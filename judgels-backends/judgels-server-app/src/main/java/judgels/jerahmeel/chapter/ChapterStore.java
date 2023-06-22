@@ -1,9 +1,5 @@
 package judgels.jerahmeel.chapter;
 
-import static judgels.jerahmeel.JerahmeelCacheUtils.getShortDuration;
-
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -31,18 +27,11 @@ public class ChapterStore {
     private final CourseChapterDao courseChapterDao;
     private final CourseDao courseDao;
 
-    private final LoadingCache<String, Chapter> chapterByJidCache;
-
     @Inject
     public ChapterStore(ChapterDao chapterDao, CourseChapterDao courseChapterDao, CourseDao courseDao) {
         this.chapterDao = chapterDao;
         this.courseChapterDao = courseChapterDao;
         this.courseDao = courseDao;
-
-        this.chapterByJidCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getChapterByJidUncached);
     }
 
     public List<Chapter> getChapters() {
@@ -50,11 +39,7 @@ public class ChapterStore {
     }
 
     public Optional<Chapter> getChapterByJid(String chapterJid) {
-        return Optional.ofNullable(chapterByJidCache.get(chapterJid));
-    }
-
-    private Chapter getChapterByJidUncached(String chapterJid) {
-        return chapterDao.selectByJid(chapterJid).map(ChapterStore::fromModel).orElse(null);
+        return chapterDao.selectByJid(chapterJid).map(ChapterStore::fromModel);
     }
 
     public Map<String, ChapterInfo> getChapterInfosByJids(Set<String> chapterJids) {
@@ -113,8 +98,6 @@ public class ChapterStore {
 
     public Optional<Chapter> updateChapter(String chapterJid, ChapterUpdateData data) {
         return chapterDao.selectByJid(chapterJid).map(model -> {
-            chapterByJidCache.invalidate(chapterJid);
-
             data.getName().ifPresent(name -> model.name = name);
             return fromModel(chapterDao.update(model));
         });

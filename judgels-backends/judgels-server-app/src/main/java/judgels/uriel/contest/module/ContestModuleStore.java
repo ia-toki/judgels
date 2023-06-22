@@ -1,7 +1,5 @@
 package judgels.uriel.contest.module;
 
-import static judgels.uriel.UrielCacheUtils.SEPARATOR;
-import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.DIVISION;
@@ -18,8 +16,6 @@ import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -54,7 +50,6 @@ import judgels.uriel.api.contest.module.TrocStyleModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
-import judgels.uriel.persistence.ContestRoleDao;
 import judgels.uriel.persistence.ContestStyleDao;
 import judgels.uriel.persistence.ContestStyleModel;
 
@@ -76,27 +71,17 @@ public class ContestModuleStore {
 
     private final ContestStyleDao styleDao; // TODO(fushar): put style config in module store as well
     private final ContestModuleDao moduleDao;
-    private final ContestRoleDao roleDao;
     private final ObjectMapper mapper;
-
-    private final Cache<String, Optional<?>> moduleCache;
 
     @Inject
     public ContestModuleStore(
             ContestStyleDao styleDao,
             ContestModuleDao moduleDao,
-            ContestRoleDao roleDao,
             ObjectMapper mapper) {
 
         this.styleDao = styleDao;
         this.moduleDao = moduleDao;
-        this.roleDao = roleDao;
         this.mapper = mapper;
-
-        this.moduleCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build();
     }
 
     public Set<ContestModuleType> getEnabledModules(String contestJid) {
@@ -116,9 +101,6 @@ public class ContestModuleStore {
             ContestModuleModel model = maybeModel.get();
             model.enabled = true;
             moduleDao.update(model);
-
-            moduleCache.invalidate(contestJid + SEPARATOR + type.name());
-            roleDao.invalidateCaches();
         } else {
             upsertModule(contestJid, type, DEFAULT_CONFIGS.getOrDefault(type, Collections.emptyMap()));
         }
@@ -130,9 +112,6 @@ public class ContestModuleStore {
             ContestModuleModel model = maybeModel.get();
             model.enabled = false;
             moduleDao.update(model);
-
-            moduleCache.invalidate(contestJid + SEPARATOR + type.name());
-            roleDao.invalidateCaches();
         }
     }
 
@@ -485,9 +464,6 @@ public class ContestModuleStore {
             toModel(contestJid, type, config, model);
             moduleDao.insert(model);
         }
-
-        moduleCache.invalidate(contestJid + SEPARATOR + type.name());
-        roleDao.invalidateCaches();
     }
 
     private void toModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {
@@ -531,12 +507,6 @@ public class ContestModuleStore {
 
     @SuppressWarnings("unchecked")
     private <T> Optional<T> getModuleConfig(String contestJid, ContestModuleType module, Class<T> configClass) {
-        return (Optional<T>) moduleCache.get(
-                contestJid + SEPARATOR + module.name(),
-                $ -> getModuleConfigUncached(contestJid, module, configClass));
-    }
-
-    private <T> Optional<T> getModuleConfigUncached(String contestJid, ContestModuleType module, Class<T> configClass) {
         return moduleDao.selectEnabledByContestJidAndType(contestJid, module)
                 .map(model -> parseConfig(model.config, configClass));
     }

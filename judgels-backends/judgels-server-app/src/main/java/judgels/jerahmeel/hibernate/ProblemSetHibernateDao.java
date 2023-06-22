@@ -1,6 +1,8 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;
@@ -31,6 +33,11 @@ public class ProblemSetHibernateDao extends JudgelsHibernateDao<ProblemSetModel>
                         cb.equal(root.get(ProblemSetModel_.slug), problemSetSlug),
                         cb.equal(root.get(Model_.id), NumberUtils.toInt(problemSetSlug, 0))))
                 .unique();
+    }
+
+    @Override
+    public List<ProblemSetModel> selectAllBySlugs(Set<String> contestSlugs) {
+        return select().where(columnIn(ProblemSetModel_.slug, contestSlugs)).all();
     }
 
     private static class ProblemSetHibernateQueryBuilder extends HibernateQueryBuilder<ProblemSetModel> implements ProblemSetQueryBuilder {

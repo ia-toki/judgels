@@ -1,9 +1,5 @@
 package judgels.jerahmeel.course;
 
-import static judgels.jerahmeel.JerahmeelCacheUtils.getShortDuration;
-
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
@@ -20,37 +16,17 @@ import judgels.persistence.api.OrderDir;
 public class CourseStore {
     private final CourseDao courseDao;
 
-    private final LoadingCache<String, Course> courseByJidCache;
-    private final LoadingCache<String, Course> courseBySlugCache;
-
     @Inject
     public CourseStore(CourseDao courseDao) {
         this.courseDao = courseDao;
-
-        this.courseByJidCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getCourseByJidUncached);
-        this.courseBySlugCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getCourseBySlugUncached);
     }
 
     public Optional<Course> getCourseByJid(String courseJid) {
-        return Optional.ofNullable(courseByJidCache.get(courseJid));
-    }
-
-    private Course getCourseByJidUncached(String courseJid) {
-        return courseDao.selectByJid(courseJid).map(CourseStore::fromModel).orElse(null);
+        return courseDao.selectByJid(courseJid).map(CourseStore::fromModel);
     }
 
     public Optional<Course> getCourseBySlug(String courseSlug) {
-        return Optional.ofNullable(courseBySlugCache.get(courseSlug));
-    }
-
-    private Course getCourseBySlugUncached(String courseSlug) {
-        return courseDao.selectBySlug(courseSlug).map(CourseStore::fromModel).orElse(null);
+        return courseDao.selectBySlug(courseSlug).map(CourseStore::fromModel);
     }
 
     public List<Course> getCourses() {
@@ -82,14 +58,6 @@ public class CourseStore {
                         throw CourseErrors.slugAlreadyExists(newSlug);
                     }
                 }
-            }
-
-            courseByJidCache.invalidate(courseJid);
-            if (model.slug != null) {
-                courseBySlugCache.invalidate(model.slug);
-            }
-            if (data.getSlug().isPresent()) {
-                courseBySlugCache.invalidate(data.getSlug().get());
             }
 
             data.getSlug().ifPresent(slug -> model.slug = slug);
