@@ -47,7 +47,6 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
-import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionService;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionsResponse;
 import judgels.uriel.api.contest.submission.bundle.ContestSubmissionSummaryResponse;
 import judgels.uriel.contest.ContestRoleChecker;
@@ -62,7 +61,7 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 @Path("/api/v2/contests/submissions/bundle")
-public class ContestItemSubmissionResource implements ContestItemSubmissionService {
+public class ContestItemSubmissionResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContestItemSubmissionResource.class);
     private static final Marker ITEM_SUBMISSION_MARKER = MarkerFactory.getMarker("ITEM_SUBMISSION");
     private static final int PAGE_SIZE = 20;

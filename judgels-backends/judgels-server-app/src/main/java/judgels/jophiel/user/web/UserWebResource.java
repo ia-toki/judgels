@@ -5,6 +5,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -41,7 +42,7 @@ public class UserWebResource {
             String actorJid = actorChecker.check(authHeader.get());
             config
                     .role(myResource.getMyRole(authHeader.get()))
-                    .profile(profileResource.getProfile(actorJid));
+                    .profile(profileResource.getProfiles(Set.of(actorJid), Optional.empty()).get(actorJid));
         }
         return config.build();
     }
