@@ -17,7 +17,7 @@ public class MultipleChoiceItemProcessor implements ItemProcessor {
     }
 
     @Override
-    public Item replaceRenderUrls(Item item, String baseUrl, String problemJid) {
+    public Item replaceRenderUrls(Item item, String apiUrl, String problemJid) {
         MultipleChoiceItemConfig itemConfig = (MultipleChoiceItemConfig) item.getConfig();
 
         List<MultipleChoiceItemConfig.Choice> choices = itemConfig.getChoices().stream()
@@ -25,7 +25,7 @@ public class MultipleChoiceItemProcessor implements ItemProcessor {
                         .from(choice)
                         .content(SandalphonUtils.replaceProblemRenderUrls(
                                 choice.getContent(),
-                                baseUrl,
+                                apiUrl,
                                 problemJid))
                         .build())
                 .collect(Collectors.toList());
@@ -37,7 +37,7 @@ public class MultipleChoiceItemProcessor implements ItemProcessor {
                         .statement(
                                 SandalphonUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
-                                        baseUrl,
+                                        apiUrl,
                                         problemJid))
                         .choices(choices)
                         .build())

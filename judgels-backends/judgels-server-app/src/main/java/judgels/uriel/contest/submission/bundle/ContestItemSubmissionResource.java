@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.net.URI;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -288,7 +287,7 @@ public class ContestItemSubmissionResource {
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
         for (String problemJid : bundleProblemJidsSortedByAlias) {
-            ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(problemJid, URI.create(""), language);
+            ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(null, null, problemJid, language);
             List<Item> items = worksheet.getItems().stream()
                     .filter(item -> !item.getType().equals(ItemType.STATEMENT))
                     .collect(Collectors.toList());

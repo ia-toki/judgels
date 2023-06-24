@@ -15,7 +15,7 @@ public class ShortAnswerItemProcessor implements ItemProcessor {
     }
 
     @Override
-    public Item replaceRenderUrls(Item item, String baseUrl, String problemJid) {
+    public Item replaceRenderUrls(Item item, String apiUrl, String problemJid) {
         return new Item.Builder()
                 .from(item)
                 .config(new ShortAnswerItemConfig.Builder()
@@ -23,7 +23,7 @@ public class ShortAnswerItemProcessor implements ItemProcessor {
                         .statement(
                                 SandalphonUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
-                                        baseUrl,
+                                        apiUrl,
                                         problemJid))
                         .build())
                 .build();

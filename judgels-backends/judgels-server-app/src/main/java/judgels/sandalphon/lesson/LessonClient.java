@@ -2,13 +2,13 @@ package judgels.sandalphon.lesson;
 
 import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.JudgelsAppConfiguration;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.UriInfo;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonInfo;
@@ -18,19 +18,16 @@ import judgels.sandalphon.resource.StatementLanguageStatus;
 import judgels.sandalphon.role.RoleChecker;
 
 public class LessonClient {
-    private final JudgelsAppConfiguration appConfig;
     private final RoleChecker roleChecker;
     private final LessonStore lessonStore;
     private final LessonStatementStore statementStore;
 
     @Inject
     public LessonClient(
-            JudgelsAppConfiguration appConfig,
             RoleChecker roleChecker,
             LessonStore lessonStore,
             LessonStatementStore statementStore) {
 
-        this.appConfig = appConfig;
         this.roleChecker = roleChecker;
         this.lessonStore = lessonStore;
         this.statementStore = statementStore;
@@ -59,13 +56,18 @@ public class LessonClient {
         return lessonJids.stream().collect(Collectors.toMap(jid -> jid, this::getLesson));
     }
 
-    public LessonStatement getLessonStatement(String lessonJid, URI baseUri, Optional<String> language) {
+    public LessonStatement getLessonStatement(
+            HttpServletRequest req,
+            UriInfo uriInfo,
+            String lessonJid, Optional<String> language) {
+
         String sanitizedLanguage = sanitizeLanguage(lessonJid, language);
         LessonStatement statement = statementStore.getStatement(null, lessonJid, sanitizedLanguage);
+        String apiUrl = getApiUrl(req, uriInfo);
 
         return new LessonStatement.Builder()
                 .from(statement)
-                .text(SandalphonUtils.replaceLessonRenderUrls(statement.getText(), baseUri.toString(), lessonJid))
+                .text(SandalphonUtils.replaceLessonRenderUrls(statement.getText(), apiUrl, lessonJid))
                 .build();
     }
 
@@ -81,5 +83,21 @@ public class LessonClient {
         }
 
         return simplifiedLanguages.get(lang);
+    }
+
+    private static String getApiUrl(HttpServletRequest req, UriInfo uriInfo) {
+        if (req == null) {
+            return "";
+        }
+
+        String oldScheme = uriInfo.getBaseUri().getScheme();
+        String newScheme = oldScheme;
+
+        String forwardedProto = req.getHeader("X-Forwarded-Proto");
+        if (forwardedProto != null && !forwardedProto.isEmpty()) {
+            newScheme = forwardedProto;
+        }
+
+        return newScheme + uriInfo.getBaseUri().toString().substring(oldScheme.length());
     }
 }

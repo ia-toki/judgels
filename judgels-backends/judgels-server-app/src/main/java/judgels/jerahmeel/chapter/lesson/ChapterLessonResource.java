@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -101,6 +102,7 @@ public class ChapterLessonResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ChapterLessonStatement getLessonStatement(
+            @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("chapterJid") String chapterJid,
@@ -113,7 +115,7 @@ public class ChapterLessonResource {
         ChapterLesson lesson = checkFound(lessonStore.getLessonByAlias(chapterJid, lessonAlias));
         String lessonJid = lesson.getLessonJid();
         LessonInfo lessonInfo = lessonClient.getLesson(lessonJid);
-        LessonStatement statement = lessonClient.getLessonStatement(lesson.getLessonJid(), uriInfo.getBaseUri(), language);
+        LessonStatement statement = lessonClient.getLessonStatement(req, uriInfo, lesson.getLessonJid(), language);
 
         return new ChapterLessonStatement.Builder()
                 .defaultLanguage(lessonInfo.getDefaultLanguage())

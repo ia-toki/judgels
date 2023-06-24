@@ -13,7 +13,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.UriInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.Problem;
@@ -38,7 +39,6 @@ import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 import judgels.sandalphon.resource.StatementLanguageStatus;
 import judgels.sandalphon.role.RoleChecker;
 
-@Singleton
 public class ProblemClient {
     private final RoleChecker roleChecker;
     private final ProblemStore problemStore;
@@ -127,7 +127,7 @@ public class ProblemClient {
     }
 
     public Optional<Item> getItem(String problemJid, String itemJid) {
-        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(problemJid, URI.create(""), Optional.empty());
+        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(null, null, problemJid, Optional.empty());
         return worksheet.getItems().stream()
                 .filter(item -> itemJid.equals(item.getJid()))
                 .findAny();
@@ -136,7 +136,7 @@ public class ProblemClient {
     public Map<String, Item> getItems(Set<String> problemJids, Set<String> itemJids) {
         Map<String, Item> itemsByItemJid = new HashMap<>();
         for (String problemJid : problemJids) {
-            judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(problemJid, URI.create(""), Optional.empty());
+            judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(null, null, problemJid, Optional.empty());
             worksheet.getItems().stream()
                     .filter(item -> itemJids.contains(item.getJid()))
                     .forEach(item -> itemsByItemJid.put(item.getJid(), item));
@@ -152,15 +152,21 @@ public class ProblemClient {
         return problemJids.stream().collect(toMap(jid -> jid, this::getProgrammingProblemSubmissionConfig));
     }
 
-    public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(String problemJid, URI baseUri, Optional<String> language) {
+    public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(
+            HttpServletRequest req,
+            UriInfo uriInfo,
+            String problemJid,
+            Optional<String> language) {
+
         GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
         String sanitizedLanguage = sanitizeStatementLanguage(problemJid, language);
         ProblemStatement statement = statementStore.getStatement(null, problemJid, sanitizedLanguage);
+        String apiUrl = getApiUrl(req, uriInfo);
 
         return new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), baseUri.toString(), problemJid))
+                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
                         .build())
                 .limits(new ProblemLimits.Builder()
                         .timeLimit(config.getTimeLimit())
@@ -170,7 +176,12 @@ public class ProblemClient {
                 .build();
     }
 
-    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(String problemJid, URI baseUri, Optional<String> language) {
+    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(
+            HttpServletRequest req,
+            UriInfo uriInfo,
+            String problemJid,
+            Optional<String> language) {
+
         String sanitizedLanguage = sanitizeStatementLanguage(problemJid, language);
         String defaultLanguage = statementStore.getStatementDefaultLanguage(null, problemJid);
 
@@ -189,22 +200,28 @@ public class ProblemClient {
         }
 
         ProblemStatement statement = statementStore.getStatement(null, problemJid, sanitizedLanguage);
+        String apiUrl = getApiUrl(req, uriInfo);
 
         return new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), baseUri.toString(), problemJid))
+                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
                         .build())
                 .items(itemsWithConfig
                         .stream()
-                        .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(item, baseUri.toString(), problemJid))
+                        .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(item, apiUrl, problemJid))
                         .collect(Collectors.toList())
                 )
                 .build();
     }
 
-    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheetWithoutAnswerKey(String problemJid, URI baseUri, Optional<String> language) {
-        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(problemJid, baseUri, language);
+    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheetWithoutAnswerKey(
+            HttpServletRequest req,
+            UriInfo uriInfo,
+            String problemJid,
+            Optional<String> language) {
+
+        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(req, uriInfo, problemJid, language);
         return new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                 .from(worksheet)
                 .items(worksheet.getItems().stream()
@@ -268,5 +285,21 @@ public class ProblemClient {
         }
 
         return simplifiedLanguages.get(lang);
+    }
+
+    private static String getApiUrl(HttpServletRequest req, UriInfo uriInfo) {
+        if (req == null) {
+            return "";
+        }
+
+        String oldScheme = uriInfo.getBaseUri().getScheme();
+        String newScheme = oldScheme;
+
+        String forwardedProto = req.getHeader("X-Forwarded-Proto");
+        if (forwardedProto != null && !forwardedProto.isEmpty()) {
+            newScheme = forwardedProto;
+        }
+
+        return newScheme + uriInfo.getBaseUri().toString().substring(oldScheme.length());
     }
 }

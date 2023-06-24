@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -148,6 +149,7 @@ public class ContestProblemResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet getProgrammingProblemWorksheet(
+            @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
@@ -172,7 +174,7 @@ public class ContestProblemResource {
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.sandalphon.api.problem.programming.ProblemWorksheet worksheet =
-                problemClient.getProgrammingProblemWorksheet(problemJid, uriInfo.getBaseUri(), language);
+                problemClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
                 moduleStore.getStyleModuleConfig(contestJid, contest.getStyle()).getGradingLanguageRestriction();
@@ -206,6 +208,7 @@ public class ContestProblemResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet getBundleProblemWorksheet(
+            @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
@@ -230,7 +233,7 @@ public class ContestProblemResource {
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet =
-                problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, uriInfo.getBaseUri(), language);
+                problemClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet
                 finalWorksheet = new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
