@@ -23,14 +23,7 @@ public class SandalphonUtils {
         return lesson.getTitlesByLanguage().get(finalLanguage);
     }
 
-    public static String replaceProblemRenderUrls(String text, String baseUrl, String problemJid) {
-        // HACKHACK
-        // TODO(fushar): get the scheme from X-Forwarded-Proto
-        String apiUrl = baseUrl;
-        if (!apiUrl.startsWith("http://localhost") && !apiUrl.startsWith("http://127.0.0.1")) {
-            apiUrl = apiUrl.replace("http://", "https://");
-        }
-
+    public static String replaceProblemRenderUrls(String text, String apiUrl, String problemJid) {
         return text
                 .replaceAll(
                         "src=\"render/",
@@ -43,14 +36,7 @@ public class SandalphonUtils {
                         String.format("href=\"%sapi/v2/problems/%s/render/", apiUrl, problemJid));
     }
 
-    public static String replaceProblemEditorialRenderUrls(String text, String baseUrl, String problemJid) {
-        // HACKHACK
-        // TODO(fushar): get the scheme from X-Forwarded-Proto
-        String apiUrl = baseUrl;
-        if (!apiUrl.startsWith("http://localhost") && !apiUrl.startsWith("http://127.0.0.1")) {
-            apiUrl = apiUrl.replace("http://", "https://");
-        }
-
+    public static String replaceProblemEditorialRenderUrls(String text, String apiUrl, String problemJid) {
         return text
                 .replaceAll(
                         "src=\"render/",
@@ -63,14 +49,7 @@ public class SandalphonUtils {
                         String.format("href=\"%sapi/v2/problems/%s/editorials/render/", apiUrl, problemJid));
     }
 
-    public static String replaceLessonRenderUrls(String text, String baseUrl, String lessonJid) {
-        // HACKHACK
-        // TODO(fushar): get the scheme from X-Forwarded-Proto
-        String apiUrl = baseUrl;
-        if (!apiUrl.startsWith("http://localhost") && !apiUrl.startsWith("http://127.0.0.1")) {
-            apiUrl = apiUrl.replace("http://", "https://");
-        }
-
+    public static String replaceLessonRenderUrls(String text, String apiUrl, String lessonJid) {
         return text
                 .replaceAll(
                         "src=\"render/",

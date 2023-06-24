@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -107,6 +108,7 @@ public class ChapterProblemResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ChapterProblemWorksheet getProblemWorksheet(
+            @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("chapterJid") String chapterJid,
@@ -130,7 +132,7 @@ public class ChapterProblemResource {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
-                            .from(problemClient.getProgrammingProblemWorksheet(problemJid, uriInfo.getBaseUri(), language))
+                            .from(problemClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -140,7 +142,7 @@ public class ChapterProblemResource {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, uriInfo.getBaseUri(), language))
+                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
