@@ -3,13 +3,9 @@ package judgels.jophiel.api.profile;
 import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserService;
@@ -47,14 +43,6 @@ public class ProfileServiceIntegrationTests extends BaseJophielServiceIntegratio
                 .username("budi")
                 .build());
 
-        // profiles without ratings
-
-        Set<String> userJids = ImmutableSet.of(andi.getJid(), budi.getJid());
-        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
-        assertThat(profilesMap).isEqualTo(ImmutableMap.of(
-                andi.getJid(), new Profile.Builder().username("andi").country("ID").build(),
-                budi.getJid(), new Profile.Builder().username("budi").build()));
-
         Instant firstTime = Instant.ofEpochSecond(10);
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(firstTime)
@@ -70,34 +58,6 @@ public class ProfileServiceIntegrationTests extends BaseJophielServiceIntegratio
                 .putRatingsMap(andi.getJid(), UserRating.of(2100, 1500))
                 .putRatingsMap(budi.getJid(), UserRating.of(2700, 1800))
                 .build());
-
-        // profiles with ratings after first time but before second time
-
-        profilesMap = profileService.getProfiles(userJids, Instant.ofEpochSecond(80));
-        assertThat(profilesMap).isEqualTo(ImmutableMap.of(
-                andi.getJid(), new Profile.Builder()
-                        .username("andi")
-                        .country("ID")
-                        .rating(UserRating.of(2000, 1000))
-                        .build(),
-                budi.getJid(), new Profile.Builder()
-                        .username("budi")
-                        .rating(UserRating.of(1800, 1700))
-                        .build()));
-
-        // profiles with latest ratings
-
-        profilesMap = profileService.getProfiles(userJids);
-        assertThat(profilesMap).isEqualTo(ImmutableMap.of(
-                andi.getJid(), new Profile.Builder()
-                        .username("andi")
-                        .country("ID")
-                        .rating(UserRating.of(2100, 1500))
-                        .build(),
-                budi.getJid(), new Profile.Builder()
-                        .username("budi")
-                        .rating(UserRating.of(2700, 1800))
-                        .build()));
 
         // basic profiles with latest ratings
 

@@ -5,15 +5,9 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.time.Clock;
-import java.time.Instant;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,14 +22,6 @@ public class ProfileResource {
     @Inject protected ProfileStore profileStore;
 
     @Inject public ProfileResource() {}
-
-    @POST
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork(readOnly = true)
-    public Map<String, Profile> getProfiles(Set<String> userJids, @QueryParam("beforeTime") Optional<Long> time) {
-        return profileStore.getProfiles(userJids, time.map(Instant::ofEpochMilli).orElse(clock.instant()));
-    }
 
     @GET
     @Path("/top")
