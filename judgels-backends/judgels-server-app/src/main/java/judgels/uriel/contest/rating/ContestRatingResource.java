@@ -21,11 +21,11 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
-import judgels.jophiel.profile.ProfileStore;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.rating.UserRatingStore;
 import judgels.service.actor.ActorChecker;
@@ -54,7 +54,7 @@ public class ContestRatingResource {
     @Inject protected ContestRatingComputer ratingComputer;
     @Inject protected UserStore userStore;
     @Inject protected UserRatingStore userRatingStore;
-    @Inject protected ProfileStore profileStore;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public ContestRatingResource() {}
 
@@ -119,7 +119,7 @@ public class ContestRatingResource {
                 .filter(ScoreboardEntry::hasSubmission)
                 .collect(Collectors.toMap(ScoreboardEntry::getContestantJid, ScoreboardEntry::getRank));
 
-        Map<String, Profile> profilesMap = profileStore.getProfiles(ranksMap.keySet(), contest.getBeginTime());
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(ranksMap.keySet(), contest.getBeginTime());
 
         Map<String, Integer> publicRatingsMap = Maps.newHashMap();
         Map<String, Integer> hiddenRatingsMap = Maps.newHashMap();

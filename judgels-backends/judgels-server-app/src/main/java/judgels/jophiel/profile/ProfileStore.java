@@ -1,12 +1,10 @@
 package judgels.jophiel.profile;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -55,19 +53,9 @@ public class ProfileStore {
                         .rating(Optional.ofNullable(ratings.get(e.getKey())))
                         .build()));
     }
+
     public Map<String, Profile> getProfiles(Set<String> userJids) {
         return getProfiles(userJids, Instant.now());
-    }
-
-    public Map<String, Profile> parseProfiles(String str) {
-        Set<String> usernames = Sets.newHashSet();
-        Matcher m = USERNAME_PATTERN.matcher(str);
-        while (m.find()) {
-            usernames.add(m.group(1));
-        }
-
-        Set<String> userJids = ImmutableSet.copyOf(userStore.translateUsernamesToJids(usernames).values());
-        return getProfiles(userJids);
     }
 
     public Page<Profile> getTopRatedProfiles(Instant time, int pageNumber, int pageSize) {

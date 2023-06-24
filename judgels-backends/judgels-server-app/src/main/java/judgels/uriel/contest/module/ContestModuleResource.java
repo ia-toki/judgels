@@ -16,7 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import judgels.jophiel.user.UserClient;
+import judgels.jophiel.JophielClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -33,7 +33,7 @@ public class ContestModuleResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestModuleStore moduleStore;
-    @Inject protected UserClient userClient;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public ContestModuleResource() {}
 
@@ -104,7 +104,7 @@ public class ContestModuleResource {
         if (config.getEditorial().isPresent()) {
             config = new ContestModulesConfig.Builder()
                     .from(config)
-                    .profilesMap(userClient.parseProfiles(config.getEditorial().get().getPreface().orElse("")))
+                    .profilesMap(jophielClient.parseProfiles(config.getEditorial().get().getPreface().orElse("")))
                     .build();
         }
         return config;

@@ -30,9 +30,9 @@ import judgels.jerahmeel.api.chapter.lesson.ChapterLessonStatement;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.role.RoleChecker;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.sandalphon.api.lesson.LessonStatement;
-import judgels.sandalphon.lesson.LessonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -42,7 +42,7 @@ public class ChapterLessonResource {
     @Inject protected RoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterLessonStore lessonStore;
-    @Inject protected LessonClient lessonClient;
+    @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ChapterLessonResource() {}
 
@@ -65,7 +65,7 @@ public class ChapterLessonResource {
         checkArgument(aliases.size() == data.size(), "Lesson aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Lesson slugs must be unique");
 
-        Map<String, String> slugToJidMap = lessonClient.translateAllowedSlugsToJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = sandalphonClient.translateAllowedLessonSlugsToJids(actorJid, slugs);
 
         List<ChapterLesson> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(lesson ->
                 new ChapterLesson.Builder()
@@ -89,7 +89,7 @@ public class ChapterLessonResource {
 
         List<ChapterLesson> lessons = lessonStore.getLessons(chapterJid);
         Set<String> lessonJids = lessons.stream().map(ChapterLesson::getLessonJid).collect(Collectors.toSet());
-        Map<String, LessonInfo> lessonsMap = lessonClient.getLessons(lessonJids);
+        Map<String, LessonInfo> lessonsMap = sandalphonClient.getLessons(lessonJids);
 
         return new ChapterLessonsResponse.Builder()
                 .data(lessons)
@@ -114,8 +114,8 @@ public class ChapterLessonResource {
 
         ChapterLesson lesson = checkFound(lessonStore.getLessonByAlias(chapterJid, lessonAlias));
         String lessonJid = lesson.getLessonJid();
-        LessonInfo lessonInfo = lessonClient.getLesson(lessonJid);
-        LessonStatement statement = lessonClient.getLessonStatement(req, uriInfo, lesson.getLessonJid(), language);
+        LessonInfo lessonInfo = sandalphonClient.getLesson(lessonJid);
+        LessonStatement statement = sandalphonClient.getLessonStatement(req, uriInfo, lesson.getLessonJid(), language);
 
         return new ChapterLessonStatement.Builder()
                 .defaultLanguage(lessonInfo.getDefaultLanguage())

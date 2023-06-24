@@ -1,4 +1,4 @@
-package judgels.jophiel.user;
+package judgels.jophiel;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -13,21 +13,17 @@ import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.profile.ProfileStore;
+import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.rating.UserRatingStore;
 
-public class UserClient {
+public class JophielClient {
     private static final Pattern USERNAME_PATTERN = Pattern.compile("\\[user:(\\S+)]");
 
-    private final UserStore userStore;
-    private final UserRatingStore userRatingStore;
-    private final ProfileStore profileStore;
+    @Inject protected UserStore userStore;
+    @Inject protected UserRatingStore userRatingStore;
+    @Inject protected ProfileStore profileStore;
 
-    @Inject
-    public UserClient(UserStore userStore, UserRatingStore userRatingStore, ProfileStore profileStore) {
-        this.userStore = userStore;
-        this.userRatingStore = userRatingStore;
-        this.profileStore = profileStore;
-    }
+    @Inject public JophielClient() {}
 
     public Optional<String> translateUsernameToJid(String username) {
         return userStore.translateUsernameToJid(username);

@@ -13,9 +13,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
-import judgels.jophiel.user.UserClient;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.history.ContestHistoryEvent;
@@ -27,7 +27,7 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 public class ContestHistoryResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestContestantStore contestantStore;
-    @Inject protected UserClient userClient;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public ContestHistoryResource() {}
 
@@ -36,10 +36,10 @@ public class ContestHistoryResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestHistoryResponse getPublicHistory(@QueryParam("username") String username) {
-        String userJid = checkFound(userClient.translateUsernameToJid(username));
+        String userJid = checkFound(jophielClient.translateUsernameToJid(username));
 
         List<Contest> contests = contestStore.getPubliclyParticipatedContests(userJid);
-        Map<String, UserRating> ratingsMap = userClient.getUserRatingEvents(userJid)
+        Map<String, UserRating> ratingsMap = jophielClient.getUserRatingEvents(userJid)
                 .stream()
                 .collect(Collectors.toMap(UserRatingEvent::getEventJid, UserRatingEvent::getRating));
         Map<String, Integer> ranksMap = contestantStore.getContestantFinalRanks(userJid);

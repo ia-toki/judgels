@@ -20,12 +20,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemMetadata;
-import judgels.sandalphon.problem.ProblemClient;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.editorial.ContestEditorialResponse;
 import judgels.uriel.api.contest.module.EditorialModuleConfig;
@@ -42,8 +42,8 @@ public class ContestEditorialResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestModuleStore contestModuleStore;
     @Inject protected ContestProblemStore problemStore;
-    @Inject protected UserClient userClient;
-    @Inject protected ProblemClient problemClient;
+    @Inject protected JophielClient jophielClient;
+    @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestEditorialResource() {}
 
@@ -63,13 +63,13 @@ public class ContestEditorialResource {
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
 
-        Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
-        Map<String, ProblemMetadata> problemMetadatasMap = problemClient.getProblemMetadatas(problemJids);
-        Map<String, ProblemEditorialInfo> problemEditorialsMap = problemClient.getProblemEditorials(problemJids, uriInfo.getBaseUri(), language);
+        Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
+        Map<String, ProblemMetadata> problemMetadatasMap = sandalphonClient.getProblemMetadatas(problemJids);
+        Map<String, ProblemEditorialInfo> problemEditorialsMap = sandalphonClient.getProblemEditorials(problemJids, uriInfo.getBaseUri(), language);
 
         Map<String, Profile> profilesMap = Maps.newHashMap();
-        profilesMap.putAll(userClient.parseProfiles(config.getPreface().orElse("")));
-        profilesMap.putAll(userClient.getProfiles(problemMetadatasMap.values()
+        profilesMap.putAll(jophielClient.parseProfiles(config.getPreface().orElse("")));
+        profilesMap.putAll(jophielClient.getProfiles(problemMetadatasMap.values()
                 .stream()
                 .map(ProblemMetadata::getSettersMap)
                 .map(Map::values)

@@ -26,10 +26,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
-import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -52,7 +52,7 @@ public class ContestProblemResource {
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ContestModuleStore moduleStore;
     @Inject protected SubmissionStore submissionStore;
-    @Inject protected ProblemClient problemClient;
+    @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestProblemResource() {}
 
@@ -75,7 +75,7 @@ public class ContestProblemResource {
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
-        Map<String, String> slugToJidMap = problemClient.translateAllowedSlugsToJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = sandalphonClient.translateAllowedProblemSlugsToJids(actorJid, slugs);
 
         Set<String> notAllowedSlugs = data.stream()
                 .map(ContestProblemData::getSlug)
@@ -114,7 +114,7 @@ public class ContestProblemResource {
 
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
-        Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
+        Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 
@@ -162,7 +162,7 @@ public class ContestProblemResource {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
+        ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.PROGRAMMING) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
@@ -174,7 +174,7 @@ public class ContestProblemResource {
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.sandalphon.api.problem.programming.ProblemWorksheet worksheet =
-                problemClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language);
+                sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
                 moduleStore.getStyleModuleConfig(contestJid, contest.getStyle()).getGradingLanguageRestriction();
@@ -221,7 +221,7 @@ public class ContestProblemResource {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
+        ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.BUNDLE) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
@@ -233,7 +233,7 @@ public class ContestProblemResource {
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet =
-                problemClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language);
+                sandalphonClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet
                 finalWorksheet = new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()

@@ -36,16 +36,16 @@ import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jerahmeel.submission.SubmissionUtils;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
-import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -61,8 +61,8 @@ public class ItemSubmissionResource {
     @Inject protected SubmissionRoleChecker submissionRoleChecker;
     @Inject protected ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
-    @Inject protected UserClient userClient;
-    @Inject protected ProblemClient problemClient;
+    @Inject protected JophielClient jophielClient;
+    @Inject protected SandalphonClient sandalphonClient;
 
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected ChapterProblemStore chapterProblemStore;
@@ -83,7 +83,7 @@ public class ItemSubmissionResource {
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         Optional<String> userJid = username.map(
-                u -> userClient.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
+                u -> jophielClient.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
 
         Optional<String> problemJid = Optional.empty();
         if (problemAlias.isPresent()) {
@@ -95,7 +95,7 @@ public class ItemSubmissionResource {
         Set<String> userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(toSet());
         Set<String> problemJids = submissions.getPage().stream().map(ItemSubmission::getProblemJid).collect(toSet());
 
-        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
@@ -108,7 +108,7 @@ public class ItemSubmissionResource {
                 .map(ItemSubmission::getItemJid)
                 .collect(toSet());
 
-        Map<String, Item> itemsMap = problemClient.getItems(problemJids, itemJids);
+        Map<String, Item> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -137,7 +137,7 @@ public class ItemSubmissionResource {
 
         String actorJid = actorChecker.check(authHeader);
 
-        Item item = checkFound(problemClient.getItem(data.getProblemJid(), data.getItemJid()));
+        Item item = checkFound(sandalphonClient.getItem(data.getProblemJid(), data.getItemJid()));
 
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
@@ -172,7 +172,7 @@ public class ItemSubmissionResource {
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         String userJid;
         if (canManage && username.isPresent()) {
-            userJid = checkFound(userClient.translateUsernameToJid(username.get()));
+            userJid = checkFound(jophielClient.translateUsernameToJid(username.get()));
         } else {
             userJid = actorJid;
         }
@@ -205,7 +205,7 @@ public class ItemSubmissionResource {
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         String userJid;
         if (canManage && username.isPresent()) {
-            userJid = checkFound(userClient.translateUsernameToJid(username.get()));
+            userJid = checkFound(jophielClient.translateUsernameToJid(username.get()));
         } else {
             userJid = actorJid;
         }
@@ -230,7 +230,7 @@ public class ItemSubmissionResource {
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
 
         for (String pJid : problemJids) {
-            ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(null, null, pJid, language);
+            ProblemWorksheet worksheet = sandalphonClient.getBundleProblemWorksheet(null, null, pJid, language);
             List<Item> items = worksheet.getItems().stream()
                     .filter(item -> !item.getType().equals(ItemType.STATEMENT))
                     .collect(Collectors.toList());
@@ -241,8 +241,8 @@ public class ItemSubmissionResource {
             itemJidsByProblemJid.put(pJid, items.stream().map(Item::getJid).collect(Collectors.toList()));
         }
 
-        Map<String, String> problemNamesMap = problemClient.getProblemNames(ImmutableSet.copyOf(problemJids), language);
-        Profile profile = userClient.getProfile(userJid);
+        Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(ImmutableSet.copyOf(problemJids), language);
+        Profile profile = jophielClient.getProfile(userJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)

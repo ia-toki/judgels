@@ -4,10 +4,10 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
-import judgels.sandalphon.problem.ProblemClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,23 +16,23 @@ public class ItemSubmissionRegradeProcessor {
 
     private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     private final ItemSubmissionStore itemSubmissionStore;
-    private final ProblemClient problemClient;
+    private final SandalphonClient sandalphonClient;
 
     @Inject
     public ItemSubmissionRegradeProcessor(
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
             ItemSubmissionStore itemSubmissionStore,
-            ProblemClient problemClient) {
+            SandalphonClient sandalphonClient) {
 
         this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
         this.itemSubmissionStore = itemSubmissionStore;
-        this.problemClient = problemClient;
+        this.sandalphonClient = sandalphonClient;
     }
 
     @UnitOfWork
     public void process(List<ItemSubmission> submissions) {
         for (ItemSubmission submission : submissions) {
-            Optional<Item> item = problemClient.getItem(submission.getProblemJid(), submission.getItemJid());
+            Optional<Item> item = sandalphonClient.getItem(submission.getProblemJid(), submission.getItemJid());
             if (item.isPresent()) {
                 Grading grading = itemSubmissionGraderRegistry
                         .get(item.get().getType())

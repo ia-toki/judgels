@@ -1,34 +1,27 @@
-package judgels.jerahmeel.uriel;
+package judgels.uriel;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import judgels.jerahmeel.submission.UrielSubmissionStore;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.submission.UrielSubmissionStore;
 
-public class ContestClient {
-    private final ContestStore contestStore;
-    private final SubmissionStore submissionStore;
+public class UrielClient {
+    @Inject protected ContestStore contestStore;
+    @Inject @UrielSubmissionStore protected SubmissionStore submissionStore;
 
-    @Inject
-    public ContestClient(
-            ContestStore contestStore,
-            @UrielSubmissionStore SubmissionStore submissionStore) {
-
-        this.contestStore = contestStore;
-        this.submissionStore = submissionStore;
-    }
+    @Inject public UrielClient() {}
 
     public Map<String, ContestInfo> getContestsByJids(Set<String> contestJids) {
         return contestStore.getContestInfosByJids(contestJids);
     }
 
-    public Map<String, String> translateSlugsToJids(Set<String> contestSlugs) {
+    public Map<String, String> translateContestSlugsToJids(Set<String> contestSlugs) {
         return contestStore.translateSlugsToJids(contestSlugs);
     }
 

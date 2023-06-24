@@ -19,8 +19,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -43,7 +43,7 @@ public class ContestScoreboardResource {
     @Inject protected ContestScoreboardFetcher scoreboardFetcher;
     @Inject protected ContestScoreboardPoller scoreboardUpdaterDispatcher;
     @Inject protected ScoreboardIncrementalMarker scoreboardIncrementalMarker;
-    @Inject protected UserClient userClient;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public ContestScoreboardResource() {}
 
@@ -85,7 +85,7 @@ public class ContestScoreboardResource {
                     Set<String> contestantJids = scoreboard.getScoreboard().getContent().getEntries().stream()
                             .map(ScoreboardEntry::getContestantJid).collect(Collectors.toSet());
                     Map<String, Profile> profilesMap =
-                            userClient.getProfiles(contestantJids, contest.getBeginTime());
+                            jophielClient.getProfiles(contestantJids, contest.getBeginTime());
 
                     return new ContestScoreboardResponse.Builder()
                             .data(scoreboard)

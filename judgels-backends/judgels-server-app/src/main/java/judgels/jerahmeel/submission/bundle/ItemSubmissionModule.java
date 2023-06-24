@@ -5,7 +5,7 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
-import judgels.sandalphon.problem.ProblemClient;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegradeProcessor;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
@@ -33,19 +33,19 @@ public class ItemSubmissionModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
             ItemSubmissionStore itemSubmissionStore,
-            ProblemClient problemClient) {
+            SandalphonClient sandalphonClient) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ItemSubmissionRegradeProcessor.class,
                 new Class<?>[] {
                         ItemSubmissionGraderRegistry.class,
                         ItemSubmissionStore.class,
-                        ProblemClient.class
+                        SandalphonClient.class
                 },
                 new Object[] {
                         itemSubmissionGraderRegistry,
                         itemSubmissionStore,
-                        problemClient
+                        sandalphonClient
                 }
         );
     }

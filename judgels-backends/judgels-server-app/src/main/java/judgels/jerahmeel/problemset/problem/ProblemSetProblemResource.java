@@ -41,16 +41,16 @@ import judgels.jerahmeel.difficulty.ProblemDifficultyStore;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
-import judgels.jerahmeel.uriel.ContestClient;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemMetadata;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.uriel.UrielClient;
 import judgels.uriel.api.contest.ContestInfo;
 
 @Path("/api/v2/problemsets/{problemSetJid}/problems")
@@ -60,10 +60,10 @@ public class ProblemSetProblemResource {
     @Inject protected ProblemSetStore problemSetStore;
     @Inject protected ProblemSetProblemStore problemStore;
     @Inject protected ProblemDifficultyStore difficultyStore;
-    @Inject protected UserClient userClient;
-    @Inject protected ProblemClient problemClient;
-    @Inject protected ContestClient contestClient;
     @Inject protected StatsStore statsStore;
+    @Inject protected JophielClient jophielClient;
+    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected UrielClient urielClient;
 
     @Inject public ProblemSetProblemResource() {}
 
@@ -86,14 +86,14 @@ public class ProblemSetProblemResource {
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
-        Map<String, String> slugToJidMap = problemClient.translateAllowedSlugsToJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = sandalphonClient.translateAllowedProblemSlugsToJids(actorJid, slugs);
 
         Set<String> contestSlugs = data.stream()
                 .map(ProblemSetProblemData::getContestSlugs)
                 .flatMap(List::stream)
                 .collect(Collectors.toSet());
 
-        Map<String, String> contestSlugToJidMap = contestClient.translateSlugsToJids(contestSlugs);
+        Map<String, String> contestSlugToJidMap = urielClient.translateContestSlugsToJids(contestSlugs);
 
         Set<String> notAllowedContestSlugs = data.stream()
                 .map(ProblemSetProblemData::getContestSlugs)
@@ -118,7 +118,7 @@ public class ProblemSetProblemResource {
                 .collect(Collectors.toList());
 
         Map<String, Boolean> problemVisibilitiesMap = problemStore.setProblems(problemSetJid, setData);
-        problemClient.setProblemVisibilityTagsByJids(problemVisibilitiesMap);
+        sandalphonClient.setProblemVisibilityTagsByJids(problemVisibilitiesMap);
     }
 
     @GET
@@ -142,12 +142,12 @@ public class ProblemSetProblemResource {
 
         return new ProblemSetProblemsResponse.Builder()
                 .data(problems)
-                .problemsMap(problemClient.getProblems(problemJids))
-                .problemMetadatasMap(problemClient.getProblemMetadatas(problemJids))
+                .problemsMap(sandalphonClient.getProblems(problemJids))
+                .problemMetadatasMap(sandalphonClient.getProblemMetadatas(problemJids))
                 .problemDifficultiesMap(difficultyStore.getProblemDifficultiesMap(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
                 .contestsMap(roleChecker.isAdmin(actorJid)
-                        ? contestClient.getContestsByJids(contestJids)
+                        ? urielClient.getContestsByJids(contestJids)
                         : ImmutableMap.of())
                 .build();
     }
@@ -184,7 +184,7 @@ public class ProblemSetProblemResource {
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
+        ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
 
         Optional<String> reasonNotAllowedToSubmit = authHeader.isPresent()
                 ? Optional.empty()
@@ -196,7 +196,7 @@ public class ProblemSetProblemResource {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
-                            .from(problemClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
+                            .from(sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -206,7 +206,7 @@ public class ProblemSetProblemResource {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
+                            .from(sandalphonClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -229,12 +229,12 @@ public class ProblemSetProblemResource {
         String problemJid = problem.getProblemJid();
         Set<String> problemJids = ImmutableSet.of(problemJid);
 
-        ProblemMetadata metadata = problemClient.getProblemMetadata(problem.getProblemJid());
+        ProblemMetadata metadata = sandalphonClient.getProblemMetadata(problem.getProblemJid());
         ProblemDifficulty difficulty = difficultyStore.getProblemDifficultiesMap(problemJids).get(problemJid);
         ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, problemJids).get(problemJid);
 
-        Map<String, ContestInfo> contestsMap = contestClient.getContestsByJids(ImmutableSet.copyOf(problem.getContestJids()));
+        Map<String, ContestInfo> contestsMap = urielClient.getContestsByJids(ImmutableSet.copyOf(problem.getContestJids()));
         List<ContestInfo> contests = problem.getContestJids().stream()
                 .filter(contestsMap::containsKey)
                 .map(contestsMap::get)
@@ -245,7 +245,7 @@ public class ProblemSetProblemResource {
         topStats.getTopUsersByScore().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByMemory().forEach(e -> userJids.add(e.getUserJid()));
-        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
 
         return new ProblemReportResponse.Builder()
                 .metadata(metadata)
@@ -270,7 +270,7 @@ public class ProblemSetProblemResource {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
-        ProblemEditorialInfo editorial = checkFound(problemClient.getProblemEditorial(problem.getProblemJid(), uriInfo.getBaseUri(), language));
+        ProblemEditorialInfo editorial = checkFound(sandalphonClient.getProblemEditorial(problem.getProblemJid(), uriInfo.getBaseUri(), language));
         return new ProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();

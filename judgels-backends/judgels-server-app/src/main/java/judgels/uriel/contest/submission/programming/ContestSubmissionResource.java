@@ -35,9 +35,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -46,7 +47,6 @@ import judgels.sandalphon.api.submission.programming.SubmissionData;
 import judgels.sandalphon.api.submission.programming.SubmissionInfo;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
-import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionDownloader;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
@@ -92,8 +92,8 @@ public class ContestSubmissionResource {
     @Inject protected ContestContestantStore contestantStore;
     @Inject protected ContestSupervisorStore supervisorStore;
     @Inject protected ContestProblemStore problemStore;
-    @Inject protected UserClient userClient;
-    @Inject protected ProblemClient problemClient;
+    @Inject protected JophielClient jophielClient;
+    @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestSubmissionResource() {}
 
@@ -143,7 +143,7 @@ public class ContestSubmissionResource {
                     .collect(toSet());
         }
 
-        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
 
         userJidsSortedByUsername.sort((u1, u2) -> {
             String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
@@ -184,10 +184,10 @@ public class ContestSubmissionResource {
 
         ContestProblem contestProblem =
                 checkFound(problemStore.getProblem(contest.getJid(), submission.getProblemJid()));
-        ProblemInfo problem = problemClient.getProblem(contestProblem.getProblemJid());
+        ProblemInfo problem = sandalphonClient.getProblem(contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
-        Profile profile = checkFound(Optional.ofNullable(userClient.getProfile(userJid, contest.getBeginTime())));
+        Profile profile = checkFound(Optional.ofNullable(jophielClient.getProfile(userJid, contest.getBeginTime())));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
@@ -218,7 +218,7 @@ public class ContestSubmissionResource {
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
-        Profile profile = this.userClient.getProfile(userJid);
+        Profile profile = this.jophielClient.getProfile(userJid);
 
         return new SubmissionInfo.Builder().id(submission.getId()).profile(profile).build();
     }
@@ -288,7 +288,7 @@ public class ContestSubmissionResource {
                 .additionalGradingLanguageRestriction(contestGradingLanguageRestriction)
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
-        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
+        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
@@ -308,7 +308,7 @@ public class ContestSubmissionResource {
         Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
 
-        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
+        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
         submissionRegrader.regradeSubmission(submission, config);
 
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
@@ -344,7 +344,7 @@ public class ContestSubmissionResource {
             }
 
             Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
-            Map<String, ProblemSubmissionConfig> configsMap = problemClient.getProgrammingProblemSubmissionConfigs(problemJids);
+            Map<String, ProblemSubmissionConfig> configsMap = sandalphonClient.getProgrammingProblemSubmissionConfigs(problemJids);
             submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
@@ -401,7 +401,7 @@ public class ContestSubmissionResource {
         }
 
         Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
-        Map<String, String> usernamesMap = userClient.getProfiles(userJids).entrySet()
+        Map<String, String> usernamesMap = jophielClient.getProfiles(userJids).entrySet()
                 .stream()
                 .collect(toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
 
@@ -419,7 +419,7 @@ public class ContestSubmissionResource {
     }
 
     private Optional<String> byUserJid(Optional<String> username) {
-        return username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
+        return username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
     }
 
     private Optional<String> byProblemJid(

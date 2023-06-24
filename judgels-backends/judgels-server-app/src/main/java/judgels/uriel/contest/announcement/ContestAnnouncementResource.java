@@ -22,8 +22,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -44,7 +44,7 @@ public class ContestAnnouncementResource {
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestAnnouncementRoleChecker announcementRoleChecker;
     @Inject protected ContestAnnouncementStore announcementStore;
-    @Inject protected UserClient userClient;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public ContestAnnouncementResource() {}
 
@@ -74,7 +74,7 @@ public class ContestAnnouncementResource {
                 .stream()
                 .map(ContestAnnouncement::getUserJid)
                 .collect(Collectors.toSet());
-        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_ANNOUNCEMENTS");
 

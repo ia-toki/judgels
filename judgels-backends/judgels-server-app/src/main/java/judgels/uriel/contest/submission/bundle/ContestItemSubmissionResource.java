@@ -28,9 +28,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
@@ -38,7 +39,6 @@ import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
-import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -76,8 +76,8 @@ public class ContestItemSubmissionResource {
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
-    @Inject protected UserClient userClient;
-    @Inject protected ProblemClient problemClient;
+    @Inject protected JophielClient jophielClient;
+    @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestItemSubmissionResource() {}
 
@@ -131,7 +131,7 @@ public class ContestItemSubmissionResource {
                     .collect(Collectors.toSet());
         }
 
-        Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
 
         userJidsSortedByUsername.sort((u1, u2) -> {
             String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
@@ -152,7 +152,7 @@ public class ContestItemSubmissionResource {
                 .map(ItemSubmission::getItemJid)
                 .collect(Collectors.toSet());
 
-        Map<String, Item> itemsMap = problemClient.getItems(problemJids, itemJids);
+        Map<String, Item> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -186,7 +186,7 @@ public class ContestItemSubmissionResource {
         ContestProblem problem = checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
 
-        Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
+        Optional<Item> item = sandalphonClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
         if (data.getAnswer().trim().isEmpty()) {
@@ -280,7 +280,7 @@ public class ContestItemSubmissionResource {
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
 
         List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(contestJid).stream()
-                .filter(problemJid -> problemClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
+                .filter(problemJid -> sandalphonClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
                 .collect(Collectors.toList());
         Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
                 contestJid, ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
@@ -288,7 +288,7 @@ public class ContestItemSubmissionResource {
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
         for (String problemJid : bundleProblemJidsSortedByAlias) {
-            ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(null, null, problemJid, language);
+            ProblemWorksheet worksheet = sandalphonClient.getBundleProblemWorksheet(null, null, problemJid, language);
             List<Item> items = worksheet.getItems().stream()
                     .filter(item -> !item.getType().equals(ItemType.STATEMENT))
                     .collect(Collectors.toList());
@@ -302,10 +302,10 @@ public class ContestItemSubmissionResource {
             );
         }
 
-        Map<String, String> problemNamesByProblemJid = problemClient.getProblemNames(
+        Map<String, String> problemNamesByProblemJid = sandalphonClient.getProblemNames(
                 ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
 
-        Profile profile = userClient.getProfile(userJid, contest.getBeginTime());
+        Profile profile = jophielClient.getProfile(userJid, contest.getBeginTime());
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
                 .canSupervise(canSupervise)
@@ -365,7 +365,7 @@ public class ContestItemSubmissionResource {
     }
 
     private Optional<String> byUserJid(Optional<String> username) {
-        return username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
+        return username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
     }
 
     private Optional<String> byProblemJid(
