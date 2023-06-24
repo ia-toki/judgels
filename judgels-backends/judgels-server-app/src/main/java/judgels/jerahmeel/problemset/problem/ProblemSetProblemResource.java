@@ -1,6 +1,8 @@
 package judgels.jerahmeel.problemset.problem;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -14,6 +16,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import judgels.jerahmeel.api.problem.ProblemDifficulty;
@@ -24,7 +34,6 @@ import judgels.jerahmeel.api.problemset.problem.ProblemEditorialResponse;
 import judgels.jerahmeel.api.problemset.problem.ProblemReportResponse;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemData;
-import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemService;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemWorksheet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemsResponse;
 import judgels.jerahmeel.difficulty.ProblemDifficultyStore;
@@ -43,45 +52,28 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.ContestInfo;
 
-public class ProblemSetProblemResource implements ProblemSetProblemService {
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final ProblemSetStore problemSetStore;
-    private final ProblemSetProblemStore problemStore;
-    private final ProblemDifficultyStore difficultyStore;
-    private final UserClient userClient;
-    private final ProblemClient problemClient;
-    private final ContestClient contestClient;
-    private final StatsStore statsStore;
+@Path("/api/v2/problemsets/{problemSetJid}/problems")
+public class ProblemSetProblemResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected ProblemSetStore problemSetStore;
+    @Inject protected ProblemSetProblemStore problemStore;
+    @Inject protected ProblemDifficultyStore difficultyStore;
+    @Inject protected UserClient userClient;
+    @Inject protected ProblemClient problemClient;
+    @Inject protected ContestClient contestClient;
+    @Inject protected StatsStore statsStore;
 
-    @Context UriInfo baseUriInfo;
+    @Inject public ProblemSetProblemResource() {}
 
-    @Inject
-    public ProblemSetProblemResource(
-            ActorChecker actorChecker,
-            RoleChecker roleChecker,
-            ProblemSetStore problemSetStore,
-            ProblemSetProblemStore problemStore,
-            ProblemDifficultyStore difficultyStore,
-            UserClient userClient,
-            ProblemClient problemClient,
-            ContestClient contestClient,
-            StatsStore statsStore) {
-
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.problemSetStore = problemSetStore;
-        this.problemStore = problemStore;
-        this.difficultyStore = difficultyStore;
-        this.userClient = userClient;
-        this.problemClient = problemClient;
-        this.contestClient = contestClient;
-        this.statsStore = statsStore;
-    }
-
-    @Override
+    @PUT
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void setProblems(AuthHeader authHeader, String problemSetJid, List<ProblemSetProblemData> data) {
+    public void setProblems(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            List<ProblemSetProblemData> data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
@@ -128,9 +120,13 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         problemClient.setProblemVisibilityTagsByJids(problemVisibilitiesMap);
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemSetProblemsResponse getProblems(Optional<AuthHeader> authHeader, String problemSetJid) {
+    public ProblemSetProblemsResponse getProblems(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
@@ -155,12 +151,14 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{problemAlias}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemSetProblem getProblem(
-            Optional<AuthHeader> authHeader,
-            String problemSetJid,
-            String problemAlias) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            @PathParam("problemAlias") String problemAlias) {
 
         actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
@@ -168,14 +166,16 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         return checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
     }
 
-    @Override
+    @GET
+    @Path("/{problemAlias}/worksheet")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemSetProblemWorksheet getProblemWorksheet(
-            UriInfo uriInfo,
-            Optional<AuthHeader> authHeader,
-            String problemSetJid,
-            String problemAlias,
-            Optional<String> language) {
+            @Context UriInfo uriInfo,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language) {
 
         actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
@@ -211,12 +211,14 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         }
     }
 
-    @Override
+    @GET
+    @Path("/{problemAlias}/report")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemReportResponse getProblemReport(
-            Optional<AuthHeader> authHeader,
-            String problemSetJid,
-            String problemAlias) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            @PathParam("problemAlias") String problemAlias) {
 
         String actorJid = actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
@@ -253,13 +255,15 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{problemAlias}/editorial")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemEditorialResponse getProblemEditorial(
-            UriInfo uriInfo,
-            String problemSetJid,
-            String problemAlias,
-            Optional<String> language) {
+            @Context UriInfo uriInfo,
+            @PathParam("problemSetJid") String problemSetJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language) {
 
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
