@@ -1,19 +1,22 @@
 package judgels.jerahmeel.curriculum;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
-import judgels.jerahmeel.api.curriculum.CurriculumService;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import judgels.jerahmeel.api.curriculum.CurriculumsResponse;
 
-public class CurriculumResource implements CurriculumService {
-    private final CurriculumStore curriculumStore;
+@Path("/api/v2/curriculums")
+public class CurriculumResource {
+    @Inject protected CurriculumStore curriculumStore;
 
-    @Inject
-    public CurriculumResource(CurriculumStore curriculumStore) {
-        this.curriculumStore = curriculumStore;
-    }
+    @Inject public CurriculumResource() {}
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public CurriculumsResponse getCurriculums() {
         return new CurriculumsResponse.Builder()

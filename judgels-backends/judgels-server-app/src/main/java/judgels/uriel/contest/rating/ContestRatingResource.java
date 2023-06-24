@@ -1,5 +1,7 @@
 package judgels.uriel.contest.rating;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
@@ -14,6 +16,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
@@ -28,7 +35,6 @@ import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.rating.ContestRating;
 import judgels.uriel.api.contest.rating.ContestRatingChanges;
 import judgels.uriel.api.contest.rating.ContestRatingHistoryResponse;
-import judgels.uriel.api.contest.rating.ContestRatingService;
 import judgels.uriel.api.contest.rating.ContestsPendingRatingResponse;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
@@ -38,43 +44,25 @@ import judgels.uriel.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.RawContestScoreboard;
 
-public class ContestRatingResource implements ContestRatingService {
-    private final ActorChecker actorChecker;
-    private final ContestRoleChecker contestRoleChecker;
-    private final ContestStore contestStore;
-    private final ContestScoreboardStore scoreboardStore;
-    private final ContestScoreboardBuilder scoreboardBuilder;
-    private final ContestRatingComputer ratingComputer;
-    private final UserStore userStore;
-    private final UserRatingStore userRatingStore;
-    private final ProfileStore profileStore;
+@Path("/api/v2/contest-rating")
+public class ContestRatingResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestRoleChecker contestRoleChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestScoreboardStore scoreboardStore;
+    @Inject protected ContestScoreboardBuilder scoreboardBuilder;
+    @Inject protected ContestRatingComputer ratingComputer;
+    @Inject protected UserStore userStore;
+    @Inject protected UserRatingStore userRatingStore;
+    @Inject protected ProfileStore profileStore;
 
-    @Inject
-    public ContestRatingResource(
-            ActorChecker actorChecker,
-            ContestRoleChecker contestRoleChecker,
-            ContestStore contestStore,
-            ContestScoreboardStore scoreboardStore,
-            ContestScoreboardBuilder scoreboardBuilder,
-            ContestRatingComputer ratingComputer,
-            UserStore userStore,
-            UserRatingStore userRatingStore,
-            ProfileStore profileStore) {
+    @Inject public ContestRatingResource() {}
 
-        this.actorChecker = actorChecker;
-        this.contestRoleChecker = contestRoleChecker;
-        this.contestStore = contestStore;
-        this.scoreboardStore = scoreboardStore;
-        this.scoreboardBuilder = scoreboardBuilder;
-        this.ratingComputer = ratingComputer;
-        this.userStore = userStore;
-        this.userRatingStore = userRatingStore;
-        this.profileStore = profileStore;
-    }
-
-    @Override
+    @GET
+    @Path("/pending")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ContestsPendingRatingResponse getContestsPendingRating(AuthHeader authHeader) {
+    public ContestsPendingRatingResponse getContestsPendingRating(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
@@ -91,9 +79,11 @@ public class ContestRatingResource implements ContestRatingService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/history")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ContestRatingHistoryResponse getRatingHistory(String username) {
+    public ContestRatingHistoryResponse getRatingHistory(@QueryParam("username") String username) {
         String userJid = checkFound(userStore.translateUsernameToJid(username));
 
         List<UserRatingEvent> userRatingEvents = userRatingStore.getUserRatingEvents(userJid);

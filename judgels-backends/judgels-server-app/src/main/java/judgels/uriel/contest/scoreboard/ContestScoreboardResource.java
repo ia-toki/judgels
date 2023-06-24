@@ -1,5 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -9,6 +11,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.user.UserClient;
 import judgels.service.actor.ActorChecker;
@@ -16,55 +25,36 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 
-public class ContestScoreboardResource implements ContestScoreboardService {
-    private final ActorChecker actorChecker;
-    private final ContestStore contestStore;
-    private final ContestLogger contestLogger;
-    private final ContestSubmissionRoleChecker submissionRoleChecker;
-    private final ContestScoreboardRoleChecker scoreboardRoleChecker;
-    private final ContestScoreboardFetcher scoreboardFetcher;
-    private final ContestScoreboardPoller scoreboardUpdaterDispatcher;
-    private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
-    private final UserClient userClient;
+@Path("/api/v2/contests/{contestJid}/scoreboard")
+public class ContestScoreboardResource {
     private static final int PAGE_SIZE = 250;
 
-    @Inject
-    public ContestScoreboardResource(
-            ActorChecker actorChecker,
-            ContestStore contestStore,
-            ContestLogger contestLogger,
-            ContestSubmissionRoleChecker submissionRoleChecker,
-            ContestScoreboardRoleChecker scoreboardRoleChecker,
-            ContestScoreboardFetcher scoreboardFetcher,
-            ContestScoreboardPoller scoreboardUpdaterDispatcher,
-            ScoreboardIncrementalMarker scoreboardIncrementalMarker,
-            UserClient userClient) {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected ContestSubmissionRoleChecker submissionRoleChecker;
+    @Inject protected ContestScoreboardRoleChecker scoreboardRoleChecker;
+    @Inject protected ContestScoreboardFetcher scoreboardFetcher;
+    @Inject protected ContestScoreboardPoller scoreboardUpdaterDispatcher;
+    @Inject protected ScoreboardIncrementalMarker scoreboardIncrementalMarker;
+    @Inject protected UserClient userClient;
 
-        this.actorChecker = actorChecker;
-        this.contestStore = contestStore;
-        this.contestLogger = contestLogger;
-        this.submissionRoleChecker = submissionRoleChecker;
-        this.scoreboardRoleChecker = scoreboardRoleChecker;
-        this.scoreboardFetcher = scoreboardFetcher;
-        this.scoreboardUpdaterDispatcher = scoreboardUpdaterDispatcher;
-        this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
-        this.userClient = userClient;
-    }
+    @Inject public ContestScoreboardResource() {}
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public Optional<ContestScoreboardResponse> getScoreboard(
-            Optional<AuthHeader> authHeader,
-            String contestJid,
-            boolean frozen,
-            boolean showClosedProblems,
-            Optional<Integer> page) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid,
+            @QueryParam("frozen") boolean frozen,
+            @QueryParam("showClosedProblems") boolean showClosedProblems,
+            @QueryParam("page") Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -104,9 +94,13 @@ public class ContestScoreboardResource implements ContestScoreboardService {
                 });
     }
 
-    @Override
+    @POST
+    @Path("/refresh")
     @UnitOfWork
-    public void refreshScoreboard(AuthHeader authHeader, String contestJid) {
+    public void refreshScoreboard(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canManage(actorJid, contest));

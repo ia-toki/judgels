@@ -1,6 +1,8 @@
 package judgels.jerahmeel.chapter.lesson;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -11,10 +13,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLesson;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonData;
-import judgels.jerahmeel.api.chapter.lesson.ChapterLessonService;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonStatement;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
@@ -25,31 +35,24 @@ import judgels.sandalphon.lesson.LessonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-public class ChapterLessonResource implements ChapterLessonService {
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final ChapterStore chapterStore;
-    private final ChapterLessonStore lessonStore;
-    private final LessonClient lessonClient;
+@Path("/api/v2/chapters/{chapterJid}/lessons")
+public class ChapterLessonResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected ChapterStore chapterStore;
+    @Inject protected ChapterLessonStore lessonStore;
+    @Inject protected LessonClient lessonClient;
 
-    @Inject
-    public ChapterLessonResource(
-            ActorChecker actorChecker,
-            RoleChecker roleChecker,
-            ChapterStore chapterStore,
-            ChapterLessonStore lessonStore,
-            LessonClient lessonClient) {
+    @Inject public ChapterLessonResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.chapterStore = chapterStore;
-        this.lessonStore = lessonStore;
-        this.lessonClient = lessonClient;
-    }
-
-    @Override
+    @PUT
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void setLessons(AuthHeader authHeader, String chapterJid, List<ChapterLessonData> data) {
+    public void setLessons(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("chapterJid") String chapterJid,
+            List<ChapterLessonData> data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
@@ -73,9 +76,13 @@ public class ChapterLessonResource implements ChapterLessonService {
         lessonStore.setLessons(chapterJid, setData);
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ChapterLessonsResponse getLessons(Optional<AuthHeader> authHeader, String chapterJid) {
+    public ChapterLessonsResponse getLessons(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("chapterJid") String chapterJid) {
+
         actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
@@ -89,14 +96,16 @@ public class ChapterLessonResource implements ChapterLessonService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{lessonAlias}/statement")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ChapterLessonStatement getLessonStatement(
-            UriInfo uriInfo,
-            Optional<AuthHeader> authHeader,
-            String chapterJid,
-            String lessonAlias,
-            Optional<String> language) {
+            @Context UriInfo uriInfo,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("chapterJid") String chapterJid,
+            @PathParam("lessonAlias") String lessonAlias,
+            @QueryParam("language") Optional<String> language) {
 
         actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));

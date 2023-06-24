@@ -1,5 +1,7 @@
 package judgels.jerahmeel.course;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -10,10 +12,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import judgels.jerahmeel.api.course.Course;
 import judgels.jerahmeel.api.course.CourseCreateData;
 import judgels.jerahmeel.api.course.CourseProgress;
-import judgels.jerahmeel.api.course.CourseService;
 import judgels.jerahmeel.api.course.CourseUpdateData;
 import judgels.jerahmeel.api.course.CoursesResponse;
 import judgels.jerahmeel.api.curriculum.Curriculum;
@@ -23,31 +31,20 @@ import judgels.jerahmeel.stats.StatsStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-public class CourseResource implements CourseService {
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final CourseStore courseStore;
-    private final CurriculumStore curriculumStore;
-    private final StatsStore statsStore;
+@Path("/api/v2/courses")
+public class CourseResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected CourseStore courseStore;
+    @Inject protected CurriculumStore curriculumStore;
+    @Inject protected StatsStore statsStore;
 
-    @Inject
-    public CourseResource(
-            ActorChecker actorChecker,
-            RoleChecker roleChecker,
-            CourseStore courseStore,
-            CurriculumStore curriculumStore,
-            StatsStore statsStore) {
+    @Inject public CourseResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.courseStore = courseStore;
-        this.curriculumStore = curriculumStore;
-        this.statsStore = statsStore;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public CoursesResponse getCourses(Optional<AuthHeader> authHeader) {
+    public CoursesResponse getCourses(@HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
 
         List<Course> courses = courseStore.getCourses();
@@ -61,26 +58,43 @@ public class CourseResource implements CourseService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/slug/{courseSlug}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public Course getCourseBySlug(Optional<AuthHeader> authHeader, String courseSlug) {
+    public Course getCourseBySlug(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("courseSlug") String courseSlug) {
+
         actorChecker.check(authHeader);
 
         return checkFound(courseStore.getCourseBySlug(courseSlug));
     }
 
-    @Override
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Course createCourse(AuthHeader authHeader, CourseCreateData data) {
+    public Course createCourse(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            CourseCreateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.isAdmin(actorJid));
 
         return courseStore.createCourse(data);
     }
 
-    @Override
+    @POST
+    @Path("/{courseJid}")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Course updateCourse(AuthHeader authHeader, String courseJid, CourseUpdateData data) {
+    public Course updateCourse(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("courseJid") String courseJid,
+            CourseUpdateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(courseStore.getCourseByJid(courseJid));
         checkAllowed(roleChecker.isAdmin(actorJid));

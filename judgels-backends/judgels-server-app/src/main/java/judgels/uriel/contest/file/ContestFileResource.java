@@ -2,6 +2,7 @@ package judgels.uriel.contest.file;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
@@ -18,6 +19,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import judgels.fs.FileSystem;
 import judgels.service.ServiceUtils;
@@ -26,7 +28,6 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.file.ContestFile;
 import judgels.uriel.api.contest.file.ContestFileConfig;
-import judgels.uriel.api.contest.file.ContestFileService;
 import judgels.uriel.api.contest.file.ContestFilesResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
@@ -34,31 +35,23 @@ import judgels.uriel.file.FileFs;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-public class ContestFileResource implements ContestFileService {
-    private final ActorChecker actorChecker;
-    private final ContestFileRoleChecker fileRoleChecker;
-    private final ContestStore contestStore;
-    private final ContestLogger contestLogger;
-    private final FileSystem fileFs;
+@Path("/api/v2/contests/{contestJid}/files")
+public class ContestFileResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestFileRoleChecker fileRoleChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogger contestLogger;
+    @Inject @FileFs protected FileSystem fileFs;
 
-    @Inject
-    public ContestFileResource(
-            ActorChecker actorChecker,
-            ContestFileRoleChecker fileRoleChecker,
-            ContestStore contestStore,
-            ContestLogger contestLogger,
-            @FileFs FileSystem fileFs) {
+    @Inject public ContestFileResource() {}
 
-        this.actorChecker = actorChecker;
-        this.fileRoleChecker = fileRoleChecker;
-        this.contestStore = contestStore;
-        this.contestLogger = contestLogger;
-        this.fileFs = fileFs;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ContestFilesResponse getFiles(AuthHeader authHeader, String contestJid) {
+    public ContestFilesResponse getFiles(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
@@ -87,7 +80,10 @@ public class ContestFileResource implements ContestFileService {
     @GET
     @Path("/{filename}")
     @UnitOfWork(readOnly = true)
-    public Response downloadFile(@PathParam("contestJid") String contestJid, @PathParam("filename") String filename) {
+    public Response downloadFile(
+            @PathParam("contestJid") String contestJid,
+            @PathParam("filename") String filename) {
+
         checkFound(contestStore.getContestByJid(contestJid));
         Response response =
                 ServiceUtils.buildDownloadResponse(fileFs.getPrivateFileUrl(Paths.get(contestJid, filename)));
@@ -98,7 +94,6 @@ public class ContestFileResource implements ContestFileService {
     }
 
     @POST
-    @Path("/")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
     public void uploadFile(

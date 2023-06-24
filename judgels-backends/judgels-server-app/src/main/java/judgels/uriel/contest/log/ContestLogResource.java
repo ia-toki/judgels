@@ -1,5 +1,7 @@
 package judgels.uriel.contest.log;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -11,6 +13,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
@@ -19,7 +27,6 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.log.ContestLog;
 import judgels.uriel.api.contest.log.ContestLogConfig;
-import judgels.uriel.api.contest.log.ContestLogService;
 import judgels.uriel.api.contest.log.ContestLogsResponse;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.contest.ContestRoleChecker;
@@ -28,47 +35,30 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 
-public class ContestLogResource implements ContestLogService {
+@Path("/api/v2/contests/{contestJid}/logs")
+public class ContestLogResource {
     private static final int PAGE_SIZE = 100;
 
-    private final ActorChecker actorChecker;
-    private final ContestRoleChecker contestRoleChecker;
-    private final ContestStore contestStore;
-    private final ContestLogStore logStore;
-    private final ContestContestantStore contestantStore;
-    private final ContestSupervisorStore supervisorStore;
-    private final ContestProblemStore problemStore;
-    private final UserClient userClient;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestRoleChecker contestRoleChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogStore logStore;
+    @Inject protected ContestContestantStore contestantStore;
+    @Inject protected ContestSupervisorStore supervisorStore;
+    @Inject protected ContestProblemStore problemStore;
+    @Inject protected UserClient userClient;
 
-    @Inject
-    public ContestLogResource(
-            ActorChecker actorChecker,
-            ContestRoleChecker contestRoleChecker,
-            ContestStore contestStore,
-            ContestLogStore logStore,
-            ContestContestantStore contestantStore,
-            ContestSupervisorStore supervisorStore,
-            ContestProblemStore problemStore,
-            UserClient userClient) {
+    @Inject public ContestLogResource() {}
 
-        this.actorChecker = actorChecker;
-        this.contestRoleChecker = contestRoleChecker;
-        this.contestStore = contestStore;
-        this.logStore = logStore;
-        this.contestantStore = contestantStore;
-        this.supervisorStore = supervisorStore;
-        this.problemStore = problemStore;
-        this.userClient = userClient;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestLogsResponse getLogs(
-            AuthHeader authHeader,
-            String contestJid,
-            Optional<String> username,
-            Optional<String> problemAlias,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));

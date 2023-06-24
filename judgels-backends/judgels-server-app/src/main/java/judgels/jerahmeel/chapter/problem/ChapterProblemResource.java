@@ -1,6 +1,8 @@
 package judgels.jerahmeel.chapter.problem;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -11,10 +13,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemData;
-import judgels.jerahmeel.api.chapter.problem.ChapterProblemService;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemWorksheet;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemsResponse;
 import judgels.jerahmeel.api.problem.ProblemProgress;
@@ -27,34 +37,25 @@ import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-public class ChapterProblemResource implements ChapterProblemService {
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final ChapterStore chapterStore;
-    private final ChapterProblemStore problemStore;
-    private final ProblemClient problemClient;
-    private final StatsStore statsStore;
+@Path("/api/v2/chapters/{chapterJid}/problems")
+public class ChapterProblemResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected ChapterStore chapterStore;
+    @Inject protected ChapterProblemStore problemStore;
+    @Inject protected ProblemClient problemClient;
+    @Inject protected StatsStore statsStore;
 
-    @Inject
-    public ChapterProblemResource(
-            ActorChecker actorChecker,
-            RoleChecker roleChecker,
-            ChapterStore chapterStore,
-            ChapterProblemStore problemStore,
-            ProblemClient problemClient,
-            StatsStore statsStore) {
+    @Inject public ChapterProblemResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.chapterStore = chapterStore;
-        this.problemStore = problemStore;
-        this.problemClient = problemClient;
-        this.statsStore = statsStore;
-    }
-
-    @Override
+    @PUT
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void setProblems(AuthHeader authHeader, String chapterJid, List<ChapterProblemData> data) {
+    public void setProblems(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("chapterJid") String chapterJid,
+            List<ChapterProblemData> data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
@@ -79,9 +80,13 @@ public class ChapterProblemResource implements ChapterProblemService {
         problemStore.setProblems(chapterJid, setData);
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ChapterProblemsResponse getProblems(Optional<AuthHeader> authHeader, String chapterJid) {
+    public ChapterProblemsResponse getProblems(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("chapterJid") String chapterJid) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
@@ -97,14 +102,16 @@ public class ChapterProblemResource implements ChapterProblemService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{problemAlias}/worksheet")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ChapterProblemWorksheet getProblemWorksheet(
-            UriInfo uriInfo,
-            Optional<AuthHeader> authHeader,
-            String chapterJid,
-            String problemAlias,
-            Optional<String> language) {
+            @Context UriInfo uriInfo,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("chapterJid") String chapterJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language) {
 
         actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));

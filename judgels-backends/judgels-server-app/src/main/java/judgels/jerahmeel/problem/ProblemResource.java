@@ -1,11 +1,18 @@
 package judgels.jerahmeel.problem;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jerahmeel.api.problem.ProblemService;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jerahmeel.api.problem.ProblemSetProblemInfo;
 import judgels.jerahmeel.api.problem.ProblemsResponse;
 import judgels.jerahmeel.difficulty.ProblemDifficultyStore;
@@ -15,36 +22,25 @@ import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-public class ProblemResource implements ProblemService {
+@Path("/api/v2/problems")
+public class ProblemResource {
     private static final int PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
-    private final ProblemStore problemStore;
-    private final StatsStore statsStore;
-    private final ProblemDifficultyStore difficultyStore;
-    private final ProblemClient problemClient;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ProblemStore problemStore;
+    @Inject protected StatsStore statsStore;
+    @Inject protected ProblemDifficultyStore difficultyStore;
+    @Inject protected ProblemClient problemClient;
 
-    @Inject
-    public ProblemResource(
-            ActorChecker actorChecker,
-            ProblemStore problemStore,
-            StatsStore statsStore,
-            ProblemDifficultyStore difficultyStore,
-            ProblemClient problemClient) {
+    @Inject public ProblemResource() {}
 
-        this.actorChecker = actorChecker;
-        this.problemStore = problemStore;
-        this.statsStore = statsStore;
-        this.difficultyStore = difficultyStore;
-        this.problemClient = problemClient;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemsResponse getProblems(
-            Optional<AuthHeader> authHeader,
-            Set<String> tags,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("tags") Set<String> tags,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 

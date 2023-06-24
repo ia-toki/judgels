@@ -1,5 +1,6 @@
 package judgels.uriel.contest.editorial;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -12,6 +13,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.user.UserClient;
@@ -21,7 +28,6 @@ import judgels.sandalphon.api.problem.ProblemMetadata;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.editorial.ContestEditorialResponse;
-import judgels.uriel.api.contest.editorial.ContestEditorialService;
 import judgels.uriel.api.contest.module.EditorialModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.contest.ContestStore;
@@ -29,35 +35,26 @@ import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 
-public class ContestEditorialResource implements ContestEditorialService {
-    private final ContestLogger contestLogger;
-    private final ContestEditorialRoleChecker roleChecker;
-    private final ContestStore contestStore;
-    private final ContestModuleStore contestModuleStore;
-    private final ContestProblemStore problemStore;
-    private final UserClient userClient;
-    private final ProblemClient problemClient;
+@Path("/api/v2/contests/{contestJid}/editorial")
+public class ContestEditorialResource {
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected ContestEditorialRoleChecker roleChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestModuleStore contestModuleStore;
+    @Inject protected ContestProblemStore problemStore;
+    @Inject protected UserClient userClient;
+    @Inject protected ProblemClient problemClient;
 
-    @Inject
-    public ContestEditorialResource(
-            ContestLogger contestLogger,
-            ContestEditorialRoleChecker roleChecker,
-            ContestStore contestStore,
-            ContestModuleStore contestModuleStore,
-            ContestProblemStore problemStore,
-            UserClient userClient, ProblemClient problemClient) {
-        this.contestLogger = contestLogger;
-        this.roleChecker = roleChecker;
-        this.contestStore = contestStore;
-        this.contestModuleStore = contestModuleStore;
-        this.problemStore = problemStore;
-        this.userClient = userClient;
-        this.problemClient = problemClient;
-    }
+    @Inject public ContestEditorialResource() {}
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ContestEditorialResponse getEditorial(UriInfo uriInfo, String contestJid, Optional<String> language) {
+    public ContestEditorialResponse getEditorial(
+            @Context UriInfo uriInfo,
+            @PathParam("contestJid") String contestJid,
+            @QueryParam("language") Optional<String> language) {
+
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(roleChecker.canView(contest));
 

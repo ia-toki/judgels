@@ -3,6 +3,7 @@ package judgels.jophiel.user.avatar;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.IF_MODIFIED_SINCE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
@@ -15,14 +16,16 @@ import java.util.Date;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.avatar.UserAvatarService;
 import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.RandomCodeGenerator;
@@ -32,39 +35,34 @@ import judgels.service.api.actor.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-public class UserAvatarResource implements UserAvatarService {
+@Path("/api/v2/users/{userJid}/avatar")
+public class UserAvatarResource {
     private static final String DEFAULT_AVATAR = "assets/avatar-default.png";
 
-    private final ActorChecker actorChecker;
-    private final UserRoleChecker roleChecker;
-    private final UserStore userStore;
-    private final FileSystem avatarFs;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected UserRoleChecker roleChecker;
+    @Inject protected UserStore userStore;
+    @Inject @UserAvatarFs protected FileSystem avatarFs;
 
-    @Inject
-    public UserAvatarResource(
-            ActorChecker actorChecker,
-            UserRoleChecker roleChecker,
-            UserStore userStore,
-            @UserAvatarFs FileSystem avatarFs) {
+    @Inject public UserAvatarResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.avatarFs = avatarFs;
-        this.userStore = userStore;
-    }
-
-    @Override
+    @DELETE
     @UnitOfWork
-    public void deleteAvatar(AuthHeader authHeader, String userJid) {
+    public void deleteAvatar(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("userJid") String userJid) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canManage(actorJid, userJid));
 
         userStore.updateUserAvatar(userJid, null);
     }
 
-    @Override
+    @GET
+    @Path("/exists")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public boolean avatarExists(String userJid) {
+    public boolean avatarExists(@PathParam("userJid") String userJid) {
         return userStore.getUserAvatarFilename(userJid).isPresent();
     }
 

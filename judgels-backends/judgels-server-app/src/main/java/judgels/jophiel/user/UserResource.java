@@ -1,5 +1,8 @@
 package judgels.jophiel.user;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -17,9 +20,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.UsersResponse;
 import judgels.jophiel.api.user.UsersUpsertResponse;
 import judgels.jophiel.api.user.info.UserInfo;
@@ -32,46 +42,40 @@ import judgels.service.api.actor.AuthHeader;
 import liquibase.util.csv.CSVReader;
 import liquibase.util.csv.CSVWriter;
 
-public class UserResource implements UserService {
+@Path("/api/v2/users")
+public class UserResource {
     private static final int PAGE_SIZE = 250;
 
-    private final ActorChecker actorChecker;
-    private final UserRoleChecker roleChecker;
-    private final UserStore userStore;
-    private final UserInfoStore infoStore;
-    private final SessionStore sessionStore;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected UserRoleChecker roleChecker;
+    @Inject protected UserStore userStore;
+    @Inject protected UserInfoStore infoStore;
+    @Inject protected SessionStore sessionStore;
 
-    @Inject
-    public UserResource(
-            ActorChecker actorChecker,
-            UserRoleChecker roleChecker,
-            UserStore userStore,
-            UserInfoStore infoStore,
-            SessionStore sessionStore) {
+    @Inject public UserResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.userStore = userStore;
-        this.infoStore = infoStore;
-        this.sessionStore = sessionStore;
-    }
-
-    @Override
+    @GET
+    @Path("/{userJid}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public User getUser(AuthHeader authHeader, String userJid) {
+    public User getUser(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("userJid") String userJid) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canManage(actorJid, userJid));
 
         return checkFound(userStore.getUserByJid(userJid));
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public UsersResponse getUsers(
-            AuthHeader authHeader,
-            Optional<Integer> pageNumber,
-            Optional<String> orderBy,
-            Optional<OrderDir> orderDir) {
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("page") Optional<Integer> pageNumber,
+            @QueryParam("orderBy") Optional<String> orderBy,
+            @QueryParam("orderDir") Optional<OrderDir> orderDir) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
@@ -85,18 +89,29 @@ public class UserResource implements UserService {
                 .build();
     }
 
-    @Override
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public User createUser(AuthHeader authHeader, UserData data) {
+    public User createUser(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            UserData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
         return userStore.createUser(data);
     }
 
-    @Override
+    @POST
+    @Path("/batch-get")
+    @Consumes(APPLICATION_JSON)
+    @Produces(TEXT_PLAIN)
     @UnitOfWork(readOnly = true)
-    public String exportUsers(AuthHeader authHeader, List<String> usernames) {
+    public String exportUsers(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            List<String> usernames) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
@@ -116,9 +131,15 @@ public class UserResource implements UserService {
         return csv.toString();
     }
 
-    @Override
+    @POST
+    @Path("/batch-upsert")
+    @Consumes(TEXT_PLAIN)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public UsersUpsertResponse upsertUsers(AuthHeader authHeader, String csv) throws IOException {
+    public UsersUpsertResponse upsertUsers(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            String csv) throws IOException {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
