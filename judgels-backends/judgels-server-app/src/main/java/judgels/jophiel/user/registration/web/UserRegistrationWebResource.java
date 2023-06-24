@@ -9,12 +9,9 @@ import javax.ws.rs.Produces;
 
 @Path("/api/v2/users/registration/web")
 public class UserRegistrationWebResource {
-    private final UserRegistrationWebConfig config;
+    @Inject protected UserRegistrationWebConfig config;
 
-    @Inject
-    public UserRegistrationWebResource(UserRegistrationWebConfig config) {
-        this.config = config;
-    }
+    @Inject public UserRegistrationWebResource() {}
 
     @GET
     @Path("/config")

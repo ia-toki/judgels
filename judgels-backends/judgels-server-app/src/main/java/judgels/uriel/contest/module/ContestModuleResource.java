@@ -1,50 +1,49 @@
 package judgels.uriel.contest.module;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import judgels.jophiel.user.UserClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.module.ContestModuleService;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 
-public class ContestModuleResource implements ContestModuleService {
-    private final ActorChecker actorChecker;
-    private final ContestRoleChecker contestRoleChecker;
-    private final ContestStore contestStore;
-    private final ContestLogger contestLogger;
-    private final ContestModuleStore moduleStore;
-    private final UserClient userClient;
+@Path("/api/v2/contests/{contestJid}/modules")
+public class ContestModuleResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestRoleChecker contestRoleChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected ContestModuleStore moduleStore;
+    @Inject protected UserClient userClient;
 
-    @Inject
-    public ContestModuleResource(
-            ActorChecker actorChecker,
-            ContestRoleChecker contestRoleChecker,
-            ContestStore contestStore,
-            ContestLogger contestLogger,
-            ContestModuleStore moduleStore,
-            UserClient userClient) {
+    @Inject public ContestModuleResource() {}
 
-        this.actorChecker = actorChecker;
-        this.contestRoleChecker = contestRoleChecker;
-        this.contestStore = contestStore;
-        this.contestLogger = contestLogger;
-        this.moduleStore = moduleStore;
-        this.userClient = userClient;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public Set<ContestModuleType> getModules(AuthHeader authHeader, String contestJid) {
+    public Set<ContestModuleType> getModules(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
@@ -55,9 +54,14 @@ public class ContestModuleResource implements ContestModuleService {
         return moduleStore.getEnabledModules(contest.getJid());
     }
 
-    @Override
+    @PUT
+    @Path("/{type}")
     @UnitOfWork
-    public void enableModule(AuthHeader authHeader, String contestJid, ContestModuleType type) {
+    public void enableModule(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("type") ContestModuleType type) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
@@ -67,9 +71,14 @@ public class ContestModuleResource implements ContestModuleService {
         contestLogger.log(contestJid, "ENABLE_MODULE", type.name());
     }
 
-    @Override
+    @DELETE
+    @Path("/{type}")
     @UnitOfWork
-    public void disableModule(AuthHeader authHeader, String contestJid, ContestModuleType type) {
+    public void disableModule(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("type") ContestModuleType type) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
@@ -79,9 +88,14 @@ public class ContestModuleResource implements ContestModuleService {
         contestLogger.log(contestJid, "DISABLE_MODULE", type.name());
     }
 
-    @Override
+    @GET
+    @Path("/config")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestModulesConfig getConfig(AuthHeader authHeader, String contestJid) {
+    public ContestModulesConfig getConfig(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
@@ -96,9 +110,15 @@ public class ContestModuleResource implements ContestModuleService {
         return config;
     }
 
-    @Override
+    @PUT
+    @Path("/config")
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void upsertConfig(AuthHeader authHeader, String contestJid, ContestModulesConfig config) {
+    public void upsertConfig(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            ContestModulesConfig config) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 

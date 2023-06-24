@@ -1,5 +1,7 @@
 package judgels.uriel.contest.announcement;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.PUBLISHED;
@@ -10,6 +12,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
@@ -19,44 +30,30 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementConfig;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
-import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 
-public class ContestAnnouncementResource implements ContestAnnouncementService {
+@Path("/api/v2/contests/{contestJid}/announcements")
+public class ContestAnnouncementResource {
     private static final int PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
-    private final ContestStore contestStore;
-    private final ContestLogger contestLogger;
-    private final ContestAnnouncementRoleChecker announcementRoleChecker;
-    private final ContestAnnouncementStore announcementStore;
-    private final UserClient userClient;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected ContestAnnouncementRoleChecker announcementRoleChecker;
+    @Inject protected ContestAnnouncementStore announcementStore;
+    @Inject protected UserClient userClient;
 
-    @Inject
-    public ContestAnnouncementResource(
-            ActorChecker actorChecker,
-            ContestStore contestStore,
-            ContestLogger contestLogger,
-            ContestAnnouncementRoleChecker announcementRoleChecker,
-            ContestAnnouncementStore announcementStore,
-            UserClient userClient) {
+    @Inject public ContestAnnouncementResource() {}
 
-        this.actorChecker = actorChecker;
-        this.announcementRoleChecker = announcementRoleChecker;
-        this.contestStore = contestStore;
-        this.announcementStore = announcementStore;
-        this.contestLogger = contestLogger;
-        this.userClient = userClient;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestAnnouncementsResponse getAnnouncements(
-            Optional<AuthHeader> authHeader,
-            String contestJid,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -87,12 +84,15 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 .build();
     }
 
-    @Override
+    @POST
+    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
     public ContestAnnouncement createAnnouncement(
-            AuthHeader authHeader,
-            String contestJid,
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
             ContestAnnouncementData data) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canManage(actorJid, contest));
@@ -103,13 +103,17 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         return announcement;
     }
 
-    @Override
+    @PUT
+    @Path("/{announcementJid}")
+    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
     public ContestAnnouncement updateAnnouncement(
-            AuthHeader authHeader,
-            String contestJid,
-            String announcementJid,
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("announcementJid") String announcementJid,
             ContestAnnouncementData data) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canManage(actorJid, contest));

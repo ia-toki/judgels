@@ -1,5 +1,7 @@
 package judgels.uriel.contest.clarification;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -13,6 +15,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
@@ -24,50 +35,33 @@ import judgels.uriel.api.contest.clarification.ContestClarification;
 import judgels.uriel.api.contest.clarification.ContestClarificationAnswerData;
 import judgels.uriel.api.contest.clarification.ContestClarificationConfig;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
-import judgels.uriel.api.contest.clarification.ContestClarificationService;
 import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.problem.ContestProblemStore;
 
-public class ContestClarificationResource implements ContestClarificationService {
+@Path("/api/v2/contests/{contestJid}/clarifications")
+public class ContestClarificationResource {
     private static final int PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
-    private final ContestStore contestStore;
-    private final ContestLogger contestLogger;
-    private final ContestClarificationRoleChecker clarificationRoleChecker;
-    private final ContestClarificationStore clarificationStore;
-    private final ContestProblemStore problemStore;
-    private final UserClient userClient;
-    private final ProblemClient problemClient;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected ContestClarificationRoleChecker clarificationRoleChecker;
+    @Inject protected ContestClarificationStore clarificationStore;
+    @Inject protected ContestProblemStore problemStore;
+    @Inject protected UserClient userClient;
+    @Inject protected ProblemClient problemClient;
 
-    @Inject
-    public ContestClarificationResource(
-            ActorChecker actorChecker,
-            ContestStore contestStore,
-            ContestLogger contestLogger,
-            ContestClarificationRoleChecker clarificationRoleChecker,
-            ContestClarificationStore clarificationStore,
-            ContestProblemStore problemStore,
-            UserClient userClient,
-            ProblemClient problemClient) {
+    @Inject public ContestClarificationResource() {}
 
-        this.actorChecker = actorChecker;
-        this.contestStore = contestStore;
-        this.contestLogger = contestLogger;
-        this.clarificationRoleChecker = clarificationRoleChecker;
-        this.clarificationStore = clarificationStore;
-        this.problemStore = problemStore;
-        this.userClient = userClient;
-        this.problemClient = problemClient;
-    }
-
-    @Override
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
     public ContestClarification createClarification(
-            AuthHeader authHeader,
-            String contestJid,
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
             ContestClarificationData data) {
 
         String actorJid = actorChecker.check(authHeader);
@@ -80,14 +74,15 @@ public class ContestClarificationResource implements ContestClarificationService
         return clarification;
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestClarificationsResponse getClarifications(
-            AuthHeader authHeader,
-            String contestJid,
-            Optional<String> status,
-            Optional<String> language,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @QueryParam("status") Optional<String> status,
+            @QueryParam("language") Optional<String> language,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -153,12 +148,15 @@ public class ContestClarificationResource implements ContestClarificationService
                 .build();
     }
 
-    @Override
+    @PUT
+    @Path("/{clarificationJid}/answer")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
     public ContestClarification answerClarification(
-            AuthHeader authHeader,
-            String contestJid,
-            String clarificationJid,
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("clarificationJid") String clarificationJid,
             ContestClarificationAnswerData data) {
 
         String actorJid = actorChecker.check(authHeader);

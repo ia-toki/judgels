@@ -1,5 +1,7 @@
 package judgels.uriel.contest;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -9,6 +11,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jophiel.profile.ProfileStore;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
@@ -18,7 +29,6 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestConfig;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
-import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.ContestsResponse;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
@@ -27,39 +37,28 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 
-public class ContestResource implements ContestService {
+@Path("/api/v2/contests")
+public class ContestResource {
     private static final int PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
-    private final ContestRoleChecker contestRoleChecker;
-    private final ContestStore contestStore;
-    private final ContestLogger contestLogger;
-    private final ContestModuleStore moduleStore;
-    private final ContestContestantStore contestantStore;
-    private final ProfileStore profileStore;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestRoleChecker contestRoleChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected ContestModuleStore moduleStore;
+    @Inject protected ContestContestantStore contestantStore;
+    @Inject protected ProfileStore profileStore;
 
-    @Inject
-    public ContestResource(
-            ActorChecker actorChecker,
-            ContestRoleChecker contestRoleChecker,
-            ContestStore contestStore,
-            ContestLogger contestLogger,
-            ContestModuleStore moduleStore,
-            ContestContestantStore contestantStore,
-            ProfileStore profileStore) {
+    @Inject public ContestResource() {}
 
-        this.actorChecker = actorChecker;
-        this.contestRoleChecker = contestRoleChecker;
-        this.contestStore = contestStore;
-        this.contestLogger = contestLogger;
-        this.moduleStore = moduleStore;
-        this.contestantStore = contestantStore;
-        this.profileStore = profileStore;
-    }
-
-    @Override
+    @GET
+    @Path("/{contestJid}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public Contest getContest(Optional<AuthHeader> authHeader, String contestJid) {
+    public Contest getContest(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
@@ -67,9 +66,16 @@ public class ContestResource implements ContestService {
         return contest;
     }
 
-    @Override
+    @POST
+    @Path("/{contestJid}")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Contest updateContest(AuthHeader authHeader, String contestJid, ContestUpdateData data) {
+    public Contest updateContest(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            ContestUpdateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
@@ -81,9 +87,14 @@ public class ContestResource implements ContestService {
         return contest;
     }
 
-    @Override
+    @GET
+    @Path("/slug/{contestSlug}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public Contest getContestBySlug(Optional<AuthHeader> authHeader, String contestSlug) {
+    public Contest getContestBySlug(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestSlug") String contestSlug) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestBySlug(contestSlug));
 
@@ -91,9 +102,13 @@ public class ContestResource implements ContestService {
         return contest;
     }
 
-    @Override
+    @POST
+    @Path("/{contestJid}/virtual")
     @UnitOfWork
-    public void startVirtualContest(AuthHeader authHeader, String contestJid) {
+    public void startVirtualContest(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canStartVirtual(actorJid, contest));
@@ -103,9 +118,13 @@ public class ContestResource implements ContestService {
         contestLogger.log(contestJid, "START_VIRTUAL_CONTEST");
     }
 
-    @Override
+    @PUT
+    @Path("/{contestJid}/virtual/reset")
     @UnitOfWork
-    public void resetVirtualContest(AuthHeader authHeader, String contestJid) {
+    public void resetVirtualContest(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canResetVirtual(actorJid, contest));
@@ -115,18 +134,19 @@ public class ContestResource implements ContestService {
         contestLogger.log(contestJid, "RESET_VIRTUAL_CONTEST");
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestsResponse getContests(
-            Optional<AuthHeader> authHeader,
-            Optional<String> nameFilter,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("name") Optional<String> name,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         boolean isAdmin = contestRoleChecker.canAdminister(actorJid);
 
         Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actorJid);
-        Page<Contest> contests = contestStore.getContests(userJid, nameFilter, pageNumber.orElse(1), PAGE_SIZE);
+        Page<Contest> contests = contestStore.getContests(userJid, name, pageNumber.orElse(1), PAGE_SIZE);
 
         Map<String, ContestRole> rolesMap = contests.getPage()
                 .stream()
@@ -146,9 +166,13 @@ public class ContestResource implements ContestService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/active")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ActiveContestsResponse getActiveContests(Optional<AuthHeader> authHeader) {
+    public ActiveContestsResponse getActiveContests(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader) {
+
         String actorJid = actorChecker.check(authHeader);
         boolean isAdmin = contestRoleChecker.canAdminister(actorJid);
 
@@ -167,9 +191,14 @@ public class ContestResource implements ContestService {
                 .build();
     }
 
-    @Override
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Contest createContest(AuthHeader authHeader, ContestCreateData data) {
+    public Contest createContest(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            ContestCreateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
@@ -181,9 +210,14 @@ public class ContestResource implements ContestService {
         return contest;
     }
 
-    @Override
+    @GET
+    @Path("/{contestJid}/description")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ContestDescription getContestDescription(Optional<AuthHeader> authHeader, String contestJid) {
+    public ContestDescription getContestDescription(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canView(actorJid, contest));
@@ -197,11 +231,14 @@ public class ContestResource implements ContestService {
                 .build();
     }
 
-    @Override
+    @POST
+    @Path("/{contestJid}/description")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
     public ContestDescription updateContestDescription(
-            AuthHeader authHeader,
-            String contestJid,
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
             ContestDescription description) {
 
         String actorJid = actorChecker.check(authHeader);

@@ -3,6 +3,7 @@ package judgels.jerahmeel.submission.programming;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.buildDarkImageResponseFromText;
 import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
@@ -19,9 +20,13 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
@@ -29,7 +34,6 @@ import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.submission.SubmissionConfig;
-import judgels.jerahmeel.api.submission.programming.SubmissionService;
 import judgels.jerahmeel.api.submission.programming.SubmissionsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
@@ -57,66 +61,37 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
-public class SubmissionResource implements SubmissionService {
+@Path("/api/v2/submissions/programming")
+public class SubmissionResource {
     private static final int PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
-    private final SubmissionStore submissionStore;
-    private final SubmissionSourceBuilder submissionSourceBuilder;
-    private final SubmissionClient submissionClient;
-    private final SubmissionRegrader submissionRegrader;
-    private final SubmissionRoleChecker submissionRoleChecker;
-    private final UserClient userClient;
-    private final ProblemClient problemClient;
+    @Inject protected ActorChecker actorChecker;
+    @Inject @JerahmeelSubmissionStore protected SubmissionStore submissionStore;
+    @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
+    @Inject protected SubmissionClient submissionClient;
+    @Inject protected SubmissionRegrader submissionRegrader;
+    @Inject protected SubmissionRoleChecker submissionRoleChecker;
+    @Inject protected UserClient userClient;
+    @Inject protected ProblemClient problemClient;
 
-    private final ProblemSetStore problemSetStore;
-    private final ProblemSetProblemStore problemSetProblemStore;
+    @Inject protected ProblemSetStore problemSetStore;
+    @Inject protected ProblemSetProblemStore problemSetProblemStore;
 
-    private final ChapterStore chapterStore;
-    private final ChapterProblemStore chapterProblemStore;
+    @Inject protected ChapterStore chapterStore;
+    @Inject protected ChapterProblemStore chapterProblemStore;
 
-    @Inject
-    public SubmissionResource(
-            ActorChecker actorChecker,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore,
-            SubmissionSourceBuilder submissionSourceBuilder,
-            SubmissionClient submissionClient,
-            SubmissionRegrader submissionRegrader,
-            SubmissionRoleChecker submissionRoleChecker,
-            UserClient userClient,
-            ProblemClient problemClient,
+    @Inject public SubmissionResource() {}
 
-            ProblemSetStore problemSetStore,
-            ProblemSetProblemStore problemSetProblemStore,
-
-            ChapterStore chapterStore,
-            ChapterProblemStore chapterProblemStore) {
-
-        this.actorChecker = actorChecker;
-        this.submissionStore = submissionStore;
-        this.submissionSourceBuilder = submissionSourceBuilder;
-        this.submissionClient = submissionClient;
-        this.submissionRegrader = submissionRegrader;
-        this.submissionRoleChecker = submissionRoleChecker;
-        this.userClient = userClient;
-        this.problemClient = problemClient;
-
-        this.problemSetStore = problemSetStore;
-        this.problemSetProblemStore = problemSetProblemStore;
-
-        this.chapterStore = chapterStore;
-        this.chapterProblemStore = chapterProblemStore;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public SubmissionsResponse getSubmissions(
-            Optional<AuthHeader> authHeader,
-            Optional<String> containerJid,
-            Optional<String> username,
-            Optional<String> problemJid,
-            Optional<String> problemAlias,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("containerJid") Optional<String> containerJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -179,12 +154,14 @@ public class SubmissionResource implements SubmissionService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/id/{submissionId}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public SubmissionWithSourceResponse getSubmissionWithSourceById(
-            Optional<AuthHeader> authHeader,
-            long submissionId,
-            Optional<String> language) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("submissionId") long submissionId,
+            @QueryParam("language") Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
@@ -237,18 +214,22 @@ public class SubmissionResource implements SubmissionService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{submissionJid}/image")
+    @Produces("image/png")
     @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceImage(String submissionJid) {
+    public Response getSubmissionSourceImage(@PathParam("submissionJid") String submissionJid) {
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
 
         return buildLightImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
-    @Override
+    @GET
+    @Path("/{submissionJid}/image/dark")
+    @Produces("image/png")
     @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceDarkImage(String submissionJid) {
+    public Response getSubmissionSourceDarkImage(@PathParam("submissionJid") String submissionJid) {
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
 
@@ -256,7 +237,6 @@ public class SubmissionResource implements SubmissionService {
     }
 
     @POST
-    @Path("/")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
     public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
@@ -278,9 +258,13 @@ public class SubmissionResource implements SubmissionService {
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
     }
 
-    @Override
+    @POST
+    @Path("/{submissionJid}/regrade")
     @UnitOfWork
-    public void regradeSubmission(AuthHeader authHeader, String submissionJid) {
+    public void regradeSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionJid") String submissionJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid));
@@ -289,14 +273,15 @@ public class SubmissionResource implements SubmissionService {
         submissionRegrader.regradeSubmission(submission, config);
     }
 
-    @Override
+    @POST
+    @Path("/regrade")
     @UnitOfWork
     public void regradeSubmissions(
-            AuthHeader authHeader,
-            Optional<String> containerJid,
-            Optional<String> username,
-            Optional<String> problemJid,
-            Optional<String> problemAlias) {
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("containerJid") Optional<String> containerJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("problemAlias") Optional<String> problemAlias) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(submissionRoleChecker.canManage(actorJid));

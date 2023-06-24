@@ -2,6 +2,8 @@ package judgels.jerahmeel.problemset;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.toSet;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -15,12 +17,19 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.jerahmeel.api.archive.Archive;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
 import judgels.jerahmeel.api.problemset.ProblemSetProgress;
-import judgels.jerahmeel.api.problemset.ProblemSetService;
 import judgels.jerahmeel.api.problemset.ProblemSetStatsResponse;
 import judgels.jerahmeel.api.problemset.ProblemSetUpdateData;
 import judgels.jerahmeel.api.problemset.ProblemSetUserProgressesData;
@@ -37,43 +46,28 @@ import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-public class ProblemSetResource implements ProblemSetService {
+@Path("/api/v2/problemsets")
+public class ProblemSetResource {
     private static final int PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final ProblemSetStore problemSetStore;
-    private final ProblemSetProblemStore problemSetProblemStore;
-    private final ArchiveStore archiveStore;
-    private final StatsStore statsStore;
-    private final UserClient userClient;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected ProblemSetStore problemSetStore;
+    @Inject protected ProblemSetProblemStore problemSetProblemStore;
+    @Inject protected ArchiveStore archiveStore;
+    @Inject protected StatsStore statsStore;
+    @Inject protected UserClient userClient;
 
-    @Inject
-    public ProblemSetResource(
-            ActorChecker actorChecker,
-            RoleChecker roleChecker,
-            ProblemSetStore problemSetStore,
-            ProblemSetProblemStore problemSetProblemStore,
-            ArchiveStore archiveStore,
-            StatsStore statsStore,
-            UserClient userClient) {
+    @Inject public ProblemSetResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.problemSetStore = problemSetStore;
-        this.problemSetProblemStore = problemSetProblemStore;
-        this.archiveStore = archiveStore;
-        this.statsStore = statsStore;
-        this.userClient = userClient;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemSetsResponse getProblemSets(
-            Optional<AuthHeader> authHeader,
-            Optional<String> archiveSlug,
-            Optional<String> nameFilter,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("archiveSlug") Optional<String> archiveSlug,
+            @QueryParam("name") Optional<String> name,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -81,7 +75,7 @@ public class ProblemSetResource implements ProblemSetService {
         Optional<String> archiveJid = archiveSlug.isPresent()
                 ? Optional.of(archive.map(Archive::getJid).orElse(""))
                 : Optional.empty();
-        Page<ProblemSet> problemSets = problemSetStore.getProblemSets(archiveJid, nameFilter, pageNumber.orElse(1), PAGE_SIZE);
+        Page<ProblemSet> problemSets = problemSetStore.getProblemSets(archiveJid, name, pageNumber.orElse(1), PAGE_SIZE);
         Set<String> problemSetJids = problemSets.getPage().stream().map(ProblemSet::getJid).collect(toSet());
         Set<String> archiveJids = problemSets.getPage().stream().map(ProblemSet::getArchiveJid).collect(toSet());
         Map<String, Archive> archivesMap = archiveStore.getArchivesByJids(archiveJids);
@@ -111,9 +105,14 @@ public class ProblemSetResource implements ProblemSetService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{problemSetJid}/stats")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemSetStatsResponse getProblemSetStats(Optional<AuthHeader> authHeader, String problemSetJid) {
+    public ProblemSetStatsResponse getProblemSetStats(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid) {
+
         String actorJid = actorChecker.check(authHeader);
         ProblemSetProgress progress = statsStore
                 .getProblemSetProgressesMap(actorJid, ImmutableSet.of(problemSetJid))
@@ -123,24 +122,38 @@ public class ProblemSetResource implements ProblemSetService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/slug/{problemSetSlug}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemSet getProblemSetBySlug(Optional<AuthHeader> authHeader, String problemSetSlug) {
+    public ProblemSet getProblemSetBySlug(@PathParam("problemSetSlug") String problemSetSlug) {
         return checkFound(problemSetStore.getProblemSetBySlug(problemSetSlug));
     }
 
-    @Override
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ProblemSet createProblemSet(AuthHeader authHeader, ProblemSetCreateData data) {
+    public ProblemSet createProblemSet(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            ProblemSetCreateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.isAdmin(actorJid));
 
         return problemSetStore.createProblemSet(data);
     }
 
-    @Override
+    @POST
+    @Path("/{problemSetJid}")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ProblemSet updateProblemSet(AuthHeader authHeader, String problemSetJid, ProblemSetUpdateData data) {
+    public ProblemSet updateProblemSet(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            ProblemSetUpdateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
@@ -148,13 +161,18 @@ public class ProblemSetResource implements ProblemSetService {
         return problemSetStore.updateProblemSet(problemSetJid, data);
     }
 
-    @Override
-    @UnitOfWork
-    public ProblemSet searchProblemSet(String contestJid) {
+    @GET
+    @Path("/search")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public ProblemSet searchProblemSet(@QueryParam("contestJid") String contestJid) {
         return checkFound(problemSetStore.getProblemSetByContestJid(contestJid));
     }
 
-    @Override
+    @POST
+    @Path("/user-progresses")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemSetUserProgressesResponse getProblemSetUserProgresses(ProblemSetUserProgressesData data) {
         checkArgument(data.getUsernames().size() <= 100, "Cannot get more than 100 users.");

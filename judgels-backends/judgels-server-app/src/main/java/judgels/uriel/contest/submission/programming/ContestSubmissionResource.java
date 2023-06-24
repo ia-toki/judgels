@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.buildDarkImageResponseFromText;
@@ -56,7 +57,6 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
-import judgels.uriel.api.contest.submission.programming.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.programming.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -70,76 +70,41 @@ import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
-public class ContestSubmissionResource implements ContestSubmissionService {
+@Path("/api/v2/contests/submissions/programming")
+public class ContestSubmissionResource {
     private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 5000;
     private static final String LAST_SUBMISSION_ID_HEADER = "Last-Submission-Id";
     private static final int PAGE_SIZE = 20;
 
-    private final ActorChecker actorChecker;
-    private final ContestStore contestStore;
-    private final ContestLogger contestLogger;
-    private final SubmissionStore submissionStore;
-    private final SubmissionSourceBuilder submissionSourceBuilder;
-    private final SubmissionDownloader submissionDownloader;
-    private final SubmissionClient submissionClient;
-    private final SubmissionRegrader submissionRegrader;
-    private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
-    private final ContestSubmissionRoleChecker submissionRoleChecker;
-    private final ContestProblemRoleChecker problemRoleChecker;
-    private final ContestModuleStore moduleStore;
-    private final ContestContestantStore contestantStore;
-    private final ContestSupervisorStore supervisorStore;
-    private final ContestProblemStore problemStore;
-    private final UserClient userClient;
-    private final ProblemClient problemClient;
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected SubmissionStore submissionStore;
+    @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
+    @Inject protected SubmissionDownloader submissionDownloader;
+    @Inject protected SubmissionClient submissionClient;
+    @Inject protected SubmissionRegrader submissionRegrader;
+    @Inject protected ScoreboardIncrementalMarker scoreboardIncrementalMarker;
+    @Inject protected ContestSubmissionRoleChecker submissionRoleChecker;
+    @Inject protected ContestProblemRoleChecker problemRoleChecker;
+    @Inject protected ContestModuleStore moduleStore;
+    @Inject protected ContestContestantStore contestantStore;
+    @Inject protected ContestSupervisorStore supervisorStore;
+    @Inject protected ContestProblemStore problemStore;
+    @Inject protected UserClient userClient;
+    @Inject protected ProblemClient problemClient;
 
-    @Inject
-    public ContestSubmissionResource(
-            ActorChecker actorChecker,
-            ContestStore contestStore,
-            ContestLogger contestLogger,
-            SubmissionStore submissionStore,
-            SubmissionSourceBuilder submissionSourceBuilder,
-            SubmissionDownloader submissionDownloader,
-            SubmissionClient submissionClient,
-            SubmissionRegrader submissionRegrader,
-            ScoreboardIncrementalMarker scoreboardIncrementalMarker,
-            ContestSubmissionRoleChecker submissionRoleChecker,
-            ContestProblemRoleChecker problemRoleChecker,
-            ContestModuleStore moduleStore,
-            ContestContestantStore contestantStore,
-            ContestSupervisorStore supervisorStore,
-            ContestProblemStore problemStore,
-            UserClient userClient,
-            ProblemClient problemClient) {
+    @Inject public ContestSubmissionResource() {}
 
-        this.actorChecker = actorChecker;
-        this.contestStore = contestStore;
-        this.contestLogger = contestLogger;
-        this.submissionStore = submissionStore;
-        this.submissionSourceBuilder = submissionSourceBuilder;
-        this.submissionDownloader = submissionDownloader;
-        this.submissionClient = submissionClient;
-        this.submissionRegrader = submissionRegrader;
-        this.submissionRoleChecker = submissionRoleChecker;
-        this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
-        this.problemRoleChecker = problemRoleChecker;
-        this.moduleStore = moduleStore;
-        this.contestantStore = contestantStore;
-        this.supervisorStore = supervisorStore;
-        this.problemStore = problemStore;
-        this.userClient = userClient;
-        this.problemClient = problemClient;
-    }
-
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestSubmissionsResponse getSubmissions(
-            AuthHeader authHeader,
-            String contestJid,
-            Optional<String> username,
-            Optional<String> problemAlias,
-            Optional<Integer> pageNumber) {
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
+            @QueryParam("page") Optional<Integer> pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -202,12 +167,14 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/id/{submissionId}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public SubmissionWithSourceResponse getSubmissionWithSourceById(
-            AuthHeader authHeader,
-            long submissionId,
-            Optional<String> language) {
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionId") long submissionId,
+            @QueryParam("language") Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
@@ -236,9 +203,15 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/info")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public SubmissionInfo getSubmissionInfo(String contestJid, String userJid, String problemJid) {
+    public SubmissionInfo getSubmissionInfo(
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") String userJid,
+            @QueryParam("problemJid") String problemJid) {
+
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewAll(contest));
 
@@ -249,9 +222,15 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         return new SubmissionInfo.Builder().id(submission.getId()).profile(profile).build();
     }
 
-    @Override
+    @GET
+    @Path("/image")
+    @Produces("image/png")
     @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceImage(String contestJid, String userJid, String problemJid) {
+    public Response getSubmissionSourceImage(
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") String userJid,
+            @QueryParam("problemJid") String problemJid) {
+
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewAll(contest));
 
@@ -262,9 +241,15 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         return buildLightImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
-    @Override
+    @GET
+    @Path("/image/dark")
+    @Produces("image/png")
     @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceDarkImage(String contestJid, String userJid, String problemJid) {
+    public Response getSubmissionSourceDarkImage(
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") String userJid,
+            @QueryParam("problemJid") String problemJid) {
+
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewAll(contest));
 
@@ -276,10 +261,12 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     }
 
     @POST
-    @Path("/")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
-    public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
+    public void createSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            FormDataMultiPart parts) {
+
         String actorJid = actorChecker.check(authHeader);
         String contestJid = checkNotNull(parts.getField("contestJid"), "contestJid").getValue();
         String problemJid = checkNotNull(parts.getField("problemJid"), "problemJid").getValue();
@@ -308,9 +295,13 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         contestLogger.log(contestJid, "SUBMIT", submission.getJid(), problemJid);
     }
 
-    @Override
+    @POST
+    @Path("/{submissionJid}/regrade")
     @UnitOfWork
-    public void regradeSubmission(AuthHeader authHeader, String submissionJid) {
+    public void regradeSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionJid") String submissionJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
@@ -324,13 +315,14 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         contestLogger.log(contest.getJid(), "REGRADE_SUBMISSION", submissionJid, submission.getProblemJid());
     }
 
-    @Override
+    @POST
+    @Path("/regrade")
     @UnitOfWork
     public void regradeSubmissions(
-            AuthHeader authHeader,
-            String contestJid,
-            Optional<String> username,
-            Optional<String> problemAlias) {
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));

@@ -1,35 +1,40 @@
 package judgels.jerahmeel.chapter;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterCreateData;
-import judgels.jerahmeel.api.chapter.ChapterService;
 import judgels.jerahmeel.api.chapter.ChapterUpdateData;
 import judgels.jerahmeel.api.chapter.ChaptersResponse;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-public class ChapterResource implements ChapterService {
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final ChapterStore chapterStore;
+@Path("/api/v2/chapters")
+public class ChapterResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected ChapterStore chapterStore;
 
-    @Inject
-    public ChapterResource(ActorChecker actorChecker, RoleChecker roleChecker, ChapterStore chapterStore) {
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.chapterStore = chapterStore;
-    }
+    @Inject public ChapterResource() {}
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ChaptersResponse getChapters(AuthHeader authHeader) {
+    public ChaptersResponse getChapters(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.isAdmin(actorJid));
 
@@ -39,18 +44,30 @@ public class ChapterResource implements ChapterService {
                 .build();
     }
 
-    @Override
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Chapter createChapter(AuthHeader authHeader, ChapterCreateData data) {
+    public Chapter createChapter(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            ChapterCreateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.isAdmin(actorJid));
 
         return chapterStore.createChapter(data);
     }
 
-    @Override
+    @POST
+    @Path("/{chapterJid}")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Chapter updateChapter(AuthHeader authHeader, String chapterJid, ChapterUpdateData data) {
+    public Chapter updateChapter(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("chapterJid") String chapterJid,
+            ChapterUpdateData data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
         checkAllowed(roleChecker.isAdmin(actorJid));

@@ -1,24 +1,27 @@
 package judgels.jerahmeel.problem;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import judgels.jerahmeel.api.problem.ProblemTagCategory;
 import judgels.jerahmeel.api.problem.ProblemTagOption;
-import judgels.jerahmeel.api.problem.ProblemTagService;
 import judgels.jerahmeel.api.problem.ProblemTagsResponse;
 import judgels.sandalphon.problem.base.tag.ProblemTagStore;
 
-public class ProblemTagResource implements ProblemTagService {
-    private final ProblemTagStore tagStore;
+@Path("/api/v2/problems/tags")
+public class ProblemTagResource {
+    @Inject protected ProblemTagStore tagStore;
 
-    @Inject
-    public ProblemTagResource(ProblemTagStore tagStore) {
-        this.tagStore = tagStore;
-    }
+    @Inject public ProblemTagResource() {}
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemTagsResponse getProblemTags() {
         Map<String, Integer> tagCounts = tagStore.getPublicTagCounts();

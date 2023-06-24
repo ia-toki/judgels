@@ -42,7 +42,6 @@ public class ProblemEditorialResource extends BaseProblemResource {
     @Inject public ProblemEditorialResource() {}
 
     @GET
-    @Path("")
     @UnitOfWork(readOnly = true)
     public View viewEditorial(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
         Actor actor = actorChecker.check(req);
@@ -67,7 +66,6 @@ public class ProblemEditorialResource extends BaseProblemResource {
     }
 
     @POST
-    @Path("")
     @UnitOfWork
     public Response createEditorial(
             @Context HttpServletRequest req,

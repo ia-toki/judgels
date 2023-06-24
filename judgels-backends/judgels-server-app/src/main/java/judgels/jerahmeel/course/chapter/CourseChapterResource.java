@@ -3,6 +3,8 @@ package judgels.jerahmeel.course.chapter;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -15,13 +17,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterInfo;
 import judgels.jerahmeel.api.chapter.ChapterProgress;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLesson;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
 import judgels.jerahmeel.api.course.chapter.CourseChapterResponse;
-import judgels.jerahmeel.api.course.chapter.CourseChapterService;
 import judgels.jerahmeel.api.course.chapter.CourseChapterUserProgressesData;
 import judgels.jerahmeel.api.course.chapter.CourseChapterUserProgressesResponse;
 import judgels.jerahmeel.api.course.chapter.CourseChaptersResponse;
@@ -34,40 +43,27 @@ import judgels.jophiel.user.UserClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-public class CourseChapterResource implements CourseChapterService {
-    private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
-    private final CourseStore courseStore;
-    private final CourseChapterStore courseChapterStore;
-    private final ChapterStore chapterStore;
-    private final ChapterLessonStore chapterLessonStore;
-    private final StatsStore statsStore;
-    private final UserClient userClient;
+@Path("/api/v2/courses/{courseJid}/chapters")
+public class CourseChapterResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected RoleChecker roleChecker;
+    @Inject protected CourseStore courseStore;
+    @Inject protected CourseChapterStore courseChapterStore;
+    @Inject protected ChapterStore chapterStore;
+    @Inject protected ChapterLessonStore chapterLessonStore;
+    @Inject protected StatsStore statsStore;
+    @Inject protected UserClient userClient;
 
-    @Inject
-    public CourseChapterResource(
-            ActorChecker actorChecker,
-            RoleChecker roleChecker,
-            CourseStore courseStore,
-            CourseChapterStore courseChapterStore,
-            ChapterStore chapterStore,
-            ChapterLessonStore chapterLessonStore,
-            StatsStore statsStore,
-            UserClient userClient) {
+    @Inject public CourseChapterResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.courseStore = courseStore;
-        this.courseChapterStore = courseChapterStore;
-        this.chapterLessonStore = chapterLessonStore;
-        this.chapterStore = chapterStore;
-        this.statsStore = statsStore;
-        this.userClient = userClient;
-    }
-
-    @Override
+    @PUT
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void setChapters(AuthHeader authHeader, String courseJid, List<CourseChapter> data) {
+    public void setChapters(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("courseJid") String courseJid,
+            List<CourseChapter> data) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(courseStore.getCourseByJid(courseJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
@@ -81,9 +77,13 @@ public class CourseChapterResource implements CourseChapterService {
         courseChapterStore.setChapters(courseJid, data);
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public CourseChaptersResponse getChapters(Optional<AuthHeader> authHeader, String courseJid) {
+    public CourseChaptersResponse getChapters(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("courseJid") String courseJid) {
+
         String actorJid = actorChecker.check(authHeader);
         checkFound(courseStore.getCourseByJid(courseJid));
 
@@ -99,9 +99,15 @@ public class CourseChapterResource implements CourseChapterService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{chapterAlias}")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public CourseChapterResponse getChapter(Optional<AuthHeader> authHeader, String courseJid, String chapterAlias) {
+    public CourseChapterResponse getChapter(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("courseJid") String courseJid,
+            @PathParam("chapterAlias") String chapterAlias) {
+
         checkFound(courseStore.getCourseByJid(courseJid));
 
         CourseChapter courseChapter = checkFound(courseChapterStore.getChapterByAlias(courseJid, chapterAlias));
@@ -116,11 +122,14 @@ public class CourseChapterResource implements CourseChapterService {
                 .build();
     }
 
-    @Override
+    @POST
+    @Path("/user-progresses")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public CourseChapterUserProgressesResponse getChapterUserProgresses(
-            Optional<AuthHeader> authHeader,
-            String courseJid,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("courseJid") String courseJid,
             CourseChapterUserProgressesData data) {
 
         checkFound(courseStore.getCourseByJid(courseJid));

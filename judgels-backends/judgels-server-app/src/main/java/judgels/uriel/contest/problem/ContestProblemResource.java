@@ -1,6 +1,8 @@
 package judgels.uriel.contest.problem;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 import static judgels.service.actor.Actors.GUEST;
@@ -12,6 +14,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemInfo;
@@ -26,48 +37,30 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemConfig;
 import judgels.uriel.api.contest.problem.ContestProblemData;
-import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.log.ContestLogger;
 import judgels.uriel.contest.module.ContestModuleStore;
 
-public class ContestProblemResource implements ContestProblemService {
-    private final ActorChecker actorChecker;
-    private final ContestProblemRoleChecker roleChecker;
-    private final ContestLogger contestLogger;
-    private final ContestStore contestStore;
-    private final ContestProblemStore problemStore;
-    private final ContestModuleStore moduleStore;
-    private final SubmissionStore submissionStore;
-    private final ProblemClient problemClient;
+@Path("/api/v2/contests/{contestJid}/problems")
+public class ContestProblemResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestProblemRoleChecker roleChecker;
+    @Inject protected ContestLogger contestLogger;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestProblemStore problemStore;
+    @Inject protected ContestModuleStore moduleStore;
+    @Inject protected SubmissionStore submissionStore;
+    @Inject protected ProblemClient problemClient;
 
-    @Inject
-    public ContestProblemResource(
-            ActorChecker actorChecker,
-            ContestProblemRoleChecker roleChecker,
-            ContestLogger contestLogger,
-            ContestStore contestStore,
-            ContestProblemStore problemStore,
-            ContestModuleStore moduleStore,
-            SubmissionStore submissionStore,
-            ProblemClient problemClient) {
+    @Inject public ContestProblemResource() {}
 
-        this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
-        this.contestLogger = contestLogger;
-        this.contestStore = contestStore;
-        this.problemStore = problemStore;
-        this.moduleStore = moduleStore;
-        this.submissionStore = submissionStore;
-        this.problemClient = problemClient;
-    }
-
-    @Override
+    @PUT
+    @Consumes(APPLICATION_JSON)
     @UnitOfWork
     public void setProblems(
-            AuthHeader authHeader,
-            String contestJid,
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
             List<ContestProblemData> data) {
 
         String actorJid = actorChecker.check(authHeader);
@@ -107,9 +100,13 @@ public class ContestProblemResource implements ContestProblemService {
         contestLogger.log(contestJid, "SET_PROBLEMS");
     }
 
-    @Override
+    @GET
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ContestProblemsResponse getProblems(Optional<AuthHeader> authHeader, String contestJid) {
+    public ContestProblemsResponse getProblems(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(roleChecker.canView(actorJid, contest));
@@ -146,14 +143,16 @@ public class ContestProblemResource implements ContestProblemService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{problemAlias}/programming/worksheet")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet getProgrammingProblemWorksheet(
-            UriInfo uriInfo,
-            Optional<AuthHeader> authHeader,
-            String contestJid,
-            String problemAlias,
-            Optional<String> language) {
+            @Context UriInfo uriInfo,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -202,14 +201,16 @@ public class ContestProblemResource implements ContestProblemService {
                 .build();
     }
 
-    @Override
+    @GET
+    @Path("/{problemAlias}/bundle/worksheet")
+    @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet getBundleProblemWorksheet(
-            UriInfo uriInfo,
-            Optional<AuthHeader> authHeader,
-            String contestJid,
-            String problemAlias,
-            Optional<String> language) {
+            @Context UriInfo uriInfo,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
