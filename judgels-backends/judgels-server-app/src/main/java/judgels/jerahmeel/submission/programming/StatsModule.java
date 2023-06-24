@@ -5,8 +5,8 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
 import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
-import judgels.jerahmeel.uriel.ContestClient;
 import judgels.sandalphon.submission.programming.SubmissionStore;
+import judgels.uriel.UrielClient;
 
 @Module
 public class StatsModule {
@@ -33,16 +33,16 @@ public class StatsModule {
     @Singleton
     static ContestStatsTask contestStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            ContestClient contestClient,
+            UrielClient urielClient,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestStatsTask.class,
                 new Class<?>[] {
-                        ContestClient.class,
+                        UrielClient.class,
                         StatsProcessor.class},
                 new Object[] {
-                        contestClient,
+                        urielClient,
                         statsProcessor});
     }
 }

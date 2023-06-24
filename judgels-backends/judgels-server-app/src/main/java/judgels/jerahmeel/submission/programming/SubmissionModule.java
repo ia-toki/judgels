@@ -17,7 +17,6 @@ import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
-import judgels.jerahmeel.submission.UrielSubmissionStore;
 import judgels.messaging.MessageClient;
 import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -35,6 +34,7 @@ import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
 import judgels.uriel.persistence.ContestProgrammingGradingDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
+import judgels.uriel.submission.UrielSubmissionStore;
 
 @Module
 public class SubmissionModule {

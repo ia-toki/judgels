@@ -41,8 +41,8 @@ import judgels.jerahmeel.archive.ArchiveStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -57,7 +57,7 @@ public class ProblemSetResource {
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected ArchiveStore archiveStore;
     @Inject protected StatsStore statsStore;
-    @Inject protected UserClient userClient;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public ProblemSetResource() {}
 
@@ -94,7 +94,7 @@ public class ProblemSetResource {
         for (ProblemSet problemSet : problemSets.getPage()) {
             descriptions = descriptions.concat(problemSet.getDescription());
         }
-        Map<String, Profile> profilesMap = userClient.parseProfiles(descriptions);
+        Map<String, Profile> profilesMap = jophielClient.parseProfiles(descriptions);
 
         return new ProblemSetsResponse.Builder()
                 .data(problemSets)
@@ -190,7 +190,7 @@ public class ProblemSetResource {
         Map<String, List<ProblemSetProblem>> problemsMap = problemSetProblemStore.getProblems(problemSetJids);
 
         Set<String> usernames = ImmutableSet.copyOf(data.getUsernames());
-        Map<String, String> usernameToJidsMap = userClient.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidsMap = jophielClient.translateUsernamesToJids(usernames);
 
         Set<String> userJids = ImmutableSet.copyOf(usernameToJidsMap.values());
         Set<String> problemJids = problemsMap

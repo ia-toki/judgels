@@ -1,4 +1,4 @@
-package judgels.jerahmeel.submission;
+package judgels.uriel.submission;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

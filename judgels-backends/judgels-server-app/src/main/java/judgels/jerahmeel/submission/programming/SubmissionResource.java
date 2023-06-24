@@ -43,9 +43,10 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jerahmeel.submission.SubmissionUtils;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -53,7 +54,6 @@ import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
-import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
@@ -72,8 +72,8 @@ public class SubmissionResource {
     @Inject protected SubmissionClient submissionClient;
     @Inject protected SubmissionRegrader submissionRegrader;
     @Inject protected SubmissionRoleChecker submissionRoleChecker;
-    @Inject protected UserClient userClient;
-    @Inject protected ProblemClient problemClient;
+    @Inject protected JophielClient jophielClient;
+    @Inject protected SandalphonClient sandalphonClient;
 
     @Inject protected ProblemSetStore problemSetStore;
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
@@ -112,7 +112,7 @@ public class SubmissionResource {
             problemJids = ImmutableSet.copyOf(chapterProblemStore.getProgrammingProblemJids(containerJid.get()));
         }
 
-        Map<String, Profile> profilesMap = userClient.getProfiles(userJids);
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
@@ -129,7 +129,7 @@ public class SubmissionResource {
 
         Map<String, String> problemNamesMap = new HashMap<>();
         if (!containerJid.isPresent()) {
-            problemNamesMap = problemClient.getProblemNames(problemJids, Optional.empty());
+            problemNamesMap = sandalphonClient.getProblemNames(problemJids, Optional.empty());
         }
 
         Map<String, String> containerNamesMap = new HashMap<>();
@@ -187,10 +187,10 @@ public class SubmissionResource {
             problemAlias = problem.getAlias();
         }
 
-        ProblemInfo problem = problemClient.getProblem(submission.getProblemJid());
+        ProblemInfo problem = sandalphonClient.getProblem(submission.getProblemJid());
 
         String userJid = submission.getUserJid();
-        Profile profile = checkFound(Optional.ofNullable(userClient.getProfile(userJid)));
+        Profile profile = checkFound(Optional.ofNullable(jophielClient.getProfile(userJid)));
 
         SubmissionWithSource submissionWithSource;
         if (submissionRoleChecker.canViewSource(actorJid, submission.getUserJid())) {
@@ -253,7 +253,7 @@ public class SubmissionResource {
                 .gradingLanguage(gradingLanguage)
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
-        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
+        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
@@ -270,7 +270,7 @@ public class SubmissionResource {
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
-        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
+        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
         submissionRegrader.regradeSubmission(submission, config);
     }
 
@@ -300,13 +300,13 @@ public class SubmissionResource {
             }
 
             Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
-            Map<String, ProblemSubmissionConfig> configsMap = problemClient.getProgrammingProblemSubmissionConfigs(problemJids);
+            Map<String, ProblemSubmissionConfig> configsMap = sandalphonClient.getProgrammingProblemSubmissionConfigs(problemJids);
             submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
     }
 
     private Optional<String> byUserJid(Optional<String> username) {
-        return username.map(u -> userClient.translateUsernameToJid(u).orElse(""));
+        return username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
     }
 
     private Optional<String> byProblemJid(

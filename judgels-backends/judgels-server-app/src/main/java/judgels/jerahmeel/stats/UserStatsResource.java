@@ -16,14 +16,14 @@ import javax.ws.rs.QueryParam;
 import judgels.jerahmeel.api.stats.UserStats;
 import judgels.jerahmeel.api.stats.UserTopStatsEntry;
 import judgels.jerahmeel.api.stats.UserTopStatsResponse;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.persistence.api.Page;
 
 @Path("/api/v2/stats/users")
 public class UserStatsResource {
     @Inject protected StatsStore statsStore;
-    @Inject protected UserClient userClient;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public UserStatsResource() {}
 
@@ -37,7 +37,7 @@ public class UserStatsResource {
 
         Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(pageNumber, pageSize);
         Set<String> userJids = stats.getPage().stream().map(UserTopStatsEntry::getUserJid).collect(toSet());
-        Map<String, Profile> profileMap = userClient.getProfiles(userJids);
+        Map<String, Profile> profileMap = jophielClient.getProfiles(userJids);
 
         return new UserTopStatsResponse.Builder()
                 .data(stats)
@@ -49,7 +49,7 @@ public class UserStatsResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public UserStats getUserStats(@QueryParam("username") String username) {
-        String userJid = checkFound(userClient.translateUsernameToJid(username));
+        String userJid = checkFound(jophielClient.translateUsernameToJid(username));
         return statsStore.getUserStats(userJid);
     }
 }

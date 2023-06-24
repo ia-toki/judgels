@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserClient;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -50,7 +50,7 @@ public class ContestScoreboardUpdater {
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final ContestScoreboardPusher scoreboardPusher;
-    private final UserClient userClient;
+    private final JophielClient jophielClient;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -64,7 +64,7 @@ public class ContestScoreboardUpdater {
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
-            UserClient userClient) {
+            JophielClient jophielClient) {
 
         this.objectMapper = objectMapper;
         this.contestTimer = contestTimer;
@@ -77,7 +77,7 @@ public class ContestScoreboardUpdater {
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.scoreboardPusher = scoreboardPusher;
-        this.userClient = userClient;
+        this.jophielClient = jophielClient;
     }
 
     @UnitOfWork
@@ -114,7 +114,7 @@ public class ContestScoreboardUpdater {
 
         Set<ContestContestant> contestants = ImmutableSet.copyOf(contestantsMap.values());
         Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
-        Map<String, Profile> profilesMap = userClient.getProfiles(contestantJidsSet, contest.getBeginTime());
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJidsSet, contest.getBeginTime());
 
         ScoreboardState state = new ScoreboardState.Builder()
                 .problemJids(problemJids)

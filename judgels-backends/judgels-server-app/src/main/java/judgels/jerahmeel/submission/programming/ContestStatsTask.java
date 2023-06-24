@@ -9,17 +9,17 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.jerahmeel.uriel.ContestClient;
 import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.uriel.UrielClient;
 
 public class ContestStatsTask extends Task {
-    private final ContestClient contestClient;
+    private final UrielClient urielClient;
     private final StatsProcessor statsProcessor;
 
-    public ContestStatsTask(ContestClient contestClient, StatsProcessor statsProcessor) {
+    public ContestStatsTask(UrielClient urielClient, StatsProcessor statsProcessor) {
         super("jerahmeel-stats-contest");
 
-        this.contestClient = contestClient;
+        this.urielClient = urielClient;
         this.statsProcessor = statsProcessor;
     }
 
@@ -41,7 +41,7 @@ public class ContestStatsTask extends Task {
         List<String> limits = parameters.get("limit");
         Optional<Integer> limit = limits == null || limits.isEmpty() ? empty() : of(Integer.parseInt(limits.get(0)));
 
-        List<Submission> submissions = contestClient.getSubmissionsForStats(contestJid, lastSubmissionId, limit);
+        List<Submission> submissions = urielClient.getSubmissionsForStats(contestJid, lastSubmissionId, limit);
 
         Submission lastSubmission = null;
         for (Submission s : submissions) {

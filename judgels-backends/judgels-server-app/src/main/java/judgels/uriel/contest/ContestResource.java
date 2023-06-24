@@ -21,7 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.jophiel.profile.ProfileStore;
+import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -48,7 +48,7 @@ public class ContestResource {
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestModuleStore moduleStore;
     @Inject protected ContestContestantStore contestantStore;
-    @Inject protected ProfileStore profileStore;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public ContestResource() {}
 
@@ -228,7 +228,7 @@ public class ContestResource {
         String description = contestStore.getContestDescription(contest.getJid());
         return new ContestDescription.Builder()
                 .description(description)
-                .profilesMap(profileStore.parseProfiles(description))
+                .profilesMap(jophielClient.parseProfiles(description))
                 .build();
     }
 

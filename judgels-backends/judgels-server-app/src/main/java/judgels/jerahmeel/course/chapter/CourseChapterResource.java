@@ -39,7 +39,7 @@ import judgels.jerahmeel.chapter.lesson.ChapterLessonStore;
 import judgels.jerahmeel.course.CourseStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
-import judgels.jophiel.user.UserClient;
+import judgels.jophiel.JophielClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -52,7 +52,7 @@ public class CourseChapterResource {
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterLessonStore chapterLessonStore;
     @Inject protected StatsStore statsStore;
-    @Inject protected UserClient userClient;
+    @Inject protected JophielClient jophielClient;
 
     @Inject public CourseChapterResource() {}
 
@@ -146,7 +146,7 @@ public class CourseChapterResource {
                 .collect(toList());
 
         Map<String, String> usernameToJidsMap =
-                userClient.translateUsernamesToJids(ImmutableSet.copyOf(data.getUsernames()));
+                jophielClient.translateUsernamesToJids(ImmutableSet.copyOf(data.getUsernames()));
         Map<String, Map<String, Integer>> userSolvedProblemsMap = statsStore.getUserChapterSolvedProblemsMap(
                     ImmutableSet.copyOf(usernameToJidsMap.values()),
                     chapterJids);
