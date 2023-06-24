@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -58,7 +59,7 @@ public class ContestLogResource {
             @PathParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") Optional<String> problemAlias,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -71,7 +72,7 @@ public class ContestLogResource {
                 .map(ContestProblem::getProblemJid)
                 .orElse(""));
 
-        Page<ContestLog> logs = logStore.getLogs(contestJid, userJid, problemJid, pageNumber.orElse(1), PAGE_SIZE);
+        Page<ContestLog> logs = logStore.getLogs(contestJid, userJid, problemJid, pageNumber, PAGE_SIZE);
 
         Set<String> userJids = ImmutableSet.<String>builder()
                 .addAll(Lists.transform(logs.getPage(), ContestLog::getUserJid))

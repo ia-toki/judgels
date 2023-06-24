@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -91,7 +92,7 @@ public class SubmissionResource {
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemJid") Optional<String> problemJid,
             @QueryParam("problemAlias") Optional<String> problemAlias,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -101,7 +102,7 @@ public class SubmissionResource {
                 containerJid,
                 byUserJid(username),
                 byProblemJid(containerJid, problemJid, problemAlias),
-                pageNumber.orElse(1),
+                pageNumber,
                 PAGE_SIZE);
         Set<String> containerJids = submissions.getPage().stream().map(Submission::getContainerJid).collect(toSet());
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());

@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -140,13 +141,13 @@ public class ContestResource {
     public ContestsResponse getContests(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("name") Optional<String> name,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         boolean isAdmin = contestRoleChecker.canAdminister(actorJid);
 
         Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actorJid);
-        Page<Contest> contests = contestStore.getContests(userJid, name, pageNumber.orElse(1), PAGE_SIZE);
+        Page<Contest> contests = contestStore.getContests(userJid, name, pageNumber, PAGE_SIZE);
 
         Map<String, ContestRole> rolesMap = contests.getPage()
                 .stream()

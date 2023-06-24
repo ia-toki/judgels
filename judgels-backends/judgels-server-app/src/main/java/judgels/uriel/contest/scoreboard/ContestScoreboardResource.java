@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -54,7 +55,7 @@ public class ContestScoreboardResource {
             @PathParam("contestJid") String contestJid,
             @QueryParam("frozen") boolean frozen,
             @QueryParam("showClosedProblems") boolean showClosedProblems,
-            @QueryParam("page") Optional<Integer> page) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -79,7 +80,7 @@ public class ContestScoreboardResource {
         contestLogger.log(contestJid, "OPEN_SCOREBOARD");
 
         return scoreboardFetcher
-                .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, page.orElse(1), PAGE_SIZE)
+                .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, pageNumber, PAGE_SIZE)
                 .map(scoreboard -> {
                     Set<String> contestantJids = scoreboard.getScoreboard().getContent().getEntries().stream()
                             .map(ScoreboardEntry::getContestantJid).collect(Collectors.toSet());

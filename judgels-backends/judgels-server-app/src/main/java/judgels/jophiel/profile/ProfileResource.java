@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -41,10 +42,10 @@ public class ProfileResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public Page<Profile> getTopRatedProfiles(
-            @QueryParam("page") Optional<Integer> pageNumber,
-            @QueryParam("pageSize") Optional<Integer> pageSize) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber,
+            @QueryParam("pageSize") @DefaultValue("50") int pageSize) {
 
-        return profileStore.getTopRatedProfiles(clock.instant(), pageNumber.orElse(1), pageSize.orElse(50));
+        return profileStore.getTopRatedProfiles(clock.instant(), pageNumber, pageSize);
     }
 
     @GET

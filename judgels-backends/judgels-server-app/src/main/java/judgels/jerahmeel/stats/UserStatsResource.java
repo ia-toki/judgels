@@ -6,9 +6,9 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,10 +32,10 @@ public class UserStatsResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public UserTopStatsResponse getTopUserStats(
-            @QueryParam("page") Optional<Integer> pageNumber,
-            @QueryParam("pageSize") Optional<Integer> pageSize) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber,
+            @QueryParam("pageSize") @DefaultValue("50") int pageSize) {
 
-        Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(pageNumber.orElse(1), pageSize.orElse(50));
+        Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(pageNumber, pageSize);
         Set<String> userJids = stats.getPage().stream().map(UserTopStatsEntry::getUserJid).collect(toSet());
         Map<String, Profile> profileMap = userClient.getProfiles(userJids);
 

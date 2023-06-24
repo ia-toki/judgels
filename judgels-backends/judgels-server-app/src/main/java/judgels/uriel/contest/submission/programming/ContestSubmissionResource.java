@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -104,7 +105,7 @@ public class ContestSubmissionResource {
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") Optional<String> problemAlias,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -116,7 +117,7 @@ public class ContestSubmissionResource {
                 Optional.of(contest.getJid()),
                 canSupervise ? byUserJid(username) : Optional.of(actorJid),
                 byProblemJid(contestJid, problemAlias),
-                pageNumber.orElse(1),
+                pageNumber,
                 PAGE_SIZE);
 
         List<String> userJidsSortedByUsername;

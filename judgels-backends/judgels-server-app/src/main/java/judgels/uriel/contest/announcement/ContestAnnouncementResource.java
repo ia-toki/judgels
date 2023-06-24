@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -53,7 +54,7 @@ public class ContestAnnouncementResource {
     public ContestAnnouncementsResponse getAnnouncements(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -67,7 +68,7 @@ public class ContestAnnouncementResource {
                 .build();
 
         Optional<String> statusFilter = canSupervise ? Optional.empty() : Optional.of(PUBLISHED.name());
-        Page<ContestAnnouncement> announcements = announcementStore.getAnnouncements(contestJid, statusFilter, pageNumber.orElse(1), PAGE_SIZE);
+        Page<ContestAnnouncement> announcements = announcementStore.getAnnouncements(contestJid, statusFilter, pageNumber, PAGE_SIZE);
 
         Set<String> userJids = announcements.getPage()
                 .stream()

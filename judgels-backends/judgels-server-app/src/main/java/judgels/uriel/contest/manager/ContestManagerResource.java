@@ -10,11 +10,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -55,13 +55,13 @@ public class ContestManagerResource {
     public ContestManagersResponse getManagers(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(managerRoleChecker.canView(actorJid, contest));
 
-        Page<ContestManager> managers = managerStore.getManagers(contestJid, pageNumber.orElse(1), PAGE_SIZE);
+        Page<ContestManager> managers = managerStore.getManagers(contestJid, pageNumber, PAGE_SIZE);
         Set<String> userJids =
                 managers.getPage().stream().map(ContestManager::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = userClient.getProfiles(userJids, contest.getBeginTime());
