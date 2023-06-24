@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -40,7 +41,7 @@ public class ProblemResource {
     public ProblemsResponse getProblems(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("tags") Set<String> tags,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -49,7 +50,7 @@ public class ProblemResource {
             allowedProblemJids = problemClient.getProblemJidsByTags(tags);
         }
 
-        Page<ProblemSetProblemInfo> problems = problemStore.getProblems(allowedProblemJids, pageNumber.orElse(1), PAGE_SIZE);
+        Page<ProblemSetProblemInfo> problems = problemStore.getProblems(allowedProblemJids, pageNumber, PAGE_SIZE);
         Set<String> problemJids = problems.getPage().stream()
                 .map(ProblemSetProblemInfo::getProblemJid)
                 .collect(Collectors.toSet());

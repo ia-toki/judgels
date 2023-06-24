@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -82,7 +83,7 @@ public class ContestClarificationResource {
             @PathParam("contestJid") String contestJid,
             @QueryParam("status") Optional<String> status,
             @QueryParam("language") Optional<String> language,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -99,7 +100,7 @@ public class ContestClarificationResource {
             userFilter = Optional.of(actorJid);
         }
 
-        Page<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, userFilter, statusFilter, pageNumber.orElse(1), PAGE_SIZE);
+        Page<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, userFilter, statusFilter, pageNumber, PAGE_SIZE);
 
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;

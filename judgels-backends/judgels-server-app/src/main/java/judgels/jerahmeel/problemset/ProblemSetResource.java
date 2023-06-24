@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -67,7 +68,7 @@ public class ProblemSetResource {
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("archiveSlug") Optional<String> archiveSlug,
             @QueryParam("name") Optional<String> name,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
@@ -75,7 +76,7 @@ public class ProblemSetResource {
         Optional<String> archiveJid = archiveSlug.isPresent()
                 ? Optional.of(archive.map(Archive::getJid).orElse(""))
                 : Optional.empty();
-        Page<ProblemSet> problemSets = problemSetStore.getProblemSets(archiveJid, name, pageNumber.orElse(1), PAGE_SIZE);
+        Page<ProblemSet> problemSets = problemSetStore.getProblemSets(archiveJid, name, pageNumber, PAGE_SIZE);
         Set<String> problemSetJids = problemSets.getPage().stream().map(ProblemSet::getJid).collect(toSet());
         Set<String> archiveJids = problemSets.getPage().stream().map(ProblemSet::getArchiveJid).collect(toSet());
         Map<String, Archive> archivesMap = archiveStore.getArchivesByJids(archiveJids);

@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -73,14 +74,14 @@ public class UserResource {
     @UnitOfWork(readOnly = true)
     public UsersResponse getUsers(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("page") Optional<Integer> pageNumber,
             @QueryParam("orderBy") Optional<String> orderBy,
-            @QueryParam("orderDir") Optional<OrderDir> orderDir) {
+            @QueryParam("orderDir") Optional<OrderDir> orderDir,
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        Page<User> users = userStore.getUsers(pageNumber.orElse(1), PAGE_SIZE, orderBy, orderDir);
+        Page<User> users = userStore.getUsers(pageNumber, PAGE_SIZE, orderBy, orderDir);
         Set<String> userJids = users.getPage().stream().map(User::getJid).collect(Collectors.toSet());
         Map<String, Instant> lastSessionTimesMap = sessionStore.getLatestSessionTimeByUserJids(userJids);
         return new UsersResponse.Builder()

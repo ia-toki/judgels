@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -89,7 +90,7 @@ public class ContestItemSubmissionResource {
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") Optional<String> problemAlias,
-            @QueryParam("page") Optional<Integer> pageNumber) {
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -101,7 +102,7 @@ public class ContestItemSubmissionResource {
                 contestJid,
                 canSupervise ? byUserJid(username) : Optional.of(actorJid),
                 byProblemJid(Optional.of(contestJid), Optional.empty(), problemAlias),
-                pageNumber.orElse(1),
+                pageNumber,
                 PAGE_SIZE);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
