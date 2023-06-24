@@ -16,16 +16,6 @@ export function getUser(username) {
 
 export const clearUser = DelUser;
 
-export function getProfile(userJid) {
-  return async () => {
-    const profiles = await profileAPI.getProfiles([userJid]);
-    if (profiles[userJid] === undefined) {
-      throw new NotFoundError();
-    }
-    return profiles[userJid];
-  };
-}
-
 export function getTopRatedProfiles(page, pageSize) {
   return async () => {
     return await profileAPI.getTopRatedProfiles(page, pageSize);
