@@ -76,7 +76,7 @@ In `vars.yml`, generate different random strings for these values:
    ```
    app_version: '2.0'
    ```
-   You can get the latest version from https://github.com/ia-toki/judgels/tags. Enter the version without the `v` prefix.
+   You can get the latest version from https://github.com/ia-toki/judgels/releases. Enter the version without the `v` prefix.
 1. Run the provision playbook:
    ```
    ansible-playbook -e @env/vars.yml playbooks/provision.yml
