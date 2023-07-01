@@ -74,6 +74,7 @@ public class BaseSubmissionStore<
                 .select()
                 .whereContainerIs(containerJid)
                 .whereLastSubmissionIs(lastSubmissionId)
+                .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
                 .all();
         Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());
 
