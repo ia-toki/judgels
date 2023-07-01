@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Instant;
 import judgels.jophiel.api.BaseJophielServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingService;
@@ -20,8 +19,6 @@ public class UserRatingServiceIntegrationTests extends BaseJophielServiceIntegra
         User andi = createUser("andi");
         User budi = createUser("budi");
 
-        assertThat(userRatingService.getLatestRatingEvent()).isEmpty();
-
         Instant firstTime = Instant.ofEpochSecond(10);
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(firstTime)
@@ -30,21 +27,11 @@ public class UserRatingServiceIntegrationTests extends BaseJophielServiceIntegra
                 .putRatingsMap(budi.getJid(), UserRating.of(10, 20))
                 .build());
 
-        assertThat(userRatingService.getLatestRatingEvent()).contains(new RatingEvent.Builder()
-                .time(firstTime)
-                .eventJid("open-contest-1-jid")
-                .build());
-
         Instant secondTime = Instant.ofEpochSecond(100);
         userRatingService.updateRatings(adminHeader, new UserRatingUpdateData.Builder()
                 .time(secondTime)
                 .eventJid("open-contest-2-jid")
                 .putRatingsMap(andi.getJid(), UserRating.of(3000, 1500))
-                .build());
-
-        assertThat(userRatingService.getLatestRatingEvent()).contains(new RatingEvent.Builder()
-                .time(secondTime)
-                .eventJid("open-contest-2-jid")
                 .build());
 
         assertThat(userRatingService.getRatingHistory(andi.getJid())).containsOnly(
