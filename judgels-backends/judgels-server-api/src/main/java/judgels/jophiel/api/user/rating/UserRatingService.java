@@ -4,7 +4,6 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
-import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -20,11 +19,6 @@ public interface UserRatingService {
     @Path("/")
     @Consumes(APPLICATION_JSON)
     void updateRatings(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserRatingUpdateData data);
-
-    @GET
-    @Path("/events/latest")
-    @Produces(APPLICATION_JSON)
-    Optional<RatingEvent> getLatestRatingEvent();
 
     @GET
     @Path("/history")

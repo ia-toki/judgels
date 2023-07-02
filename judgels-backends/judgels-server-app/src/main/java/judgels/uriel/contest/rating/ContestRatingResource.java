@@ -26,8 +26,6 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
-import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.rating.UserRatingStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -52,8 +50,6 @@ public class ContestRatingResource {
     @Inject protected ContestScoreboardStore scoreboardStore;
     @Inject protected ContestScoreboardBuilder scoreboardBuilder;
     @Inject protected ContestRatingComputer ratingComputer;
-    @Inject protected UserStore userStore;
-    @Inject protected UserRatingStore userRatingStore;
     @Inject protected JophielClient jophielClient;
 
     @Inject public ContestRatingResource() {}
@@ -66,7 +62,7 @@ public class ContestRatingResource {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
-        Optional<RatingEvent> latestEvent = userRatingStore.getLatestRatingEvent();
+        Optional<RatingEvent> latestEvent = jophielClient.getLatestRatingEvent();
         Instant latestTime = latestEvent.isPresent() ? latestEvent.get().getTime() : Instant.MIN;
 
         List<Contest> contests = contestStore.getPublicContestsAfter(latestTime);
@@ -84,9 +80,9 @@ public class ContestRatingResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestRatingHistoryResponse getRatingHistory(@QueryParam("username") String username) {
-        String userJid = checkFound(userStore.translateUsernameToJid(username));
+        String userJid = checkFound(jophielClient.translateUsernameToJid(username));
 
-        List<UserRatingEvent> userRatingEvents = userRatingStore.getUserRatingEvents(userJid);
+        List<UserRatingEvent> userRatingEvents = jophielClient.getUserRatingEvents(userJid);
 
         Set<String> contestJids = userRatingEvents.stream()
                 .map(UserRatingEvent::getEventJid)

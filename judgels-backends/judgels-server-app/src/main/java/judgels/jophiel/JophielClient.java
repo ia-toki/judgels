@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.profile.ProfileStore;
 import judgels.jophiel.user.UserStore;
@@ -60,5 +61,9 @@ public class JophielClient {
 
     public List<UserRatingEvent> getUserRatingEvents(String userJid) {
         return userRatingStore.getUserRatingEvents(userJid);
+    }
+
+    public Optional<RatingEvent> getLatestRatingEvent() {
+        return userRatingStore.getLatestRatingEvent();
     }
 }

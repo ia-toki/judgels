@@ -6,7 +6,6 @@ import static judgels.service.ServiceUtils.checkAllowed;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
-import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,7 +14,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.user.UserRoleChecker;
@@ -38,14 +36,6 @@ public class UserRatingResource {
         checkAllowed(roleChecker.canAdminister(actorJid));
 
         ratingStore.updateRatings(data.getTime(), data.getEventJid(), data.getRatingsMap());
-    }
-
-    @GET
-    @Path("/events/latest")
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork(readOnly = true)
-    public Optional<RatingEvent> getLatestRatingEvent() {
-        return ratingStore.getLatestRatingEvent();
     }
 
     @GET
