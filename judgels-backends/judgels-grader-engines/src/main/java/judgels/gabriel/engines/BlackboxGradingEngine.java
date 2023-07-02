@@ -49,7 +49,6 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
     private File gradingDir;
     private File compilationDir;
     private File evaluationDir;
-    private File scoringDir;
 
     private GradingConfig config;
     private GradingLanguage language;
@@ -141,8 +140,6 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
             FileUtils.forceMkdir(compilationDir);
             evaluationDir = new File(gradingDir, "evaluation");
             FileUtils.forceMkdir(evaluationDir);
-            scoringDir = new File(gradingDir, "scoring");
-            FileUtils.forceMkdir(scoringDir);
         } catch (IOException e) {
             throw new PreparationException(e);
         }
