@@ -18,7 +18,7 @@ public class ScorerRegistry {
     public static Scorer getAndPrepare(
             Optional<String> customScorer,
             Map<String, File> helperFiles,
-            @Nullable  Sandbox sandbox,
+            @Nullable Sandbox sandbox,
             File evaluationDir) throws PreparationException {
 
         if (customScorer.isPresent()) {
@@ -27,7 +27,7 @@ public class ScorerRegistry {
             scorer.prepare(sandbox, evaluationDir, language, scorerFile);
             return scorer;
         } else {
-            return new DiffScorer();
+            return new DiffScorer(evaluationDir);
         }
     }
 }

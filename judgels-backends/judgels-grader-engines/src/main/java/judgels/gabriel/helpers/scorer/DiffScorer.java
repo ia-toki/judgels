@@ -9,6 +9,12 @@ import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.api.Verdict;
 
 public class DiffScorer implements Scorer {
+    private final File evaluationDir;
+
+    public DiffScorer(File evaluationDir) {
+        this.evaluationDir = evaluationDir;
+    }
+
     @Override
     public ScoringResult score(File input, File output, File evaluationOutput) throws ScoringException {
         String[] scoringCommand = new String[]{"/bin/bash", "-c", String.format(""
@@ -16,11 +22,13 @@ public class DiffScorer implements Scorer {
                 + "cat \"%s\" | tr '[\\t\\r\\n]' ' ' | xargs > _evaluation_tokenized.out; "
                 + "diff --brief _output_tokenized.out _evaluation_tokenized.out; result=$?; "
                 + "rm _output_tokenized.out _evaluation_tokenized.out; "
-                + "exit $result;",
+                + "exit $result",
                 output.getAbsolutePath(),
                 evaluationOutput.getAbsolutePath())};
 
         ProcessBuilder pb = new ProcessBuilder(scoringCommand);
+        pb.directory(evaluationDir);
+
         int exitCode;
         try {
             exitCode = pb.start().waitFor();
