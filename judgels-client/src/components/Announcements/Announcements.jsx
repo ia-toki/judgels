@@ -1,5 +1,6 @@
 import { Navbar } from '@blueprintjs/core';
 import { WarningSign } from '@blueprintjs/icons';
+import HTMLReactParser from 'html-react-parser';
 import { connect } from 'react-redux';
 
 import './Announcements.scss';
@@ -14,7 +15,7 @@ function Announcements({ announcements }) {
         <Navbar.Heading className="announcement__text">
           <WarningSign />
           &nbsp;&nbsp;
-          {announcemet}
+          {HTMLReactParser(announcemet)}
         </Navbar.Heading>
       </div>
     </Navbar>
