@@ -35,17 +35,6 @@ export class ChapterSubmissionsPage extends Component {
     };
   }
 
-  async componentDidMount() {
-    const queries = parse(this.props.location.search);
-    const problemAlias = queries.problemAlias;
-
-    if (problemAlias) {
-      await this.refreshSubmissions();
-    }
-
-    this.setState({ filter: { problemAlias } });
-  }
-
   componentDidUpdate() {
     const queries = parse(this.props.location.search);
     const problemAlias = queries.problemAlias;

@@ -29,10 +29,6 @@ export class ChapterSubmissionsPage extends Component {
     response: undefined,
   };
 
-  async componentDidMount() {
-    await this.refreshSubmissions();
-  }
-
   render() {
     return (
       <ContentCard>
