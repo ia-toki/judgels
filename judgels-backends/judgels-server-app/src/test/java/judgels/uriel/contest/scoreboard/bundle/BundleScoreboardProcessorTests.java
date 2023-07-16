@@ -2,9 +2,6 @@ package judgels.uriel.contest.scoreboard.bundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
@@ -49,17 +46,17 @@ public class BundleScoreboardProcessorTests {
 
         private StyleModuleConfig styleModuleConfig = new BundleStyleModuleConfig.Builder().build();
 
-        private Set<ContestContestant> contestants = ImmutableSet.of(
+        private Set<ContestContestant> contestants = Set.of(
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").build());
 
-        private Map<String, Profile> profilesMap = ImmutableMap.of(
+        private Map<String, Profile> profilesMap = Map.of(
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
 
         @Test
         void latest_answered_time_calculation() {
-            List<ItemSubmission> submissions = ImmutableList.of(
+            List<ItemSubmission> submissions = List.of(
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
                             .jid("JIDS-1")
@@ -121,7 +118,7 @@ public class BundleScoreboardProcessorTests {
                     styleModuleConfig,
                     contestants,
                     profilesMap,
-                    ImmutableList.of(),
+                    List.of(),
                     submissions,
                     Optional.empty());
 
@@ -129,14 +126,14 @@ public class BundleScoreboardProcessorTests {
                     new BundleScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c1")
-                            .answeredItems(ImmutableList.of(1, 2))
+                            .answeredItems(List.of(1, 2))
                             .totalAnsweredItems(3)
                             .lastAnsweredTime(Instant.ofEpochSecond(600))
                             .build(),
                     new BundleScoreboardEntry.Builder()
                             .rank(2)
                             .contestantJid("c2")
-                            .answeredItems(ImmutableList.of(1, 0))
+                            .answeredItems(List.of(1, 0))
                             .totalAnsweredItems(1)
                             .lastAnsweredTime(Instant.ofEpochSecond(501))
                             .build());
@@ -147,7 +144,7 @@ public class BundleScoreboardProcessorTests {
 
             @Test
             void total_answered_items_over_last_answered_time() {
-                List<ItemSubmission> submissions = ImmutableList.of(
+                List<ItemSubmission> submissions = List.of(
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
                                 .jid("JIDS-1")
@@ -196,7 +193,7 @@ public class BundleScoreboardProcessorTests {
                         styleModuleConfig,
                         contestants,
                         profilesMap,
-                        ImmutableList.of(),
+                        List.of(),
                         submissions,
                         Optional.empty());
 
@@ -204,14 +201,14 @@ public class BundleScoreboardProcessorTests {
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
-                                .answeredItems(ImmutableList.of(1, 1))
+                                .answeredItems(List.of(1, 1))
                                 .totalAnsweredItems(2)
                                 .lastAnsweredTime(Instant.ofEpochSecond(300))
                                 .build(),
                         new BundleScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c2")
-                                .answeredItems(ImmutableList.of(1, 0))
+                                .answeredItems(List.of(1, 0))
                                 .totalAnsweredItems(1)
                                 .lastAnsweredTime(Instant.ofEpochSecond(400))
                                 .build());
@@ -219,7 +216,7 @@ public class BundleScoreboardProcessorTests {
 
             @Test
             void last_answered_time_as_tiebreaker() {
-                List<ItemSubmission> submissions = ImmutableList.of(
+                List<ItemSubmission> submissions = List.of(
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
                                 .jid("JIDS-1")
@@ -255,7 +252,7 @@ public class BundleScoreboardProcessorTests {
                         styleModuleConfig,
                         contestants,
                         profilesMap,
-                        ImmutableList.of(),
+                        List.of(),
                         submissions,
                         Optional.empty());
 
@@ -263,14 +260,14 @@ public class BundleScoreboardProcessorTests {
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
-                                .answeredItems(ImmutableList.of(1, 0))
+                                .answeredItems(List.of(1, 0))
                                 .totalAnsweredItems(1)
                                 .lastAnsweredTime(Instant.ofEpochSecond(400))
                                 .build(),
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
-                                .answeredItems(ImmutableList.of(1, 0))
+                                .answeredItems(List.of(1, 0))
                                 .totalAnsweredItems(1)
                                 .lastAnsweredTime(Instant.ofEpochSecond(300))
                                 .build());

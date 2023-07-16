@@ -16,9 +16,6 @@ import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -51,19 +48,17 @@ import judgels.uriel.persistence.ContestStyleModel;
 
 @Singleton
 public class ContestModuleStore {
-    private static final Map<ContestModuleType, Object> DEFAULT_CONFIGS = Maps.immutableEnumMap(
-            new ImmutableMap.Builder<ContestModuleType, Object>()
-                    .put(CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.DEFAULT)
-                    .put(DIVISION, DivisionModuleConfig.DEFAULT)
-                    .put(EDITORIAL, EditorialModuleConfig.DEFAULT)
-                    .put(EXTERNAL_SCOREBOARD, ExternalScoreboardModuleConfig.DEFAULT)
-                    .put(FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.DEFAULT)
-                    .put(MERGED_SCOREBOARD, MergedScoreboardModuleConfig.DEFAULT)
-                    .put(SCOREBOARD, ScoreboardModuleConfig.DEFAULT)
-                    .put(VIRTUAL, VirtualModuleConfig.DEFAULT)
-                    .build());
+    private static final Map<ContestModuleType, Object> DEFAULT_CONFIGS = Map.of(
+            CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.DEFAULT,
+            DIVISION, DivisionModuleConfig.DEFAULT,
+            EDITORIAL, EditorialModuleConfig.DEFAULT,
+            EXTERNAL_SCOREBOARD, ExternalScoreboardModuleConfig.DEFAULT,
+            FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.DEFAULT,
+            MERGED_SCOREBOARD, MergedScoreboardModuleConfig.DEFAULT,
+            SCOREBOARD, ScoreboardModuleConfig.DEFAULT,
+            VIRTUAL, VirtualModuleConfig.DEFAULT);
 
-    private static final Set<ContestModuleType> ALWAYS_ENABLED_MODULES = ImmutableSet.of(SCOREBOARD);
+    private static final Set<ContestModuleType> ALWAYS_ENABLED_MODULES = Set.of(SCOREBOARD);
 
     private final ContestStyleDao styleDao; // TODO(fushar): put style config in module store as well
     private final ContestModuleDao moduleDao;

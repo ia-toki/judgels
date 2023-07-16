@@ -117,8 +117,7 @@ public class ContestProblemResource {
 
         var problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
         Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
-        Map<String, Long> totalSubmissionsMap =
-                submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
+        Map<String, Long> totalSubmissionsMap = submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 
         boolean canManage = roleChecker.canManage(actorJid, contest);
         ContestProblemConfig config = new ContestProblemConfig.Builder()

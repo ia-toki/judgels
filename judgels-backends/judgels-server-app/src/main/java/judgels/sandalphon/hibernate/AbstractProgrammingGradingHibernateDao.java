@@ -1,8 +1,7 @@
 package judgels.sandalphon.hibernate;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,10 +37,10 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
     @Override
     public Map<String, M> selectAllLatestBySubmissionJids(Collection<String> submissionJids) {
         if (submissionJids.isEmpty()) {
-            return ImmutableMap.of();
+            return Map.of();
         }
 
-        Map<String, M> result = Maps.newHashMap();
+        Map<String, M> result = new HashMap<>();
 
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<M> query = criteriaQuery();
@@ -66,16 +65,16 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
             result.put(model.submissionJid, model);
         }
 
-        return ImmutableMap.copyOf(result);
+        return Map.copyOf(result);
     }
 
     @Override
     public Map<String, M> selectAllLatestWithDetailsBySubmissionJids(Collection<String> submissionJids) {
         if (submissionJids.isEmpty()) {
-            return ImmutableMap.of();
+            return Map.of();
         }
 
-        Map<String, M> result = Maps.newHashMap();
+        Map<String, M> result = new HashMap<>();
 
         List<M> models = select()
                 .where(columnIn(AbstractProgrammingGradingModel_.submissionJid, submissionJids))
@@ -86,6 +85,6 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
             result.put(model.submissionJid, model);
         }
 
-        return ImmutableMap.copyOf(result);
+        return Map.copyOf(result);
     }
 }

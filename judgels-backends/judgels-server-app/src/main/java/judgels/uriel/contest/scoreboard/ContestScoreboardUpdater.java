@@ -6,12 +6,12 @@ import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +90,7 @@ public class ContestScoreboardUpdater {
         Optional<String> previousContestJid = contestModulesConfig.getMergedScoreboard()
                 .flatMap(c -> c.getPreviousContestJid());
 
-        List<ContestProblem> problems = Lists.newArrayList();
+        List<ContestProblem> problems = new ArrayList<>();
         Map<String, ContestContestant> contestantsMap = new HashMap<>();
 
         if (previousContestJid.isPresent()) {
@@ -106,13 +106,13 @@ public class ContestScoreboardUpdater {
         }
 
         List<String> problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
-        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
+        Set<String> problemJidsSet = Set.copyOf(problemJids);
         List<String> problemAliases = Lists.transform(problems, ContestProblem::getAlias);
         Optional<List<Integer>> problemPoints = problems.stream().anyMatch(p -> p.getPoints().isPresent())
                 ? Optional.of(Lists.transform(problems, p -> p.getPoints().orElse(0)))
                 : Optional.empty();
 
-        Set<ContestContestant> contestants = ImmutableSet.copyOf(contestantsMap.values());
+        Set<ContestContestant> contestants = Set.copyOf(contestantsMap.values());
         Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJidsSet, contest.getBeginTime());
 
@@ -139,8 +139,8 @@ public class ContestScoreboardUpdater {
         boolean withGradingDetails = processor.requiresGradingDetails(styleModuleConfig);
         long lastSubmissionId = incrementalMark.getLastSubmissionId();
 
-        List<Submission> programmingSubmissions = Lists.newArrayList();
-        List<ItemSubmission> bundleItemSubmissions = Lists.newArrayList();
+        List<Submission> programmingSubmissions = new ArrayList<>();
+        List<ItemSubmission> bundleItemSubmissions = new ArrayList<>();
 
         if (previousContestJid.isPresent() && lastSubmissionId == 0) {
             programmingSubmissions.addAll(programmingSubmissionStore

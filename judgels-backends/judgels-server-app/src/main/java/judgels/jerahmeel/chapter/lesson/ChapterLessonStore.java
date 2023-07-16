@@ -1,11 +1,9 @@
 package judgels.jerahmeel.chapter.lesson;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -35,7 +33,7 @@ public class ChapterLessonStore {
                 .map(ChapterLessonStore::fromModel);
     }
 
-    public Set<ChapterLesson> setLessons(String chapterJid, List<ChapterLesson> data) {
+    public void setLessons(String chapterJid, List<ChapterLesson> data) {
         Map<String, ChapterLesson> setLessons = data.stream().collect(
                 Collectors.toMap(ChapterLesson::getLessonJid, Function.identity()));
         for (ChapterLessonModel model : lessonDao.selectByChapterJid(chapterJid).all()) {
@@ -45,28 +43,26 @@ public class ChapterLessonStore {
             }
         }
 
-        ImmutableSet.Builder<ChapterLesson> lessons = ImmutableSet.builder();
         for (ChapterLesson lesson : data) {
-            lessons.add(upsertLesson(
+            upsertLesson(
                     chapterJid,
                     lesson.getAlias(),
-                    lesson.getLessonJid()));
+                    lesson.getLessonJid());
         }
-        return lessons.build();
     }
 
-    public ChapterLesson upsertLesson(String chapterJid, String alias, String lessonJid) {
+    public void upsertLesson(String chapterJid, String alias, String lessonJid) {
         Optional<ChapterLessonModel> maybeModel = lessonDao.selectByLessonJid(lessonJid);
         if (maybeModel.isPresent()) {
             ChapterLessonModel model = maybeModel.get();
             model.alias = alias;
-            return fromModel(lessonDao.update(model));
+            lessonDao.update(model);
         } else {
             ChapterLessonModel model = new ChapterLessonModel();
             model.chapterJid = chapterJid;
             model.alias = alias;
             model.lessonJid = lessonJid;
-            return fromModel(lessonDao.insert(model));
+            lessonDao.insert(model);
         }
     }
 

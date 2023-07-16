@@ -3,8 +3,6 @@ package judgels.sandalphon.problem.base.tag;
 import static judgels.sandalphon.resource.StatementLanguageStatus.DISABLED;
 import static judgels.sandalphon.resource.StatementLanguageStatus.ENABLED;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,7 +37,7 @@ public class ProblemTagStore {
 
     public Map<String, Integer> getTagCounts(boolean isAdmin) {
         if (!isAdmin) {
-            return ImmutableMap.of();
+            return Map.of();
         }
         return tagDao.selectTagCounts();
     }
@@ -166,11 +164,11 @@ public class ProblemTagStore {
     public Set<String> filterProblemJidsByTags(Set<String> initialProblemJids, Set<String> tags) {
         Set<String> problemJids = initialProblemJids;
 
-        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("visibility-private", "visibility-public"));
-        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("statement-en"));
-        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("editorial-no", "editorial-yes", "editorial-en"));
-        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("engine-batch", "engine-interactive", "engine-output-only", "engine-functional"));
-        problemJids = filterProblemJidsByTags(problemJids, tags, ImmutableSet.of("scoring-partial", "scoring-subtasks", "scoring-absolute"));
+        problemJids = filterProblemJidsByTags(problemJids, tags, Set.of("visibility-private", "visibility-public"));
+        problemJids = filterProblemJidsByTags(problemJids, tags, Set.of("statement-en"));
+        problemJids = filterProblemJidsByTags(problemJids, tags, Set.of("editorial-no", "editorial-yes", "editorial-en"));
+        problemJids = filterProblemJidsByTags(problemJids, tags, Set.of("engine-batch", "engine-interactive", "engine-output-only", "engine-functional"));
+        problemJids = filterProblemJidsByTags(problemJids, tags, Set.of("scoring-partial", "scoring-subtasks", "scoring-absolute"));
         problemJids = filterProblemJidsByTopicTags(problemJids, tags);
 
         return problemJids;

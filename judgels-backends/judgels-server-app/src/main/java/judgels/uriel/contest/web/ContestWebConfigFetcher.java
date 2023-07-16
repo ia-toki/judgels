@@ -12,9 +12,10 @@ import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
 import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
 
-import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
@@ -88,7 +89,7 @@ public class ContestWebConfigFetcher {
 
         boolean canManage = roleChecker.canManage(userJid, contest);
 
-        ImmutableSet.Builder<ContestTab> visibleTabs = ImmutableSet.builder();
+        Set<ContestTab> visibleTabs = new HashSet<>();
         visibleTabs.add(ANNOUNCEMENTS);
 
         if (problemRoleChecker.canView(userJid, contest)) {
@@ -179,7 +180,7 @@ public class ContestWebConfigFetcher {
         return new ContestWebConfig.Builder()
                 .role(role)
                 .canManage(canManage)
-                .visibleTabs(visibleTabs.build())
+                .visibleTabs(visibleTabs)
                 .state(state)
                 .remainingStateDuration(remainingStateDuration)
                 .announcementCount(announcementCount)

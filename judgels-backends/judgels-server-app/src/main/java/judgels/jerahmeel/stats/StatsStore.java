@@ -4,8 +4,6 @@ import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.Collection;
@@ -87,12 +85,12 @@ public class StatsStore {
                     .totalProblems(problemJids.size())
                     .build());
         }
-        return ImmutableMap.copyOf(progressesMap);
+        return Map.copyOf(progressesMap);
     }
 
     public Map<String, ChapterProgress> getChapterProgressesMap(String userJid, Collection<String> chapterJids) {
         Map<String, Integer> totalProblemsMap = getChapterTotalProblemsMap(chapterJids);
-        Map<String, Integer> solvedProblemsMap = getUserChapterSolvedProblemsMap(ImmutableSet.of(userJid), chapterJids).get(userJid);
+        Map<String, Integer> solvedProblemsMap = getUserChapterSolvedProblemsMap(Set.of(userJid), chapterJids).get(userJid);
 
         Map<String, ChapterProgress> chapterProgressesMap = new HashMap<>();
         for (String chapterJid : chapterJids) {
@@ -101,7 +99,7 @@ public class StatsStore {
                     .solvedProblems(solvedProblemsMap.get(chapterJid))
                     .build());
         }
-        return ImmutableMap.copyOf(chapterProgressesMap);
+        return Map.copyOf(chapterProgressesMap);
     }
 
     public Map<String, Integer> getChapterTotalProblemsMap(Collection<String> chapterJids) {
@@ -112,7 +110,7 @@ public class StatsStore {
         for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).whereTypeIs(PROGRAMMING.name()).all()) {
             totalProblemsMap.put(model.chapterJid, 1 + totalProblemsMap.get(model.chapterJid));
         }
-        return ImmutableMap.copyOf(totalProblemsMap);
+        return Map.copyOf(totalProblemsMap);
     }
 
     public Map<String, Map<String, Integer>> getUserChapterSolvedProblemsMap(
@@ -148,7 +146,7 @@ public class StatsStore {
                         chapterProblemJidsMap.get(chapterJid)).size());
             }
         }
-        return ImmutableMap.copyOf(userChapterSolvedProblemsMap);
+        return Map.copyOf(userChapterSolvedProblemsMap);
     }
 
     public Map<String, ProblemProgress> getProblemProgressesMap(String userJid, Collection<String> problemJids) {
@@ -170,7 +168,7 @@ public class StatsStore {
                     .score(scoresMap.get(problemJid))
                     .build());
         }
-        return ImmutableMap.copyOf(progressesMap);
+        return Map.copyOf(progressesMap);
     }
 
     public Map<String, ProblemStats> getProblemStatsMap(Collection<String> problemJids) {
@@ -186,7 +184,7 @@ public class StatsStore {
                     .totalUsersTried(totalUsersTried.getOrDefault(problemJid, 0L).intValue())
                     .build());
         }
-        return ImmutableMap.copyOf(problemStatsMap);
+        return Map.copyOf(problemStatsMap);
     }
 
     public ProblemTopStats getProblemTopStats(String problemJid) {
@@ -260,7 +258,7 @@ public class StatsStore {
                     .totalProblems(problemJidsMap.getOrDefault(problemSetJid, emptySet()).size())
                     .build());
         }
-        return ImmutableMap.copyOf(progressesMap);
+        return Map.copyOf(progressesMap);
     }
 
     public Map<String, Map<String, ProblemProgress>> getUserProblemProgressesMap(Collection<String> userJids, Collection<String> problemJids) {
@@ -274,7 +272,7 @@ public class StatsStore {
                     .score(m.score)
                     .build());
         }
-        return ImmutableMap.copyOf(progressesMap);
+        return Map.copyOf(progressesMap);
     }
 
     public UserStats getUserStats(String userJid) {

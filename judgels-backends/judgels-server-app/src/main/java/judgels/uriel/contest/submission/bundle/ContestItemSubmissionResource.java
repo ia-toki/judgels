@@ -5,12 +5,10 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -119,14 +117,14 @@ public class ContestItemSubmissionResource {
         userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
             userJids.addAll(contestContestantStore.getApprovedContestantJids(contestJid));
-            userJidsSortedByUsername = Lists.newArrayList(userJids);
+            userJidsSortedByUsername = new ArrayList<>(userJids);
 
             problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
             problemJids = problemJidsSortedByAlias;
         } else {
-            userJidsSortedByUsername = Collections.emptyList();
+            userJidsSortedByUsername = List.of();
 
-            problemJidsSortedByAlias = Collections.emptyList();
+            problemJidsSortedByAlias = List.of();
             problemJids = Lists.transform(submissions.getPage(), ItemSubmission::getProblemJid);
         }
 
@@ -278,8 +276,7 @@ public class ContestItemSubmissionResource {
         List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(contestJid).stream()
                 .filter(problemJid -> sandalphonClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
                 .collect(Collectors.toList());
-        Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
-                contestJid, ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
+        Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(contestJid, bundleProblemJidsSortedByAlias);
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
@@ -298,15 +295,14 @@ public class ContestItemSubmissionResource {
             );
         }
 
-        Map<String, String> problemNamesByProblemJid = sandalphonClient.getProblemNames(
-                ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
+        Map<String, String> problemNamesByProblemJid = sandalphonClient.getProblemNames(bundleProblemJidsSortedByAlias, language);
 
         Profile profile = jophielClient.getProfile(userJid, contest.getBeginTime());
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
                 .canSupervise(canSupervise)
                 .canManage(canManage)
-                .userJids(ImmutableList.of(userJid))
+                .userJids(List.of(userJid))
                 .problemJids(bundleProblemJidsSortedByAlias)
                 .build();
 

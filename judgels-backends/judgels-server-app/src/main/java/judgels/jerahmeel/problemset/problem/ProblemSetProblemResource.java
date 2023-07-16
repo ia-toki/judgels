@@ -7,7 +7,6 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.HashSet;
@@ -227,14 +226,14 @@ public class ProblemSetProblemResource {
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        Set<String> problemJids = ImmutableSet.of(problemJid);
+        Set<String> problemJids = Set.of(problemJid);
 
         ProblemMetadata metadata = sandalphonClient.getProblemMetadata(problem.getProblemJid());
         ProblemDifficulty difficulty = difficultyStore.getProblemDifficultiesMap(problemJids).get(problemJid);
         ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, problemJids).get(problemJid);
 
-        Map<String, ContestInfo> contestsMap = urielClient.getContestsByJids(ImmutableSet.copyOf(problem.getContestJids()));
+        Map<String, ContestInfo> contestsMap = urielClient.getContestsByJids(problem.getContestJids());
         List<ContestInfo> contests = problem.getContestJids().stream()
                 .filter(contestsMap::containsKey)
                 .map(contestsMap::get)

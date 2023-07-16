@@ -1,9 +1,8 @@
 package judgels.jophiel;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,12 +51,12 @@ public class JophielClient {
     }
 
     public Map<String, Profile> parseProfiles(String str) {
-        Set<String> usernames = Sets.newHashSet();
+        Set<String> usernames = new HashSet<>();
         Matcher m = USERNAME_PATTERN.matcher(str);
         while (m.find()) {
             usernames.add(m.group(1));
         }
-        return getProfiles(ImmutableSet.copyOf(translateUsernamesToJids(usernames).values()));
+        return getProfiles(translateUsernamesToJids(usernames).values());
     }
 
     public List<UserRatingEvent> getUserRatingEvents(String userJid) {

@@ -3,11 +3,10 @@ package judgels.uriel.contest.scoreboard.bundle;
 import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -75,7 +74,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                 .map(contestantJid -> {
                     List<Integer> contestantAnsweredItems = problemJids.stream()
                             .map(problemJid -> submissionsByUserJid
-                                    .getOrDefault(contestantJid, Collections.emptyList())
+                                    .getOrDefault(contestantJid, List.of())
                                     .stream()
                                     .filter(submission -> submission.getProblemJid().equals(problemJid))
                                     .count()
@@ -84,7 +83,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                             .collect(Collectors.toList());
 
                     Optional<Instant> lastAnsweredTime = submissionsByUserJid
-                            .getOrDefault(contestantJid, Collections.emptyList())
+                            .getOrDefault(contestantJid, List.of())
                             .stream()
                             .map(ItemSubmission::getTime)
                             .max(Instant::compareTo);
@@ -120,7 +119,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
 
         entries.sort(comparator);
 
-        ImmutableList.Builder<BundleScoreboardEntry> newEntries = ImmutableList.builder();
+        List<BundleScoreboardEntry> newEntries = new ArrayList<>();
 
         int previousRank = 0;
         for (int i = 0; i < entries.size(); i++) {
@@ -135,6 +134,6 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
             newEntries.add(new BundleScoreboardEntry.Builder().from(entries.get(i)).rank(assignedRank).build());
         }
 
-        return newEntries.build();
+        return List.copyOf(newEntries);
     }
 }

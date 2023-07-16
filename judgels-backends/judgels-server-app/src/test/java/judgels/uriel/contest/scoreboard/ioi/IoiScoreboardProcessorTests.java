@@ -4,9 +4,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
@@ -54,17 +51,17 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
         private StyleModuleConfig styleModuleConfig = new IoiStyleModuleConfig.Builder().build();
 
-        private Set<ContestContestant> contestants = ImmutableSet.of(
+        private Set<ContestContestant> contestants = Set.of(
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(10)).build());
 
-        private Map<String, Profile> profilesMap = ImmutableMap.of(
+        private Map<String, Profile> profilesMap = Map.of(
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
 
         @Test
         void time_calculation() {
-            List<Submission> submissions = ImmutableList.of(
+            List<Submission> submissions = List.of(
                     createMilliSubmission(1, 20, "c2", "p1", 78, Verdict.TIME_LIMIT_EXCEEDED),
                     createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK),
                     createMilliSubmission(3, 25, "c1", "p1", 0, Verdict.WRONG_ANSWER));
@@ -77,7 +74,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     contestants,
                     profilesMap,
                     submissions,
-                    ImmutableList.of(),
+                    List.of(),
                     Optional.empty());
 
             assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -109,7 +106,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
         @Test
         void frozen() {
-            List<Submission> submissions = ImmutableList.of(
+            List<Submission> submissions = List.of(
                     createMilliSubmission(1, 20, "c2", "p1", 78, Verdict.TIME_LIMIT_EXCEEDED),
                     createMilliSubmission(2, 22, "c1", "p2", 50, Verdict.OK),
                     createMilliSubmission(3, 25, "c1", "p2", 90, Verdict.WRONG_ANSWER));
@@ -122,7 +119,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     contestants,
                     profilesMap,
                     submissions,
-                    ImmutableList.of(),
+                    List.of(),
                     Optional.of(Instant.ofEpochMilli(23)));
 
             assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -158,7 +155,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     .usingMaxScorePerSubtask(true)
                     .build();
 
-            List<Submission> submissions = ImmutableList.of(
+            List<Submission> submissions = List.of(
                     createMilliSubmission(5, 100, "c1", "p1", 0, Verdict.WRONG_ANSWER),
                     createMilliSubmission(6, 200, "c2", "p1", 0, Verdict.WRONG_ANSWER),
                     createMilliSubmission(7, 300, "c1", "p1", 60, Verdict.WRONG_ANSWER, 35, 25),
@@ -171,10 +168,10 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             IoiScoreboardIncrementalContent incrementalContent = new IoiScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
                     .putLastAffectingPenaltiesByContestantJid("c1", 200L)
-                    .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", empty(), "p2", of(15)))
+                    .putScoresMapsByContestantJid("c1", Map.of("p1", empty(), "p2", of(15)))
                     .putMaxScorePerSubtaskMapsByContestantJid(
                             "c1",
-                            ImmutableMap.of("p2", ImmutableMap.of(1, 10.0, 2, 5.0)))
+                            Map.of("p2", Map.of(1, 10.0, 2, 5.0)))
                     .build();
 
             @Test
@@ -187,7 +184,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -220,14 +217,14 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .lastSubmissionId(10)
                         .putLastAffectingPenaltiesByContestantJid("c1", 395)
                         .putLastAffectingPenaltiesByContestantJid("c2", 490)
-                        .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(75), "p2", empty()))
-                        .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c1", ImmutableMap.of(
-                                "p1", ImmutableMap.of(1, 35.0, 2, 40.0),
-                                "p2", ImmutableMap.of()))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c2", ImmutableMap.of(
-                                "p1", ImmutableMap.of(),
-                                "p2", ImmutableMap.of(1, 80.0, 2, 15.0)))
+                        .putScoresMapsByContestantJid("c1", Map.of("p1", of(75), "p2", empty()))
+                        .putScoresMapsByContestantJid("c2", Map.of("p1", of(0), "p2", of(95)))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c1", Map.of(
+                                "p1", Map.of(1, 35.0, 2, 40.0),
+                                "p2", Map.of()))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c2", Map.of(
+                                "p1", Map.of(),
+                                "p2", Map.of(1, 80.0, 2, 15.0)))
                         .build());
             }
 
@@ -241,7 +238,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -274,21 +271,21 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .lastSubmissionId(10)
                         .putLastAffectingPenaltiesByContestantJid("c1", 395)
                         .putLastAffectingPenaltiesByContestantJid("c2", 490)
-                        .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(75), "p2", of(15)))
-                        .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c1", ImmutableMap.of(
-                                "p1", ImmutableMap.of(1, 35.0, 2, 40.0),
-                                "p2", ImmutableMap.of(1, 10.0, 2, 5.0)))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c2", ImmutableMap.of(
-                                "p1", ImmutableMap.of(),
-                                "p2", ImmutableMap.of(1, 80.0, 2, 15.0)))
+                        .putScoresMapsByContestantJid("c1", Map.of("p1", of(75), "p2", of(15)))
+                        .putScoresMapsByContestantJid("c2", Map.of("p1", of(0), "p2", of(95)))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c1", Map.of(
+                                "p1", Map.of(1, 35.0, 2, 40.0),
+                                "p2", Map.of(1, 10.0, 2, 5.0)))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c2", Map.of(
+                                "p1", Map.of(),
+                                "p2", Map.of(1, 80.0, 2, 15.0)))
                         .build());
             }
         }
 
         @Nested
         class ProblemOrdering {
-            private List<Submission> submissions = ImmutableList.of(
+            private List<Submission> submissions = List.of(
                     createMilliSubmission(1, 20, "c2", "p1", 50, Verdict.TIME_LIMIT_EXCEEDED),
                     createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK));
 
@@ -302,7 +299,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -347,7 +344,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -380,7 +377,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
         @Nested
         class LastAffectingPenalty {
-            private List<Submission> submissions = ImmutableList.of(
+            private List<Submission> submissions = List.of(
                     createMilliSubmission(1, 20, "c2", "p1", 50, Verdict.TIME_LIMIT_EXCEEDED),
                     createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK));
 
@@ -396,7 +393,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -438,7 +435,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
@@ -471,7 +468,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
         @Nested
         class IncrementalProcess {
-            List<Submission> submissions = ImmutableList.of(
+            List<Submission> submissions = List.of(
                     createMilliSubmission(5, 100, "c1", "p1", 0, Verdict.WRONG_ANSWER),
                     createMilliSubmission(6, 200, "c2", "p1", 0, Verdict.WRONG_ANSWER),
                     createMilliSubmission(7, 300, "c1", "p1", 20, Verdict.WRONG_ANSWER),
@@ -480,12 +477,12 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     createMilliSubmission(10, 600, "c2", "p1", 0, Verdict.PENDING),
                     createMilliSubmission(11, 700, "c1", "p2", 80, Verdict.OK));
 
-            Set<ContestContestant> contestants = ImmutableSet.of(
+            Set<ContestContestant> contestants = Set.of(
                     new ContestContestant.Builder().userJid("c1").build(),
                     new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(300)).build(),
                     new ContestContestant.Builder().userJid("c3").build());
 
-            Map<String, Profile> profilesMap = ImmutableMap.of(
+            Map<String, Profile> profilesMap = Map.of(
                     "c1", new Profile.Builder().username("c1").build(),
                     "c2", new Profile.Builder().username("c2").build(),
                     "c3", new Profile.Builder().username("c3").build());
@@ -494,8 +491,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     .lastSubmissionId(3)
                     .putLastAffectingPenaltiesByContestantJid("c2", 75L)
                     .putLastAffectingPenaltiesByContestantJid("c3", 90L)
-                    .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", empty(), "p2", of(90)))
-                    .putScoresMapsByContestantJid("c3", ImmutableMap.of("p1", of(20), "p2", of(30)))
+                    .putScoresMapsByContestantJid("c2", Map.of("p1", empty(), "p2", of(90)))
+                    .putScoresMapsByContestantJid("c3", Map.of("p1", of(20), "p2", of(30)))
                     .build();
 
             @Test
@@ -508,21 +505,21 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
                         .putLastAffectingPenaltiesByContestantJid("c1", 395L)
                         .putLastAffectingPenaltiesByContestantJid("c2", 200L)
-                        .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(100), "p2", empty()))
-                        .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c1", ImmutableMap.of(
-                                "p1", ImmutableMap.of(),
-                                "p2", ImmutableMap.of()))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c2", ImmutableMap.of(
-                                "p1", ImmutableMap.of(),
-                                "p2", ImmutableMap.of()))
+                        .putScoresMapsByContestantJid("c1", Map.of("p1", of(100), "p2", empty()))
+                        .putScoresMapsByContestantJid("c2", Map.of("p1", of(0), "p2", of(95)))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c1", Map.of(
+                                "p1", Map.of(),
+                                "p2", Map.of()))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c2", Map.of(
+                                "p1", Map.of(),
+                                "p2", Map.of()))
                         .build());
             }
 
@@ -535,8 +532,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
-                        ImmutableList.of(),
-                        ImmutableList.of(),
+                        List.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
@@ -555,7 +552,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
@@ -563,15 +560,15 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .putLastAffectingPenaltiesByContestantJid("c1", 395L)
                         .putLastAffectingPenaltiesByContestantJid("c2", 200L)
                         .putLastAffectingPenaltiesByContestantJid("c3", 90L)
-                        .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(100), "p2", empty()))
-                        .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
-                        .putScoresMapsByContestantJid("c3", ImmutableMap.of("p1", of(20), "p2", of(30)))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c1", ImmutableMap.of(
-                                "p1", ImmutableMap.of(),
-                                "p2", ImmutableMap.of()))
-                        .putMaxScorePerSubtaskMapsByContestantJid("c2", ImmutableMap.of(
-                                "p1", ImmutableMap.of(),
-                                "p2", ImmutableMap.of()))
+                        .putScoresMapsByContestantJid("c1", Map.of("p1", of(100), "p2", empty()))
+                        .putScoresMapsByContestantJid("c2", Map.of("p1", of(0), "p2", of(95)))
+                        .putScoresMapsByContestantJid("c3", Map.of("p1", of(20), "p2", of(30)))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c1", Map.of(
+                                "p1", Map.of(),
+                                "p2", Map.of()))
+                        .putMaxScorePerSubtaskMapsByContestantJid("c2", Map.of(
+                                "p1", Map.of(),
+                                "p2", Map.of()))
                         .build());
             }
         }
@@ -665,7 +662,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
         IoiStyleModuleConfig config = new IoiStyleModuleConfig.Builder()
                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .build();
-        assertThat(scoreboardProcessor.filterProblemJids(scoreboard, ImmutableSet.of("p1", "p3"), config))
+        assertThat(scoreboardProcessor.filterProblemJids(scoreboard, Set.of("p1", "p3"), config))
                 .isEqualTo(filteredScoreboard);
     }
 }

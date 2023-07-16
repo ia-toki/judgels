@@ -2,7 +2,6 @@ package judgels.uriel.contest.supervisor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Optional;
@@ -98,7 +97,7 @@ public class ContestSupervisorStore {
         }
 
         Set<SupervisorManagementPermission> managementPermissions = permissions.getIsAllowedAll()
-                ? ImmutableSet.of(SupervisorManagementPermission.ALL)
+                ? Set.of(SupervisorManagementPermission.ALL)
                 : permissions.getAllowedPermissions();
 
         return new ContestSupervisor.Builder()

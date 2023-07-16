@@ -1,7 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
-import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class ContestScoreboardPoller implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContestScoreboardPoller.class);
 
-    private static final Set<String> CONTEST_JIDS_IN_PROGRESS = Sets.newHashSet();
+    private static final Set<String> CONTEST_JIDS_IN_PROGRESS = new HashSet<>();
 
     private final ContestStore contestStore;
     private final ExecutorService executorService;

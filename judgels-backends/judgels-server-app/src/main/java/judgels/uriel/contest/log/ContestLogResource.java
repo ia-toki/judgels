@@ -8,6 +8,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -82,7 +83,7 @@ public class ContestLogResource {
 
         Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
 
-        List<String> userJidsSortedByUsername = Lists.newArrayList(userJids);
+        List<String> userJidsSortedByUsername = new ArrayList<>(userJids);
         userJidsSortedByUsername.sort((u1, u2) -> {
             String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
             String usernameB = profilesMap.containsKey(u2) ? profilesMap.get(u2).getUsername() : u2;
@@ -90,7 +91,7 @@ public class ContestLogResource {
         });
 
         List<String> problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
-        Set<String> problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
+        Set<String> problemJids = Set.copyOf(problemJidsSortedByAlias);
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
 
         ContestLogConfig config = new ContestLogConfig.Builder()

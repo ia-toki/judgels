@@ -12,10 +12,9 @@ import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -130,14 +129,14 @@ public class ContestSubmissionResource {
         if (canSupervise) {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
             userJids.addAll(supervisorStore.getAllSupervisorJids(contestJid));
-            userJidsSortedByUsername = Lists.newArrayList(userJids);
+            userJidsSortedByUsername = new ArrayList<>(userJids);
 
             problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
-            problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
+            problemJids = Set.copyOf(problemJidsSortedByAlias);
         } else {
-            userJidsSortedByUsername = Collections.emptyList();
+            userJidsSortedByUsername = new ArrayList<>();
 
-            problemJidsSortedByAlias = Collections.emptyList();
+            problemJidsSortedByAlias = List.of();
             problemJids = submissions.getPage().stream()
                     .map(Submission::getProblemJid)
                     .collect(toSet());

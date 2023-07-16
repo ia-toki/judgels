@@ -7,8 +7,8 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -191,8 +191,8 @@ public class ContestContestantResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
 
-        Set<String> insertedContestantUsernames = Sets.newHashSet();
-        Set<String> alreadyContestantUsernames = Sets.newHashSet();
+        Set<String> insertedContestantUsernames = new HashSet<>();
+        Set<String> alreadyContestantUsernames = new HashSet<>();
         usernameToJidMap.forEach((username, userJid) -> {
             if (contestantStore.upsertContestant(contest.getJid(), userJid)) {
                 insertedContestantUsernames.add(username);
@@ -235,7 +235,7 @@ public class ContestContestantResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
 
-        Set<String> deletedContestantUsernames = Sets.newHashSet();
+        Set<String> deletedContestantUsernames = new HashSet<>();
         usernameToJidMap.forEach((username, userJid) -> {
             if (contestantStore.deleteContestant(contest.getJid(), userJid)) {
                 deletedContestantUsernames.add(username);

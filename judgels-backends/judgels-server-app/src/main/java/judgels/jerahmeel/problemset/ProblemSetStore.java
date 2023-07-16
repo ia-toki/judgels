@@ -2,9 +2,6 @@ package judgels.jerahmeel.problemset;
 
 import static java.util.stream.Collectors.toMap;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Instant;
 import java.util.Collection;
@@ -105,13 +102,13 @@ public class ProblemSetStore {
     public Map<String, List<String>> getProblemSetPathsByJids(Collection<String> problemSetJids) {
         ImmutableMap.Builder<String, List<String>> pathsMap = ImmutableMap.builder();
         for (ProblemSetModel m : problemSetDao.selectByJids(problemSetJids).values()) {
-            pathsMap.put(m.jid, ImmutableList.of(m.slug));
+            pathsMap.put(m.jid, List.of(m.slug));
         }
-        return pathsMap.build();
+        return Map.copyOf(pathsMap);
     }
 
     public Optional<List<String>> getProblemSetPathByJid(String problemSetJid) {
-        Map<String, List<String>> pathsMap = getProblemSetPathsByJids(ImmutableSet.of(problemSetJid));
+        Map<String, List<String>> pathsMap = getProblemSetPathsByJids(Set.of(problemSetJid));
         return Optional.ofNullable(pathsMap.get(problemSetJid));
     }
 

@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -115,7 +114,7 @@ class ContestScoreboardBuilderTests {
         when(entry2.getContestantJid()).thenReturn(USER_JID);
         when(entry2.getContestantUsername()).thenReturn("username");
         when(entry2.getContestantRating()).thenReturn(0);
-        List<IoiScoreboardEntry> entries = ImmutableList.of(entry1, entry2);
+        List<IoiScoreboardEntry> entries = List.of(entry1, entry2);
 
         IoiScoreboard scoreboard = new IoiScoreboard.Builder()
                 .state(new ScoreboardState.Builder().build())
@@ -149,7 +148,7 @@ class ContestScoreboardBuilderTests {
         when(entry2.getContestantJid()).thenReturn(USER_JID);
         when(entry2.getContestantUsername()).thenReturn("username");
         when(entry2.getContestantRating()).thenReturn(0);
-        List<IoiScoreboardEntry> entries = ImmutableList.of(entry1, entry2);
+        List<IoiScoreboardEntry> entries = List.of(entry1, entry2);
 
         IoiScoreboard scoreboard = new IoiScoreboard.Builder()
                 .state(new ScoreboardState.Builder().build())
@@ -196,7 +195,7 @@ class ContestScoreboardBuilderTests {
                 .build();
         when(mapper.readValue(anyString(), eq(IoiScoreboard.class))).thenReturn(scoreboard);
 
-        when(problemStore.getOpenProblemJids(CONTEST_JID)).thenReturn(ImmutableList.of("p1", "p3"));
+        when(problemStore.getOpenProblemJids(CONTEST_JID)).thenReturn(List.of("p1", "p3"));
 
         Scoreboard filteredScoreboard = scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, false);
         assertThat(filteredScoreboard).isEqualTo(new IoiScoreboard.Builder()

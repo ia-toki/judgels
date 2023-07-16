@@ -4,7 +4,7 @@ import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 
 import java.time.Duration;
-import java.util.Collections;
+import java.util.List;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
@@ -100,7 +100,7 @@ class ContestProblemApiPermissionIntegrationTests extends BaseUrielApiIntegratio
     }
 
     private ThrowingCallable setProblems(String token) {
-        return () -> problemClient.setProblems(token, contest.getJid(), Collections.emptyList());
+        return () -> problemClient.setProblems(token, contest.getJid(), List.of());
     }
 
     private ThrowingCallable getProblems(String token) {

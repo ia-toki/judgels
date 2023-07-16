@@ -2,7 +2,6 @@ package judgels.jophiel.hibernate;
 
 import java.time.Instant;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import judgels.jophiel.persistence.UserRatingDao;
@@ -22,7 +21,7 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
     @Override
     public List<UserRatingModel> selectAllByTimeAndUserJids(Instant time, Collection<String> userJids) {
         if (userJids.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         // selects the row for each `userJid` with the latest `time` before the given time

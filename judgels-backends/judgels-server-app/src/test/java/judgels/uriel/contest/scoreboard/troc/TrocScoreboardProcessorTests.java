@@ -2,12 +2,10 @@ package judgels.uriel.contest.scoreboard.troc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +34,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
         private ScoreboardState state = new ScoreboardState.Builder()
                 .addProblemJids("p1", "p2")
                 .addProblemAliases("A", "B")
-                .problemPoints(ImmutableList.of(1, 10))
+                .problemPoints(List.of(1, 10))
                 .build();
 
         private Contest contest = new Contest.Builder()
@@ -53,17 +51,17 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                 .wrongSubmissionPenalty(10)
                 .build();
 
-        private Set<ContestContestant> contestants = ImmutableSet.of(
+        private Set<ContestContestant> contestants = Set.of(
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build());
 
-        private Map<String, Profile> profilesMap = ImmutableMap.of(
+        private Map<String, Profile> profilesMap = Map.of(
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
 
         @Test
         void time_calculation() {
-            List<Submission> submissions = ImmutableList.of(
+            List<Submission> submissions = List.of(
                     createSubmission(1, 300, "c1", "p1", 100, Verdict.ACCEPTED),
                     createSubmission(2, 320, "c1", "p1", 0, Verdict.WRONG_ANSWER),
                     createSubmission(3, 340, "c1", "p1", 0, Verdict.COMPILATION_ERROR),
@@ -82,7 +80,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     contestants,
                     profilesMap,
                     submissions,
-                    ImmutableList.of(),
+                    List.of(),
                     Optional.empty());
 
             assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -118,7 +116,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
         @Nested
         class ProblemOrdering {
-            private List<Submission> submissions = ImmutableList.of(
+            private List<Submission> submissions = List.of(
                     createSubmission(1, 350, "c2", "p1", 100, Verdict.ACCEPTED),
                     createSubmission(2, 400, "c1", "p2", 100, Verdict.ACCEPTED));
 
@@ -132,7 +130,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -171,7 +169,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                 state = new ScoreboardState.Builder()
                         .addProblemJids("p2", "p1")
                         .addProblemAliases("B", "A")
-                        .problemPoints(ImmutableList.of(10, 1))
+                        .problemPoints(List.of(10, 1))
                         .build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
@@ -182,7 +180,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -221,7 +219,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
         class Sorting {
             @Test
             void points_over_penalty() {
-                List<Submission> submissions = ImmutableList.of(
+                List<Submission> submissions = List.of(
                         createSubmission(1, 300, "c1", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c2", "p2", 100, Verdict.ACCEPTED));
 
@@ -233,7 +231,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -269,7 +267,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
             @Test
             void penalty_as_tiebreaker() {
-                List<Submission> submissions = ImmutableList.of(
+                List<Submission> submissions = List.of(
                         createSubmission(1, 900, "c2", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c1", "p1", 100, Verdict.ACCEPTED));
 
@@ -281,7 +279,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -317,7 +315,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
             @Test
             void same_rank_if_equal() {
-                contestants = ImmutableSet.of(
+                contestants = Set.of(
                         new ContestContestant.Builder().userJid("c1").build(),
                         new ContestContestant.Builder()
                                 .userJid("c2")
@@ -325,12 +323,12 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                                 .build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
-                profilesMap = ImmutableMap.of(
+                profilesMap = Map.of(
                         "c1", new Profile.Builder().username("c1").build(),
                         "c2", new Profile.Builder().username("c2").build(),
                         "c3", new Profile.Builder().username("c3").build());
 
-                List<Submission> submissions = ImmutableList.of(
+                List<Submission> submissions = List.of(
                         createSubmission(1, 660, "c1", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c2", "p1", 100, Verdict.ACCEPTED));
 
@@ -342,7 +340,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -392,17 +390,17 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
             @Test
             void zero_points_ordering() {
-                contestants = ImmutableSet.of(
+                contestants = Set.of(
                         new ContestContestant.Builder().userJid("c1").build(),
                         new ContestContestant.Builder().userJid("c2").build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
-                profilesMap = ImmutableMap.of(
+                profilesMap = Map.of(
                         "c1", new Profile.Builder().username("c1").build(),
                         "c2", new Profile.Builder().username("c2").build(),
                         "c3", new Profile.Builder().username("c3").build());
 
-                List<Submission> submissions = ImmutableList.of(
+                List<Submission> submissions = List.of(
                         createSubmission(1, 660, "c1", "p1", 0, Verdict.WRONG_ANSWER),
                         createSubmission(2, 900, "c1", "p2", 0, Verdict.WRONG_ANSWER),
                         createSubmission(3, 900, "c3", "p2", 0, Verdict.WRONG_ANSWER));
@@ -415,7 +413,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -468,7 +466,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
         class PendingAfterFreeze {
             private Optional<Instant> freezeTime = Optional.of(Instant.ofEpochSecond(500));
 
-            private List<Submission> baseSubmissions = ImmutableList.of(
+            private List<Submission> baseSubmissions = List.of(
                     createSubmission(1, 100, "c1", "p1", 100, Verdict.ACCEPTED),
                     createSubmission(2, 400, "c2", "p2", 100, Verdict.ACCEPTED),
                     createSubmission(3, 450, "c2", "p1", 100, Verdict.ACCEPTED));
@@ -483,7 +481,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         baseSubmissions,
-                        ImmutableList.of(),
+                        List.of(),
                         freezeTime);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -519,10 +517,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
             @Test
             void pending_does_not_overwrite_accepted() {
-                List<Submission> submissions = new ImmutableList.Builder<Submission>()
-                        .addAll(baseSubmissions)
-                        .add(createSubmission(4, 501, "c1", "p1", 100, Verdict.PENDING))
-                        .build();
+                List<Submission> submissions = new ArrayList<>(baseSubmissions);
+                submissions.add(createSubmission(4, 501, "c1", "p1", 100, Verdict.PENDING));
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
@@ -532,7 +528,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         freezeTime);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -568,10 +564,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
             @Test
             void pending_does_overwrite_not_accepted() {
-                List<Submission> submissions = new ImmutableList.Builder<Submission>()
-                        .addAll(baseSubmissions)
-                        .add(createSubmission(4, 501, "c1", "p2", 0, Verdict.PENDING))
-                        .build();
+                List<Submission> submissions = new ArrayList<>(baseSubmissions);
+                submissions.add(createSubmission(4, 501, "c1", "p2", 0, Verdict.PENDING));
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
@@ -581,7 +575,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         freezeTime);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -617,10 +611,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
             @Test
             void pending_counts_on_freeze_time() {
-                List<Submission> submissions = new ImmutableList.Builder<Submission>()
-                        .addAll(baseSubmissions)
-                        .add(createSubmission(4, 500, "c1", "p2", 0, Verdict.PENDING))
-                        .build();
+                List<Submission> submissions = new ArrayList<>(baseSubmissions);
+                submissions.add(createSubmission(4, 500, "c1", "p2", 0, Verdict.PENDING));
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
@@ -630,7 +622,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         freezeTime);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
@@ -667,7 +659,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
         @Nested
         class IncrementalProcess {
-            List<Submission> submissions = ImmutableList.of(
+            List<Submission> submissions = List.of(
                     createSubmission(5, 100, "c1", "p1", 0, Verdict.WRONG_ANSWER),
                     createSubmission(6, 200, "c2", "p1", 0, Verdict.WRONG_ANSWER),
                     createSubmission(7, 300, "c1", "p1", 0, Verdict.WRONG_ANSWER),
@@ -676,12 +668,12 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     createSubmission(10, 600, "c2", "p1", 0, Verdict.PENDING),
                     createSubmission(11, 700, "c1", "p2", 100, Verdict.ACCEPTED));
 
-            Set<ContestContestant> contestants = ImmutableSet.of(
+            Set<ContestContestant> contestants = Set.of(
                     new ContestContestant.Builder().userJid("c1").build(),
                     new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build(),
                     new ContestContestant.Builder().userJid("c3").build());
 
-            Map<String, Profile> profilesMap = ImmutableMap.of(
+            Map<String, Profile> profilesMap = Map.of(
                     "c1", new Profile.Builder().username("c1").build(),
                     "c2", new Profile.Builder().username("c2").build(),
                     "c3", new Profile.Builder().username("c3").build());
@@ -689,14 +681,14 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
             TrocScoreboardIncrementalContent incrementalContent = new TrocScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
                     .putFirstToSolveSubmissionJids("p1", "JIDSX")
-                    .putAttemptsMapsByContestantJid("c2", ImmutableMap.of("p1", 0, "p2", 2))
-                    .putAttemptsMapsByContestantJid("c3", ImmutableMap.of("p1", 1, "p2", 0))
-                    .putPenaltyMapsByContestantJid("c2", ImmutableMap.of("p1", 0L, "p2", 3L))
-                    .putPenaltyMapsByContestantJid("c3", ImmutableMap.of("p1", 3L, "p2", 0L))
-                    .putProblemStateMapsByContestantJid("c2", ImmutableMap.of(
+                    .putAttemptsMapsByContestantJid("c2", Map.of("p1", 0, "p2", 2))
+                    .putAttemptsMapsByContestantJid("c3", Map.of("p1", 1, "p2", 0))
+                    .putPenaltyMapsByContestantJid("c2", Map.of("p1", 0L, "p2", 3L))
+                    .putPenaltyMapsByContestantJid("c3", Map.of("p1", 3L, "p2", 0L))
+                    .putProblemStateMapsByContestantJid("c2", Map.of(
                             "p1", TrocScoreboardProblemState.NOT_ACCEPTED,
                             "p2", TrocScoreboardProblemState.NOT_ACCEPTED))
-                    .putProblemStateMapsByContestantJid("c3", ImmutableMap.of(
+                    .putProblemStateMapsByContestantJid("c3", Map.of(
                             "p1", TrocScoreboardProblemState.ACCEPTED,
                             "p2", TrocScoreboardProblemState.NOT_ACCEPTED))
                     .build();
@@ -711,21 +703,21 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
                         .putFirstToSolveSubmissionJids("p1", "JIDS8")
                         .putFirstToSolveSubmissionJids("p2", "JIDS9")
-                        .putAttemptsMapsByContestantJid("c1", ImmutableMap.of("p1", 3, "p2", 0))
-                        .putAttemptsMapsByContestantJid("c2", ImmutableMap.of("p1", 1, "p2", 1))
-                        .putPenaltyMapsByContestantJid("c1", ImmutableMap.of("p1", 6L, "p2", 0L))
-                        .putPenaltyMapsByContestantJid("c2", ImmutableMap.of("p1", 0L, "p2", 4L))
-                        .putProblemStateMapsByContestantJid("c1", ImmutableMap.of(
+                        .putAttemptsMapsByContestantJid("c1", Map.of("p1", 3, "p2", 0))
+                        .putAttemptsMapsByContestantJid("c2", Map.of("p1", 1, "p2", 1))
+                        .putPenaltyMapsByContestantJid("c1", Map.of("p1", 6L, "p2", 0L))
+                        .putPenaltyMapsByContestantJid("c2", Map.of("p1", 0L, "p2", 4L))
+                        .putProblemStateMapsByContestantJid("c1", Map.of(
                                 "p1", TrocScoreboardProblemState.FIRST_ACCEPTED,
                                 "p2", TrocScoreboardProblemState.NOT_ACCEPTED))
-                        .putProblemStateMapsByContestantJid("c2", ImmutableMap.of(
+                        .putProblemStateMapsByContestantJid("c2", Map.of(
                                 "p1", TrocScoreboardProblemState.NOT_ACCEPTED,
                                 "p2", TrocScoreboardProblemState.FIRST_ACCEPTED))
                         .build());
@@ -740,8 +732,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
-                        ImmutableList.of(),
-                        ImmutableList.of(),
+                        List.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
@@ -760,26 +752,26 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         contestants,
                         profilesMap,
                         submissions,
-                        ImmutableList.of(),
+                        List.of(),
                         Optional.empty());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
                         .putFirstToSolveSubmissionJids("p1", "JIDSX")
                         .putFirstToSolveSubmissionJids("p2", "JIDS9")
-                        .putAttemptsMapsByContestantJid("c1", ImmutableMap.of("p1", 3, "p2", 0))
-                        .putAttemptsMapsByContestantJid("c2", ImmutableMap.of("p1", 1, "p2", 3))
-                        .putAttemptsMapsByContestantJid("c3", ImmutableMap.of("p1", 1, "p2", 0))
-                        .putPenaltyMapsByContestantJid("c1", ImmutableMap.of("p1", 6L, "p2", 0L))
-                        .putPenaltyMapsByContestantJid("c2", ImmutableMap.of("p1", 0L, "p2", 4L))
-                        .putPenaltyMapsByContestantJid("c3", ImmutableMap.of("p1", 3L, "p2", 0L))
-                        .putProblemStateMapsByContestantJid("c1", ImmutableMap.of(
+                        .putAttemptsMapsByContestantJid("c1", Map.of("p1", 3, "p2", 0))
+                        .putAttemptsMapsByContestantJid("c2", Map.of("p1", 1, "p2", 3))
+                        .putAttemptsMapsByContestantJid("c3", Map.of("p1", 1, "p2", 0))
+                        .putPenaltyMapsByContestantJid("c1", Map.of("p1", 6L, "p2", 0L))
+                        .putPenaltyMapsByContestantJid("c2", Map.of("p1", 0L, "p2", 4L))
+                        .putPenaltyMapsByContestantJid("c3", Map.of("p1", 3L, "p2", 0L))
+                        .putProblemStateMapsByContestantJid("c1", Map.of(
                                 "p1", TrocScoreboardProblemState.ACCEPTED,
                                 "p2", TrocScoreboardProblemState.NOT_ACCEPTED))
-                        .putProblemStateMapsByContestantJid("c2", ImmutableMap.of(
+                        .putProblemStateMapsByContestantJid("c2", Map.of(
                                 "p1", TrocScoreboardProblemState.NOT_ACCEPTED,
                                 "p2", TrocScoreboardProblemState.FIRST_ACCEPTED))
-                        .putProblemStateMapsByContestantJid("c3", ImmutableMap.of(
+                        .putProblemStateMapsByContestantJid("c3", Map.of(
                                 "p1", TrocScoreboardProblemState.ACCEPTED,
                                 "p2", TrocScoreboardProblemState.NOT_ACCEPTED))
                         .build());

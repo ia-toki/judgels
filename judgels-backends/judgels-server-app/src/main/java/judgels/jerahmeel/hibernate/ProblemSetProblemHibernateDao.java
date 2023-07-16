@@ -1,6 +1,5 @@
 package judgels.jerahmeel.hibernate;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
@@ -67,7 +66,7 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
             int pageSize) {
 
         long count = 0;
-        List<Tuple> data = ImmutableList.of();
+        List<Tuple> data = List.of();
 
         String countQ = ""
                 + "SELECT COUNT(*) FROM jerahmeel_problem_set_problem a "

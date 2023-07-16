@@ -7,7 +7,6 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.LinkedHashMap;
@@ -118,7 +117,7 @@ public class ProblemSetResource {
 
         String actorJid = actorChecker.check(authHeader);
         ProblemSetProgress progress = statsStore
-                .getProblemSetProgressesMap(actorJid, ImmutableSet.of(problemSetJid))
+                .getProblemSetProgressesMap(actorJid, Set.of(problemSetJid))
                 .get(problemSetJid);
         return new ProblemSetStatsResponse.Builder()
                 .progress(progress)

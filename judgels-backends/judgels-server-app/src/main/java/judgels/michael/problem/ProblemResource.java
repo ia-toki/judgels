@@ -3,7 +3,6 @@ package judgels.michael.problem;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
@@ -235,10 +235,9 @@ public class ProblemResource extends BaseProblemResource {
 
     private List<String> usernamesToUserJids(String usernames, Map<String, String> jidsMap) {
         if (usernames == null) {
-            return ImmutableList.of();
+            return List.of();
         }
-        return Lists.newArrayList(usernames.split(","))
-                .stream()
+        return Stream.of(usernames.split(","))
                 .filter(jidsMap::containsKey)
                 .map(jidsMap::get)
                 .collect(Collectors.toList());
@@ -252,7 +251,7 @@ public class ProblemResource extends BaseProblemResource {
             Map<String, String> jidsMap) {
 
         List<String> userJids = usernamesToUserJids(usernames, jidsMap);
-        if (!userJids.equals(setters.getOrDefault(role, ImmutableList.of()))) {
+        if (!userJids.equals(setters.getOrDefault(role, List.of()))) {
             problemStore.updateProblemSetters(problemJid, role, userJids);
         }
     }

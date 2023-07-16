@@ -2,10 +2,9 @@ package judgels.michael.problem.programming.grading.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import judgels.fs.FileInfo;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
@@ -26,9 +25,9 @@ public class OutputOnlyGradingConfigAdapterTests extends BaseGradingConfigAdapte
         GradingConfigForm form = new GradingConfigForm();
 
         OutputOnlyGradingConfig config = new OutputOnlyGradingConfig.Builder()
-                .testData(ImmutableList.of(
-                        TestGroup.of(0, ImmutableList.of()),
-                        TestGroup.of(-1, ImmutableList.of())))
+                .testData(List.of(
+                        TestGroup.of(0, List.of()),
+                        TestGroup.of(-1, List.of())))
                 .build();
 
         assertThat(adapter.buildConfigFromForm(form)).isEqualTo(config);
@@ -47,12 +46,12 @@ public class OutputOnlyGradingConfigAdapterTests extends BaseGradingConfigAdapte
         form.customScorer = "scorer.cpp";
 
         OutputOnlyGradingConfig config = new OutputOnlyGradingConfig.Builder()
-                .testData(ImmutableList.of(
-                        TestGroup.of(0, ImmutableList.of(
-                                TestCase.of("sample_1.in", "sample_1.out", ImmutableSet.of(0)))),
-                        TestGroup.of(-1, ImmutableList.of(
-                                TestCase.of("1.in", "1.out", ImmutableSet.of(-1)),
-                                TestCase.of("2.in", "2.out", ImmutableSet.of(-1))))))
+                .testData(List.of(
+                        TestGroup.of(0, List.of(
+                                TestCase.of("sample_1.in", "sample_1.out", Set.of(0)))),
+                        TestGroup.of(-1, List.of(
+                                TestCase.of("1.in", "1.out", Set.of(-1)),
+                                TestCase.of("2.in", "2.out", Set.of(-1))))))
                 .customScorer("scorer.cpp")
                 .build();
 
@@ -64,7 +63,7 @@ public class OutputOnlyGradingConfigAdapterTests extends BaseGradingConfigAdapte
     void test_auto_population() {
         OutputOnlyGradingConfig config = new OutputOnlyGradingConfig.Builder().build();
 
-        List<FileInfo> testDataFiles = ImmutableList.of(
+        List<FileInfo> testDataFiles = List.of(
                 createFile("hello_sample_1.in"),
                 createFile("hello_sample_1.out"),
                 createFile("hello_1.in"),
@@ -76,12 +75,12 @@ public class OutputOnlyGradingConfigAdapterTests extends BaseGradingConfigAdapte
         OutputOnlyGradingConfig populatedConfig = (OutputOnlyGradingConfig) adapter.autoPopulateTestData(config, testDataFiles);
         assertThat(populatedConfig).isEqualTo(new OutputOnlyGradingConfig.Builder()
                 .from(config)
-                .testData(ImmutableList.of(
-                        TestGroup.of(0, ImmutableList.of(
-                                TestCase.of("hello_sample_1.in", "hello_sample_1.out", ImmutableSet.of(0)))),
-                        TestGroup.of(-1, ImmutableList.of(
-                                TestCase.of("hello_1.in", "hello_1.out", ImmutableSet.of(-1)),
-                                TestCase.of("hello_2.in", "hello_2.out", ImmutableSet.of(-1))))))
+                .testData(List.of(
+                        TestGroup.of(0, List.of(
+                                TestCase.of("hello_sample_1.in", "hello_sample_1.out", Set.of(0)))),
+                        TestGroup.of(-1, List.of(
+                                TestCase.of("hello_1.in", "hello_1.out", Set.of(-1)),
+                                TestCase.of("hello_2.in", "hello_2.out", Set.of(-1))))))
                 .build());
     }
 }

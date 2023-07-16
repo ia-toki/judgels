@@ -1,7 +1,6 @@
 package judgels.michael.problem.programming.grading.config;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
@@ -26,13 +25,13 @@ public class GradingConfigForm extends HtmlForm {
     List<String> testCaseOutputs = Arrays.asList("", "");
 
     @FormParam("sampleTestCaseSubtaskIds")
-    List<String> sampleTestCaseSubtaskIds = Collections.emptyList();
+    List<String> sampleTestCaseSubtaskIds = List.of();
 
     @FormParam("testGroupSubtaskIds")
-    List<String> testGroupSubtaskIds = Collections.emptyList();
+    List<String> testGroupSubtaskIds = List.of();
 
     @FormParam("subtaskPoints")
-    List<Integer> subtaskPoints = Collections.emptyList();
+    List<Integer> subtaskPoints = List.of();
 
     @FormParam("customScorer")
     String customScorer = HELPER_NONE;

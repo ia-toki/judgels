@@ -1,8 +1,8 @@
 package judgels.sandalphon.problem.bundle.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
+import java.util.List;
 import judgels.sandalphon.api.problem.bundle.ItemConfig;
 import judgels.sandalphon.api.problem.bundle.MultipleChoiceItemConfig;
 
@@ -18,7 +18,7 @@ public class MultipleChoiceItemEngine implements ItemEngine {
                 .statement("")
                 .score(4.0)
                 .penalty(-1.0)
-                .choices(ImmutableList.of(
+                .choices(List.of(
                         new MultipleChoiceItemConfig.Choice.Builder().alias("a").content("").build(),
                         new MultipleChoiceItemConfig.Choice.Builder().alias("b").content("").build(),
                         new MultipleChoiceItemConfig.Choice.Builder().alias("c").content("").build(),

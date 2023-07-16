@@ -1,6 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import judgels.gabriel.api.GradingResultDetails;
@@ -8,7 +9,6 @@ import judgels.gabriel.api.SubtaskResult;
 import judgels.gabriel.api.Verdict;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
-import org.assertj.core.util.Lists;
 
 public abstract class AbstractProgrammingScoreboardProcessorTests {
     protected Submission createMilliSubmission(
@@ -20,7 +20,7 @@ public abstract class AbstractProgrammingScoreboardProcessorTests {
             Verdict verdict,
             int... subtaskPoints) {
 
-        List<SubtaskResult> subtaskResults = Lists.newArrayList();
+        List<SubtaskResult> subtaskResults = new ArrayList<>();
         for (int i = 0; i < subtaskPoints.length; i++) {
             subtaskResults.add(new SubtaskResult.Builder()
                     .id(i + 1)

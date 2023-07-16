@@ -1,9 +1,9 @@
 package judgels.sandalphon;
 
-import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import judgels.fs.local.LocalFileSystem;
@@ -172,12 +172,12 @@ public final class LocalGit implements Git {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
 
             Iterable<RevCommit> logs = new org.eclipse.jgit.api.Git(repo).log().call();
-            ImmutableList.Builder<GitCommit> versions = ImmutableList.builder();
+            List<GitCommit> versions = new ArrayList<>();
             for (RevCommit rev : logs) {
                 versions.add(new GitCommit(rev.getName(), rev.getAuthorIdent().getName(), new Date(rev.getCommitTime() * 1000L), rev.getShortMessage(), rev.getFullMessage()));
             }
             repo.close();
-            return versions.build();
+            return List.copyOf(versions);
 
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);

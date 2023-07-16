@@ -1,6 +1,5 @@
 package judgels.jophiel.session;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,7 +41,7 @@ public class SessionStore {
         for (SessionModel m : sessionDao.selectAllByUserJids(userJids)) {
             timesMap.put(m.userJid, m.createdAt);
         }
-        return ImmutableMap.copyOf(timesMap);
+        return Map.copyOf(timesMap);
     }
 
     public void deleteSessionByToken(String token) {

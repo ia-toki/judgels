@@ -1,6 +1,6 @@
 package judgels.uriel.contest.rating;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ public class ContestRatingComputer {
             Map<String, Integer> publicRatingsMap,
             Map<String, Integer> hiddenRatingsMap) {
 
-        ImmutableMap.Builder<String, UserRating> result = ImmutableMap.builder();
+        Map<String, UserRating> result = new HashMap<>();
 
         int N = contestantJids.size();
         for (String cA : contestantJids) {
@@ -62,7 +62,7 @@ public class ContestRatingComputer {
                     .publicRating((int) publicA)
                     .build());
         }
-        return result.build();
+        return Map.copyOf(result);
     }
 
     private static double getScore(int N, double hiddenA, double hiddenB) {

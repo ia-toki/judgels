@@ -5,9 +5,9 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,7 +67,7 @@ public class ContestEditorialResource {
         Map<String, ProblemMetadata> problemMetadatasMap = sandalphonClient.getProblemMetadatas(problemJids);
         Map<String, ProblemEditorialInfo> problemEditorialsMap = sandalphonClient.getProblemEditorials(problemJids, uriInfo.getBaseUri(), language);
 
-        Map<String, Profile> profilesMap = Maps.newHashMap();
+        Map<String, Profile> profilesMap = new HashMap<>();
         profilesMap.putAll(jophielClient.parseProfiles(config.getPreface().orElse("")));
         profilesMap.putAll(jophielClient.getProfiles(problemMetadatasMap.values()
                 .stream()

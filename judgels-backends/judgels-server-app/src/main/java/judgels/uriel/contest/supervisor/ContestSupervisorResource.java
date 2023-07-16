@@ -7,8 +7,8 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -93,7 +93,7 @@ public class ContestSupervisorResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(data.getUsernames());
 
-        Set<String> upsertedSupervisorUsernames = Sets.newHashSet();
+        Set<String> upsertedSupervisorUsernames = new HashSet<>();
         usernameToJidMap.forEach((username, userJid) -> {
             supervisorStore.upsertSupervisor(contest.getJid(), userJid, data.getManagementPermissions());
             upsertedSupervisorUsernames.add(username);
@@ -129,7 +129,7 @@ public class ContestSupervisorResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
 
-        Set<String> deletedSupervisorUsernames = Sets.newHashSet();
+        Set<String> deletedSupervisorUsernames = new HashSet<>();
         usernameToJidMap.forEach((username, userJid) -> {
             if (supervisorStore.deleteSupervisor(contest.getJid(), userJid)) {
                 deletedSupervisorUsernames.add(username);

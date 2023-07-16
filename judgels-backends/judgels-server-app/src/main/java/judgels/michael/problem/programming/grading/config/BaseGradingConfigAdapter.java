@@ -2,8 +2,6 @@ package judgels.michael.problem.programming.grading.config;
 
 import static java.util.stream.Collectors.joining;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,9 +33,9 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
 
     protected List<String> getSourceFileFieldKeysConfigPartFromForm(GradingConfigForm form) {
         if (form.sourceFileFieldKeys != null) {
-            return ImmutableList.copyOf(form.sourceFileFieldKeys.split(","));
+            return List.of(form.sourceFileFieldKeys.split(","));
         }
-        return Collections.emptyList();
+        return List.of();
     }
 
     protected void fillTestDataWithoutSubtasksFormPartsFromConfig(GradingConfigForm form, GradingConfig config) {
@@ -101,7 +99,7 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
             testData.add(TestGroup.of(i /* placeholder */, testCases));
         }
 
-        return ImmutableList.copyOf(testData);
+        return List.copyOf(testData);
     }
 
     protected List<TestGroup> getTestDataWithoutSubtasksConfigPartsFromForm(GradingConfigForm form) {
@@ -121,7 +119,7 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
                     .build());
         }
 
-        return ImmutableList.copyOf(testDataWithoutSubtasks);
+        return List.copyOf(testDataWithoutSubtasks);
     }
 
     protected Object[] getTestDataWithSubtasksConfigPartsFromForm(GradingConfigForm form) {
@@ -200,7 +198,7 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
             }
         }
 
-        return new Object[]{ImmutableList.copyOf(testDataWithSubtasks), ImmutableList.copyOf(subtaskPoints)};
+        return new Object[]{List.copyOf(testDataWithSubtasks), List.copyOf(subtaskPoints)};
     }
 
     protected void fillCustomScorerFormPartFromConfig(GradingConfigForm form, Optional<String> customScorer) {
@@ -235,15 +233,15 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
             String out = hasOutput ? testDataFiles.get(i + 1).getName() : "";
             if (isTestCasePair(in, out)) {
                 if (in.contains("sample")) {
-                    sampleTestCases.add(TestCase.of(in, out, ImmutableSet.of(0)));
+                    sampleTestCases.add(TestCase.of(in, out, Set.of(0)));
                 } else {
-                    testCases.add(TestCase.of(in, out, ImmutableSet.of(-1)));
+                    testCases.add(TestCase.of(in, out, Set.of(-1)));
                 }
                 i += (hasOutput ? 1 : 0);
             }
         }
 
-        return ImmutableList.of(
+        return List.of(
                 TestGroup.of(0, sampleTestCases),
                 TestGroup.of(-1, testCases));
     }

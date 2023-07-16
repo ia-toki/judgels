@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -117,7 +118,7 @@ public class LessonStatementStore extends BaseLessonStore {
     public Map<String, String> getTitlesByLanguage(String userJid, String lessonJid) {
         Map<String, StatementLanguageStatus> availableLanguages = getAvailableLanguages(userJid, lessonJid);
 
-        ImmutableMap.Builder<String, String> titlesByLanguageBuilder = ImmutableMap.builder();
+        Map<String, String> titlesByLanguageBuilder = new HashMap<>();
 
         for (Map.Entry<String, StatementLanguageStatus> entry : availableLanguages.entrySet()) {
             if (entry.getValue() == StatementLanguageStatus.ENABLED) {
@@ -126,7 +127,7 @@ public class LessonStatementStore extends BaseLessonStore {
             }
         }
 
-        return titlesByLanguageBuilder.build();
+        return Map.copyOf(titlesByLanguageBuilder);
     }
 
     public void uploadStatementMediaFile(String userJid, String lessonJid, InputStream mediaFile, String filename) {

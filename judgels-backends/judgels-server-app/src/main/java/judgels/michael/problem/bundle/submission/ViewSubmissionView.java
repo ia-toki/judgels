@@ -1,6 +1,5 @@
 package judgels.michael.problem.bundle.submission;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -46,7 +45,7 @@ public class ViewSubmissionView extends TemplateView {
             sortedResults.put(jid, results.get(jid));
         }
 
-        return ImmutableMap.copyOf(sortedResults);
+        return Map.copyOf(sortedResults);
     }
 
     public BundleAnswer getAnswer() {

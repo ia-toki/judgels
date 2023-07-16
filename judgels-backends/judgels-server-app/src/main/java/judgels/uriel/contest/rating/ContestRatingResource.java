@@ -7,9 +7,10 @@ import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -113,10 +114,10 @@ public class ContestRatingResource {
 
         Map<String, Profile> profilesMap = jophielClient.getProfiles(ranksMap.keySet(), contest.getBeginTime());
 
-        Map<String, Integer> publicRatingsMap = Maps.newHashMap();
-        Map<String, Integer> hiddenRatingsMap = Maps.newHashMap();
+        Map<String, Integer> publicRatingsMap = new HashMap<>();
+        Map<String, Integer> hiddenRatingsMap = new HashMap<>();
 
-        List<String> contestantJids = Lists.newArrayList();
+        List<String> contestantJids = new ArrayList<>();
 
         for (Map.Entry<String, Profile> entry : profilesMap.entrySet()) {
             String contestantJid = entry.getKey();

@@ -1,11 +1,9 @@
 package judgels.jerahmeel.course.chapter;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -23,7 +21,7 @@ public class CourseChapterStore {
         this.chapterDao = chapterDao;
     }
 
-    public Set<CourseChapter> setChapters(String courseJid, List<CourseChapter> data) {
+    public void setChapters(String courseJid, List<CourseChapter> data) {
         Map<String, CourseChapter> setChapters = data.stream().collect(
                 Collectors.toMap(CourseChapter::getChapterJid, Function.identity()));
         for (CourseChapterModel model : chapterDao.selectByCourseJid(courseJid).all()) {
@@ -33,28 +31,26 @@ public class CourseChapterStore {
             }
         }
 
-        ImmutableSet.Builder<CourseChapter> chapters = ImmutableSet.builder();
         for (CourseChapter chapter : data) {
-            chapters.add(upsertChapter(
+            upsertChapter(
                     courseJid,
                     chapter.getAlias(),
-                    chapter.getChapterJid()));
+                    chapter.getChapterJid());
         }
-        return chapters.build();
     }
 
-    private CourseChapter upsertChapter(String courseJid, String alias, String chapterJid) {
+    private void upsertChapter(String courseJid, String alias, String chapterJid) {
         Optional<CourseChapterModel> maybeModel = chapterDao.selectByChapterJid(chapterJid);
         if (maybeModel.isPresent()) {
             CourseChapterModel model = maybeModel.get();
             model.alias = alias;
-            return fromModel(chapterDao.update(model));
+            chapterDao.update(model);
         } else {
             CourseChapterModel model = new CourseChapterModel();
             model.courseJid = courseJid;
             model.chapterJid = chapterJid;
             model.alias = alias;
-            return fromModel(chapterDao.insert(model));
+            chapterDao.insert(model);
         }
     }
 

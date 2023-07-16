@@ -1,7 +1,6 @@
 package judgels.sandalphon.problem.bundle.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class BundleItemStore extends BaseBundleProblemStore {
             numberedItems.add(numberedItem.build());
         }
 
-        return ImmutableList.copyOf(numberedItems);
+        return List.copyOf(numberedItems);
     }
 
     public Optional<BundleItem> getNumberedItem(String userJid, String problemJid, String itemJid) {

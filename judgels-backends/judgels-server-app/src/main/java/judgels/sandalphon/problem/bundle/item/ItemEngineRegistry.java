@@ -1,6 +1,5 @@
 package judgels.sandalphon.problem.bundle.item;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import judgels.sandalphon.api.problem.bundle.ItemType;
@@ -29,6 +28,6 @@ public class ItemEngineRegistry {
         for (Map.Entry<ItemType, ItemEngine> entry : REGISTRY.entrySet()) {
             types.put(entry.getKey().name(), entry.getValue().getName());
         }
-        return ImmutableMap.copyOf(types);
+        return Map.copyOf(types);
     }
 }

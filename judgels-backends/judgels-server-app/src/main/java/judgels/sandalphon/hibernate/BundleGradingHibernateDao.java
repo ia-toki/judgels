@@ -2,7 +2,7 @@ package judgels.sandalphon.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -43,7 +43,7 @@ public final class BundleGradingHibernateDao extends JudgelsHibernateDao<BundleG
 
         List<BundleGradingModel> models = currentSession().createQuery(query).getResultList();
 
-        Map<String, List<BundleGradingModel>> result = Maps.newHashMap();
+        Map<String, List<BundleGradingModel>> result = new HashMap<>();
 
         for (BundleGradingModel model : models) {
             if (result.containsKey(model.submissionJid)) {

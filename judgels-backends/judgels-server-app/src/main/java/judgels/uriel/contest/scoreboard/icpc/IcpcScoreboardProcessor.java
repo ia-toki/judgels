@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
@@ -111,7 +110,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             }
             nextLastSubmissionId = Optional.of(s.getId());
         }
-        firstToSolveSubmissionJids = ImmutableMap.copyOf(currentFirstToSolveSubmissionJids);
+        firstToSolveSubmissionJids = Map.copyOf(currentFirstToSolveSubmissionJids);
 
         List<IcpcScoreboardEntry> entries = new ArrayList<>();
         for (String contestantJid : submissionsMap.keySet()) {
@@ -171,9 +170,9 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
 
                 if (submission.getId() <= nextLastSubmissionId.orElse(Long.MAX_VALUE)) {
                     lastAcceptedPenaltiesByContestantJid.put(contestantJid, lastAcceptedPenalty);
-                    attemptsMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(attemptsMap));
-                    penaltyMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(penaltyMap));
-                    problemStateMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(problemStateMap));
+                    attemptsMapsByContestantJid.put(contestantJid, Map.copyOf(attemptsMap));
+                    penaltyMapsByContestantJid.put(contestantJid, Map.copyOf(penaltyMap));
+                    problemStateMapsByContestantJid.put(contestantJid, Map.copyOf(problemStateMap));
                 }
             }
 

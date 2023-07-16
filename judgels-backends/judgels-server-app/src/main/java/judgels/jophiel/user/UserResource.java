@@ -6,15 +6,14 @@ import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,7 +102,7 @@ public class UserResource {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        Map<String, User> usersMap = userStore.getUsersByUsername(ImmutableSet.copyOf(usernames));
+        Map<String, User> usersMap = userStore.getUsersByUsername(usernames);
         List<User> users = usernames.stream()
                 .filter(usersMap::containsKey)
                 .map(usersMap::get)
@@ -134,13 +133,13 @@ public class UserResource {
         CSVReader reader = new CSVReader(new StringReader(csv));
 
         String[] header = reader.readNext();
-        Map<String, Integer> headerMap = Maps.newHashMap();
+        Map<String, Integer> headerMap = new HashMap<>();
         for (int i = 0; i < header.length; i++) {
             headerMap.put(header[i], i);
         }
 
-        ImmutableList.Builder<String> createdUsernames = ImmutableList.builder();
-        ImmutableList.Builder<String> updatedUsernames = ImmutableList.builder();
+        List<String> createdUsernames = new ArrayList<>();
+        List<String> updatedUsernames = new ArrayList<>();
         while (true) {
             String[] line = reader.readNext();
             if (line == null) {
@@ -194,8 +193,8 @@ public class UserResource {
         }
 
         return new UsersUpsertResponse.Builder()
-                .createdUsernames(createdUsernames.build())
-                .updatedUsernames(updatedUsernames.build())
+                .createdUsernames(createdUsernames)
+                .updatedUsernames(updatedUsernames)
                 .build();
     }
 

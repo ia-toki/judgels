@@ -3,12 +3,12 @@ package judgels.persistence.hibernate;
 import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.TestClock;
@@ -276,13 +276,13 @@ class HibernateDaoIntegrationTests {
 
         Page<ExampleModel> models = dao.select()
                 .whereUniqueColumn1Is("x")
-                .whereColumn1In(ImmutableSet.of("a", "d"))
+                .whereColumn1In(Set.of("a", "d"))
                 .paged(1, 20);
         assertThat(models.getPage()).containsExactly(model4, model1);
 
         models = dao.select()
                 .whereUniqueColumn1Is("x")
-                .whereColumn1In(ImmutableSet.of())
+                .whereColumn1In(Set.of())
                 .paged(1, 20);
         assertThat(models.getPage()).isEmpty();
     }

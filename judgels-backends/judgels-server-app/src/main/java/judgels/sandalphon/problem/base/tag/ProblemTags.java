@@ -2,11 +2,8 @@ package judgels.sandalphon.problem.base.tag;
 
 import static java.util.stream.Collectors.toSet;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,14 +11,14 @@ import java.util.stream.Collectors;
 public class ProblemTags {
     private ProblemTags() {}
 
-    public static final List<Set<String>> DERIVED_TAG_GROUPS = ImmutableList.of(
-            ImmutableSet.of("visibility-private", "visibility-public"),
-            ImmutableSet.of("statement-en"),
-            ImmutableSet.of("editorial-no", "editorial-yes", "editorial-en"),
-            ImmutableSet.of("engine-batch", "engine-interactive", "engine-output-only", "engine-functional"),
-            ImmutableSet.of("scoring-partial", "scoring-subtasks", "scoring-absolute"));
+    public static final List<Set<String>> DERIVED_TAG_GROUPS = List.of(
+            Set.of("visibility-private", "visibility-public"),
+            Set.of("statement-en"),
+            Set.of("editorial-no", "editorial-yes", "editorial-en"),
+            Set.of("engine-batch", "engine-interactive", "engine-output-only", "engine-functional"),
+            Set.of("scoring-partial", "scoring-subtasks", "scoring-absolute"));
 
-    public static final List<String> TOPIC_TAGS = ImmutableList.of(
+    public static final List<String> TOPIC_TAGS = List.of(
             "ad hoc",
             "bitwise operation",
             "constructive",
@@ -141,6 +138,6 @@ public class ProblemTags {
                 .filter(tag -> tags.stream().noneMatch(t -> isChildTag(tag, t)))
                 .collect(toSet()));
 
-        return Collections.unmodifiableList(result);
+        return List.copyOf(result);
     }
 }

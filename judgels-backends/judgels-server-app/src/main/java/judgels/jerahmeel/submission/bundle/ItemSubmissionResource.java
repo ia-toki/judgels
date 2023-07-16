@@ -5,8 +5,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collection;
@@ -83,7 +81,7 @@ public class ItemSubmissionResource {
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         Optional<String> userJid = username.map(
-                u -> jophielClient.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
+                u -> jophielClient.translateUsernamesToJids(Set.of(u)).getOrDefault(u, ""));
 
         Optional<String> problemJid = Optional.empty();
         if (problemAlias.isPresent()) {
@@ -210,7 +208,7 @@ public class ItemSubmissionResource {
         List<? extends ItemSubmission> submissions;
         List<String> problemJids;
         if (problemJid.isPresent()) {
-            problemJids = ImmutableList.of(problemJid.get());
+            problemJids = List.of(problemJid.get());
             submissions = submissionStore
                     .getLatestSubmissionsByUserForProblemInContainer(containerJid, problemJid.get(), userJid);
         } else {
@@ -221,7 +219,7 @@ public class ItemSubmissionResource {
         Map<String, ItemSubmission> submissionsByItemJid = submissions.stream()
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
 
-        Map<String, String> problemAliasesMap = getProblemAliasesMap(containerJid, ImmutableSet.copyOf(problemJids));
+        Map<String, String> problemAliasesMap = getProblemAliasesMap(containerJid, problemJids);
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
@@ -238,12 +236,12 @@ public class ItemSubmissionResource {
             itemJidsByProblemJid.put(pJid, items.stream().map(Item::getJid).collect(Collectors.toList()));
         }
 
-        Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(ImmutableSet.copyOf(problemJids), language);
+        Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(problemJids, language);
         Profile profile = jophielClient.getProfile(userJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
-                .userJids(ImmutableList.of(userJid))
+                .userJids(List.of(userJid))
                 .problemJids(problemJids)
                 .build();
 

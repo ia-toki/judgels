@@ -4,13 +4,11 @@ import static java.util.stream.Collectors.toMap;
 import static judgels.sandalphon.api.problem.ProblemType.BUNDLE;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
@@ -66,7 +64,7 @@ public class ChapterProblemStore {
                 .collect(toMap(m -> m.chapterJid + "-" + m.problemJid, m -> m.alias));
     }
 
-    public Set<ChapterProblem> setProblems(String chapterJid, List<ChapterProblem> data) {
+    public void setProblems(String chapterJid, List<ChapterProblem> data) {
         Map<String, ChapterProblem> setProblems = data.stream().collect(
                 toMap(ChapterProblem::getProblemJid, Function.identity()));
         for (ChapterProblemModel model : problemDao.selectByChapterJid(chapterJid).all()) {
@@ -76,30 +74,28 @@ public class ChapterProblemStore {
             }
         }
 
-        ImmutableSet.Builder<ChapterProblem> problems = ImmutableSet.builder();
         for (ChapterProblem problem : data) {
-            problems.add(upsertProblem(
+            upsertProblem(
                     chapterJid,
                     problem.getAlias(),
                     problem.getProblemJid(),
-                    problem.getType()));
+                    problem.getType());
         }
-        return problems.build();
     }
 
-    public ChapterProblem upsertProblem(String chapterJid, String alias, String problemJid, ProblemType type) {
+    public void upsertProblem(String chapterJid, String alias, String problemJid, ProblemType type) {
         Optional<ChapterProblemModel> maybeModel = problemDao.selectByProblemJid(problemJid);
         if (maybeModel.isPresent()) {
             ChapterProblemModel model = maybeModel.get();
             model.alias = alias;
-            return fromModel(problemDao.update(model));
+            problemDao.update(model);
         } else {
             ChapterProblemModel model = new ChapterProblemModel();
             model.chapterJid = chapterJid;
             model.alias = alias;
             model.problemJid = problemJid;
             model.type = type.name();
-            return fromModel(problemDao.insert(model));
+            problemDao.insert(model);
         }
     }
 

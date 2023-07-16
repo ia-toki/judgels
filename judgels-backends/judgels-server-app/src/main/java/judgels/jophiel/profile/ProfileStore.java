@@ -1,12 +1,11 @@
 package judgels.jophiel.profile;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.BasicProfile;
@@ -21,8 +20,6 @@ import judgels.jophiel.user.rating.UserWithRating;
 import judgels.persistence.api.Page;
 
 public class ProfileStore {
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("\\[user:(\\S+)]");
-
     private final UserStore userStore;
     private final UserInfoStore infoStore;
     private final UserRatingStore ratingStore;
@@ -35,11 +32,11 @@ public class ProfileStore {
     }
 
     public Profile getProfile(String userJid, Instant time) {
-        return getProfiles(ImmutableSet.of(userJid), time).get(userJid);
+        return getProfiles(Set.of(userJid), time).get(userJid);
     }
 
     public Profile getProfile(String userJid) {
-        return getProfiles(ImmutableSet.of(userJid), Instant.now()).get(userJid);
+        return getProfiles(Set.of(userJid), Instant.now()).get(userJid);
     }
 
     public Map<String, Profile> getProfiles(Collection<String> userJids, Instant time) {
@@ -79,7 +76,7 @@ public class ProfileStore {
 
     public Optional<BasicProfile> getBasicProfile(Instant time, String userJid) {
         return userStore.getUserByJid(userJid).map(user -> {
-            Map<String, UserRating> ratings = ratingStore.getRatings(time, ImmutableSet.of(userJid));
+            Map<String, UserRating> ratings = ratingStore.getRatings(time, Set.of(userJid));
             UserInfo info = infoStore.getInfo(userJid);
 
             return new BasicProfile.Builder()

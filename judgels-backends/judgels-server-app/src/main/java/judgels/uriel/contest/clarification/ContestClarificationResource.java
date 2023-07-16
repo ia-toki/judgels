@@ -5,9 +5,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -108,9 +106,9 @@ public class ContestClarificationResource {
         boolean canCreate = clarificationRoleChecker.canCreate(actorJid, contest);
         if (canCreate) {
             problemJidsSortedByAlias = problemStore.getOpenProblemJids(contestJid);
-            problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
+            problemJids = Set.copyOf(problemJidsSortedByAlias);
         } else {
-            problemJidsSortedByAlias = Collections.emptyList();
+            problemJidsSortedByAlias = List.of();
             problemJids = clarifications.getPage()
                     .stream()
                     .map(ContestClarification::getTopicJid)

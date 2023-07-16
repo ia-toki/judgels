@@ -4,8 +4,9 @@ import static java.util.stream.Collectors.toMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -101,10 +102,10 @@ public class ProblemStore extends BaseProblemStore {
     }
 
     public Map<ProblemSetterRole, List<String>> getProblemSetters(String problemJid) {
-        Map<ProblemSetterRole, List<String>> setters = Maps.newHashMap();
+        Map<ProblemSetterRole, List<String>> setters = new HashMap<>();
         for (ProblemSetterModel m : setterDao.selectAllByProblemJid(problemJid)) {
             ProblemSetterRole role = ProblemSetterRole.valueOf(m.role);
-            setters.putIfAbsent(role, Lists.newArrayList());
+            setters.putIfAbsent(role, new ArrayList<>());
             setters.get(role).add(m.userJid);
         }
         return setters;

@@ -4,7 +4,7 @@ import static judgels.sandalphon.submission.programming.SubmissionUtils.checkGra
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 import judgels.gabriel.api.LanguageRestriction;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ class SubmissionUtilsTests {
     @Test
     void check_grading_languages_allowed() {
         LanguageRestriction r0 = LanguageRestriction.noRestriction();
-        LanguageRestriction r1 = LanguageRestriction.of(ImmutableSet.of("Cpp11", "Pascal"));
+        LanguageRestriction r1 = LanguageRestriction.of(Set.of("Cpp11", "Pascal"));
 
         assertThatCode(() -> checkGradingLanguageAllowed("Batch", "Cpp11", r0))
                 .doesNotThrowAnyException();

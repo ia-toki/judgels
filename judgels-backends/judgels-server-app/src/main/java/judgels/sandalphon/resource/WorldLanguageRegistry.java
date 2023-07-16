@@ -1,6 +1,5 @@
 package judgels.sandalphon.resource;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.Map;
 
@@ -134,7 +133,7 @@ public final class WorldLanguageRegistry {
     }
 
     public Map<String, String> getLanguages() {
-        return ImmutableMap.copyOf(registry);
+        return Map.copyOf(registry);
     }
 
     public String getDisplayLanguage(String languageCode) {

@@ -1,14 +1,12 @@
 package judgels.jerahmeel.chapter;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.Chapter;
@@ -70,21 +68,21 @@ public class ChapterStore {
         var courseJids = Lists.transform(chapters, c -> c.courseJid);
         Map<String, CourseModel> coursesMap = courseDao.selectByJids(courseJids);
 
-        ImmutableMap.Builder<String, List<String>> pathsMap = ImmutableMap.builder();
+        Map<String, List<String>> pathsMap = new HashMap<>();
         for (String chapterJid : chapterJids) {
             CourseChapterModel m = chapterToCourseChapterMap.get(chapterJid);
             if (m != null) {
                 CourseModel cm = coursesMap.get(m.courseJid);
                 if (cm != null) {
-                    pathsMap.put(chapterJid, ImmutableList.of(cm.slug, m.alias));
+                    pathsMap.put(chapterJid, List.of(cm.slug, m.alias));
                 }
             }
         }
-        return pathsMap.build();
+        return Map.copyOf(pathsMap);
     }
 
     public Optional<List<String>> getChapterPathByJid(String chapterJid) {
-        Map<String, List<String>> pathsMap = getChapterPathsByJids(ImmutableSet.of(chapterJid));
+        Map<String, List<String>> pathsMap = getChapterPathsByJids(Set.of(chapterJid));
         return Optional.ofNullable(pathsMap.get(chapterJid));
     }
 

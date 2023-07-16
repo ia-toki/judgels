@@ -3,8 +3,8 @@ package judgels.uriel.hibernate;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDao;
@@ -44,7 +44,7 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
         ContestProblemHibernateQueryBuilder(Session currentSession, String contestJid) {
             super(currentSession, ContestProblemModel.class);
             where(columnEq(ContestProblemModel_.contestJid, contestJid));
-            where(columnIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name())));
+            where(columnIn(ContestProblemModel_.status, Set.of(OPEN.name(), CLOSED.name())));
         }
 
         @Override

@@ -215,12 +215,12 @@ public abstract class BaseUrielApiIntegrationTests extends BaseJudgelsApiIntegra
         Optional<Duration> duration = Optional.empty();
         Optional<ContestStyle> style = Optional.empty();
 
-        Set<ContestModuleType> modules = Collections.emptySet();
-        Set<String> managers = Collections.emptySet();
-        Set<String> supervisors = Collections.emptySet();
+        Set<ContestModuleType> modules = Set.of();
+        Set<String> managers = Set.of();
+        Set<String> supervisors = Set.of();
         Map<String, SupervisorManagementPermission> supervisorsWithManagementPermissions = Collections.emptyMap();
-        Set<String> contestants = Collections.emptySet();
-        List<String> problems = Collections.emptyList();
+        Set<String> contestants = Set.of();
+        List<String> problems = List.of();
 
         public ContestBuilder beginTime(Instant instant) {
             this.beginTime = Optional.of(instant);

@@ -5,7 +5,6 @@ import dagger.Provides;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import javax.inject.Singleton;
 import judgels.fs.FileInfo;
@@ -63,12 +62,12 @@ public class UserAvatarIntegrationTestModule {
 
         @Override
         public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         @Override
         public List<FileInfo> listFilesInDirectory(Path dirPath) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         @Override

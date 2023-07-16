@@ -1,6 +1,5 @@
 package judgels.sandalphon.submission.bundle;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class ItemSubmissionRegrader {
     }
 
     public void regradeSubmission(ItemSubmission itemSubmission) {
-        processor.process(ImmutableList.of(itemSubmission));
+        processor.process(List.of(itemSubmission));
     }
 
     public void regradeSubmissions(

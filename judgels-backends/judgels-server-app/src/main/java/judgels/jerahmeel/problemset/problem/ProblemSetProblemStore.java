@@ -1,7 +1,5 @@
 package judgels.jerahmeel.problemset.problem;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,7 +41,7 @@ public class ProblemSetProblemStore {
                 .collect(Collectors.groupingBy(
                         m -> m.problemSetJid,
                         Collectors.mapping(
-                                m -> fromModel(m, ImmutableList.of()),
+                                m -> fromModel(m, List.of()),
                                 Collectors.toList())));
     }
 
@@ -96,11 +94,11 @@ public class ProblemSetProblemStore {
                 .map(m -> m.problemJid)
                 .collect(Collectors.toSet());
 
-        ImmutableMap.Builder<String, Boolean> problemVisibilitiesMap = ImmutableMap.builder();
+        Map<String, Boolean> problemVisibilitiesMap = new HashMap<>();
         for (String problemJid : affectedProblemJids) {
             problemVisibilitiesMap.put(problemJid, visibleProblemJids.contains(problemJid));
         }
-        return problemVisibilitiesMap.build();
+        return Map.copyOf(problemVisibilitiesMap);
     }
 
     public ProblemSetProblem upsertProblem(

@@ -1,13 +1,13 @@
 package judgels.sandalphon.submission.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -208,7 +208,7 @@ public class BaseSubmissionStore<
 
     @Override
     public long getTotalSubmissions(String containerJid, String userJid, String problemJid) {
-        Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, ImmutableSet.of(problemJid));
+        Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, Set.of(problemJid));
         return map.getOrDefault(problemJid, 0L);
     }
 

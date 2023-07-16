@@ -5,10 +5,7 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -136,7 +133,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 int score;
 
                 if (ioiStyleModuleConfig.getUsingMaxScorePerSubtask()) {
-                    Map<Integer, Double> newMaxScorePerSubtask = Maps.newHashMap(
+                    Map<Integer, Double> newMaxScorePerSubtask = new HashMap<>(
                             maxScorePerSubtaskMap.get(problemJid));
 
                     for (SubtaskResult subtask : grading.getDetails().get().getSubtaskResults()) {
@@ -173,9 +170,8 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
 
                 if (submission.getId() <= nextLastSubmissionId.orElse(Long.MAX_VALUE)) {
                     lastAffectingPenaltiesByContestantJid.put(contestantJid, lastAffectingPenalty);
-                    scoresMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(scoresMap));
-                    maxScorePerSubtaskMapsByContestantJid
-                            .put(contestantJid, ImmutableMap.copyOf(maxScorePerSubtaskMap));
+                    scoresMapsByContestantJid.put(contestantJid, Map.copyOf(scoresMap));
+                    maxScorePerSubtaskMapsByContestantJid.put(contestantJid, Map.copyOf(maxScorePerSubtaskMap));
                 }
             }
 
@@ -226,15 +222,12 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             return scoreboard;
         }
 
-        ImmutableList.Builder<Integer> openProblemIndicesBuilder = ImmutableList.builder();
-
+        List<Integer> openProblemIndices = new ArrayList<>();
         for (int i = 0; i < state.getProblemJids().size(); i++) {
             if (problemJids.contains(state.getProblemJids().get(i))) {
-                openProblemIndicesBuilder.add(i);
+                openProblemIndices.add(i);
             }
         }
-
-        List<Integer> openProblemIndices = openProblemIndicesBuilder.build();
 
         ScoreboardState newState = new ScoreboardState.Builder()
                 .from(state)
@@ -242,7 +235,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 .problemAliases(filterIndices(state.getProblemAliases(), openProblemIndices))
                 .build();
 
-        List<IoiScoreboardEntry> newEntries = Lists.newArrayList();
+        List<IoiScoreboardEntry> newEntries = new ArrayList<>();
 
         for (IoiScoreboardEntry entry : content.getEntries()) {
             List<Optional<Integer>> newScores = filterIndices(entry.getScores(), openProblemIndices);
@@ -276,7 +269,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
 
         entries.sort(comparator);
 
-        ImmutableList.Builder<IoiScoreboardEntry> newEntries = ImmutableList.builder();
+        List<IoiScoreboardEntry> newEntries = new ArrayList<>();
 
         int previousRank = 0;
         for (int i = 0; i < entries.size(); i++) {
@@ -291,7 +284,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             newEntries.add(new IoiScoreboardEntry.Builder().from(entries.get(i)).rank(assignedRank).build());
         }
 
-        return newEntries.build();
+        return List.copyOf(newEntries);
     }
 
     private static Long computeLastAffectingPenalty(

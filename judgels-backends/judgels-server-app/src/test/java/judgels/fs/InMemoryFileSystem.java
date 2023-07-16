@@ -1,12 +1,12 @@
 package judgels.fs;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,8 +75,8 @@ public class InMemoryFileSystem implements FileSystem {
             prefix += File.separator;
         }
 
-        Set<String> seenDirectoryNames = Sets.newHashSet();
-        ImmutableList.Builder<FileInfo> fileInfos = ImmutableList.builder();
+        Set<String> seenDirectoryNames = new HashSet<>();
+        List<FileInfo> fileInfos = new ArrayList<>();
         for (Map.Entry<Path, byte[]> entry : fs.entrySet()) {
             if (!entry.getKey().toString().startsWith(prefix)) {
                 continue;
@@ -98,7 +98,7 @@ public class InMemoryFileSystem implements FileSystem {
                     .lastModifiedTime(Instant.ofEpochSecond(42))
                     .build());
         }
-        return fileInfos.build();
+        return List.copyOf(fileInfos);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class InMemoryFileSystem implements FileSystem {
             prefix += File.separator;
         }
 
-        ImmutableList.Builder<FileInfo> fileInfos = ImmutableList.builder();
+        List<FileInfo> fileInfos = new ArrayList<>();
         for (Map.Entry<Path, byte[]> entry : fs.entrySet()) {
             if (!entry.getKey().toString().startsWith(prefix)) {
                 continue;
@@ -125,7 +125,7 @@ public class InMemoryFileSystem implements FileSystem {
                     .lastModifiedTime(Instant.ofEpochSecond(42))
                     .build());
         }
-        return fileInfos.build();
+        return List.copyOf(fileInfos);
     }
 
     @Override

@@ -1,8 +1,6 @@
 package judgels.uriel.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +64,7 @@ public class ContestScoreboardBuilder {
         if (page <= partition.size()) {
             partitionPage = partition.get(page - 1);
         } else {
-            partitionPage = ImmutableList.of();
+            partitionPage = List.of();
         }
 
         return processor.create(scoreboard.getState(), partitionPage);
@@ -123,7 +121,7 @@ public class ContestScoreboardBuilder {
             IoiStyleModuleConfig config = moduleStore.getIoiStyleModuleConfig(contest.getJid());
             IoiScoreboardProcessor ioiProcessor = (IoiScoreboardProcessor) processor;
             IoiScoreboard ioiScoreboard = (IoiScoreboard) scoreboard;
-            return ioiProcessor.filterProblemJids(ioiScoreboard, ImmutableSet.copyOf(openProblemJids), config);
+            return ioiProcessor.filterProblemJids(ioiScoreboard, Set.copyOf(openProblemJids), config);
         }
         return scoreboard;
     }

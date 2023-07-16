@@ -2,7 +2,6 @@ package judgels.persistence.hibernate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Set;
@@ -85,7 +84,7 @@ class JudgelsHibernateDaoIntegrationTests {
         model2.column = "value4";
         model2 = dao.insert(model2);
 
-        Set<String> jids = ImmutableSet.of(model1.jid, model2.jid);
+        Set<String> jids = Set.of(model1.jid, model2.jid);
         Map<String, ExampleModel> models = dao.selectByJids(jids);
         assertThat(models).hasSize(2);
 
@@ -94,14 +93,14 @@ class JudgelsHibernateDaoIntegrationTests {
         assertThat(models.get(model2.jid)).isEqualTo(model2);
 
         // assert to only return found jids
-        jids = ImmutableSet.of(model1.jid, "1234");
+        jids = Set.of(model1.jid, "1234");
         models = dao.selectByJids(jids);
         assertThat(models).hasSize(1);
         assertThat(models).containsKey(model1.jid);
         assertThat(models.get(model1.jid)).isEqualTo(model1);
 
         // assert to ignore empty list
-        jids = ImmutableSet.of();
+        jids = Set.of();
         models = dao.selectByJids(jids);
         assertThat(models).isEmpty();
     }

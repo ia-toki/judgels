@@ -1,8 +1,8 @@
 package judgels.jerahmeel.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -38,13 +38,13 @@ public class ProblemLevelHibernateDao extends HibernateDao<ProblemLevelModel>
 
         List<Tuple> data = query.getResultList();
 
-        ImmutableMap.Builder<String, Integer> res = ImmutableMap.builder();
+        Map<String, Integer> res = new HashMap<>();
         for (Tuple t : data) {
             String problemJid = t.get(0, String.class);
             int level = (int) (double) t.get(1, Double.class);
             level = (level + 99) / 100 * 100;
             res.put(problemJid, level);
         }
-        return res.build();
+        return Map.copyOf(res);
     }
 }

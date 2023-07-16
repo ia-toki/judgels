@@ -1,12 +1,11 @@
 package judgels.michael.problem.programming.grading.config;
 
-import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GradingConfigAdapterRegistry {
-    private static final List<GradingConfigAdapter> ADAPTERS = ImmutableList.of(
+    private static final List<GradingConfigAdapter> ADAPTERS = List.of(
             new BatchGradingConfigAdapter(),
             new BatchWithSubtasksGradingConfigAdapter(),
             new InteractiveGradingConfigAdapter(),
