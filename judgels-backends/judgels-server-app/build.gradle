@@ -58,11 +58,9 @@ dependencies {
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
+    integTestImplementation project(':judgels-server-feign')
+
     integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
-    integTestImplementation "io.github.openfeign:feign-core:$feignVersion"
-    integTestImplementation "io.github.openfeign:feign-jackson:$feignVersion"
-    integTestImplementation "io.github.openfeign:feign-jaxrs:$feignVersion"
-    integTestImplementation "io.github.openfeign:feign-okhttp:$feignVersion"
     integTestImplementation "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
     integTestImplementation "org.subethamail:subethasmtp-wiser:$wiserVersion"
 

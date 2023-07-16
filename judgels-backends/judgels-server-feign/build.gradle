@@ -1,0 +1,10 @@
+apply from: '../gradle/java.gradle'
+
+dependencies {
+    api project(':judgels-server-api')
+
+    api "io.github.openfeign:feign-core:$feignVersion"
+    api "io.github.openfeign:feign-jackson:$feignVersion"
+    api "io.github.openfeign:feign-okhttp:$feignVersion"
+    api "io.github.openfeign.form:feign-form:$feignFormVersion"
+}

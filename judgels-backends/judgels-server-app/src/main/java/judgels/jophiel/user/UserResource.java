@@ -56,20 +56,6 @@ public class UserResource {
     @Inject public UserResource() {}
 
     @GET
-    @Path("/{userJid}")
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork(readOnly = true)
-    public User getUser(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("userJid") String userJid) {
-
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canManage(actorJid, userJid));
-
-        return checkFound(userStore.getUserByJid(userJid));
-    }
-
-    @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public UsersResponse getUsers(
@@ -211,6 +197,21 @@ public class UserResource {
                 .updatedUsernames(updatedUsernames.build())
                 .build();
     }
+
+    @GET
+    @Path("/{userJid}")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public User getUser(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("userJid") String userJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canManage(actorJid, userJid));
+
+        return checkFound(userStore.getUserByJid(userJid));
+    }
+
 
     private Optional<String> getCsvValue(Map<String, Integer> headerMap, String[] line, String key) {
         if (!headerMap.containsKey(key)) {

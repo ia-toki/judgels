@@ -16,8 +16,9 @@ MODULES = OrderedDict([
     ('judgels-grader-app', {'judgels-grader-engines', 'judgels-grader-api'}),
     ('judgels-grader', {'judgels-grader-app', 'judgels-grader-engines', 'judgels-grader-api'}),
 
+    ('judgels-server-feign', set()),
     ('judgels-server-api', {'judgels-commons', 'judgels-grader-api'}),
-    ('judgels-server-app', {'judgels-grader-engines', 'judgels-server-api'}),
+    ('judgels-server-app', {'judgels-grader-engines', 'judgels-server-api', 'judgels-server-feign'}),
     ('judgels-server', {'judgels-server-app', 'judgels-server-api'}),
 
     ('judgels-client', set()),
