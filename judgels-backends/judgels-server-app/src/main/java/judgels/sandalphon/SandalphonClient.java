@@ -97,11 +97,11 @@ public class SandalphonClient {
     }
 
     public Map<String, ProblemMetadata> getProblemMetadatas(Collection<String> problemJids) {
-        return problemJids.stream().collect(toMap(jid -> jid, this::getProblemMetadata));
+        return Set.copyOf(problemJids).stream().collect(toMap(jid -> jid, this::getProblemMetadata));
     }
 
     public Map<String, ProblemInfo> getProblems(Collection<String> problemJids) {
-        return problemJids.stream().collect(toMap(jid -> jid, this::getProblem));
+        return Set.copyOf(problemJids).stream().collect(toMap(jid -> jid, this::getProblem));
     }
 
     public Map<String, String> getProblemNames(Collection<String> problemJids, Optional<String> language) {
@@ -123,7 +123,7 @@ public class SandalphonClient {
 
     public Map<String, Item> getItems(Collection<String> problemJids, Collection<String> itemJids) {
         Map<String, Item> itemsByItemJid = new HashMap<>();
-        for (String problemJid : problemJids) {
+        for (String problemJid : Set.copyOf(problemJids)) {
             judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(null, null, problemJid, Optional.empty());
             worksheet.getItems().stream()
                     .filter(item -> itemJids.contains(item.getJid()))
@@ -137,7 +137,7 @@ public class SandalphonClient {
     }
 
     public Map<String, ProblemSubmissionConfig> getProgrammingProblemSubmissionConfigs(Collection<String> problemJids) {
-        return problemJids.stream().collect(toMap(jid -> jid, this::getProgrammingProblemSubmissionConfig));
+        return Set.copyOf(problemJids).stream().collect(toMap(jid -> jid, this::getProgrammingProblemSubmissionConfig));
     }
 
     public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(
@@ -238,7 +238,7 @@ public class SandalphonClient {
 
     public Map<String, ProblemEditorialInfo> getProblemEditorials(Collection<String> problemJids, URI baseUri, Optional<String> language) {
         Map<String, ProblemEditorialInfo> editorialsMap = new HashMap<>();
-        for (String problemJid : problemJids) {
+        for (String problemJid : Set.copyOf(problemJids)) {
             Optional<ProblemEditorialInfo> editorial = getProblemEditorial(problemJid, baseUri, language);
             if (editorial.isPresent()) {
                 editorialsMap.put(problemJid, editorial.get());
@@ -295,7 +295,7 @@ public class SandalphonClient {
     }
 
     public Map<String, LessonInfo> getLessons(Collection<String> lessonJids) {
-        return lessonJids.stream().collect(Collectors.toMap(jid -> jid, this::getLesson));
+        return Set.copyOf(lessonJids).stream().collect(Collectors.toMap(jid -> jid, this::getLesson));
     }
 
     public LessonStatement getLessonStatement(
