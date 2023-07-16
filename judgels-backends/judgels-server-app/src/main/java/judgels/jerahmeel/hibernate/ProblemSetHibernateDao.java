@@ -1,8 +1,8 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;
@@ -36,7 +36,7 @@ public class ProblemSetHibernateDao extends JudgelsHibernateDao<ProblemSetModel>
     }
 
     @Override
-    public List<ProblemSetModel> selectAllBySlugs(Set<String> contestSlugs) {
+    public List<ProblemSetModel> selectAllBySlugs(Collection<String> contestSlugs) {
         return select().where(columnIn(ProblemSetModel_.slug, contestSlugs)).all();
     }
 

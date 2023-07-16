@@ -6,7 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
@@ -62,9 +62,10 @@ public class ContestManagerResource {
         checkAllowed(managerRoleChecker.canView(actorJid, contest));
 
         Page<ContestManager> managers = managerStore.getManagers(contestJid, pageNumber, PAGE_SIZE);
-        Set<String> userJids =
-                managers.getPage().stream().map(ContestManager::getUserJid).collect(Collectors.toSet());
+
+        var userJids = Lists.transform(managers.getPage(), ContestManager::getUserJid);
         Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+
         boolean canManage = managerRoleChecker.canManage(actorJid);
         ContestManagerConfig config = new ContestManagerConfig.Builder()
                 .canManage(canManage)
@@ -97,7 +98,6 @@ public class ContestManagerResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
 
-        Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> insertedManagerUsernames = Sets.newHashSet();
         Set<String> alreadyManagerUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
@@ -108,7 +108,7 @@ public class ContestManagerResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
         Map<String, Profile> insertedManagerProfilesMap = insertedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -142,7 +142,6 @@ public class ContestManagerResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
 
-        Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> deletedManagerUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             if (managerStore.deleteManager(contest.getJid(), userJid)) {
@@ -150,7 +149,7 @@ public class ContestManagerResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
         Map<String, Profile> deletedManagerProfilesMap = deletedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

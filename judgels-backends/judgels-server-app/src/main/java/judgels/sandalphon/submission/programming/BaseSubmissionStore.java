@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -76,8 +76,8 @@ public class BaseSubmissionStore<
                 .whereLastSubmissionIs(lastSubmissionId)
                 .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
                 .all();
-        Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());
 
+        var submissionJids = Lists.transform(submissionModels, m -> m.jid);
         Map<String, GM> gradingModels = withGradingDetails
                 ? gradingDao.selectAllLatestWithDetailsBySubmissionJids(submissionJids)
                 : gradingDao.selectAllLatestBySubmissionJids(submissionJids);
@@ -135,7 +135,8 @@ public class BaseSubmissionStore<
         Page<SM> submissionModels = query
                 .orderBy(UnmodifiableModel_.ID, OrderDir.ASC)
                 .paged(1, pageSize);
-        Set<String> submissionJids = submissionModels.getPage().stream().map(m -> m.jid).collect(Collectors.toSet());
+
+        var submissionJids = Lists.transform(submissionModels.getPage(), m -> m.jid);
         Map<String, GM> gradingModels = gradingDao.selectAllLatestWithDetailsBySubmissionJids(submissionJids);
 
         return submissionModels.mapPage(p ->
@@ -169,7 +170,7 @@ public class BaseSubmissionStore<
     }
 
     private Page<Submission> getSubmissions(Page<SM> submissionModels) {
-        Set<String> submissionJids = submissionModels.getPage().stream().map(m -> m.jid).collect(Collectors.toSet());
+        var submissionJids = Lists.transform(submissionModels.getPage(), m -> m.jid);
         Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJids);
 
         return submissionModels.mapPage(p ->
@@ -212,7 +213,7 @@ public class BaseSubmissionStore<
     }
 
     @Override
-    public Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Set<String> problemJids) {
+    public Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Collection<String> problemJids) {
         Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, problemJids);
         return problemJids.stream().collect(Collectors.toMap(jid -> jid, jid -> map.getOrDefault(jid, 0L)));
     }

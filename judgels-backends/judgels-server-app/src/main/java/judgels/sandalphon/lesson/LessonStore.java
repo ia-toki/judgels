@@ -5,9 +5,9 @@ import static java.util.stream.Collectors.toMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.Model_;
@@ -121,7 +121,7 @@ public final class LessonStore extends BaseLessonStore {
         }
     }
 
-    public Map<String, String> translateAllowedSlugsToJids(Optional<String> userJid, Set<String> slugs) {
+    public Map<String, String> translateAllowedSlugsToJids(Optional<String> userJid, Collection<String> slugs) {
         LessonQueryBuilder query = lessonDao
                 .select()
                 .whereSlugIn(slugs);

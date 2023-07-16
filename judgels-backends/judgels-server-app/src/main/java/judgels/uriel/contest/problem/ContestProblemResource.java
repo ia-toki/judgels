@@ -7,6 +7,7 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 import static judgels.service.actor.Actors.GUEST;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +114,8 @@ public class ContestProblemResource {
         checkAllowed(roleChecker.canView(actorJid, contest));
 
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
-        Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
+
+        var problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
         Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);

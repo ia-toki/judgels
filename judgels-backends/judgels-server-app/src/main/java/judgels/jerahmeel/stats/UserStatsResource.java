@@ -1,12 +1,11 @@
 package judgels.jerahmeel.stats;
 
-import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -36,7 +35,8 @@ public class UserStatsResource {
             @QueryParam("pageSize") @DefaultValue("50") int pageSize) {
 
         Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(pageNumber, pageSize);
-        Set<String> userJids = stats.getPage().stream().map(UserTopStatsEntry::getUserJid).collect(toSet());
+
+        var userJids = Lists.transform(stats.getPage(), UserTopStatsEntry::getUserJid);
         Map<String, Profile> profileMap = jophielClient.getProfiles(userJids);
 
         return new UserTopStatsResponse.Builder()

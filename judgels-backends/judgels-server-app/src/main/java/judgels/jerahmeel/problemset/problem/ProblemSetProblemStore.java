@@ -3,6 +3,7 @@ package judgels.jerahmeel.problemset.problem;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ProblemSetProblemStore {
                 m -> fromModel(m, getContestJids(m.problemJid)));
     }
 
-    public Map<String, List<ProblemSetProblem>> getProblems(Set<String> problemSetJids) {
+    public Map<String, List<ProblemSetProblem>> getProblems(Collection<String> problemSetJids) {
         return problemDao.selectByProblemSetJids(problemSetJids).orderBy(ProblemSetProblemModel_.ALIAS, OrderDir.ASC).all()
                 .stream()
                 .collect(Collectors.groupingBy(
@@ -56,7 +57,7 @@ public class ProblemSetProblemStore {
                 .map(m -> fromModel(m, getContestJids(m.problemJid)));
     }
 
-    public Map<String, String> getProblemAliasesByJids(Set<String> problemJids) {
+    public Map<String, String> getProblemAliasesByJids(Collection<String> problemJids) {
         return problemDao.selectAllByProblemJids(problemJids)
                 .stream()
                 .filter(m -> problemJids.contains(m.problemJid))

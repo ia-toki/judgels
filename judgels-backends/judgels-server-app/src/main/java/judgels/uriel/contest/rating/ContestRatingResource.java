@@ -13,7 +13,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -84,10 +83,7 @@ public class ContestRatingResource {
 
         List<UserRatingEvent> userRatingEvents = jophielClient.getUserRatingEvents(userJid);
 
-        Set<String> contestJids = userRatingEvents.stream()
-                .map(UserRatingEvent::getEventJid)
-                .collect(Collectors.toSet());
-
+        var contestJids = Lists.transform(userRatingEvents, UserRatingEvent::getEventJid);
         Map<String, ContestInfo> contestInfosMap = contestStore.getContestInfosByJids(contestJids);
 
         List<ContestRating> data = userRatingEvents.stream()

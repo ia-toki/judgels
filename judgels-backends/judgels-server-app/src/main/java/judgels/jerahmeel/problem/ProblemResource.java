@@ -3,10 +3,10 @@ package judgels.jerahmeel.problem;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -51,9 +51,7 @@ public class ProblemResource {
         }
 
         Page<ProblemSetProblemInfo> problems = problemStore.getProblems(allowedProblemJids, pageNumber, PAGE_SIZE);
-        Set<String> problemJids = problems.getPage().stream()
-                .map(ProblemSetProblemInfo::getProblemJid)
-                .collect(Collectors.toSet());
+        var problemJids = Lists.transform(problems.getPage(), ProblemSetProblemInfo::getProblemJid);
 
         return new ProblemsResponse.Builder()
                 .data(problems)

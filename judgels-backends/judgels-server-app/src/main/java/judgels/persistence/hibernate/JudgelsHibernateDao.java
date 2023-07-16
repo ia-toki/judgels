@@ -1,10 +1,10 @@
 package judgels.persistence.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,7 +32,7 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     }
 
     @Override
-    public Map<String, M> selectByJids(Set<String> jids) {
+    public Map<String, M> selectByJids(Collection<String> jids) {
         if (jids.isEmpty()) {
             return ImmutableMap.of();
         }

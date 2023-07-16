@@ -5,12 +5,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -49,7 +48,8 @@ public class CourseResource {
 
         List<Course> courses = courseStore.getCourses();
         Optional<Curriculum> curriculum = curriculumStore.getCurriculum();
-        Set<String> courseJids = courses.stream().map(Course::getJid).collect(Collectors.toSet());
+
+        var courseJids = Lists.transform(courses, Course::getJid);
         Map<String, CourseProgress> courseProgressMap = statsStore.getCourseProgressesMap(actorJid, courseJids);
         return new CoursesResponse.Builder()
                 .data(courses)

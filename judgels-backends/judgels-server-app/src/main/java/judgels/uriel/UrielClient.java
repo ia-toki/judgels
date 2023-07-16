@@ -1,9 +1,9 @@
 package judgels.uriel;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
@@ -17,11 +17,11 @@ public class UrielClient {
 
     @Inject public UrielClient() {}
 
-    public Map<String, ContestInfo> getContestsByJids(Set<String> contestJids) {
+    public Map<String, ContestInfo> getContestsByJids(Collection<String> contestJids) {
         return contestStore.getContestInfosByJids(contestJids);
     }
 
-    public Map<String, String> translateContestSlugsToJids(Set<String> contestSlugs) {
+    public Map<String, String> translateContestSlugsToJids(Collection<String> contestSlugs) {
         return contestStore.translateSlugsToJids(contestSlugs);
     }
 

@@ -3,9 +3,9 @@ package judgels.jophiel.user;
 import com.google.common.collect.Lists;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -45,7 +45,7 @@ public class UserStore {
         return userDao.selectByJid(userJid).map(model -> model.email);
     }
 
-    public Map<String, User> getUsersByJids(Set<String> userJids) {
+    public Map<String, User> getUsersByJids(Collection<String> userJids) {
         Map<String, UserModel> userModels = userDao.selectByJids(userJids);
         return userModels.values().stream().map(UserStore::fromModel).collect(Collectors.toMap(User::getJid, p -> p));
     }
@@ -54,7 +54,7 @@ public class UserStore {
         return userDao.selectByUsername(username).map(UserStore::fromModel);
     }
 
-    public Map<String, User> getUsersByUsername(Set<String> usernames) {
+    public Map<String, User> getUsersByUsername(Collection<String> usernames) {
         return userDao.selectAllByUsernames(usernames).stream()
                 .collect(Collectors.toMap(m -> m.username, UserStore::fromModel));
     }
@@ -118,7 +118,7 @@ public class UserStore {
         return userDao.selectByUsername(username).map(m -> m.jid);
     }
 
-    public Map<String, String> translateUsernamesToJids(Set<String> usernames) {
+    public Map<String, String> translateUsernamesToJids(Collection<String> usernames) {
         return userDao.selectAllByUsernames(usernames).stream()
                 .collect(Collectors.toMap(m -> m.username, m -> m.jid));
     }

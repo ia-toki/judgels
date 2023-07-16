@@ -8,6 +8,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.HashSet;
 import java.util.List;
@@ -132,10 +133,9 @@ public class ProblemSetProblemResource {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         List<ProblemSetProblem> problems = problemStore.getProblems(problemSetJid);
-        Set<String> problemJids = problems.stream()
-                .map(ProblemSetProblem::getProblemJid)
-                .collect(Collectors.toSet());
-        Set<String> contestJids = problems.stream()
+
+        var problemJids = Lists.transform(problems, ProblemSetProblem::getProblemJid);
+        var contestJids = problems.stream()
                 .map(ProblemSetProblem::getContestJids)
                 .flatMap(List::stream)
                 .collect(Collectors.toSet());

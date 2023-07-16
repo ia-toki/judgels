@@ -7,10 +7,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
@@ -56,7 +56,7 @@ public class ProblemSetStore {
         return problemSetDao.selectBySlug(problemSetSlug).map(ProblemSetStore::fromModel);
     }
 
-    public Map<String, ProblemSet> getProblemSetsBySlugs(Set<String> problemSetSlugs) {
+    public Map<String, ProblemSet> getProblemSetsBySlugs(Collection<String> problemSetSlugs) {
         return problemSetDao.selectAllBySlugs(problemSetSlugs).stream().collect(toMap(
                 m -> m.slug, ProblemSetStore::fromModel));
     }
@@ -93,7 +93,7 @@ public class ProblemSetStore {
                 .mapPage(p -> Lists.transform(p, ProblemSetStore::fromModel));
     }
 
-    public Map<String, String> getProblemSetNamesByJids(Set<String> problemSetJids) {
+    public Map<String, String> getProblemSetNamesByJids(Collection<String> problemSetJids) {
         return problemSetDao.selectByJids(problemSetJids)
                 .values()
                 .stream()
@@ -102,7 +102,7 @@ public class ProblemSetStore {
                         c -> c.name));
     }
 
-    public Map<String, List<String>> getProblemSetPathsByJids(Set<String> problemSetJids) {
+    public Map<String, List<String>> getProblemSetPathsByJids(Collection<String> problemSetJids) {
         ImmutableMap.Builder<String, List<String>> pathsMap = ImmutableMap.builder();
         for (ProblemSetModel m : problemSetDao.selectByJids(problemSetJids).values()) {
             pathsMap.put(m.jid, ImmutableList.of(m.slug));

@@ -5,6 +5,7 @@ import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -95,15 +96,15 @@ public class SandalphonClient {
                 .build();
     }
 
-    public Map<String, ProblemMetadata> getProblemMetadatas(Set<String> problemJids) {
+    public Map<String, ProblemMetadata> getProblemMetadatas(Collection<String> problemJids) {
         return problemJids.stream().collect(toMap(jid -> jid, this::getProblemMetadata));
     }
 
-    public Map<String, ProblemInfo> getProblems(Set<String> problemJids) {
+    public Map<String, ProblemInfo> getProblems(Collection<String> problemJids) {
         return problemJids.stream().collect(toMap(jid -> jid, this::getProblem));
     }
 
-    public Map<String, String> getProblemNames(Set<String> problemJids, Optional<String> language) {
+    public Map<String, String> getProblemNames(Collection<String> problemJids, Optional<String> language) {
         return getProblems(problemJids)
                 .entrySet()
                 .stream()
@@ -120,7 +121,7 @@ public class SandalphonClient {
                 .findAny();
     }
 
-    public Map<String, Item> getItems(Set<String> problemJids, Set<String> itemJids) {
+    public Map<String, Item> getItems(Collection<String> problemJids, Collection<String> itemJids) {
         Map<String, Item> itemsByItemJid = new HashMap<>();
         for (String problemJid : problemJids) {
             judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(null, null, problemJid, Optional.empty());
@@ -135,7 +136,7 @@ public class SandalphonClient {
         return programmingProblemStore.getProgrammingProblemSubmissionConfig(problemJid);
     }
 
-    public Map<String, ProblemSubmissionConfig> getProgrammingProblemSubmissionConfigs(Set<String> problemJids) {
+    public Map<String, ProblemSubmissionConfig> getProgrammingProblemSubmissionConfigs(Collection<String> problemJids) {
         return problemJids.stream().collect(toMap(jid -> jid, this::getProgrammingProblemSubmissionConfig));
     }
 
@@ -235,7 +236,7 @@ public class SandalphonClient {
                 .build());
     }
 
-    public Map<String, ProblemEditorialInfo> getProblemEditorials(Set<String> problemJids, URI baseUri, Optional<String> language) {
+    public Map<String, ProblemEditorialInfo> getProblemEditorials(Collection<String> problemJids, URI baseUri, Optional<String> language) {
         Map<String, ProblemEditorialInfo> editorialsMap = new HashMap<>();
         for (String problemJid : problemJids) {
             Optional<ProblemEditorialInfo> editorial = getProblemEditorial(problemJid, baseUri, language);
@@ -274,7 +275,7 @@ public class SandalphonClient {
         return simplifiedLanguages.get(lang);
     }
 
-    public Map<String, String> translateAllowedLessonSlugsToJids(String actorJid, Set<String> slugs) {
+    public Map<String, String> translateAllowedLessonSlugsToJids(String actorJid, Collection<String> slugs) {
         Optional<String> userJid = roleChecker.isAdmin(actorJid)
                 ? Optional.empty()
                 : Optional.of(actorJid);
@@ -293,7 +294,7 @@ public class SandalphonClient {
                 .build();
     }
 
-    public Map<String, LessonInfo> getLessons(Set<String> lessonJids) {
+    public Map<String, LessonInfo> getLessons(Collection<String> lessonJids) {
         return lessonJids.stream().collect(Collectors.toMap(jid -> jid, this::getLesson));
     }
 

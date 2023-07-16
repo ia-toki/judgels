@@ -1,8 +1,8 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
@@ -24,7 +24,7 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     }
 
     @Override
-    public ChapterProblemQueryBuilder selectByChapterJids(Set<String> chapterJids) {
+    public ChapterProblemQueryBuilder selectByChapterJids(Collection<String> chapterJids) {
         return new ChapterProblemHibernateQueryBuilder(currentSession(), chapterJids);
     }
 
@@ -42,7 +42,7 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     }
 
     @Override
-    public List<ChapterProblemModel> selectAllByProblemJids(Set<String> problemJids) {
+    public List<ChapterProblemModel> selectAllByProblemJids(Collection<String> problemJids) {
         return select().where(columnIn(ChapterProblemModel_.problemJid, problemJids)).all();
     }
 
@@ -52,7 +52,7 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
             where(columnEq(ChapterProblemModel_.chapterJid, chapterJid));
         }
 
-        ChapterProblemHibernateQueryBuilder(Session currentSession, Set<String> chapterJids) {
+        ChapterProblemHibernateQueryBuilder(Session currentSession, Collection<String> chapterJids) {
             super(currentSession, ChapterProblemModel.class);
             where(columnIn(ChapterProblemModel_.chapterJid, chapterJids));
         }

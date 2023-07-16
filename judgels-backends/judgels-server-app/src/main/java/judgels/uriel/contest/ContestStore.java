@@ -6,10 +6,10 @@ import static java.util.stream.Collectors.toMap;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.OrderDir;
@@ -39,7 +39,7 @@ public class ContestStore {
         return contestDao.selectByJid(contestJid).map(ContestStore::fromModel);
     }
 
-    public Map<String, ContestInfo> getContestInfosByJids(Set<String> contestJids) {
+    public Map<String, ContestInfo> getContestInfosByJids(Collection<String> contestJids) {
         return contestDao.selectByJids(contestJids)
                 .values()
                 .stream()
@@ -56,7 +56,7 @@ public class ContestStore {
         return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel);
     }
 
-    public Map<String, String> translateSlugsToJids(Set<String> slugs) {
+    public Map<String, String> translateSlugsToJids(Collection<String> slugs) {
         return contestDao.selectAllBySlugs(slugs).stream()
                 .collect(toMap(m -> m.slug, m -> m.jid));
     }

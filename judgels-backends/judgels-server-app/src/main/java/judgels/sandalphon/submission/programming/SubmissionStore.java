@@ -1,9 +1,9 @@
 package judgels.sandalphon.submission.programming;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import judgels.gabriel.api.GradingResult;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -39,7 +39,7 @@ public interface SubmissionStore {
             Optional<String> problemJid);
 
     long getTotalSubmissions(String containerJid, String userJid, String problemJid);
-    Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Set<String> problemJids);
+    Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Collection<String> problemJids);
 
     Submission createSubmission(SubmissionData data, ProblemSubmissionConfig config);
     String createGrading(Submission submission);

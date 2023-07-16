@@ -5,11 +5,10 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -82,10 +81,8 @@ public class ContestScoreboardResource {
         return scoreboardFetcher
                 .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, pageNumber, PAGE_SIZE)
                 .map(scoreboard -> {
-                    Set<String> contestantJids = scoreboard.getScoreboard().getContent().getEntries().stream()
-                            .map(ScoreboardEntry::getContestantJid).collect(Collectors.toSet());
-                    Map<String, Profile> profilesMap =
-                            jophielClient.getProfiles(contestantJids, contest.getBeginTime());
+                    var contestantJids = Lists.transform(scoreboard.getScoreboard().getContent().getEntries(), ScoreboardEntry::getContestantJid);
+                    Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJids, contest.getBeginTime());
 
                     return new ContestScoreboardResponse.Builder()
                             .data(scoreboard)

@@ -3,6 +3,7 @@ package judgels.jophiel;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class JophielClient {
         return userStore.translateUsernameToJid(username);
     }
 
-    public Map<String, String> translateUsernamesToJids(Set<String> usernames) {
+    public Map<String, String> translateUsernamesToJids(Collection<String> usernames) {
         return userStore.translateUsernamesToJids(usernames);
     }
 
@@ -42,11 +43,11 @@ public class JophielClient {
         return profileStore.getProfile(userJid, time);
     }
 
-    public Map<String, Profile> getProfiles(Set<String> userJids) {
+    public Map<String, Profile> getProfiles(Collection<String> userJids) {
         return profileStore.getProfiles(userJids);
     }
 
-    public Map<String, Profile> getProfiles(Set<String> userJids, Instant time) {
+    public Map<String, Profile> getProfiles(Collection<String> userJids, Instant time) {
         return profileStore.getProfiles(userJids, time);
     }
 

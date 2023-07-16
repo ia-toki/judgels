@@ -1,7 +1,6 @@
 package judgels.jerahmeel.submission.programming;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
@@ -10,14 +9,13 @@ import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -104,12 +102,12 @@ public class SubmissionResource {
                 byProblemJid(containerJid, problemJid, problemAlias),
                 pageNumber,
                 PAGE_SIZE);
-        Set<String> containerJids = submissions.getPage().stream().map(Submission::getContainerJid).collect(toSet());
-        Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
 
-        Set<String> problemJids = submissions.getPage().stream().map(Submission::getProblemJid).collect(toSet());
+        var containerJids = Lists.transform(submissions.getPage(), Submission::getContainerJid);
+        var userJids = Lists.transform(submissions.getPage(), Submission::getUserJid);
+        var problemJids = Lists.transform(submissions.getPage(), Submission::getProblemJid);
         if (containerJid.isPresent() && SubmissionUtils.isChapter(containerJid.get())) {
-            problemJids = ImmutableSet.copyOf(chapterProblemStore.getProgrammingProblemJids(containerJid.get()));
+            problemJids = chapterProblemStore.getProgrammingProblemJids(containerJid.get());
         }
 
         Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
@@ -299,7 +297,7 @@ public class SubmissionResource {
                 break;
             }
 
-            Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
+            var problemJids = Lists.transform(submissions, Submission::getProblemJid);
             Map<String, ProblemSubmissionConfig> configsMap = sandalphonClient.getProgrammingProblemSubmissionConfigs(problemJids);
             submissionRegrader.regradeSubmissions(submissions, configsMap);
         }

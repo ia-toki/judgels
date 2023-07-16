@@ -1,8 +1,8 @@
 package judgels.jophiel.user.info;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.info.UserInfo;
@@ -23,7 +23,7 @@ public class UserInfoStore {
                 .orElse(new UserInfo.Builder().build());
     }
 
-    public Map<String, UserInfo> getInfos(Set<String> userJids) {
+    public Map<String, UserInfo> getInfos(Collection<String> userJids) {
         return profileDao.selectAllByUserJids(userJids)
                 .stream()
                 .collect(Collectors.toMap(m -> m.userJid, UserInfoStore::fromModel));

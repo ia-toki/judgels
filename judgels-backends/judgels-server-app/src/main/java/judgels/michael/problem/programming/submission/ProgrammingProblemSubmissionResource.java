@@ -1,18 +1,17 @@
 package judgels.michael.problem.programming.submission;
 
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -67,7 +66,8 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
         checkAllowed(roleChecker.canView(actor, problem));
 
         Page<Submission> submissions = submissionStore.getSubmissions(Optional.empty(), Optional.empty(), Optional.of(problem.getJid()), pageNumber, PAGE_SIZE);
-        Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
+
+        var userJids = Lists.transform(submissions.getPage(), Submission::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, String> gradingLanguageNamesMap = GradingLanguageRegistry.getInstance().getLanguages();
 
@@ -129,7 +129,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
                 break;
             }
 
-            Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
+            var problemJids = Lists.transform(submissions, Submission::getProblemJid);
             Map<String, ProblemSubmissionConfig> configsMap = problemJids.stream().collect(toMap(jid -> jid, programmingProblemStore::getProgrammingProblemSubmissionConfig));
             submissionRegrader.regradeSubmissions(submissions, configsMap);
         }

@@ -2,10 +2,10 @@ package judgels.sandalphon.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -36,7 +36,7 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
     }
 
     @Override
-    public Map<String, M> selectAllLatestBySubmissionJids(Set<String> submissionJids) {
+    public Map<String, M> selectAllLatestBySubmissionJids(Collection<String> submissionJids) {
         if (submissionJids.isEmpty()) {
             return ImmutableMap.of();
         }
@@ -70,7 +70,7 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
     }
 
     @Override
-    public Map<String, M> selectAllLatestWithDetailsBySubmissionJids(Set<String> submissionJids) {
+    public Map<String, M> selectAllLatestWithDetailsBySubmissionJids(Collection<String> submissionJids) {
         if (submissionJids.isEmpty()) {
             return ImmutableMap.of();
         }

@@ -1,10 +1,10 @@
 package judgels.jerahmeel.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.Tuple;
 import judgels.jerahmeel.persistence.ProblemLevelDao;
@@ -22,7 +22,7 @@ public class ProblemLevelHibernateDao extends HibernateDao<ProblemLevelModel>
     }
 
     @Override
-    public Map<String, Integer> selectAllAverageByProblemJids(Set<String> problemJids) {
+    public Map<String, Integer> selectAllAverageByProblemJids(Collection<String> problemJids) {
         if (problemJids.isEmpty()) {
             return Collections.emptyMap();
         }
