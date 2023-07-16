@@ -3,6 +3,7 @@ package judgels.jerahmeel.difficulty;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -25,7 +26,7 @@ public class ProblemDifficultyStore {
         Map<String, ProblemStats> statsMap = statsStore.getProblemStatsMap(problemJids);
         Map<String, Integer> levelsMap = problemLevelDao.selectAllAverageByProblemJids(problemJids);
 
-        return problemJids.stream().collect(Collectors.toMap(
+        return Set.copyOf(problemJids).stream().collect(Collectors.toMap(
                 Function.identity(),
                 jid -> new ProblemDifficulty.Builder()
                         .stats(statsMap.get(jid))

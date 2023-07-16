@@ -70,13 +70,11 @@ public class ChapterStore {
         Map<String, CourseModel> coursesMap = courseDao.selectByJids(courseJids);
 
         Map<String, List<String>> pathsMap = new HashMap<>();
-        for (String chapterJid : chapterJids) {
+        for (String chapterJid : chapterToCourseChapterMap.keySet()) {
             CourseChapterModel m = chapterToCourseChapterMap.get(chapterJid);
-            if (m != null) {
-                CourseModel cm = coursesMap.get(m.courseJid);
-                if (cm != null) {
-                    pathsMap.put(chapterJid, ImmutableList.of(cm.slug, m.alias));
-                }
+            CourseModel cm = coursesMap.get(m.courseJid);
+            if (cm != null) {
+                pathsMap.put(chapterJid, ImmutableList.of(cm.slug, m.alias));
             }
         }
         return Map.copyOf(pathsMap);
