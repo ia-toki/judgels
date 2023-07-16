@@ -50,7 +50,7 @@ public class SubmissionClient {
 
         Submission submission = submissionStore.createSubmission(data, config);
         String gradingJid = submissionStore.createGrading(submission);
-        requestGrading(gradingJid, submission, source, config);
+        // requestGrading(gradingJid, submission, source, config);
 
         return submission;
     }
