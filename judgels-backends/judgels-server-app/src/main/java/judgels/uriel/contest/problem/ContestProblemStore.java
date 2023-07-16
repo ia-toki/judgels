@@ -5,6 +5,7 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -118,7 +119,7 @@ public class ContestProblemStore {
                 .count() > 0;
     }
 
-    public Map<String, String> getProblemAliasesByJids(String contestJid, Set<String> problemJids) {
+    public Map<String, String> getProblemAliasesByJids(String contestJid, Collection<String> problemJids) {
         Map<String, String> problemAliases = problemDao.selectByContestJid(contestJid).all()
                 .stream()
                 .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));

@@ -1,8 +1,8 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
@@ -36,7 +36,7 @@ public class CourseChapterHibernateDao extends HibernateDao<CourseChapterModel> 
     }
 
     @Override
-    public List<CourseChapterModel> selectAllByChapterJids(Set<String> chapterJids) {
+    public List<CourseChapterModel> selectAllByChapterJids(Collection<String> chapterJids) {
         return select().where(columnIn(CourseChapterModel_.chapterJid, chapterJids)).all();
     }
 }

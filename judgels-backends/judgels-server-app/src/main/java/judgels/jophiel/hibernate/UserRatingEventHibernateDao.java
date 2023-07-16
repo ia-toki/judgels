@@ -1,8 +1,8 @@
 package judgels.jophiel.hibernate;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRatingEventModel;
@@ -19,7 +19,7 @@ public class UserRatingEventHibernateDao extends UnmodifiableHibernateDao<UserRa
     }
 
     @Override
-    public List<UserRatingEventModel> selectAllByTimes(Set<Instant> times) {
+    public List<UserRatingEventModel> selectAllByTimes(Collection<Instant> times) {
         return select()
                 .where(columnIn(UserRatingEventModel_.time, times))
                 .all();

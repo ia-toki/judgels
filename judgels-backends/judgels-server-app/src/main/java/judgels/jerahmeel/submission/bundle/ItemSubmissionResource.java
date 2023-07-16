@@ -1,6 +1,5 @@
 package judgels.jerahmeel.submission.bundle;
 
-import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
@@ -8,13 +7,14 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -92,8 +92,8 @@ public class ItemSubmissionResource {
 
         Page<ItemSubmission> submissions = submissionStore.getSubmissions(containerJid, userJid, problemJid, pageNumber, PAGE_SIZE);
 
-        Set<String> userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(toSet());
-        Set<String> problemJids = submissions.getPage().stream().map(ItemSubmission::getProblemJid).collect(toSet());
+        var userJids = Lists.transform(submissions.getPage(), ItemSubmission::getUserJid);
+        var problemJids = Lists.transform(submissions.getPage(), ItemSubmission::getProblemJid);
 
         Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
 
@@ -104,10 +104,7 @@ public class ItemSubmissionResource {
 
         Map<String, String> problemAliasesMap = getProblemAliasesMap(containerJid, problemJids);
 
-        Set<String> itemJids = submissions.getPage().stream()
-                .map(ItemSubmission::getItemJid)
-                .collect(toSet());
-
+        var itemJids = Lists.transform(submissions.getPage(), ItemSubmission::getItemJid);
         Map<String, Item> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
@@ -299,7 +296,7 @@ public class ItemSubmissionResource {
         }
     }
 
-    private Map<String, String> getProblemAliasesMap(String containerJid, Set<String> problemJids) {
+    private Map<String, String> getProblemAliasesMap(String containerJid, Collection<String> problemJids) {
         if (SubmissionUtils.isProblemSet(containerJid)) {
             return problemSetProblemStore.getProblemAliasesByJids(problemJids);
         } else {

@@ -1,8 +1,8 @@
 package judgels.jophiel.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
@@ -27,7 +27,7 @@ public class UserHibernateDao extends JudgelsHibernateDao<UserModel> implements 
     }
 
     @Override
-    public List<UserModel> selectAllByUsernames(Set<String> usernames) {
+    public List<UserModel> selectAllByUsernames(Collection<String> usernames) {
         return select().where(columnIn(UserModel_.username, usernames)).all();
     }
 }

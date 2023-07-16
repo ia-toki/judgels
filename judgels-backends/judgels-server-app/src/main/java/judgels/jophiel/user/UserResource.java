@@ -8,6 +8,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
@@ -17,7 +18,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -68,7 +68,8 @@ public class UserResource {
         checkAllowed(roleChecker.canAdminister(actorJid));
 
         Page<User> users = userStore.getUsers(pageNumber, PAGE_SIZE, orderBy, orderDir);
-        Set<String> userJids = users.getPage().stream().map(User::getJid).collect(Collectors.toSet());
+
+        var userJids = Lists.transform(users.getPage(), User::getJid);
         Map<String, Instant> lastSessionTimesMap = sessionStore.getLatestSessionTimeByUserJids(userJids);
         return new UsersResponse.Builder()
                 .data(users)

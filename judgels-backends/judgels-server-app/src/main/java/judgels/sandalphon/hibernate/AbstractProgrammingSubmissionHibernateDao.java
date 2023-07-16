@@ -1,8 +1,8 @@
 package judgels.sandalphon.hibernate;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -29,7 +29,7 @@ public abstract class AbstractProgrammingSubmissionHibernateDao<M extends Abstra
     }
 
     @Override
-    public Map<String, Long> selectCounts(String containerJid, String userJid, Set<String> problemJids) {
+    public Map<String, Long> selectCounts(String containerJid, String userJid, Collection<String> problemJids) {
         if (problemJids.isEmpty()) {
             return Collections.emptyMap();
         }

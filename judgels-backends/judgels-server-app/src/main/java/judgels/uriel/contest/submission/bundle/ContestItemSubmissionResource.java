@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -113,7 +114,7 @@ public class ContestItemSubmissionResource {
         Set<String> userJids;
 
         List<String> problemJidsSortedByAlias;
-        Set<String> problemJids;
+        Collection<String> problemJids;
 
         userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
@@ -121,14 +122,12 @@ public class ContestItemSubmissionResource {
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
             problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
-            problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
+            problemJids = problemJidsSortedByAlias;
         } else {
             userJidsSortedByUsername = Collections.emptyList();
 
             problemJidsSortedByAlias = Collections.emptyList();
-            problemJids = submissions.getPage().stream()
-                    .map(ItemSubmission::getProblemJid)
-                    .collect(Collectors.toSet());
+            problemJids = Lists.transform(submissions.getPage(), ItemSubmission::getProblemJid);
         }
 
         Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
@@ -148,10 +147,7 @@ public class ContestItemSubmissionResource {
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
-        Set<String> itemJids = submissions.getPage().stream()
-                .map(ItemSubmission::getItemJid)
-                .collect(Collectors.toSet());
-
+        var itemJids = Lists.transform(submissions.getPage(), ItemSubmission::getItemJid);
         Map<String, Item> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(

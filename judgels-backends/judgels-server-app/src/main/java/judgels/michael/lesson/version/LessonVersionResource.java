@@ -1,14 +1,13 @@
 package judgels.michael.lesson.version;
 
-import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
@@ -98,7 +97,7 @@ public class LessonVersionResource extends BaseLessonResource {
 
         List<GitCommit> versions = versionStore.getVersions(actor.getUserJid(), lesson.getJid());
 
-        Set<String> userJids = versions.stream().map(GitCommit::getUserJid).collect(toSet());
+        var userJids = Lists.transform(versions, GitCommit::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         boolean isClean = !lessonStore.userCloneExists(actor.getUserJid(), lesson.getJid());

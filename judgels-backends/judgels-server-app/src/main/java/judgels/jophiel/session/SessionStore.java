@@ -2,11 +2,11 @@ package judgels.jophiel.session;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.session.Session;
@@ -37,7 +37,7 @@ public class SessionStore {
                 .collect(Collectors.toList());
     }
 
-    public Map<String, Instant> getLatestSessionTimeByUserJids(Set<String> userJids) {
+    public Map<String, Instant> getLatestSessionTimeByUserJids(Collection<String> userJids) {
         Map<String, Instant> timesMap = new HashMap<>();
         for (SessionModel m : sessionDao.selectAllByUserJids(userJids)) {
             timesMap.put(m.userJid, m.createdAt);

@@ -6,11 +6,10 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.PUBLISHED;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -70,10 +69,7 @@ public class ContestAnnouncementResource {
         Optional<String> statusFilter = canSupervise ? Optional.empty() : Optional.of(PUBLISHED.name());
         Page<ContestAnnouncement> announcements = announcementStore.getAnnouncements(contestJid, statusFilter, pageNumber, PAGE_SIZE);
 
-        Set<String> userJids = announcements.getPage()
-                .stream()
-                .map(ContestAnnouncement::getUserJid)
-                .collect(Collectors.toSet());
+        var userJids = Lists.transform(announcements.getPage(), ContestAnnouncement::getUserJid);
         Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_ANNOUNCEMENTS");

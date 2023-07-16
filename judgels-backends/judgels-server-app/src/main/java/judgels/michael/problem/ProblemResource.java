@@ -1,6 +1,5 @@
 package judgels.michael.problem;
 
-import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -63,7 +62,7 @@ public class ProblemResource extends BaseProblemResource {
         Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actor.getUserJid());
         Page<Problem> problems = problemStore.getProblems(userJid, termFilter, tagsFilter, pageNumber, PAGE_SIZE);
 
-        Set<String> userJids = problems.getPage().stream().map(Problem::getAuthorJid).collect(toSet());
+        var userJids = Lists.transform(problems.getPage(), Problem::getAuthorJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
         Map<String, Integer> tagCounts = tagStore.getTagCounts(isAdmin);
 

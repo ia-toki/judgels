@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,7 +62,7 @@ public class StatsStore {
         this.statsUserDao = statsUserDao;
     }
 
-    public Map<String, CourseProgress> getCourseProgressesMap(String userJid, Set<String> courseJids) {
+    public Map<String, CourseProgress> getCourseProgressesMap(String userJid, Collection<String> courseJids) {
         Map<String, CourseProgress> progressesMap = new HashMap<>();
         for (String courseJid : courseJids) {
             Set<String> chapterJids = new HashSet<>();
@@ -89,7 +90,7 @@ public class StatsStore {
         return ImmutableMap.copyOf(progressesMap);
     }
 
-    public Map<String, ChapterProgress> getChapterProgressesMap(String userJid, Set<String> chapterJids) {
+    public Map<String, ChapterProgress> getChapterProgressesMap(String userJid, Collection<String> chapterJids) {
         Map<String, Integer> totalProblemsMap = getChapterTotalProblemsMap(chapterJids);
         Map<String, Integer> solvedProblemsMap = getUserChapterSolvedProblemsMap(ImmutableSet.of(userJid), chapterJids).get(userJid);
 
@@ -103,7 +104,7 @@ public class StatsStore {
         return ImmutableMap.copyOf(chapterProgressesMap);
     }
 
-    public Map<String, Integer> getChapterTotalProblemsMap(Set<String> chapterJids) {
+    public Map<String, Integer> getChapterTotalProblemsMap(Collection<String> chapterJids) {
         Map<String, Integer> totalProblemsMap = new HashMap<>();
         for (String chapterJid : chapterJids) {
             totalProblemsMap.put(chapterJid, 0);
@@ -115,8 +116,8 @@ public class StatsStore {
     }
 
     public Map<String, Map<String, Integer>> getUserChapterSolvedProblemsMap(
-            Set<String> userJids,
-            Set<String> chapterJids) {
+            Collection<String> userJids,
+            Collection<String> chapterJids) {
 
         Map<String, Set<String>> chapterProblemJidsMap = new HashMap<>();
         for (String chapterJid : chapterJids) {
@@ -150,7 +151,7 @@ public class StatsStore {
         return ImmutableMap.copyOf(userChapterSolvedProblemsMap);
     }
 
-    public Map<String, ProblemProgress> getProblemProgressesMap(String userJid, Set<String> problemJids) {
+    public Map<String, ProblemProgress> getProblemProgressesMap(String userJid, Collection<String> problemJids) {
         Map<String, String> verdictsMap = new HashMap<>();
         Map<String, Integer> scoresMap = new HashMap<>();
         for (String problemJid : problemJids) {
@@ -172,7 +173,7 @@ public class StatsStore {
         return ImmutableMap.copyOf(progressesMap);
     }
 
-    public Map<String, ProblemStats> getProblemStatsMap(Set<String> problemJids) {
+    public Map<String, ProblemStats> getProblemStatsMap(Collection<String> problemJids) {
         Map<String, Long> totalScoresMap = statsUserProblemDao.selectTotalScoresByProblemJids(problemJids);
         Map<String, Long> totalUsersAccepted = statsUserProblemDao.selectCountsAcceptedByProblemJids(problemJids);
         Map<String, Long> totalUsersTried = statsUserProblemDao.selectCountsTriedByProblemJids(problemJids);
@@ -232,7 +233,7 @@ public class StatsStore {
                 .build();
     }
 
-    public Map<String, ProblemSetProgress> getProblemSetProgressesMap(String userJid, Set<String> problemSetJids) {
+    public Map<String, ProblemSetProgress> getProblemSetProgressesMap(String userJid, Collection<String> problemSetJids) {
         Map<String, Set<String>> problemJidsMap = new HashMap<>();
         Set<String> problemJids = new HashSet<>();
         for (ProblemSetProblemModel m : problemSetProblemDao.selectByProblemSetJids(problemSetJids).all()) {
@@ -262,7 +263,7 @@ public class StatsStore {
         return ImmutableMap.copyOf(progressesMap);
     }
 
-    public Map<String, Map<String, ProblemProgress>> getUserProblemProgressesMap(Set<String> userJids, Set<String> problemJids) {
+    public Map<String, Map<String, ProblemProgress>> getUserProblemProgressesMap(Collection<String> userJids, Collection<String> problemJids) {
         Map<String, Map<String, ProblemProgress>> progressesMap = new HashMap<>();
         for (String userJid : userJids) {
             progressesMap.put(userJid, new HashMap<>());

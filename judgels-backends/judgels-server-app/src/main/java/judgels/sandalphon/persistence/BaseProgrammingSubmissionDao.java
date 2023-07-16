@@ -1,7 +1,7 @@
 package judgels.sandalphon.persistence;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import judgels.persistence.JudgelsDao;
 import judgels.persistence.QueryBuilder;
 
@@ -9,7 +9,7 @@ public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmi
     M createSubmissionModel();
 
     BaseProgrammingSubmissionQueryBuilder<M> select();
-    Map<String, Long> selectCounts(String containerJid, String userJid, Set<String> problemJids);
+    Map<String, Long> selectCounts(String containerJid, String userJid, Collection<String> problemJids);
 
     interface BaseProgrammingSubmissionQueryBuilder<M extends AbstractProgrammingSubmissionModel> extends QueryBuilder<M> {
         BaseProgrammingSubmissionQueryBuilder<M> whereContainerIs(String containerJid);

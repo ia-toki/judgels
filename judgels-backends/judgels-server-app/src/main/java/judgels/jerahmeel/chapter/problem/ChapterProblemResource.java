@@ -6,6 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,8 @@ public class ChapterProblemResource {
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         List<ChapterProblem> problems = problemStore.getProblems(chapterJid);
-        Set<String> problemJids = problems.stream().map(ChapterProblem::getProblemJid).collect(Collectors.toSet());
+
+        var problemJids = Lists.transform(problems, ChapterProblem::getProblemJid);
         Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
         Map<String, ProblemProgress> problemProgressesMap = statsStore.getProblemProgressesMap(actorJid, problemJids);
 

@@ -8,7 +8,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.LinkedHashMap;
@@ -88,7 +87,8 @@ public class CourseChapterResource {
         checkFound(courseStore.getCourseByJid(courseJid));
 
         List<CourseChapter> chapters = courseChapterStore.getChapters(courseJid);
-        Set<String> chapterJids = chapters.stream().map(CourseChapter::getChapterJid).collect(toSet());
+
+        var chapterJids = Lists.transform(chapters, CourseChapter::getChapterJid);
         Map<String, ChapterInfo> chaptersMap = chapterStore.getChapterInfosByJids(chapterJids);
         Map<String, ChapterProgress> chapterProgressesMap = statsStore.getChapterProgressesMap(actorJid, chapterJids);
 
@@ -137,18 +137,17 @@ public class CourseChapterResource {
         checkArgument(data.getUsernames().size() <= 100, "Cannot get more than 100 users.");
 
         List<CourseChapter> chapters = courseChapterStore.getChapters(courseJid);
-        Set<String> chapterJids = chapters.stream().map(CourseChapter::getChapterJid).collect(toSet());
 
+        var chapterJids = Lists.transform(chapters, CourseChapter::getChapterJid);
         Map<String, Integer> totalProblemsMap = statsStore.getChapterTotalProblemsMap(chapterJids);
         List<Integer> totalProblemsList = chapters.stream()
                 .map(CourseChapter::getChapterJid)
                 .map(totalProblemsMap::get)
                 .collect(toList());
 
-        Map<String, String> usernameToJidsMap =
-                jophielClient.translateUsernamesToJids(ImmutableSet.copyOf(data.getUsernames()));
+        Map<String, String> usernameToJidsMap = jophielClient.translateUsernamesToJids(data.getUsernames());
         Map<String, Map<String, Integer>> userSolvedProblemsMap = statsStore.getUserChapterSolvedProblemsMap(
-                    ImmutableSet.copyOf(usernameToJidsMap.values()),
+                    usernameToJidsMap.values(),
                     chapterJids);
 
         Map<String, List<Integer>> userProgressesMap = new LinkedHashMap<>();

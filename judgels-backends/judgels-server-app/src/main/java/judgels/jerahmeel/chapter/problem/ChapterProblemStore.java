@@ -6,6 +6,7 @@ import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,7 +59,7 @@ public class ChapterProblemStore {
                 .map(ChapterProblemStore::fromModel);
     }
 
-    public Map<String, String> getProblemAliasesByJids(Set<String> problemJids) {
+    public Map<String, String> getProblemAliasesByJids(Collection<String> problemJids) {
         return problemDao.selectAllByProblemJids(problemJids)
                 .stream()
                 .filter(m -> problemJids.contains(m.problemJid))

@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.Chapter;
@@ -42,7 +42,7 @@ public class ChapterStore {
         return chapterDao.selectByJid(chapterJid).map(ChapterStore::fromModel);
     }
 
-    public Map<String, ChapterInfo> getChapterInfosByJids(Set<String> chapterJids) {
+    public Map<String, ChapterInfo> getChapterInfosByJids(Collection<String> chapterJids) {
         return chapterDao.selectByJids(chapterJids)
                 .values()
                 .stream()
@@ -53,7 +53,7 @@ public class ChapterStore {
                                 .build()));
     }
 
-    public Map<String, String> getChapterNamesByJids(Set<String> chapterJids) {
+    public Map<String, String> getChapterNamesByJids(Collection<String> chapterJids) {
         return chapterDao.selectByJids(chapterJids)
                 .values()
                 .stream()
@@ -62,12 +62,12 @@ public class ChapterStore {
                         c -> c.name));
     }
 
-    public Map<String, List<String>> getChapterPathsByJids(Set<String> chapterJids) {
+    public Map<String, List<String>> getChapterPathsByJids(Collection<String> chapterJids) {
         List<CourseChapterModel> chapters = courseChapterDao.selectAllByChapterJids(chapterJids);
         Map<String, CourseChapterModel> chapterToCourseChapterMap = new HashMap<>();
         chapters.forEach(c -> chapterToCourseChapterMap.put(c.chapterJid, c));
 
-        Set<String> courseJids = chapters.stream().map(c -> c.courseJid).collect(Collectors.toSet());
+        var courseJids = Lists.transform(chapters, c -> c.courseJid);
         Map<String, CourseModel> coursesMap = courseDao.selectByJids(courseJids);
 
         ImmutableMap.Builder<String, List<String>> pathsMap = ImmutableMap.builder();

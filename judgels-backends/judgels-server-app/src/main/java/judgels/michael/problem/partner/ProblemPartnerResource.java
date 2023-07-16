@@ -1,15 +1,14 @@
 package judgels.michael.problem.partner;
 
-import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
@@ -48,7 +47,8 @@ public class ProblemPartnerResource extends BaseProblemResource {
         checkAllowed(roleChecker.isAuthorOrAbove(actor, problem));
 
         List<Partner> partners = partnerStore.getPartners(problem.getJid());
-        Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
+
+        var userJids = Lists.transform(partners, Partner::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         HtmlTemplate template = newProblemPartnerTemplate(actor, problem);
@@ -65,7 +65,8 @@ public class ProblemPartnerResource extends BaseProblemResource {
         checkAllowed(roleChecker.isAuthorOrAbove(actor, problem));
 
         List<Partner> partners = partnerStore.getPartners(problem.getJid());
-        Set<String> userJids = partners.stream().map(Partner::getUserJid).collect(toSet());
+
+        var userJids = Lists.transform(partners, Partner::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         EditPartnersForm form = new EditPartnersForm();

@@ -343,7 +343,7 @@ public class ContestSubmissionResource {
                 break;
             }
 
-            Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(toSet());
+            var problemJids = Lists.transform(submissions, Submission::getProblemJid);
             Map<String, ProblemSubmissionConfig> configsMap = sandalphonClient.getProgrammingProblemSubmissionConfigs(problemJids);
             submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
@@ -400,14 +400,12 @@ public class ContestSubmissionResource {
             return Response.noContent().build();
         }
 
-        Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
+        var userJids = contestantStore.getApprovedContestantJids(contestJid);
         Map<String, String> usernamesMap = jophielClient.getProfiles(userJids).entrySet()
                 .stream()
                 .collect(toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
 
-        Set<String> problemJids = submissions.stream()
-                .map(Submission::getProblemJid)
-                .collect(toSet());
+        var problemJids = Lists.transform(submissions, Submission::getProblemJid);
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
         StreamingOutput stream =

@@ -1,10 +1,10 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.Tuple;
@@ -34,7 +34,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public List<StatsUserProblemModel> selectAllByUserJidAndProblemJids(String userJid, Set<String> problemJids) {
+    public List<StatsUserProblemModel> selectAllByUserJidAndProblemJids(String userJid, Collection<String> problemJids) {
         return select()
                 .where(columnEq(StatsUserProblemModel_.userJid, userJid))
                 .where(columnIn(StatsUserProblemModel_.problemJid, problemJids))
@@ -42,7 +42,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public List<StatsUserProblemModel> selectAllByUserJidsAndProblemJids(Set<String> userJids, Set<String> problemJids) {
+    public List<StatsUserProblemModel> selectAllByUserJidsAndProblemJids(Collection<String> userJids, Collection<String> problemJids) {
         return select()
                 .where(columnIn(StatsUserProblemModel_.userJid, userJids))
                 .where(columnIn(StatsUserProblemModel_.problemJid, problemJids))
@@ -63,7 +63,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public Map<String, Long> selectTotalScoresByProblemJids(Set<String> problemJids) {
+    public Map<String, Long> selectTotalScoresByProblemJids(Collection<String> problemJids) {
         if (problemJids.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -88,7 +88,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public Map<String, Long> selectCountsAcceptedByProblemJids(Set<String> problemJids) {
+    public Map<String, Long> selectCountsAcceptedByProblemJids(Collection<String> problemJids) {
         if (problemJids.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -114,7 +114,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public Map<String, Long> selectCountsTriedByProblemJids(Set<String> problemJids) {
+    public Map<String, Long> selectCountsTriedByProblemJids(Collection<String> problemJids) {
         if (problemJids.isEmpty()) {
             return Collections.emptyMap();
         }

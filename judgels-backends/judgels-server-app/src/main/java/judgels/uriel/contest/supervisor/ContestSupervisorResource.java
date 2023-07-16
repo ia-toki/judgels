@@ -6,7 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
@@ -63,8 +63,8 @@ public class ContestSupervisorResource {
         checkAllowed(roleChecker.canSupervise(actorJid, contest));
 
         Page<ContestSupervisor> supervisors = supervisorStore.getSupervisors(contestJid, pageNumber, PAGE_SIZE);
-        Set<String> userJids =
-                supervisors.getPage().stream().map(ContestSupervisor::getUserJid).collect(Collectors.toSet());
+
+        var userJids = Lists.transform(supervisors.getPage(), ContestSupervisor::getUserJid);
         Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_SUPERVISORS");
@@ -93,14 +93,13 @@ public class ContestSupervisorResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(data.getUsernames());
 
-        Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> upsertedSupervisorUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             supervisorStore.upsertSupervisor(contest.getJid(), userJid, data.getManagementPermissions());
             upsertedSupervisorUsernames.add(username);
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
         Map<String, Profile> upsertedSupervisorProfilesMap = upsertedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -130,7 +129,6 @@ public class ContestSupervisorResource {
 
         Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
 
-        Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
         Set<String> deletedSupervisorUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             if (supervisorStore.deleteSupervisor(contest.getJid(), userJid)) {
@@ -138,7 +136,7 @@ public class ContestSupervisorResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
         Map<String, Profile> deletedSupervisorProfilesMap = deletedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

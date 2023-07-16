@@ -1,9 +1,9 @@
 package judgels.michael.problem.bundle.submission;
 
-import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.util.List;
@@ -53,7 +53,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
 
         Page<BundleSubmission> submissions = submissionStore.getSubmissions(problem.getJid(), pageNumber, PAGE_SIZE);
 
-        Set<String> userJids = submissions.getPage().stream().map(BundleSubmission::getAuthorJid).collect(toSet());
+        var userJids = Lists.transform(submissions.getPage(), BundleSubmission::getAuthorJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         boolean canEdit = roleChecker.canEdit(actor, problem);

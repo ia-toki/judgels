@@ -1,14 +1,13 @@
 package judgels.michael.lesson;
 
-import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.View;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
@@ -47,7 +46,7 @@ public class LessonResource extends BaseLessonResource {
         Optional<String> userJid = isAdmin ? Optional.empty() : Optional.of(actor.getUserJid());
         Page<Lesson> lessons = lessonStore.getLessons(userJid, termFilter, pageNumber, PAGE_SIZE);
 
-        Set<String> userJids = lessons.getPage().stream().map(Lesson::getAuthorJid).collect(toSet());
+        var userJids = Lists.transform(lessons.getPage(), Lesson::getAuthorJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         HtmlTemplate template = newLessonsTemplate(actor);

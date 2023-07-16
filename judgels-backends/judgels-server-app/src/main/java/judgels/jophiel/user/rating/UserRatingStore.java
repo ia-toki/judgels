@@ -2,10 +2,10 @@ package judgels.jophiel.user.rating;
 
 import com.google.common.collect.Lists;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.RatingEvent;
@@ -27,7 +27,7 @@ public class UserRatingStore {
         this.ratingEventDao = ratingEventDao;
     }
 
-    public Map<String, UserRating> getRatings(Instant time, Set<String> userJids) {
+    public Map<String, UserRating> getRatings(Instant time, Collection<String> userJids) {
         return ratingDao.selectAllByTimeAndUserJids(time, userJids)
                 .stream()
                 .collect(Collectors.toMap(m -> m.userJid, UserRatingStore::fromModel));
@@ -60,21 +60,18 @@ public class UserRatingStore {
 
     public List<UserRatingEvent> getUserRatingEvents(String userJid) {
         List<UserRatingModel> ratings = ratingDao.selectAllByUserJid(userJid);
+
+        var times = Lists.transform(ratings, e -> e.time);
         Map<Instant, UserRatingEventModel> ratingEventsMap = ratingEventDao
-                .selectAllByTimes(
-                        ratings.stream()
-                                .map(e -> e.time)
-                                .collect(Collectors.toSet()))
+                .selectAllByTimes(times)
                 .stream()
                 .collect(Collectors.toMap(m -> m.time, m -> m));
 
-        return ratings.stream()
-                .map(e -> new UserRatingEvent.Builder()
-                        .time(e.time)
-                        .eventJid(ratingEventsMap.get(e.time).eventJid)
-                        .rating(fromModel(e))
-                        .build()
-                ).collect(Collectors.toList());
+        return Lists.transform(ratings, e -> new UserRatingEvent.Builder()
+                .time(e.time)
+                .eventJid(ratingEventsMap.get(e.time).eventJid)
+                .rating(fromModel(e))
+                .build());
     }
 
     private static UserRating fromModel(UserRatingModel model) {

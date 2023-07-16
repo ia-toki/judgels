@@ -1,12 +1,12 @@
 package judgels.jerahmeel.problemset;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static java.util.stream.Collectors.toSet;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -14,7 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -76,14 +75,17 @@ public class ProblemSetResource {
         Optional<String> archiveJid = archiveSlug.isPresent()
                 ? Optional.of(archive.map(Archive::getJid).orElse(""))
                 : Optional.empty();
+
         Page<ProblemSet> problemSets = problemSetStore.getProblemSets(archiveJid, name, pageNumber, PAGE_SIZE);
-        Set<String> problemSetJids = problemSets.getPage().stream().map(ProblemSet::getJid).collect(toSet());
-        Set<String> archiveJids = problemSets.getPage().stream().map(ProblemSet::getArchiveJid).collect(toSet());
+
+        var archiveJids = Lists.transform(problemSets.getPage(), ProblemSet::getArchiveJid);
         Map<String, Archive> archivesMap = archiveStore.getArchivesByJids(archiveJids);
         Map<String, String> archiveSlugsMap = archivesMap.entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getSlug()));
         Map<String, String> archiveDescriptionsMap = archivesMap.entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getDescription()));
+
+        var problemSetJids = Lists.transform(problemSets.getPage(), ProblemSet::getJid);
         Map<String, ProblemSetProgress> problemSetProgressesMap =
                 statsStore.getProblemSetProgressesMap(actorJid, problemSetJids);
 
@@ -179,21 +181,14 @@ public class ProblemSetResource {
         checkArgument(data.getUsernames().size() <= 100, "Cannot get more than 100 users.");
         checkArgument(data.getProblemSetSlugs().size() <= 20, "Cannot get more than 100 problemsets.");
 
-        Set<String> problemSetSlugs = ImmutableSet.copyOf(data.getProblemSetSlugs());
-        Map<String, ProblemSet> problemSetsMap = problemSetStore.getProblemSetsBySlugs(problemSetSlugs);
+        Map<String, ProblemSet> problemSetsMap = problemSetStore.getProblemSetsBySlugs(data.getProblemSetSlugs());
 
-        Set<String> problemSetJids = problemSetsMap
-                .values()
-                .stream()
-                .map(ProblemSet::getJid)
-                .collect(Collectors.toSet());
+        var problemSetJids = Collections2.transform(problemSetsMap.values(), ProblemSet::getJid);
         Map<String, List<ProblemSetProblem>> problemsMap = problemSetProblemStore.getProblems(problemSetJids);
+        Map<String, String> usernameToJidsMap = jophielClient.translateUsernamesToJids(data.getUsernames());
 
-        Set<String> usernames = ImmutableSet.copyOf(data.getUsernames());
-        Map<String, String> usernameToJidsMap = jophielClient.translateUsernamesToJids(usernames);
-
-        Set<String> userJids = ImmutableSet.copyOf(usernameToJidsMap.values());
-        Set<String> problemJids = problemsMap
+        var userJids = usernameToJidsMap.values();
+        var problemJids = problemsMap
                 .values()
                 .stream()
                 .flatMap(problems -> Lists.transform(problems, ProblemSetProblem::getProblemJid).stream())

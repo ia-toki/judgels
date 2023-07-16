@@ -1,10 +1,11 @@
 package judgels.jophiel.profile;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -41,7 +42,7 @@ public class ProfileStore {
         return getProfiles(ImmutableSet.of(userJid), Instant.now()).get(userJid);
     }
 
-    public Map<String, Profile> getProfiles(Set<String> userJids, Instant time) {
+    public Map<String, Profile> getProfiles(Collection<String> userJids, Instant time) {
         Map<String, UserInfo> infos = infoStore.getInfos(userJids);
         Map<String, UserRating> ratings = ratingStore.getRatings(time, userJids);
 
@@ -54,13 +55,14 @@ public class ProfileStore {
                         .build()));
     }
 
-    public Map<String, Profile> getProfiles(Set<String> userJids) {
+    public Map<String, Profile> getProfiles(Collection<String> userJids) {
         return getProfiles(userJids, Instant.now());
     }
 
     public Page<Profile> getTopRatedProfiles(Instant time, int pageNumber, int pageSize) {
         Page<UserWithRating> ratings = ratingStore.getTopRatings(time, pageNumber, pageSize);
-        Set<String> userJids = ratings.getPage().stream().map(UserWithRating::getUserJid).collect(Collectors.toSet());
+
+        var userJids = Lists.transform(ratings.getPage(), UserWithRating::getUserJid);
         Map<String, User> users = userStore.getUsersByJids(userJids);
         Map<String, UserInfo> infos = infoStore.getInfos(userJids);
 

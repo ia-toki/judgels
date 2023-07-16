@@ -2,6 +2,7 @@ package judgels.jerahmeel.hibernate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
     }
 
     @Override
-    public QueryBuilder<ProblemSetProblemModel> selectByProblemSetJids(Set<String> problemSetJids) {
+    public QueryBuilder<ProblemSetProblemModel> selectByProblemSetJids(Collection<String> problemSetJids) {
         return select().where(columnIn(ProblemSetProblemModel_.problemSetJid, problemSetJids));
     }
 
@@ -39,7 +40,7 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
     }
 
     @Override
-    public List<ProblemSetProblemModel> selectAllByProblemJids(Set<String> problemJids) {
+    public List<ProblemSetProblemModel> selectAllByProblemJids(Collection<String> problemJids) {
         return select().where(columnIn(ProblemSetProblemModel_.problemJid, problemJids)).all();
     }
 

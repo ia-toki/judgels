@@ -1,9 +1,9 @@
 package judgels.jophiel.hibernate;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingModel;
@@ -20,7 +20,7 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
     }
 
     @Override
-    public List<UserRatingModel> selectAllByTimeAndUserJids(Instant time, Set<String> userJids) {
+    public List<UserRatingModel> selectAllByTimeAndUserJids(Instant time, Collection<String> userJids) {
         if (userJids.isEmpty()) {
             return Collections.emptyList();
         }

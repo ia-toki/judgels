@@ -1,9 +1,9 @@
 package judgels.jophiel.hibernate;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
@@ -31,7 +31,7 @@ public class SessionHibernateDao extends UnmodifiableHibernateDao<SessionModel> 
     }
 
     @Override
-    public List<SessionModel> selectAllByUserJids(Set<String> userJids) {
+    public List<SessionModel> selectAllByUserJids(Collection<String> userJids) {
         return select().where(columnIn(SessionModel_.userJid, userJids)).all();
     }
 
