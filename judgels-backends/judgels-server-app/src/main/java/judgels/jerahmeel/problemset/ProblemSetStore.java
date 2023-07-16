@@ -3,11 +3,11 @@ package judgels.jerahmeel.problemset;
 import static java.util.stream.Collectors.toMap;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,11 +103,11 @@ public class ProblemSetStore {
     }
 
     public Map<String, List<String>> getProblemSetPathsByJids(Collection<String> problemSetJids) {
-        ImmutableMap.Builder<String, List<String>> pathsMap = ImmutableMap.builder();
+        Map<String, List<String>> pathsMap = new HashMap<>();
         for (ProblemSetModel m : problemSetDao.selectByJids(problemSetJids).values()) {
             pathsMap.put(m.jid, ImmutableList.of(m.slug));
         }
-        return pathsMap.build();
+        return Map.copyOf(pathsMap);
     }
 
     public Optional<List<String>> getProblemSetPathByJid(String problemSetJid) {

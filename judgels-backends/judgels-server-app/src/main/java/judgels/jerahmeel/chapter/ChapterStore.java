@@ -1,7 +1,6 @@
 package judgels.jerahmeel.chapter;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.Collection;
@@ -70,7 +69,7 @@ public class ChapterStore {
         var courseJids = Lists.transform(chapters, c -> c.courseJid);
         Map<String, CourseModel> coursesMap = courseDao.selectByJids(courseJids);
 
-        ImmutableMap.Builder<String, List<String>> pathsMap = ImmutableMap.builder();
+        Map<String, List<String>> pathsMap = new HashMap<>();
         for (String chapterJid : chapterJids) {
             CourseChapterModel m = chapterToCourseChapterMap.get(chapterJid);
             if (m != null) {
@@ -80,7 +79,7 @@ public class ChapterStore {
                 }
             }
         }
-        return pathsMap.build();
+        return Map.copyOf(pathsMap);
     }
 
     public Optional<List<String>> getChapterPathByJid(String chapterJid) {
