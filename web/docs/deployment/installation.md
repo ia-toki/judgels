@@ -56,6 +56,11 @@ In `vars.yml`, generate different random strings for these values:
 - `rabbitmq_password`
    * The password for the server and grader apps to connect to RabbitMQ.
 
+If you generate a different ssh key filename, edit the following variable in `vars.yml` to allow access to root:
+
+- `ansible_ssh_private_key_file`
+   * Fill with the location of the custom ssh private key file
+
 ### E. Setting up domains
 
 1. Purchase a domain (for example: `mycontest.org`). Then, set up the following (sub)domains.
