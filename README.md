@@ -1,11 +1,13 @@
-# Judgels
+<div align="center">
+  <img src="https://raw.githubusercontent.com/ia-toki/judgels/master/judgels-client/src/assets/images/logo.png" height="65" />
 
-<img src="https://raw.githubusercontent.com/ia-toki/judgels/master/judgels-client/src/assets/images/logo.png" align="left" height="65" />
+  <h1>Judgels</h1>
 
-![CI Status](https://github.com/ia-toki/judgels/workflows/ci/badge.svg)
-[![License](https://img.shields.io/github/license/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/blob/master/LICENSE.txt)
-
-A modern programming contest system.
+  A modern programming contest system.
+ 
+  <img alt="CI" src="https://github.com/ia-toki/judgels/workflows/ci/badge.svg"/>
+  <a href="https://github.com/ia-toki/judgels/blob/master/LICENSE.txt"><img alt="License" src="https://img.shields.io/github/license/ia-toki/judgels.svg"/></a>
+</div>
 
 ## Usage
 
