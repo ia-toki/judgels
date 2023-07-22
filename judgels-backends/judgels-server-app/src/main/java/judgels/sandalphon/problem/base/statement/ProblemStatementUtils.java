@@ -1,22 +1,19 @@
 package judgels.sandalphon.problem.base.statement;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
 public final class ProblemStatementUtils {
 
-    private static final Map<String, String> DEFAULT_TITLES = ImmutableMap.of(
-            "id-ID", "(judul soal)",
-            "en-US", "(problem title)"
+    private static final Map<String, String> DEFAULT_TITLES = Map.of(
+            "id-ID", "Kotak Apel",
+            "en-US", "Boxes of Apples"
     );
 
-    private ProblemStatementUtils() {
-        // prevent instantiation
-    }
+    private ProblemStatementUtils() {}
 
-    public static String getDefaultTitle(String languageCode) {
-        if (DEFAULT_TITLES.containsKey(languageCode)) {
-            return DEFAULT_TITLES.get(languageCode);
+    public static String getDefaultTitle(String language) {
+        if (DEFAULT_TITLES.containsKey(language)) {
+            return DEFAULT_TITLES.get(language);
         } else {
             return DEFAULT_TITLES.get("en-US");
         }
