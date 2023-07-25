@@ -7,12 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import judgels.JudgelsAppConfiguration;
 import judgels.jophiel.api.actor.Actor;
+import judgels.jophiel.user.UserRoleChecker;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
 
 public abstract class BaseResource {
     @Inject protected JudgelsAppConfiguration appConfig;
     @Inject protected ActorChecker actorChecker;
+    @Inject protected UserRoleChecker userRoleChecker;
 
     protected Response badRequest() {
         return Response.status(Response.Status.BAD_REQUEST).build();
@@ -36,8 +38,14 @@ public abstract class BaseResource {
 
     protected HtmlTemplate newTemplate(Actor actor) {
         HtmlTemplate template = newTemplate();
+
         template.setUsername(actor.getUsername());
         template.setAvatarUrl(actor.getAvatarUrl());
+
+        if (userRoleChecker.canAdminister(actor.getUserJid())) {
+            template.addSidebarMenu("accounts", "Accounts", "/accounts/users");
+        }
+
         template.addSidebarMenu("problems", "Problems", "/problems");
         template.addSidebarMenu("lessons", "Lessons", "/lessons");
         return template;
