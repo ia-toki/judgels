@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface UserUpdateData {
-    String getUsername();
+    Optional<String> getUsername();
     Optional<String> getPassword();
     Optional<String> getEmail();
 
