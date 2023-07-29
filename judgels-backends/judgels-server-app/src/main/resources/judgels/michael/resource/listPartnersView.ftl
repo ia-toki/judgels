@@ -4,7 +4,6 @@
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
-  <h3>Partners</h3>
   <#if partners?size == 0>
     <p>No partners.</p>
   <#else>

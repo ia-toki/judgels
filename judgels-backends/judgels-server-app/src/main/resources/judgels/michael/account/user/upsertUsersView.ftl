@@ -9,7 +9,7 @@
 
   <hr>
 
-  <p><b>Allowed CSV headers:</b></p>
+  <p><b>Allowed CSV headers</b></p>
   <ul style="margin-left: 25px">
     <li><code>jid</code></li>
     <li><code>username</code> (mandatory only when creating users)</li>
@@ -27,6 +27,8 @@
   </p>
 
   <hr>
+
+  <p>CSV rows, including header:</p>
 
   <@forms.form type="vertical">
     <@forms.csv name="csv"/>
