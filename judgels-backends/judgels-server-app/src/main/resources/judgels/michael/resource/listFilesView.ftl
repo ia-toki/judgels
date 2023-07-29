@@ -17,7 +17,6 @@
     <hr>
   </#if>
 
-  <h3>Files</h3>
   <#if files?size == 0>
     <p>No files.</p>
   <#else>
