@@ -1,9 +1,9 @@
 package judgels.jophiel.user;
 
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,25 +35,30 @@ public class UserCreator {
     }
 
     public UpsertUsersResult upsertUsers(String csv) throws IOException {
-        CSVReader reader = new CSVReader(new StringReader(csv));
+        UpsertUsersResult result = new UpsertUsersResult();
 
+        CSVReader reader = new CSVReader(new StringReader(csv));
         String[] header = reader.readNext();
-        Map<String, Integer> headerMap = Maps.newHashMap();
+        if (header == null) {
+            result.errorMessage = Optional.of("Missing headers.");
+            return result;
+        }
+
+        Map<String, Integer> headerMap = new HashMap<>();
         for (int i = 0; i < header.length; i++) {
             headerMap.put(header[i], i);
         }
 
-        UpsertUsersResult result = new UpsertUsersResult();
 
         for (String optionalHeader : headerMap.keySet()) {
             if (!Set.of("jid", "username", "password", "email", "name", "country").contains(optionalHeader)) {
-                result.errorMessage = Optional.of("'" + optionalHeader + "' header is not allowed");
+                result.errorMessage = Optional.of("'" + optionalHeader + "' header is not allowed.");
                 return result;
             }
         }
 
         if (!headerMap.containsKey("jid") && !headerMap.containsKey("username")) {
-            result.errorMessage = Optional.of("Either 'jid' or 'username' header (or both) must be present");
+            result.errorMessage = Optional.of("Either 'jid' or 'username' header (or both) must be present.");
             return result;
         }
 
@@ -94,15 +99,15 @@ public class UserCreator {
                 String key = jid.orElse(username.orElse(""));
 
                 if (!username.isPresent()) {
-                    result.errorMessage = Optional.of("User '" + key + "' not found but cannot be created because the 'username' header is missing");
+                    result.errorMessage = Optional.of("User '" + key + "' not found but cannot be created because the 'username' header is missing.");
                     return result;
                 }
                 if (!password.isPresent()) {
-                    result.errorMessage = Optional.of("User '" + key + "' not found but cannot be created because the 'password' header is missing");
+                    result.errorMessage = Optional.of("User '" + key + "' not found but cannot be created because the 'password' header is missing.");
                     return result;
                 }
                 if (!email.isPresent()) {
-                    result.errorMessage = Optional.of("User '" + key + "' not found but cannot be created because the 'email' header is missing");
+                    result.errorMessage = Optional.of("User '" + key + "' not found but cannot be created because the 'email' header is missing.");
                     return result;
                 }
 
