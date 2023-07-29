@@ -2,6 +2,7 @@ package judgels.jophiel.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,9 @@ import judgels.jophiel.api.user.UsersResponse;
 import judgels.jophiel.api.user.UsersUpsertResponse;
 import judgels.jophiel.api.user.info.UserInfo;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 
+@Execution(SAME_THREAD)
 class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserClient userClient = createClient(UserClient.class);
     private final UserInfoClient userInfoClient = createClient(UserInfoClient.class);
