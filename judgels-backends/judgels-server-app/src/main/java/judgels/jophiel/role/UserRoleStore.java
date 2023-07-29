@@ -21,7 +21,7 @@ public class UserRoleStore {
         Optional<UserRoleModel> maybeModel = userRoleDao.selectByUserJid(userJid);
         if (maybeModel.isPresent()) {
             UserRoleModel model = maybeModel.get();
-            model.jophiel = role.getJophiel().name();
+            model.jophiel = role.getJophiel().orElse(null);
             model.sandalphon = role.getSandalphon().orElse(null);
             model.uriel = role.getUriel().orElse(null);
             model.jerahmeel = role.getJerahmeel().orElse(null);
@@ -29,7 +29,7 @@ public class UserRoleStore {
         } else {
             UserRoleModel model = new UserRoleModel();
             model.userJid = userJid;
-            model.jophiel = role.getJophiel().name();
+            model.jophiel = role.getJophiel().orElse(null);
             model.sandalphon = role.getSandalphon().orElse(null);
             model.uriel = role.getUriel().orElse(null);
             model.jerahmeel = role.getJerahmeel().orElse(null);
@@ -41,7 +41,7 @@ public class UserRoleStore {
         UserRole.Builder role = new UserRole.Builder();
 
         if (superadminRoleStore.isSuperadmin(userJid)) {
-            role.jophiel(JophielRole.SUPERADMIN);
+            role.jophiel(JophielRole.SUPERADMIN.name());
             role.sandalphon("ADMIN");
             role.uriel("ADMIN");
             role.jerahmeel("ADMIN");
@@ -50,7 +50,7 @@ public class UserRoleStore {
             if (maybeModel.isPresent()) {
                 UserRoleModel model = maybeModel.get();
                 if (model.jophiel != null) {
-                    role.jophiel(JophielRole.valueOf(model.jophiel));
+                    role.jophiel(model.jophiel);
                 }
                 if (model.sandalphon != null) {
                     role.sandalphon(model.sandalphon);

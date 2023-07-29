@@ -2,7 +2,6 @@ package judgels.uriel.role;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.jophiel.api.role.JophielRole;
 import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.role.UserRoleStore;
 import judgels.uriel.api.role.UrielRole;
@@ -18,7 +17,6 @@ public class RoleChecker {
 
     public boolean isAdmin(String userJid) {
         UserRole role = userRoleStore.getRole(userJid);
-        return role.getJophiel() == JophielRole.SUPERADMIN
-                || role.getUriel().orElse("").equals(UrielRole.ADMIN.name());
+        return role.getUriel().orElse("").equals(UrielRole.ADMIN.name());
     }
 }

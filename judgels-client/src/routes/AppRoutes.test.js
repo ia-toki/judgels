@@ -34,7 +34,7 @@ describe('AppRoutes', () => {
   });
 
   test('Jerahmeel admin', () => {
-    testAppRoutes({ jophiel: JophielRole.User, jerahmeel: JerahmeelRole.Admin }, [
+    testAppRoutes({ jerahmeel: JerahmeelRole.Admin }, [
       'contests',
       'training',
       'courses',
@@ -45,10 +45,6 @@ describe('AppRoutes', () => {
   });
 
   test('user', () => {
-    testAppRoutes({ jophiel: JophielRole.User }, ['contests', 'courses', 'problems', 'submissions', 'ranking']);
-  });
-
-  test('guest', () => {
-    testAppRoutes({ jophiel: JophielRole.Guest }, ['contests', 'courses', 'problems', 'submissions', 'ranking']);
+    testAppRoutes({}, ['contests', 'courses', 'problems', 'submissions', 'ranking']);
   });
 });
