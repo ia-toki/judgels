@@ -88,13 +88,6 @@ public class UserStore {
         return fromModel(userDao.updateByJid(userJid, model));
     }
 
-    public void validateUserPassword(String userJid, String password) {
-        UserModel model = userDao.findByJid(userJid);
-        if (!validatePassword(password, model.password)) {
-            throw new IllegalArgumentException();
-        }
-    }
-
     public void updateUserPassword(String userJid, String newPassword) {
         updateUser(userJid, new UserUpdateData.Builder()
                 .password(newPassword)
