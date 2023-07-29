@@ -5,7 +5,7 @@ import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { PutWebConfig } from '../../modules/userWebReducer';
 import { SessionErrors } from '../../../../modules/api/jophiel/session';
 import { sessionAPI } from '../../../../modules/api/jophiel/session';
-import { myUserAPI } from '../../../../modules/api/jophiel/myUser';
+import { userAPI } from '../../../../modules/api/jophiel/user';
 import { userWebAPI } from '../../../../modules/api/jophiel/userWeb';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -37,7 +37,7 @@ export function logIn(usernameOrEmail, password) {
 export function afterLogin(session) {
   return async dispatch => {
     const { token } = session;
-    const [user, config] = await Promise.all([myUserAPI.getMyself(session.token), userWebAPI.getWebConfig(token)]);
+    const [user, config] = await Promise.all([userAPI.getMyself(session.token), userWebAPI.getWebConfig(token)]);
 
     toastActions.showToast(`Welcome, ${user.username}.`);
     dispatch(PutToken(session.token));
