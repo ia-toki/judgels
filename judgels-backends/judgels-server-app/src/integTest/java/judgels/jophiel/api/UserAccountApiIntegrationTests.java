@@ -2,6 +2,7 @@ package judgels.jophiel.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -16,8 +17,10 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.account.PasswordResetData;
 import judgels.jophiel.api.user.account.UserRegistrationData;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import org.subethamail.wiser.Wiser;
 
+@Execution(SAME_THREAD)
 class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserClient userClient = createClient(UserClient.class);
     private final UserAccountClient accountClient = createClient(UserAccountClient.class);
