@@ -18,7 +18,6 @@ import judgels.jophiel.user.account.UserResetPasswordModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.avatar.UserAvatarResource;
 import judgels.jophiel.user.info.UserInfoResource;
-import judgels.jophiel.user.me.MyUserResource;
 import judgels.jophiel.user.rating.UserRatingResource;
 import judgels.jophiel.user.registration.web.UserRegistrationWebResource;
 import judgels.jophiel.user.search.UserSearchResource;
@@ -59,7 +58,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         WebModule.class})
 @Singleton
 public interface JophielComponent {
-    MyUserResource myUserResource();
     ProfileResource profileResource();
     SessionResource sessionResource();
     SuperadminCreator superadminCreator();

@@ -137,7 +137,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         component.superadminCreator().ensureSuperadminExists();
 
         env.jersey().register(component.sessionResource());
-        env.jersey().register(component.myUserResource());
         env.jersey().register(component.profileResource());
         env.jersey().register(component.userResource());
         env.jersey().register(component.userAccountResource());
