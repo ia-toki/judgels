@@ -1,10 +1,6 @@
-import { JophielRole } from '../../../modules/api/jophiel/role';
-
 const initialState = {
   config: {
-    role: {
-      jophiel: JophielRole.Guest,
-    },
+    role: {},
     announcements: [],
     isConfigLoaded: false,
   },

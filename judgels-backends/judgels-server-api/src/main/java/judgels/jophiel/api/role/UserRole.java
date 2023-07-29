@@ -7,14 +7,10 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserRole.class)
 public interface UserRole {
-    JophielRole getJophiel();
+    Optional<String> getJophiel();
     Optional<String> getSandalphon();
     Optional<String> getUriel();
     Optional<String> getJerahmeel();
 
-    class Builder extends ImmutableUserRole.Builder {
-        public Builder() {
-            jophiel(JophielRole.USER);
-        }
-    }
+    class Builder extends ImmutableUserRole.Builder {}
 }

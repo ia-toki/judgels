@@ -15,14 +15,16 @@ public class UserRoleChecker {
 
     public boolean canAdminister(String actorJid) {
         UserRole role = userRoleStore.getRole(actorJid);
-        return role.getJophiel() == JophielRole.SUPERADMIN
-                || role.getJophiel() == JophielRole.ADMIN;
+        String jophielRole = role.getJophiel().orElse("");
+        return jophielRole.equals(JophielRole.SUPERADMIN.name())
+                || jophielRole.equals(JophielRole.ADMIN.name());
     }
 
     public boolean canManage(String actorJid, String userJid) {
         UserRole role = userRoleStore.getRole(actorJid);
-        return role.getJophiel() == JophielRole.SUPERADMIN
-                || role.getJophiel() == JophielRole.ADMIN
+        String jophielRole = role.getJophiel().orElse("");
+        return jophielRole.equals(JophielRole.SUPERADMIN.name())
+                || jophielRole.equals(JophielRole.ADMIN.name())
                 || actorJid.equals(userJid);
     }
 }

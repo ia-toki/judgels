@@ -2,7 +2,6 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { JophielRole } from '../../../../modules/api/jophiel/role';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { nockJophiel } from '../../../../utils/nock';
 import * as loginActions from './loginActions';
@@ -14,7 +13,7 @@ const authCode = 'authCode';
 const userJid = 'userJid';
 const token = 'token123';
 const user = { jid: userJid, username: usernameOrEmail, email: 'email' };
-const config = { role: { jophiel: JophielRole.User } };
+const config = { role: {} };
 const mockStore = configureMockStore([thunk]);
 
 describe('loginActions', () => {

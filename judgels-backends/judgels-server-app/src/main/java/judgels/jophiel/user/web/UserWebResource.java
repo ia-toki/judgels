@@ -10,7 +10,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import judgels.jophiel.api.role.JophielRole;
 import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.user.web.UserWebConfig;
 import judgels.jophiel.profile.ProfileStore;
@@ -36,7 +35,7 @@ public class UserWebResource {
                 .announcements(webConfig.getAnnouncements());
 
         if (!authHeader.isPresent()) {
-            config.role(new UserRole.Builder().jophiel(JophielRole.GUEST).build());
+            config.role(new UserRole.Builder().build());
         } else {
             String actorJid = actorChecker.check(authHeader.get());
             config

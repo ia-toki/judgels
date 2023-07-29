@@ -1,5 +1,4 @@
 import { UnauthorizedError, ForbiddenError } from '../../../../modules/api/error';
-import { JophielRole } from '../../../../modules/api/jophiel/role';
 import { DelSession } from '../../../../modules/session/sessionReducer';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { PutWebConfig } from '../../modules/userWebReducer';
@@ -21,6 +20,6 @@ export function logOut() {
       }
     }
     dispatch(DelSession());
-    dispatch(PutWebConfig({ role: { jophiel: JophielRole.Guest } }));
+    dispatch(PutWebConfig({ role: {} }));
   };
 }

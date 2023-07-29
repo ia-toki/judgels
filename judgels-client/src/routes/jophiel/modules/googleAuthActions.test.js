@@ -3,7 +3,6 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { JophielRole } from '../../../modules/api/jophiel/role';
 import { SubmissionError } from '../../../modules/form/submissionError';
 import { PutWebConfig } from '../modules/userWebReducer';
 import { PutToken, PutUser } from '../../../modules/session/sessionReducer';
@@ -16,7 +15,7 @@ const token = 'token123';
 const idToken = 'google-id-token';
 const username = 'user';
 const user = { jid: userJid, username, email: 'email' };
-const config = { role: { jophiel: JophielRole.User } };
+const config = { role: {} };
 const mockStore = configureMockStore([thunk]);
 
 describe('googleAuthActions', () => {

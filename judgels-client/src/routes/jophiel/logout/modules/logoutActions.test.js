@@ -2,7 +2,6 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { JophielRole } from '../../../../modules/api/jophiel/role';
 import { DelSession } from '../../../../modules/session/sessionReducer';
 import { nockJophiel } from '../../../../utils/nock';
 import * as logoutActions from './logoutActions';
@@ -32,7 +31,7 @@ describe('logoutActions', () => {
         await store.dispatch(logoutActions.logOut(path));
 
         expect(store.getActions()).toContainEqual(DelSession());
-        expect(store.getActions()).toContainEqual(PutWebConfig({ role: { jophiel: JophielRole.Guest } }));
+        expect(store.getActions()).toContainEqual(PutWebConfig({ role: {} }));
       });
     });
 
