@@ -151,4 +151,13 @@ public class UserResource {
 
         return checkFound(userStore.getUserByJid(userJid));
     }
+
+    @GET
+    @Path("/me")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public User getMyself(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
+        String actorJid = actorChecker.check(authHeader);
+        return checkFound(userStore.getUserByJid(actorJid));
+    }
 }

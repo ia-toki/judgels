@@ -26,8 +26,11 @@ public interface UserClient {
     @Headers("Authorization: Bearer {token}")
     User getUser(@Param("token") String token, @Param("userJid") String userJid);
 
+    @RequestLine("GET /api/v2/users/me")
+    @Headers("Authorization: Bearer {token}")
+    User getMyself(@Param("token") String token);
+
     @RequestLine("POST /api/v2/users/batch-get")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     String exportUsers(@Param("token") String token, List<String> usernames);
-
 }

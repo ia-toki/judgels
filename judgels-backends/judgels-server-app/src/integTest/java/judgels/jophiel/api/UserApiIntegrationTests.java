@@ -170,4 +170,9 @@ class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertUnauthorized(() -> userClient.getUser(cacaSession.getToken(), caca.getJid()));
         assertUnauthorized(() -> userClient.getUser(dudiSession.getToken(), dudi.getJid()));
     }
+
+    @Test
+    void get_myself() {
+        assertThat(userClient.getMyself(adminToken).getUsername()).isEqualTo("superadmin");
+    }
 }
