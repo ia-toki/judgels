@@ -4,7 +4,6 @@
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
-  <h3>Users</h3>
   <@ui.table>
     <thead>
       <tr>

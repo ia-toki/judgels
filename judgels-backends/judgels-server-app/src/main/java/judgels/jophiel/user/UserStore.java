@@ -96,9 +96,7 @@ public class UserStore {
     }
 
     public void updateUserPassword(String userJid, String newPassword) {
-        UserModel model = userDao.findByJid(userJid);
         updateUser(userJid, new UserUpdateData.Builder()
-                .username(model.username)
                 .password(newPassword)
                 .build());
     }
@@ -138,7 +136,7 @@ public class UserStore {
     }
 
     private static void toModel(UserUpdateData data, UserModel model) {
-        model.username = data.getUsername();
+        data.getUsername().ifPresent(username -> model.username = username);
         data.getEmail().ifPresent(email -> model.email = email);
         data.getPassword().ifPresent(password -> setPassword(model, data.getPassword()));
     }
