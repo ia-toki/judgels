@@ -1,4 +1,4 @@
-package judgels.jophiel.api.role;
+package judgels.jophiel.api.user.role;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;

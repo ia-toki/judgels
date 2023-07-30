@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Optional;
 import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.role.UserRole;
+import judgels.jophiel.api.user.role.UserRole;
 import org.immutables.value.Value;
 
 @Value.Immutable

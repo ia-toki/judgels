@@ -10,10 +10,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import judgels.jophiel.api.role.UserRole;
+import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.api.user.web.UserWebConfig;
 import judgels.jophiel.profile.ProfileStore;
-import judgels.jophiel.role.UserRoleStore;
+import judgels.jophiel.user.role.UserRoleStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 

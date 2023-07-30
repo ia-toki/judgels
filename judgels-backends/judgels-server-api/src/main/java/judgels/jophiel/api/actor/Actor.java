@@ -1,6 +1,6 @@
 package judgels.jophiel.api.actor;
 
-import judgels.jophiel.api.role.UserRole;
+import judgels.jophiel.api.user.role.UserRole;
 import org.immutables.value.Value;
 
 @Value.Immutable

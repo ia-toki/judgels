@@ -2,8 +2,8 @@ package judgels.sandalphon.role;
 
 import javax.inject.Inject;
 import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.role.UserRole;
-import judgels.jophiel.role.UserRoleStore;
+import judgels.jophiel.api.user.role.UserRole;
+import judgels.jophiel.user.role.UserRoleStore;
 import judgels.sandalphon.api.role.SandalphonRole;
 
 public class RoleChecker {

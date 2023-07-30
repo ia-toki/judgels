@@ -2,8 +2,8 @@ package judgels.jophiel.user;
 
 import javax.inject.Inject;
 import judgels.jophiel.api.role.JophielRole;
-import judgels.jophiel.api.role.UserRole;
-import judgels.jophiel.role.UserRoleStore;
+import judgels.jophiel.api.user.role.UserRole;
+import judgels.jophiel.user.role.UserRoleStore;
 
 public class UserRoleChecker {
     private final UserRoleStore userRoleStore;

@@ -1,11 +1,12 @@
-package judgels.jophiel.role;
+package judgels.jophiel.user.role;
 
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.role.JophielRole;
-import judgels.jophiel.api.role.UserRole;
+import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.persistence.UserRoleDao;
 import judgels.jophiel.persistence.UserRoleModel;
+import judgels.jophiel.role.SuperadminRoleStore;
 
 public class UserRoleStore {
     private final UserRoleDao userRoleDao;

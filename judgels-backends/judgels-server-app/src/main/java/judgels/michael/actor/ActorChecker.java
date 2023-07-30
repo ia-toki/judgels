@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.role.UserRole;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.role.UserRoleStore;
+import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.UserStore;
+import judgels.jophiel.user.role.UserRoleStore;
 import judgels.service.actor.PerRequestActorProvider;
 
 public class ActorChecker {
