@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ws.rs.client.Entity;
@@ -30,10 +31,12 @@ import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jophiel.JophielConfiguration;
 import judgels.jophiel.SessionClient;
 import judgels.jophiel.UserClient;
+import judgels.jophiel.UserRoleClient;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
 import judgels.jophiel.user.account.UserRegistrationConfiguration;
@@ -65,6 +68,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
     protected static User admin;
     protected static User user;
 
+    protected static String superadminToken;
     protected static String adminToken;
     protected static String userToken;
 
@@ -137,9 +141,17 @@ public abstract class BaseJudgelsApiIntegrationTests {
         support = new DropwizardTestSupport<>(JudgelsServerApplication.class, config);
         support.before();
 
-        Session adminSession = createClient(SessionClient.class).logIn(Credentials.of("superadmin", "superadmin"));
-        adminToken = adminSession.getToken();
-        admin = createClient(UserClient.class).getUser(adminToken, adminSession.getUserJid());
+        Session superadminSession = createClient(SessionClient.class).logIn(Credentials.of("superadmin", "superadmin"));
+        superadminToken = superadminSession.getToken();
+
+        admin = createUser("admin");
+        adminToken = getToken(admin);
+        createClient(UserRoleClient.class).setUserRoles(superadminToken, Map.of("admin", new UserRole.Builder()
+                .jophiel("ADMIN")
+                .sandalphon("ADMIN")
+                .uriel("ADMIN")
+                .jerahmeel("ADMIN")
+                .build()));
 
         user = createUser("user");
         userToken = getToken(user);
@@ -185,7 +197,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
     }
 
     protected static User createUser(String username) {
-        return createClient(UserClient.class).createUser(adminToken, new UserData.Builder()
+        return createClient(UserClient.class).createUser(superadminToken, new UserData.Builder()
                 .username(username)
                 .password("pass")
                 .email(username + "@domain.com")

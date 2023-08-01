@@ -173,6 +173,6 @@ class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
     @Test
     void get_myself() {
-        assertThat(userClient.getMyself(adminToken).getUsername()).isEqualTo("superadmin");
+        assertThat(userClient.getMyself(adminToken).getUsername()).isEqualTo("admin");
     }
 }
