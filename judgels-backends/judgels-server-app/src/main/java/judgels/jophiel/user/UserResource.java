@@ -31,7 +31,6 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UsersResponse;
 import judgels.jophiel.api.user.UsersUpsertResponse;
 import judgels.jophiel.session.SessionStore;
-import judgels.jophiel.user.info.UserInfoStore;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
@@ -45,7 +44,6 @@ public class UserResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
-    @Inject protected UserInfoStore infoStore;
     @Inject protected SessionStore sessionStore;
     @Inject protected UserCreator userCreator;
 
