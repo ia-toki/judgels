@@ -10,6 +10,7 @@ public class BaseAccountResource extends BaseResource {
         template.setTitle("Accounts");
         template.setActiveSidebarMenu("accounts");
         template.addMainTab("users", "Users", "/accounts/users");
+        template.addMainTab("roles", "Roles", "/accounts/roles");
         return template;
     }
 }

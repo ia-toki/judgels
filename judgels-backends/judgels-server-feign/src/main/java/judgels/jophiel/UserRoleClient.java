@@ -4,8 +4,6 @@ import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import java.util.Map;
-import judgels.jophiel.api.session.Credentials;
-import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.api.user.role.UserRolesResponse;
 
