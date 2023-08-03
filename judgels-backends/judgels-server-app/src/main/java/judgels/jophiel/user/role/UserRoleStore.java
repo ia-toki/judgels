@@ -11,6 +11,8 @@ import judgels.jophiel.api.user.role.UserWithRole;
 import judgels.jophiel.persistence.UserRoleDao;
 import judgels.jophiel.persistence.UserRoleModel;
 import judgels.jophiel.role.SuperadminRoleStore;
+import judgels.persistence.UnmodifiableModel_;
+import judgels.persistence.api.OrderDir;
 
 public class UserRoleStore {
     private final UserRoleDao userRoleDao;
@@ -23,7 +25,7 @@ public class UserRoleStore {
     }
 
     public List<UserWithRole> getRoles() {
-        List<UserRoleModel> models = userRoleDao.select().all();
+        List<UserRoleModel> models = userRoleDao.select().orderBy(UnmodifiableModel_.ID, OrderDir.ASC).all();
         return Lists.transform(models, m -> new UserWithRole.Builder()
                 .userJid(m.userJid)
                 .role(fromModel(m))
@@ -46,6 +48,13 @@ public class UserRoleStore {
         }
 
         for (var entry : userRolesMap.entrySet()) {
+            UserRole role = entry.getValue();
+            if (role.getJophiel().isEmpty()
+                    && role.getSandalphon().isEmpty()
+                    && role.getUriel().isEmpty()
+                    && role.getJerahmeel().isEmpty()) {
+                continue;
+            }
             upsertRole(entry.getKey(), entry.getValue());
         }
     }

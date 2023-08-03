@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
+import judgels.michael.account.role.RoleResource;
 import judgels.michael.account.user.UserResource;
 import judgels.michael.index.IndexResource;
 import judgels.michael.lesson.LessonResource;
@@ -57,6 +58,7 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 public interface MichaelComponent {
     IndexResource indexResource();
     UserResource userResource();
+    RoleResource roleResource();
     ProblemResource problemResource();
     ProblemStatementResource problemStatementResource();
     ProblemStatementRenderResources.InEditProblemStatement problemStatementRenderResourceInEditProblemStatement();
