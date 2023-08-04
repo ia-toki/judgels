@@ -9,6 +9,7 @@
       <tr>
         <th>Username</th>
         <th>Last login at</th>
+        <th class="col-fit"></th>
       </tr>
     </thead>
     <tbody>
@@ -16,6 +17,8 @@
         <tr>
           <td>${user.username}</td>
           <td><#if lastSessionTimesMap[user.jid]??>${getFormattedDurationFromNow(lastSessionTimesMap[user.jid])}</#if></td>
+          <td class="col-fit">
+            <@ui.buttonLink size="xs" to="/accounts/users/${user.id}">View</@ui.buttonLink>
           </td>
         </tr>
       </#list>

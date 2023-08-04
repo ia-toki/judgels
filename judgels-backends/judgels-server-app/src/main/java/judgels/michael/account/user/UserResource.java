@@ -1,6 +1,7 @@
 package judgels.michael.account.user;
 
 import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -16,13 +17,16 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.UserCreator;
 import judgels.jophiel.user.UserStore;
+import judgels.jophiel.user.info.UserInfoStore;
 import judgels.michael.account.BaseAccountResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
@@ -32,6 +36,7 @@ public class UserResource extends BaseAccountResource {
     private static final int PAGE_SIZE = 250;
 
     @Inject protected UserStore userStore;
+    @Inject protected UserInfoStore userInfoStore;
     @Inject protected SessionStore sessionStore;
     @Inject protected UserCreator userCreator;
 
@@ -84,6 +89,21 @@ public class UserResource extends BaseAccountResource {
         return new UpsertUsersSuccessView(template, result.createdUsernames, result.updatedUsernames);
     }
 
+    @GET
+    @Path("/{userId}")
+    @UnitOfWork(readOnly = true)
+    public View viewUser(@Context HttpServletRequest req, @PathParam("userId") int userId) {
+        Actor actor = actorChecker.check(req);
+        checkAllowed(userRoleChecker.canAdminister(actor.getUserJid()));
+
+        User user = checkFound(userStore.getUserById(userId));
+        UserInfo info = userInfoStore.getInfo(user.getJid());
+
+        HtmlTemplate template = newUsersTemplate(actor);
+        template.setActiveSecondaryTab("view");
+        return new ViewUserView(template, user, info);
+    }
+
     private View renderEditUsers(Actor actor, UpsertUsersForm form) {
         HtmlTemplate template = newUsersTemplate(actor);
         template.setActiveSecondaryTab("upsert");
@@ -92,6 +112,7 @@ public class UserResource extends BaseAccountResource {
 
     private HtmlTemplate newUsersTemplate(Actor actor) {
         HtmlTemplate template = super.newAccountsTemplate(actor);
+        template.setTitle("Users");
         template.setActiveMainTab("users");
         template.addSecondaryTab("view", "View", "/accounts/users");
         template.addSecondaryTab("upsert", "Bulk Create / Update", "/accounts/users/upsert");

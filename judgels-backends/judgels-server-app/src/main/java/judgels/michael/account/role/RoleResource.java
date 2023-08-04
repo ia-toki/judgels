@@ -108,6 +108,7 @@ public class RoleResource extends BaseAccountResource {
 
     private HtmlTemplate newRolesTemplate(Actor actor) {
         HtmlTemplate template = super.newAccountsTemplate(actor);
+        template.setTitle("Roles");
         template.setActiveMainTab("roles");
         template.addSecondaryTab("view", "View", "/accounts/roles");
         template.addSecondaryTab("edit", "Edit", "/accounts/roles/edit");
