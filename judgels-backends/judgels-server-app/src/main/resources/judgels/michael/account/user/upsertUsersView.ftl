@@ -5,7 +5,7 @@
 <#import "/judgels/michael/forms.ftl" as forms>
 
 <@template.layout>
-  <p>Users can be created / updated via a CSV form below.</p>
+  <p>Users can be created / updated via a CSV form below. <a href="https://judgels.toki.id/docs/account-management/users" target="_blank">Learn more <span class="glyphicon glyphicon-new-window"></span></a></p>
 
   <hr>
 
