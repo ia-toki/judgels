@@ -6,7 +6,7 @@ import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/Brea
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
 import * as infoActions from '../../../modules/infoActions';
-import * as userActions from '../../../../system/modules/userActions';
+import * as userActions from '../../../modules/userActions';
 
 class InfoPage extends Component {
   state = {

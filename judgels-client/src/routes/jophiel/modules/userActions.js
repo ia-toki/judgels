@@ -7,10 +7,3 @@ export function getUser(userJid) {
     return await userAPI.getUser(token, userJid);
   };
 }
-
-export function getUsers(page, orderBy, orderDir) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await userAPI.getUsers(token, page, orderBy, orderDir);
-  };
-}
