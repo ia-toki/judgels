@@ -2,7 +2,6 @@ package judgels.jophiel.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -17,10 +16,8 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.account.PasswordResetData;
 import judgels.jophiel.api.user.account.UserRegistrationData;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
 import org.subethamail.wiser.Wiser;
 
-@Execution(SAME_THREAD)
 class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserClient userClient = createClient(UserClient.class);
     private final UserAccountClient accountClient = createClient(UserAccountClient.class);
@@ -29,7 +26,7 @@ class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     @Test
     void register_activate_user() {
         Wiser wiser = new Wiser();
-        wiser.setPort(2500);
+        wiser.setPort(9250);
         wiser.start();
 
         accountClient.registerUser(new UserRegistrationData.Builder()
@@ -59,7 +56,7 @@ class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     @Test
     void resend_activation_email() {
         Wiser wiser = new Wiser();
-        wiser.setPort(2500);
+        wiser.setPort(9250);
         wiser.start();
 
         // resend activation email with nonexistent code
@@ -94,7 +91,7 @@ class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     @Test
     void reset_password() {
         Wiser wiser = new Wiser();
-        wiser.setPort(2500);
+        wiser.setPort(9250);
         wiser.start();
 
         // allow requesting to reset random email in order not to leak info

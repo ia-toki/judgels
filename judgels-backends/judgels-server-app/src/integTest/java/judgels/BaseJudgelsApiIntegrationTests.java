@@ -99,7 +99,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
         JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
                 .mailerConfig(new MailerConfiguration.Builder()
                         .host("localhost")
-                        .port(2500)
+                        .port(9250)
                         .useSsl(false)
                         .username("wiser")
                         .password("wiser")
