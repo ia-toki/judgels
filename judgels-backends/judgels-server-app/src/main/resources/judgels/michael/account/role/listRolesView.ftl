@@ -4,7 +4,7 @@
 <#import "/judgels/michael/ui.ftl" as ui>
 
 <@template.layout>
-  <p>List of users with the corresponding role for account, problem/lesson, contest, and training management.</p>
+  <p>List of users with the corresponding role for account, problem/lesson, contest, and training management. <a href="https://judgels.toki.id/docs/account-management/roles" target="_blank">Learn more <span class="glyphicon glyphicon-new-window"></span></a></p>
 
   <hr>
 

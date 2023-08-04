@@ -5,7 +5,7 @@
 <#import "/judgels/michael/forms.ftl" as forms>
 
 <@template.layout>
-  <p>User roles can be edited via a CSV form below.</p>
+  <p>User roles can be edited via a CSV form below. <a href="https://judgels.toki.id/docs/account-management/roles" target="_blank">Learn more <span class="glyphicon glyphicon-new-window"></span></a></p>
 
   <hr>
 
