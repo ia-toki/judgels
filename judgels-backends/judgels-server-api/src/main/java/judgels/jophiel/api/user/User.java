@@ -6,6 +6,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUser.class)
 public interface User {
+    int getId();
     String getJid();
     String getUsername();
     String getEmail();

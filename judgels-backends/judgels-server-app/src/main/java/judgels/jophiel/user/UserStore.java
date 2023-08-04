@@ -37,6 +37,10 @@ public class UserStore {
         return fromModel(userDao.insertWithJid(jid, model));
     }
 
+    public Optional<User> getUserById(int userId) {
+        return userDao.selectById(userId).map(UserStore::fromModel);
+    }
+
     public Optional<User> getUserByJid(String userJid) {
         return userDao.selectByJid(userJid).map(UserStore::fromModel);
     }
@@ -116,6 +120,7 @@ public class UserStore {
 
     private static User fromModel(UserModel model) {
         return new User.Builder()
+                .id((int) model.id)
                 .jid(model.jid)
                 .username(model.username)
                 .email(model.email)
