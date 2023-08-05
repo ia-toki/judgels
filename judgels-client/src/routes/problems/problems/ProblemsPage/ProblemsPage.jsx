@@ -52,7 +52,7 @@ class ProblemsPage extends Component {
   };
 
   renderProblems = () => {
-    const { response } = this.state;
+    const { response, filter } = this.state;
     if (!response || !response.data) {
       return <LoadingState />;
     }
@@ -60,6 +60,15 @@ class ProblemsPage extends Component {
     const { data: problems, problemsMap, problemMetadatasMap, problemDifficultiesMap, problemProgressesMap } = response;
 
     if (problems.page.length === 0) {
+      if (filter.tags.length === 0) {
+        return (
+          <>
+            <p>To view problems, select some filters on the left.</p>
+            <p>We will refine this page in the future.</p>
+          </>
+        );
+      }
+
       return (
         <p>
           <small>No problems found.</small>
