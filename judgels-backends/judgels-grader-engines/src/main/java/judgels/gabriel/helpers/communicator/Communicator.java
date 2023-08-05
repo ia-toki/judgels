@@ -143,7 +143,7 @@ public class Communicator {
                 sandboxInteractor.interact(solutionSandbox, solutionCommand, communicatorSandbox, command);
 
         SandboxExecutionResult solutionResult = ignoreSignal13(results[0]);
-        SandboxExecutionResult communicatorResult = results[1];
+        SandboxExecutionResult communicatorResult = ignoreSignal13(results[1]);
 
         if (communicatorResult.getStatus() != SandboxExecutionStatus.ZERO_EXIT_CODE
                 && communicatorResult.getStatus() != SandboxExecutionStatus.TIMED_OUT) {
