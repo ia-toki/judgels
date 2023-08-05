@@ -45,6 +45,14 @@ public class ProblemResource {
 
         String actorJid = actorChecker.check(authHeader);
 
+        // HACK: the query is very slow. In the meantime, when the number of problems is large,
+        // we return empty and force the user to filter by tags.
+        if (tags.isEmpty() && problemStore.getTotalProblems() > 1000) {
+            return new ProblemsResponse.Builder()
+                    .data(new Page.Builder<ProblemSetProblemInfo>().totalCount(0).build())
+                    .build();
+        }
+
         Set<String> allowedProblemJids = null;
         if (!tags.isEmpty()) {
             allowedProblemJids = sandalphonClient.getProblemJidsByTags(tags);

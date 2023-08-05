@@ -24,6 +24,10 @@ public class ProblemStore {
         this.problemDao = problemDao;
     }
 
+    public int getTotalProblems() {
+        return problemDao.select().count();
+    }
+
     public Page<ProblemSetProblemInfo> getProblems(Set<String> allowedProblemJids, int pageNumber, int pageSize) {
         Page<ProblemSetProblemModel> models = problemDao.selectPagedByDifficulty(allowedProblemJids, pageNumber, pageSize);
 
