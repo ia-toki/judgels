@@ -1,5 +1,3 @@
-import { Tag } from '@blueprintjs/core';
-import { Globe } from '@blueprintjs/icons';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
@@ -35,12 +33,6 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
         {`${name}`}
         {renderProgress()}
       </h4>
-      <p className="course-card__subtitle">
-        <Globe />
-        &nbsp;&nbsp;Bahasa Indonesia&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-        <Tag minimal>Free</Tag>
-        &nbsp;&nbsp;&middot;&nbsp;&nbsp;Ikatan Alumni TOKI
-      </p>
       <hr />
       {description && (
         <small className="course-card__description">
