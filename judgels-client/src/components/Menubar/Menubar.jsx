@@ -34,22 +34,20 @@ function Menubar({ match, location, items, homeRoute }) {
 
   return (
     <div className="menubar">
-      <div className="menubar__content">
-        <Tabs id="menubar" renderActiveTabPanelOnly animate={false} selectedTabId={selectedTabId}>
-          {homeRoute ? (
-            <Tab key={homeRoute.id} id={homeRoute.id}>
-              <Link to={resolveUrl(homeRoute.id)}>{homeRoute.title}</Link>
+      <Tabs id="menubar" renderActiveTabPanelOnly animate={false} selectedTabId={selectedTabId}>
+        {homeRoute ? (
+          <Tab key={homeRoute.id} id={homeRoute.id}>
+            <Link to={resolveUrl(homeRoute.id)}>{homeRoute.title}</Link>
+          </Tab>
+        ) : null}
+        {items.map(item => {
+          return (
+            <Tab key={item.id} id={item.id}>
+              <Link to={resolveUrl(item.id)}>{item.title}</Link>
             </Tab>
-          ) : null}
-          {items.map(item => {
-            return (
-              <Tab key={item.id} id={item.id}>
-                <Link to={resolveUrl(item.id)}>{item.title}</Link>
-              </Tab>
-            );
-          })}
-        </Tabs>
-      </div>
+          );
+        })}
+      </Tabs>
     </div>
   );
 }

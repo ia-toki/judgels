@@ -29,7 +29,6 @@
 
 .header__wrapper {
   margin: 0 auto;
-  max-width: 1250px;
 }
 
 .header__logo {
@@ -49,15 +48,8 @@
   line-height: 22px;
 }
 
-.header__flag {
-  vertical-align: middle;
-  margin-right: 5px;
-  margin-top: -3px;
-  display: inline-block;
-}
-
-@media only screen and (max-width: 750px) {
-  .header__subtitle {
+@media only screen and (max-width: 1280px) {
+  .header__subtitle-wrapper {
     display: none;
   }
 }

@@ -1,23 +1,6 @@
 @import '../../styles/base';
 
 .menubar {
-  width: 100%;
-  height: 40px;
-}
-
-.bp4-light .menubar {
-  background-color: white;
-}
-
-.bp4-dark .menubar {
-  background-color: $dark-gray3;
-}
-
-.menubar__content {
-  overflow-x: auto;
-  max-width: 1160px;
-  margin-left: auto;
-  margin-right: auto;
   padding-left: 10px;
   padding-right: 10px;
 
@@ -29,8 +12,8 @@
     padding-left: 20px;
     padding-right: 20px;
     margin-right: 0;
-    line-height: 40px;
-    height: 40px;
+    line-height: 50px;
+    height: 50px;
     color: $primary-color;
   }
 
@@ -40,12 +23,12 @@
 
   .bp4-tab[aria-selected='true'] {
     font-weight: 600;
-    background-color: $secondary-background-color !important;
+    background-color: $tertiary-background-color !important;
     color: $text-color;
   }
 
   .bp4-tab-indicator-wrapper {
-    height: 40px !important;
+    height: 50px !important;
     z-index: 1;
   }
 
@@ -54,7 +37,7 @@
   }
 }
 
-.bp4-dark .menubar__content {
+.bp4-dark .menubar {
   .bp4-tab {
     color: inherit;
 
@@ -70,9 +53,15 @@
 
   .bp4-tab[aria-selected='true'] {
     font-weight: 600;
-    background-color: $dark-secondary-background-color !important;
+    background-color: $dark-tertiary-background-color !important;
     color: inherit;
     border-bottom: 3px solid $gray3;
     box-shadow: none;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .menubar {
+    display: none;
   }
 }
