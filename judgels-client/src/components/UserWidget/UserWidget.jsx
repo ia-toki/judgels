@@ -1,5 +1,5 @@
 import { Alignment, MenuDivider, Menu, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
-import { ChevronDown, Menu as IconMenu, User } from '@blueprintjs/icons';
+import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
