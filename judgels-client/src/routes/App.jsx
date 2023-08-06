@@ -8,7 +8,6 @@ import { setGAUser } from '../ga';
 import Announcements from '../components/Announcements/Announcements';
 import Header from '../components/Header/Header';
 import { AppContent } from '../components/AppContent/AppContent';
-import Menubar from '../components/Menubar/Menubar';
 import { Footer } from '../components/Footer/Footer';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 import { selectIsDarkMode } from '../modules/webPrefs/webPrefsSelectors';
@@ -41,8 +40,7 @@ class App extends PureComponent {
       <DocumentTitle title={title}>
         <div className={classNames({ 'bp4-light': !isDarkMode, 'bp4-dark': isDarkMode })}>
           <Announcements />
-          <Header />
-          <Menubar items={visibleAppRoutes} homeRoute={homeRoute} />
+          <Header items={visibleAppRoutes} homeRoute={homeRoute} />
           <AppContent>
             <Switch>
               {visibleAppRoutes.map(item => (

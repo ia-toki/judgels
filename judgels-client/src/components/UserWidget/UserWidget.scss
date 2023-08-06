@@ -53,10 +53,20 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .widget-user__avatar,
-  .widget-user__avatar-menu,
-  .widget-user__link {
-    display: none !important;
+  .widget-user__burger,
+  .widget-user__menu-helper {
+    display: block !important;
+    cursor: pointer;
+
+    span.bp4-icon {
+      float: left;
+    }
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .widget-user__avatar-menu {
+    margin-right: 10px;
   }
 
   .widget-user__burger,

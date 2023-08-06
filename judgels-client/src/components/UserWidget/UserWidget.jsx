@@ -46,15 +46,15 @@ export class UserWidget extends PureComponent {
   };
 
   renderForUser = (avatarUrl, profile) => {
-    const menu = (
-      <Menu className="widget-user__menu">
-        <MenuItem className="widget-user__menu-helper" icon={<User />} text={profile.username} disabled />
-        <MenuDivider className="widget-user__menu-helper" />
+    const menuItems = (
+      <>
         <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
         {isTLX() && <MenuItemLink text="My account" to="/account" />}
         <MenuItemLink text="Log out" to="/logout" />
-      </Menu>
+      </>
     );
+
+    const menu = <Menu className="widget-user__menu">{menuItems}</Menu>;
 
     const popover = (
       <Popover className="widget-user__avatar-menu" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
@@ -69,8 +69,24 @@ export class UserWidget extends PureComponent {
       </Popover>
     );
 
+    const responsiveMenu = (
+      <Menu>
+        <MenuItem text={this.props.homeRoute.title} to="/" />
+        {this.props.items.map(item => (
+          <MenuItemLink text={item.title} to={item.route.path} />
+        ))}
+        <MenuDivider className="widget-user__menu-helper" />
+        {menuItems}
+      </Menu>
+    );
+
     const responsivePopover = (
-      <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
+      <Popover
+        className="widget-user__burger"
+        content={responsiveMenu}
+        position={Position.BOTTOM_RIGHT}
+        usePortal={false}
+      >
         <IconMenu />
       </Popover>
     );
@@ -109,8 +125,10 @@ export class UserWidget extends PureComponent {
   renderGuestResponsiveMenu = () => {
     const menu = (
       <Menu className="widget-user__menu">
-        <MenuItemLink text="Log in" to="/login" />
-        {isTLX() && <MenuItemLink text="Register" to="/register" />}
+        <MenuItem text={this.props.homeRoute.title} to="/" />
+        {this.props.items.map(item => (
+          <MenuItemLink text={item.title} to={item.route.path} />
+        ))}
       </Menu>
     );
 

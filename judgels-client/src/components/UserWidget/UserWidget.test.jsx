@@ -14,6 +14,8 @@ describe('UserWidget', () => {
       user,
       isWebConfigLoaded: true,
       profile,
+      items: [],
+      homeRoute: { title: 'Home' },
       onRenderAvatar,
     };
 
