@@ -3,6 +3,8 @@
   margin-bottom: 0;
 }
 
-.dark-mode-widget__onboarding {
-  margin-right: 10px;
+@media only screen and (max-width: 600px) {
+  .dark-mode-widget__switch {
+    display: none;
+  }
 }
