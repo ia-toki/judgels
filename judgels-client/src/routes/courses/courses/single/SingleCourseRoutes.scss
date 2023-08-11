@@ -1,5 +1,6 @@
 .single-course-routes {
   display: flex;
+  width: 100%;
 }
 
 .single-course-routes__sidebar {
@@ -15,6 +16,7 @@
 }
 
 .single-course-routes__divider {
+  width: 100%;
   display: none;
 }
 
