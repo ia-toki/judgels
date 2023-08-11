@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 
-import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
 import { selectCourse } from '../../modules/courseSelectors';
 
@@ -11,9 +10,7 @@ function CourseOverview({ course }) {
     <div className="course-overview">
       <h2>{course.name}</h2>
       <hr />
-      <ContentCard>
-        <HtmlText>{course.description}</HtmlText>
-      </ContentCard>
+      <HtmlText>{course.description}</HtmlText>
     </div>
   );
 }

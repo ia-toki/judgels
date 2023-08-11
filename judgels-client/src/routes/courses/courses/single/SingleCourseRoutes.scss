@@ -3,13 +3,14 @@
 }
 
 .single-course-routes__sidebar {
-  width: 270px;
+  width: 300px;
   margin-right: 25px;
   margin-bottom: 15px;
 }
 
 .single-course-routes__content {
   flex-grow: 1;
+  margin-left: auto;
   max-width: 865px;
 }
 
@@ -17,7 +18,7 @@
   display: none;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 780px) {
   .single-course-routes {
     flex-direction: column-reverse;
   }
@@ -25,6 +26,10 @@
   .single-course-routes__sidebar {
     width: inherit;
     margin-right: 0;
+  }
+
+  .single-course-routes__content {
+    margin-left: inherit;
   }
 
   .single-course-routes__divider {
