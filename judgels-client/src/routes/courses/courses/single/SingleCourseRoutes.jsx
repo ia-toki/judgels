@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import CourseChaptersSidebar from './CourseChaptersSidebar/CourseChaptersSidebar';
 import SingleCourseContentRoutes from './SingleCourseContentRoutes';
@@ -18,7 +18,7 @@ function SingleCourseRoutes({ match, course }) {
   }
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ScrollToTopOnMount />
       <div className="single-course-routes">
         <div className="single-course-routes__sidebar">
@@ -29,7 +29,7 @@ function SingleCourseRoutes({ match, course }) {
           <SingleCourseContentRoutes />
         </div>
       </div>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }
 

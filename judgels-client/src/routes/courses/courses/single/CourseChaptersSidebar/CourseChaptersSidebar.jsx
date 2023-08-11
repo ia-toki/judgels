@@ -1,11 +1,10 @@
-import { Classes, Tree } from '@blueprintjs/core';
-import { ChevronDown, Selection } from '@blueprintjs/icons';
+import { ChevronDown } from '@blueprintjs/icons';
+import classNames from 'classnames';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { selectCourse } from '../../modules/courseSelectors';
@@ -34,38 +33,32 @@ class CourseChaptersSidebar extends Component {
     const { data: courseChapters, chaptersMap, chapterProgressesMap } = response;
     const activeChapterJid = chapter && chapter.jid;
 
-    let contents = [
-      {
-        id: 0,
-        label: (
-          <Link to={`/courses/${course.slug}`}>
-            <h4>{course.name}</h4>
-          </Link>
-        ),
-        icon: <ChevronDown className={Classes.TREE_NODE_ICON} />,
-        isSelected: !activeChapterJid,
-      },
-    ];
-
-    contents = contents.concat(
-      courseChapters.map(courseChapter => ({
-        id: courseChapter.alias,
-        label: (
-          <Link to={`/courses/${course.slug}/chapters/${courseChapter.alias}`}>
-            {courseChapter.alias}. {chaptersMap[courseChapter.chapterJid].name}
+    return (
+      <div className="course-chapters-sidebar">
+        <Link
+          className={classNames('course-chapters-sidebar__item', 'course-chapters-sidebar__title', {
+            'course-chapters-sidebar__item--selected': !activeChapterJid,
+          })}
+          to={`/courses/${course.slug}`}
+        >
+          <ChevronDown />
+          <h4>{course.name}</h4>
+        </Link>
+        {courseChapters.map(courseChapter => (
+          <Link
+            className={classNames('course-chapters-sidebar__item', {
+              'course-chapters-sidebar__item--selected': courseChapter.chapterJid === activeChapterJid,
+            })}
+            to={`/courses/${course.slug}/chapters/${courseChapter.alias}`}
+          >
+            <div className="course-chapters-sidebar__item-title">
+              {courseChapter.alias}. {chaptersMap[courseChapter.chapterJid].name}
+              {this.renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
+            </div>
             {this.renderProgressBar(chapterProgressesMap[courseChapter.chapterJid])}
           </Link>
-        ),
-        secondaryLabel: this.renderProgress(chapterProgressesMap[courseChapter.chapterJid]),
-        icon: <Selection className={Classes.TREE_NODE_ICON} />,
-        isSelected: courseChapter.chapterJid === activeChapterJid,
-      }))
-    );
-
-    return (
-      <ContentCard className="course-chapters-sidebar">
-        <Tree className="course-chapters-sidebar__chapters" contents={contents} />
-      </ContentCard>
+        ))}
+      </div>
     );
   }
 

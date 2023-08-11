@@ -1,72 +1,56 @@
 @import '../../../../../styles/base';
 
-.course-chapters-sidebar .content-card {
-  padding-top: 5px;
-  padding-bottom: 0;
-
-  h4 {
-    margin-bottom: 5px;
-  }
-}
-
-.course-chapters-sidebar__chapters {
+.course-chapters-sidebar {
   font-family: $accent-font;
-  margin-left: -15px;
-  margin-right: -15px;
+  background-color: inherit !important;
+  box-shadow: none !important;
+  border-right: 1px solid $border-color;
 
-  .bp4-tree-node-content {
-    align-items: initial;
-    height: inherit;
+}
 
-    a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      padding-top: 5px;
-      padding-bottom: 15px;
-    }
-  }
+a.course-chapters-sidebar__item {
+  display: block;
+  padding: 10px;
 
-  .bp4-tree-node-icon {
-    padding-top: 7px;
-  }
+  color: inherit;
+  text-decoration: none;
 
-  .bp4-tree-node-label {
-    text-overflow: initial;
-    white-space: normal;
-  }
-
-  .bp4-tree-node-selected > .bp4-tree-node-content {
+  &:hover {
     color: inherit;
-    background-color: $secondary-background-color !important;
-
-    .bp4-tree-node-icon {
-      color: inherit;
-    }
+    background-color: $tertiary-background-color;
   }
 
-  li {
-    margin-left: -15px;
-  }
-
-  .progress-tag {
-    margin-top: 5px;
-    margin-bottom: 0;
-  }
-
-  .progress-bar {
-    margin-top: 4px;
-    margin-bottom: 0;
+  &--selected {
+    background-color: $tertiary-background-color;
   }
 }
 
-.bp4-dark .course-chapters-sidebar__chapters {
-  .bp4-tree-node-selected > .bp4-tree-node-content {
-    color: inherit;
-    background-color: $dark-secondary-background-color !important;
+.course-chapters-sidebar__title {
+  h4 {
+    display: inline-block;
+  }
 
-    .bp4-tree-node-icon {
-      color: inherit;
+  .bp4-icon {
+    margin-right: 10px;
+  }
+}
+
+.bp4-dark {
+  .course-chapters-sidebar {
+    border-color: $dark-border-color;
+  }
+
+  a.course-chapters-sidebar__item {
+    &:hover {
+      background-color: $dark-tertiary-background-color;
     }
+  
+    &--selected {
+      background-color: $dark-secondary-background-color;
+    }
+  }
+
+  a.course-chapters-sidebar__item:hover.course-chapters-sidebar__item--selected{
+    background-color: $dark-secondary-background-color;
   }
 }

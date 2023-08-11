@@ -1,13 +1,12 @@
 import { Card } from '@blueprintjs/core';
+import classNames from 'classnames';
 
 import './ContentCard.scss';
 
 export function ContentCard({ className, elevation, children }) {
   return (
-    <div className={className}>
-      <Card className="content-card" elevation={elevation}>
-        {children}
-      </Card>
-    </div>
+    <Card className={classNames(className, 'content-card')} elevation={elevation}>
+      {children}
+    </Card>
   );
 }

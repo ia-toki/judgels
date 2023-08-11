@@ -92,11 +92,11 @@ hr {
 }
 
 .bp4-light hr {
-  border-bottom: 1px solid rgba($text-color, 0.15);
+  border-bottom: 1px solid $border-color;
 }
 
 .bp4-dark hr {
-  border-bottom: 1px solid $dark-secondary-text-color;
+  border-bottom: 1px solid $dark-border-color;
 }
 
 a {
