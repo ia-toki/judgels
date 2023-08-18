@@ -7,7 +7,7 @@ import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
 public class GradingConfigForm extends HtmlForm {
-    static final int DEFAULT_SUBTASK_COUNT = 10;
+    static final int DEFAULT_SUBTASK_COUNT = 12;
     static final String HELPER_NONE = "(none)";
 
     @FormParam("timeLimit")
