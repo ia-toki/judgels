@@ -257,6 +257,11 @@ public class IsolateSandbox implements Sandbox {
             executionStatus = SandboxExecutionStatus.INTERNAL_ERROR;
         }
 
+        Optional<Integer> exitSignal = Optional.empty();
+        if (items.containsKey("exitsig")) {
+            exitSignal = Optional.of(Integer.parseInt(items.get("exitsig")));
+        }
+
         boolean isKilled = items.getOrDefault("killed", "0").equals("1");
         Optional<String> message = Optional.ofNullable(items.get("message"));
 
@@ -265,6 +270,7 @@ public class IsolateSandbox implements Sandbox {
                 .wallTime(wallTime)
                 .memory(memory)
                 .status(executionStatus)
+                .exitSignal(exitSignal)
                 .isKilled(isKilled)
                 .message(message)
                 .build();

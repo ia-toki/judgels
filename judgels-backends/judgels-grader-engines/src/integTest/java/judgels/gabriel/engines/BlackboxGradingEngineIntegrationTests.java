@@ -149,7 +149,6 @@ public class BlackboxGradingEngineIntegrationTests {
                 .time(100)
                 .memory(1000)
                 .status(s)
-                .message("OK")
                 .build());
         return new TestCaseResult.Builder()
                 .verdict(verdict)

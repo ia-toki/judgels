@@ -1,5 +1,7 @@
 package judgels.gabriel.helpers.communicator;
 
+import static judgels.gabriel.api.SandboxExecutionStatus.ZERO_EXIT_CODE;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -16,9 +18,9 @@ import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxExecutionResult;
-import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.SandboxInteractor;
 import judgels.gabriel.api.TestCaseVerdict;
+import judgels.gabriel.api.Verdict;
 import judgels.gabriel.compilers.SingleSourceFileCompiler;
 import judgels.gabriel.helpers.TestCaseVerdictParser;
 import judgels.gabriel.languages.cpp.Cpp17GradingLanguage;
@@ -142,52 +144,60 @@ public class Communicator {
         SandboxExecutionResult[] results =
                 sandboxInteractor.interact(solutionSandbox, solutionCommand, communicatorSandbox, command);
 
-        SandboxExecutionResult solutionResult = ignoreSignal13(results[0]);
-        SandboxExecutionResult communicatorResult = ignoreSignal13(results[1]);
+        SandboxExecutionResult solutionResult = results[0];
+        SandboxExecutionResult communicatorResult = results[1];
 
-        if (communicatorResult.getStatus() != SandboxExecutionStatus.ZERO_EXIT_CODE
-                && communicatorResult.getStatus() != SandboxExecutionStatus.TIMED_OUT) {
+        // If the communicator received SIGPIPE, it means it was still writing output while the solution already exited.
+        if (communicatorResult.getExitSignal().equals(Optional.of(13))) {
+            // If the communicator has not written the verdict, it means the solution exited too early.
+            // We return Wrong Answer in this case.
+            if (getCommunicationOutput().isEmpty()) {
+                return new EvaluationResult.Builder()
+                        .verdict(new TestCaseVerdict.Builder().verdict(Verdict.WRONG_ANSWER).build())
+                        .executionResult(solutionResult)
+                        .build();
+            }
+        }
+
+        // After we considered the above special case,
+        // we can now safely ignore SIGPIPE from both solution and communicator results.
+        solutionResult = ignoreSignal13(solutionResult);
+        communicatorResult = ignoreSignal13(communicatorResult);
+
+        // If the communicator did not exit successfully, it means there is something wrong with it.
+        if (communicatorResult.getStatus() != ZERO_EXIT_CODE) {
             throw new EvaluationException(String.join(" ", command) + " resulted in " + communicatorResult);
         }
 
-        SandboxExecutionResult finalResult;
-        if (communicatorResult.getStatus() == SandboxExecutionStatus.TIMED_OUT) {
-            finalResult = communicatorResult;
-        } else {
-            finalResult = solutionResult;
-        }
-
-        TestCaseVerdict verdict;
-
-        Optional<TestCaseVerdict> maybeVerdict = verdictParser.parseExecutionResult(finalResult);
-        if (maybeVerdict.isPresent()) {
-            verdict = maybeVerdict.get();
-        } else {
-            String communicationOutput;
-            try {
-                File communicationOutputFile = communicatorSandbox.getFile(COMMUNICATION_OUTPUT_FILENAME);
-                communicationOutput = FileUtils.readFileToString(communicationOutputFile, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                throw new EvaluationException(e);
-            }
-            verdict = verdictParser.parseOutput(communicationOutput);
+        Optional<TestCaseVerdict> verdict = verdictParser.parseExecutionResult(solutionResult);
+        if (verdict.isEmpty()) {
+            verdict = Optional.of(verdictParser.parseOutput(getCommunicationOutput()));
         }
 
         communicatorSandbox.removeAllFilesExcept(ImmutableSet.of(communicatorExecutableFilename));
 
         return new EvaluationResult.Builder()
-                .verdict(verdict)
-                .executionResult(finalResult)
+                .verdict(verdict.get())
+                .executionResult(solutionResult)
                 .build();
     }
 
-    // Ignore errors caused by SIGPIPE (broken pipe); treat is as Wrong Answer / Accepted.
+    private String getCommunicationOutput() throws EvaluationException {
+        try {
+            File communicationOutputFile = communicatorSandbox.getFile(COMMUNICATION_OUTPUT_FILENAME);
+            return FileUtils.readFileToString(communicationOutputFile, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new EvaluationException(e);
+        }
+    }
+
     private static SandboxExecutionResult ignoreSignal13(SandboxExecutionResult result) {
-        if (result.getStatus() == SandboxExecutionStatus.KILLED_ON_SIGNAL
-                && result.getMessage().orElse("").contains("Caught fatal signal 13")) {
+        if (result.getExitSignal().equals(Optional.of(13))) {
             return new SandboxExecutionResult.Builder()
                     .from(result)
-                    .status(SandboxExecutionStatus.ZERO_EXIT_CODE)
+                    .status(ZERO_EXIT_CODE)
+                    .exitSignal(Optional.empty())
+                    .isKilled(false)
                     .message(Optional.empty())
                     .build();
         }
