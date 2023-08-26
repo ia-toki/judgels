@@ -14,7 +14,6 @@ int main()
         fflush(stdout);
 
         fprintf(stderr, "debug");
-        fflush(stderr);
 
         scanf("%s", response);
 

@@ -29,6 +29,7 @@ import org.apache.commons.io.FileUtils;
 
 public class Communicator {
     private static final String COMMUNICATION_OUTPUT_FILENAME = "_communication.out";
+    private static final String SOLUTION_ERROR_FILENAME = "_solution.err";
 
     private final SingleSourceFileCompiler compiler;
     private final TestCaseVerdictParser verdictParser;
@@ -125,6 +126,13 @@ public class Communicator {
                         "Cannot set " + solutionExecutableFile.getAbsolutePath() + " as executable");
             }
         }
+
+        solutionSandbox.resetRedirections();
+
+        // By default, stderr is not buffered.
+        // Writing to the unbuffered stderr sometimes interferes with the interaction.
+        // We redirect the stderr to a file so that it is buffered.
+        solutionSandbox.redirectStandardError(SOLUTION_ERROR_FILENAME);
 
         try {
             FileUtils.cleanDirectory(communicationDir);
