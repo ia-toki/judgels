@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.util.List;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingResult;
@@ -154,5 +155,81 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
         assertThatThrownBy(() -> runEngine(CONFIG))
                 .isInstanceOf(PreparationException.class)
                 .hasMessageContaining("Communicator not specified");
+    }
+
+    @Test
+    void when_communicator_received_sigpipe_before_verdict_then_we_should_return_wa() throws GradingException {
+        addSourceFile("source", "trigger-communicator-sigpipe.cpp");
+        assertResult(
+                new InteractiveGradingConfig.Builder().from(CONFIG)
+                        .communicator("communicator-sigpipe-before-verdict.cpp").build(),
+                WRONG_ANSWER,
+                0,
+                List.of(
+                        testGroupResult(
+                                0,
+                                testCaseResult(WRONG_ANSWER, "", 0),
+                                testCaseResult(WRONG_ANSWER, "", 0),
+                                testCaseResult(WRONG_ANSWER, "", 0)),
+                        testGroupResult(
+                                -1,
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1),
+                                testCaseResult(WRONG_ANSWER, "0.0", -1))),
+                List.of(
+                        subtaskResult(-1, WRONG_ANSWER, 0)));
+    }
+
+
+    @Test
+    void when_communicator_received_sigpipe_after_verdict_then_we_should_still_return_the_verdict() throws GradingException {
+        addSourceFile("source", "trigger-communicator-sigpipe.cpp");
+        assertResult(
+                new InteractiveGradingConfig.Builder().from(CONFIG)
+                        .communicator("communicator-sigpipe-after-verdict.cpp").build(),
+                ACCEPTED,
+                100,
+                List.of(
+                        testGroupResult(
+                                0,
+                                testCaseResult(ACCEPTED, "", 0),
+                                testCaseResult(ACCEPTED, "", 0),
+                                testCaseResult(ACCEPTED, "", 0)),
+                        testGroupResult(
+                                -1,
+                                testCaseResult(ACCEPTED, "20.0", -1),
+                                testCaseResult(ACCEPTED, "20.0", -1),
+                                testCaseResult(ACCEPTED, "20.0", -1),
+                                testCaseResult(ACCEPTED, "20.0", -1),
+                                testCaseResult(ACCEPTED, "20.0", -1))),
+                List.of(
+                        subtaskResult(-1, ACCEPTED, 100)));
+    }
+
+    @Test
+    void when_solution_received_sigpipe_then_we_should_still_return_the_verdict() throws GradingException {
+        addSourceFile("source", "trigger-solution-sigpipe.cpp");
+        assertResult(
+                new InteractiveGradingConfig.Builder().from(CONFIG)
+                        .communicator("communicator-binary.cpp").build(),
+                ACCEPTED,
+                100,
+                List.of(
+                        testGroupResult(
+                                0,
+                                testCaseResult(ACCEPTED, "[8]", 0),
+                                testCaseResult(ACCEPTED, "[9]", 0),
+                                testCaseResult(ACCEPTED, "[10]", 0)),
+                        testGroupResult(
+                                -1,
+                                testCaseResult(ACCEPTED, "20.0 [9]", -1),
+                                testCaseResult(ACCEPTED, "20.0 [10]", -1),
+                                testCaseResult(ACCEPTED, "20.0 [10]", -1),
+                                testCaseResult(ACCEPTED, "20.0 [9]", -1),
+                                testCaseResult(ACCEPTED, "20.0 [1]", -1))),
+                List.of(
+                        subtaskResult(-1, ACCEPTED, 100)));
     }
 }

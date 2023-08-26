@@ -15,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 
 public class FakeSandbox implements Sandbox {
     private static final int FAKE_TIMED_OUT_EXIT_CODE = 10;
-    private static final int FAKE_KILLED_ON_SIGNAL_EXIT_CODE = 20;
 
     private final File baseDir;
     private File standardInput;
@@ -157,9 +156,6 @@ public class FakeSandbox implements Sandbox {
             case FAKE_TIMED_OUT_EXIT_CODE:
                 status = SandboxExecutionStatus.TIMED_OUT;
                 break;
-            case FAKE_KILLED_ON_SIGNAL_EXIT_CODE:
-                status = SandboxExecutionStatus.KILLED_ON_SIGNAL;
-                break;
             default:
                 status = SandboxExecutionStatus.NONZERO_EXIT_CODE;
         }
@@ -167,7 +163,6 @@ public class FakeSandbox implements Sandbox {
                 .time(100)
                 .memory(1000)
                 .status(status)
-                .message("OK")
                 .build();
     }
 }

@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxException;
 import judgels.gabriel.api.SandboxExecutionResult;
+import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.SandboxInteractor;
 
 public class FakeSandboxInteractor implements SandboxInteractor {
@@ -43,8 +44,11 @@ public class FakeSandboxInteractor implements SandboxInteractor {
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
-        executor.submit(new UnidirectionalPipe(p1InputStream, p2OutputStream));
-        executor.submit(new UnidirectionalPipe(p2InputStream, p1OutputStream));
+        UnidirectionalPipe pipe1 = new UnidirectionalPipe(p1InputStream, p2OutputStream);
+        UnidirectionalPipe pipe2 = new UnidirectionalPipe(p2InputStream, p1OutputStream);
+
+        executor.submit(pipe1);
+        executor.submit(pipe2);
 
         int exitCode1;
         int exitCode2;
@@ -58,15 +62,34 @@ public class FakeSandboxInteractor implements SandboxInteractor {
             };
         }
 
-        return new SandboxExecutionResult[]{
-                sandbox1.getResult(exitCode1),
-                sandbox2.getResult(exitCode2)
-        };
+        SandboxExecutionResult result1 = sandbox1.getResult(exitCode1);
+        SandboxExecutionResult result2 = sandbox2.getResult(exitCode2);
+
+        if (pipe1.receivedSignal13) {
+            result1 = newKilledOnSignal13Result(result1);
+        }
+        if (pipe2.receivedSignal13) {
+            result2 = newKilledOnSignal13Result(result2);
+        }
+
+        return new SandboxExecutionResult[]{result1, result2};
+    }
+
+    private static SandboxExecutionResult newKilledOnSignal13Result(SandboxExecutionResult result) {
+        return new SandboxExecutionResult.Builder()
+                .from(result)
+                .status(SandboxExecutionStatus.KILLED_ON_SIGNAL)
+                .exitSignal(13)
+                .isKilled(true)
+                .message("Caught fatal signal 13")
+                .build();
     }
 
     class UnidirectionalPipe implements Runnable {
         private final InputStream in;
         private final OutputStream out;
+
+        boolean receivedSignal13;
 
         UnidirectionalPipe(InputStream in, OutputStream out) {
             this.in = in;
@@ -91,7 +114,11 @@ public class FakeSandboxInteractor implements SandboxInteractor {
                 out.close();
 
             } catch (IOException e) {
-                throw new SandboxException(e);
+                if (e.getMessage().equals("Stream closed")) {
+                    receivedSignal13 = true;
+                } else {
+                    throw new SandboxException(e);
+                }
             }
         }
     }
