@@ -1,5 +1,6 @@
 package judgels.gabriel.helpers.communicator;
 
+import static judgels.gabriel.api.SandboxExecutionStatus.TIMED_OUT;
 import static judgels.gabriel.api.SandboxExecutionStatus.ZERO_EXIT_CODE;
 
 import com.google.common.collect.ImmutableList;
@@ -172,8 +173,13 @@ public class Communicator {
         solutionResult = ignoreSignal13(solutionResult);
         communicatorResult = ignoreSignal13(communicatorResult);
 
-        // If the communicator did not exit successfully, it means there is something wrong with it.
-        if (communicatorResult.getStatus() != ZERO_EXIT_CODE) {
+        SandboxExecutionResult finalResult = solutionResult;
+
+        if (communicatorResult.getStatus() == TIMED_OUT) {
+            // If the interaction timed out, and the communicator sandbox reported TLE, take this result (instead of ERR)
+            finalResult = communicatorResult;
+        } else if (communicatorResult.getStatus() != ZERO_EXIT_CODE) {
+            // Otherwise, if the communicator did not exit successfully, it means there is something wrong with it.
             throw new EvaluationException(String.join(" ", command) + " resulted in " + communicatorResult);
         }
 
@@ -186,7 +192,7 @@ public class Communicator {
 
         return new EvaluationResult.Builder()
                 .verdict(verdict.get())
-                .executionResult(solutionResult)
+                .executionResult(finalResult)
                 .build();
     }
 
