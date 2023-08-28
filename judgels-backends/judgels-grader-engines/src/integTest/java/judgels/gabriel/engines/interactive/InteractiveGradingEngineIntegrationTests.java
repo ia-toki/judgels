@@ -3,6 +3,7 @@ package judgels.gabriel.engines.interactive;
 import static judgels.gabriel.api.Verdict.ACCEPTED;
 import static judgels.gabriel.api.Verdict.COMPILATION_ERROR;
 import static judgels.gabriel.api.Verdict.OK;
+import static judgels.gabriel.api.Verdict.TIME_LIMIT_EXCEEDED;
 import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -10,11 +11,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
+import java.util.Optional;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.PreparationException;
+import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.BlackboxGradingEngineIntegrationTests;
@@ -112,6 +115,31 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(ACCEPTED, "20.0", -1))),
                 ImmutableList.of(
                         subtaskResult(-1, OK, 90)));
+    }
+
+    @Test
+    void tle_when_communication_timed_out() throws GradingException {
+        addSourceFile("source", "trigger-communication-TLE.cpp");
+        assertResult(
+                new InteractiveGradingConfig.Builder().from(CONFIG)
+                        .communicator("communicator-TLE.cpp").build(),
+                TIME_LIMIT_EXCEEDED,
+                0,
+                List.of(
+                        testGroupResult(
+                                0,
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "", Optional.of(SandboxExecutionStatus.TIMED_OUT), 0),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "", Optional.of(SandboxExecutionStatus.TIMED_OUT), 0),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "", Optional.of(SandboxExecutionStatus.TIMED_OUT), 0)),
+                        testGroupResult(
+                                -1,
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1))),
+                List.of(
+                        subtaskResult(-1, TIME_LIMIT_EXCEEDED, 0)));
     }
 
     @Test
