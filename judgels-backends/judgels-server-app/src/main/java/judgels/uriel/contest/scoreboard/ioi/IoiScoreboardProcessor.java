@@ -74,7 +74,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
-            Optional<Instant> freezeTime) {
+            Map<String, Instant> freezeTimesMap) {
 
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
@@ -158,7 +158,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     score = grading.getScore();
                 }
 
-                if (submission.getTime().isBefore(freezeTime.orElse(Instant.MAX))) {
+                if (submission.getTime().isBefore(freezeTimesMap.getOrDefault(submission.getContainerJid(), Instant.MAX))) {
                     if (!scoresMap.get(problemJid).isPresent() || score > scoresMap.get(problemJid).get()) {
                         scoresMap.put(problemJid, Optional.of(score));
 

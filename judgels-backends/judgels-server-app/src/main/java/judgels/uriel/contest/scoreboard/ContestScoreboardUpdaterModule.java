@@ -48,6 +48,7 @@ public class ContestScoreboardUpdaterModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper objectMapper,
             ContestTimer contestTimer,
+            ContestStore contestStore,
             ContestScoreboardStore scoreboardStore,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
@@ -64,6 +65,7 @@ public class ContestScoreboardUpdaterModule {
                 new Class<?>[] {
                         ObjectMapper.class,
                         ContestTimer.class,
+                        ContestStore.class,
                         ContestScoreboardStore.class,
                         ContestModuleStore.class,
                         ContestContestantStore.class,
@@ -77,6 +79,7 @@ public class ContestScoreboardUpdaterModule {
                 new Object[] {
                         objectMapper,
                         contestTimer,
+                        contestStore,
                         scoreboardStore,
                         moduleStore,
                         contestantStore,
