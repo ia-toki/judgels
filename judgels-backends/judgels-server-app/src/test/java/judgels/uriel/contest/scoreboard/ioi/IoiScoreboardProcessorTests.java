@@ -78,7 +78,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     profilesMap,
                     submissions,
                     ImmutableList.of(),
-                    Optional.empty());
+                    Map.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                     new IoiScoreboardEntry.Builder()
@@ -123,7 +123,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     profilesMap,
                     submissions,
                     ImmutableList.of(),
-                    Optional.of(Instant.ofEpochMilli(23)));
+                    Map.of(contest.getJid(), Instant.ofEpochMilli(23)));
 
             assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                     new IoiScoreboardEntry.Builder()
@@ -188,7 +188,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -242,7 +242,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -303,7 +303,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -348,7 +348,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -397,7 +397,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -439,7 +439,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -509,7 +509,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
@@ -537,7 +537,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         ImmutableList.of(),
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -556,7 +556,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)

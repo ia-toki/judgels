@@ -72,7 +72,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
-            Optional<Instant> freezeTime) {
+            Map<String, Instant> freezeTimesMap) {
 
         GcjStyleModuleConfig gcjStyleModuleConfig = (GcjStyleModuleConfig) styleModuleConfig;
 
@@ -137,7 +137,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             for (Submission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
-                if (submission.getTime().isBefore(freezeTime.orElse(Instant.MAX))) {
+                if (submission.getTime().isBefore(freezeTimesMap.getOrDefault(submission.getContainerJid(), Instant.MAX))) {
                     Verdict verdict = submission.getLatestGrading().get().getVerdict();
                     if (verdict.equals(Verdict.PENDING)) {
                         continue;

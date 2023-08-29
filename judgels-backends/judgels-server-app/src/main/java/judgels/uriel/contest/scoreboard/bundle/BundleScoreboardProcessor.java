@@ -63,7 +63,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
-            Optional<Instant> freezeTime) {
+            Map<String, Instant> freezeTimesMap) {
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());

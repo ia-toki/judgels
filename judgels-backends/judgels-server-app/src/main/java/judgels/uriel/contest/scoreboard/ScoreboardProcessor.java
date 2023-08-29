@@ -31,7 +31,7 @@ public interface ScoreboardProcessor {
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
-            Optional<Instant> freezeTime);
+            Map<String, Instant> freezeTimesMap);
 
     ScoreboardEntry clearEntryRank(ScoreboardEntry entry);
 }

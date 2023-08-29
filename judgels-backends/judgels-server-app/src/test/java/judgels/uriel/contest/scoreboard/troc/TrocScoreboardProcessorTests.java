@@ -83,7 +83,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     profilesMap,
                     submissions,
                     ImmutableList.of(),
-                    Optional.empty());
+                    Map.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                     new TrocScoreboardEntry.Builder()
@@ -133,7 +133,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -183,7 +183,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -234,7 +234,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -282,7 +282,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -343,7 +343,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -416,7 +416,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -466,7 +466,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
         @Nested
         class PendingAfterFreeze {
-            private Optional<Instant> freezeTime = Optional.of(Instant.ofEpochSecond(500));
+            private Map<String, Instant> freezeTimesMap = Map.of(contest.getJid(), Instant.ofEpochSecond(500));
 
             private List<Submission> baseSubmissions = ImmutableList.of(
                     createSubmission(1, 100, "c1", "p1", 100, Verdict.ACCEPTED),
@@ -484,7 +484,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         baseSubmissions,
                         ImmutableList.of(),
-                        freezeTime);
+                        freezeTimesMap);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -533,7 +533,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        freezeTime);
+                        freezeTimesMap);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -582,7 +582,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        freezeTime);
+                        freezeTimesMap);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -631,7 +631,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        freezeTime);
+                        freezeTimesMap);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -712,7 +712,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
@@ -742,7 +742,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         ImmutableList.of(),
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -761,7 +761,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         profilesMap,
                         submissions,
                         ImmutableList.of(),
-                        Optional.empty());
+                        Map.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)

@@ -33,6 +33,7 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -41,6 +42,7 @@ import judgels.uriel.contest.problem.ContestProblemStore;
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
     private final ContestTimer contestTimer;
+    private final ContestStore contestStore;
     private final ContestScoreboardStore scoreboardStore;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
@@ -55,6 +57,7 @@ public class ContestScoreboardUpdater {
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
             ContestTimer contestTimer,
+            ContestStore contestStore,
             ContestScoreboardStore scoreboardStore,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
@@ -68,6 +71,7 @@ public class ContestScoreboardUpdater {
 
         this.objectMapper = objectMapper;
         this.contestTimer = contestTimer;
+        this.contestStore = contestStore;
         this.scoreboardStore = scoreboardStore;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
@@ -170,14 +174,21 @@ public class ContestScoreboardUpdater {
         Map<ContestScoreboardType, Scoreboard> scoreboards = new HashMap<>();
         Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents = new HashMap<>();
 
+        Map<String, Instant> freezeTimesMap = new HashMap<>();
         for (ContestScoreboardType type : new ContestScoreboardType[]{OFFICIAL, FROZEN}) {
-            Optional<Instant> freezeTime = Optional.empty();
             if (type == FROZEN) {
-                if (!contestModulesConfig.getFrozenScoreboard().isPresent()) {
+                putFreezeTime(freezeTimesMap, contest);
+
+                if (previousContestJid.isPresent()) {
+                    Optional<Contest> previousContest = contestStore.getContestByJid(previousContestJid.get());
+                    if (previousContest.isPresent()) {
+                        putFreezeTime(freezeTimesMap, previousContest.get());
+                    }
+                }
+
+                if (freezeTimesMap.isEmpty()) {
                     continue;
                 }
-                Duration duration = contestModulesConfig.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
-                freezeTime = Optional.of(contest.getEndTime().minus(duration));
             }
 
             Optional<ScoreboardIncrementalContent> incrementalContent = Optional.ofNullable(
@@ -192,7 +203,7 @@ public class ContestScoreboardUpdater {
                     profilesMap,
                     programmingSubmissions,
                     bundleItemSubmissions,
-                    freezeTime);
+                    freezeTimesMap);
 
             Scoreboard scoreboard = processor.create(state, result.getEntries());
 
@@ -234,6 +245,15 @@ public class ContestScoreboardUpdater {
                     contest.getJid(),
                     contest.getStyle(),
                     scoreboards);
+        }
+    }
+
+    private void putFreezeTime(Map<String, Instant> freezeTimesMap, Contest contest) {
+        ContestModulesConfig config = moduleStore.getConfig(contest.getJid(), contest.getStyle());
+
+        if (config.getFrozenScoreboard().isPresent()) {
+            Duration duration = config.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
+            freezeTimesMap.put(contest.getJid(), contest.getEndTime().minus(duration));
         }
     }
 }
