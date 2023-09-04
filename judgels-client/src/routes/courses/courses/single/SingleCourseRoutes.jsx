@@ -21,13 +21,9 @@ function SingleCourseRoutes({ match, course }) {
     <FullWidthPageLayout>
       <ScrollToTopOnMount />
       <div className="single-course-routes">
-        <div className="single-course-routes__sidebar">
-          <CourseChaptersSidebar />
-        </div>
+        <CourseChaptersSidebar />
         <hr className="single-course-routes__divider" />
-        <div className="single-course-routes__content">
-          <SingleCourseContentRoutes />
-        </div>
+        <SingleCourseContentRoutes />
       </div>
     </FullWidthPageLayout>
   );

@@ -1,15 +1,29 @@
 @import '../../../../../styles/base';
 
 .course-chapters-sidebar {
+  flex-grow: 1;
+  max-width: 300px;
+  margin-top: 56px;
+  margin-right: 10px;
   font-family: $accent-font;
   background-color: inherit !important;
   box-shadow: none !important;
-  border-right: 1px solid $border-color;
+
+  transition: all 0.2s ease-in-out;
+
+  hr {
+    margin: 0 !important;
+  }
+
+  &--compact {
+    flex-grow: unset;
+  }
 }
 
 a.course-chapters-sidebar__item {
   display: block;
   padding: 10px;
+  margin-bottom: 1px;
 
   color: inherit;
   text-decoration: none;
@@ -17,10 +31,12 @@ a.course-chapters-sidebar__item {
   &:hover {
     color: inherit;
     background-color: $tertiary-background-color;
+    border-radius: 3px;
   }
 
   &--selected {
     background-color: $tertiary-background-color;
+    border-radius: 3px;
   }
 }
 
@@ -49,13 +65,14 @@ a.course-chapters-sidebar__item {
     }
   }
 
-  a.course-chapters-sidebar__item:hover.course-chapters-sidebar__item--selected{
+  a.course-chapters-sidebar__item:hover.course-chapters-sidebar__item--selected {
     background-color: $dark-secondary-background-color;
   }
 }
 
-@media only screen and (max-width: 780px) {
+@media only screen and (max-width: 750px) {
   .course-chapters-sidebar {
-    border-right: none;
+    max-width: none;
+    margin-top: 0;
   }
 }

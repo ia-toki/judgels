@@ -15,6 +15,9 @@ export function ProblemWorksheetCard({
   };
 
   const renderSubmission = () => {
+    if (!onSubmit) {
+      return null;
+    }
     return (
       <ProblemSubmissionCard
         config={submissionConfig}

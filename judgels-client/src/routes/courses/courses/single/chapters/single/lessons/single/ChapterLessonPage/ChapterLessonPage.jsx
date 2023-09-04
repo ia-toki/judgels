@@ -1,13 +1,18 @@
+import { ChevronRight } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
+import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import * as chapterLessonActions from '../../modules/chapterLessonActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+
+import './ChapterLessonPage.scss';
 
 export class ChapterLessonPage extends Component {
   state = {
@@ -42,12 +47,38 @@ export class ChapterLessonPage extends Component {
 
   render() {
     return (
-      <ContentCard>
-        {this.renderStatementLanguageWidget()}
-        {this.renderStatement()}
-      </ContentCard>
+      <div className="chapter-lesson-page">
+        {this.renderHeader()}
+        <hr />
+        <ContentCard>
+          {this.renderStatementLanguageWidget()}
+          {this.renderStatement()}
+        </ContentCard>
+      </div>
     );
   }
+
+  renderHeader = () => {
+    const { course, chapter, match } = this.props;
+
+    return (
+      <h3 className="chapter-lesson-page__title">
+        <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}`}>
+          {course.name}
+        </Link>
+        &nbsp;
+        <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
+        &nbsp;
+        <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
+          {chapter.alias}. {chapter.name}
+        </Link>
+        &nbsp;
+        <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
+        &nbsp;
+        {match.params.lessonAlias}
+      </h3>
+    );
+  };
 
   renderStatementLanguageWidget = () => {
     const { response } = this.state;
@@ -77,6 +108,7 @@ export class ChapterLessonPage extends Component {
 }
 
 const mapStateToProps = state => ({
+  course: selectCourse(state),
   chapter: selectCourseChapter(state),
 });
 

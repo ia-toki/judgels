@@ -9,7 +9,7 @@ import { selectMaybeUserJid } from '../../../../../../../../modules/session/sess
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { ProblemSubmissionCard } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
+import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 class ProblemSubmissionSummaryPage extends Component {
@@ -82,7 +82,7 @@ class ProblemSubmissionSummaryPage extends Component {
           Summary for <UserRef profile={this.state.profile} />
         </ContentCard>
         {this.state.problemSummaries.map(props => (
-          <ProblemSubmissionCard key={props.alias} {...props} />
+          <SubmissionDetails key={props.alias} {...props} />
         ))}
       </>
     );

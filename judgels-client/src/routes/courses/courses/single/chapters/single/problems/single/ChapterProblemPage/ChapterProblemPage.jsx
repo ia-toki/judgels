@@ -1,17 +1,21 @@
+import { ChevronRight } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { sendGAEvent } from '../../../../../../../../../ga';
-import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
+import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+
+import './ChapterProblemPage.scss';
 
 export class ChapterProblemPage extends Component {
   state = {
@@ -53,17 +57,50 @@ export class ChapterProblemPage extends Component {
   }
 
   render() {
+    return (
+      <div className="chapter-problem-page">
+        {this.renderHeader()}
+        <hr />
+        {this.renderContent()}
+      </div>
+    );
+  }
+
+  renderHeader = () => {
+    const { course, chapter, match } = this.props;
+
+    return (
+      <h3 className="chapter-problem-page__title">
+        <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}`}>
+          {course.name}
+        </Link>
+        &nbsp;
+        <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
+        &nbsp;
+        <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
+          {chapter.alias}. {chapter.name}
+        </Link>
+        &nbsp;
+        <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
+        &nbsp;
+        {match.params.problemAlias}
+      </h3>
+    );
+  };
+
+  renderContent = () => {
     const { response } = this.state;
     if (!response) {
       return <LoadingState />;
     }
+
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
       return <ChapterProblemProgrammingPage worksheet={response} />;
     } else {
       return <ChapterProblemBundlePage worksheet={response} />;
     }
-  }
+  };
 }
 
 const mapStateToProps = state => ({

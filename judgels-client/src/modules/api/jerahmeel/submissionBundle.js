@@ -15,8 +15,8 @@ export const submissionBundleAPI = {
     return post(`${baseSubmissionsURL}/`, token, data);
   },
 
-  getSubmissionSummary: (token, containerJid, problemJid, username, language) => {
-    const params = stringify({ containerJid, problemJid, username, language });
+  getSubmissionSummary: (token, containerJid, problemJid, username, problemAlias, language) => {
+    const params = stringify({ containerJid, problemJid, username, problemAlias, language });
     return get(`${baseSubmissionsURL}/summary?${params}`, token);
   },
 

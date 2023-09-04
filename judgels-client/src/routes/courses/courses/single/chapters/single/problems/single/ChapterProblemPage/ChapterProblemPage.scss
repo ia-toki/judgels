@@ -1,0 +1,23 @@
+@import '../../../../../../../../../styles/base';
+
+.chapter-problem-page {
+  flex: 1 1;
+}
+
+.chapter-problem-page__title {
+  margin-bottom: 20px;
+  line-height: 20px !important;
+}
+
+.chapter-problem-page__title--link {
+  color: inherit !important;
+
+  &:hover {
+    text-decoration: none;
+    color: $primary-color !important;
+  }
+}
+
+.chapter-problem-page__title--chevron {
+  color: $dark-secondary-background-color !important;
+}

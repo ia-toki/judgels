@@ -1,16 +1,11 @@
-import { Layers, Manual, ManuallyEnteredData, Presentation } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
+import { Route, Switch, withRouter } from 'react-router';
 
-import ContentWithTopbar from '../../../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
+import ChapterResourcesPage from './resources/ChapterResourcesPage/ChapterResourcesPage';
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
-import ChapterSubmissionRoutes from './submissions/ChapterSubmissionRoutes';
-import ChapterItemSubmissionRoutes from './results/ChapterItemSubmissionRoutes';
-
-import './SingleCourseChapterRoutes.scss';
 
 function SingleCourseChapterRoutes({ chapter, match }) {
   // Optimization:
@@ -19,48 +14,13 @@ function SingleCourseChapterRoutes({ chapter, match }) {
     return <LoadingState large />;
   }
 
-  const topbarItems = [
-    {
-      id: 'lessons',
-      titleIcon: <Presentation />,
-      title: 'Lessons',
-      routeComponent: Route,
-      component: ChapterLessonRoutes,
-    },
-    {
-      id: 'problems',
-      titleIcon: <Manual />,
-      title: 'Problems',
-      routeComponent: Route,
-      component: ChapterProblemRoutes,
-    },
-    {
-      id: 'results',
-      titleIcon: <ManuallyEnteredData />,
-      title: 'Quiz Results',
-      routeComponent: Route,
-      component: ChapterItemSubmissionRoutes,
-    },
-    {
-      id: 'submissions',
-      titleIcon: <Layers />,
-      title: 'Submissions',
-      routeComponent: Route,
-      component: ChapterSubmissionRoutes,
-    },
-  ];
-
-  const contentWithTopbarProps = {
-    className: 'single-course-chapter-routes',
-    contentHeader: (
-      <h2>
-        {chapter.alias}. {chapter.name}
-      </h2>
-    ),
-    items: topbarItems,
-  };
-
-  return <ContentWithTopbar {...contentWithTopbarProps} />;
+  return (
+    <Switch>
+      <Route exact path={match.url} component={ChapterResourcesPage} />
+      <Route path={`${match.url}/lessons`} component={ChapterLessonRoutes} />
+      <Route path={`${match.url}/problems`} component={ChapterProblemRoutes} />
+    </Switch>
+  );
 }
 
 const mapStateToProps = state => ({

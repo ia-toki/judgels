@@ -20,21 +20,6 @@ describe('chapterProblemActions', () => {
     nock.cleanAll();
   });
 
-  describe('getProblems()', () => {
-    const responseBody = {
-      data: [],
-    };
-
-    it('calls API', async () => {
-      nockJerahmeel()
-        .get(`/chapters/${chapterJid}/problems`)
-        .reply(200, responseBody);
-
-      const response = await store.dispatch(chapterProblemActions.getProblems(chapterJid));
-      expect(response).toEqual(responseBody);
-    });
-  });
-
   describe('getProblemWorksheet()', () => {
     const language = 'id';
     const responseBody = {

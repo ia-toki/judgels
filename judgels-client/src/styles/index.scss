@@ -83,6 +83,13 @@ h5 {
   font-size: 14px !important;
 }
 
+@media only screen and (max-width: 750px) {
+  h2 {
+    font-size: 20px !important;
+    line-height: 22px !important;
+  }
+}
+
 hr {
   margin-top: 15px !important;
   margin-bottom: 15px !important;
@@ -224,4 +231,11 @@ blockquote {
 
 .normal-weight {
   font-weight: normal !important;
+}
+
+.heading-with-button-action {
+  display: inline-block;
+  margin-bottom: 0 !important;
+  margin-right: 10px;
+  vertical-align: middle;
 }
