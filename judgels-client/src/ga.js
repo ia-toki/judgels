@@ -1,4 +1,4 @@
-import * as ReactGA from 'react-ga';
+import * as ReactGA from 'react-ga4';
 
 import { APP_CONFIG } from './conf';
 
@@ -13,7 +13,7 @@ export function initGA(history) {
       page += location.search;
 
       ReactGA.set({ page });
-      ReactGA.pageview(page);
+      ReactGA.send({ hitType: 'pageview', page });
     });
   }
 }
@@ -21,7 +21,7 @@ export function initGA(history) {
 export function setGAUser(userJid) {
   if (APP_CONFIG.googleAnalytics) {
     if (userJid) {
-      ReactGA.set({ userId: userJid });
+      ReactGA.set({ user_id: userJid });
     }
   }
 }

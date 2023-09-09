@@ -62,7 +62,7 @@
     "react-dev-utils": "^11.0.3",
     "react-document-title": "2.0.3",
     "react-final-form": "^6.5.3",
-    "react-ga": "3.3.0",
+    "react-ga4": "2.1.0",
     "react-google-login": "5.2.2",
     "react-google-recaptcha": "^0.9.9",
     "react-paginate": "7.1.3",
