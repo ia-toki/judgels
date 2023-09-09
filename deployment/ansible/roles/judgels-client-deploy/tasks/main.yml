@@ -31,3 +31,7 @@
         volumes:
           - "/opt/judgels/client/var:/judgels/client/var"
       tags: config
+
+    - name: Append cache-busting hash to judgels-client.js
+      shell: docker exec judgels-client sed -i 's/judgels-client.js/judgels-client.{{ app_version | default('latest', true) }}.js/' index.html
+      tags: config
