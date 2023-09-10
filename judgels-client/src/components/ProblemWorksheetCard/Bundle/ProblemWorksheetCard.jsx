@@ -1,13 +1,10 @@
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
+import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmissionCard';
 
 import './ProblemWorksheetCard.scss';
 
-export function ProblemWorksheetCard({
-  alias,
-  worksheet: { statement, items, reasonNotAllowedToSubmit },
-  latestSubmissions,
-  onAnswerItem,
-}) {
+export function ProblemWorksheetCard({ alias, worksheet, latestSubmissions, onAnswerItem, resultsUrl, disabled }) {
+  const { statement, items, reasonNotAllowedToSubmit } = worksheet;
   return (
     <div className="bundle-problem-worksheet">
       <ProblemStatementCard
@@ -16,8 +13,9 @@ export function ProblemWorksheetCard({
         onAnswerItem={onAnswerItem}
         items={items}
         latestSubmissions={latestSubmissions}
-        reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
+        disabled={disabled || !!reasonNotAllowedToSubmit}
       />
+      <ProblemSubmissionCard reasonNotAllowedToSubmit={reasonNotAllowedToSubmit} resultsUrl={resultsUrl} />
     </div>
   );
 }

@@ -4,7 +4,7 @@ export const ProblemType = {
 };
 
 export function getProblemName(problem, language) {
-  return problem.titlesByLanguage[language] || problem.titlesByLanguage[problem.defaultLanguage];
+  return (language && problem.titlesByLanguage[language]) || problem.titlesByLanguage[problem.defaultLanguage];
 }
 
 export function constructProblemName(title, alias) {

@@ -7,7 +7,7 @@ import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { selectStatementLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../../modules/contestSelectors';
 
-import { ProblemSubmissionCard } from '../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
+import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 class SubmissionSummaryPage extends Component {
@@ -51,7 +51,7 @@ class SubmissionSummaryPage extends Component {
           Summary for <UserRef profile={this.state.profile} />
         </ContentCard>
         {this.state.problemSummaries.map(props => (
-          <ProblemSubmissionCard key={props.alias} {...props} />
+          <SubmissionDetails key={props.alias} {...props} />
         ))}
       </ContentCard>
     );

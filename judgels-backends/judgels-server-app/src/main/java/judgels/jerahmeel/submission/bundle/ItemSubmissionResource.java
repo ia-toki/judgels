@@ -195,6 +195,7 @@ public class ItemSubmissionResource {
             @QueryParam("containerJid") String containerJid,
             @QueryParam("problemJid") Optional<String> problemJid,
             @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
             @QueryParam("language") Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
@@ -211,8 +212,11 @@ public class ItemSubmissionResource {
         List<String> problemJids;
         if (problemJid.isPresent()) {
             problemJids = ImmutableList.of(problemJid.get());
-            submissions = submissionStore
-                    .getLatestSubmissionsByUserForProblemInContainer(containerJid, problemJid.get(), userJid);
+            submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(containerJid, problemJid.get(), userJid);
+        } else if (problemAlias.isPresent()) {
+            String problemJidFromAlias = getProblemJidByAlias(containerJid, problemAlias.get()).orElse("");
+            problemJids = List.of(problemJidFromAlias);
+            submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(containerJid, problemJidFromAlias, userJid);
         } else {
             problemJids = chapterProblemStore.getBundleProblemJids(containerJid);
             submissions = submissionStore.getLatestSubmissionsByUserInContainer(containerJid, userJid);

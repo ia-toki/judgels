@@ -2,10 +2,5 @@
 
 .topbar {
   font-family: $accent-font;
-}
-
-@media only screen and (max-width: 600px) {
-  .topbar__item {
-    display: none;
-  }
+  margin-bottom: 10px;
 }

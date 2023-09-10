@@ -11,14 +11,7 @@ import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';
 
 import './ProblemStatementCard.scss';
 
-export function ProblemStatementCard({
-  items,
-  alias,
-  statement,
-  onAnswerItem,
-  latestSubmissions,
-  reasonNotAllowedToSubmit,
-}) {
+export function ProblemStatementCard({ items, alias, statement, onAnswerItem, latestSubmissions, disabled }) {
   const generateOnAnswer = itemJid => {
     return async answer => {
       return await onAnswerItem(itemJid, answer || '');
@@ -40,7 +33,7 @@ export function ProblemStatementCard({
         {...item}
         itemNumber={item.number}
         initialAnswer={initialAnswer}
-        disabled={!!reasonNotAllowedToSubmit}
+        disabled={disabled}
       />
     );
   };
@@ -56,7 +49,7 @@ export function ProblemStatementCard({
         {...item}
         itemNumber={item.number}
         initialAnswer={initialAnswer}
-        disabled={!!reasonNotAllowedToSubmit}
+        disabled={disabled}
       />
     );
   };
@@ -72,7 +65,7 @@ export function ProblemStatementCard({
         {...item}
         itemNumber={item.number}
         initialAnswer={initialAnswer}
-        disabled={!!reasonNotAllowedToSubmit}
+        disabled={disabled}
       />
     );
   };

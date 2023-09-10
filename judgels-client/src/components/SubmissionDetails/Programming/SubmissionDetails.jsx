@@ -80,20 +80,24 @@ export function SubmissionDetails({
                   <UserRef profile={profile} />
                 </td>
               </tr>
-              <tr>
-                <td>Problem</td>
-                <td>
-                  {!!problemUrl ? (
-                    <Link to={problemUrl}>{constructProblemName(problemName, problemAlias)}</Link>
-                  ) : (
-                    constructProblemName(problemName, problemAlias)
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <td>{containerTitle}</td>
-                <td>{containerName}</td>
-              </tr>
+              {problemName && (
+                <tr>
+                  <td>Problem</td>
+                  <td>
+                    {!!problemUrl ? (
+                      <Link to={problemUrl}>{constructProblemName(problemName, problemAlias)}</Link>
+                    ) : (
+                      constructProblemName(problemName, problemAlias)
+                    )}
+                  </td>
+                </tr>
+              )}
+              {containerName && (
+                <tr>
+                  <td>{containerTitle}</td>
+                  <td>{containerName}</td>
+                </tr>
+              )}
               <tr>
                 <td>Language</td>
                 <td>{getGradingLanguageName(gradingLanguage)}</td>

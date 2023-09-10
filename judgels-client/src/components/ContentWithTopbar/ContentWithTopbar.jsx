@@ -3,12 +3,10 @@ import { Redirect, Switch, withRouter } from 'react-router';
 
 import { Topbar } from '../Topbar/Topbar';
 
-function ContentAndTopbar({ className, contentHeader, topbarElement, contentElement }) {
+function ContentAndTopbar({ className, topbarElement, contentElement }) {
   return (
     <div className={classNames('content-with-topbar', className)}>
-      {contentHeader}
       {topbarElement}
-      <hr />
       {contentElement}
     </div>
   );
@@ -19,7 +17,7 @@ function resolveUrl(parentPath, childPath) {
   return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
 }
 
-function ContentWithTopbar({ match, location, className, contentHeader, items }) {
+function ContentWithTopbar({ match, location, className, items }) {
   const renderTopbar = () => {
     const topbarItems = items
       .filter(item => !item.disabled)
@@ -46,12 +44,10 @@ function ContentWithTopbar({ match, location, className, contentHeader, items })
     const redirect = items[0].id !== '@' && <Redirect exact from={match.url} to={resolveUrl(match.url, items[0].id)} />;
 
     return (
-      <div>
-        <Switch>
-          {redirect}
-          {components}
-        </Switch>
-      </div>
+      <Switch>
+        {redirect}
+        {components}
+      </Switch>
     );
   };
 
@@ -69,14 +65,7 @@ function ContentWithTopbar({ match, location, className, contentHeader, items })
     return currentPath.substring(match.url.length + 1, nextSlashPos);
   };
 
-  return (
-    <ContentAndTopbar
-      className={className}
-      contentHeader={contentHeader}
-      topbarElement={renderTopbar()}
-      contentElement={renderContent()}
-    />
-  );
+  return <ContentAndTopbar className={className} topbarElement={renderTopbar()} contentElement={renderContent()} />;
 }
 
 export default withRouter(ContentWithTopbar);

@@ -1,0 +1,25 @@
+@import '../../../../../../../../../styles/base';
+
+.chapter-lesson-page {
+  flex: 1 1;
+  max-width: 865px;
+  margin-left: 20px;
+}
+
+.chapter-lesson-page__title {
+  margin-bottom: 20px;
+  line-height: 20px !important;
+}
+
+.chapter-lesson-page__title--link {
+  color: inherit !important;
+
+  &:hover {
+    text-decoration: none;
+    color: $primary-color !important;
+  }
+}
+
+.chapter-lesson-page__title--chevron {
+  color: $dark-secondary-background-color !important;
+}

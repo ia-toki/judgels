@@ -5,12 +5,10 @@ import CourseOverview from './CourseOverview/CourseOverview';
 
 function SingleCourseContentRoutes() {
   return (
-    <div>
-      <Switch>
-        <Route path="/courses/:courseSlug/chapters/:chapterAlias" component={MainSingleCourseChapterRoutes} />
-        <Route path="/courses/:courseSlug" component={CourseOverview} />
-      </Switch>
-    </div>
+    <Switch>
+      <Route path="/courses/:courseSlug/chapters/:chapterAlias" component={MainSingleCourseChapterRoutes} />
+      <Route path="/courses/:courseSlug" component={CourseOverview} />
+    </Switch>
   );
 }
 

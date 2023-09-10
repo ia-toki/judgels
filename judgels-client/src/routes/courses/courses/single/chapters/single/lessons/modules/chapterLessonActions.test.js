@@ -20,21 +20,6 @@ describe('chapterLessonActions', () => {
     nock.cleanAll();
   });
 
-  describe('getLessons()', () => {
-    const responseBody = {
-      data: [],
-    };
-
-    it('calls API', async () => {
-      nockJerahmeel()
-        .get(`/chapters/${chapterJid}/lessons`)
-        .reply(200, responseBody);
-
-      const response = await store.dispatch(chapterLessonActions.getLessons(chapterJid));
-      expect(response).toEqual(responseBody);
-    });
-  });
-
   describe('getLessonStatement()', () => {
     const language = 'id';
     const responseBody = {

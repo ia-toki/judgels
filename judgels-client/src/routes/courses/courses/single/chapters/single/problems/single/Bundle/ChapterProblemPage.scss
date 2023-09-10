@@ -1,0 +1,11 @@
+.chapter-bundle-problem-page {
+  display: flex;
+  column-gap: 5px;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 1024px) {
+  .chapter-bundle-problem-page {
+    display: block;
+  }
+}

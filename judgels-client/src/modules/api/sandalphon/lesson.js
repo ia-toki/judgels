@@ -1,5 +1,5 @@
 export function getLessonName(lesson, language) {
-  return lesson.titlesByLanguage[language] || lesson.titlesByLanguage[lesson.defaultLanguage];
+  return (language && lesson.titlesByLanguage[language]) || lesson.titlesByLanguage[lesson.defaultLanguage];
 }
 
 export function constructLessonName(title, alias) {
