@@ -2,28 +2,3 @@
   display: flex;
   width: 100%;
 }
-
-.single-course-routes__divider {
-  width: 100%;
-  display: none;
-}
-
-@media only screen and (max-width: 750px) {
-  .single-course-routes {
-    flex-direction: column-reverse;
-  }
-
-  .single-course-routes__sidebar {
-    max-width: none;
-    width: inherit;
-    margin-right: 0;
-  }
-
-  .single-course-routes__content {
-    margin-left: inherit;
-  }
-
-  .single-course-routes__divider {
-    display: block;
-  }
-}

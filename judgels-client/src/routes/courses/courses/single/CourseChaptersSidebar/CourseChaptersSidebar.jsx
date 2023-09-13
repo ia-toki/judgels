@@ -59,8 +59,8 @@ class CourseChaptersSidebar extends Component {
         }
       >
         <div className="course-chapters-sidebar__item-title">
-          {courseChapter.alias}{' '}
-          {this.isInProblemPath() ? <>&nbsp;</> : <>. {chaptersMap[courseChapter.chapterJid].name}</>}
+          {courseChapter.alias} {!this.isInProblemPath() && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
+          &nbsp;
           {this.renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
         </div>
         {!this.isInProblemPath() && this.renderProgressBar(chapterProgressesMap[courseChapter.chapterJid])}
