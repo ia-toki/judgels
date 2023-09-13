@@ -22,7 +22,6 @@ function SingleCourseRoutes({ match, course }) {
       <ScrollToTopOnMount />
       <div className="single-course-routes">
         <CourseChaptersSidebar />
-        <hr className="single-course-routes__divider" />
         <SingleCourseContentRoutes />
       </div>
     </FullWidthPageLayout>

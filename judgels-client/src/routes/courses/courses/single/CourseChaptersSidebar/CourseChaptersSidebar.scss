@@ -4,7 +4,7 @@
   flex-grow: 1;
   max-width: 300px;
   margin-top: 56px;
-  margin-right: 10px;
+  margin-right: 30px;
   font-family: $accent-font;
   background-color: inherit !important;
   box-shadow: none !important;
@@ -17,6 +17,7 @@
 
   &--compact {
     flex-grow: unset;
+    margin-right: 10px;
   }
 }
 
@@ -72,7 +73,7 @@ a.course-chapters-sidebar__item {
 
 @media only screen and (max-width: 750px) {
   .course-chapters-sidebar {
-    max-width: none;
-    margin-top: 0;
+    flex-grow: unset;
+    margin-right: 10px;
   }
 }
