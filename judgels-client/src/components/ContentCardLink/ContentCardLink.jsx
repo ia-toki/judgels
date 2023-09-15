@@ -8,7 +8,7 @@ export function ContentCardLink({ className, to, elevation, children }) {
   return (
     <ContentCard className={className} elevation={elevation}>
       <Link className="content-card-link" to={to}>
-        <div>{children}</div>
+        {children}
       </Link>
     </ContentCard>
   );

@@ -5,8 +5,16 @@
 }
 
 .chapter-problem-page__title {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  column-gap: 15px;
   margin-bottom: 20px;
   line-height: 20px !important;
+}
+
+.chapter-problem-page__title h3 {
+  margin-bottom: 0;
 }
 
 .chapter-problem-page__title--link {

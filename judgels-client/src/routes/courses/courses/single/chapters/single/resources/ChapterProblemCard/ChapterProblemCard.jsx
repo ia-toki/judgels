@@ -1,8 +1,8 @@
 import { Code, PanelTable } from '@blueprintjs/icons';
 
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
-import { VerdictProgressTag } from '../../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
+import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
 
 import './ChapterProblemCard.scss';
@@ -13,15 +13,15 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
       return null;
     }
 
-    const { verdict, score } = progress;
-    return <VerdictProgressTag className="chapter-problem-card__progress" verdict={verdict} score={score} />;
+    const { verdict } = progress;
+    return <ChapterProblemProgressTag className="chapter-problem-card__progress" verdict={verdict} />;
   };
 
   const renderProgressBar = () => {
     if (problem.type === ProblemType.Bundle || !progress) {
       return null;
     }
-    return <ProgressBar verdict={progress.verdict} num={progress.score} denom={100} />;
+    return <ProgressBar num={progress.score} denom={100} />;
   };
 
   return (
@@ -29,11 +29,13 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
       className="chapter-problem-card"
       to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}
     >
-      {problem.type === ProblemType.Programming ? <Code /> : <PanelTable />}
-      <h4 data-key="name">
-        {problem.alias}. {problemName}
+      <div className="chapter-problem-card__heading">
+        {problem.type === ProblemType.Programming ? <Code /> : <PanelTable />}
+        <h4 data-key="name">
+          {problem.alias}. {problemName}
+        </h4>
         {renderProgress()}
-      </h4>
+      </div>
       {renderProgressBar()}
     </ContentCardLink>
   );

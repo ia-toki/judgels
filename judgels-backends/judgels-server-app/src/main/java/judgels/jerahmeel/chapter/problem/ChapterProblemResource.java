@@ -117,7 +117,7 @@ public class ChapterProblemResource {
             @PathParam("problemAlias") String problemAlias,
             @QueryParam("language") Optional<String> language) {
 
-        actorChecker.check(authHeader);
+        String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         ChapterProblem problem = checkFound(problemStore.getProblemByAlias(chapterJid, problemAlias));
@@ -137,6 +137,7 @@ public class ChapterProblemResource {
                             .from(sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
+                    .progress(statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid))
                     .build();
         } else {
             return new judgels.jerahmeel.api.chapter.problem.bundle.ChapterProblemWorksheet.Builder()

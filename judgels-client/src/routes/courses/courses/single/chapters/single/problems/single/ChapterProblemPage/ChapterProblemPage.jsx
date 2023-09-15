@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { sendGAEvent } from '../../../../../../../../../ga';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { ChapterProblemProgressTag } from '../../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
@@ -70,22 +71,37 @@ export class ChapterProblemPage extends Component {
     const { course, chapter, match } = this.props;
 
     return (
-      <h3 className="chapter-problem-page__title">
-        <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}`}>
-          {course.name}
-        </Link>
-        &nbsp;
-        <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
-        &nbsp;
-        <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
-          {chapter.alias}. {chapter.name}
-        </Link>
-        &nbsp;
-        <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
-        &nbsp;
-        {match.params.problemAlias}
-      </h3>
+      <div className="chapter-problem-page__title">
+        <h3>
+          <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}`}>
+            {course.name}
+          </Link>
+          &nbsp;
+          <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
+          &nbsp;
+          <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
+            {chapter.alias}. {chapter.name}
+          </Link>
+          &nbsp;
+          <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
+          &nbsp;
+          {match.params.problemAlias}
+        </h3>
+
+        {this.renderProgress()}
+      </div>
     );
+  };
+
+  renderProgress = () => {
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+
+    const { progress } = response;
+
+    return <ChapterProblemProgressTag verdict={progress.verdict} />;
   };
 
   renderContent = () => {
