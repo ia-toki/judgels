@@ -1,13 +1,23 @@
 .chapter-problem-card {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 
-    h4 {
-        margin-bottom: 0;
-    }
+  .content-card-link {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+  }
 
-    .bp4-icon {
-        float: left;
-        padding-top: 1px;
-        margin-right: 10px;
-    }
+  .chapter-problem-card__heading {
+    display: flex;
+  }
+
+  h4 {
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-bottom: 0;
+  }
+
+  .bp4-icon {
+    padding-top: 1px;
+  }
 }

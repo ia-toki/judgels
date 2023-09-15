@@ -117,7 +117,7 @@ describe('ChapterResourcesPage', () => {
       expect(cards.map(card => [card.text(), card.find('a').props().href])).toEqual([
         ['bookX. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
         ['bookY. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],
-        ['panel-tableA. Problem AAC 100', '/courses/courseSlug/chapters/chapter-1/problems/A'],
+        ['panel-tableA. Problem A🎉 solved  confirm', '/courses/courseSlug/chapters/chapter-1/problems/A'],
         ['panel-tableB. Problem B', '/courses/courseSlug/chapters/chapter-1/problems/B'],
       ]);
     });
