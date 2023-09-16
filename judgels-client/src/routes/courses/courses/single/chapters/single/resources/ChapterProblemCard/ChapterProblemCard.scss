@@ -29,7 +29,11 @@
     background-color: inherit;
 
     a {
-      opacity: 25%;
+      opacity: 50%;
+
+      h4 {
+        font-weight: normal !important;
+      }
     }
   }
 }
