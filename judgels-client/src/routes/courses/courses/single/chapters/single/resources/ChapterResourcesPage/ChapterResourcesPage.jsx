@@ -102,11 +102,11 @@ export class ChapterResourcesPage extends Component {
 
   getFirstUnsolvedProblemIndex = (problems, problemProgressesMap) => {
     for (let i = problems.length - 1; i >= 0; i--) {
-      const progress = problemProgressesMap[problems[i].chapterJid];
+      const progress = problemProgressesMap[problems[i].problemJid];
       if (!progress) {
         continue;
       }
-      if (progress.verdict === VerdictCode.AC) {
+      if (progress.verdict !== VerdictCode.PND) {
         return i + 1;
       }
     }
