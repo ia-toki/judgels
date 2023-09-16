@@ -1,4 +1,4 @@
-import { Code, PanelTable } from '@blueprintjs/icons';
+import { Code, Form } from '@blueprintjs/icons';
 
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
@@ -30,7 +30,7 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
       to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}
     >
       <div className="chapter-problem-card__heading">
-        {problem.type === ProblemType.Programming ? <Code /> : <PanelTable />}
+        {problem.type === ProblemType.Programming ? <Code /> : <Form />}
         <h4 data-key="name">
           {problem.alias}. {problemName}
         </h4>
