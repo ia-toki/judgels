@@ -70,10 +70,13 @@ class CourseChaptersSidebar extends Component {
 
     const { data: courseChapters, chaptersMap, chapterProgressesMap } = response;
 
-    return courseChapters.map(courseChapter => (
+    const firstUnsolvedChapterIndex = this.getFirstUnsolvedChapterIndex(courseChapters, chapterProgressesMap);
+
+    return courseChapters.map((courseChapter, idx) => (
       <Link
         className={classNames('course-chapters-sidebar__item', {
           'course-chapters-sidebar__item--selected': this.isInChapterPath(courseChapter.alias),
+          'course-chapters-sidebar__item--future': idx > firstUnsolvedChapterIndex,
         })}
         to={`${match.url}/chapters/${courseChapter.alias}`}
         onClick={() => {
@@ -131,6 +134,33 @@ class CourseChaptersSidebar extends Component {
       return null;
     }
     return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
+  };
+
+  getFirstUnsolvedChapterIndex = (courseChapters, chapterProgressesMap) => {
+    for (let i = courseChapters.length - 1; i >= 0; i--) {
+      const progress = chapterProgressesMap[courseChapters[i].chapterJid];
+      if (!progress) {
+        continue;
+      }
+      if (progress.totalProblems === 0) {
+        continue;
+      }
+      if (progress.solvedProblems > 0) {
+        if (progress.solvedProblems < progress.totalProblems) {
+          return i;
+        } else {
+          for (let j = i + 1; j < courseChapters.length; j++) {
+            if (chapterProgressesMap[courseChapters[i].chapterJid]) {
+              if (chapterProgressesMap[courseChapters[i].chapterJid].totalProblems > 0) {
+                return j;
+              }
+            }
+          }
+          return i + 1;
+        }
+      }
+    }
+    return 0;
   };
 
   onResponsivePopoverInteraction = state => {

@@ -9,9 +9,11 @@ import { LoadingState } from '../../../../../../../../../components/LoadingState
 import { ChapterProblemProgressTag } from '../../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
+import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
+import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
@@ -45,10 +47,10 @@ export class ChapterProblemPage extends Component {
     });
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.response) {
-      this.setState({ response: undefined });
-    } else if (!this.state.response && prevState.response) {
+  async componentDidUpdate(prevProps) {
+    if (this.props.statementLanguage !== prevProps.statementLanguage) {
+      await this.componentDidMount();
+    } else if (this.props.match.params.problemAlias !== prevProps.match.params.problemAlias) {
       await this.componentDidMount();
     }
   }
@@ -89,6 +91,7 @@ export class ChapterProblemPage extends Component {
         </h3>
 
         {this.renderProgress()}
+        {this.renderPrevAndNextResourcePaths()}
       </div>
     );
   };
@@ -105,6 +108,25 @@ export class ChapterProblemPage extends Component {
     }
 
     return <ChapterProblemProgressTag verdict={progress.verdict} />;
+  };
+
+  renderPrevAndNextResourcePaths = () => {
+    const { course, chapter, chapters } = this.props;
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+
+    const { previousResourcePath, nextResourcePath } = response;
+    return (
+      <ChapterNavigation
+        courseSlug={course.slug}
+        chapterAlias={chapter.alias}
+        previousResourcePath={previousResourcePath}
+        nextResourcePath={nextResourcePath}
+        chapters={chapters}
+      />
+    );
   };
 
   renderContent = () => {
@@ -125,6 +147,7 @@ export class ChapterProblemPage extends Component {
 const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
+  chapters: selectCourseChapters(state),
   statementLanguage: selectStatementLanguage(state),
 });
 const mapDispatchToProps = {

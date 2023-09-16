@@ -10,10 +10,10 @@
   row-gap: 10px;
   column-gap: 15px;
   margin-bottom: 20px;
-  line-height: 20px !important;
 }
 
 .chapter-problem-page__title h3 {
+  line-height: 24px !important;
   margin-bottom: 0;
 }
 
@@ -28,4 +28,8 @@
 
 .chapter-problem-page__title--chevron {
   color: $dark-secondary-background-color !important;
+}
+
+.chapter-problem-page__prev {
+  margin-right: 5px;
 }

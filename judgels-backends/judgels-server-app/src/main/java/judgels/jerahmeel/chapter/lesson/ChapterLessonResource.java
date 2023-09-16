@@ -30,6 +30,7 @@ import judgels.jerahmeel.api.chapter.lesson.ChapterLessonData;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonStatement;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
+import judgels.jerahmeel.chapter.resource.ChapterResourceStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.lesson.LessonInfo;
@@ -42,6 +43,7 @@ public class ChapterLessonResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected RoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
+    @Inject protected ChapterResourceStore resourceStore;
     @Inject protected ChapterLessonStore lessonStore;
     @Inject protected SandalphonClient sandalphonClient;
 
@@ -119,11 +121,16 @@ public class ChapterLessonResource {
         LessonInfo lessonInfo = sandalphonClient.getLesson(lessonJid);
         LessonStatement statement = sandalphonClient.getLessonStatement(req, uriInfo, lesson.getLessonJid(), language);
 
+        List<Optional<String>> previousAndNextResourcePaths =
+                resourceStore.getPreviousAndNextResourcePathsForLesson(chapterJid, lessonAlias);
+
         return new ChapterLessonStatement.Builder()
                 .defaultLanguage(lessonInfo.getDefaultLanguage())
                 .languages(lessonInfo.getTitlesByLanguage().keySet())
                 .lesson(lesson)
                 .statement(statement)
+                .previousResourcePath(previousAndNextResourcePaths.get(0))
+                .nextResourcePath(previousAndNextResourcePaths.get(1))
                 .build();
     }
 }

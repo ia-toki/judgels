@@ -31,6 +31,7 @@ import judgels.jerahmeel.api.chapter.problem.ChapterProblemWorksheet;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemsResponse;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.chapter.ChapterStore;
+import judgels.jerahmeel.chapter.resource.ChapterResourceStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.sandalphon.SandalphonClient;
@@ -44,6 +45,7 @@ public class ChapterProblemResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected RoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
+    @Inject protected ChapterResourceStore resourceStore;
     @Inject protected ChapterProblemStore problemStore;
     @Inject protected StatsStore statsStore;
     @Inject protected SandalphonClient sandalphonClient;
@@ -128,11 +130,16 @@ public class ChapterProblemResource {
                 ? Optional.empty()
                 : Optional.of("You must log in to submit.");
 
+        List<Optional<String>> previousAndNextResourcePaths =
+                resourceStore.getPreviousAndNextResourcePathsForProblem(chapterJid, problemAlias);
+
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
             return new judgels.jerahmeel.api.chapter.problem.programming.ChapterProblemWorksheet.Builder()
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
+                    .previousResourcePath(previousAndNextResourcePaths.get(0))
+                    .nextResourcePath(previousAndNextResourcePaths.get(1))
                     .worksheet(new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
                             .from(sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
@@ -144,6 +151,8 @@ public class ChapterProblemResource {
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
+                    .previousResourcePath(previousAndNextResourcePaths.get(0))
+                    .nextResourcePath(previousAndNextResourcePaths.get(1))
                     .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                             .from(sandalphonClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
