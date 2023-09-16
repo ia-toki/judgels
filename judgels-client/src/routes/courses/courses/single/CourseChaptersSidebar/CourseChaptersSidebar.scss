@@ -8,8 +8,7 @@
   font-family: $accent-font;
   background-color: inherit !important;
   box-shadow: none !important;
-
-  transition: all 0.2s ease-in-out;
+  transition: flex-grow 0.2s ease-in-out;
 
   hr {
     margin: 0 !important;
@@ -18,6 +17,10 @@
   &--compact {
     flex-grow: unset;
     margin-right: 10px;
+  }
+
+  &__responsive {
+    display: none;
   }
 }
 
@@ -73,7 +76,32 @@ a.course-chapters-sidebar__item {
 
 @media only screen and (max-width: 750px) {
   .course-chapters-sidebar {
-    flex-grow: unset;
-    margin-right: 10px;
+    &__full {
+      display: none;
+    }
+
+    &__responsive {
+      display: block;
+      flex: none;
+      width: 100%;
+      max-width: unset;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .course-chapters-sidebar--wide.course-chapters-sidebar__full {
+    display: block;
+    flex: none;
+    order: 2;
+    width: 100%;
+    max-width: unset;
+    margin-top: 20px;
+  }
+
+  .course-chapters-sidebar--wide.course-chapters-sidebar__responsive {
+    display: none;
   }
 }
