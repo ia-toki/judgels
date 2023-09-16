@@ -1,5 +1,5 @@
 import { Popover, Position } from '@blueprintjs/core';
-import { ChevronDown, ChevronRight, Menu } from '@blueprintjs/icons';
+import { Menu } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { Component } from 'react';
 import { connect } from 'react-redux';
