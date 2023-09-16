@@ -7,8 +7,10 @@ import { LoadingState } from '../../../../../../../../../components/LoadingState
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
+import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
+import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
 import * as chapterLessonActions from '../../modules/chapterLessonActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
@@ -33,10 +35,10 @@ export class ChapterLessonPage extends Component {
     this.props.onPushBreadcrumb(this.props.match.url, response.lesson.alias);
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.response) {
-      this.setState({ response: undefined });
-    } else if (!this.state.response && prevState.response) {
+  async componentDidUpdate(prevProps) {
+    if (this.props.statementLanguage !== prevProps.statementLanguage) {
+      await this.componentDidMount();
+    } else if (this.props.match.params.lessonAlias !== prevProps.match.params.lessonAlias) {
       await this.componentDidMount();
     }
   }
@@ -62,21 +64,25 @@ export class ChapterLessonPage extends Component {
     const { course, chapter, match } = this.props;
 
     return (
-      <h3 className="chapter-lesson-page__title">
-        <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}`}>
-          {course.name}
-        </Link>
-        &nbsp;
-        <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
-        &nbsp;
-        <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
-          {chapter.alias}. {chapter.name}
-        </Link>
-        &nbsp;
-        <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
-        &nbsp;
-        {match.params.lessonAlias}
-      </h3>
+      <div className="chapter-lesson-page__title">
+        <h3>
+          <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}`}>
+            {course.name}
+          </Link>
+          &nbsp;
+          <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
+          &nbsp;
+          <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
+            {chapter.alias}. {chapter.name}
+          </Link>
+          &nbsp;
+          <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
+          &nbsp;
+          {match.params.lessonAlias}
+        </h3>
+
+        {this.renderPrevAndNextResourcePaths()}
+      </div>
     );
   };
 
@@ -105,11 +111,31 @@ export class ChapterLessonPage extends Component {
 
     return <LessonStatementCard alias={response.lesson.alias} statement={response.statement} />;
   };
+
+  renderPrevAndNextResourcePaths = () => {
+    const { course, chapter, chapters } = this.props;
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+
+    const { previousResourcePath, nextResourcePath } = response;
+    return (
+      <ChapterNavigation
+        courseSlug={course.slug}
+        chapterAlias={chapter.alias}
+        previousResourcePath={previousResourcePath}
+        nextResourcePath={nextResourcePath}
+        chapters={chapters}
+      />
+    );
+  };
 }
 
 const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
+  chapters: selectCourseChapters(state),
 });
 
 const mapDispatchToProps = {

@@ -1,11 +1,14 @@
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { PutCourseChapter, DelCourseChapter } from './courseChapterReducer';
+import { PutCourseChapters } from './courseChaptersReducer';
 import { courseChapterAPI } from '../../../../../../modules/api/jerahmeel/courseChapter';
 
 export function getChapters(courseJid) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    return await courseChapterAPI.getChapters(token, courseJid);
+    const response = await courseChapterAPI.getChapters(token, courseJid);
+    dispatch(PutCourseChapters(response.data));
+    return response;
   };
 }
 

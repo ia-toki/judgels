@@ -42,6 +42,10 @@ a.course-chapters-sidebar__item {
     background-color: $tertiary-background-color;
     border-radius: 3px;
   }
+
+  &--future {
+    opacity: 25%;
+  }
 }
 
 .course-chapters-sidebar__title {

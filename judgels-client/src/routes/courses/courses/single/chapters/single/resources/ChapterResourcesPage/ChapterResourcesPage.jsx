@@ -9,6 +9,7 @@ import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
+import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import * as chapterResourcesActions from '../modules/chapterResourceActions';
@@ -71,6 +72,8 @@ export class ChapterResourcesPage extends Component {
       );
     }
 
+    const firstUnsolvedProblemIndex = this.getFirstUnsolvedProblemIndex(problems, problemProgressesMap);
+
     return (
       <>
         {lessons.map(lesson => {
@@ -82,18 +85,32 @@ export class ChapterResourcesPage extends Component {
           };
           return <ChapterLessonCard key={lesson.lessonJid} {...props} />;
         })}
-        {problems.map(problem => {
+        {problems.map((problem, idx) => {
           const props = {
             course: this.props.course,
             chapter: this.props.chapter,
             problem,
             problemName: getProblemName(problemsMap[problem.problemJid], undefined),
             progress: problemProgressesMap[problem.problemJid],
+            isFuture: idx > firstUnsolvedProblemIndex,
           };
           return <ChapterProblemCard key={problem.problemJid} {...props} />;
         })}
       </>
     );
+  };
+
+  getFirstUnsolvedProblemIndex = (problems, problemProgressesMap) => {
+    for (let i = problems.length - 1; i >= 0; i--) {
+      const progress = problemProgressesMap[problems[i].chapterJid];
+      if (!progress) {
+        continue;
+      }
+      if (progress.verdict === VerdictCode.AC) {
+        return i + 1;
+      }
+    }
+    return 0;
   };
 }
 

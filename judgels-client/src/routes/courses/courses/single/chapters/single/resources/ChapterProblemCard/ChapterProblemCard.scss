@@ -24,4 +24,21 @@
   .bp4-tag {
     height: 21px;
   }
+
+  &--future {
+    background-color: inherit;
+
+    a {
+      opacity: 25%;
+    }
+  }
+}
+
+.bp4-dark {
+  .chapter-problem-card {
+    &--future {
+      background-color: inherit;
+
+    }
+  }
 }

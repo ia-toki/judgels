@@ -1,4 +1,5 @@
 import { Code, Form } from '@blueprintjs/icons';
+import classNames from 'classnames';
 
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
@@ -7,7 +8,7 @@ import { ProblemType } from '../../../../../../../../modules/api/sandalphon/prob
 
 import './ChapterProblemCard.scss';
 
-export function ChapterProblemCard({ course, chapter, problem, progress, problemName }) {
+export function ChapterProblemCard({ course, chapter, problem, progress, problemName, isFuture }) {
   const renderProgress = () => {
     if (problem.type === ProblemType.Bundle || !progress) {
       return null;
@@ -26,7 +27,7 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
 
   return (
     <ContentCardLink
-      className="chapter-problem-card"
+      className={classNames('chapter-problem-card', { 'chapter-problem-card--future': isFuture })}
       to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}
     >
       <div className="chapter-problem-card__heading">

@@ -6,8 +6,16 @@
 }
 
 .chapter-lesson-page__title {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  column-gap: 15px;
   margin-bottom: 20px;
-  line-height: 20px !important;
+}
+
+.chapter-lesson-page__title h3 {
+  line-height: 24px !important;
+  margin-bottom: 0;
 }
 
 .chapter-lesson-page__title--link {
@@ -21,4 +29,8 @@
 
 .chapter-lesson-page__title--chevron {
   color: $dark-secondary-background-color !important;
+}
+
+.chapter-lesson-page__prev {
+  margin-right: 5px;
 }
