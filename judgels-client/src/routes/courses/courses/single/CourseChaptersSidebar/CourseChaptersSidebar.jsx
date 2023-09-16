@@ -1,3 +1,5 @@
+import { Popover, Position } from '@blueprintjs/core';
+import { ChevronDown, ChevronRight, Menu } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { Component } from 'react';
 import { connect } from 'react-redux';
@@ -15,6 +17,7 @@ import './CourseChaptersSidebar.scss';
 class CourseChaptersSidebar extends Component {
   state = {
     response: undefined,
+    isResponsivePopoverOpen: false,
   };
 
   async componentDidMount() {
@@ -22,19 +25,43 @@ class CourseChaptersSidebar extends Component {
     this.setState({ response });
   }
 
+  componentDidUpdate() {}
+
   render() {
     return (
-      <div
-        className={classNames('course-chapters-sidebar', {
-          'course-chapters-sidebar--compact': this.isInProblemPath(),
-        })}
-      >
-        {this.renderChapters()}
-      </div>
+      <>
+        <div
+          className={classNames('course-chapters-sidebar', 'course-chapters-sidebar__full', {
+            'course-chapters-sidebar--compact': this.isInProblemPath(),
+            'course-chapters-sidebar--wide': !this.isInChaptersPath(),
+          })}
+        >
+          {this.renderChapters({ showName: !this.isInProblemPath() })}
+        </div>
+
+        <div
+          className={classNames('course-chapters-sidebar', 'course-chapters-sidebar__responsive', {
+            'course-chapters-sidebar--wide': !this.isInChaptersPath(),
+          })}
+        >
+          <Popover
+            content={this.renderChapters({ showName: true })}
+            position={Position.BOTTOM_LEFT}
+            isOpen={this.state.isResponsivePopoverOpen}
+            onInteraction={this.onResponsivePopoverInteraction}
+            usePortal={false}
+          >
+            <p>
+              <Menu />
+              &nbsp;<small>Chapters Menu</small>
+            </p>
+          </Popover>
+        </div>
+      </>
     );
   }
 
-  renderChapters = () => {
+  renderChapters = ({ showName }) => {
     const { course, match, onPutCourseChapter } = this.props;
     const { response } = this.state;
     if (!course || !response) {
@@ -49,23 +76,31 @@ class CourseChaptersSidebar extends Component {
           'course-chapters-sidebar__item--selected': this.isInChapterPath(courseChapter.alias),
         })}
         to={`${match.url}/chapters/${courseChapter.alias}`}
-        onClick={() =>
+        onClick={() => {
           onPutCourseChapter({
             jid: courseChapter.chapterJid,
             name: chaptersMap[courseChapter.chapterJid].name,
             alias: courseChapter.alias,
             courseSlug: course.slug,
-          })
-        }
+          });
+
+          if (this.state.isResponsivePopoverOpen) {
+            this.onResponsiveItemClick();
+          }
+        }}
       >
         <div className="course-chapters-sidebar__item-title">
-          {courseChapter.alias} {!this.isInProblemPath() && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
-          &nbsp;
+          {courseChapter.alias} {showName && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
+          &nbsp;&nbsp;
           {this.renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
         </div>
         {!this.isInProblemPath() && this.renderProgressBar(chapterProgressesMap[courseChapter.chapterJid])}
       </Link>
     ));
+  };
+
+  isInChaptersPath = () => {
+    return this.props.location.pathname.includes('/chapters/');
   };
 
   isInChapterPath = chapterAlias => {
@@ -96,6 +131,16 @@ class CourseChaptersSidebar extends Component {
       return null;
     }
     return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
+  };
+
+  onResponsivePopoverInteraction = state => {
+    this.setState({ isResponsivePopoverOpen: state });
+  };
+
+  onResponsiveItemClick = () => {
+    setTimeout(() => {
+      this.setState({ isResponsivePopoverOpen: false });
+    }, 200);
   };
 }
 

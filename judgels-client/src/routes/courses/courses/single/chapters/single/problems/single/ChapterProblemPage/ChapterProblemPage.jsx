@@ -100,6 +100,9 @@ export class ChapterProblemPage extends Component {
     }
 
     const { progress } = response;
+    if (!progress) {
+      return null;
+    }
 
     return <ChapterProblemProgressTag verdict={progress.verdict} />;
   };

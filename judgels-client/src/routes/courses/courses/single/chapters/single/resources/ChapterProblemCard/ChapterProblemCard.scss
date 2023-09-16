@@ -9,15 +9,19 @@
 
   .chapter-problem-card__heading {
     display: flex;
+    gap: 10px;
   }
 
   h4 {
-    flex-grow: 1;
-    margin-left: 10px;
+    flex: 1 1;
     margin-bottom: 0;
   }
 
   .bp4-icon {
     padding-top: 1px;
+  }
+
+  .bp4-tag {
+    height: 21px;
   }
 }
