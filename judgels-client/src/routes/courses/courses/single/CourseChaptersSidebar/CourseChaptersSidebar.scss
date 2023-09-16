@@ -28,7 +28,6 @@ a.course-chapters-sidebar__item {
   display: block;
   padding: 10px;
   margin-bottom: 1px;
-  font-weight: 600;
   color: inherit;
   text-decoration: none;
 
@@ -44,8 +43,9 @@ a.course-chapters-sidebar__item {
   }
 
   &--future {
-    opacity: 70%;
-    font-weight: normal !important;
+    opacity: 25%;
+    filter: alpha(opacity=25);
+    zoom: 1;
   }
 }
 
