@@ -28,14 +28,9 @@
   &--future {
     background-color: inherit;
 
-    a {
-      opacity: 25%;
-      filter: alpha(opacity=25);
-      zoom: 1;
-
-      h4 {
-        font-weight: normal !important;
-      }
+    a h4, .chapter-problem-card__heading > .bp4-icon {
+      font-weight: normal !important;
+      color: #bcc0c2;
     }
   }
 }
@@ -44,6 +39,11 @@
   .chapter-problem-card {
     &--future {
       background-color: inherit;
+
+      a h4, .chapter-problem-card__heading > .bp4-icon {
+        font-weight: normal !important;
+        color: #5d6c79;
+      }
     }
   }
 }

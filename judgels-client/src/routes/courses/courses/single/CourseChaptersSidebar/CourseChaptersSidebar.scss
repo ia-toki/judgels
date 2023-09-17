@@ -43,9 +43,7 @@ a.course-chapters-sidebar__item {
   }
 
   &--future {
-    opacity: 25%;
-    filter: alpha(opacity=25);
-    zoom: 1;
+    color: #bcc0c2;
   }
 }
 
@@ -71,6 +69,10 @@ a.course-chapters-sidebar__item {
   
     &--selected {
       background-color: $dark-secondary-background-color;
+    }
+
+    &--future {
+      color: #5d6c79;
     }
   }
 
