@@ -37,13 +37,14 @@ a.course-chapters-sidebar__item {
     border-radius: 3px;
   }
 
-  &--selected {
-    background-color: $tertiary-background-color;
-    border-radius: 3px;
-  }
-
   &--future {
     color: #bcc0c2;
+  }
+
+  &--selected {
+    color: inherit;
+    background-color: $tertiary-background-color;
+    border-radius: 3px;
   }
 }
 
@@ -67,12 +68,13 @@ a.course-chapters-sidebar__item {
       background-color: $dark-tertiary-background-color;
     }
   
-    &--selected {
-      background-color: $dark-secondary-background-color;
-    }
-
     &--future {
       color: #5d6c79;
+    }
+
+    &--selected {
+      color: inherit;
+      background-color: $dark-secondary-background-color;
     }
   }
 

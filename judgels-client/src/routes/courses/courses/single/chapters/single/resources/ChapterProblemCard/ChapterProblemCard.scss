@@ -32,6 +32,10 @@
       font-weight: normal !important;
       color: #bcc0c2;
     }
+
+    a:hover h4, a:hover .chapter-problem-card__heading > .bp4-icon {
+      color: inherit !important;
+    }
   }
 }
 
