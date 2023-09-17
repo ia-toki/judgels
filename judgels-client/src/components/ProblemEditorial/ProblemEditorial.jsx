@@ -70,7 +70,7 @@ export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
         {renderEditorialists()}
       </ul>
       <hr />
-      <KatexText>{children}</KatexText>
+      <KatexText key={title}>{children}</KatexText>
     </div>
   );
 }

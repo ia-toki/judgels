@@ -45,7 +45,7 @@ export function ProblemStatementCard({ alias, statement: { title, text }, limits
         </tbody>
       </HTMLTable>
       <div className="programming-problem-statement__text">
-        <KatexText>{text}</KatexText>
+        <KatexText key={alias}>{text}</KatexText>
       </div>
     </ContentCard>
   );

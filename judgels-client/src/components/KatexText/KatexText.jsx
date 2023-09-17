@@ -9,21 +9,20 @@ export class KatexText extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {
-      containsKatex: this.containsKatexSyntax(props.children),
-    };
     this.ref = createRef();
   }
 
   componentDidMount() {
-    if (this.state.containsKatex) {
+    if (this.containsKatexSyntax(this.props.children)) {
       this.typesetKatex();
     }
   }
 
-  componentDidUpdate() {
-    if (this.state.containsKatex) {
-      this.typesetKatex();
+  componentDidUpdate(prevProps) {
+    if (this.props.key !== prevProps.key) {
+      if (this.containsKatexSyntax(this.props.children)) {
+        this.typesetKatex();
+      }
     }
   }
 

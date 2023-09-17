@@ -10,7 +10,7 @@ export function LessonStatementCard({ alias, statement }) {
         {alias}. {statement.title}
       </h2>
       <div className="lesson-statement__text">
-        <KatexText>{statement.text}</KatexText>
+        <KatexText key={alias}>{statement.text}</KatexText>
       </div>
     </ContentCard>
   );
