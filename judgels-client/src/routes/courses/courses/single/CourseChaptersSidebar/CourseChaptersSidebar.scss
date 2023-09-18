@@ -39,6 +39,10 @@ a.course-chapters-sidebar__item {
 
   &--future {
     color: #bcc0c2;
+
+    .bp4-tag {
+      background-color: #ced4d8;
+    }
   }
 
   &--selected {
@@ -70,6 +74,10 @@ a.course-chapters-sidebar__item {
   
     &--future {
       color: #5d6c79;
+
+      .bp4-tag {
+        background-color: #5f6d79;
+      }
     }
 
     &--selected {
