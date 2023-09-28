@@ -21,6 +21,10 @@ export const EmailAddress = value =>
 export const ConfirmPassword = (value, { password }) =>
   value === password ? undefined : 'Confirmed password does not match';
 
+export const MaxCodeLength50KB = value => {
+  return value && value.length <= 50 * 1024 ? undefined : 'Code length must be at most 50 KB';
+};
+
 export const MaxFileSize100KB = value => {
   return value && value.size <= 100 * 1024 ? undefined : 'File size must be at most 100 KB';
 };

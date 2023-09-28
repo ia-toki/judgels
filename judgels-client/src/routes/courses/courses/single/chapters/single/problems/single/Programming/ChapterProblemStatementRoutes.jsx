@@ -12,7 +12,7 @@ export default function ChapterProblemStatementRoutes({ worksheet }) {
       id: '@',
       title: 'Submit',
       routeComponent: Route,
-      component: () => <ChapterProblemWorkspacePage worksheet={worksheet} />,
+      render: props => <ChapterProblemWorkspacePage {...props} worksheet={worksheet} />,
     },
     {
       id: 'submissions',

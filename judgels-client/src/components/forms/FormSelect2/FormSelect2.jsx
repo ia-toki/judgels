@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { getIntent, getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 
-export function FormSelect2({ input, className, label, meta, optionValues, optionNamesMap }) {
+export function FormSelect2({ input, className, label, meta, optionValues, optionNamesMap, small }) {
   const renderOption = (value, { handleClick, modifiers }) => {
     return <MenuItem active={modifiers.active} key={value} onClick={handleClick} text={optionNamesMap[value]} />;
   };
@@ -30,6 +30,7 @@ export function FormSelect2({ input, className, label, meta, optionValues, optio
           alignText={Alignment.LEFT}
           text={optionNamesMap[input.value]}
           rightIcon={<CaretDown />}
+          small={small}
         />
       </Select>
       <FormInputValidation meta={meta} />
