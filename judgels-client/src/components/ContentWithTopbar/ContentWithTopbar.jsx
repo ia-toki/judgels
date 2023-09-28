@@ -36,8 +36,13 @@ function ContentWithTopbar({ match, location, className, items }) {
       const props = {
         exact: item.id === '@',
         path: resolveUrl(match.url, item.id),
-        component: item.component,
       };
+      if (item.component) {
+        props.component = item.component;
+      }
+      if (item.render) {
+        props.render = item.render;
+      }
       return <RouteC key={item.id} {...props} />;
     });
 

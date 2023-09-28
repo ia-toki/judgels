@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { sendGAEvent } from '../../../../../../../../../../ga';
-import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard';
+import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
@@ -41,7 +41,7 @@ function ChapterProblemWorkspacePage({
   };
 
   return (
-    <ProblemSubmissionCard
+    <ProblemSubmissionEditor
       config={submissionConfig}
       onSubmit={createSubmission}
       reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
