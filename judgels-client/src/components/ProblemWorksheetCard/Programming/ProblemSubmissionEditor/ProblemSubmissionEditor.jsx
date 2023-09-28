@@ -3,7 +3,7 @@ import { BanCircle } from '@blueprintjs/icons';
 import { Field, Form } from 'react-final-form';
 
 import { ContentCard } from '../../../ContentCard/ContentCard';
-import { MaxCodeLength50KB, Required } from '../../../forms/validations';
+import { MaxCodeLength50KB, Required, composeValidators } from '../../../forms/validations';
 import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor';
 import { FormSelect2 } from '../../../forms/FormSelect2/FormSelect2';
 import { getAllowedGradingLanguages, gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
@@ -54,7 +54,7 @@ export function ProblemSubmissionEditor({
 
     const editorField = {
       name: 'editor',
-      validate: MaxCodeLength50KB,
+      validate: composeValidators(Required, MaxCodeLength50KB),
       autoFocus: true,
     };
 
