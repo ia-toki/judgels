@@ -58,6 +58,23 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
   OutputOnly: '',
 };
 
+export const gradingLanguageEditorSubmissionFilenamesMap = {
+  C: 'solution.c',
+  Cpp11: 'solution.cpp',
+  Cpp17: 'solution.cpp',
+  Cpp20: 'solution.cpp',
+  Go: 'solution.go',
+  Java: 'Solution.java',
+  Pascal: 'solution.pas',
+  Python3: 'solution.py',
+  PyPy3: 'solution.py',
+  Rust2021: 'solution.rs',
+};
+
+export const gradingLanguageEditorSubmissionHintsMap = {
+  Java: 'Public class name must be Solution',
+};
+
 export const gradingLanguages = Object.keys(gradingLanguageNamesMap)
   .filter(l => l !== OutputOnlyOverrides.KEY)
   .sort();
@@ -76,6 +93,14 @@ export function getGradingLanguageFilenameExtensions(code) {
 
 export function getGradingLanguageSyntaxHighlighterValue(code) {
   return gradingLanguageSyntaxHighlighterValueMap[code] || code;
+}
+
+export function getGradingLanguageEditorSubmissionFilename(code) {
+  return gradingLanguageEditorSubmissionFilenamesMap[code];
+}
+
+export function getGradingLanguageEditorSubmissionHint(code) {
+  return gradingLanguageEditorSubmissionHintsMap[code];
 }
 
 export function getAllowedGradingLanguages(gradingEngine, restriction) {

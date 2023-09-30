@@ -6,7 +6,12 @@ import { ContentCard } from '../../../ContentCard/ContentCard';
 import { MaxCodeLength50KB, Required, composeValidators } from '../../../forms/validations';
 import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor';
 import { FormSelect2 } from '../../../forms/FormSelect2/FormSelect2';
-import { getAllowedGradingLanguages, gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
+import {
+  getAllowedGradingLanguages,
+  getGradingLanguageEditorSubmissionFilename,
+  getGradingLanguageEditorSubmissionHint,
+  gradingLanguageNamesMap,
+} from '../../../../modules/api/gabriel/language.js';
 
 import './ProblemSubmissionEditor.scss';
 
@@ -20,7 +25,9 @@ export function ProblemSubmissionEditor({
   const onSubmitEditor = data => {
     const sourceFiles = {};
     Object.keys(sourceKeys).forEach(key => {
-      sourceFiles[key] = new File([data.editor], 'solution.cpp', { type: 'text/plain' });
+      sourceFiles[key] = new File([data.editor], getGradingLanguageEditorSubmissionFilename(data.gradingLanguage), {
+        type: 'text/plain',
+      });
     });
 
     return onSubmit({
@@ -71,21 +78,30 @@ export function ProblemSubmissionEditor({
 
     return (
       <Form onSubmit={onSubmitEditor} initialValues={initialValues}>
-        {({ values, handleSubmit, submitting }) => (
-          <form onSubmit={handleSubmit}>
-            <div className="editor-heading">
-              <Field component={FormSelect2} {...gradingLanguageField} />
-              <p>
-                <Tag intent={Intent.WARNING}>BETA</Tag>
-              </p>
-              <p>
-                <small>Type or paste your code here</small>
-              </p>
-            </div>
-            <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
-            <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />
-          </form>
-        )}
+        {({ values, handleSubmit, submitting }) => {
+          const submissionHint = getGradingLanguageEditorSubmissionHint(values.gradingLanguage);
+
+          return (
+            <form onSubmit={handleSubmit}>
+              <div className="editor-heading">
+                <Field component={FormSelect2} {...gradingLanguageField} />
+                <p>
+                  <Tag intent={Intent.WARNING}>BETA</Tag>
+                </p>
+                <p>
+                  <small>Type or paste your code here</small>
+                </p>
+              </div>
+              {submissionHint && (
+                <p>
+                  <small>{submissionHint}</small>
+                </p>
+              )}
+              <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
+              <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />
+            </form>
+          );
+        }}
       </Form>
     );
   };
