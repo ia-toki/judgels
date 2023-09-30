@@ -10,14 +10,15 @@ import * as chapterProblemSubmissionActions from '../submissions/modules/chapter
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
 
 function ChapterProblemWorkspacePage({
-  worksheet: { problem, worksheet },
+  worksheet,
   course,
   chapter,
   gradingLanguage,
   onCreateSubmission,
   onUpdateGradingLanguage,
 }) {
-  const { submissionConfig, reasonNotAllowedToSubmit } = worksheet;
+  const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
+  const { problem, skeletons } = worksheet;
 
   const createSubmission = async data => {
     onUpdateGradingLanguage(data.gradingLanguage);
@@ -27,7 +28,7 @@ function ChapterProblemWorkspacePage({
     sendGAEvent({
       category: 'Courses',
       action: 'Submit problem',
-      label: chapter.name + ': ' + problem.alis,
+      label: chapter.name + ': ' + problem.alias,
     });
     if (getGradingLanguageFamily(data.gradingLanguage)) {
       sendGAEvent({
@@ -42,6 +43,7 @@ function ChapterProblemWorkspacePage({
 
   return (
     <ProblemSubmissionEditor
+      skeletons={skeletons}
       config={submissionConfig}
       onSubmit={createSubmission}
       reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}

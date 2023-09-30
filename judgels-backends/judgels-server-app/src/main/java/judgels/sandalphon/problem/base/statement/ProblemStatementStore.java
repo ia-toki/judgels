@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,13 +14,16 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.programming.ProblemSkeleton;
 import judgels.sandalphon.problem.base.BaseProblemStore;
 import judgels.sandalphon.problem.base.ProblemFs;
 import judgels.sandalphon.problem.bundle.statement.BundleProblemStatementUtils;
 import judgels.sandalphon.problem.programming.statement.ProgrammingProblemStatementUtils;
 import judgels.sandalphon.resource.StatementLanguageStatus;
+import org.apache.commons.io.FilenameUtils;
 
 public class ProblemStatementStore extends BaseProblemStore {
     @Inject
@@ -148,6 +152,29 @@ public class ProblemStatementStore extends BaseProblemStore {
     public String getStatementMediaFileURL(String userJid, String problemJid, String filename) {
         Path mediaFilePath = getStatementMediaDirPath(userJid, problemJid).resolve(filename);
         return problemFs.getPublicFileUrl(mediaFilePath);
+    }
+
+    public Set<ProblemSkeleton> getSkeletons(String userJid, String problemJid) {
+        Set<ProblemSkeleton> skeletons = new HashSet<>();
+        for (FileInfo file : getStatementMediaFiles(null, problemJid)) {
+            if (file.getName().toLowerCase().startsWith("skeleton.")) {
+                Path mediaFilePath = getStatementMediaDirPath(userJid, problemJid).resolve(file.getName());
+                String extension = FilenameUtils.getExtension(file.getName());
+
+                Set<String> languages = new HashSet<>();
+                for (String language : GradingLanguageRegistry.getInstance().getLanguages().keySet()) {
+                    if (GradingLanguageRegistry.getInstance().get(language).getAllowedExtensions().contains(extension)) {
+                        languages.add(language);
+                    }
+                }
+
+                skeletons.add(new ProblemSkeleton.Builder()
+                        .languages(languages)
+                        .content(problemFs.readByteArrayFromFile(mediaFilePath))
+                        .build());
+            }
+        }
+        return skeletons;
     }
 
     private Path getStatementsDirPath(String userJid, String problemJid) {

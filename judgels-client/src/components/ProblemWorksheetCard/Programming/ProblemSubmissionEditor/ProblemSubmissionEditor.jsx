@@ -11,6 +11,7 @@ import { getAllowedGradingLanguages, gradingLanguageNamesMap } from '../../../..
 import './ProblemSubmissionEditor.scss';
 
 export function ProblemSubmissionEditor({
+  skeletons,
   config: { sourceKeys, gradingEngine, gradingLanguageRestriction },
   onSubmit,
   reasonNotAllowedToSubmit,
@@ -61,6 +62,12 @@ export function ProblemSubmissionEditor({
     const initialValues = {
       gradingLanguage: defaultGradingLanguage,
     };
+
+    (skeletons || []).forEach(skeleton => {
+      if (skeleton.languages.indexOf(defaultGradingLanguage) >= 0) {
+        initialValues.editor = atob(skeleton.content);
+      }
+    });
 
     return (
       <Form onSubmit={onSubmitEditor} initialValues={initialValues}>
