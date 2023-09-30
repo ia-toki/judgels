@@ -6,6 +6,7 @@ import StatementLanguageWidget from '../../../../../../../../../../components/La
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { ProblemEditorialCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 
 import './ChapterProblemStatementPage.scss';
 
@@ -26,8 +27,29 @@ export function ChapterProblemStatementPage({ worksheet }) {
     );
   };
 
+  const renderEditorial = () => {
+    const { problem, editorial } = worksheet;
+    if (!editorial) {
+      return null;
+    }
+    return (
+      <ProblemEditorialCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />
+    );
+  };
+
   const renderStatement = () => {
-    const { problem } = worksheet;
+    const { problem, editorial } = worksheet;
+
+    if (editorial) {
+      return (
+        <details>
+          <summary>
+            <small>Click to view original problem statement</small>
+          </summary>
+          <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} />
+        </details>
+      );
+    }
 
     return <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} />;
   };
@@ -35,6 +57,7 @@ export function ChapterProblemStatementPage({ worksheet }) {
   return (
     <ContentCard className="chapter-programming-problem-statement-page">
       {renderStatementLanguageWidget()}
+      {renderEditorial()}
       {renderStatement()}
     </ContentCard>
   );
