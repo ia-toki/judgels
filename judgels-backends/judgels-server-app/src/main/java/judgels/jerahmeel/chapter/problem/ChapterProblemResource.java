@@ -25,6 +25,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemData;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemWorksheet;
@@ -35,6 +36,7 @@ import judgels.jerahmeel.chapter.resource.ChapterResourceStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.sandalphon.SandalphonClient;
+import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.service.actor.ActorChecker;
@@ -134,6 +136,13 @@ public class ChapterProblemResource {
                 resourceStore.getPreviousAndNextResourcePathsForProblem(chapterJid, problemAlias);
 
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
+            ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid);
+
+            Optional<ProblemEditorialInfo> editorial = Optional.empty();
+            if (progress.getVerdict().equals(Verdict.ACCEPTED.getCode())) {
+                editorial = sandalphonClient.getProblemEditorial(problemJid, uriInfo.getBaseUri(), language);
+            }
+
             return new judgels.jerahmeel.api.chapter.problem.programming.ChapterProblemWorksheet.Builder()
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
@@ -145,7 +154,8 @@ public class ChapterProblemResource {
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .skeletons(sandalphonClient.getProgrammingProblemSkeletons(problemJid))
-                    .progress(statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid))
+                    .progress(progress)
+                    .editorial(editorial)
                     .build();
         } else {
             return new judgels.jerahmeel.api.chapter.problem.bundle.ChapterProblemWorksheet.Builder()

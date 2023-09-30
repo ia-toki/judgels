@@ -1,4 +1,13 @@
 .chapter-programming-problem-statement-page {
   flex: 1 1;
   max-width: 865px;
+
+  details summary { 
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  details summary > * { 
+    display: inline;
+  }
 }
