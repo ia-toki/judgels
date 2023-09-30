@@ -21,6 +21,7 @@ describe('ChapterProblemProgrammingPage', () => {
       },
       defaultLanguage: 'id',
       languages: ['en', 'id'],
+      skeletons: [],
       worksheet: {
         statement: {
           title: 'Problem',

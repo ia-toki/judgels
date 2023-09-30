@@ -144,6 +144,7 @@ public class ChapterProblemResource {
                             .from(sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
+                    .skeletons(sandalphonClient.getProgrammingProblemSkeletons(problemJid))
                     .progress(statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid))
                     .build();
         } else {

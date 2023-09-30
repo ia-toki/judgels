@@ -31,6 +31,7 @@ import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemConfig;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
+import judgels.sandalphon.api.problem.programming.ProblemSkeleton;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.lesson.LessonStore;
 import judgels.sandalphon.lesson.statement.LessonStatementStore;
@@ -162,6 +163,10 @@ public class SandalphonClient {
                         .build())
                 .submissionConfig(getProgrammingProblemSubmissionConfig(problemJid))
                 .build();
+    }
+
+    public Set<ProblemSkeleton> getProgrammingProblemSkeletons(String problemJid) {
+        return problemStatementStore.getSkeletons(null, problemJid);
     }
 
     public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(
