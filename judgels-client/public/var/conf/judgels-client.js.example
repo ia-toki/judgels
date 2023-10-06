@@ -8,4 +8,5 @@ window.conf = {
     description:
       '<h2>This is a programming contest system.</h2>',
   },
+  footer: '© Ikatan Alumni TOKI',
 };

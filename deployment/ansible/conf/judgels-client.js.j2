@@ -7,6 +7,9 @@ window.conf = {
     title: '{{ app_title }}',
     description: '{{ app_description }}',
   },
+{% if app_footer is defined %}
+  footer: '{{ app_footer }}',
+{% endif %}
 {% if googleAnalytics_trackingId is defined %}
   googleAnalytics: {
     trackingId: '{{ googleAnalytics_trackingId }}',
