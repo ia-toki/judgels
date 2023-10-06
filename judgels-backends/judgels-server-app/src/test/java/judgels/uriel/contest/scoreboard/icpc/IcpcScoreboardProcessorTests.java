@@ -64,10 +64,12 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
                     createSubmission(1, 300, "c1", "p1", 100, Verdict.ACCEPTED),
-                    createSubmission(2, 360, "c2", "p2", 100, Verdict.ACCEPTED),
-                    createSubmission(3, 400, "c1", "p2", 0, Verdict.TIME_LIMIT_EXCEEDED),
-                    createSubmission(4, 410, "c1", "p2", 100, Verdict.ACCEPTED),
-                    createSubmission(5, 900, "c2", "p1", 100, Verdict.ACCEPTED));
+                    createSubmission(2, 340, "c1", "p1", 0, Verdict.COMPILATION_ERROR),
+                    createSubmission(3, 360, "c2", "p2", 100, Verdict.ACCEPTED),
+                    createSubmission(4, 400, "c1", "p2", 0, Verdict.TIME_LIMIT_EXCEEDED),
+                    createSubmission(5, 410, "c1", "p2", 100, Verdict.ACCEPTED),
+                    createSubmission(6, 900, "c2", "p1", 100, Verdict.ACCEPTED),
+                    createSubmission(7, 920, "c2", "p1", 0, Verdict.COMPILATION_ERROR));
 
             ScoreboardProcessResult result = scoreboardProcessor.process(
                     contest,
