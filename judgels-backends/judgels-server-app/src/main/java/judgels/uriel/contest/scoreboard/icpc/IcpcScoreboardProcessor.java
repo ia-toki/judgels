@@ -144,7 +144,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
 
                 if (submission.getTime().isBefore(freezeTimesMap.getOrDefault(submission.getContainerJid(), Instant.MAX))) {
                     Verdict verdict = submission.getLatestGrading().get().getVerdict();
-                    if (verdict.equals(Verdict.PENDING)) {
+                    if (verdict.equals(Verdict.PENDING) || verdict.equals(Verdict.COMPILATION_ERROR)) {
                         continue;
                     }
 
