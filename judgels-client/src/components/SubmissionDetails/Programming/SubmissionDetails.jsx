@@ -66,19 +66,20 @@ export function SubmissionDetails({
 
     return (
       <div className="general-info">
-        {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} />
         {(containerName || problemName) && (
-          <>
-            {' '}
-            {separator} {containerName && <>{containerName} / </>}
+          <h4>
+            {containerName && <>{containerName} / </>}
             {problemName && !!problemUrl ? (
               <Link to={problemUrl}>{constructProblemName(problemName, problemAlias)}</Link>
             ) : (
               constructProblemName(problemName, problemAlias)
             )}
-          </>
-        )}{' '}
-        {separator} {getGradingLanguageName(gradingLanguage)} {separator} <FormattedDate value={time} showSeconds />
+          </h4>
+        )}
+        <p>
+          {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} />
+          {separator} {getGradingLanguageName(gradingLanguage)} {separator} <FormattedDate value={time} showSeconds />
+        </p>
       </div>
     );
   };
