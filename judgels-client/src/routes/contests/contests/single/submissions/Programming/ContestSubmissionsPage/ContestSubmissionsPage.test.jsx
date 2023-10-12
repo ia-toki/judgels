@@ -107,8 +107,8 @@ describe('ContestSubmissionsPage', () => {
       it('shows the submissions', () => {
         expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().trim()))).toEqual([
           [],
-          ['20', 'A', 'C++17', '', '', '1 day ago', 'search'],
-          ['10', 'B', 'C++17', 'WA', '70', '2 days ago', 'search'],
+          ['20', 'A', 'C++17', '', '1 day ago', 'search'],
+          ['10', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
         ]);
       });
     });
@@ -123,8 +123,8 @@ describe('ContestSubmissionsPage', () => {
       it('shows the submissions', () => {
         expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().trim()))).toEqual([
           [],
-          ['20', 'user1', 'A', 'C++17', '', '', '1 day ago', 'search'],
-          ['10', 'user2', 'B', 'C++17', 'WA', '70', '2 days ago', 'search'],
+          ['20', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
+          ['10', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
         ]);
       });
     });
@@ -148,8 +148,8 @@ describe('ContestSubmissionsPage', () => {
           )
         ).toEqual([
           [],
-          ['20 refresh', 'user1', 'A', 'C++17', '', '', '1 day ago', 'search'],
-          ['10 refresh', 'user2', 'B', 'C++17', 'WA', '70', '2 days ago', 'search'],
+          ['20 refresh', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
+          ['10 refresh', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
         ]);
       });
     });

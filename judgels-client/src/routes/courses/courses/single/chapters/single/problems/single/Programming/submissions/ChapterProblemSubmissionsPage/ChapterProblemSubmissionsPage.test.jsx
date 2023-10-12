@@ -156,8 +156,8 @@ describe('ChapterProblemSubmissionsPage', () => {
         it('shows the submissions', () => {
           expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().trim()))).toEqual([
             [],
-            ['20', 'username1', 'C++17', 'AC', '100', '1 day ago', 'search'],
-            ['10', 'username2', 'C++17', '', '', '2 days ago', 'search'],
+            ['20', 'username1', 'C++17', 'Accepted', '1 day ago', 'search'],
+            ['10', 'username2', 'C++17', '', '2 days ago', 'search'],
           ]);
         });
       });
@@ -180,8 +180,8 @@ describe('ChapterProblemSubmissionsPage', () => {
             )
           ).toEqual([
             [],
-            ['20 refresh', 'username1', 'C++17', 'AC', '100', '1 day ago', 'search'],
-            ['10 refresh', 'username2', 'C++17', '', '', '2 days ago', 'search'],
+            ['20 refresh', 'username1', 'C++17', 'Accepted', '1 day ago', 'search'],
+            ['10 refresh', 'username2', 'C++17', '', '2 days ago', 'search'],
           ]);
         });
       });

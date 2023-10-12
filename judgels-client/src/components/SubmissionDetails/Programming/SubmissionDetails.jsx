@@ -7,6 +7,7 @@ import { FormattedDate } from '../../FormattedDate/FormattedDate';
 import { UserRef } from '../../UserRef/UserRef';
 import { ContentCard } from '../../ContentCard/ContentCard';
 import { VerdictTag } from '../../VerdictTag/VerdictTag';
+import { GradingVerdictTag } from '../../GradingVerdictTag/GradingVerdictTag';
 import { constructProblemName } from '../../../modules/api/sandalphon/problem';
 import {
   getGradingLanguageName,
@@ -26,7 +27,6 @@ export function SubmissionDetails({
   problemName,
   problemAlias,
   problemUrl,
-  containerTitle,
   containerName,
   onDownload,
 }) {
@@ -60,66 +60,26 @@ export function SubmissionDetails({
   };
 
   const renderGeneralInfo = () => {
+    const separator = <>&nbsp;&#9679;&nbsp;</>;
+
     const grading = latestGrading;
 
     return (
-      <>
-        <h4>General Info</h4>
-        <ContentCard>
-          <HTMLTable striped className="programming-submission-details">
-            <thead>
-              <tr>
-                <th className="col-info">Info</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Author</td>
-                <td>
-                  <UserRef profile={profile} />
-                </td>
-              </tr>
-              {problemName && (
-                <tr>
-                  <td>Problem</td>
-                  <td>
-                    {!!problemUrl ? (
-                      <Link to={problemUrl}>{constructProblemName(problemName, problemAlias)}</Link>
-                    ) : (
-                      constructProblemName(problemName, problemAlias)
-                    )}
-                  </td>
-                </tr>
-              )}
-              {containerName && (
-                <tr>
-                  <td>{containerTitle}</td>
-                  <td>{containerName}</td>
-                </tr>
-              )}
-              <tr>
-                <td>Language</td>
-                <td>{getGradingLanguageName(gradingLanguage)}</td>
-              </tr>
-              <tr>
-                <td>Verdict</td>
-                <td>{grading && <VerdictTag verdictCode={grading.verdict.code} />}</td>
-              </tr>
-              <tr>
-                <td>Score</td>
-                <td>{grading && grading.score}</td>
-              </tr>
-              <tr>
-                <td>Time</td>
-                <td>
-                  <FormattedDate value={time} showSeconds />
-                </td>
-              </tr>
-            </tbody>
-          </HTMLTable>
-        </ContentCard>
-      </>
+      <div className="general-info">
+        {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} />
+        {(containerName || problemName) && (
+          <>
+            {' '}
+            {separator} {containerName && <>{containerName} / </>}
+            {problemName && !!problemUrl ? (
+              <Link to={problemUrl}>{constructProblemName(problemName, problemAlias)}</Link>
+            ) : (
+              constructProblemName(problemName, problemAlias)
+            )}
+          </>
+        )}{' '}
+        {separator} {getGradingLanguageName(gradingLanguage)} {separator} <FormattedDate value={time} showSeconds />
+      </div>
     );
   };
 
@@ -131,7 +91,7 @@ export function SubmissionDetails({
     const results = latestGrading.details.subtaskResults.map(({ verdict, score }, idx) => (
       <tr key={idx}>
         <td>{idx + 1}</td>
-        <td className="col-centered">
+        <td>
           <VerdictTag verdictCode={verdict.code} />
         </td>
         <td>{score}</td>
@@ -166,7 +126,7 @@ export function SubmissionDetails({
     const results = details.testDataResults[0].testCaseResults.map((result, idx) => (
       <tr key={idx}>
         <td>{idx + 1}</td>
-        <td className="col-centered">
+        <td>
           <VerdictTag verdictCode={result.verdict.code} />
         </td>
         <td>{renderExecutionTime(result)}</td>
@@ -212,7 +172,7 @@ export function SubmissionDetails({
       const results = group.testCaseResults.map((result, idx2) => (
         <tr key={idx2}>
           <td>{idx2 + 1}</td>
-          <td className="col-centered">
+          <td>
             <VerdictTag verdictCode={result.verdict.code} />
           </td>
           <td>{renderExecutionTime(result)}</td>
