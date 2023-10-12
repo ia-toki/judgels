@@ -19,15 +19,21 @@ const verdictIntentsMap = {
   [VerdictCode.SKP]: Intent.NONE,
 };
 
-const verdictDisplayCodeMap = {
-  [VerdictCode.ERR]: 'ERR',
-  [VerdictCode.SKP]: 'SKIPPED',
+const verdictDisplayNamesMap = {
+  [VerdictCode.AC]: 'Accepted',
+  [VerdictCode.WA]: 'Wrong Answer',
+  [VerdictCode.TLE]: 'Time Limit Exceeded',
+  [VerdictCode.RTE]: 'Runtime Error',
+  [VerdictCode.CE]: 'Compilation Error',
+  [VerdictCode.PND]: 'Pending',
+  [VerdictCode.ERR]: 'Internal Error',
+  [VerdictCode.SKP]: 'Skipped',
 };
 
 export function getVerdictIntent(code) {
   return verdictIntentsMap[code] || Intent.WARNING;
 }
 
-export function getVerdictDisplayCode(code) {
-  return verdictDisplayCodeMap[code] || code;
+export function getVerdictDisplayName(code) {
+  return verdictDisplayNamesMap[code] || code;
 }

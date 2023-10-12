@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
-import { VerdictTag } from '../../../../../../../components/VerdictTag/VerdictTag';
+import { GradingVerdictTag } from '../../../../../../../components/GradingVerdictTag/GradingVerdictTag';
 import { getGradingLanguageName } from '../../../../../../../modules/api/gabriel/language.js';
 
 import '../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
@@ -22,14 +22,13 @@ export function ContestSubmissionsTable({
     return (
       <thead>
         <tr>
-          <th className="col-id">ID</th>
-          {canSupervise && <th className="col-user">User</th>}
-          <th className="col-prob">Prob</th>
-          <th className="col-lang">Lang</th>
-          <th className="col-verdict">Verdict</th>
-          <th className="col-pts">Pts</th>
+          <th className="col-fit">ID</th>
+          {canSupervise && <th>User</th>}
+          <th className="col-fit">Prob</th>
+          <th className="col-fit">Lang</th>
+          <th className="col-fit">Verdict</th>
           <th>Time</th>
-          <th className="col-actions" />
+          <th className="col-fit" />
         </tr>
       </thead>
     );
@@ -38,7 +37,7 @@ export function ContestSubmissionsTable({
   const renderRows = () => {
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
-        <td>
+        <td className="col-fit">
           {submission.id}
           {canManage && (
             <>
@@ -52,16 +51,15 @@ export function ContestSubmissionsTable({
             <UserRef profile={profilesMap[submission.userJid]} />
           </td>
         )}
-        <td>{problemAliasesMap[submission.problemJid]}</td>
-        <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
-        <td className="cell-centered">
-          {submission.latestGrading && <VerdictTag verdictCode={submission.latestGrading.verdict.code} />}
+        <td className="col-fit">{problemAliasesMap[submission.problemJid]}</td>
+        <td className="col-fit">{getGradingLanguageName(submission.gradingLanguage)}</td>
+        <td className="col-fit">
+          {submission.latestGrading && <GradingVerdictTag wide grading={submission.latestGrading} />}
         </td>
-        <td>{submission.latestGrading && submission.latestGrading.score}</td>
         <td>
-          <FormattedRelative value={submission.time} />{' '}
+          <FormattedRelative value={submission.time} />
         </td>
-        <td className="cell-centered">
+        <td className="col-fit">
           <Link className="action" to={`/contests/${contest.slug}/submissions/${submission.id}`}>
             <Search />
           </Link>

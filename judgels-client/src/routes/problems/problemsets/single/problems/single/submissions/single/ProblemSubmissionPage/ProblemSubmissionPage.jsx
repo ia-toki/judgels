@@ -76,7 +76,6 @@ export class ProblemSubmissionPage extends Component {
         problemName={problemName}
         problemAlias={problemAlias}
         problemUrl={`/problems/${problemSet.slug}/${problemAlias}`}
-        containerTitle="Problemset"
         containerName={containerName}
       />
     );

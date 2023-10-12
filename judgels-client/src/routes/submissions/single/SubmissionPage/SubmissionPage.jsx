@@ -81,7 +81,6 @@ export class SubmissionPage extends Component {
         problemName={problemName}
         problemAlias={problemAlias}
         problemUrl={`${constructContainerUrl(containerPath)}/${problemAlias}`}
-        containerTitle="Archive"
         containerName={containerName}
       />
     );

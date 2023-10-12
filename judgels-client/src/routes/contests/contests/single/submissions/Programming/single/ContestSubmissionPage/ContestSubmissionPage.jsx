@@ -65,7 +65,6 @@ export class ContestSubmissionPage extends Component {
         problemName={problemName}
         problemAlias={problemAlias}
         problemUrl={`/contests/${contest.slug}/problems/${problemAlias}`}
-        containerTitle="Contest"
         containerName={containerName}
         onDownload={this.downloadSubmission}
       />
