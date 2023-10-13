@@ -14,6 +14,7 @@ export const VerdictCode = {
 const verdictIntentsMap = {
   [VerdictCode.AC]: Intent.SUCCESS,
   [VerdictCode.WA]: Intent.DANGER,
+  [VerdictCode.CE]: Intent.NONE,
   [VerdictCode.PND]: Intent.NONE,
   [VerdictCode.ERR]: Intent.NONE,
   [VerdictCode.SKP]: Intent.NONE,
