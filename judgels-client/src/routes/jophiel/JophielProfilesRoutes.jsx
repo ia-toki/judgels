@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react';
 
+import { lazyRetry } from '../../lazy';
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const LazyProfilesRoutes = lazy(() => import('./profiles/ProfilesRoutes'));
+const LazyProfilesRoutes = lazy(() => lazyRetry(() => import('./profiles/ProfilesRoutes')));
 
 function JophielProfilesRoutes(props) {
   return (

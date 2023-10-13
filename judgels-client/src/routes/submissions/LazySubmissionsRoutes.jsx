@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react';
 
+import { lazyRetry } from '../../lazy';
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const SubmissionsRoutes = lazy(() => import('./SubmissionsRoutes'));
+const SubmissionsRoutes = lazy(() => lazyRetry(() => import('./SubmissionsRoutes')));
 
 function LazySubmissionsRoutes(props) {
   return (

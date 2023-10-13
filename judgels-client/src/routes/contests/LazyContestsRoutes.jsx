@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react';
 
+import { lazyRetry } from '../../lazy';
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-export const ContestsRoutesPromise = () => import('./MainContestsRoutes');
+export const ContestsRoutesPromise = () => lazyRetry(() => import('./MainContestsRoutes'));
 
 const ContestsRoutes = lazy(ContestsRoutesPromise);
 
