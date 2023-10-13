@@ -50,7 +50,7 @@ export class ContestSubmissionPage extends Component {
   }
 
   renderSubmission = () => {
-    const { submissionWithSource, profile, problemName, problemAlias, containerName } = this.state;
+    const { submissionWithSource, profile, problemName, problemAlias } = this.state;
     const { contest } = this.props;
 
     if (!submissionWithSource) {
@@ -65,7 +65,6 @@ export class ContestSubmissionPage extends Component {
         problemName={problemName}
         problemAlias={problemAlias}
         problemUrl={`/contests/${contest.slug}/problems/${problemAlias}`}
-        containerName={containerName}
         onDownload={this.downloadSubmission}
       />
     );
