@@ -67,8 +67,16 @@
     margin-bottom: 0;
   }
 
+  .details-results {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+
   .details-card {
     padding: 10px;
+    margin-bottom: 0;
   }
 
   .details-content {

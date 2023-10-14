@@ -51,11 +51,11 @@ export function SubmissionDetails({
     }
 
     return (
-      <>
+      <div className="details-results">
         {renderSampleTestDataResults()}
         {renderSubtaskResults()}
         {renderTestDataResults()}
-      </>
+      </div>
     );
   };
 
