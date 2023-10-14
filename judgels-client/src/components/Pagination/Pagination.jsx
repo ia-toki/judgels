@@ -4,7 +4,7 @@ import { parse, stringify } from 'query-string';
 import { PureComponent } from 'react';
 import ReactPaginate from 'react-paginate';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 import { withRouter } from 'react-router';
 
 import './Pagination.scss';
@@ -113,7 +113,12 @@ const mapDispatchToProps = {
     } else {
       query = stringify({ ...queries, page: undefined });
     }
-    return push({ search: query });
+
+    if (!queries.page && nextPage === 1) {
+      return replace({ search: query });
+    } else {
+      return push({ search: query });
+    }
   },
 };
 export default withRouter(connect(undefined, mapDispatchToProps)(PaginationContainer));
