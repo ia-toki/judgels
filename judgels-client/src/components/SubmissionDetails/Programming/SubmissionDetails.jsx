@@ -78,7 +78,11 @@ export function SubmissionDetails({
         )}
         <p>
           {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} />
-          {separator} {getGradingLanguageName(gradingLanguage)} {separator} <FormattedDate value={time} showSeconds />
+          {separator} {getGradingLanguageName(gradingLanguage)}
+          {separator}{' '}
+          <span className="general-info__time">
+            <FormattedDate value={time} showSeconds />
+          </span>
         </p>
       </div>
     );
