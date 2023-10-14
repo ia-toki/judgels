@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { constructContainerUrl } from '../../../../modules/api/jerahmeel/submission';
+import { constructProblemUrl } from '../../../../modules/api/jerahmeel/submission';
 import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSelectors';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as submissionActions from '../../modules/submissionActions';
@@ -80,7 +80,7 @@ export class SubmissionPage extends Component {
         profile={profile}
         problemName={problemName}
         problemAlias={problemAlias}
-        problemUrl={`${constructContainerUrl(containerPath)}/${problemAlias}`}
+        problemUrl={`${constructProblemUrl(containerPath, problemAlias)}`}
         containerName={containerName}
       />
     );

@@ -8,3 +8,14 @@ export function constructContainerUrl(subpaths) {
     return `/problems/${subpaths[0]}`;
   }
 }
+
+export function constructProblemUrl(subpaths, problemAlias) {
+  if (!subpaths) {
+    return '';
+  }
+  if (subpaths.length === 2) {
+    return `${constructContainerUrl(subpaths)}/problems/${problemAlias}`;
+  } else {
+    return `${constructContainerUrl(subpaths)}/${problemAlias}`;
+  }
+}

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { VerdictTag } from '../../../../../../components/VerdictTag/VerdictTag';
 import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { constructContainerUrl } from '../../../../../../modules/api/jerahmeel/submission';
+import { constructContainerUrl, constructProblemUrl } from '../../../../../../modules/api/jerahmeel/submission';
 import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
 
 import '../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
@@ -46,9 +46,10 @@ export function SubmissionsTable({
         </td>
         <td>
           <Link
-            to={`${constructContainerUrl(containerPathsMap[submission.containerJid])}/${problemAliasesMap[
-              submission.containerJid + '-' + submission.problemJid
-            ] || '#'}`}
+            to={`${constructProblemUrl(
+              containerPathsMap[submission.containerJid],
+              problemAliasesMap[submission.containerJid + '-' + submission.problemJid] || '#'
+            )}`}
           >
             {constructProblemName(
               problemNamesMap[submission.problemJid],

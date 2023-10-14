@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 
 import { FormattedRelative } from '../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../components/UserRef/UserRef';
+import { GradingVerdictTag } from '../../../components/GradingVerdictTag/GradingVerdictTag';
 import { getGradingLanguageName } from '../../../modules/api/gabriel/language';
 import { constructProblemName } from '../../../modules/api/sandalphon/problem';
-import { constructContainerUrl } from '../../../modules/api/jerahmeel/submission';
+import { constructContainerUrl, constructProblemUrl } from '../../../modules/api/jerahmeel/submission';
 
 import '../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
-import { GradingVerdictTag } from '../../../components/GradingVerdictTag/GradingVerdictTag';
 
 export function SubmissionsTable({
   submissions,
@@ -61,9 +61,10 @@ export function SubmissionsTable({
         </td>
         <td>
           <Link
-            to={`${constructContainerUrl(containerPathsMap[submission.containerJid])}/${problemAliasesMap[
-              submission.containerJid + '-' + submission.problemJid
-            ] || '#'}`}
+            to={`${constructProblemUrl(
+              containerPathsMap[submission.containerJid],
+              problemAliasesMap[submission.containerJid + '-' + submission.problemJid] || '#'
+            )}`}
           >
             {constructProblemName(
               problemNamesMap[submission.problemJid],
