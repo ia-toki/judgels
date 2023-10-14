@@ -1,6 +1,15 @@
 .single-contest-routes__header {
   margin-top: -2px;
   padding-bottom: 8px;
+
+  .single-contest-routes__heading {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .single-contest-routes__action{
+    margin-left: auto;
+  }
 }
 
 .tab-item-with-widget {

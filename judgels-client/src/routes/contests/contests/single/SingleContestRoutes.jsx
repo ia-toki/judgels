@@ -173,18 +173,19 @@ function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfi
     items: sidebarItems,
     contentHeader: (
       <div className="single-contest-routes__header">
-        <h2 className="float-left">{contest.name}</h2>
-        {contestWebConfig && (
-          <div className="float-right">
-            <ContestEditDialog
-              contest={contest}
-              canManage={contestWebConfig.canManage}
-              isEditingContest={isEditingContest}
-              onSetNotEditingContest={onSetNotEditingContest}
-            />
-          </div>
-        )}
-        <div className="clearfix" />
+        <div className="single-contest-routes__heading">
+          <h2>{contest.name}</h2>
+          {contestWebConfig && (
+            <div className="single-contest-routes__action">
+              <ContestEditDialog
+                contest={contest}
+                canManage={contestWebConfig.canManage}
+                isEditingContest={isEditingContest}
+                onSetNotEditingContest={onSetNotEditingContest}
+              />
+            </div>
+          )}
+        </div>
         {contestWebConfig ? <ContestStateWidget /> : <LoadingContestStateWidget />}
       </div>
     ),
