@@ -25,16 +25,11 @@
   }
 
   .col-verdict {
-    width: 160px;
+    width: 140px;
   }
 
   .col-tc-info {
     width: 110px;
-  }
-
-  .col-tc-subtasks {
-    width: 150px;
-    text-align: center;
   }
 
   .col-centered {
@@ -43,23 +38,6 @@
 
   .general-info {
     margin-bottom: 25px;
-  }
-
-  .test-group__id {
-    float: left;
-  }
-
-  .test-group__subtasks-tags {
-    float: right;
-  }
-
-  .test-group__subtasks {
-    font-weight: 600;
-    margin-right: 5px;
-  }
-
-  .subtask-tag {
-    margin-right: 2px;
   }
 
   .compilation-output {
@@ -77,5 +55,38 @@
 
   .submission-details-image {
     overflow: auto;
+  }
+
+  details summary { 
+    cursor: pointer;
+  }
+
+  details summary > * { 
+    display: inline-block;
+    margin-left: 5px;
+    margin-bottom: 0;
+  }
+
+  .details-card {
+    padding: 10px;
+  }
+
+  .details-content {
+    margin-left: 15px;
+  }
+
+  .subtask-name {
+    display: inline-block;
+    width: 80px;
+  }
+
+  .subtask-verdict {
+    display: inline-block;
+    width: 140px;
+    font-weight: normal;
+  }
+
+  .subtask-score {
+    font-weight: normal;
   }
 }

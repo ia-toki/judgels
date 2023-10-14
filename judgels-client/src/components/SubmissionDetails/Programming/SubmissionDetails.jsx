@@ -1,4 +1,4 @@
-import { HTMLTable, Tag, Button } from '@blueprintjs/core';
+import { HTMLTable, Button } from '@blueprintjs/core';
 import { Download } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
@@ -52,8 +52,8 @@ export function SubmissionDetails({
 
     return (
       <>
-        {renderSubtaskResults()}
         {renderSampleTestDataResults()}
+        {renderSubtaskResults()}
         {renderTestDataResults()}
       </>
     );
@@ -89,33 +89,57 @@ export function SubmissionDetails({
       return null;
     }
 
-    const results = latestGrading.details.subtaskResults.map(({ verdict, score }, idx) => (
-      <tr key={idx}>
-        <td>{idx + 1}</td>
-        <td>
-          <VerdictTag verdictCode={verdict.code} />
-        </td>
-        <td>{score}</td>
-      </tr>
-    ));
+    return latestGrading.details.subtaskResults.map(subtaskResult => (
+      <ContentCard className="details-card">
+        <details>
+          <summary>
+            <h5>
+              <span className="subtask-name">Subtask {subtaskResult.id}</span>
+              <span className="subtask-verdict">
+                <VerdictTag verdictCode={subtaskResult.verdict.code} />
+              </span>
+              <span className="subtask-score">{subtaskResult.score}</span>
+            </h5>
+          </summary>
 
-    return (
-      <>
-        <h4>Subtask Results</h4>
-        <ContentCard>
-          <HTMLTable striped>
-            <thead>
-              <tr>
-                <th className="col-id">ID</th>
-                <th className="col-verdict">Verdict</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>{results}</tbody>
-          </HTMLTable>
-        </ContentCard>
-      </>
-    );
+          <div className="details-content">
+            <hr />
+            <HTMLTable striped className="programming-submission-details">
+              <thead>
+                <tr>
+                  <th className="col-id">ID</th>
+                  <th className="col-verdict">Verdict</th>
+                  <th className="col-tc-info">Time</th>
+                  <th className="col-tc-info">Memory</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {latestGrading.details.testDataResults.map(testGroupResult =>
+                  testGroupResult.testCaseResults.map((testCaseResult, testCaseIdx) => {
+                    if (testCaseResult.subtaskIds.indexOf(subtaskResult.id) < 0) {
+                      return null;
+                    }
+                    const testCaseId = `${testGroupResult.id}_${testCaseIdx + 1}`;
+                    return (
+                      <tr key={testCaseId}>
+                        <td>{testCaseId}</td>
+                        <td>
+                          <VerdictTag verdictCode={testCaseResult.verdict.code} />
+                        </td>
+                        <td>{renderExecutionTime(testCaseResult)}</td>
+                        <td>{renderExecutionMemory(testCaseResult)}</td>
+                        <td>{testCaseResult.score}</td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </HTMLTable>
+          </div>
+        </details>
+      </ContentCard>
+    ));
   };
 
   const renderSampleTestDataResults = () => {
@@ -124,89 +148,89 @@ export function SubmissionDetails({
       return null;
     }
 
-    const results = details.testDataResults[0].testCaseResults.map((result, idx) => (
-      <tr key={idx}>
-        <td>{idx + 1}</td>
-        <td>
-          <VerdictTag verdictCode={result.verdict.code} />
-        </td>
-        <td>{renderExecutionTime(result)}</td>
-        <td>{renderExecutionMemory(result)}</td>
-        <td>{result.score}</td>
-        {hasSubtasks && <td className="col-centered">{renderSubtaskTags(result.subtaskIds)}</td>}
-      </tr>
-    ));
-
     return (
-      <>
-        <h4>Sample Test Data Results</h4>
-        <ContentCard>
-          <HTMLTable striped className="programming-submission-details">
-            <thead>
-              <tr>
-                <th className="col-id">ID</th>
-                <th className="col-verdict">Verdict</th>
-                <th className="col-tc-info">Time</th>
-                <th className="col-tc-info">Memory</th>
-                <th>Score</th>
-                {hasSubtasks && <th className="col-tc-subtasks">{hasSubtasks && 'Subtasks'}</th>}
-              </tr>
-            </thead>
-            <tbody>{results}</tbody>
-          </HTMLTable>
-        </ContentCard>
-      </>
+      <ContentCard className="details-card">
+        <details>
+          <summary>
+            <h5>Sample Test Data Results</h5>
+          </summary>
+
+          <div className="details-content">
+            <HTMLTable striped className="programming-submission-details">
+              <thead>
+                <tr>
+                  <th className="col-id">ID</th>
+                  <th className="col-verdict">Verdict</th>
+                  <th className="col-tc-info">Time</th>
+                  <th className="col-tc-info">Memory</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {details.testDataResults[0].testCaseResults.map((result, idx) => (
+                  <tr key={idx}>
+                    <td>0_{idx + 1}</td>
+                    <td>
+                      <VerdictTag verdictCode={result.verdict.code} />
+                    </td>
+                    <td>{renderExecutionTime(result)}</td>
+                    <td>{renderExecutionMemory(result)}</td>
+                    <td>{result.score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </HTMLTable>
+          </div>
+        </details>
+      </ContentCard>
     );
   };
 
   const renderTestDataResults = () => {
+    if (hasSubtasks) {
+      return null;
+    }
+
     const details = latestGrading.details;
     if (details.testDataResults.length < 2) {
       return null;
     }
 
-    let groups = [];
-
-    for (let idx = 1; idx < details.testDataResults.length; idx++) {
-      const group = details.testDataResults[idx];
-
-      const results = group.testCaseResults.map((result, idx2) => (
-        <tr key={idx2}>
-          <td>{idx2 + 1}</td>
-          <td>
-            <VerdictTag verdictCode={result.verdict.code} />
-          </td>
-          <td>{renderExecutionTime(result)}</td>
-          <td>{renderExecutionMemory(result)}</td>
-          <td>{result.score}</td>
-        </tr>
-      ));
-
-      groups = [
-        ...groups,
-        <ContentCard key={idx}>
-          {hasSubtasks && renderTestGroupHeading(idx, group.testCaseResults)}
-          <HTMLTable striped className="programming-submission-details">
-            <thead>
-              <tr>
-                <th className="col-id">ID</th>
-                <th className="col-verdict">Verdict</th>
-                <th className="col-tc-info">Time</th>
-                <th className="col-tc-info">Memory</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>{results}</tbody>
-          </HTMLTable>
-        </ContentCard>,
-      ];
-    }
-
     return (
-      <>
-        <h4>Test Data Results</h4>
-        {groups}
-      </>
+      <ContentCard className="details-card">
+        <details>
+          <summary>
+            <h5>Test Data Results</h5>
+          </summary>
+
+          <div className="details-content">
+            <HTMLTable striped className="programming-submission-details">
+              <thead>
+                <tr>
+                  <th className="col-id">ID</th>
+                  <th className="col-verdict">Verdict</th>
+                  <th className="col-tc-info">Time</th>
+                  <th className="col-tc-info">Memory</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {details.testDataResults[1].testCaseResults.map((result, idx) => (
+                  <tr key={idx}>
+                    <td>{idx + 1}</td>
+                    <td>
+                      <VerdictTag verdictCode={result.verdict.code} />
+                    </td>
+                    <td>{renderExecutionTime(result)}</td>
+                    <td>{renderExecutionMemory(result)}</td>
+                    <td>{result.score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </HTMLTable>
+          </div>
+        </details>
+      </ContentCard>
     );
   };
 
@@ -309,33 +333,6 @@ export function SubmissionDetails({
         </Button>
         <div className="clearfix" />
       </div>
-    );
-  };
-
-  const renderTestGroupHeading = (id, results) => {
-    const subtaskTags = results.length !== 0 && renderSubtaskTags(results[0].subtaskIds);
-
-    return (
-      <>
-        <h5 className="test-group__id">Test Group {id}</h5>
-        <div className="test-group__subtasks-tags">
-          <span className="test-group__subtasks">Subtasks</span> {subtaskTags}
-        </div>
-      </>
-    );
-  };
-
-  const renderSubtaskTags = subtaskIds => {
-    return (
-      <span>
-        {subtaskIds
-          .filter(id => id !== 0)
-          .map(id => (
-            <Tag className="subtask-tag" key={id} round>
-              {id}
-            </Tag>
-          ))}
-      </span>
     );
   };
 
