@@ -50,7 +50,7 @@ describe('googleAuthActions', () => {
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(200, config);
 
-        await store.dispatch(googleAuthActions.logIn({ tokenId: idToken }));
+        await store.dispatch(googleAuthActions.logIn(idToken));
         expect(store.getActions()).toContainEqual(PutToken(token));
         expect(store.getActions()).toContainEqual(PutUser(user));
         expect(store.getActions()).toContainEqual(PutWebConfig(config));
@@ -63,7 +63,7 @@ describe('googleAuthActions', () => {
           .post(`/session/login-google`, { idToken })
           .reply(403);
 
-        const isLoggedIn = await store.dispatch(googleAuthActions.logIn({ tokenId: idToken }));
+        const isLoggedIn = await store.dispatch(googleAuthActions.logIn(idToken));
         expect(isLoggedIn).toBeFalsy();
       });
     });

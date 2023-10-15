@@ -1,6 +1,6 @@
 import { Classes, Dialog } from '@blueprintjs/core';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Component } from 'react';
-import GoogleLogin from 'react-google-login';
 import { connect } from 'react-redux';
 
 import { APP_CONFIG } from '../../../../conf';
@@ -23,16 +23,11 @@ class GoogleAuth extends Component {
     }
 
     return (
-      <>
-        <GoogleLogin
-          clientId={APP_CONFIG.googleAuth.clientId}
-          buttonText={this.state.isAuthorizing ? 'Continuing with Google...' : 'Continue with Google'}
-          onSuccess={this.logIn}
-          className="google-auth"
-        />
+      <GoogleOAuthProvider clientId={APP_CONFIG.googleAuth.clientId}>
+        <GoogleLogin onSuccess={this.logIn} className="google-auth" />
         <hr />
         {this.renderDialog()}
-      </>
+      </GoogleOAuthProvider>
     );
   }
 
@@ -78,13 +73,16 @@ class GoogleAuth extends Component {
   );
 
   logIn = async response => {
+    const { credential } = response;
+    const data = decodeJwtResponse(credential);
+
     this.setState({
-      idToken: response.tokenId,
-      email: response.profileObj.email,
+      idToken: credential,
+      email: data.email,
       isAuthorizing: true,
     });
 
-    const isLoggedIn = await this.props.onLogIn(response);
+    const isLoggedIn = await this.props.onLogIn(credential);
     if (!isLoggedIn) {
       this.toggleDialog();
     }
@@ -96,6 +94,22 @@ class GoogleAuth extends Component {
       username: data.username,
     });
   };
+}
+
+function decodeJwtResponse(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split('')
+      .map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
+
+  return JSON.parse(jsonPayload);
 }
 
 const mapDispatchToProps = {

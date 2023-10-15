@@ -7,11 +7,11 @@ import { userSearchAPI } from '../../../modules/api/jophiel/userSearch';
 import { SubmissionError } from '../../../modules/form/submissionError';
 import { afterLogin } from '../login/modules/loginActions';
 
-export function logIn({ tokenId }) {
+export function logIn(idToken) {
   return async dispatch => {
     let session;
     try {
-      session = await sessionAPI.logInWithGoogle(tokenId);
+      session = await sessionAPI.logInWithGoogle(idToken);
     } catch (error) {
       if (error instanceof ForbiddenError) {
         return false;
@@ -31,6 +31,6 @@ export function register(data) {
 
     await userAccountAPI.registerGoogleUser(data);
     await dispatch(push('/registered?source=google'));
-    await dispatch(logIn({ tokenId: data.idToken }));
+    await dispatch(logIn(data.idToken));
   };
 }
