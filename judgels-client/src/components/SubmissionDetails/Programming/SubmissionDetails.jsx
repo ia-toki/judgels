@@ -60,7 +60,7 @@ export function SubmissionDetails({
   };
 
   const renderGeneralInfo = () => {
-    const separator = <>&nbsp;&#9679;&nbsp;</>;
+    const separator = <>&nbsp;&bull;&nbsp;</>;
 
     const grading = latestGrading;
 
@@ -77,9 +77,8 @@ export function SubmissionDetails({
           </h4>
         )}
         <p>
-          {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} />
-          {separator} {getGradingLanguageName(gradingLanguage)}
-          {separator}{' '}
+          {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} /> {separator}{' '}
+          {getGradingLanguageName(gradingLanguage)} {separator}{' '}
           <span className="general-info__time">
             <FormattedDate value={time} showSeconds />
           </span>
