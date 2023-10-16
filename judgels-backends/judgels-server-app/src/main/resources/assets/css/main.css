@@ -190,6 +190,10 @@ input[type="text"], input[type="password"], textarea {
   border: 1px solid var(--accent-color);
 }
 
+.login-layout {
+  min-height: unset;
+}
+
 .title-inline {
   margin-bottom: 10px;
 }

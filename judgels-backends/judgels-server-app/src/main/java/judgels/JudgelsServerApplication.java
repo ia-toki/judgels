@@ -73,12 +73,14 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runMichael(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
+        JophielConfiguration jophielConfig = config.getJophielConfig();
         SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
+                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(sandalphonConfig.getGabrielConfig()))
                 .build();

@@ -7,6 +7,7 @@ import java.util.Optional;
 public class HtmlTemplate {
     private final String name;
 
+    private String contentLayoutClassName = "";
     private String title = "";
     private String username = "";
     private String avatarUrl = "";
@@ -27,6 +28,14 @@ public class HtmlTemplate {
 
     public String getName() {
         return name;
+    }
+
+    public String getContentLayoutClassName() {
+        return contentLayoutClassName;
+    }
+
+    public void setContentLayoutClassName(String contentLayoutClassName) {
+        this.contentLayoutClassName = contentLayoutClassName;
     }
 
     public String getTitle() {

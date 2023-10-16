@@ -3,6 +3,7 @@ package judgels.michael;
 import dagger.Component;
 import javax.inject.Singleton;
 import judgels.JudgelsServerModule;
+import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.account.role.RoleResource;
@@ -48,6 +49,7 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         SandalphonHibernateDaoModule.class,
 
         // 3rd parties
+        AuthModule.class,
         RabbitMQModule.class,
         GabrielClientModule.class,
         SandalphonClientModule.class,

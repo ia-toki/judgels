@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.auth.google.GoogleAuth;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
@@ -32,6 +33,7 @@ import judgels.michael.template.HtmlTemplate;
 public class IndexResource extends BaseResource {
     private static final String POST_LOGIN_URL = "/problems";
 
+    @Inject protected Optional<GoogleAuth> googleAuth;
     @Inject protected SessionStore sessionStore;
     @Inject protected UserStore userStore;
     @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
@@ -57,8 +59,9 @@ public class IndexResource extends BaseResource {
 
     private View renderLogin(LoginForm form) {
         HtmlTemplate template = newTemplate();
+        template.setContentLayoutClassName("login-layout");
         template.setTitle("Log in");
-        return new LoginView(template, form);
+        return new LoginView(template, form, googleAuth.isPresent());
     }
 
     @POST
