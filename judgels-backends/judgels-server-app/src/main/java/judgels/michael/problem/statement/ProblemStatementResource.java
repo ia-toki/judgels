@@ -32,7 +32,6 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.resource.StatementLanguageStatus;
-import judgels.sandalphon.resource.StatementUtils;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 import judgels.service.ServiceUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -81,7 +80,7 @@ public class ProblemStatementResource extends BaseProblemResource {
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
         statementStore.updateStatement(actor.getUserJid(), problem.getJid(), language, new ProblemStatement.Builder()
                 .title(form.title)
-                .text(StatementUtils.convertUnicodeToHtmlEntities(form.text))
+                .text(form.text)
                 .build());
 
         return redirect("/problems/" + problem.getType().name().toLowerCase() + "/" + problemId + "/statements");

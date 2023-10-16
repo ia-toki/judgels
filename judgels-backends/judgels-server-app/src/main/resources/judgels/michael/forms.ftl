@@ -5,7 +5,6 @@
   type="horizontal"
   compact=false
   action=""
-  acceptCharset=""
   multipart=false
   labelWidth=3
   fieldWidth=9
@@ -14,7 +13,6 @@
     method="${method}"
     class="form-${type}"
     <#if action?has_content>action="${action}"</#if>
-    <#if acceptCharset?has_content>accept-charset="${acceptCharset}"</#if>
     <#if multipart>enctype="multipart/form-data"</#if>
   >
     <#global globalFormType = type>
