@@ -2,10 +2,12 @@ import { Tag } from '@blueprintjs/core';
 
 import { getVerdictDisplayName, getVerdictIntent } from '../../modules/api/gabriel/verdict';
 
-export const VerdictTag = ({ verdictCode }) => {
+import './VerdictTag.scss';
+
+export const VerdictTag = ({ verdictCode, blank }) => {
   return (
-    <Tag round intent={getVerdictIntent(verdictCode)}>
-      {getVerdictDisplayName(verdictCode)}
+    <Tag className="verdict-tag" round intent={getVerdictIntent(verdictCode)}>
+      {blank ? <>&nbsp;&nbsp;</> : getVerdictDisplayName(verdictCode)}
     </Tag>
   );
 };
