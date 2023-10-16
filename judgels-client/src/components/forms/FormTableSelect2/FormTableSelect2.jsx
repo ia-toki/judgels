@@ -9,7 +9,7 @@ import { FormTableInput } from '../FormTableInput/FormTableInput';
 import './FormTableSelect2.scss';
 
 export function FormTableSelect2(props) {
-  const { input, meta, optionValues, optionNamesMap } = props;
+  const { input, meta, disabled, optionValues, optionNamesMap } = props;
   const { onChange, ...inputProps } = input;
 
   const renderOption = (value, { handleClick, modifiers }) => {
@@ -37,6 +37,7 @@ export function FormTableSelect2(props) {
         popoverProps={{ usePortal: false }}
       >
         <Button
+          disabled={disabled}
           data-key={inputProps.name}
           alignText={Alignment.LEFT}
           text={optionNamesMap[input.value]}
