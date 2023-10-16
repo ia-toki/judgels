@@ -155,7 +155,14 @@ export function SubmissionDetails({
       <ContentCard className="details-card">
         <details>
           <summary>
-            <h5>Sample Test Data Results</h5>
+            <h5>
+              <span className="test-data-heading">Sample Test Data Results</span>
+              <span className="test-data-verdicts">
+                {details.testDataResults[0].testCaseResults.map(result => (
+                  <VerdictTag blank verdictCode={result.verdict.code} />
+                ))}
+              </span>
+            </h5>
           </summary>
 
           <div className="details-content">
@@ -203,7 +210,12 @@ export function SubmissionDetails({
       <ContentCard className="details-card">
         <details>
           <summary>
-            <h5>Test Data Results</h5>
+            <h5>
+              <span className="test-data-heading">Test Data Results</span>
+              <span className="test-data-verdicts">
+                <VerdictTag blank verdictCode={latestGrading.verdict.code} />
+              </span>
+            </h5>
           </summary>
 
           <div className="details-content">

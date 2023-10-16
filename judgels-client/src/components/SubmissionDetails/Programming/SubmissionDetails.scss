@@ -88,6 +88,16 @@
     margin-left: 15px;
   }
 
+  .test-data-heading {
+    display: inline-block;
+    width: 220px;
+  }
+
+  .test-data-verdicts {
+    display: inline-flex;
+    gap: 2px;
+  }
+
   .subtask-name {
     display: inline-block;
     width: 80px;
