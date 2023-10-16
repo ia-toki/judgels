@@ -1,5 +1,5 @@
 <#macro layout>
-  <div class="content">
+  <div class="content ${vars.contentLayoutClassName}">
     <#nested>
   </div>
 </#macro>
