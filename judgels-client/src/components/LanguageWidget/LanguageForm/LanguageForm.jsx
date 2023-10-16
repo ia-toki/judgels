@@ -14,26 +14,29 @@ export default function LanguageForm({ onSubmit, initialValues, languages }) {
     optionValues: languages,
     optionNamesMap: languageDisplayNamesMap,
     validate: Required,
+    disabled: languages.length <= 1,
   };
 
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues}>
-      {({ handleSubmit, submitting }) => (
-        <form onSubmit={handleSubmit}>
+      {({ handleSubmit, submitting, dirty }) => (
+        <form onSubmit={handleSubmit} className="language-form">
           <table className="language-form__field">
             <tbody>
               <Field component={FormTableSelect2} {...field} />
             </tbody>
           </table>
-          <Button
-            className="language-form__button"
-            type="submit"
-            text="Switch"
-            alignText={Alignment.LEFT}
-            intent={Intent.PRIMARY}
-            loading={submitting}
-          />
-          <div className="clearfix" />
+          {languages.length > 1 && (
+            <Button
+              className="language-form__button"
+              type="submit"
+              text="Switch"
+              alignText={Alignment.LEFT}
+              intent={Intent.PRIMARY}
+              loading={submitting}
+              disabled={!dirty}
+            />
+          )}
         </form>
       )}
     </Form>
