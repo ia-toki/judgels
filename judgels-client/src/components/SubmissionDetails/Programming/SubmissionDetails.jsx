@@ -16,6 +16,7 @@ import {
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
 import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
+import { decodeBase64 } from '../../../utils/base64';
 
 import './SubmissionDetails.scss';
 
@@ -301,7 +302,7 @@ export function SubmissionDetails({
           {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
         </h5>
         <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
-          {atob(submissionFiles[key].content)}
+          {decodeBase64(submissionFiles[key].content)}
         </SourceCode>
         {verdict.code === VerdictCode.CE &&
           details &&

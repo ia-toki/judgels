@@ -12,6 +12,7 @@ import {
   getGradingLanguageEditorSubmissionHint,
   gradingLanguageNamesMap,
 } from '../../../../modules/api/gabriel/language.js';
+import { decodeBase64 } from '../../../../utils/base64';
 
 import './ProblemSubmissionEditor.scss';
 
@@ -72,7 +73,7 @@ export function ProblemSubmissionEditor({
 
     (skeletons || []).forEach(skeleton => {
       if (skeleton.languages.indexOf(defaultGradingLanguage) >= 0) {
-        initialValues.editor = atob(skeleton.content);
+        initialValues.editor = decodeBase64(skeleton.content);
       }
     });
 
