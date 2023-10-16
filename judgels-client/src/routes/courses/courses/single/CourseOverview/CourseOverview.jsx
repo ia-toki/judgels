@@ -15,10 +15,12 @@ function CourseOverview({ course, chapters }) {
       return null;
     }
     return (
-      <ButtonLink intent={Intent.WARNING} to={`/courses/${course.slug}/chapters/${chapters[0].alias}`}>
-        Start first chapter&nbsp;&nbsp;
-        <SendMessage />
-      </ButtonLink>
+      <div>
+        <ButtonLink intent={Intent.WARNING} to={`/courses/${course.slug}/chapters/${chapters[0].alias}`}>
+          Start first chapter&nbsp;&nbsp;
+          <SendMessage />
+        </ButtonLink>
+      </div>
     );
   };
 
@@ -27,6 +29,7 @@ function CourseOverview({ course, chapters }) {
       <h2>{course.name}</h2>
       <hr />
       <HtmlText>{course.description}</HtmlText>
+      <br />
       {renderStartButton()}
     </div>
   );
