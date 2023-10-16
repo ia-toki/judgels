@@ -1,6 +1,7 @@
 package judgels.michael.template;
 
 import io.dropwizard.views.View;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -10,7 +11,7 @@ public abstract class TemplateView extends View {
     private HtmlForm form;
 
     public TemplateView(String templateName, HtmlTemplate template) {
-        super(templateName);
+        super(templateName, StandardCharsets.UTF_8);
         this.template = template;
     }
 
