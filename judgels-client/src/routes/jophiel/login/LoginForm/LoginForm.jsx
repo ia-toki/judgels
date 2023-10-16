@@ -13,7 +13,6 @@ const usernameOrEmailField = {
   name: 'usernameOrEmail',
   label: 'Username or Email',
   validate: Required,
-  autoFocus: true,
 };
 
 const passwordField = {
