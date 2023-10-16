@@ -2,6 +2,7 @@
   <!DOCTYPE html>
   <html>
     <head>
+      <meta charset="UTF-8">
       <meta name="robots" content="noindex">
       <title>${title}</title>
       <link rel="stylesheet" href="/assets/css/reset.css">
