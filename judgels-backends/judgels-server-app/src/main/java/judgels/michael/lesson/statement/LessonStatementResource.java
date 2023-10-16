@@ -32,6 +32,7 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.resource.StatementLanguageStatus;
+import judgels.sandalphon.resource.StatementUtils;
 import judgels.sandalphon.resource.WorldLanguageRegistry;
 import judgels.service.ServiceUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -96,7 +97,7 @@ public class LessonStatementResource extends BaseLessonResource {
         lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
         statementStore.updateStatement(actor.getUserJid(), lesson.getJid(), language, new LessonStatement.Builder()
                 .title(form.title)
-                .text(form.text)
+                .text(StatementUtils.convertUnicodeToHtmlEntities(form.text))
                 .build());
 
         return redirect("/lessons/" + lessonId + "/statements");

@@ -8,7 +8,7 @@
   <#include "ckeditor.ftl">
   <@switchLanguage.view languages=enabledLanguages language=language/>
 
-  <@forms.form type="vertical">
+  <@forms.form type="vertical" acceptCharset="utf-8">
     <#if formValues.title?has_content>
       <@forms.input name="title" label="Title" required=true disabled=!canEdit/>
     </#if>
