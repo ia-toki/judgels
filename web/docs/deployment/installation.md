@@ -56,11 +56,6 @@ In `vars.yml`, generate different random strings for these values:
 - `rabbitmq_password`
    * The password for the server and grader apps to connect to RabbitMQ.
 
-If you generate a different ssh key filename, edit the following variable in `vars.yml` to allow access to root:
-
-- `ansible_ssh_private_key_file`
-   * Fill with the location of the custom ssh private key file
-
 ### E. Setting up domains
 
 1. Purchase a domain (for example: `mycontest.org`). Then, set up the following (sub)domains.
@@ -82,6 +77,9 @@ If you generate a different ssh key filename, edit the following variable in `va
    app_version: '2.0'
    ```
    You can get the latest version from https://github.com/ia-toki/judgels/releases. Enter the version without the `v` prefix.
+1. If you generate a different ssh key filename, edit the following variable in `env/vars.yml` to allow access to root:
+   - `ansible_ssh_private_key_file`
+      * Fill with the location of the custom ssh private key file
 1. Run the provision playbook:
    ```
    ansible-playbook -e @env/vars.yml playbooks/provision.yml
