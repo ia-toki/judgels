@@ -166,7 +166,7 @@ class ContestProblemApiIntegrationTests extends BaseUrielApiIntegrationTests {
                                 .build())
                         .limits(new ProblemLimits.Builder()
                                 .timeLimit(2000)
-                                .memoryLimit(65536)
+                                .memoryLimit(262144)
                                 .build())
                         .submissionConfig(new ProblemSubmissionConfig.Builder()
                                 .sourceKeys(Map.of("source", "Source code"))
