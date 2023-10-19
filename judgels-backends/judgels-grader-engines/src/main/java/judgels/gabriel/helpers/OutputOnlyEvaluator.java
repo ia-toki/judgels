@@ -31,7 +31,7 @@ public class OutputOnlyEvaluator implements Evaluator {
         this.evaluationDir = evaluationDir;
 
         try {
-            fs.uploadZippedFiles(Paths.get(""), new FileInputStream(sourceFile), false);
+            fs.uploadZippedFiles(Paths.get(""), new FileInputStream(sourceFile));
         } catch (RuntimeException | FileNotFoundException e) {
             throw new PreparationException(e);
         }

@@ -136,7 +136,7 @@ public class LessonStatementStore extends BaseLessonStore {
 
     public void uploadStatementMediaFileZipped(String userJid, String lessonJid, InputStream mediaFileZipped) {
         Path mediaDirPath = getStatementMediaDirPath(userJid, lessonJid);
-        lessonFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
+        lessonFs.uploadZippedFiles(mediaDirPath, mediaFileZipped);
     }
 
     public List<FileInfo> getStatementMediaFiles(String userJid, String lessonJid) {

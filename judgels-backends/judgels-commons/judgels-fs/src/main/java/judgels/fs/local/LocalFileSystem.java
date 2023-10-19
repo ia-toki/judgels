@@ -106,21 +106,29 @@ public final class LocalFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadZippedFiles(Path dirPath, InputStream content, boolean includeDirectory) {
+    public void uploadZippedFiles(Path dirPath, InputStream content) {
         try {
             File destDir = baseDir.resolve(dirPath).toFile();
             byte[] buffer = new byte[4096];
             int entries = 0;
             long total = 0;
+
+            List<String> directories = Lists.newArrayList();
             try (ZipInputStream zis = new ZipInputStream(content)) {
                 ZipEntry ze = zis.getNextEntry();
                 while (ze != null) {
                     String filename = ze.getName();
-                    File file = new File(destDir, filename);
-                    if (includeDirectory && ze.isDirectory()) {
-                        file.mkdirs();
-                    } else if ((includeDirectory && file.getCanonicalPath().startsWith(destDir.getCanonicalPath()))
-                            || destDir.getAbsolutePath().equals(file.getParentFile().getAbsolutePath())) {
+
+                    for (String dirName : directories) {
+                        if (filename.contains(dirName)) {
+                            filename = filename.replaceFirst("^" + dirName, "");
+                        }
+                    }
+
+                    if (ze.isDirectory()) {
+                        directories.add(filename);
+                    } else {
+                        File file = new File(destDir, filename);
                         try (FileOutputStream fos = new FileOutputStream(file)) {
                             int len;
                             while ((len = zis.read(buffer)) > 0) {
@@ -149,7 +157,7 @@ public final class LocalFileSystem implements FileSystem {
 
     @Override
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
-        File[] files  = baseDir.resolve(dirPath).toFile().listFiles();
+        File[] files = baseDir.resolve(dirPath).toFile().listFiles();
         if (files == null) {
             return ImmutableList.of();
         }
@@ -171,7 +179,7 @@ public final class LocalFileSystem implements FileSystem {
 
     @Override
     public List<FileInfo> listFilesInDirectory(Path dirPath) {
-        File[] files  = baseDir.resolve(dirPath).toFile().listFiles();
+        File[] files = baseDir.resolve(dirPath).toFile().listFiles();
         if (files == null) {
             return ImmutableList.of();
         }
