@@ -3,7 +3,6 @@ package judgels.fs.local;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
