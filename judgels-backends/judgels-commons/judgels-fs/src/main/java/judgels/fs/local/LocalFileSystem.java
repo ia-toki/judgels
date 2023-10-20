@@ -3,6 +3,7 @@ package judgels.fs.local;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
@@ -113,19 +114,22 @@ public final class LocalFileSystem implements FileSystem {
             int entries = 0;
             long total = 0;
 
-            List<String> directories = Lists.newArrayList();
+            Set<String> directories = Sets.newHashSet();
             try (ZipInputStream zis = new ZipInputStream(content)) {
                 ZipEntry ze = zis.getNextEntry();
                 while (ze != null) {
+                    boolean isDirectoryEntry = ze.isDirectory();
                     String filename = ze.getName();
+                    int lastSlashIdx = filename.lastIndexOf('/');
 
-                    for (String dirName : directories) {
-                        if (filename.contains(dirName)) {
-                            filename = filename.replaceFirst("^" + dirName, "");
+                    if (lastSlashIdx != -1 && !isDirectoryEntry) {
+                        String fileBasePath = filename.substring(0, lastSlashIdx + 1);
+                        if (directories.contains(fileBasePath)) {
+                            filename = filename.replaceFirst("^" + fileBasePath, "");
                         }
                     }
 
-                    if (ze.isDirectory()) {
+                    if (isDirectoryEntry) {
                         directories.add(filename);
                     } else {
                         File file = new File(destDir, filename);
