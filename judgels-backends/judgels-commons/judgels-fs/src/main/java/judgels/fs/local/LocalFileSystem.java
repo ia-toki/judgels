@@ -29,6 +29,7 @@ import java.util.zip.ZipInputStream;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.fs.NaturalFilenameComparator;
+import org.apache.commons.io.FilenameUtils;
 
 public final class LocalFileSystem implements FileSystem {
     private static final Set<String> IGNORABLE_FILES = ImmutableSet.of(
@@ -114,33 +115,24 @@ public final class LocalFileSystem implements FileSystem {
             int entries = 0;
             long total = 0;
 
-            Set<String> directories = Sets.newHashSet();
             try (ZipInputStream zis = new ZipInputStream(content)) {
                 ZipEntry ze = zis.getNextEntry();
                 while (ze != null) {
-                    boolean isDirectoryEntry = ze.isDirectory();
-                    String filename = ze.getName();
-                    int lastSlashIdx = filename.lastIndexOf('/');
-
-                    if (lastSlashIdx != -1 && !isDirectoryEntry) {
-                        String fileBasePath = filename.substring(0, lastSlashIdx + 1);
-                        if (directories.contains(fileBasePath)) {
-                            filename = filename.replaceFirst("^" + fileBasePath, "");
-                        }
+                    if (ze.isDirectory()) {
+                        zis.closeEntry();
+                        ze = zis.getNextEntry();
+                        continue;
                     }
 
-                    if (isDirectoryEntry) {
-                        directories.add(filename);
-                    } else {
-                        File file = new File(destDir, filename);
-                        try (FileOutputStream fos = new FileOutputStream(file)) {
-                            int len;
-                            while ((len = zis.read(buffer)) > 0) {
-                                fos.write(buffer, 0, len);
-                                total += len;
-                            }
-                            entries++;
+                    String filename = FilenameUtils.getName(ze.getName());
+                    File file = new File(destDir, filename);
+                    try (FileOutputStream fos = new FileOutputStream(file)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                            total += len;
                         }
+                        entries++;
                     }
 
                     zis.closeEntry();
