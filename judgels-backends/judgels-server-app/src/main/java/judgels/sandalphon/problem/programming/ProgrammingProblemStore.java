@@ -94,7 +94,7 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
     }
 
     public void uploadGradingTestDataFileZipped(String userJid, String problemJid, InputStream testDataFileZipped) {
-        problemFs.uploadZippedFiles(getGradingTestDataDirPath(userJid, problemJid), testDataFileZipped, false);
+        problemFs.uploadZippedFiles(getGradingTestDataDirPath(userJid, problemJid), testDataFileZipped);
 
         updateGradingLastUpdateTime(userJid, problemJid);
     }
@@ -106,7 +106,7 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
     }
 
     public void uploadGradingHelperFileZipped(String userJid, String problemJid, InputStream helperFileZipped) {
-        problemFs.uploadZippedFiles(getGradingHelpersDirPath(userJid, problemJid), helperFileZipped, false);
+        problemFs.uploadZippedFiles(getGradingHelpersDirPath(userJid, problemJid), helperFileZipped);
 
         updateGradingLastUpdateTime(userJid, problemJid);
     }

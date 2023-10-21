@@ -141,7 +141,7 @@ public class ProblemStatementStore extends BaseProblemStore {
 
     public void uploadStatementMediaFileZipped(String userJid, String problemJid, InputStream mediaFileZipped) {
         Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
-        problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
+        problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped);
     }
 
     public List<FileInfo> getStatementMediaFiles(String userJid, String problemJid) {

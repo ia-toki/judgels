@@ -116,7 +116,7 @@ public class ProblemEditorialStore extends BaseProblemStore {
 
     public void uploadEditorialMediaFileZipped(String userJid, String problemJid, InputStream mediaFileZipped) {
         Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
-        problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped, false);
+        problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped);
     }
 
     public List<FileInfo> getEditorialMediaFiles(String userJid, String problemJid) {
