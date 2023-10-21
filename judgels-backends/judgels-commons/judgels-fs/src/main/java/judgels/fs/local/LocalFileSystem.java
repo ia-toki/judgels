@@ -117,13 +117,18 @@ public final class LocalFileSystem implements FileSystem {
             try (ZipInputStream zis = new ZipInputStream(content)) {
                 ZipEntry ze = zis.getNextEntry();
                 while (ze != null) {
-                    if (ze.isDirectory()) {
+                    String fileFullName = ze.getName();
+                    boolean isDirectoryEntry = ze.isDirectory();
+                    boolean isFileEntryInIgnorableDirectory = IGNORABLE_FILES.stream()
+                            .anyMatch(dir -> fileFullName.contains(dir + "/"));
+
+                    if (isDirectoryEntry || isFileEntryInIgnorableDirectory) {
                         zis.closeEntry();
                         ze = zis.getNextEntry();
                         continue;
                     }
 
-                    String filename = FilenameUtils.getName(ze.getName());
+                    String filename = FilenameUtils.getName(fileFullName);
                     File file = new File(destDir, filename);
                     try (FileOutputStream fos = new FileOutputStream(file)) {
                         int len;
