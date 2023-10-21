@@ -1,0 +1,3 @@
+CREATE USER 'judgels'@'%' IDENTIFIED BY 'judgels';
+GRANT ALL PRIVILEGES ON * . * TO 'judgels'@'%';
+FLUSH PRIVILEGES;
