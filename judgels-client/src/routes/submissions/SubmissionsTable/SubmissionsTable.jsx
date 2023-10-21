@@ -77,7 +77,7 @@ export function SubmissionsTable({
           {submission.latestGrading && <GradingVerdictTag wide grading={submission.latestGrading} />}
         </td>
         <td>
-          <FormattedRelative value={submission.time} />{' '}
+          <FormattedRelative value={submission.time} />
         </td>
         <td className="col-fit">
           <Link className="action" to={`/submissions/${submission.id}`}>
