@@ -152,6 +152,10 @@ export function SubmissionDetails({
       return null;
     }
 
+    if (details.testDataResults[0].testCaseResults.length < 1) {
+      return null;
+    }
+
     return (
       <ContentCard className="details-card">
         <details>
