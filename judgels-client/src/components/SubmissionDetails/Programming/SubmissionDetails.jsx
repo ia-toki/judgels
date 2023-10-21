@@ -164,7 +164,7 @@ export function SubmissionDetails({
               <span className="test-data-heading">Sample Test Data Results</span>
               <span className="test-data-verdicts">
                 {details.testDataResults[0].testCaseResults.map(result => (
-                  <VerdictTag blank verdictCode={result.verdict.code} />
+                  <VerdictTag blank square verdictCode={result.verdict.code} />
                 ))}
               </span>
             </h5>

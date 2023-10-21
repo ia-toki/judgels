@@ -4,9 +4,9 @@ import { getVerdictDisplayName, getVerdictIntent } from '../../modules/api/gabri
 
 import './VerdictTag.scss';
 
-export const VerdictTag = ({ verdictCode, blank }) => {
+export const VerdictTag = ({ verdictCode, blank, square }) => {
   return (
-    <Tag className="verdict-tag" round intent={getVerdictIntent(verdictCode)}>
+    <Tag className="verdict-tag" round={!square} intent={getVerdictIntent(verdictCode)}>
       {blank ? <>&nbsp;&nbsp;</> : getVerdictDisplayName(verdictCode)}
     </Tag>
   );
