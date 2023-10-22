@@ -58,7 +58,7 @@ LABEL org.opencontainers.image.revision $VCS_REF
 COPY --from=0 /isolate/isolate /judgels/isolate/bin/
 COPY --from=0 /usr/local/etc/isolate /usr/local/etc/
 COPY --from=0 /moe/eval/iwrapper /judgels/isolate/bin/
-#COPY build/distributions .
+COPY build/distributions .
 
 ENTRYPOINT ["./init.sh"]
 CMD ["server"]
