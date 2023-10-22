@@ -14,6 +14,7 @@ export const gradingLanguageNamesMap = {
   Python3: 'Python 3',
   PyPy3: 'PyPy 3',
   Rust2021: 'Rust 2021',
+  JavascriptNode18: 'Javascript (Node.js 18)',
   OutputOnly: '-',
 };
 
@@ -28,6 +29,7 @@ export const gradingLanguageFamiliesMap = {
   Python3: 'Python',
   PyPy3: 'Python',
   Rust2021: 'Rust',
+  JavascriptNode18: 'Javascript',
 };
 
 export const gradingLanguageFilenameExtensionsMap = {
@@ -41,6 +43,7 @@ export const gradingLanguageFilenameExtensionsMap = {
   Python3: ['py'],
   PyPy3: ['py'],
   Rust2021: ['rs'],
+  JavascriptNode18: ['js'],
   OutputOnly: ['zip'],
 };
 
@@ -55,6 +58,7 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
   Python3: 'python',
   PyPy3: 'python',
   Rust2021: 'rust',
+  JavascriptNode18: 'javascript',
   OutputOnly: '',
 };
 
@@ -69,6 +73,7 @@ export const gradingLanguageEditorSubmissionFilenamesMap = {
   Python3: 'solution.py',
   PyPy3: 'solution.py',
   Rust2021: 'solution.rs',
+  JavascriptNode18: 'solution.js',
 };
 
 export const gradingLanguageEditorSubmissionHintsMap = {
