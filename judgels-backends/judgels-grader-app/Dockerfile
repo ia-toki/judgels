@@ -19,11 +19,16 @@ ENV RUSTUP_HOME /usr
 ENV XDG_CACHE_HOME /tmp
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 ENV PATH $JAVA_HOME/bin:$PATH
-ENV NODE_VERSION=18.0.0
-ENV NVM_DIR=/root/.nvm
+ENV NODE_MAJOR 18
 
 RUN apt-get update \
-    && apt-get -y --no-install-recommends install software-properties-common gpg-agent \
+    && apt-get install -y ca-certificates curl gnupg \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install software-properties-common gpg-agent  \
     && add-apt-repository -y ppa:pypy/ppa \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get -y --no-install-recommends install \
@@ -39,12 +44,10 @@ RUN apt-get update \
        openjdk-11-jre \
        pypy3 \
        python3 \
+       nodejs \
     && ln -s /usr/bin/gcc-11 /usr/bin/gcc \
     && ln -s /usr/bin/g++-11 /usr/bin/g++ \
     && curl -sSf https://sh.rustup.rs/ | bash -s -- -y -q --default-toolchain=1.57.0 \
-    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash \
-    && . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} \
-    && cp $NVM_DIR/versions/node/v${NODE_VERSION}/bin/node /usr/bin/ \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /judgels/grader
@@ -58,7 +61,7 @@ LABEL org.opencontainers.image.revision $VCS_REF
 COPY --from=0 /isolate/isolate /judgels/isolate/bin/
 COPY --from=0 /usr/local/etc/isolate /usr/local/etc/
 COPY --from=0 /moe/eval/iwrapper /judgels/isolate/bin/
-COPY build/distributions .
+#COPY build/distributions .
 
 ENTRYPOINT ["./init.sh"]
 CMD ["server"]

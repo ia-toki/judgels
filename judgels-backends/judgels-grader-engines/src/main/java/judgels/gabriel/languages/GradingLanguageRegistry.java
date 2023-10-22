@@ -13,7 +13,7 @@ import judgels.gabriel.languages.cpp.Cpp20GradingLanguage;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import judgels.gabriel.languages.go.GoGradingLanguage;
 import judgels.gabriel.languages.java.JavaGradingLanguage;
-import judgels.gabriel.languages.javascript.JavascriptNode18GradingLanguage;
+import judgels.gabriel.languages.javascript.JavaScriptNode18GradingLanguage;
 import judgels.gabriel.languages.pascal.PascalGradingLanguage;
 import judgels.gabriel.languages.python.PyPy3GradingLanguage;
 import judgels.gabriel.languages.python.Python3GradingLanguage;
@@ -34,7 +34,7 @@ public class GradingLanguageRegistry {
             new PyPy3GradingLanguage(),
             new Python3GradingLanguage(),
             new Rust2021GradingLanguage(),
-            new JavascriptNode18GradingLanguage(),
+            new JavaScriptNode18GradingLanguage(),
             new OutputOnlyGradingLanguage());
 
     private static final List<GradingLanguage> VISIBLE_LANGUAGES = LANGUAGES.stream()

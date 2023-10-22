@@ -10,11 +10,11 @@ export const gradingLanguageNamesMap = {
   Cpp20: 'C++20',
   Go: 'Go',
   Java: 'Java 11',
+  JavaScriptNode18: 'JavaScript (Node 18)',
   Pascal: 'Pascal',
   Python3: 'Python 3',
   PyPy3: 'PyPy 3',
   Rust2021: 'Rust 2021',
-  JavascriptNode18: 'Javascript (Node.js 18)',
   OutputOnly: '-',
 };
 
@@ -25,11 +25,11 @@ export const gradingLanguageFamiliesMap = {
   Cpp20: 'C++',
   Go: 'Go',
   Java: 'Java',
+  JavaScriptNode18: 'JavaScript',
   Pascal: 'Pascal',
   Python3: 'Python',
   PyPy3: 'Python',
   Rust2021: 'Rust',
-  JavascriptNode18: 'Javascript',
 };
 
 export const gradingLanguageFilenameExtensionsMap = {
@@ -39,11 +39,11 @@ export const gradingLanguageFilenameExtensionsMap = {
   Cpp20: ['cc', 'cpp'],
   Go: ['go'],
   Java: ['java'],
+  JavaScriptNode18: ['js'],
   Pascal: ['pas'],
   Python3: ['py'],
   PyPy3: ['py'],
   Rust2021: ['rs'],
-  JavascriptNode18: ['js'],
   OutputOnly: ['zip'],
 };
 
@@ -54,11 +54,11 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
   Cpp20: 'cpp',
   Go: 'go',
   Java: 'java',
+  JavaScriptNode18: 'JavaScript',
   Pascal: 'pascal',
   Python3: 'python',
   PyPy3: 'python',
   Rust2021: 'rust',
-  JavascriptNode18: 'javascript',
   OutputOnly: '',
 };
 
@@ -69,11 +69,11 @@ export const gradingLanguageEditorSubmissionFilenamesMap = {
   Cpp20: 'solution.cpp',
   Go: 'solution.go',
   Java: 'Solution.java',
+  JavaScriptNode18: 'solution.js',
   Pascal: 'solution.pas',
   Python3: 'solution.py',
   PyPy3: 'solution.py',
   Rust2021: 'solution.rs',
-  JavascriptNode18: 'solution.js',
 };
 
 export const gradingLanguageEditorSubmissionHintsMap = {

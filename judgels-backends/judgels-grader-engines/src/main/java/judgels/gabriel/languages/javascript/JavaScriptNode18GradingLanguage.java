@@ -4,10 +4,10 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import judgels.gabriel.api.GradingLanguage;
 
-public class JavascriptNode18GradingLanguage implements GradingLanguage {
+public class JavaScriptNode18GradingLanguage implements GradingLanguage {
     @Override
     public String getName() {
-        return "Javascript (Node.js 18)";
+        return "JavaScript (Node 18)";
     }
 
     @Override
