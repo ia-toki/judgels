@@ -30,11 +30,11 @@ public class GradingLanguageRegistry {
             new Cpp20GradingLanguage(),
             new GoGradingLanguage(),
             new JavaGradingLanguage(),
+            new JavaScriptNode18GradingLanguage(),
             new PascalGradingLanguage(),
             new PyPy3GradingLanguage(),
             new Python3GradingLanguage(),
             new Rust2021GradingLanguage(),
-            new JavaScriptNode18GradingLanguage(),
             new OutputOnlyGradingLanguage());
 
     private static final List<GradingLanguage> VISIBLE_LANGUAGES = LANGUAGES.stream()
