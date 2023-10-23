@@ -6,7 +6,7 @@ import StatementLanguageWidget from '../../../../../../../../../../components/La
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { ProblemEditorialCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
+import { ProblemReviewCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemReviewCard/ProblemReviewCard';
 
 import './ChapterProblemStatementPage.scss';
 
@@ -27,14 +27,12 @@ export function ChapterProblemStatementPage({ worksheet }) {
     );
   };
 
-  const renderEditorial = () => {
+  const renderReview = () => {
     const { problem, editorial } = worksheet;
     if (!editorial) {
       return null;
     }
-    return (
-      <ProblemEditorialCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />
-    );
+    return <ProblemReviewCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />;
   };
 
   const renderStatement = () => {
@@ -44,9 +42,9 @@ export function ChapterProblemStatementPage({ worksheet }) {
       return (
         <details>
           <summary>
-            <small>Click to view original problem statement</small>
+            <small>View problem statement</small>
           </summary>
-          <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} />
+          <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} showTitle={false} />
         </details>
       );
     }
@@ -57,7 +55,7 @@ export function ChapterProblemStatementPage({ worksheet }) {
   return (
     <ContentCard className="chapter-programming-problem-statement-page">
       {renderStatementLanguageWidget()}
-      {renderEditorial()}
+      {renderReview()}
       {renderStatement()}
     </ContentCard>
   );
