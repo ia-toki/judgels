@@ -14,6 +14,7 @@ import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/p
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
+import { selectChapterProblemKey } from '../modules/chapterProblemSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
@@ -25,7 +26,35 @@ export class ChapterProblemPage extends Component {
     response: undefined,
   };
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.refreshProblem();
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (
+      this.props.statementLanguage !== prevProps.statementLanguage ||
+      this.props.chapterProblemKey !== prevProps.chapterProblemKey ||
+      this.props.match.params.problemAlias !== prevProps.match.params.problemAlias
+    ) {
+      await this.refreshProblem();
+    }
+  }
+
+  async componentWillUnmount() {
+    this.props.onPopBreadcrumb(this.props.match.url);
+  }
+
+  render() {
+    return (
+      <div className="chapter-problem-page">
+        {this.renderHeader()}
+        <hr />
+        {this.renderContent()}
+      </div>
+    );
+  }
+
+  refreshProblem = async () => {
     const response = await this.props.onGetProblemWorksheet(
       this.props.chapter.jid,
       this.props.match.params.problemAlias,
@@ -45,29 +74,7 @@ export class ChapterProblemPage extends Component {
       action: 'View problem',
       label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
     });
-  }
-
-  async componentDidUpdate(prevProps) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage) {
-      await this.componentDidMount();
-    } else if (this.props.match.params.problemAlias !== prevProps.match.params.problemAlias) {
-      await this.componentDidMount();
-    }
-  }
-
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
-  }
-
-  render() {
-    return (
-      <div className="chapter-problem-page">
-        {this.renderHeader()}
-        <hr />
-        {this.renderContent()}
-      </div>
-    );
-  }
+  };
 
   renderHeader = () => {
     const { course, chapter, match } = this.props;
@@ -148,6 +155,7 @@ const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   chapters: selectCourseChapters(state),
+  chapterProblemKey: selectChapterProblemKey(state),
   statementLanguage: selectStatementLanguage(state),
 });
 const mapDispatchToProps = {

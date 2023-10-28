@@ -10,6 +10,8 @@ import { SubmissionDetails } from '../../../../../../../../../../../../component
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
+import { RefreshChapterProblem } from '../../../../modules/chapterProblemReducer';
+import { VerdictCode } from '../../../../../../../../../../../../modules/api/gabriel/verdict';
 import * as breadcrumbsActions from '../../../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
@@ -22,20 +24,10 @@ export class ChapterProblemSubmissionPage extends Component {
     containerName: undefined,
   };
 
-  async componentDidMount() {
-    const { data, profile, problemName, containerName } = await this.props.onGetSubmissionWithSource(
-      +this.props.match.params.submissionId,
-      this.props.statementLanguage
-    );
-    const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
-    this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
-    this.setState({
-      submissionWithSource: data,
-      sourceImageUrl,
-      profile,
-      problemName,
-      containerName,
-    });
+  currentTimeout;
+
+  componentDidMount() {
+    this.refreshSubmission();
   }
 
   async componentWillUnmount() {
@@ -63,6 +55,36 @@ export class ChapterProblemSubmissionPage extends Component {
     );
   }
 
+  refreshSubmission = async () => {
+    const { data, profile, problemName, containerName } = await this.props.onGetSubmissionWithSource(
+      +this.props.match.params.submissionId,
+      this.props.statementLanguage
+    );
+    const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
+    this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
+    this.setState({
+      submissionWithSource: data,
+      sourceImageUrl,
+      profile,
+      problemName,
+      containerName,
+    });
+
+    if (sourceImageUrl) {
+      return;
+    }
+
+    const verdictCode = data.submission.latestGrading?.verdict.code || VerdictCode.PND;
+    if (verdictCode === VerdictCode.PND) {
+      this.currentTimeout = setTimeout(this.refreshSubmission, 1500);
+    } else {
+      if (this.currentTimeout) {
+        clearTimeout(this.currentTimeout);
+        this.props.onRefreshChapterProblem(Date.now());
+      }
+    }
+  };
+
   renderSubmission = () => {
     const { submissionWithSource, profile, sourceImageUrl } = this.state;
     const { course, chapter } = this.props;
@@ -79,6 +101,8 @@ export class ChapterProblemSubmissionPage extends Component {
         sourceImageUrl={sourceImageUrl}
         profile={profile}
         problemUrl={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}`}
+        hideSourceFilename
+        showLoaderWhenPending
       />
     );
   };
@@ -91,6 +115,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+  onRefreshChapterProblem: RefreshChapterProblem,
   onGetSubmissionWithSource: chapterProblemSubmissionActions.getSubmissionWithSource,
   onGetSubmissionSourceImage: chapterProblemSubmissionActions.getSubmissionSourceImage,
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,

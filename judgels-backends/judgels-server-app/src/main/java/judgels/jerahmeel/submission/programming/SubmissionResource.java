@@ -237,8 +237,9 @@ public class SubmissionResource {
 
     @POST
     @Consumes(MULTIPART_FORM_DATA)
+    @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
+    public Submission createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
         actorChecker.check(authHeader);
 
         String containerJid = checkNotNull(parts.getField("containerJid"), "containerJid").getValue();
@@ -255,6 +256,8 @@ public class SubmissionResource {
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
+
+        return submission;
     }
 
     @POST
