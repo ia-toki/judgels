@@ -1,4 +1,4 @@
-import { HTMLTable, Button } from '@blueprintjs/core';
+import { HTMLTable, Button, ProgressBar } from '@blueprintjs/core';
 import { Download } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
@@ -30,6 +30,8 @@ export function SubmissionDetails({
   problemUrl,
   containerName,
   onDownload,
+  hideSourceFilename,
+  showLoaderWhenPending,
 }) {
   const hasSubtasks = latestGrading && latestGrading.details && latestGrading.details.subtaskResults.length > 1;
 
@@ -144,6 +146,13 @@ export function SubmissionDetails({
         </details>
       </ContentCard>
     ));
+  };
+
+  const renderLoader = () => {
+    if (showLoaderWhenPending && latestGrading?.verdict.code === VerdictCode.PND) {
+      return <ProgressBar className="pending-loader" />;
+    }
+    return null;
   };
 
   const renderSampleTestDataResults = () => {
@@ -302,9 +311,11 @@ export function SubmissionDetails({
 
     const sourceFiles = Object.keys(submissionFiles).map(key => (
       <ContentCard key={key}>
-        <h5>
-          {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
-        </h5>
+        {!hideSourceFilename && (
+          <h5>
+            {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
+          </h5>
+        )}
         <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
           {decodeBase64(submissionFiles[key].content)}
         </SourceCode>
@@ -343,7 +354,7 @@ export function SubmissionDetails({
 
   const renderSourceFilesHeading = () => {
     if (!onDownload) {
-      return <h4>Source Files</h4>;
+      return null;
     }
     return (
       <div>
@@ -359,6 +370,7 @@ export function SubmissionDetails({
   return (
     <div className="programming-submission-details">
       {renderGeneralInfo()}
+      {renderLoader()}
       {renderDetails()}
       {renderSourceFiles()}
     </div>

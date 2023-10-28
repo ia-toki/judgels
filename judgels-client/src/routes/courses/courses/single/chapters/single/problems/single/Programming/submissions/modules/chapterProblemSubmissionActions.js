@@ -34,12 +34,20 @@ export function createSubmission(courseSlug, chapterJid, chapterAlias, problemJi
       sourceFiles['sourceFiles.' + key] = data.sourceFiles[key];
     });
 
-    await submissionProgrammingAPI.createSubmission(token, chapterJid, problemJid, data.gradingLanguage, sourceFiles);
+    const submission = await submissionProgrammingAPI.createSubmission(
+      token,
+      chapterJid,
+      problemJid,
+      data.gradingLanguage,
+      sourceFiles
+    );
 
     toastActions.showSuccessToast('Solution submitted.');
 
     window.scrollTo(0, 0);
-    dispatch(push(`/courses/${courseSlug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`));
+    dispatch(
+      push(`/courses/${courseSlug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions/${submission.id}`)
+    );
   };
 }
 
