@@ -10,6 +10,7 @@ import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { selectCourse } from '../../modules/courseSelectors';
 import { PutCourseChapter } from '../chapters/modules/courseChapterReducer';
+import { selectChapterProblemRefreshKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
 import * as courseChapterActions from '../chapters/modules/courseChapterActions';
 
 import './CourseChaptersSidebar.scss';
@@ -21,11 +22,19 @@ class CourseChaptersSidebar extends Component {
   };
 
   async componentDidMount() {
-    const response = await this.props.onGetChapters(this.props.course.jid);
-    this.setState({ response });
+    await this.refreshChapters();
   }
 
-  componentDidUpdate() {}
+  async componentDidUpdate(prevProps) {
+    if (this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey) {
+      await this.refreshChapters();
+    }
+  }
+
+  refreshChapters = async () => {
+    const response = await this.props.onGetChapters(this.props.course.jid);
+    this.setState({ response });
+  };
 
   render() {
     return (
@@ -176,6 +185,7 @@ class CourseChaptersSidebar extends Component {
 
 const mapStateToProps = state => ({
   course: selectCourse(state),
+  chapterProblemRefreshKey: selectChapterProblemRefreshKey(state),
 });
 
 const mapDispatchToProps = {

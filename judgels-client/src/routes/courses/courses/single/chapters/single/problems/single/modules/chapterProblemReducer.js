@@ -1,5 +1,5 @@
 export const initialState = {
-  value: undefined,
+  refreshKey: undefined,
 };
 
 export function RefreshChapterProblem(key) {
@@ -12,7 +12,7 @@ export function RefreshChapterProblem(key) {
 export default function chapterProblemReducer(state = initialState, action) {
   switch (action.type) {
     case 'jerahmeel/chapterProblem/REFRESH':
-      return { ...state, value: action.payload };
+      return { ...state, refreshKey: action.payload };
     default:
       return state;
   }

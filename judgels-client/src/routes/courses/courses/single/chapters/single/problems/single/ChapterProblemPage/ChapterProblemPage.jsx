@@ -14,7 +14,7 @@ import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/p
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
-import { selectChapterProblemKey } from '../modules/chapterProblemSelectors';
+import { selectChapterProblemRefreshKey } from '../modules/chapterProblemSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
@@ -33,7 +33,7 @@ export class ChapterProblemPage extends Component {
   async componentDidUpdate(prevProps) {
     if (
       this.props.statementLanguage !== prevProps.statementLanguage ||
-      this.props.chapterProblemKey !== prevProps.chapterProblemKey ||
+      this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey ||
       this.props.match.params.problemAlias !== prevProps.match.params.problemAlias
     ) {
       await this.refreshProblem();
@@ -155,7 +155,7 @@ const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   chapters: selectCourseChapters(state),
-  chapterProblemKey: selectChapterProblemKey(state),
+  chapterProblemRefreshKey: selectChapterProblemRefreshKey(state),
   statementLanguage: selectStatementLanguage(state),
 });
 const mapDispatchToProps = {
