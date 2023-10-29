@@ -1,3 +1,3 @@
-export function selectChapterProblemKey(state) {
-  return state.jerahmeel.chapterProblem.value;
+export function selectChapterProblemRefreshKey(state) {
+  return state.jerahmeel.chapterProblem.refreshKey;
 }
