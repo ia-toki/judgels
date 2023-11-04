@@ -6,7 +6,7 @@ export function ProblemReviewCard({ alias, statement: { title }, editorial: { te
   return (
     <div class="programming-problem-worksheet">
       <ContentCard>
-        <Tag intent={Intent.SUCCESS}>REVIEW</Tag>
+        <Tag intent={Intent.SUCCESS} style={{ width: '100%' }}></Tag>
         <h2 className="programming-problem-statement__name">
           {alias ? `${alias}. ` : ''}
           {title}

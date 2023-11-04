@@ -10,7 +10,7 @@ import { ProblemReviewCard } from '../../../../../../../../../../components/Prob
 
 import './ChapterProblemStatementPage.scss';
 
-export function ChapterProblemStatementPage({ worksheet }) {
+function ChapterProblemStatementPage({ worksheet }) {
   const renderStatementLanguageWidget = () => {
     const { defaultLanguage, languages } = worksheet;
     if (!defaultLanguage || !languages) {
@@ -42,7 +42,7 @@ export function ChapterProblemStatementPage({ worksheet }) {
       return (
         <details>
           <summary>
-            <small>View problem statement</small>
+            <small>Problem statement</small>
           </summary>
           <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} showTitle={false} />
         </details>
