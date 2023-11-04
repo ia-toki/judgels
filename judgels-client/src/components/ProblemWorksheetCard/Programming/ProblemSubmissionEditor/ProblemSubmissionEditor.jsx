@@ -79,7 +79,7 @@ export function ProblemSubmissionEditor({
 
     return (
       <Form onSubmit={onSubmitEditor} initialValues={initialValues}>
-        {({ values, handleSubmit, submitting }) => {
+        {({ values, handleSubmit, submitting, dirty }) => {
           const submissionHint = getGradingLanguageEditorSubmissionHint(values.gradingLanguage);
 
           return (
@@ -99,7 +99,7 @@ export function ProblemSubmissionEditor({
                 </p>
               )}
               <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
-              <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />
+              <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} disabled={!dirty} />
             </form>
           );
         }}
