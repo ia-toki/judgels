@@ -6,13 +6,12 @@ import './ProblemWorksheetCard.scss';
 export function ProblemWorksheetCard({
   alias,
   worksheet: { statement, limits, submissionConfig, reasonNotAllowedToSubmit },
-  showTitle,
   submissionWarning,
   gradingLanguage,
   onSubmit,
 }) {
   const renderStatement = () => {
-    return <ProblemStatementCard alias={alias} statement={statement} limits={limits} showTitle={showTitle} />;
+    return <ProblemStatementCard alias={alias} statement={statement} limits={limits} />;
   };
 
   const renderSubmission = () => {

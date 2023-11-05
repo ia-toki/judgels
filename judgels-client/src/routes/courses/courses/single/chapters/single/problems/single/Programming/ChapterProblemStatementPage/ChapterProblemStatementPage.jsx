@@ -6,11 +6,11 @@ import StatementLanguageWidget from '../../../../../../../../../../components/La
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { ProblemReviewCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemReviewCard/ProblemReviewCard';
+import { ProblemEditorialCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 
 import './ChapterProblemStatementPage.scss';
 
-function ChapterProblemStatementPage({ worksheet }) {
+function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
   const renderStatementLanguageWidget = () => {
     const { defaultLanguage, languages } = worksheet;
     if (!defaultLanguage || !languages) {
@@ -32,7 +32,9 @@ function ChapterProblemStatementPage({ worksheet }) {
     if (!editorial) {
       return null;
     }
-    return <ProblemReviewCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />;
+    return (
+      <ProblemEditorialCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />
+    );
   };
 
   const renderStatement = () => {
@@ -42,9 +44,9 @@ function ChapterProblemStatementPage({ worksheet }) {
       return (
         <details>
           <summary>
-            <small>Problem statement</small>
+            <small>Problem</small>
           </summary>
-          <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} showTitle={false} />
+          <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} />
         </details>
       );
     }
@@ -55,8 +57,11 @@ function ChapterProblemStatementPage({ worksheet }) {
   return (
     <ContentCard className="chapter-programming-problem-statement-page">
       {renderStatementLanguageWidget()}
-      {renderReview()}
       {renderStatement()}
+      <div className="chapter-programming-problem-statement-page__footer">
+        {renderReview()}
+        <div className="chapter-programming-problem-statement-page__navigation">{renderNavigation()}</div>
+      </div>
     </ContentCard>
   );
 }

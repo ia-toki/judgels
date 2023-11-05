@@ -38,6 +38,7 @@ describe('ChapterProblemProgrammingPage', () => {
         },
       },
     };
+    const renderNavigation = () => null;
 
     const store = createStore(
       combineReducers({
@@ -60,7 +61,7 @@ describe('ChapterProblemProgrammingPage', () => {
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <ChapterProblemPage worksheet={worksheet} />
+          <ChapterProblemPage worksheet={worksheet} renderNavigation={renderNavigation} />
         </MemoryRouter>
       </Provider>
     );
