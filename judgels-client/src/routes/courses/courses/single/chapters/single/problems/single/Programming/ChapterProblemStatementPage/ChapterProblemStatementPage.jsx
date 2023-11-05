@@ -1,3 +1,4 @@
+import { Intent, Tag } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -33,7 +34,10 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
       return null;
     }
     return (
-      <ProblemEditorialCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />
+      <>
+        <Tag intent={Intent.SUCCESS} style={{ width: '100%' }}></Tag>
+        <ProblemEditorialCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />
+      </>
     );
   };
 
