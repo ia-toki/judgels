@@ -36,7 +36,12 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
     return (
       <>
         <Tag intent={Intent.SUCCESS} style={{ width: '100%' }}></Tag>
-        <ProblemEditorialCard alias={problem.alias} statement={worksheet.worksheet.statement} editorial={editorial} />
+        <ProblemEditorialCard
+          alias={problem.alias}
+          statement={worksheet.worksheet.statement}
+          editorial={editorial}
+          titleSuffix=" (Review)"
+        />
       </>
     );
   };
