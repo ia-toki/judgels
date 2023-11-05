@@ -10,4 +10,13 @@
   details summary > * { 
     display: inline;
   }
+
+  .chapter-programming-problem-statement-page__footer{
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .chapter-programming-problem-statement-page__navigation {
+    text-align: right;
+  }
 }

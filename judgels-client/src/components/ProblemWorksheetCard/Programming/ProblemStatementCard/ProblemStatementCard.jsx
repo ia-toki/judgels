@@ -5,12 +5,7 @@ import { KatexText } from '../../../KatexText/KatexText';
 
 import './ProblemStatementCard.scss';
 
-export function ProblemStatementCard({
-  alias,
-  statement: { title, text },
-  limits: { timeLimit, memoryLimit },
-  showTitle = true,
-}) {
+export function ProblemStatementCard({ alias, statement: { title, text }, limits: { timeLimit, memoryLimit } }) {
   const renderTimeLimit = timeLimit => {
     if (!timeLimit) {
       return '-';
@@ -34,8 +29,8 @@ export function ProblemStatementCard({
   return (
     <ContentCard>
       <h2 className="programming-problem-statement__name">
-        {showTitle && alias ? `${alias}. ` : ''}
-        {showTitle && title}
+        {alias ? `${alias}. ` : ''}
+        {title}
       </h2>
       <HTMLTable condensed className="programming-problem-statement__limits">
         <tbody>

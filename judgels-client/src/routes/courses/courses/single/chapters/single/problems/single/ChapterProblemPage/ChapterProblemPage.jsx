@@ -98,7 +98,7 @@ export class ChapterProblemPage extends Component {
         </h3>
 
         {this.renderProgress()}
-        {this.renderPrevAndNextResourcePaths()}
+        {this.renderNavigation()}
       </div>
     );
   };
@@ -117,7 +117,7 @@ export class ChapterProblemPage extends Component {
     return <ChapterProblemProgressTag verdict={progress.verdict} />;
   };
 
-  renderPrevAndNextResourcePaths = () => {
+  renderNavigation = () => {
     const { course, chapter, chapters } = this.props;
     const { response } = this.state;
     if (!response) {
@@ -144,7 +144,7 @@ export class ChapterProblemPage extends Component {
 
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
-      return <ChapterProblemProgrammingPage worksheet={response} />;
+      return <ChapterProblemProgrammingPage worksheet={response} renderNavigation={this.renderNavigation} />;
     } else {
       return <ChapterProblemBundlePage worksheet={response} />;
     }
