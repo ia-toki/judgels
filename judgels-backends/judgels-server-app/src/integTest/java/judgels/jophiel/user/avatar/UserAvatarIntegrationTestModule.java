@@ -78,5 +78,11 @@ public class UserAvatarIntegrationTestModule {
         public byte[] readByteArrayFromFile(Path filePath) {
             return new byte[0];
         }
+
+        @Override
+        public void copyDirectory(Path src, Path dest) {}
+
+        @Override
+        public void copy(Path src, Path dest) {}
     }
 }

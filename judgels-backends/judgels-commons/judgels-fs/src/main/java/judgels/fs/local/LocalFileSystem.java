@@ -1,5 +1,8 @@
 package judgels.fs.local;
 
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -23,6 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import judgels.fs.FileInfo;
@@ -211,6 +215,24 @@ public final class LocalFileSystem implements FileSystem {
             return ByteStreams.toByteArray(stream);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void copyDirectory(Path src, Path dest) {
+        try (Stream<Path> stream = Files.walk(src)) {
+            stream.forEach(source -> copy(source, dest.resolve(src.relativize(source))));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void copy(Path src, Path dest) {
+        try {
+            Files.copy(src, dest, REPLACE_EXISTING, COPY_ATTRIBUTES);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 }

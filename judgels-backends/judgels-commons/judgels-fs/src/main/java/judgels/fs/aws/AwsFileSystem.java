@@ -213,4 +213,14 @@ public final class AwsFileSystem implements FileSystem {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void copyDirectory(Path src, Path dest) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void copy(Path src, Path dest) {
+        throw new UnsupportedOperationException();
+    }
 }
