@@ -1,10 +1,12 @@
 .app-content {
-  overflow-x: auto;
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 35px;
 }
 
+.app-content:not(:has(.ace_editor)) {
+  overflow-x: auto;
+}
 
 @media only screen and (max-width: 1024px) {
   .app-content {
