@@ -4,7 +4,7 @@
   padding-top: 35px;
 }
 
-.app-content:not(:has(.ace_editor)) {
+.app-content:not(:has(.chapter-problem-statement-routes)) {
   overflow-x: auto;
 }
 
