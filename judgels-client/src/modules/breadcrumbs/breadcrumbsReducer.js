@@ -21,7 +21,7 @@ export default function breadcrumbsReducer(state = initialState, action) {
   switch (action.type) {
     case 'breadcrumbs/PUSH':
       const { link, title } = action.payload;
-      return { values: [...state.values, { link: cleanLink(link), title }] };
+      return { values: [...state.values.filter(b => b.link !== cleanLink(link)), { link: cleanLink(link), title }] };
     case 'breadcrumbs/POP':
       return { values: state.values.filter(b => b.link !== cleanLink(action.payload.link)) };
     default:

@@ -41,7 +41,7 @@ export class ChapterProblemPage extends Component {
   }
 
   async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
+    this.props.onPopBreadcrumb(this.props.match.path);
   }
 
   render() {
@@ -65,7 +65,7 @@ export class ChapterProblemPage extends Component {
       response,
     });
 
-    this.props.onPushBreadcrumb(this.props.match.url, response.problem.alias);
+    this.props.onPushBreadcrumb(this.props.match.path, response.problem.alias);
 
     sendGAEvent({ category: 'Courses', action: 'View course problem', label: this.props.course.name });
     sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: this.props.chapter.name });
