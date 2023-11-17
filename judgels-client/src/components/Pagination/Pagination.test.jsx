@@ -13,7 +13,7 @@ describe('Pagination', () => {
   let wrapper;
   let onChangePage;
 
-  const render = pageQuery => {
+  const render = async pageQuery => {
     const props = {
       pageSize: 6,
       onChangePage,
@@ -27,6 +27,9 @@ describe('Pagination', () => {
         </MemoryRouter>
       </Provider>
     );
+
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
   };
 
   beforeEach(() => {
@@ -40,10 +43,7 @@ describe('Pagination', () => {
       render('');
     });
 
-    it('does not show the helper text', async () => {
-      await new Promise(resolve => setImmediate(resolve));
-      wrapper.update();
-
+    it('does not show the helper text', () => {
       expect(wrapper.find('[data-key="pagination-helper-text"]')).toHaveLength(0);
     });
   });
@@ -55,10 +55,7 @@ describe('Pagination', () => {
       expect(onChangePage).toBeCalledWith(1);
     });
 
-    it('shows the helper text', async () => {
-      await new Promise(resolve => setImmediate(resolve));
-      wrapper.update();
-
+    it('shows the helper text', () => {
       expect(wrapper.find('[data-key="pagination-helper-text"]').text()).toEqual('Showing 1..6 of 14 results');
     });
   });
@@ -70,10 +67,7 @@ describe('Pagination', () => {
       expect(onChangePage).toBeCalledWith(3);
     });
 
-    it('shows the helper text', async () => {
-      await new Promise(resolve => setImmediate(resolve));
-      wrapper.update();
-
+    it('shows the helper text', () => {
       expect(wrapper.find('[data-key="pagination-helper-text"]').text()).toEqual('Showing 13..14 of 14 results');
     });
   });
@@ -92,10 +86,6 @@ describe('Pagination', () => {
       it('clears the query string', () => {
         expect(store.getActions()).toContainEqual(push({ search: '' }));
       });
-
-      it('navigates to that page', () => {
-        expect(onChangePage).toBeCalledWith(1);
-      });
     });
 
     describe('when page changes to page > 1', () => {
@@ -109,10 +99,6 @@ describe('Pagination', () => {
       it('pushes the query string', () => {
         const query = stringify({ page: 3 });
         expect(store.getActions()).toContainEqual(push({ search: query }));
-      });
-
-      it('navigates to that page', () => {
-        expect(onChangePage).toBeCalledWith(3);
       });
     });
   });

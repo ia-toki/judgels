@@ -64,7 +64,6 @@ export class ContestScoreboardPage extends Component {
         {this.renderScoreboard()}
         <Pagination
           key={lastRefreshScoreboardTime}
-          currentPage={1}
           pageSize={ContestScoreboardPage.PAGE_SIZE}
           onChangePage={this.onChangePage}
         />

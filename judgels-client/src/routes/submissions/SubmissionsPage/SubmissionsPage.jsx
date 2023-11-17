@@ -12,7 +12,7 @@ import { selectMaybeUserJid, selectMaybeUsername } from '../../../modules/sessio
 import * as submissionActions from '../modules/submissionActions';
 
 export class SubmissionsPage extends Component {
-  static PAGE_SIZE = 20;
+  static PAGE_SIZE = 5;
 
   state = {
     response: undefined,
@@ -77,7 +77,6 @@ export class SubmissionsPage extends Component {
     return (
       <Pagination
         key={'' + this.isUserFilterMine()}
-        currentPage={1}
         pageSize={SubmissionsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
       />

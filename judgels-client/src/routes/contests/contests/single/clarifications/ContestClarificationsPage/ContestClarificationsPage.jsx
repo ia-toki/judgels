@@ -118,18 +118,10 @@ class ContestClarificationsPage extends Component {
   };
 
   renderPagination = () => {
-    // updates pagination when clarifications are refreshed
     const { lastRefreshClarificationsTime } = this.state;
     const key = lastRefreshClarificationsTime || 0;
 
-    return (
-      <Pagination
-        key={key}
-        currentPage={1}
-        pageSize={ContestClarificationsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+    return <Pagination key={key} pageSize={ContestClarificationsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
   toggleAnswerBox = clarification => {
