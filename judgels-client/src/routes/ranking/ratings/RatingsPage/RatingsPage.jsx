@@ -23,7 +23,7 @@ class RatingsPage extends Component {
     return (
       <Card title="Top ratings">
         {this.renderRatings()}
-        <Pagination currentPage={1} pageSize={RatingsPage.PAGE_SIZE} onChangePage={this.onChangePage} />
+        <Pagination pageSize={RatingsPage.PAGE_SIZE} onChangePage={this.onChangePage} />
       </Card>
     );
   }

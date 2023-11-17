@@ -23,7 +23,7 @@ class ScoresPage extends Component {
     return (
       <Card title="Top scorers">
         {this.renderScores()}
-        <Pagination currentPage={1} pageSize={ScoresPage.PAGE_SIZE} onChangePage={this.onChangePage} />
+        <Pagination pageSize={ScoresPage.PAGE_SIZE} onChangePage={this.onChangePage} />
       </Card>
     );
   }

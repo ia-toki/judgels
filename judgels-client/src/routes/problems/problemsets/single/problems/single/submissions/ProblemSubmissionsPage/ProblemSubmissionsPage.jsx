@@ -87,7 +87,6 @@ export class ProblemSubmissionsPage extends Component {
     return (
       <Pagination
         key={'' + this.isUserFilterMine()}
-        currentPage={1}
         pageSize={ProblemSubmissionsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
       />

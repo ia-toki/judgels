@@ -110,14 +110,7 @@ export class ProblemSubmissionsPage extends Component {
   };
 
   renderPagination = () => {
-    return (
-      <Pagination
-        key={1}
-        currentPage={1}
-        pageSize={ProblemSubmissionsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+    return <Pagination pageSize={ProblemSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
   refreshSubmissions = async page => {

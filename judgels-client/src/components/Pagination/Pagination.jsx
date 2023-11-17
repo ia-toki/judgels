@@ -1,7 +1,7 @@
 import { Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import { connect } from 'react-redux';
 import { push, replace } from 'connected-react-router';
@@ -44,7 +44,7 @@ function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
   const renderNavigation = () => {
     return (
       <ReactPaginate
-        initialPage={currentPage - 1}
+        forcePage={currentPage - 1}
         pageCount={getTotalPages()}
         pageRangeDisplayed={3}
         marginPagesDisplayed={2}
@@ -60,6 +60,7 @@ function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
         previousClassName={classNames(Classes.BUTTON, 'pagination__item')}
         nextClassName={classNames(Classes.BUTTON, 'pagination__item')}
         onPageChange={changePage}
+        disableInitialCallback
       />
     );
   };
@@ -72,41 +73,46 @@ function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
   );
 }
 
-class PaginationContainer extends PureComponent {
-  state = { totalCount: 0 };
+class PaginationContainer extends Component {
+  state = {
+    currentPage: undefined,
+    totalCount: 0,
+  };
+
+  componentDidMount() {
+    this.refreshPagination();
+  }
+
+  componentDidUpdate(prevProps) {
+    const queries = parse(this.props.location.search);
+    const prevQueries = parse(prevProps.location.search);
+
+    if (queries.page !== prevQueries.page) {
+      this.refreshPagination();
+    }
+  }
 
   render() {
-    const { location, pageSize } = this.props;
-
-    const queries = parse(location.search);
-
-    let currentPage = 1;
-    const parsedCurrentPage = +queries.page;
-    if (queries.page && !isNaN(parsedCurrentPage)) {
-      currentPage = parsedCurrentPage;
+    const { currentPage, totalCount } = this.state;
+    if (!currentPage) {
+      return null;
     }
+
+    const { pageSize } = this.props;
 
     const props = {
       currentPage,
-      pageSize: pageSize,
-      totalCount: this.state.totalCount,
+      pageSize,
+      totalCount,
       onChangePage: this.onChangePage,
     };
     return <Pagination {...props} />;
   }
 
   onChangePage = async nextPage => {
-    const { location, onAppendRoute, onChangePage } = this.props;
-
+    const { location, onPush, onReplace } = this.props;
     const queries = parse(location.search);
-    onAppendRoute(nextPage, queries);
-    const totalCount = await onChangePage(nextPage);
-    this.setState({ totalCount });
-  };
-}
 
-const mapDispatchToProps = {
-  onAppendRoute: (nextPage, queries) => {
     let query = '';
     if (nextPage > 1) {
       query = stringify({ ...queries, page: nextPage });
@@ -115,10 +121,29 @@ const mapDispatchToProps = {
     }
 
     if (!queries.page && nextPage === 1) {
-      return replace({ search: query });
+      return onReplace({ search: query });
     } else {
-      return push({ search: query });
+      return onPush({ search: query });
     }
-  },
+  };
+
+  refreshPagination = async () => {
+    const { location, onChangePage } = this.props;
+    const queries = parse(location.search);
+
+    let currentPage = 1;
+    const parsedCurrentPage = +queries.page;
+    if (queries.page && !isNaN(parsedCurrentPage)) {
+      currentPage = parsedCurrentPage;
+    }
+
+    const totalCount = await onChangePage(currentPage);
+    this.setState({ currentPage, totalCount });
+  };
+}
+
+const mapDispatchToProps = {
+  onPush: push,
+  onReplace: replace,
 };
 export default withRouter(connect(undefined, mapDispatchToProps)(PaginationContainer));

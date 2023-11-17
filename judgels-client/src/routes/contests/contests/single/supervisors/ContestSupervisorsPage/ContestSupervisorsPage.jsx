@@ -57,7 +57,6 @@ class ContestSupervisorsPage extends Component {
     return (
       <Pagination
         key={lastRefreshSupervisorsTime}
-        currentPage={1}
         pageSize={ContestSupervisorsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
       />

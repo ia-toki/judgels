@@ -77,7 +77,6 @@ class ContestAnnouncementsPage extends Component {
     return (
       <Pagination
         key={lastRefreshAnnouncementsTime}
-        currentPage={1}
         pageSize={ContestAnnouncementsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
       />
