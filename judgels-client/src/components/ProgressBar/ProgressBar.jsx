@@ -1,10 +1,11 @@
 import { Intent, ProgressBar as BlueprintProgressBar } from '@blueprintjs/core';
+import classNames from 'classnames';
 
 import { getVerdictIntent } from '../../modules/api/gabriel/verdict';
 
 import './ProgressBar.scss';
 
-export function ProgressBar({ num, denom, verdict }) {
+export function ProgressBar({ className, num, denom, verdict }) {
   if (denom === 0) {
     return null;
   }
@@ -19,7 +20,7 @@ export function ProgressBar({ num, denom, verdict }) {
   }
   return (
     <BlueprintProgressBar
-      className="progress-bar"
+      className={classNames('progress-bar', className)}
       animate={false}
       stripes={false}
       intent={intent}

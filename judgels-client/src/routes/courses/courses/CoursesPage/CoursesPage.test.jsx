@@ -56,7 +56,7 @@ describe('CoursesPage', () => {
 
     it('shows placeholder text and no courses', () => {
       expect(wrapper.text()).toContain('No courses.');
-      expect(wrapper.find('div.content-card')).toHaveLength(0);
+      expect(wrapper.find('a')).toHaveLength(0);
     });
   });
 
@@ -80,10 +80,8 @@ describe('CoursesPage', () => {
     });
 
     it('shows the courses', () => {
-      const cards = wrapper.find('div.content-card');
-      expect(
-        cards.map(card => [card.find('h4').text(), card.find('a').props().href, card.find('.html-text').text()])
-      ).toEqual([
+      const cards = wrapper.find('a');
+      expect(cards.map(card => [card.find('h4').text(), card.props().href, card.find('.html-text').text()])).toEqual([
         ['Course 12 / 6 problems completed', '/courses/course-1', 'This is course 1'],
         ['Course 2', '/courses/course-2', 'This is course 2'],
       ]);

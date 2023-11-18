@@ -44,6 +44,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
       <>
         {renderDifficulty()}
         {renderMetadata()}
+        <div className="clearfix" />
       </>
     );
   };

@@ -55,7 +55,7 @@ describe('ContestsPage', () => {
 
     it('shows placeholder text and no contests', () => {
       expect(wrapper.text()).toContain('No contests.');
-      expect(wrapper.find('div.content-card')).toHaveLength(0);
+      expect(wrapper.find('a.content-card')).toHaveLength(0);
     });
   });
 
@@ -77,8 +77,8 @@ describe('ContestsPage', () => {
     });
 
     it('shows the contests', () => {
-      const cards = wrapper.find('div.content-card');
-      expect(cards.map(card => [card.find('h4').text(), card.find('a').props().href])).toEqual([
+      const cards = wrapper.find('a.content-card');
+      expect(cards.map(card => [card.find('h4').text(), card.props().href])).toEqual([
         ['Contest 1CONTESTANT', '/contests/contest-1'],
         ['Contest 2', '/contests/contest-2'],
       ]);
