@@ -2,10 +2,12 @@ import { connect } from 'react-redux';
 
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
+import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard.jsx';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
 
@@ -40,6 +42,17 @@ function ChapterProblemWorkspacePage({
 
     return await onCreateSubmission(course.slug, chapter.jid, chapter.alias, problem.problemJid, problem.alias, data);
   };
+
+  if (isOutputOnly(submissionConfig.gradingEngine)) {
+    return (
+      <ProblemSubmissionCard
+        config={submissionConfig}
+        onSubmit={createSubmission}
+        reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
+        preferredGradingLanguage={gradingLanguage}
+      />
+    );
+  }
 
   return (
     <ProblemSubmissionEditor
