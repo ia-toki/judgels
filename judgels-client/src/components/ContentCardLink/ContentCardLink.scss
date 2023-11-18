@@ -3,8 +3,7 @@
 .content-card-link {
   color: inherit !important;
   display: block;
-  margin: -15px;
-  padding: 15px;
+  padding: 0;
   overflow: auto;
 }
 
@@ -19,4 +18,9 @@
 
 .bp4-dark .content-card-link:hover {
   background-color: $dark-secondary-background-color;
+}
+
+.content-card-link__content {
+  height: 100%;
+  padding: 15px;
 }

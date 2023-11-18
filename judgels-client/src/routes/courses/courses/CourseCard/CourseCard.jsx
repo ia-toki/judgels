@@ -24,7 +24,9 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
     if (!progress) {
       return null;
     }
-    return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
+    return (
+      <ProgressBar className="course-card__progress-bar" num={progress.solvedProblems} denom={progress.totalProblems} />
+    );
   };
 
   return (

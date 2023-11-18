@@ -1,11 +1,7 @@
 .chapter-problem-card {
-  margin-bottom: 10px;
-
-  .content-card-link {
-    display: flex;
-    flex-direction: column;
-    row-gap: 5px;
-  }
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
 
   .chapter-problem-card__heading {
     display: flex;
