@@ -7,6 +7,8 @@ import { getIntent, getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 
 export function FormSelect2({ input, className, label, meta, optionValues, optionNamesMap, small }) {
+  const isUsingFilter = optionValues.length >= 10;
+
   const renderOption = (value, { handleClick, modifiers }) => {
     return <MenuItem active={modifiers.active} key={value} onClick={handleClick} text={optionNamesMap[value]} />;
   };
@@ -22,12 +24,12 @@ export function FormSelect2({ input, className, label, meta, optionValues, optio
       <Select
         className={classNames('form-group__select', getIntentClassName(meta))}
         items={optionValues}
-        itemPredicate={filterOption}
+        itemPredicate={isUsingFilter ? filterOption : undefined}
         itemRenderer={renderOption}
         activeItem={inputProps.value}
         onItemSelect={onChange}
         inputProps={{ ...inputProps, autoComplete: 'off' }}
-        filterable={true}
+        filterable={isUsingFilter}
         popoverProps={{ usePortal: false }}
       >
         <Button
