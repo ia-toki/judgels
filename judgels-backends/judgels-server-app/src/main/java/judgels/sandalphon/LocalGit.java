@@ -3,6 +3,7 @@ package judgels.sandalphon;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.URIish;
 
 public final class LocalGit implements Git {
 
@@ -43,13 +45,17 @@ public final class LocalGit implements Git {
 
     @Override
     public void clone(Path originDirPath, Path rootDirPath) {
-        String uri = "file://" + fs.getFile(originDirPath).getAbsolutePath();
+        String srcDirAbsolutePath = fs.getFile(originDirPath).getAbsolutePath();
+        String destDirAbsolutePath = fs.getFile(rootDirPath).getAbsolutePath();
 
-        File root = fs.getFile(rootDirPath);
+        fs.copyDirectory(Path.of(srcDirAbsolutePath), Path.of(destDirAbsolutePath));
+
+        File destDir = fs.getFile(rootDirPath);
+        String destURI = "file://" + srcDirAbsolutePath;
 
         try {
-            org.eclipse.jgit.api.Git.cloneRepository().setURI(uri).setDirectory(root).call().close();
-        } catch (GitAPIException e) {
+            org.eclipse.jgit.api.Git.open(destDir).remoteAdd().setName("origin").setUri(new URIish(destURI)).call();
+        } catch (IOException | GitAPIException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }
@@ -88,12 +94,20 @@ public final class LocalGit implements Git {
     }
 
     @Override
-    public void commit(Path rootDirPath, String committerName, String committerEmail, String title, String description) {
+    public void commit(
+            Path rootDirPath,
+            String committerName,
+            String committerEmail,
+            String title,
+            String description) {
         File root = fs.getFile(rootDirPath);
 
         try {
             Repository repo = FileRepositoryBuilder.create(new File(root, ".git"));
-            new org.eclipse.jgit.api.Git(repo).commit().setAuthor(committerName, committerEmail).setMessage(title + "\n\n" + description).call();
+            new org.eclipse.jgit.api.Git(repo).commit()
+                    .setAuthor(committerName, committerEmail)
+                    .setMessage(title + "\n\n" + description)
+                    .call();
             repo.close();
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
@@ -115,7 +129,6 @@ public final class LocalGit implements Git {
             }
             repo.close();
             return true;
-
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
@@ -135,7 +148,6 @@ public final class LocalGit implements Git {
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -174,11 +186,15 @@ public final class LocalGit implements Git {
             Iterable<RevCommit> logs = new org.eclipse.jgit.api.Git(repo).log().call();
             ImmutableList.Builder<GitCommit> versions = ImmutableList.builder();
             for (RevCommit rev : logs) {
-                versions.add(new GitCommit(rev.getName(), rev.getAuthorIdent().getName(), new Date(rev.getCommitTime() * 1000L), rev.getShortMessage(), rev.getFullMessage()));
+                versions.add(new GitCommit(
+                        rev.getName(),
+                        rev.getAuthorIdent().getName(),
+                        new Date(rev.getCommitTime() * 1000L),
+                        rev.getShortMessage(),
+                        rev.getFullMessage()));
             }
             repo.close();
             return versions.build();
-
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
@@ -203,27 +219,30 @@ public final class LocalGit implements Git {
             }
             command.call();
 
-            new org.eclipse.jgit.api.Git(repo).rebase().setUpstream(head).runInteractively(new RebaseCommand.InteractiveHandler() {
-                @Override
-                public void prepareSteps(List<RebaseTodoLine> list) {
-                    for (int i = 0; i < list.size(); i++) {
-                        try {
-                            if (i == 0) {
-                                list.get(i).setAction(RebaseTodoLine.Action.REWORD);
-                            } else {
-                                list.get(i).setAction(RebaseTodoLine.Action.FIXUP);
+            new org.eclipse.jgit.api.Git(repo).rebase()
+                    .setUpstream(head)
+                    .runInteractively(new RebaseCommand.InteractiveHandler() {
+                        @Override
+                        public void prepareSteps(List<RebaseTodoLine> list) {
+                            for (int i = 0; i < list.size(); i++) {
+                                try {
+                                    if (i == 0) {
+                                        list.get(i).setAction(RebaseTodoLine.Action.REWORD);
+                                    } else {
+                                        list.get(i).setAction(RebaseTodoLine.Action.FIXUP);
+                                    }
+                                } catch (IllegalTodoFileModification e) {
+                                    // nothing
+                                }
                             }
-                        } catch (IllegalTodoFileModification e) {
-                            // nothing
                         }
-                    }
-                }
 
-                @Override
-                public String modifyCommitMessage(String s) {
-                    return "Revert to commit " + hash.substring(0, 7);
-                }
-            }).call();
+                        @Override
+                        public String modifyCommitMessage(String s) {
+                            return "Revert to commit " + hash.substring(0, 7);
+                        }
+                    })
+                    .call();
 
             repo.close();
         } catch (IOException | GitAPIException e) {

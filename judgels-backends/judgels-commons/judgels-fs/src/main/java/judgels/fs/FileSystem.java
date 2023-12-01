@@ -28,4 +28,7 @@ public interface FileSystem {
     default String readFromFile(Path filePath) {
         return new String(readByteArrayFromFile(filePath));
     }
+
+    void copyDirectory(Path src, Path dest);
+    void copy(Path src, Path dest);
 }

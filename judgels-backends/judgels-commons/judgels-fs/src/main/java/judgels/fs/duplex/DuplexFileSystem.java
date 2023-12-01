@@ -102,4 +102,14 @@ public final class DuplexFileSystem implements FileSystem {
             return aws.readByteArrayFromFile(filePath);
         }
     }
+
+    @Override
+    public void copyDirectory(Path src, Path dest) {
+        local.copyDirectory(src, dest);
+    }
+
+    @Override
+    public void copy(Path src, Path dest) {
+        local.copy(src, dest);
+    }
 }
