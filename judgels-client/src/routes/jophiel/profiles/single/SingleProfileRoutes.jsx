@@ -12,8 +12,10 @@ import ContestHistoryPage from './contestHistory/ContestHistoryPage/ContestHisto
 import SubmissionHistoryPage from './submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage';
 import { selectUserJid, selectUsername } from '../../modules/profileSelectors';
 
-function SingleProfileRoutes({ userJid, username }) {
-  if (!userJid) {
+function SingleProfileRoutes({ match, userJid, username }) {
+  // Optimization:
+  // We wait until we get the username from the backend only if the current username is different from the persisted one.
+  if (!userJid || username !== match.params.username) {
     return <LoadingState large />;
   }
 
