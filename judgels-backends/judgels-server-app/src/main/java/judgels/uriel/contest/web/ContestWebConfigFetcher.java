@@ -157,21 +157,24 @@ public class ContestWebConfigFetcher {
             }
         }
 
-        ContestClarificationStatus clarificationStatus;
-        if (clarificationRoleChecker.canSupervise(userJid, contest)) {
-            clarificationStatus = ContestClarificationStatus.ASKED;
-        } else {
-            clarificationStatus = ContestClarificationStatus.ANSWERED;
-        }
-
         int clarificationCount = 0;
-
-        // TODO(fushar): remove this try block and fix the test so that it doesn't use mock for clarificationDao
+        ContestClarificationStatus clarificationStatus = ContestClarificationStatus.ASKED;
         try {
-            clarificationDao
-                    .selectByContestJid(contestJid)
-                    .whereStatusIs(clarificationStatus.name())
-                    .count();
+            // TODO(fushar): remove this try block and fix the test so that it doesn't use mock for clarificationDao
+            if (clarificationRoleChecker.canManage(userJid, contest)) {
+                clarificationStatus = ContestClarificationStatus.ASKED;
+                clarificationCount = clarificationDao
+                        .selectByContestJid(contestJid)
+                        .whereStatusIs(clarificationStatus.name())
+                        .count();
+            } else {
+                clarificationStatus = ContestClarificationStatus.ANSWERED;
+                clarificationCount = clarificationDao
+                        .selectByContestJid(contestJid)
+                        .whereUserIsAsker(userJid)
+                        .whereStatusIs(clarificationStatus.name())
+                        .count();
+            }
         } catch (NullPointerException e) {
             // skip; for test only
         }
