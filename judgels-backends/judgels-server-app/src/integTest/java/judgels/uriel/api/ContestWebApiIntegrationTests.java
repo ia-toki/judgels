@@ -16,24 +16,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import judgels.uriel.ContestClarificationClient;
 import judgels.uriel.ContestWebClient;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.clarification.ContestClarification;
+import judgels.uriel.api.contest.clarification.ContestClarificationAnswerData;
+import judgels.uriel.api.contest.clarification.ContestClarificationData;
+import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestTab;
+import judgels.uriel.api.contest.web.ContestWebConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ContestWebApiIntegrationTests extends BaseUrielApiIntegrationTests {
     private final ContestWebClient webClient = createClient(ContestWebClient.class);
+    private final ContestClarificationClient clarificationClient = createClient(ContestClarificationClient.class);
 
     private Contest contest;
 
     @BeforeEach
     void before() {
         contest = buildContestWithRoles()
+                .contestants(CONTESTANT, CONTESTANT_A, CONTESTANT_B)
                 .supervisorWithManagementPermissions(SUPERVISOR_A, SupervisorManagementPermission.ALL)
                 .supervisors(SUPERVISOR_B)
                 .modules(ContestModuleType.REGISTRATION)
@@ -243,5 +251,53 @@ class ContestWebApiIntegrationTests extends BaseUrielApiIntegrationTests {
         endContest(contest);
         assertThat(webClient.getWebConfig(contestantToken, contest.getJid()).getState())
                 .isEqualTo(ContestState.FINISHED);
+    }
+
+    @Test
+    void get_web_config__clarifications() {
+        enableModule(contest, ContestModuleType.CLARIFICATION);
+        beginContest(contest);
+
+        ContestWebConfig config = webClient.getWebConfig(contestantAToken, contest.getJid());
+        assertThat(config.getClarificationStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);
+        assertThat(config.getClarificationCount()).isEqualTo(0);
+
+        config = webClient.getWebConfig(contestantBToken, contest.getJid());
+        assertThat(config.getClarificationStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);
+        assertThat(config.getClarificationCount()).isEqualTo(0);
+
+        config = webClient.getWebConfig(supervisorAToken, contest.getJid());
+        assertThat(config.getClarificationStatus()).isEqualTo(ContestClarificationStatus.ASKED);
+        assertThat(config.getClarificationCount()).isEqualTo(0);
+
+        ContestClarificationData data = new ContestClarificationData.Builder()
+                .topicJid(contest.getJid())
+                .title("title")
+                .question("question")
+                .build();
+
+        ContestClarification c1 = clarificationClient.createClarification(contestantAToken, contest.getJid(), data);
+        clarificationClient.createClarification(contestantAToken, contest.getJid(), data);
+        clarificationClient.createClarification(contestantBToken, contest.getJid(), data);
+
+        assertThat(webClient.getWebConfig(contestantAToken, contest.getJid()).getClarificationCount())
+                .isEqualTo(0);
+        assertThat(webClient.getWebConfig(contestantBToken, contest.getJid()).getClarificationCount())
+                .isEqualTo(0);
+        assertThat(webClient.getWebConfig(supervisorAToken, contest.getJid()).getClarificationCount())
+                .isEqualTo(3);
+
+        ContestClarificationAnswerData answerData = new ContestClarificationAnswerData.Builder()
+                .answer("answer")
+                .build();
+
+        clarificationClient.answerClarification(managerToken, contest.getJid(), c1.getJid(), answerData);
+
+        assertThat(webClient.getWebConfig(contestantAToken, contest.getJid()).getClarificationCount())
+                .isEqualTo(1);
+        assertThat(webClient.getWebConfig(contestantBToken, contest.getJid()).getClarificationCount())
+                .isEqualTo(0);
+        assertThat(webClient.getWebConfig(supervisorAToken, contest.getJid()).getClarificationCount())
+                .isEqualTo(2);
     }
 }
