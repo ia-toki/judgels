@@ -7,7 +7,7 @@ import judgels.jophiel.api.user.rating.UserRating;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestRating.class)
+@JsonDeserialize(as = ImmutableContestRatingChanges.class)
 public interface ContestRatingChanges {
     Map<String, UserRating> getRatingsMap();
     Map<String, Profile> getProfilesMap();

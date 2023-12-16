@@ -62,7 +62,7 @@ public class ContestRatingResource {
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
         Optional<RatingEvent> latestEvent = jophielClient.getLatestRatingEvent();
-        Instant latestTime = latestEvent.isPresent() ? latestEvent.get().getTime() : Instant.MIN;
+        Instant latestTime = latestEvent.isPresent() ? latestEvent.get().getTime() : Instant.EPOCH;
 
         List<Contest> contests = contestStore.getPublicContestsAfter(latestTime);
         Map<String, ContestRatingChanges> ratingChangesMap = contests.stream()
