@@ -1,7 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
 
 import { ContentCard } from '../../../ContentCard/ContentCard';
-import { KatexText } from '../../../KatexText/KatexText';
+import RichStatementText from '../../../RichStatementText/RichStatementText';
 
 import './ProblemStatementCard.scss';
 
@@ -45,7 +45,7 @@ export function ProblemStatementCard({ alias, statement: { title, text }, limits
         </tbody>
       </HTMLTable>
       <div className="programming-problem-statement__text">
-        <KatexText key={alias}>{text}</KatexText>
+        <RichStatementText key={alias}>{text}</RichStatementText>
       </div>
     </ContentCard>
   );

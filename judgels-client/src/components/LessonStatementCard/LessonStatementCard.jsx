@@ -1,5 +1,5 @@
 import { ContentCard } from '../ContentCard/ContentCard';
-import { KatexText } from '../KatexText/KatexText';
+import RichStatementText from '../RichStatementText/RichStatementText';
 
 import './LessonStatementCard.scss';
 
@@ -10,7 +10,7 @@ export function LessonStatementCard({ alias, statement }) {
         {alias}. {statement.title}
       </h2>
       <div className="lesson-statement__text">
-        <KatexText key={alias}>{statement.text}</KatexText>
+        <RichStatementText key={alias}>{statement.text}</RichStatementText>
       </div>
     </ContentCard>
   );

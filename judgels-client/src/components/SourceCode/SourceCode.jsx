@@ -20,14 +20,14 @@ registerLanguage('pascal', pascal);
 registerLanguage('python', python);
 registerLanguage('rust', rust);
 
-function SourceCode({ isDarkMode, language, children }) {
+export function SourceCode({ isDarkMode, language, showLineNumbers = true, children }) {
   return (
     <SyntaxHighlighter
       className="source-code"
       style={isDarkMode ? tomorrow : coy}
       language={language}
       wrapLines={true}
-      showLineNumbers={true}
+      showLineNumbers={showLineNumbers}
       lineNumberContainerStyle={{
         backgroundColor: isDarkMode ? '#394B59' : '#f0f0f0',
         float: 'left',
