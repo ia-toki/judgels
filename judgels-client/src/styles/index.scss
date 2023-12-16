@@ -165,7 +165,13 @@ pre {
 }
 
 pre.source-code {
-  background-color: inherit !important;
+  border-color: #cccccc;
+  background-color: #f5f5f5 !important;
+}
+
+.bp4-dark pre.source-code {
+  border-color: $dark-gray2;
+  background-color: $dark-gray3 !important;
 }
 
 em {

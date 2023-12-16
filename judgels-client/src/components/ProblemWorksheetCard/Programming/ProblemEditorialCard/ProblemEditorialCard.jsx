@@ -1,5 +1,5 @@
 import { ContentCard } from '../../../ContentCard/ContentCard';
-import { KatexText } from '../../../KatexText/KatexText';
+import RichStatementText from '../../../RichStatementText/RichStatementText';
 
 export function ProblemEditorialCard({ alias, statement: { title }, editorial: { text }, titleSuffix }) {
   return (
@@ -10,7 +10,7 @@ export function ProblemEditorialCard({ alias, statement: { title }, editorial: {
         {titleSuffix}
       </h2>
       <div className="programming-problem-statement__text">
-        <KatexText key={alias}>{text}</KatexText>
+        <RichStatementText key={alias}>{text}</RichStatementText>
       </div>
     </ContentCard>
   );

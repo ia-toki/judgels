@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 import { UserRef } from '../UserRef/UserRef';
-import { KatexText } from '../KatexText/KatexText';
+import RichStatementText from '../RichStatementText/RichStatementText';
 
 export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
   const renderWriters = () => {
@@ -70,7 +70,7 @@ export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
         {renderEditorialists()}
       </ul>
       <hr />
-      <KatexText key={title}>{children}</KatexText>
+      <RichStatementText key={title}>{children}</RichStatementText>
     </div>
   );
 }
