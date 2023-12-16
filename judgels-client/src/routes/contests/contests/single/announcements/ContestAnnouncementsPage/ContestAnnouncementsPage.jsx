@@ -109,7 +109,7 @@ class ContestAnnouncementsPage extends Component {
     if (!response) {
       return null;
     }
-    if (!response.config.canSupervise) {
+    if (!response.config.canManage) {
       return null;
     }
 
@@ -123,7 +123,7 @@ class ContestAnnouncementsPage extends Component {
     if (!response) {
       return null;
     }
-    if (!response.config.canSupervise) {
+    if (!response.config.canManage) {
       return null;
     }
 

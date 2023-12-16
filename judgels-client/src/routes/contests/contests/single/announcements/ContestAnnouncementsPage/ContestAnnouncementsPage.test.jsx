@@ -56,9 +56,9 @@ describe('ContestAnnouncementsPage', () => {
       announcements = [];
     });
 
-    describe('when not canSupervise', () => {
+    describe('when not canManage', () => {
       beforeEach(async () => {
-        canSupervise = false;
+        canManage = false;
         await render();
       });
 
@@ -67,9 +67,9 @@ describe('ContestAnnouncementsPage', () => {
       });
     });
 
-    describe('when canSupervise', () => {
+    describe('when canManage', () => {
       beforeEach(async () => {
-        canSupervise = true;
+        canManage = true;
         await render();
       });
 
