@@ -12,7 +12,7 @@ import { selectMaybeUserJid, selectMaybeUsername } from '../../../modules/sessio
 import * as submissionActions from '../modules/submissionActions';
 
 export class SubmissionsPage extends Component {
-  static PAGE_SIZE = 5;
+  static PAGE_SIZE = 20;
 
   state = {
     response: undefined,
