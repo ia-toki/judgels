@@ -103,7 +103,7 @@ describe('ContestProblemsPage', () => {
             .find('div.content-card__section')
             .find('button')
             .map(b => b.text())
-        ).toEqual(['editEdit problems']);
+        ).toEqual(['Edit problems']);
       });
     });
   });

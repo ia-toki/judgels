@@ -32,7 +32,7 @@ export class ProblemSetCreateDialog extends Component {
 
   renderDialog = () => {
     const initialValues = {
-      contestTime: new Date(),
+      contestTime: new Date().toISOString(),
     };
     const props = {
       renderFormComponents: this.renderDialogForm,
@@ -64,7 +64,13 @@ export class ProblemSetCreateDialog extends Component {
   );
 
   createProblemSet = async data => {
-    await this.props.onCreateProblemSet(data);
+    await this.props.onCreateProblemSet({
+      slug: data.slug,
+      name: data.name,
+      archiveSlug: data.archiveSlug,
+      description: data.description,
+      contestTime: new Date(data.contestTime).getTime(),
+    });
     this.setState({ isDialogOpen: false });
   };
 }

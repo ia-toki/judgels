@@ -13,16 +13,16 @@
   }
 }
 
-.bp4-menu li, .bp4-menu li a {
+.bp5-menu li, .bp5-menu li a {
   color: inherit;
 }
 
-.bp4-light .widget-user__profile {
+.bp5-light .widget-user__profile {
   background-color: #f4f5f6;
 }
 
-.bp4-dark .widget-user__profile {
-  background-color: $dark-gray5;
+.bp5-dark .widget-user__profile {
+  background-color: $dark-background-color;
 }
 
 .widget-user__avatar-wrapper {
@@ -66,7 +66,7 @@
     display: block !important;
     cursor: pointer;
 
-    span.bp4-icon {
+    span.bp5-icon {
       float: left;
     }
   }
@@ -82,7 +82,7 @@
     display: block !important;
     cursor: pointer;
 
-    span.bp4-icon {
+    span.bp5-icon {
       float: left;
     }
   }

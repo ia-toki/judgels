@@ -5,7 +5,7 @@
     outline: none;
   }
 
-  .bp4-icon {
+  .bp5-icon {
     padding-bottom: 1px;
   }
 
@@ -14,19 +14,18 @@
     padding-bottom: 0;
   }
 
-  .bp4-tab-list {
+  .bp5-tab-list {
     left: -20px;
     width: 270px;
   }
 
-  .bp4-tab-indicator {
+  .bp5-tab-indicator {
     border-radius: 0 !important;
   }
 
-  .bp4-tab {
+  .bp5-tab {
     a {
       width: 100%;
-      position: absolute;
     }
 
     position: relative;
@@ -35,14 +34,13 @@
     height: 50px;
   }
 
-  .bp4-tab[aria-selected='true'] {
+  .bp5-tab[aria-selected='true'] {
     font-weight: bold;
   }
 }
 
 .card-sidebar__arrow {
   float: right;
-  padding-top: 15px;
 }
 
 .card-sidebar__full {
@@ -63,56 +61,56 @@
     width: 200px;
     top: -15px;
 
-    .bp4-tab-list {
+    .bp5-tab-list {
       left: 0;
     }
   }
 
   .card-sidebar__responsive-menu {
-    .bp4-icon {
+    .bp5-icon {
       padding-bottom: 0 !important;
     }
   }
 }
 
-.bp4-light .card-sidebar {
+.bp5-light .card-sidebar {
   .card-sidebar__arrow {
     color: $primary-color !important;
   }
 
-  .bp4-tab-indicator {
+  .bp5-tab-indicator {
     background-color: $secondary-background-color !important;
     border-left: 3px solid $primary-color;
   }
 
-  .bp4-tab:hover {
+  .bp5-tab:hover {
     background-color: $tertiary-background-color !important;
   }
 
-  .bp4-tab[aria-selected='true'] {
+  .bp5-tab[aria-selected='true'] {
     color: $text-color;
   }
 
-  .bp4-tab[aria-selected='false'] {
+  .bp5-tab[aria-selected='false'] {
     color: $primary-color;
   }
 }
 
-.bp4-dark .card-sidebar {
-  .bp4-tab a {
+.bp5-dark .card-sidebar {
+  .bp5-tab a {
     color: $dark-text-color !important;
   }
 
-  .bp4-tab[aria-selected='true'] {
+  .bp5-tab[aria-selected='true'] {
     color: inherit;
   }
 
-  .bp4-tab-indicator {
+  .bp5-tab-indicator {
     background-color: $dark-secondary-background-color !important;
     border-left: 3px solid $gray3;
   }
 
-  .bp4-tab:hover {
+  .bp5-tab:hover {
     background-color: $dark-tertiary-background-color !important;
   }
 }

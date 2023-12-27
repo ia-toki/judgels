@@ -72,7 +72,7 @@ describe('ContestContestantsPage', () => {
       });
 
       it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['plusAdd contestants', 'trashRemove contestants']);
+        expect(wrapper.find('button').map(b => b.text())).toEqual(['Add contestants', 'Remove contestants']);
       });
     });
   });

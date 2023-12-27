@@ -45,7 +45,7 @@ class ContestEditGeneralTab extends Component {
         slug: contest.slug,
         name: contest.name,
         style: contest.style,
-        beginTime: new Date(contest.beginTime),
+        beginTime: new Date(contest.beginTime).toISOString(),
         duration: formatDuration(contest.duration),
       };
       const formProps = {
@@ -61,7 +61,7 @@ class ContestEditGeneralTab extends Component {
       slug: data.slug,
       name: data.name,
       style: data.style,
-      beginTime: data.beginTime.getTime(),
+      beginTime: new Date(data.beginTime).getTime(),
       duration: parseDuration(data.duration),
     };
     await this.props.onUpdateContest(this.props.contest.jid, this.props.contest.slug, updateData);

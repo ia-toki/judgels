@@ -101,7 +101,7 @@ describe('ChapterProblemSubmissionsPage', () => {
             .find('.action-buttons')
             .find('button')
             .map(b => b.text())
-        ).toEqual(['refreshRegrade all pages']);
+        ).toEqual(['Regrade all pages']);
       });
     });
   });

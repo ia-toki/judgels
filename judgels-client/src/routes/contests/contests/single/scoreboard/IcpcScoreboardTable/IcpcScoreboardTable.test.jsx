@@ -100,9 +100,7 @@ describe('IcpcScoreboardTable', () => {
 
   test('points', () => {
     const getColor = td =>
-      td === undefined
-        ? ''
-        : td === 'first-accepted'
+      td === 'first-accepted'
         ? 'D '
         : td === 'accepted'
         ? 'G '
@@ -110,7 +108,7 @@ describe('IcpcScoreboardTable', () => {
         ? 'R '
         : td === 'frozen'
         ? 'F '
-        : 'X ';
+        : '';
     const mapCell = td =>
       getColor(td.prop('className')) + td.find('span.top').text() + '/' + td.find('span.bottom').text();
     const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
@@ -119,7 +117,7 @@ describe('IcpcScoreboardTable', () => {
       .children()
       .map(mapRow);
     expect(points).toEqual([
-      ['3/66', 'G 1/3', 'D 3/14', 'D 1/9', 'X -/-'],
+      ['3/66', 'G 1/3', 'D 3/14', 'D 1/9', '-/-'],
       ['1/17', 'R 1/-', 'G 1/17', 'F ?/?', 'R 3/-'],
     ]);
   });

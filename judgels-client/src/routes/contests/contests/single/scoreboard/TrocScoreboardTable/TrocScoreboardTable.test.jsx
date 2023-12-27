@@ -101,9 +101,7 @@ describe('TrocScoreboardTable', () => {
 
   test('points', () => {
     const getColor = td =>
-      td === undefined
-        ? ''
-        : td === 'first-accepted'
+      td === 'first-accepted'
         ? 'D '
         : td === 'accepted'
         ? 'G '
@@ -111,7 +109,7 @@ describe('TrocScoreboardTable', () => {
         ? 'R '
         : td === 'frozen'
         ? 'F '
-        : 'X ';
+        : '';
     const mapCell = td =>
       getColor(td.prop('className')) + td.find('span.top').text() + '/' + td.find('span.bottom').text();
     const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
@@ -120,7 +118,7 @@ describe('TrocScoreboardTable', () => {
       .children()
       .map(mapRow);
     expect(points).toEqual([
-      ['111/01:06', 'G +1/00:03', 'D +3/00:14', 'D +/01:09', 'X -/-'],
+      ['111/01:06', 'G +1/00:03', 'D +3/00:14', 'D +/01:09', '-/-'],
       ['10/00:17', 'R +1/-', 'G +1/00:17', 'F -/-', 'R +3/-'],
     ]);
   });

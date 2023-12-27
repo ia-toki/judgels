@@ -81,7 +81,7 @@ export function SubmissionsTable({
         </td>
         <td className="col-fit">
           <Link className="action" to={`/submissions/${submission.id}`}>
-            <Search />
+            <Search title="search" />
           </Link>
         </td>
       </tr>

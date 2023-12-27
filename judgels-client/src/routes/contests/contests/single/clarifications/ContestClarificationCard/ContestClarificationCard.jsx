@@ -67,7 +67,7 @@ export function ContestClarificationCard({
 
     return (
       <>
-        <h4>Answer:</h4>
+        <h5>Answer:</h5>
         <p className="float-right">
           <small>
             answered <FormattedRelative value={clarification.answeredTime} />
@@ -83,9 +83,9 @@ export function ContestClarificationCard({
 
   return (
     <Callout className="contest-clarification-card" intent={questionIntent} icon={null}>
-      <h4>
+      <h5>
         {clarification.title} &nbsp; <Tag>{topic}</Tag>
-      </h4>
+      </h5>
       <p className="float-right">
         <small>
           asked <FormattedRelative value={clarification.time} />

@@ -26,7 +26,7 @@ class App extends PureComponent {
 
   getChildContext() {
     return {
-      blueprintPortalClassName: this.props.isDarkMode ? 'bp4-dark' : 'bp4-light',
+      blueprintPortalClassName: this.props.isDarkMode ? 'bp5-dark' : 'bp5-light',
     };
   }
 
@@ -38,7 +38,7 @@ class App extends PureComponent {
 
     return (
       <DocumentTitle title={title}>
-        <div className={classNames({ 'bp4-light': !isDarkMode, 'bp4-dark': isDarkMode })}>
+        <div className={classNames({ 'bp5-light': !isDarkMode, 'bp5-dark': isDarkMode })}>
           <Announcements />
           <Header items={visibleAppRoutes} homeRoute={homeRoute} />
           <AppContent>

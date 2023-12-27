@@ -64,19 +64,19 @@ export class ContestEditDialog extends Component {
         <div className={Classes.DIALOG_BODY}>
           <Tabs id="contest-edit-dialog-tabs" vertical renderActiveTabPanelOnly animate={false}>
             <Tab id="general" panel={<ContestEditGeneralTab />}>
-              General
+              <span>General</span>
               <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
             <Tab id="description" panel={<ContestEditDescriptionTab />}>
-              Description
+              <span>Description</span>
               <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
             <Tab id="modules" panel={<ContestEditModulesTab />}>
-              Modules
+              <span>Modules</span>
               <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
             <Tab id="configs" panel={<ContestEditConfigsTab />}>
-              Configs
+              <span>Configs</span>
               <ChevronRight className="contest-edit-dialog__arrow" />
             </Tab>
           </Tabs>

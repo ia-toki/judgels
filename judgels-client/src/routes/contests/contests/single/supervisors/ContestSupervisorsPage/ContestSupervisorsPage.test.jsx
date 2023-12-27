@@ -52,10 +52,7 @@ describe('ContestSupervisorsPage', () => {
     });
 
     it('shows action buttons', () => {
-      expect(wrapper.find('button').map(b => b.text())).toEqual([
-        'plusAdd/update supervisors',
-        'trashRemove supervisors',
-      ]);
+      expect(wrapper.find('button').map(b => b.text())).toEqual(['Add/update supervisors', 'Remove supervisors']);
     });
   });
 
@@ -90,8 +87,8 @@ describe('ContestSupervisorsPage', () => {
       it('shows the supervisors', () => {
         expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
           [],
-          ['username1', 'notificationsANNCmanualPROB'],
-          ['username2', 'ninjaALL'],
+          ['username1', 'ANNCPROB'],
+          ['username2', 'ALL'],
         ]);
       });
     });

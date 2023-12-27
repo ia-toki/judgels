@@ -43,11 +43,11 @@ describe('ContestRegistrationCard', () => {
   };
 
   describe.each`
-    contestantState                                    | stateText              | actionText
-    ${ContestContestantState.RegistrableWrongDivision} | ${[]}                  | ${['Your rating is not allowed for this contest division']}
-    ${ContestContestantState.Registrable}              | ${[]}                  | ${['Register']}
-    ${ContestContestantState.Registrant}               | ${['tick Registered']} | ${['Unregister']}
-    ${ContestContestantState.Contestant}               | ${['tick Registered']} | ${[]}
+    contestantState                                    | stateText          | actionText
+    ${ContestContestantState.RegistrableWrongDivision} | ${[]}              | ${['Your rating is not allowed for this contest division']}
+    ${ContestContestantState.Registrable}              | ${[]}              | ${['Register']}
+    ${ContestContestantState.Registrant}               | ${[' Registered']} | ${['Unregister']}
+    ${ContestContestantState.Contestant}               | ${[' Registered']} | ${[]}
   `('text', ({ contestantState, stateText, actionText }) => {
     beforeEach(async () => {
       contestContestantActions.getMyContestantState.mockReturnValue(() => Promise.resolve(contestantState));

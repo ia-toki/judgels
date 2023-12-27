@@ -26,7 +26,15 @@ describe('ContestEditGeneralTab', () => {
       combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a', name: 'Contest A', style: ContestStyle.ICPC }));
+    store.dispatch(
+      PutContest({
+        jid: 'contestJid',
+        slug: 'contest-a',
+        name: 'Contest A',
+        style: ContestStyle.ICPC,
+        beginTime: parseDateTime('2018-09-10 13:00').getTime(),
+      })
+    );
 
     wrapper = mount(
       <Provider store={store}>

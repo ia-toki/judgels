@@ -89,7 +89,7 @@ describe('ContestClarificationsPage', () => {
       });
 
       it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['plusNew clarification']);
+        expect(wrapper.find('button').map(b => b.text())).toEqual(['New clarification']);
       });
     });
   });
@@ -145,7 +145,7 @@ describe('ContestClarificationsPage', () => {
           expect(
             cards.map(card => [
               card
-                .find('h4')
+                .find('h5')
                 .at(0)
                 .map(n => n.text().replace(/\s+/g, ' ')),
               card
@@ -177,7 +177,7 @@ describe('ContestClarificationsPage', () => {
           expect(
             cards.map(card => [
               card
-                .find('h4')
+                .find('h5')
                 .at(0)
                 .map(n => n.text().replace(/\s+/g, ' ')),
               card

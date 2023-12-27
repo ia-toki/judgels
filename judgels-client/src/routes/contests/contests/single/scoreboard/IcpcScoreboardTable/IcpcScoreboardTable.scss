@@ -44,7 +44,7 @@ table.icpc-scoreboard__content {
   }
 }
 
-.bp4-dark table.icpc-scoreboard__content {
+.bp5-dark table.icpc-scoreboard__content {
   td {
     span.bottom {
       color: $dark-secondary-text-color !important;
@@ -61,7 +61,7 @@ table.icpc-scoreboard__content {
 
   td.accepted {
     background: #e1fdd7 !important;
-    color: $dark-gray5 !important;
+    color: $dark-background-color !important;
 
     span.bottom {
       color: $gray2 !important;

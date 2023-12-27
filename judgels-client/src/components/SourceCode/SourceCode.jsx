@@ -12,6 +12,8 @@ import tomorrow from 'react-syntax-highlighter/styles/prism/tomorrow';
 
 import { selectIsDarkMode } from '../../modules/webPrefs/webPrefsSelectors';
 
+import './SourceCode.scss';
+
 registerLanguage('c', c);
 registerLanguage('cpp', cpp);
 registerLanguage('go', go);

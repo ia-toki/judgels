@@ -14,7 +14,7 @@ const problemSet = {
   name: 'Problem Set',
   archiveJid: 'JIDARCH',
   description: 'This is a problem set',
-  contestTime: '1970-01-01 00:00',
+  contestTime: parseDateTime('1970-01-01 00:00').getTime(),
 };
 
 describe('ProblemSetEditDialog', () => {
@@ -73,7 +73,7 @@ describe('ProblemSetEditDialog', () => {
       name: 'New Problem Set',
       archiveSlug: 'new-archive',
       description: 'New description',
-      contestTime: parseDateTime('2100-01-01 00:00'),
+      contestTime: parseDateTime('2100-01-01 00:00').getTime(),
     });
   });
 });

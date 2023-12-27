@@ -41,7 +41,7 @@ export function ChapterProblemSubmissionsTable({
           {canManage && (
             <>
               &nbsp;&nbsp;&nbsp;
-              <Refresh className="action" intent="primary" onClick={onClickRegrade(submission.jid)} />
+              <Refresh className="action" intent="primary" title="refresh" onClick={onClickRegrade(submission.jid)} />
             </>
           )}
         </td>
@@ -60,7 +60,7 @@ export function ChapterProblemSubmissionsTable({
             className="action"
             to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}/submissions/${submission.id}`}
           >
-            <Search />
+            <Search title="search" />
           </Link>
         </td>
       </tr>

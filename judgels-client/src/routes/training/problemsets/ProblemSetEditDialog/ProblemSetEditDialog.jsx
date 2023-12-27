@@ -16,7 +16,13 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
   );
 
   const updateProblemSet = async data => {
-    await onUpdateProblemSet(problemSet.jid, data);
+    await onUpdateProblemSet(problemSet.jid, {
+      slug: data.slug,
+      name: data.name,
+      archiveSlug: data.archiveSlug,
+      description: data.description,
+      contestTime: new Date(data.contestTime).getTime(),
+    });
   };
 
   const initialValues = problemSet && {
@@ -24,7 +30,7 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
     name: problemSet.name,
     archiveSlug: archiveSlug,
     description: problemSet.description,
-    contestTime: new Date(problemSet.contestTime),
+    contestTime: new Date(problemSet.contestTime).toISOString(),
   };
   const props = {
     renderFormComponents: renderDialogForm,
