@@ -46,7 +46,7 @@
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
     "katex": "0.13.11",
-    "mini-css-extract-plugin": "0.11.3",
+    "mini-css-extract-plugin": "2.7.6",
     "normalize.css": "^5.0.0",
     "postcss": "8.4.32",
     "postcss-flexbugs-fixes": "4.2.1",
