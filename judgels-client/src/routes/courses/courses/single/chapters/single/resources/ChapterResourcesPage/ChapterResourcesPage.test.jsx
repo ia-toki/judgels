@@ -115,10 +115,10 @@ describe('ChapterResourcesPage', () => {
     it('shows the resources', () => {
       const cards = wrapper.find('a.content-card-link');
       expect(cards.map(card => [card.text(), card.find('a').props().href])).toEqual([
-        ['bookX. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
-        ['bookY. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],
-        ['formA. Problem A🎉 solved  confirm', '/courses/courseSlug/chapters/chapter-1/problems/A'],
-        ['formB. Problem B', '/courses/courseSlug/chapters/chapter-1/problems/B'],
+        ['X. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
+        ['Y. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],
+        ['A. Problem A🎉 solved  ', '/courses/courseSlug/chapters/chapter-1/problems/A'],
+        ['B. Problem B', '/courses/courseSlug/chapters/chapter-1/problems/B'],
       ]);
     });
   });

@@ -72,7 +72,7 @@ describe('ContestManagersPage', () => {
       });
 
       it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['plusAdd managers', 'trashRemove managers']);
+        expect(wrapper.find('button').map(b => b.text())).toEqual(['Add managers', 'Remove managers']);
       });
     });
   });

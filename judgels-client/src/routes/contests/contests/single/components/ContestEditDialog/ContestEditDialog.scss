@@ -8,7 +8,7 @@
     outline: none;
   }
 
-  .bp4-tab-list {
+  .bp5-tab-list {
     width: 150px;
     margin-right: 15px;
     padding-top: 1px;
@@ -16,22 +16,26 @@
     padding-right: 1px;
   }
 
-  .bp4-tab-panel {
+  .bp5-tab-panel {
     width: 100%;
   }
 
-  .bp4-tab-indicator {
+  .bp5-tab-indicator {
     border-radius: 0 !important;
   }
 
-  .bp4-tab {
+  .bp5-tab {
     position: relative;
     padding-left: 20px !important;
     line-height: 40px;
     height: 40px;
   }
 
-  .bp4-tab[aria-selected='true'] {
+  .bp5-tab span:first-child {
+    width: 100%;
+  }
+
+  .bp5-tab[aria-selected='true'] {
     left: -3px;
     border-radius: 0 !important;
     font-weight: bold;
@@ -42,14 +46,14 @@
     }
   }
 
-  .bp4-tab[aria-selected='false'] {
+  .bp5-tab[aria-selected='false'] {
     svg {
       display: none;
     }
   }
 
   .contest-edit-dialog__arrow {
-    line-height: 40px !important;
+    line-height: 0 !important;
     float: right;
   }
 
@@ -72,7 +76,7 @@
   .contest-edit-dialog-button {
     margin-top: -5px;
 
-    .bp4-icon {
+    .bp5-icon {
       margin-right: 0;
     }
   }
@@ -86,16 +90,16 @@
     min-width: 350px;
     height: 850px;
 
-    .bp4-tabs {
+    .bp5-tabs {
       display: block;
     }
 
-    .bp4-tab-list {
+    .bp5-tab-list {
       width: 100%;
       margin-bottom: 25px;
     }
 
-    .bp4-tab-panel {
+    .bp5-tab-panel {
       padding-left: 0 !important;
     }
   }
@@ -105,20 +109,20 @@
   }
 }
 
-.bp4-light .contest-edit-dialog {
+.bp5-light .contest-edit-dialog {
   .contest-edit-dialog__arrow {
     color: $primary-color !important;
   }
 
-  .bp4-tab[aria-selected='true'] {
+  .bp5-tab[aria-selected='true'] {
     background-color: white !important;
     border-left: 3px solid $primary-color;
     color: $text-color;
   }
 }
 
-.bp4-dark .contest-edit-dialog {
-  .bp4-tab[aria-selected='true'] {
+.bp5-dark .contest-edit-dialog {
+  .bp5-tab[aria-selected='true'] {
     color: inherit !important;
     background-color: $dark-secondary-background-color !important;
     border-left: 3px solid $gray3;

@@ -80,9 +80,9 @@ describe('ContentWithTopbar', () => {
       it('has the correct active item', () => {
         const items = wrapper.find('a');
 
-        expect(items.at(0).hasClass('bp4-active')).toBeFalsy();
-        expect(items.at(1).hasClass('bp4-active')).toBeTruthy();
-        expect(items.at(2).hasClass('bp4-active')).toBeFalsy();
+        expect(items.at(0).hasClass('bp5-active')).toBeFalsy();
+        expect(items.at(1).hasClass('bp5-active')).toBeTruthy();
+        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
       });
 
       it('renders the active component', () => {
@@ -103,9 +103,9 @@ describe('ContentWithTopbar', () => {
       it('has the first item active by default', () => {
         const items = wrapper.find('a');
 
-        expect(items.at(0).hasClass('bp4-active')).toBeTruthy();
-        expect(items.at(1).hasClass('bp4-active')).toBeFalsy();
-        expect(items.at(2).hasClass('bp4-active')).toBeFalsy();
+        expect(items.at(0).hasClass('bp5-active')).toBeTruthy();
+        expect(items.at(1).hasClass('bp5-active')).toBeFalsy();
+        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
       });
     });
   });
@@ -138,9 +138,9 @@ describe('ContentWithTopbar', () => {
       it('has the correct active item', () => {
         const items = wrapper.find('a');
 
-        expect(items.at(0).hasClass('bp4-active')).toBeFalsy();
-        expect(items.at(1).hasClass('bp4-active')).toBeTruthy();
-        expect(items.at(2).hasClass('bp4-active')).toBeFalsy();
+        expect(items.at(0).hasClass('bp5-active')).toBeFalsy();
+        expect(items.at(1).hasClass('bp5-active')).toBeTruthy();
+        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
       });
 
       it('renders the active component', () => {
@@ -164,9 +164,9 @@ describe('ContentWithTopbar', () => {
       it('has the first item active by default', () => {
         const items = wrapper.find('a');
 
-        expect(items.at(0).hasClass('bp4-active')).toBeTruthy();
-        expect(items.at(1).hasClass('bp4-active')).toBeFalsy();
-        expect(items.at(2).hasClass('bp4-active')).toBeFalsy();
+        expect(items.at(0).hasClass('bp5-active')).toBeTruthy();
+        expect(items.at(1).hasClass('bp5-active')).toBeFalsy();
+        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
       });
     });
   });

@@ -8,26 +8,26 @@
 @import './table';
 @import './ratings';
 
-.bp4-dark,
-.bp4-dark td,
-.bp4-dark th,
-.bp4-dark table.bp4-html-table td,
-.bp4-dark table.bp4-html-table th,
-.bp4-dark label,
-.bp4-dark .bp4-control,
-.bp4-dark .bp4-dialog,
-.bp4-dark .bp4-tag.bp4-intent-primary,
-.bp4-dark .bp4-breadcrumb-current {
+.bp5-dark,
+.bp5-dark td,
+.bp5-dark th,
+.bp5-dark table.bp5-html-table td,
+.bp5-dark table.bp5-html-table th,
+.bp5-dark label,
+.bp5-dark .bp5-control,
+.bp5-dark .bp5-dialog,
+.bp5-dark .bp5-tag.bp5-intent-primary,
+.bp5-dark .bp5-breadcrumb-current {
   color: $dark-text-color;
 }
 
 body {
   font-family: $primary-font;
-  background-color: #f4f5f6;
+  background-color: $background-color;
 }
 
-body .bp4-dark {
-  background-color: $dark-gray5 !important;
+body .bp5-dark {
+  background-color: $dark-background-color !important;
 }
 
 .secondary-info {
@@ -52,11 +52,11 @@ small {
   line-height: 14px !important;
 }
 
-.bp4-light small {
+.bp5-light small {
   color: $secondary-text-color;
 }
 
-.bp4-dark small {
+.bp5-dark small {
   color: $dark-secondary-text-color !important;
 }
 
@@ -64,7 +64,7 @@ strong {
   font-weight: 700;
 }
 
-.bp4-dark strong {
+.bp5-dark strong {
   color: #eeeeee;
 }
 
@@ -102,11 +102,11 @@ hr {
   border-bottom: 1px solid rgba($text-color, 0.15);
 }
 
-.bp4-light hr {
+.bp5-light hr {
   border-bottom: 1px solid $border-color;
 }
 
-.bp4-dark hr {
+.bp5-dark hr {
   border-bottom: 1px solid $dark-border-color;
 }
 
@@ -158,20 +158,10 @@ pre {
   }
 }
 
-.bp4-dark code,
-.bp4-dark pre {
-  border-color: $dark-gray2;
-  background-color: $dark-gray3;
-}
-
-pre.source-code {
-  border-color: #cccccc;
-  background-color: #f5f5f5 !important;
-}
-
-.bp4-dark pre.source-code {
-  border-color: $dark-gray2;
-  background-color: $dark-gray3 !important;
+.bp5-dark code,
+.bp5-dark pre {
+  border-color: #202b33;
+  background-color: #293742;
 }
 
 em {
@@ -198,8 +188,8 @@ table {
   width: 100%;
 }
 
-.bp4-dark td,
-.bp4-dark th {
+.bp5-dark td,
+.bp5-dark th {
   border-color: $dark-secondary-background-color !important;
 }
 
@@ -215,8 +205,46 @@ blockquote {
   margin-top: 50px;
 }
 
-.bp4-button.bp4-intent-primary {
+.bp5-button.bp5-intent-primary {
   background-color: $primary-color;
+}
+
+.bp5-button.bp5-intent-warning,
+.bp5-tag.bp5-intent-warning {
+  background-color: #d9822b;
+  color: #fff;
+}
+
+.bp5-callout {
+  padding: 10px 12px 9px;
+}
+
+.bp5-callout.bp5-callout-icon > .bp5-icon:first-child  {
+  top: 12px;
+}
+
+.bp5-dark .bp5-button:not([class*=bp5-intent-]) {
+  background-color: #394b59;
+}
+
+.bp5-dark .bp5-button:not([class*=bp5-intent-]).bp5-active {
+  background-color: #202b33;
+}
+
+.bp5-dark .bp5-callout.bp5-intent-primary {
+  color: unset;
+}
+
+.bp5-dark table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
+  background-color: rgba(92, 112, 128, 0.15);
+}
+
+.bp5-dark .bp5-dialog {
+  background-color: #293742;
+}
+
+.bp5-dark .bp5-dialog-header {
+  background-color: #30404d;
 }
 
 /* End Blueprint overrides */

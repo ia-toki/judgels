@@ -1,8 +1,7 @@
-import { Tag } from '@blueprintjs/core';
 import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 
-import { formatDateTime, formatDateTimezoneOffset, parseDateTime } from '../../../utils/datetime';
+import { formatDateTime, parseDateTime } from '../../../utils/datetime';
 
 import { getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
@@ -22,7 +21,6 @@ export function FormTableDateInput(props) {
         className={classNames('form-table-date-input', getIntentClassName(meta))}
         formatDate={formatDate}
         parseDate={parseDateTime}
-        rightElement={<Tag>{formatDateTimezoneOffset(new Date())}</Tag>}
         timePrecision={TimePrecision.MINUTE}
         canClearSelection={false}
         closeOnSelection={false}

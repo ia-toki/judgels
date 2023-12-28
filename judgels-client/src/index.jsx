@@ -1,4 +1,4 @@
-import * as ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { ConnectedRouter } from 'connected-react-router';

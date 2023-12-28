@@ -64,13 +64,13 @@
   }
 }
 
-.bp4-dark .html-text {
+.bp5-dark .html-text {
   .spoiler {
     background-color: $gray1;
     border: 2px dashed $gray5;
   }
 
   .spoiler:hover {
-    background-color: $dark-gray5;
+    background-color: $dark-background-color;
   }
 }

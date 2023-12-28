@@ -74,7 +74,7 @@ describe('ContestAnnouncementsPage', () => {
       });
 
       it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['plusNew announcement']);
+        expect(wrapper.find('button').map(b => b.text())).toEqual(['New announcement']);
       });
     });
   });
@@ -123,7 +123,7 @@ describe('ContestAnnouncementsPage', () => {
           const cards = wrapper.find('div.contest-announcement-card');
           expect(
             cards.map(card => [
-              card.find('h4').text(),
+              card.find('h5').text(),
               card
                 .find('p')
                 .text()
@@ -148,7 +148,7 @@ describe('ContestAnnouncementsPage', () => {
           const cards = wrapper.find('div.contest-announcement-card');
           expect(
             cards.map(card => [
-              card.find('h4').text(),
+              card.find('h5').text(),
               card
                 .find('p')
                 .text()
@@ -173,7 +173,7 @@ describe('ContestAnnouncementsPage', () => {
           const cards = wrapper.find('div.contest-announcement-card');
           expect(
             cards.map(card => [
-              card.find('h4').text(),
+              card.find('h5').text(),
               card
                 .find('p')
                 .text()

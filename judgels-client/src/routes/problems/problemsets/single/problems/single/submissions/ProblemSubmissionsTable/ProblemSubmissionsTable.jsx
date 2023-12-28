@@ -50,7 +50,7 @@ export function ProblemSubmissionsTable({ problemSet, problem, submissions, canM
         </td>
         <td className="col-fit">
           <Link className="action" to={`/problems/${problemSet.slug}/${problem.alias}/submissions/${submission.id}`}>
-            <Search />
+            <Search title="search" />
           </Link>
         </td>
       </tr>

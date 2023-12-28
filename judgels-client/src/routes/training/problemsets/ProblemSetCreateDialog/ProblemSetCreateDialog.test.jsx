@@ -62,7 +62,7 @@ describe('ProblemSetCreateDialog', () => {
       name: 'New problemSet',
       archiveSlug: 'New archive',
       description: 'New description',
-      contestTime: parseDateTime('2100-01-01 00:00'),
+      contestTime: parseDateTime('2100-01-01 00:00').getTime(),
     });
   });
 });

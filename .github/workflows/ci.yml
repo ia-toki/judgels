@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     branches:
-      - '*'
+      - "*"
   pull_request:
     branches:
       - master
@@ -29,9 +29,9 @@ jobs:
         if: steps.changed-files.outputs.gradle == '1'
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '11'
-          cache: 'gradle'
+          distribution: zulu
+          java-version: "11"
+          cache: gradle
 
       - name: Test judgels-commons
         if: steps.changed-files.outputs.judgels-commons == '1'
@@ -61,7 +61,7 @@ jobs:
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "20"
 
       - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
@@ -111,15 +111,15 @@ jobs:
         if: steps.changed-files.outputs.gradle == '1'
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '11'
-          cache: 'gradle'
+          distribution: zulu
+          java-version: "11"
+          cache: gradle
 
       - name: Set up node
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "20"
 
       - name: Get yarn cache directory path
         if: steps.changed-files.outputs.yarn == '1'
@@ -168,7 +168,7 @@ jobs:
         if: steps.changed-files.outputs.web == '1'
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "20"
 
       - name: Build web
         if: steps.changed-files.outputs.web == '1'

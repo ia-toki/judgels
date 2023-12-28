@@ -42,7 +42,7 @@ export function ContestSubmissionsTable({
           {canManage && (
             <>
               &nbsp;&nbsp;&nbsp;
-              <Refresh className="action" intent="primary" onClick={onClickRegrade(submission.jid)} />
+              <Refresh className="action" intent="primary" title="refresh" onClick={onClickRegrade(submission.jid)} />
             </>
           )}
         </td>
@@ -61,7 +61,7 @@ export function ContestSubmissionsTable({
         </td>
         <td className="col-fit">
           <Link className="action" to={`/contests/${contest.slug}/submissions/${submission.id}`}>
-            <Search />
+            <Search title="search" />
           </Link>
         </td>
       </tr>

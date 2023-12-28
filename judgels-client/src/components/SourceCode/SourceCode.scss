@@ -1,0 +1,11 @@
+@import '../../styles/base';
+
+pre.source-code {
+  border-color: #cccccc;
+  background-color: #f5f5f5 !important;
+}
+
+.bp5-dark pre.source-code {
+  border-color: #202b33;
+  background-color: #293742 !important;
+}
