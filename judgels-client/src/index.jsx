@@ -5,9 +5,10 @@ import { PersistGate } from 'redux-persist/es/integration/react';
 
 import { initGA } from './ga';
 import { history, persistor, store } from './modules/store';
-import App from './routes/App';
 
 import './styles/index.scss';
+
+import App from './routes/App';
 
 require('typeface-open-sans');
 require('typeface-roboto');

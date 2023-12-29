@@ -1,6 +1,13 @@
 {
   "arrowParens": "avoid",
-  "importOrder": ["^ace-", "^react-syntax-highlighter/", "^(?!.*.css$)(?!.*Actions$)[./]", "Actions$", ".s?css$"],
+  "importOrder": [
+    "^ace-",
+    "^react-syntax-highlighter/",
+    "^(?!.*(Actions|.s?css|/routes/App)$)[./]",
+    "Actions$",
+    ".s?css$",
+    "/routes/App$"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
