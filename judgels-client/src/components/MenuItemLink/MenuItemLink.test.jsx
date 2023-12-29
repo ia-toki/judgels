@@ -1,6 +1,6 @@
+import { push } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { push } from 'connected-react-router';
 import createMockStore from 'redux-mock-store';
 
 import MenuItemLink from './MenuItemLink';

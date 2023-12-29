@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Form, Field } from 'react-final-form';
+import { Field, Form } from 'react-final-form';
 
-import { withSubmissionError } from '../../../../modules/form/submissionError';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
-import { composeValidators, Required, Username } from '../../../../components/forms/validations';
+import { Required, Username, composeValidators } from '../../../../components/forms/validations';
+import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 const usernameField = {
   name: 'username',

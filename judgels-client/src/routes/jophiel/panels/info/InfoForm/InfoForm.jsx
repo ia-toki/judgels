@@ -1,13 +1,13 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { countriesData } from '../../../../../assets/data/countries';
+import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
 import { HorizontalDivider } from '../../../../../components/HorizontalDivider/HorizontalDivider';
 import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
-import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
-import { FormTableTextArea } from '../../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableSelect } from '../../../../../components/forms/FormTableSelect/FormTableSelect';
-import { countriesData } from '../../../../../assets/data/countries';
+import { FormTableTextArea } from '../../../../../components/forms/FormTableTextArea/FormTableTextArea';
+import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';
 
 const nameField = {
   name: 'name',

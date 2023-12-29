@@ -2,6 +2,7 @@ import { push } from 'connected-react-router';
 
 import { BadRequestError } from '../../../../modules/api/error';
 import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
+
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function resetPassword(emailCode, newPassword) {

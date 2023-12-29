@@ -8,8 +8,9 @@ import { FormattedDuration } from '../../../../../../components/FormattedDuratio
 import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
-import * as contestWebActions from '../../modules/contestWebActions';
+
 import * as contestActions from '../../../modules/contestActions';
+import * as contestWebActions from '../../modules/contestWebActions';
 
 // TODO(fushar): unit tests
 class ContestStateWidget extends PureComponent {

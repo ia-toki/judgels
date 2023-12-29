@@ -6,11 +6,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
+import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { selectCourse } from '../../modules/courseSelectors';
 import { PutCourseChapter } from '../chapters/modules/courseChapterReducer';
 import { selectChapterProblemRefreshKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
+
 import * as courseChapterActions from '../chapters/modules/courseChapterActions';
 
 import './CourseChaptersSidebar.scss';

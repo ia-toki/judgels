@@ -1,12 +1,11 @@
 import { Intent } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 
-import { APP_CONFIG, isTLX } from '../../../conf';
-import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
+import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { HtmlText } from '../../../components/HtmlText/HtmlText';
+import { APP_CONFIG, isTLX } from '../../../conf';
 import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
-
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
 import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersWidget';

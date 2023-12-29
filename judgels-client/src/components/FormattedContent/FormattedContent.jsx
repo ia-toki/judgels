@@ -1,5 +1,4 @@
 import { contestFileAPI } from '../../modules/api/uriel/contestFile';
-
 import { HtmlText } from '../HtmlText/HtmlText';
 
 export function FormattedContent({ context, children }) {

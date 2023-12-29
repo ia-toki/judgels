@@ -1,12 +1,13 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Pagination from '../../../../../../components/Pagination/Pagination';
 import { Card } from '../../../../../../components/Card/Card';
-import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { selectUsername } from '../../../../modules/profileSelectors';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
+import { selectUsername } from '../../../../modules/profileSelectors';
+import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
+
 import * as profileActions from '../../modules/profileActions';
 
 class SubmissionHistoryPage extends Component {

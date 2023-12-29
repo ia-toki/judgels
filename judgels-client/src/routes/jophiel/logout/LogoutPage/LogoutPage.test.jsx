@@ -5,6 +5,7 @@ import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import LogoutPage from './LogoutPage';
+
 import * as logoutActions from '../modules/logoutActions';
 
 jest.mock('../modules/logoutActions');

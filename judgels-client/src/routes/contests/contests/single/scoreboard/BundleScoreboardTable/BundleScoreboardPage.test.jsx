@@ -1,5 +1,5 @@
-import { MemoryRouter } from 'react-router';
 import { mount } from 'enzyme';
+import { MemoryRouter } from 'react-router';
 
 import { BundleScoreboardTable } from './BundleScoreboardPage';
 
@@ -86,10 +86,7 @@ describe('BundleScoreboardTable', () => {
   test('display score', () => {
     const mapCell = td => td.text();
     const mapRow = tr => [3, 4].map(x => tr.childAt(x)).map(mapCell);
-    const score = wrapper
-      .find('tbody')
-      .children()
-      .map(mapRow);
+    const score = wrapper.find('tbody').children().map(mapRow);
     expect(score).toEqual([
       ['12', '3'],
       ['10', '2'],
@@ -99,10 +96,7 @@ describe('BundleScoreboardTable', () => {
   test('display points', () => {
     const mapCell = td => td.text();
     const mapRow = tr => [3, 4].map(x => tr.childAt(x)).map(mapCell);
-    const points = wrapper
-      .find('thead')
-      .children()
-      .map(mapRow);
+    const points = wrapper.find('thead').children().map(mapRow);
     expect(points).toEqual([['A', 'B']]);
   });
 });

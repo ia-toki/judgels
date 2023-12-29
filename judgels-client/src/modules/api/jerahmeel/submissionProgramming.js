@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from '../../../conf';
-import { get, postMultipart, post } from '../http';
+import { get, post, postMultipart } from '../http';
 
 export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/submissions/programming`;
 

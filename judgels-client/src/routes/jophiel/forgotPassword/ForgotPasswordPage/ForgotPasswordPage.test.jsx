@@ -4,6 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import ForgotPasswordPage from './ForgotPasswordPage';
+
 import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
 jest.mock('../modules/forgotPasswordActions');

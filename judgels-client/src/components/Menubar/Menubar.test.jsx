@@ -93,10 +93,7 @@ describe('Menubar', () => {
     });
 
     it('has the correct links', () => {
-      const link = wrapper
-        .find('[role="tab"]')
-        .at(2)
-        .find('a');
+      const link = wrapper.find('[role="tab"]').at(2).find('a');
       expect(link.props().href).toEqual('/parent/third');
     });
   });
@@ -131,10 +128,7 @@ describe('Menubar', () => {
     });
 
     it('has the correct links', () => {
-      const link = wrapper
-        .find('[role="tab"]')
-        .at(2)
-        .find('a');
+      const link = wrapper.find('[role="tab"]').at(2).find('a');
       expect(link.props().href).toEqual('/third');
     });
   });

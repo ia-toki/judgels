@@ -1,10 +1,10 @@
+import { push } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { stringify } from 'query-string';
 import ReactPaginate from 'react-paginate';
-import createMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import { push } from 'connected-react-router';
+import createMockStore from 'redux-mock-store';
 
 import Pagination from './Pagination';
 
@@ -77,10 +77,7 @@ describe('Pagination', () => {
 
     describe('when page changes to page 1', () => {
       beforeEach(() => {
-        wrapper
-          .find(ReactPaginate)
-          .props()
-          .onPageChange({ selected: 0 });
+        wrapper.find(ReactPaginate).props().onPageChange({ selected: 0 });
       });
 
       it('clears the query string', () => {
@@ -90,10 +87,7 @@ describe('Pagination', () => {
 
     describe('when page changes to page > 1', () => {
       beforeEach(() => {
-        wrapper
-          .find(ReactPaginate)
-          .props()
-          .onPageChange({ selected: 2 });
+        wrapper.find(ReactPaginate).props().onPageChange({ selected: 2 });
       });
 
       it('pushes the query string', () => {

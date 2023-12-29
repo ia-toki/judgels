@@ -4,13 +4,13 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
-import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
-
-import ContestProblemsPage from './ContestProblemsPage';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestProblemsPage from './ContestProblemsPage';
+
 import * as contestProblemActions from '../modules/contestProblemActions';
 
 jest.mock('../modules/contestProblemActions');

@@ -4,8 +4,9 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestContestantsPage from './ContestContestantsPage';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestContestantsPage from './ContestContestantsPage';
+
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
 jest.mock('../../modules/contestContestantActions');

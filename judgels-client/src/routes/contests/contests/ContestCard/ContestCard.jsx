@@ -1,10 +1,10 @@
 import { PureComponent } from 'react';
 
-import { TimeanddateLink } from '../../../../components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
+import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
 import { FormattedDuration } from '../../../../components/FormattedDuration/FormattedDuration';
-import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
+import { TimeanddateLink } from '../../../../components/TimeanddateLink/TimeanddateLink';
 
 import './ContestCard.scss';
 

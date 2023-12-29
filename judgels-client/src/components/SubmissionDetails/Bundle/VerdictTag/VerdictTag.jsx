@@ -1,4 +1,4 @@
-import { Tag, Intent } from '@blueprintjs/core';
+import { Intent, Tag } from '@blueprintjs/core';
 import { Follower, Time } from '@blueprintjs/icons';
 
 import { Verdict } from '../../../../modules/api/sandalphon/submissionBundle';

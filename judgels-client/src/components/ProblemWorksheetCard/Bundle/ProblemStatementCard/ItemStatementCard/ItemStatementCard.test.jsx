@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 
-import { ItemStatementCard } from './ItemStatementCard';
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemStatementCard } from './ItemStatementCard';
 
 describe('ItemStatementCard', () => {
   let wrapper;

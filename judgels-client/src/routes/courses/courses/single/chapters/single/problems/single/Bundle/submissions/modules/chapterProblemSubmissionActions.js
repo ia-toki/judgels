@@ -1,5 +1,6 @@
-import { selectToken } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { submissionBundleAPI } from '../../../../../../../../../../../modules/api/jerahmeel/submissionBundle';
+import { selectToken } from '../../../../../../../../../../../modules/session/sessionSelectors';
+
 import { toastActions } from '../../../../../../../../../../../modules/toast/toastActions';
 
 export function getSubmissions(chapterJid, username, problemAlias, page) {

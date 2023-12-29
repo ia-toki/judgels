@@ -1,7 +1,7 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import { PutCourseChapter, DelCourseChapter } from './courseChapterReducer';
-import { PutCourseChapters } from './courseChaptersReducer';
 import { courseChapterAPI } from '../../../../../../modules/api/jerahmeel/courseChapter';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { DelCourseChapter, PutCourseChapter } from './courseChapterReducer';
+import { PutCourseChapters } from './courseChaptersReducer';
 
 export function getChapters(courseJid) {
   return async (dispatch, getState) => {

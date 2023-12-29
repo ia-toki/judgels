@@ -12,7 +12,9 @@
 .bp5-dark .header {
   color: $dark-text-color !important;
   background-color: $dark-blue-main-background-color !important;
-  box-shadow: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
+  box-shadow:
+    0 0 0 1px rgba(17, 20, 24, 0.1),
+    0 1px 1px rgba(17, 20, 24, 0.2);
 }
 
 .bp5-dark .header a {

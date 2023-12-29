@@ -4,12 +4,13 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestRegistrationCard from './ContestRegistrationCard';
-import sessionReducer, { PutToken, PutUser } from '../../../../../../modules/session/sessionReducer';
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
+import sessionReducer, { PutToken, PutUser } from '../../../../../../modules/session/sessionReducer';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
-import * as contestWebActions from '../../modules/contestWebActions';
+import ContestRegistrationCard from './ContestRegistrationCard';
+
 import * as contestContestantActions from '../../modules/contestContestantActions';
+import * as contestWebActions from '../../modules/contestWebActions';
 
 jest.mock('../../modules/contestWebActions');
 jest.mock('../../modules/contestContestantActions');

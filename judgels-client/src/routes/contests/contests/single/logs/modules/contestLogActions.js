@@ -1,5 +1,5 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { contestLogAPI } from '../../../../../../modules/api/uriel/contestLog';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 export function getLogs(contestJid, username, problemAlias, page) {
   return async (dispatch, getState) => {

@@ -3,8 +3,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
-import { SubmissionError } from '../../../../modules/form/submissionError';
 import { CourseErrors } from '../../../../modules/api/jerahmeel/course';
+import { SubmissionError } from '../../../../modules/form/submissionError';
+
 import * as courseActions from './courseActions';
 
 const courseJid = 'course-jid';
@@ -17,7 +18,7 @@ describe('courseActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 

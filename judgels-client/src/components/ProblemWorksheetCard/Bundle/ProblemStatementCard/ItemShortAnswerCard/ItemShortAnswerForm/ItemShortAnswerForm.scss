@@ -7,7 +7,7 @@
   .text-input {
     margin-left: 25px;
     &.readonly {
-      background-color: rgba(206,217,224,.5);
+      background-color: rgba(206, 217, 224, 0.5);
       cursor: not-allowed;
     }
   }

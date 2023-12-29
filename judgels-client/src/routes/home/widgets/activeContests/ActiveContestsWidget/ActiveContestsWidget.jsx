@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Card } from '../../../../../components/Card/Card';
-import * as contestActions from '../../../../contests/contests/modules/contestActions';
-
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
+
+import * as contestActions from '../../../../contests/contests/modules/contestActions';
 
 class ActiveContestsWidget extends PureComponent {
   state = {

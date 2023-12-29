@@ -1,25 +1,26 @@
 import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { Pause, Refresh } from '@blueprintjs/icons';
+import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectContest } from '../../../modules/contestSelectors';
-import { TrocScoreboardTable } from '../TrocScoreboardTable/TrocScoreboardTable';
+import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardPage';
+import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
-import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
-import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardPage';
+import { TrocScoreboardTable } from '../TrocScoreboardTable/TrocScoreboardTable';
+
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.scss';

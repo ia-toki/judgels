@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../../utils/nock';
+
 import * as contestScoreboardActions from './contestScoreboardActions';
 
 const contestJid = 'contest-jid';
@@ -15,7 +16,7 @@ describe('contestScoreboardActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -42,9 +43,7 @@ describe('contestScoreboardActions', () => {
 
   describe('refreshScoreboard()', () => {
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/scoreboard/refresh`)
-        .reply(200);
+      nockUriel().post(`/contests/${contestJid}/scoreboard/refresh`).reply(200);
 
       await store.dispatch(contestScoreboardActions.refreshScoreboard(contestJid));
     });

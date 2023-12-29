@@ -1,9 +1,9 @@
 import { Alignment, Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { Required } from '../../forms/validations';
-import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
 import { languageDisplayNamesMap } from '../../../modules/api/sandalphon/language';
+import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
+import { Required } from '../../forms/validations';
 
 import './LanguageForm.scss';
 

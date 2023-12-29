@@ -4,13 +4,12 @@ import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
-import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import ProblemSetProblemsPage from './problems/ProblemSetProblemsPage/ProblemSetProblemsPage';
-
+import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { selectProblemSet } from '../modules/problemSetSelectors';
+import ProblemSetProblemsPage from './problems/ProblemSetProblemsPage/ProblemSetProblemsPage';
 
 import './SingleProblemSetRoutes.scss';
 

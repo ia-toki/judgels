@@ -1,12 +1,11 @@
+import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import UserRoute from '../../../components/UserRoute/UserRoute';
-import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
-import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-
+import ChangeAvatarPage from './changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
 import InfoPage from './info/InfoPage/InfoPage';
 import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
-import ChangeAvatarPage from './changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
 
 function AccountRoutes() {
   const sidebarItems = [

@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../../utils/nock';
+
 import * as contestLogActions from './contestLogActions';
 
 const contestJid = 'contest-jid';
@@ -15,7 +16,7 @@ describe('contestLogActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -31,10 +32,7 @@ describe('contestLogActions', () => {
     };
 
     it('calls API to get logs', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/logs`)
-        .query({ username, problemAlias, page })
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/logs`).query({ username, problemAlias, page }).reply(200, responseBody);
 
       const response = await store.dispatch(contestLogActions.getLogs(contestJid, username, problemAlias, page));
       expect(response).toEqual(responseBody);

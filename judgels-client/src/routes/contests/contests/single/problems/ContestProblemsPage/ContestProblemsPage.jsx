@@ -1,17 +1,18 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
-import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
-import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
+import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../modules/contestSelectors';
+import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
+import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
+
 import * as contestProblemActions from '../modules/contestProblemActions';
 
 export class ContestProblemsPage extends Component {

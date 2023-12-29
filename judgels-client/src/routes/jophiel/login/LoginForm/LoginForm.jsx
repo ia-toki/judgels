@@ -1,11 +1,11 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Field, Form } from 'react-final-form';
 import { Link } from 'react-router-dom';
-import { Form, Field } from 'react-final-form';
 
-import { isTLX } from '../../../../conf';
+import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../components/forms/validations';
-import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
+import { isTLX } from '../../../../conf';
 
 import './LoginForm.scss';
 

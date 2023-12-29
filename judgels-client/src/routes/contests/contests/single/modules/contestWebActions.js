@@ -1,5 +1,5 @@
-import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { contestWebAPI } from '../../../../../modules/api/uriel/contestWeb';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { PutContest } from '../../modules/contestReducer';
 import { DelWebConfig, PutWebConfig } from '../../modules/contestWebConfigReducer';
 

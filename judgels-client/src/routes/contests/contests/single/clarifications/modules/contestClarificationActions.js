@@ -1,10 +1,11 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { BadRequestError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
+import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { contestClarificationAPI } from '../../../../../../modules/api/uriel/contestClarification';
-import * as toastActions from '../../../../../../modules/toast/toastActions';
 import { showDesktopNotification } from '../../../../../../modules/notification/notification';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export function createClarification(contestJid, data) {
   return async (dispatch, getState) => {

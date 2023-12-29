@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
-import { composeValidators, EmailAddress, Required } from '../../../../components/forms/validations';
-import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
+import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { EmailAddress, Required, composeValidators } from '../../../../components/forms/validations';
 
 const emailField = {
   name: 'email',

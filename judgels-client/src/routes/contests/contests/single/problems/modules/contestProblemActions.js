@@ -1,8 +1,9 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import { SubmissionError } from '../../../../../../modules/form/submissionError';
 import { ForbiddenError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import { contestProblemAPI } from '../../../../../../modules/api/uriel/contestProblem';
+import { SubmissionError } from '../../../../../../modules/form/submissionError';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export function getProblems(contestJid) {

@@ -1,5 +1,4 @@
 import { delete_, get, put } from '../http';
-
 import { baseContestURL } from './contest';
 
 export const ContestModuleType = {

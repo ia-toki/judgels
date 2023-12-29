@@ -16,15 +16,13 @@ describe('userAccountActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
   describe('resendActivationEmail()', () => {
     it('calls API', async () => {
-      nockJophiel()
-        .post(`/user-account/resend-activation-email/${email}`)
-        .reply(200);
+      nockJophiel().post(`/user-account/resend-activation-email/${email}`).reply(200);
 
       await store.dispatch(userAccountActions.resendActivationEmail(email));
     });

@@ -114,7 +114,8 @@ a {
   color: $primary-color;
 }
 
-.bp5-dark a, .bp5-dark a:hover {
+.bp5-dark a,
+.bp5-dark a:hover {
   color: #48aff0;
 }
 
@@ -220,11 +221,11 @@ blockquote {
   color: #fff !important;
 }
 
-.bp5-dark .bp5-button:not([class*=bp5-intent-]) {
+.bp5-dark .bp5-button:not([class*='bp5-intent-']) {
   background-color: #394b59;
 }
 
-.bp5-dark .bp5-button:not([class*=bp5-intent-]).bp5-active {
+.bp5-dark .bp5-button:not([class*='bp5-intent-']).bp5-active {
   background-color: #202b33;
 }
 
@@ -238,19 +239,19 @@ blockquote {
 
 .bp5-callout.bp5-intent-primary {
   color: inherit;
-  background-color: rgba(19, 124, 189, .15);
+  background-color: rgba(19, 124, 189, 0.15);
 }
 
-.bp5-callout.bp5-callout-icon > .bp5-icon:first-child  {
+.bp5-callout.bp5-callout-icon > .bp5-icon:first-child {
   top: 12px;
 }
 
 .bp5-dark .bp5-callout.bp5-intent-primary {
-  background-color: rgba(19, 124, 189, .25);
+  background-color: rgba(19, 124, 189, 0.25);
 }
 
 table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
-  background-color: rgba(191, 204, 214, .15);
+  background-color: rgba(191, 204, 214, 0.15);
 }
 
 .bp5-dark table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
@@ -263,12 +264,18 @@ table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
 
 .bp5-dark .bp5-dialog {
   background-color: #293742;
-  box-shadow: 0 0 0 1px rgba(16,22,26,.4), 0 0 0 rgba(16,22,26,0), 0 0 0 rgba(16,22,26,0);
+  box-shadow:
+    0 0 0 1px rgba(16, 22, 26, 0.4),
+    0 0 0 rgba(16, 22, 26, 0),
+    0 0 0 rgba(16, 22, 26, 0);
 }
 
 .bp5-dark .bp5-dialog-header {
   background-color: #30404d;
-  box-shadow: 0 0 0 1px rgba(16,22,26,.4), 0 0 0 rgba(16,22,26,0), 0 0 0 rgba(16,22,26,0);
+  box-shadow:
+    0 0 0 1px rgba(16, 22, 26, 0.4),
+    0 0 0 rgba(16, 22, 26, 0),
+    0 0 0 rgba(16, 22, 26, 0);
 }
 
 /* End Blueprint overrides */

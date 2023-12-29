@@ -1,5 +1,6 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { contestFileAPI } from '../../../../../../modules/api/uriel/contestFile';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export function getFiles(contestJid) {

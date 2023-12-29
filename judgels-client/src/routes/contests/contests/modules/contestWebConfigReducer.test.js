@@ -1,5 +1,4 @@
 import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
-
 import contestWebConfigReducer, { DelWebConfig, PutWebConfig } from './contestWebConfigReducer';
 
 describe('contestWebConfigReducer', () => {

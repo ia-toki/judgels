@@ -2,17 +2,17 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 import { Link } from 'react-router-dom';
 
-import { withSubmissionError } from '../../../../modules/form/submissionError';
-import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { FormRecaptcha } from '../../../../components/forms/FormRecaptcha/FormRecaptcha';
+import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import {
-  composeValidators,
   ConfirmPassword,
   EmailAddress,
   Required,
   Username,
+  composeValidators,
 } from '../../../../components/forms/validations';
-import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
+import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 import './RegisterForm.scss';
 

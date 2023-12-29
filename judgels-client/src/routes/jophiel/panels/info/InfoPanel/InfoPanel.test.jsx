@@ -2,6 +2,7 @@ import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
+
 import { InfoPanel } from './InfoPanel';
 
 describe('InfoPanel', () => {

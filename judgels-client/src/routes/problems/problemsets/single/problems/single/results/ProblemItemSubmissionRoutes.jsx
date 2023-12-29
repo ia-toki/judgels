@@ -1,8 +1,8 @@
 import { Route, Switch } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import ProblemSubmissionsPage from './ProblemSubmissionsPage/ProblemSubmissionsPage';
 import ProblemSubmissionSummaryPage from './ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage';
+import ProblemSubmissionsPage from './ProblemSubmissionsPage/ProblemSubmissionsPage';
 
 function ProblemItemSubmissionRoutes() {
   return (

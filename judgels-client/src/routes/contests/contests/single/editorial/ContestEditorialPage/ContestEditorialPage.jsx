@@ -1,16 +1,17 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import EditorialLanguageWidget from '../../../../../../components/LanguageWidget/EditorialLanguageWidget';
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorial } from '../../../../../../components/ProblemEditorial/ProblemEditorial';
-import { selectContest } from '../../../modules/contestSelectors';
+import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
 import { selectEditorialLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
-import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
+import { selectContest } from '../../../modules/contestSelectors';
+
 import * as contestEditorialActions from '../modules/contestEditorialActions';
 
 class ContestEditorialPage extends Component {

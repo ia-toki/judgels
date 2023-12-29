@@ -1,5 +1,5 @@
-import { profileAPI } from '../../../../modules/api/jophiel/profile';
 import { statsAPI } from '../../../../modules/api/jerahmeel/stats';
+import { profileAPI } from '../../../../modules/api/jophiel/profile';
 
 export function getTopRatedProfiles(page, pageSize) {
   return async () => {

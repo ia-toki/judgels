@@ -1,15 +1,17 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
+import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
-import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
+
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 class ProblemSubmissionSummaryPage extends Component {

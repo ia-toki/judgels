@@ -95,12 +95,7 @@ describe('ProblemSubmissionCard', () => {
 
   it('shows the submission warning', () => {
     render();
-    expect(
-      wrapper
-        .find('[data-key="submission-warning"]')
-        .at(1)
-        .text()
-    ).toContain('Submission Warning');
+    expect(wrapper.find('[data-key="submission-warning"]').at(1).text()).toContain('Submission Warning');
   });
 
   describe('when the grading engine is OutputOnly', () => {

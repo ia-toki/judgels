@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 
 import { nockJerahmeel } from '../../../../../../utils/nock';
 import { PutCourseChapter } from './courseChapterReducer';
+
 import * as courseChapterActions from './courseChapterActions';
 
 const courseJid = 'course-jid';
@@ -18,7 +19,7 @@ describe('courseChapterActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -28,9 +29,7 @@ describe('courseChapterActions', () => {
     };
 
     it('calls API', async () => {
-      nockJerahmeel()
-        .get(`/courses/${courseJid}/chapters`)
-        .reply(200, responseBody);
+      nockJerahmeel().get(`/courses/${courseJid}/chapters`).reply(200, responseBody);
 
       const response = await store.dispatch(courseChapterActions.getChapters(courseJid));
       expect(response).toEqual(responseBody);
@@ -44,9 +43,7 @@ describe('courseChapterActions', () => {
     };
 
     it('calls API', async () => {
-      nockJerahmeel()
-        .get(`/courses/${courseJid}/chapters/${chapterAlias}`)
-        .reply(200, responseBody);
+      nockJerahmeel().get(`/courses/${courseJid}/chapters/${chapterAlias}`).reply(200, responseBody);
 
       const response = await store.dispatch(courseChapterActions.getChapter(courseJid, courseSlug, chapterAlias));
       expect(response).toEqual(responseBody);

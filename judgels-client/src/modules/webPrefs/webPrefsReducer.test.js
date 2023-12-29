@@ -1,10 +1,10 @@
 import webPrefsReducer, {
-  PutStatementLanguage,
-  PutGradingLanguage,
   PutEditorialLanguage,
+  PutGradingLanguage,
   PutIsDarkMode,
   PutShowProblemDifficulty,
   PutShowProblemTopicTags,
+  PutStatementLanguage,
 } from './webPrefsReducer';
 
 describe('webPrefsReducer', () => {

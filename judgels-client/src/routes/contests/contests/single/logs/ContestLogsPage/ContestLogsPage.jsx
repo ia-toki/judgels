@@ -1,15 +1,16 @@
+import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
 
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import Pagination from '../../../../../../components/Pagination/Pagination';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
-import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
 import { selectContest } from '../../../modules/contestSelectors';
+import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
+
 import * as contestLogActions from '../modules/contestLogActions';
 
 export class ContestLogsPage extends Component {

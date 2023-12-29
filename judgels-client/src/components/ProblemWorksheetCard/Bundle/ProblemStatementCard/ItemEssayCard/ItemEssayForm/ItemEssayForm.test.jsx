@@ -44,10 +44,7 @@ describe('ItemEssayForm', () => {
       });
 
       test("helptext should be 'No answered.'", () => {
-        const helpText = wrapper
-          .find('div')
-          .last()
-          .text();
+        const helpText = wrapper.find('div').last().text();
         expect(helpText).toContain('Not answered.');
       });
     });
@@ -116,10 +113,7 @@ describe('ItemEssayForm', () => {
       });
 
       test("helptext should be 'Answered'", () => {
-        const helpText = wrapper
-          .find('div')
-          .last()
-          .text();
+        const helpText = wrapper.find('div').last().text();
         expect(helpText).toContain('Answered.');
       });
     });

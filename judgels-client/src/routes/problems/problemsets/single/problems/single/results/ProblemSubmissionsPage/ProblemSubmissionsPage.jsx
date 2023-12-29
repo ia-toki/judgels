@@ -1,23 +1,24 @@
-import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
+import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
-import { push } from 'connected-react-router';
+import { Link, withRouter } from 'react-router-dom';
 
-import { reallyConfirm } from '../../../../../../../../utils/confirmation';
-import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import Pagination from '../../../../../../../../components/Pagination/Pagination';
+import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
-import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
+import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
+import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
+
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';

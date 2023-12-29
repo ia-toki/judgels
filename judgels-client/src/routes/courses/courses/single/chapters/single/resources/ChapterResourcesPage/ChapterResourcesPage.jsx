@@ -5,13 +5,14 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
-import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
-import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
+import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
-import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
+import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
+import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
+
 import * as chapterResourcesActions from '../modules/chapterResourceActions';
 
 import './ChapterResourcesPage.scss';

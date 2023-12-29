@@ -1,8 +1,8 @@
 import { Classes, FormGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { getIntent, getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
+import { getIntent, getIntentClassName } from '../meta';
 
 export function FormTextInput({ input, label, meta, autoFocus, inputType }) {
   return (

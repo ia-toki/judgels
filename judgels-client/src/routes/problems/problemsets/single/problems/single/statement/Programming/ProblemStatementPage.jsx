@@ -1,15 +1,16 @@
 import { connect } from 'react-redux';
 
-import { sendGAEvent } from '../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { sendGAEvent } from '../../../../../../../../ga';
 import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language.js';
+import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
-import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import * as problemSetSubmissionActions from '../../submissions/modules/problemSetSubmissionActions';
+
 import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as problemSetSubmissionActions from '../../submissions/modules/problemSetSubmissionActions';
 
 export function ProblemStatementPage({
   problemSet,

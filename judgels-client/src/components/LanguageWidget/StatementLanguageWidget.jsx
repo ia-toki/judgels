@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 
-import { selectStatementLanguage } from '../../modules/webPrefs/webPrefsSelectors';
 import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
+import { selectStatementLanguage } from '../../modules/webPrefs/webPrefsSelectors';
 import LanguageForm from './LanguageForm/LanguageForm';
+
 import * as webPrefsActions from '../../modules/webPrefs/webPrefsActions';
 
 import './LanguageWidget.scss';

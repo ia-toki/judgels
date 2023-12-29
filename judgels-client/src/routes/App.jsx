@@ -1,20 +1,20 @@
 import classNames from 'classnames';
 import { PureComponent } from 'react';
+import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
-import DocumentTitle from 'react-document-title';
 
-import { setGAUser } from '../ga';
 import Announcements from '../components/Announcements/Announcements';
-import Header from '../components/Header/Header';
 import { AppContent } from '../components/AppContent/AppContent';
 import { Footer } from '../components/Footer/Footer';
+import Header from '../components/Header/Header';
+import { setGAUser } from '../ga';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
-import { selectIsDarkMode } from '../modules/webPrefs/webPrefsSelectors';
 import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
-
+import { selectIsDarkMode } from '../modules/webPrefs/webPrefsSelectors';
 import { getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
 import { selectRole } from './jophiel/modules/userWebSelectors';
+
 import * as userWebActions from './jophiel/modules/userWebActions';
 
 class App extends PureComponent {

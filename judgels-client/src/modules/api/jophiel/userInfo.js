@@ -1,5 +1,4 @@
 import { get, put } from '../http';
-
 import { baseUserURL } from './user';
 
 export const userInfoGender = {

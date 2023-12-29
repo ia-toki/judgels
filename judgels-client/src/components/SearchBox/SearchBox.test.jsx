@@ -1,9 +1,9 @@
+import { push } from 'connected-react-router';
 import { mount } from 'enzyme';
+import { stringify } from 'query-string';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import { push } from 'connected-react-router';
 import createMockStore from 'redux-mock-store';
-import { stringify } from 'query-string';
 
 import SearchBox from './SearchBox';
 

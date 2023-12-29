@@ -4,9 +4,10 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import RegisterPage from './RegisterPage';
-import RegisterForm from '../RegisterForm/RegisterForm';
 import jophielReducer from '../../../../modules/jophiel/jophielReducer';
+import RegisterForm from '../RegisterForm/RegisterForm';
+import RegisterPage from './RegisterPage';
+
 import * as registerActions from '../modules/registerActions';
 
 jest.mock('../modules/registerActions');

@@ -1,5 +1,5 @@
-import { selectToken } from '../../../modules/session/sessionSelectors';
 import { userAPI } from '../../../modules/api/jophiel/user';
+import { selectToken } from '../../../modules/session/sessionSelectors';
 
 export function getUser(userJid) {
   return async (dispatch, getState) => {

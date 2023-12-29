@@ -1,14 +1,15 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
-import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
+import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
+import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
+
 import * as problemSetProblemActions from '../../../modules/problemSetProblemActions';
 
 export class ProblemStatementPage extends Component {

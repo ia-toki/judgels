@@ -5,6 +5,7 @@ import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import RatingsPage from './RatingsPage';
+
 import * as ratingActions from '../modules/ratingActions';
 
 jest.mock('../modules/ratingActions');
@@ -97,13 +98,7 @@ describe('RatingsPage', () => {
 
     describe('when view rating changes button is clicked', () => {
       beforeEach(() => {
-        wrapper
-          .find('tr')
-          .at(1)
-          .find('td')
-          .at(1)
-          .find('button')
-          .simulate('click');
+        wrapper.find('tr').at(1).find('td').at(1).find('button').simulate('click');
         wrapper.update();
       });
 
@@ -118,11 +113,7 @@ describe('RatingsPage', () => {
 
       describe('when apply rating changes button is clicked', () => {
         beforeEach(() => {
-          wrapper
-            .find('.contest-rating-changes-dialog')
-            .find('button')
-            .last()
-            .simulate('click');
+          wrapper.find('.contest-rating-changes-dialog').find('button').last().simulate('click');
           wrapper.update();
         });
 

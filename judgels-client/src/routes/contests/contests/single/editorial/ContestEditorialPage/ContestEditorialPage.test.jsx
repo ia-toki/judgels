@@ -4,12 +4,12 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
+import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutEditorialLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
-
-import ContestEditorialPage from './ContestEditorialPage';
-import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestEditorialPage from './ContestEditorialPage';
+
 import * as contestEditorialActions from '../modules/contestEditorialActions';
 
 jest.mock('../modules/contestEditorialActions');

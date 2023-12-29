@@ -4,12 +4,12 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
+import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
-
-import ContestClarificationsPage from './ContestClarificationsPage';
-import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestClarificationsPage from './ContestClarificationsPage';
+
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
 jest.mock('../modules/contestClarificationActions');

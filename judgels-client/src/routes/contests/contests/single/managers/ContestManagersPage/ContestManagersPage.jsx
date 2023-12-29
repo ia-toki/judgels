@@ -1,14 +1,15 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
+import { selectContest } from '../../../modules/contestSelectors';
 import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManagerAddDialog';
 import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
-import { selectContest } from '../../../modules/contestSelectors';
+import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
+
 import * as contestManagerActions from '../modules/contestManagerActions';
 
 import './ContestManagersPage.scss';

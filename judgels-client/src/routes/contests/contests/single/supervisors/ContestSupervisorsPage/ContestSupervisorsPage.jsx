@@ -1,14 +1,15 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
+import { selectContest } from '../../../modules/contestSelectors';
 import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/ContestSupervisorAddDialog';
 import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/ContestSupervisorRemoveDialog';
-import { selectContest } from '../../../modules/contestSelectors';
+import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
+
 import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
 
 import './ContestSupervisorsPage.scss';

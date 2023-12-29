@@ -3,8 +3,9 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestEditModulesTab from './ContestEditModulesTab';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestEditModulesTab from './ContestEditModulesTab';
+
 import * as contestModuleActions from '../../modules/contestModuleActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 

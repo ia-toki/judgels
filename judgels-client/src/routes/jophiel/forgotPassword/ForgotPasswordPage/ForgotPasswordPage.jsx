@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
+
 import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
 export class ForgotPasswordPage extends Component {

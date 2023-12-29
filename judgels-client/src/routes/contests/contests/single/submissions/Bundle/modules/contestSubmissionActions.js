@@ -1,5 +1,6 @@
-import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 import { contestSubmissionBundleAPI } from '../../../../../../../modules/api/uriel/contestSubmissionBundle';
+import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
 
 export function getSubmissions(contestJid, username, problemAlias, page) {

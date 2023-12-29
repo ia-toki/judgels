@@ -1,7 +1,8 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { contestAnnouncementAPI } from '../../../../../../modules/api/uriel/contestAnnouncement';
-import * as toastActions from '../../../../../../modules/toast/toastActions';
 import { showDesktopNotification } from '../../../../../../modules/notification/notification';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export function getAnnouncements(contestJid, page) {
   return async (dispatch, getState) => {

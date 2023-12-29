@@ -1,10 +1,11 @@
 import { Component } from 'react';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { selectProblemSet } from '../modules/problemSetSelectors';
-import * as problemSetActions from '../modules/problemSetActions';
+
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as problemSetActions from '../modules/problemSetActions';
 
 class SingleProblemSetDataRoute extends Component {
   async componentDidMount() {

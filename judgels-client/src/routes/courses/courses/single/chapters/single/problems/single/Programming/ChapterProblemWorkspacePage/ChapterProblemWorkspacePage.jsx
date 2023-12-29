@@ -1,15 +1,16 @@
 import { connect } from 'react-redux';
 
-import { sendGAEvent } from '../../../../../../../../../../ga';
-import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
 import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard.jsx';
+import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
+import { sendGAEvent } from '../../../../../../../../../../ga';
+import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
+import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
-import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
-import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
+
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
 function ChapterProblemWorkspacePage({
   worksheet,

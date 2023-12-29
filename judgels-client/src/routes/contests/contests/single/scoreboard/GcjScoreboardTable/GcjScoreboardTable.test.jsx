@@ -104,10 +104,7 @@ describe('GcjScoreboardTable', () => {
     const mapCell = td =>
       getColor(td.prop('className')) + td.find('span.top').text() + '/' + td.find('span.bottom').text();
     const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
-    const points = wrapper
-      .find('tbody')
-      .children()
-      .map(mapRow);
+    const points = wrapper.find('tbody').children().map(mapRow);
     expect(points).toEqual([
       ['111/01:06', 'G +1/00:03', 'G +3/00:14', 'G +/01:09', '-/-'],
       ['10/00:17', 'R +1/-', 'G +1/00:17', 'F -/-', 'R +3/-'],

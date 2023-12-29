@@ -10,17 +10,16 @@ import {
 } from '@blueprintjs/icons';
 
 import { isTLX } from '../conf';
-import { JophielRole } from '../modules/api/jophiel/role';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
-
-import JophielRoutes from './jophiel/JophielRoutes';
-import LazySystemRoutes from './system/LazySystemRoutes';
+import { JophielRole } from '../modules/api/jophiel/role';
 import LazyContestsRoutes, { ContestsRoutesPromise } from './contests/LazyContestsRoutes';
 import LazyCoursesRoutes from './courses/LazyCoursesRoutes';
-import LazyTrainingRoutes from './training/LazyTrainingRoutes';
+import JophielRoutes from './jophiel/JophielRoutes';
 import LazyProblemsRoutes from './problems/LazyProblemsRoutes';
-import LazySubmissionsRoutes from './submissions/LazySubmissionsRoutes';
 import LazyRankingRoutes from './ranking/LazyRankingRoutes';
+import LazySubmissionsRoutes from './submissions/LazySubmissionsRoutes';
+import LazySystemRoutes from './system/LazySystemRoutes';
+import LazyTrainingRoutes from './training/LazyTrainingRoutes';
 
 const appRoutes = [
   {

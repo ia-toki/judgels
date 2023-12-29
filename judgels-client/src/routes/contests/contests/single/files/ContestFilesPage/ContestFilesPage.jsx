@@ -1,12 +1,13 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { selectContest } from '../../../modules/contestSelectors';
 import { ContestFileUploadCard } from '../ContestFileUploadCard/ContestFileUploadCard';
 import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
-import { selectContest } from '../../../modules/contestSelectors';
+
 import * as contestFileActions from '../modules/contestFileActions';
 
 class ContestFilesPage extends Component {

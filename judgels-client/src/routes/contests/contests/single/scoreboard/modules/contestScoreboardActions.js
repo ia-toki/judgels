@@ -1,8 +1,9 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { contestScoreboardAPI } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { contestSubmissionProgrammingAPI } from '../../../../../../modules/api/uriel/contestSubmissionProgramming';
-import * as toastActions from '../../../../../../modules/toast/toastActions';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { selectIsDarkMode } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export function getScoreboard(contestJid, frozen, showClosedProblems, page) {
   return async (dispatch, getState) => {

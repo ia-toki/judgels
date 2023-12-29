@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
-import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './BundleScoreboardPage.scss';
 

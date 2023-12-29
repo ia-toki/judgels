@@ -1,7 +1,7 @@
 import { Route, withRouter } from 'react-router';
 
-import SingleCourseChapterRoutes from './SingleCourseChapterRoutes';
 import SingleCourseChapterDataRoute from './SingleCourseChapterDataRoute';
+import SingleCourseChapterRoutes from './SingleCourseChapterRoutes';
 
 function MainSingleCourseChapterRoutes() {
   return (

@@ -1,8 +1,8 @@
 import { SmallCross, SmallTick } from '@blueprintjs/icons';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
+import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
 import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
 
@@ -245,10 +245,7 @@ export function ContestEditConfigsTable({ config }) {
     if (!allowedLanguageNames || allowedLanguageNames.length === 0) {
       return '(all)';
     }
-    return allowedLanguageNames
-      .sort()
-      .map(getGradingLanguageName)
-      .join(', ');
+    return allowedLanguageNames.sort().map(getGradingLanguageName).join(', ');
   };
 
   return (

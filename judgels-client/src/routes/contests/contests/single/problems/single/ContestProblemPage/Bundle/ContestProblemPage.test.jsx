@@ -1,20 +1,21 @@
+import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
-import { connectRouter, ConnectedRouter, routerMiddleware } from 'connected-react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
-import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
-import ContestProblemPage from './ContestProblemPage';
-import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
-import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
+import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
+import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
+import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
+import ContestProblemPage from './ContestProblemPage';
+
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import * as contestProblemActions from '../../../modules/contestProblemActions';
 import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
+import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 jest.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
 jest.mock('../../../modules/contestProblemActions');

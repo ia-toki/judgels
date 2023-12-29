@@ -1,14 +1,13 @@
 import { Box, PanelStats, PredictiveAnalysis, Properties } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
+import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-
-import CoursesPage from './courses/CoursesPage/CoursesPage';
-import ChaptersPage from './chapters/ChaptersPage/ChaptersPage';
 import ArchivesPage from './archives/ArchivesPage/ArchivesPage';
+import ChaptersPage from './chapters/ChaptersPage/ChaptersPage';
+import CoursesPage from './courses/CoursesPage/CoursesPage';
 import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 
 function TrainingRoutes() {

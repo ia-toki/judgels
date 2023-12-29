@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { CourseCard } from '../CourseCard/CourseCard';
+
 import * as courseActions from '../modules/courseActions';
 
 import './CoursesPage.scss';

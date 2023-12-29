@@ -1,22 +1,23 @@
-import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
+import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { push } from 'connected-react-router';
 
-import { reallyConfirm } from '../../../../../../../utils/confirmation';
+import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
-import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
-import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
-import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { selectContest } from '../../../../modules/contestSelectors';
-import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
+import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
+import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { reallyConfirm } from '../../../../../../../utils/confirmation';
+import { selectContest } from '../../../../modules/contestSelectors';
+
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';

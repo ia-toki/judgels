@@ -1,14 +1,15 @@
+import { parse } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { parse } from 'query-string';
 
-import Pagination from '../../../../components/Pagination/Pagination';
 import { Card } from '../../../../components/Card/Card';
-import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { getProblemName, ProblemType } from '../../../../modules/api/sandalphon/problem';
-import * as problemActions from '../modules/problemActions';
+import Pagination from '../../../../components/Pagination/Pagination';
+import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
+import { ProblemType, getProblemName } from '../../../../modules/api/sandalphon/problem';
+
+import * as problemActions from '../modules/problemActions';
 
 class ProblemsPage extends Component {
   static PAGE_SIZE = 20;

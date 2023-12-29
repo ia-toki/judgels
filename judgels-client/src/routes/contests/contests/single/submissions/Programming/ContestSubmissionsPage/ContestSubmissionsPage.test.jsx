@@ -4,8 +4,9 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestSubmissionsPage from './ContestSubmissionsPage';
 import contestReducer, { PutContest } from '../../../../modules/contestReducer';
+import ContestSubmissionsPage from './ContestSubmissionsPage';
+
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 jest.mock('../modules/contestSubmissionActions');
@@ -137,16 +138,7 @@ describe('ContestSubmissionsPage', () => {
       });
 
       it('shows the submissions', () => {
-        expect(
-          wrapper.find('tr').map(tr =>
-            tr.find('td').map(td =>
-              td
-                .text()
-                .replace(/\s+/g, ' ')
-                .trim()
-            )
-          )
-        ).toEqual([
+        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().replace(/\s+/g, ' ').trim()))).toEqual([
           [],
           ['20 refresh', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
           ['10 refresh', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],

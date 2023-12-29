@@ -3,16 +3,16 @@ import { WarningSign } from '@blueprintjs/icons';
 import { Field, Form } from 'react-final-form';
 
 import { isOutputOnly } from '../../../../modules/api/gabriel/engine';
+import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
 import { FormTableFileInput } from '../../../forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from '../../../forms/FormTableSelect2/FormTableSelect2';
 import {
-  composeValidators,
   CompatibleFilenameExtensionForGradingLanguage,
-  MaxFileSize300KB,
   MaxFileSize10MB,
+  MaxFileSize300KB,
   Required,
+  composeValidators,
 } from '../../../forms/validations';
-import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
 
 import './ProblemSubmissionForm.scss';
 

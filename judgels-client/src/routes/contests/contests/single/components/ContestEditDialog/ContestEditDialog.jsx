@@ -1,11 +1,11 @@
-import { Classes, Button, Dialog, Intent, Tab, Tabs } from '@blueprintjs/core';
+import { Button, Classes, Dialog, Intent, Tab, Tabs } from '@blueprintjs/core';
 import { ChevronRight, Cog } from '@blueprintjs/icons';
 import { Component } from 'react';
 
-import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
-import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
-import ContestEditModulesTab from '../ContestEditModulesTab/ContestEditModulesTab';
 import ContestEditConfigsTab from '../ContestEditConfigsTab/ContestEditConfigsTab';
+import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
+import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
+import ContestEditModulesTab from '../ContestEditModulesTab/ContestEditModulesTab';
 
 import './ContestEditDialog.scss';
 

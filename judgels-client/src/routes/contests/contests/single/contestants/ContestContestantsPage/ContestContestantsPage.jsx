@@ -3,17 +3,18 @@ import { Refresh } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { reallyConfirm } from '../../../../../../utils/confirmation';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { ContestContestantsTable } from '../ContestContestantsTable/ContestContestantsTable';
+import { reallyConfirm } from '../../../../../../utils/confirmation';
+import { selectContest } from '../../../modules/contestSelectors';
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
-import { selectContest } from '../../../modules/contestSelectors';
-import * as contestContestantActions from '../../modules/contestContestantActions';
+import { ContestContestantsTable } from '../ContestContestantsTable/ContestContestantsTable';
+
 import * as contestActions from '../../../modules/contestActions';
+import * as contestContestantActions from '../../modules/contestContestantActions';
 
 import './ContestContestantsPage.scss';
 

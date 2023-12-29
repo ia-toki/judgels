@@ -2,13 +2,14 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../../../modules/contestSelectors';
-import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
+
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 
 export class ContestSubmissionPage extends Component {
   state = {

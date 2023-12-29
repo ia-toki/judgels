@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockJerahmeel } from '../../../../../../../../utils/nock';
+
 import * as chapterLessonActions from './chapterLessonActions';
 
 const chapterJid = 'chapter-jid';
@@ -16,7 +17,7 @@ describe('chapterLessonActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 

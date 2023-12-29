@@ -1,10 +1,11 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
+
 import * as infoActions from '../../../modules/infoActions';
 import * as userActions from '../../../modules/userActions';
 

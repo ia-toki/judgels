@@ -1,11 +1,11 @@
 import HTMLReactParser from 'html-react-parser';
 import render from 'preact-render-to-string';
-import { createRef, Component } from 'react';
+import { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 
+import { selectIsDarkMode } from '../../modules/webPrefs/webPrefsSelectors';
 import { HtmlText } from '../HtmlText/HtmlText';
 import { SourceCode } from '../SourceCode/SourceCode';
-import { selectIsDarkMode } from '../../modules/webPrefs/webPrefsSelectors';
 
 import './RichStatementText.scss';
 

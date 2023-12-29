@@ -4,10 +4,11 @@ import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
 import sessionReducer, { PutUser } from '../../../../../../../../../../../modules/session/sessionReducer';
 import courseReducer, { PutCourse } from '../../../../../../../../modules/courseReducer';
 import courseChapterReducer, { PutCourseChapter } from '../../../../../../modules/courseChapterReducer';
+import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
+
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
 
 jest.mock('../modules/chapterProblemSubmissionActions');
@@ -169,16 +170,7 @@ describe('ChapterProblemSubmissionsPage', () => {
         });
 
         it('shows the submissions', () => {
-          expect(
-            wrapper.find('tr').map(tr =>
-              tr.find('td').map(td =>
-                td
-                  .text()
-                  .replace(/\s+/g, ' ')
-                  .trim()
-              )
-            )
-          ).toEqual([
+          expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().replace(/\s+/g, ' ').trim()))).toEqual([
             [],
             ['20 refresh', 'username1', 'C++17', 'Accepted', '1 day ago', 'search'],
             ['10 refresh', 'username2', 'C++17', '', '2 days ago', 'search'],

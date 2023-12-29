@@ -1,7 +1,7 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 
-import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { FormattedContent } from '../../../../../../components/FormattedContent/FormattedContent';
+import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 

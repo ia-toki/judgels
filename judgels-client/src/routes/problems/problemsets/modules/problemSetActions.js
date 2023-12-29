@@ -1,6 +1,6 @@
-import { selectToken } from '../../../../modules/session/sessionSelectors';
-import { PutProblemSet, DelProblemSet } from './problemSetReducer';
 import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { DelProblemSet, PutProblemSet } from './problemSetReducer';
 
 export function getProblemSets(archiveSlug, name, page) {
   return async (dispatch, getState) => {

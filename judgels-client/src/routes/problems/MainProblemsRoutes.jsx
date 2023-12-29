@@ -1,7 +1,6 @@
 import { Route, Switch } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-
 import MainProblemsWrapperRoutes from './MainProblemsWrapperRoutes';
 import MainSingleProblemSetRoutes from './problemsets/single/MainSingleProblemSetRoutes';
 

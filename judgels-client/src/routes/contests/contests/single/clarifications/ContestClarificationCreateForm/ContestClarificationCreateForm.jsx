@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { Required } from '../../../../../../components/forms/validations';
-import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
 import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
+import { Required } from '../../../../../../components/forms/validations';
 import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
 
 export default function ContestClarificationCreateForm({

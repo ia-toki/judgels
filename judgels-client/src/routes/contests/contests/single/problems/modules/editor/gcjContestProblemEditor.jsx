@@ -1,5 +1,5 @@
+import { Alias, NonnegativeNumber, Slug } from '../../../../../../../components/forms/validations';
 import { ContestProblemStatus } from '../../../../../../../modules/api/uriel/contestProblem';
-import { Alias, Slug, NonnegativeNumber } from '../../../../../../../components/forms/validations';
 
 const gcjContestProblemEditor = {
   validator: value => {

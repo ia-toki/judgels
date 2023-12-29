@@ -1,12 +1,12 @@
 import { ListDetailView, Property, TimelineLineChart } from '@blueprintjs/icons';
 import { Route, withRouter } from 'react-router';
 
-import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import RatingsPage from './ratings/RatingsPage/RatingsPage';
+import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import RatingSystemPage from './ratings/RatingSystemPage/RatingSystemPage';
+import RatingsPage from './ratings/RatingsPage/RatingsPage';
 import ScoresPage from './scores/ScoresPage/ScoresPage';
 
 function RankingRoutes() {

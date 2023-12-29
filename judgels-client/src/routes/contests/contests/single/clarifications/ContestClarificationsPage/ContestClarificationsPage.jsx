@@ -1,19 +1,20 @@
 import { push } from 'connected-react-router';
-import { Component } from 'react';
 import { parse, stringify } from 'query-string';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Pagination from '../../../../../../components/Pagination/Pagination';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+import { selectContest } from '../../../modules/contestSelectors';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
-import { selectContest } from '../../../modules/contestSelectors';
-import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
+
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
 class ContestClarificationsPage extends Component {

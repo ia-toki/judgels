@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../utils/nock';
+
 import * as contestModuleActions from './contestModuleActions';
 
 const contestJid = 'contestJid';
@@ -15,7 +16,7 @@ describe('contestModuleActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -23,9 +24,7 @@ describe('contestModuleActions', () => {
     const responseBody = ['REGISTRATION'];
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/modules`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/modules`).reply(200, responseBody);
 
       const response = await store.dispatch(contestModuleActions.getModules(contestJid));
       expect(response).toEqual(responseBody);
@@ -62,9 +61,7 @@ describe('contestModuleActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/modules/config`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/modules/config`).reply(200, responseBody);
 
       const response = await store.dispatch(contestModuleActions.getConfig(contestJid));
       expect(response).toEqual(responseBody);

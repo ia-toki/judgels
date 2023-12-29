@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
-import { composeValidators, ConfirmPassword, Required } from '../../../../components/forms/validations';
-import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
+import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { ConfirmPassword, Required, composeValidators } from '../../../../components/forms/validations';
 
 const newPasswordField = {
   name: 'password',

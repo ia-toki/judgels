@@ -1,13 +1,14 @@
+import { Radio, RadioGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { RadioGroup, Radio } from '@blueprintjs/core';
 import { push } from 'connected-react-router';
+import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { parse, stringify } from 'query-string';
 
-import { sendGAEvent } from '../../../../ga';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { sendGAEvent } from '../../../../ga';
+
 import * as archiveActions from '../modules/archiveActions';
 
 import './ProblemSetArchiveFilter.scss';

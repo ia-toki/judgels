@@ -63,18 +63,8 @@ describe('ContentWithTopbar', () => {
         expect(items).toHaveLength(3);
 
         expect(items.at(0).text()).toEqual('First');
-        expect(
-          items
-            .at(1)
-            .childAt(0)
-            .text()
-        ).toEqual('Second');
-        expect(
-          items
-            .at(2)
-            .childAt(0)
-            .text()
-        ).toEqual('Third');
+        expect(items.at(1).childAt(0).text()).toEqual('Second');
+        expect(items.at(2).childAt(0).text()).toEqual('Third');
       });
 
       it('has the correct active item', () => {
@@ -121,18 +111,8 @@ describe('ContentWithTopbar', () => {
         expect(items).toHaveLength(3);
 
         expect(items.at(0).text()).toEqual('First');
-        expect(
-          items
-            .at(1)
-            .childAt(0)
-            .text()
-        ).toEqual('Second');
-        expect(
-          items
-            .at(2)
-            .childAt(0)
-            .text()
-        ).toEqual('Third');
+        expect(items.at(1).childAt(0).text()).toEqual('Second');
+        expect(items.at(2).childAt(0).text()).toEqual('Third');
       });
 
       it('has the correct active item', () => {
@@ -148,10 +128,7 @@ describe('ContentWithTopbar', () => {
       });
 
       it('has the correct first link without suffix', () => {
-        const link = wrapper
-          .find('a')
-          .at(0)
-          .find('a');
+        const link = wrapper.find('a').at(0).find('a');
         expect(link.props().href).toEqual('/parent/');
       });
     });

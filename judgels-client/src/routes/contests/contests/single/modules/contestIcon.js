@@ -13,6 +13,7 @@ import {
   TakeAction,
   Th,
 } from '@blueprintjs/icons';
+
 import { ContestTab } from '../../../../../modules/api/uriel/contestWeb';
 
 export const contestIcon = {

@@ -1,7 +1,7 @@
-import { SubmissionError } from '../../../../modules/form/submissionError';
 import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
 import { userRegistrationWebAPI } from '../../../../modules/api/jophiel/userRegistration';
 import { userSearchAPI } from '../../../../modules/api/jophiel/userSearch';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 
 export function getWebConfig() {
   return async () => {

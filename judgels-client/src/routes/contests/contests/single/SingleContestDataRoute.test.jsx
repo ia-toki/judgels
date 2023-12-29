@@ -1,16 +1,17 @@
+import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
-import { applyMiddleware, createStore, combineReducers } from 'redux';
-import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import contestReducer from '../modules/contestReducer';
 import SingleContestDataRoute from './SingleContestDataRoute';
+
+import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
-import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 jest.mock('../modules/contestActions');
 jest.mock('./modules/contestWebActions');

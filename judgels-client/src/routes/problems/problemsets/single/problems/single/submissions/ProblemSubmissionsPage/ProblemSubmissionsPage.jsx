@@ -4,16 +4,17 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { reallyConfirm } from '../../../../../../../../utils/confirmation';
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
+import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
 import { selectMaybeUserJid, selectMaybeUsername } from '../../../../../../../../modules/session/sessionSelectors';
+import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
+import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
+
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 export class ProblemSubmissionsPage extends Component {

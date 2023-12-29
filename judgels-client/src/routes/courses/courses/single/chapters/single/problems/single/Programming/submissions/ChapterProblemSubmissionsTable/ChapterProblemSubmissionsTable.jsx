@@ -3,8 +3,8 @@ import { Refresh, Search } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
 import { FormattedRelative } from '../../../../../../../../../../../components/FormattedRelative/FormattedRelative';
-import { UserRef } from '../../../../../../../../../../../components/UserRef/UserRef';
 import { GradingVerdictTag } from '../../../../../../../../../../../components/GradingVerdictTag/GradingVerdictTag';
+import { UserRef } from '../../../../../../../../../../../components/UserRef/UserRef';
 import { getGradingLanguageName } from '../../../../../../../../../../../modules/api/gabriel/language.js';
 
 import '../../../../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';

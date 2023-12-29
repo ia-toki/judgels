@@ -1,8 +1,8 @@
 import { Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { getIntentClassName } from '../meta';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
+import { getIntentClassName } from '../meta';
 
 import './FormTableTextArea.scss';
 

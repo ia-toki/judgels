@@ -1,12 +1,11 @@
 import { PureComponent } from 'react';
-
-import tinymce from 'tinymce/tinymce';
-import 'tinymce/themes/modern/theme';
 import 'tinymce/plugins/code';
 import 'tinymce/plugins/image';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/paste';
+import 'tinymce/themes/modern/theme';
+import tinymce from 'tinymce/tinymce';
 
 export class TinyMCETextArea extends PureComponent {
   componentDidMount() {

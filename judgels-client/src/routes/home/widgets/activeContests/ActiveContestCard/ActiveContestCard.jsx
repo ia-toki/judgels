@@ -1,9 +1,9 @@
 import { PureComponent } from 'react';
 
-import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
-import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
 import { ContestRoleTag } from '../../../../../components/ContestRole/ContestRoleTag';
+import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
+import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
 
 import './ActiveContestCard.scss';
 

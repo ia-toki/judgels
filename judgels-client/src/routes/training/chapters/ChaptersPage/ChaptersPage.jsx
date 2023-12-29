@@ -8,6 +8,7 @@ import { ChapterEditDialog } from '../ChapterEditDialog/ChapterEditDialog';
 import { ChapterLessonEditDialog } from '../ChapterLessonEditDialog/ChapterLessonEditDialog';
 import { ChapterProblemEditDialog } from '../ChapterProblemEditDialog/ChapterProblemEditDialog';
 import { ChaptersTable } from '../ChaptersTable/ChaptersTable';
+
 import * as chapterActions from '../modules/chapterActions';
 
 class ChaptersPage extends Component {

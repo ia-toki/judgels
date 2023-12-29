@@ -4,20 +4,21 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { sendGAEvent } from '../../../../../../../../../ga';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
-import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
-import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
-import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
+import { sendGAEvent } from '../../../../../../../../../ga';
 import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
+import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
+import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
+import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
+import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import { selectChapterProblemRefreshKey } from '../modules/chapterProblemSelectors';
-import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import * as chapterProblemActions from '../../modules/chapterProblemActions';
+
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as chapterProblemActions from '../../modules/chapterProblemActions';
 
 import './ChapterProblemPage.scss';
 

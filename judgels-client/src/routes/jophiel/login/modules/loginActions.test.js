@@ -4,8 +4,9 @@ import thunk from 'redux-thunk';
 
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { nockJophiel } from '../../../../utils/nock';
-import * as loginActions from './loginActions';
 import { PutWebConfig } from '../../modules/userWebReducer';
+
+import * as loginActions from './loginActions';
 
 const usernameOrEmail = 'user';
 const password = 'password';
@@ -23,16 +24,14 @@ describe('loginActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
   describe('logIn()', () => {
     describe('when the credentials is valid', () => {
       it('succeeds', async () => {
-        nockJophiel()
-          .post(`/session/login`, { usernameOrEmail, password })
-          .reply(200, { authCode, token });
+        nockJophiel().post(`/session/login`, { usernameOrEmail, password }).reply(200, { authCode, token });
 
         nockJophiel()
           .options(`/users/me`)
@@ -57,9 +56,7 @@ describe('loginActions', () => {
 
     describe('when the credentials is invalid', () => {
       it('throws a more descriptive error', async () => {
-        nockJophiel()
-          .post(`/session/login`, { usernameOrEmail, password })
-          .reply(403);
+        nockJophiel().post(`/session/login`, { usernameOrEmail, password }).reply(403);
 
         await expect(store.dispatch(loginActions.logIn(usernameOrEmail, password))).rejects.toEqual(
           new Error('Invalid username/password.')

@@ -3,8 +3,9 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestEditDescriptionTab from './ContestEditDescriptionTab';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestEditDescriptionTab from './ContestEditDescriptionTab';
+
 import * as contestActions from '../../../modules/contestActions';
 
 jest.mock('../../../modules/contestActions');

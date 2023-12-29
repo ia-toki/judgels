@@ -4,11 +4,11 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
-
-import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectContest } from '../../../modules/contestSelectors';
+import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
+
 import * as contestActions from '../../../modules/contestActions';
 
 class ContestEditDescriptionTab extends Component {

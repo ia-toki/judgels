@@ -1,8 +1,9 @@
 import { push } from 'connected-react-router';
 
-import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 import { NotFoundError } from '../../../../../../../modules/api/error';
 import { contestSubmissionProgrammingAPI } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
+import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
 
 export function getSubmissions(contestJid, username, problemAlias, page) {

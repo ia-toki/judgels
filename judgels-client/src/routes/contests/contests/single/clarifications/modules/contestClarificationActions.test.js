@@ -2,8 +2,9 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { nockUriel } from '../../../../../../utils/nock';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
+import { nockUriel } from '../../../../../../utils/nock';
+
 import * as contestClarificationActions from './contestClarificationActions';
 
 const contestJid = 'contestJid';
@@ -17,7 +18,7 @@ describe('contestClarificationActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -29,9 +30,7 @@ describe('contestClarificationActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/clarifications`, params)
-        .reply(200);
+      nockUriel().post(`/contests/${contestJid}/clarifications`, params).reply(200);
 
       await store.dispatch(contestClarificationActions.createClarification(contestJid, params));
     });
@@ -48,10 +47,7 @@ describe('contestClarificationActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/clarifications`)
-        .query({ language, page })
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/clarifications`).query({ language, page }).reply(200, responseBody);
 
       const response = await store.dispatch(
         contestClarificationActions.getClarifications(contestJid, status, language, page)

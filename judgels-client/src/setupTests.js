@@ -1,7 +1,7 @@
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-preact-pure';
-import ReactDOM from 'react-dom';
 import nock from 'nock';
+import ReactDOM from 'react-dom';
 
 configure({ adapter: new Adapter() });
 
@@ -21,6 +21,6 @@ window.conf = {
   },
 };
 
-window.scrollTo = function() {
+window.scrollTo = function () {
   return;
 };

@@ -1,12 +1,11 @@
 import { TimelineLineChart } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
-import { isTLX } from '../../conf';
+import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-
+import { isTLX } from '../../conf';
 import RatingsPage from './ratings/RatingsPage/RatingsPage';
 
 function SystemRoutes() {

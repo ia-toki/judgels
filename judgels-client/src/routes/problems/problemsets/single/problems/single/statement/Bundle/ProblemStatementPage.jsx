@@ -1,11 +1,12 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
+
 import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
 
 export class ProblemStatementPage extends Component {

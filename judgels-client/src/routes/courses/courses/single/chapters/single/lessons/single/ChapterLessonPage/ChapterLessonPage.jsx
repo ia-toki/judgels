@@ -3,16 +3,17 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
-import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
+import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
-import * as chapterLessonActions from '../../modules/chapterLessonActions';
+import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
+
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as chapterLessonActions from '../../modules/chapterLessonActions';
 
 import './ChapterLessonPage.scss';
 

@@ -1,8 +1,8 @@
-import { selectToken } from '../../../../../modules/session/sessionSelectors';
-import { profileAPI } from '../../../../../modules/api/jophiel/profile';
-import { contestHistoryAPI } from '../../../../../modules/api/uriel/contestHistory';
 import { statsAPI } from '../../../../../modules/api/jerahmeel/stats';
 import { submissionProgrammingAPI } from '../../../../../modules/api/jerahmeel/submissionProgramming';
+import { profileAPI } from '../../../../../modules/api/jophiel/profile';
+import { contestHistoryAPI } from '../../../../../modules/api/uriel/contestHistory';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
 
 export function getBasicProfile(userJid) {
   return async () => {

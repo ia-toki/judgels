@@ -1,7 +1,7 @@
 import { NotFoundError } from '../../../modules/api/error';
-import { PutUser, DelUser } from './profileReducer';
-import { userSearchAPI } from '../../../modules/api/jophiel/userSearch';
 import { profileAPI } from '../../../modules/api/jophiel/profile';
+import { userSearchAPI } from '../../../modules/api/jophiel/userSearch';
+import { DelUser, PutUser } from './profileReducer';
 
 export function getUser(username) {
   return async dispatch => {

@@ -1,4 +1,4 @@
-import { Intent, ProgressBar as BlueprintProgressBar } from '@blueprintjs/core';
+import { ProgressBar as BlueprintProgressBar, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { getVerdictIntent } from '../../modules/api/gabriel/verdict';

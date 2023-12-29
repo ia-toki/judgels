@@ -1,11 +1,12 @@
 import { Component } from 'react';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { selectCourse } from '../../../modules/courseSelectors';
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
-import * as courseChapterActions from '../modules/courseChapterActions';
+
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as courseChapterActions from '../modules/courseChapterActions';
 
 class SingleCourseChapterDataRoute extends Component {
   async componentDidMount() {

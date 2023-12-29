@@ -1,21 +1,22 @@
+import { Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { ButtonLink } from '../../../../../../../../../../../components/ButtonLink/ButtonLink';
-import { ScrollToTopOnMount } from '../../../../../../../../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import ItemSubmissionUserFilter from '../../../../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
+import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
+import { ScrollToTopOnMount } from '../../../../../../../../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { selectMaybeUserJid } from '../../../../../../../../../../../modules/session/sessionSelectors';
+import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../modules/courseChapterSelectors';
-import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
 
 import './ChapterProblemSubmissionsPage.scss';
-import { Intent } from '@blueprintjs/core';
 
 class ChapterProblemSubmissionsPage extends Component {
   state = {

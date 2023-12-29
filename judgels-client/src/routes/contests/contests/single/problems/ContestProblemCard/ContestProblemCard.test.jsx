@@ -76,12 +76,6 @@ describe('ContestProblemCard', () => {
       points: undefined,
     });
 
-    expect(
-      wrapper
-        .find('[data-key="status"]')
-        .childAt(0)
-        .childAt(0)
-        .text()
-    ).toEqual('CLOSED');
+    expect(wrapper.find('[data-key="status"]').childAt(0).childAt(0).text()).toEqual('CLOSED');
   });
 });

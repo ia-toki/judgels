@@ -1,12 +1,13 @@
 import { Checkbox } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { push } from 'connected-react-router';
+import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { parse, stringify } from 'query-string';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+
 import * as problemActions from '../modules/problemActions';
 
 import './ProblemTagFilter.scss';

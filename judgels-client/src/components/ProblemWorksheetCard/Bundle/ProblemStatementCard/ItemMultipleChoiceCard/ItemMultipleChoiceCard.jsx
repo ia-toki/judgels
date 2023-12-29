@@ -1,4 +1,4 @@
-import { Card, Divider, RadioGroup, Radio, Tag } from '@blueprintjs/core';
+import { Card, Divider, Radio, RadioGroup, Tag } from '@blueprintjs/core';
 import { Component } from 'react';
 
 import { HtmlText } from '../../../../HtmlText/HtmlText';

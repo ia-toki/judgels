@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../utils/nock';
+
 import * as contestSupervisorActions from './contestSupervisorActions';
 
 const contestJid = 'contestJid';
@@ -15,7 +16,7 @@ describe('contestSupervisorActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -28,10 +29,7 @@ describe('contestSupervisorActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/supervisors`)
-        .query({ page })
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/supervisors`).query({ page }).reply(200, responseBody);
 
       const response = await store.dispatch(contestSupervisorActions.getSupervisors(contestJid, page));
       expect(response).toEqual(responseBody);
@@ -47,9 +45,7 @@ describe('contestSupervisorActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/supervisors/batch-upsert`, data)
-        .reply(200, responseBody);
+      nockUriel().post(`/contests/${contestJid}/supervisors/batch-upsert`, data).reply(200, responseBody);
 
       const response = await store.dispatch(contestSupervisorActions.upsertSupervisors(contestJid, data));
       expect(response).toEqual(responseBody);
@@ -63,9 +59,7 @@ describe('contestSupervisorActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/supervisors/batch-delete`, usernames)
-        .reply(200, responseBody);
+      nockUriel().post(`/contests/${contestJid}/supervisors/batch-delete`, usernames).reply(200, responseBody);
 
       const response = await store.dispatch(contestSupervisorActions.deleteSupervisors(contestJid, usernames));
       expect(response).toEqual(responseBody);

@@ -1,13 +1,14 @@
+import { parse } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { parse } from 'query-string';
 
-import Pagination from '../../../../components/Pagination/Pagination';
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
+
 import * as contestActions from '../modules/contestActions';
 
 class ContestsPage extends Component {

@@ -1,7 +1,7 @@
-import { stringify, parse } from 'query-string';
 import { push } from 'connected-react-router';
-import { withRouter } from 'react-router';
+import { parse, stringify } from 'query-string';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import SearchBoxForm from './SearchBoxForm';
 

@@ -3,11 +3,12 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { nockUriel } from '../../../../utils/nock';
-import { SubmissionError } from '../../../../modules/form/submissionError';
 import { ContestErrors } from '../../../../modules/api/uriel/contest';
-import * as contestActions from './contestActions';
+import { SubmissionError } from '../../../../modules/form/submissionError';
+import { nockUriel } from '../../../../utils/nock';
 import { EditContest, PutContest } from './contestReducer';
+
+import * as contestActions from './contestActions';
 
 const contestJid = 'contestJid';
 const mockStore = configureMockStore([thunk]);
@@ -19,7 +20,7 @@ describe('contestActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -28,9 +29,7 @@ describe('contestActions', () => {
 
     describe('when the slug does not already exist', () => {
       it('calls API', async () => {
-        nockUriel()
-          .post(`/contests`, params)
-          .reply(200);
+        nockUriel().post(`/contests`, params).reply(200);
 
         await store.dispatch(contestActions.createContest(params));
 
@@ -41,9 +40,7 @@ describe('contestActions', () => {
 
     describe('when the slug already exists', () => {
       it('throws SubmissionError', async () => {
-        nockUriel()
-          .post(`/contests`, params)
-          .reply(400, { message: ContestErrors.SlugAlreadyExists });
+        nockUriel().post(`/contests`, params).reply(400, { message: ContestErrors.SlugAlreadyExists });
 
         await expect(store.dispatch(contestActions.createContest(params))).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
@@ -59,9 +56,7 @@ describe('contestActions', () => {
       const params = { name: 'New Name' };
 
       it('calls API', async () => {
-        nockUriel()
-          .post(`/contests/${contestJid}`, params)
-          .reply(200);
+        nockUriel().post(`/contests/${contestJid}`, params).reply(200);
 
         await store.dispatch(contestActions.updateContest(contestJid, slug, params));
       });
@@ -72,9 +67,7 @@ describe('contestActions', () => {
 
       describe('when the slug does not already exist', () => {
         it('calls API', async () => {
-          nockUriel()
-            .post(`/contests/${contestJid}`, params)
-            .reply(200);
+          nockUriel().post(`/contests/${contestJid}`, params).reply(200);
 
           await store.dispatch(contestActions.updateContest(contestJid, slug, params));
 
@@ -84,9 +77,7 @@ describe('contestActions', () => {
 
       describe('when the slug already exists', () => {
         it('throws SubmissionError', async () => {
-          nockUriel()
-            .post(`/contests/${contestJid}`, params)
-            .reply(400, { message: ContestErrors.SlugAlreadyExists });
+          nockUriel().post(`/contests/${contestJid}`, params).reply(400, { message: ContestErrors.SlugAlreadyExists });
 
           await expect(store.dispatch(contestActions.updateContest(contestJid, slug, params))).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })
@@ -106,10 +97,7 @@ describe('contestActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests`)
-        .query({ name, page })
-        .reply(200, responseBody);
+      nockUriel().get(`/contests`).query({ name, page }).reply(200, responseBody);
 
       const response = await store.dispatch(contestActions.getContests(name, page));
       expect(response).toEqual(responseBody);
@@ -122,9 +110,7 @@ describe('contestActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/active`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/active`).reply(200, responseBody);
 
       const response = await store.dispatch(contestActions.getActiveContests());
       expect(response).toEqual(responseBody);
@@ -135,9 +121,7 @@ describe('contestActions', () => {
     const contest = { id: 1 };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/slug/ioi`)
-        .reply(200, contest);
+      nockUriel().get(`/contests/slug/ioi`).reply(200, contest);
 
       const response = await store.dispatch(contestActions.getContestBySlug('ioi'));
       expect(response).toEqual(contest);
@@ -148,9 +132,7 @@ describe('contestActions', () => {
 
   describe('startVirtualContest()', () => {
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/virtual`)
-        .reply(200);
+      nockUriel().post(`/contests/${contestJid}/virtual`).reply(200);
 
       await store.dispatch(contestActions.startVirtualContest(contestJid));
     });
@@ -172,9 +154,7 @@ describe('contestActions', () => {
     const description = 'This is a contest';
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/description`)
-        .reply(200, { description });
+      nockUriel().get(`/contests/${contestJid}/description`).reply(200, { description });
 
       const response = await store.dispatch(contestActions.getContestDescription(contestJid));
       expect(response).toEqual({ description });
@@ -185,9 +165,7 @@ describe('contestActions', () => {
     const description = 'This is a contest';
 
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/description`, { description })
-        .reply(200, { description });
+      nockUriel().post(`/contests/${contestJid}/description`, { description }).reply(200, { description });
 
       await store.dispatch(contestActions.updateContestDescription(contestJid, description));
     });

@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { ContestsPendingRatingTable } from '../ContestsPendingRatingTable/ContestsPendingRatingTable';
 import { ContestRatingChangesDialog } from '../ContestRatingChangesDialog/ContestRatingChangesDialog';
+import { ContestsPendingRatingTable } from '../ContestsPendingRatingTable/ContestsPendingRatingTable';
+
 import * as ratingActions from '../modules/ratingActions';
 
 class RatingsPage extends Component {

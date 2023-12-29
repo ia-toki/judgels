@@ -3,9 +3,10 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestOverviewPage from './ContestOverviewPage';
 import sessionReducer from '../../../../../../modules/session/sessionReducer';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestOverviewPage from './ContestOverviewPage';
+
 import * as contestActions from '../../../modules/contestActions';
 
 jest.mock('../../../modules/contestActions');

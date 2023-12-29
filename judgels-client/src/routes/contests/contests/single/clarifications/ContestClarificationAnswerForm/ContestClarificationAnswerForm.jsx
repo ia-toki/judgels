@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { Required } from '../../../../../../components/forms/validations';
-import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
+import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { Required } from '../../../../../../components/forms/validations';
 
 export default function ContestClarificationAnswerForm({ onSubmit, isLoading, onCancel }) {
   const answerField = {

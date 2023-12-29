@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { withSubmissionError } from '../../../../modules/form/submissionError';
-import { composeValidators, Required, Slug } from '../../../../components/forms/validations';
-import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
+import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 export default function CourseCreateForm({ onSubmit, renderFormComponents }) {
   const slugField = {

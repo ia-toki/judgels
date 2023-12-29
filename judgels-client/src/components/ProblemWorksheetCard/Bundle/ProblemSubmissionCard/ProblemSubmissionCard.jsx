@@ -1,8 +1,8 @@
 import { Callout, Intent } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
 
-import { ContentCard } from '../../../ContentCard/ContentCard';
 import { ButtonLink } from '../../../ButtonLink/ButtonLink';
+import { ContentCard } from '../../../ContentCard/ContentCard';
 
 export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) {
   const renderSubmissionForm = () => {

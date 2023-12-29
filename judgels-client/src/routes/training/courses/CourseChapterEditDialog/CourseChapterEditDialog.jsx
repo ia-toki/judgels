@@ -1,10 +1,10 @@
-import { Callout, Classes, Button, Intent, Dialog } from '@blueprintjs/core';
+import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { CourseChaptersTable } from '../CourseChaptersTable/CourseChaptersTable';
-import CourseChapterEditForm from '../CourseChapterEditForm/CourseChapterEditForm';
 import { Alias } from '../../../../components/forms/validations';
+import CourseChapterEditForm from '../CourseChapterEditForm/CourseChapterEditForm';
+import { CourseChaptersTable } from '../CourseChaptersTable/CourseChaptersTable';
 
 export class CourseChapterEditDialog extends Component {
   state = {

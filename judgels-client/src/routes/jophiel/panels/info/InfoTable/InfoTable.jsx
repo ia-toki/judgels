@@ -1,7 +1,7 @@
-import { FormTable } from '../../../../../components/forms/FormTable/FormTable';
-import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
-import { userInfoGender } from '../../../../../modules/api/jophiel/userInfo';
 import { getCountryName } from '../../../../../assets/data/countries';
+import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
+import { FormTable } from '../../../../../components/forms/FormTable/FormTable';
+import { userInfoGender } from '../../../../../modules/api/jophiel/userInfo';
 
 export function InfoTable({ email, info }) {
   const infoRows = [

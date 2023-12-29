@@ -1,9 +1,10 @@
 import nock from 'nock';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import { nockJophiel } from '../../../../../utils/nock';
 import sessionReducer, { PutUser } from '../../../../../modules/session/sessionReducer';
+import { nockJophiel } from '../../../../../utils/nock';
+
 import * as resetPasswordActions from './resetPasswordActions';
 
 describe('resetPasswordActions', () => {
@@ -19,15 +20,13 @@ describe('resetPasswordActions', () => {
     store.dispatch(PutUser({ email: 'user@judgels.com' }));
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
   describe('requestToResetPassword()', () => {
     it('calls API', async () => {
-      nockJophiel()
-        .post(`/user-account/request-reset-password/user@judgels.com`)
-        .reply(200);
+      nockJophiel().post(`/user-account/request-reset-password/user@judgels.com`).reply(200);
 
       await store.dispatch(resetPasswordActions.requestToResetPassword());
     });
