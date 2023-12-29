@@ -40,7 +40,6 @@
     "history": "4.9.0",
     "html-react-parser": "1.2.6",
     "html-webpack-plugin": "5.5.4",
-    "identity-obj-proxy": "3.0.0",
     "jest": "26.6.0",
     "jest-circus": "26.6.0",
     "jest-resolve": "26.6.0",
@@ -147,12 +146,10 @@
     ],
     "modulePaths": [],
     "moduleNameMapper": {
-      "^react-native$": "react-native-web",
       "^react$": "preact/compat",
       "^react/jsx-dev-runtime$": "preact/jsx-runtime",
       "^react-dom$": "preact/compat",
-      "^react-dom/test-utils$": "preact/test-utils",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "^react-dom/test-utils$": "preact/test-utils"
     },
     "moduleFileExtensions": [
       "web.js",
