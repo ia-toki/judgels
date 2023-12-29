@@ -103,19 +103,16 @@ describe('IcpcScoreboardTable', () => {
       td === 'first-accepted'
         ? 'D '
         : td === 'accepted'
-        ? 'G '
-        : td === 'not-accepted'
-        ? 'R '
-        : td === 'frozen'
-        ? 'F '
-        : '';
+          ? 'G '
+          : td === 'not-accepted'
+            ? 'R '
+            : td === 'frozen'
+              ? 'F '
+              : '';
     const mapCell = td =>
       getColor(td.prop('className')) + td.find('span.top').text() + '/' + td.find('span.bottom').text();
     const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
-    const points = wrapper
-      .find('tbody')
-      .children()
-      .map(mapRow);
+    const points = wrapper.find('tbody').children().map(mapRow);
     expect(points).toEqual([
       ['3/66', 'G 1/3', 'D 3/14', 'D 1/9', '-/-'],
       ['1/17', 'R 1/-', 'G 1/17', 'F ?/?', 'R 3/-'],
@@ -137,21 +134,13 @@ describe('IcpcScoreboardTable', () => {
       });
 
       test('shows submission for attempted cell', () => {
-        wrapper
-          .find('tbody')
-          .childAt(0)
-          .childAt(3)
-          .simulate('click');
+        wrapper.find('tbody').childAt(0).childAt(3).simulate('click');
 
         expect(onOpenSubmissionImage).toHaveBeenCalledWith(contestJid, 'JIDUSER2', 'JIDPROG1');
       });
 
       test('does not show submission for unattempted cell', () => {
-        wrapper
-          .find('tbody')
-          .childAt(0)
-          .childAt(6)
-          .simulate('click');
+        wrapper.find('tbody').childAt(0).childAt(6).simulate('click');
 
         expect(onOpenSubmissionImage).not.toBeCalled();
       });
@@ -171,11 +160,7 @@ describe('IcpcScoreboardTable', () => {
       });
 
       test('does not show submission', () => {
-        wrapper
-          .find('tbody')
-          .childAt(0)
-          .childAt(3)
-          .simulate('click');
+        wrapper.find('tbody').childAt(0).childAt(3).simulate('click');
 
         expect(onOpenSubmissionImage).not.toBeCalled();
       });

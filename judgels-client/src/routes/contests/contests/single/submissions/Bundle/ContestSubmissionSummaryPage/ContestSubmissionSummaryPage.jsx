@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
+import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { selectStatementLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../../modules/contestSelectors';
 
-import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 class SubmissionSummaryPage extends Component {

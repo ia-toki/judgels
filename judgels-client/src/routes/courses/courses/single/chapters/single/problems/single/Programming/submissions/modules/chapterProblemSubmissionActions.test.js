@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockJerahmeel } from '../../../../../../../../../../../utils/nock';
+
 import * as chapterProblemSubmissionActions from './chapterProblemSubmissionActions';
 
 const chapterJid = 'chapter-jid';
@@ -16,7 +17,7 @@ describe('chapterProblemSubmissionActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -48,10 +49,7 @@ describe('chapterProblemSubmissionActions', () => {
     };
 
     it('calls API', async () => {
-      nockJerahmeel()
-        .get(`/submissions/programming/id/${submissionId}`)
-        .query({ language })
-        .reply(200, responseBody);
+      nockJerahmeel().get(`/submissions/programming/id/${submissionId}`).query({ language }).reply(200, responseBody);
 
       const response = await store.dispatch(
         chapterProblemSubmissionActions.getSubmissionWithSource(submissionId, language)

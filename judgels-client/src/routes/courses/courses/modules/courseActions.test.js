@@ -3,8 +3,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockJerahmeel } from '../../../../utils/nock';
-import * as courseActions from './courseActions';
 import { PutCourse } from './courseReducer';
+
+import * as courseActions from './courseActions';
 
 const courseJid = 'course-jid';
 const course = {
@@ -22,7 +23,7 @@ describe('courseActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -32,9 +33,7 @@ describe('courseActions', () => {
     };
 
     it('calls API', async () => {
-      nockJerahmeel()
-        .get(`/courses`)
-        .reply(200, responseBody);
+      nockJerahmeel().get(`/courses`).reply(200, responseBody);
 
       const response = await store.dispatch(courseActions.getCourses());
       expect(response).toEqual(responseBody);
@@ -43,9 +42,7 @@ describe('courseActions', () => {
 
   describe('getCourseBySlug()', () => {
     it('calls API', async () => {
-      nockJerahmeel()
-        .get(`/courses/slug/competitive`)
-        .reply(200, course);
+      nockJerahmeel().get(`/courses/slug/competitive`).reply(200, course);
 
       const response = await store.dispatch(courseActions.getCourseBySlug('competitive'));
       expect(response).toEqual(course);

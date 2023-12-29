@@ -1,14 +1,13 @@
 import { Alignment, Navbar } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 
+import logo from '../../assets/images/logo-header.png';
 import { APP_CONFIG } from '../../conf';
-import Menubar from '../Menubar/Menubar';
 import DarkModeWidget from '../DarkModeWidget/DarkModeWidget';
+import Menubar from '../Menubar/Menubar';
 import UserWidget from '../UserWidget/UserWidget';
 
 import './Header.scss';
-
-import logo from '../../assets/images/logo-header.png';
 
 export default function Header({ items, homeRoute }) {
   return (

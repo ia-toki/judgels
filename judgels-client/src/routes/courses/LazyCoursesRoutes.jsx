@@ -1,7 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 
-import { lazyRetry } from '../../lazy';
 import { LoadingState } from '../../components/LoadingState/LoadingState';
+import { lazyRetry } from '../../lazy';
 
 const CoursesRoutes = lazy(() => lazyRetry(() => import('./MainCoursesRoutes')));
 

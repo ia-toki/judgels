@@ -1,7 +1,7 @@
 import { Route, withRouter } from 'react-router';
 
-import SingleContestRoutes from './SingleContestRoutes';
 import SingleContestDataRoute from './SingleContestDataRoute';
+import SingleContestRoutes from './SingleContestRoutes';
 
 function MainSingleContestRoutes() {
   return (

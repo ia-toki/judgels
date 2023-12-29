@@ -1,4 +1,4 @@
-import { Intent, Button } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 

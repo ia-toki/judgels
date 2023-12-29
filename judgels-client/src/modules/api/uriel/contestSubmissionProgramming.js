@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 
-import { get, postMultipart, post, download } from '../http';
+import { download, get, post, postMultipart } from '../http';
 import { baseContestsURL } from './contest';
 
 const baseURL = `${baseContestsURL}/submissions/programming`;

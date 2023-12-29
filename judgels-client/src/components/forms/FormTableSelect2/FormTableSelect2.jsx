@@ -3,8 +3,8 @@ import { CaretDown } from '@blueprintjs/icons';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
 
-import { getIntentClassName } from '../meta';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
+import { getIntentClassName } from '../meta';
 
 import './FormTableSelect2.scss';
 

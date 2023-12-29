@@ -2,9 +2,9 @@ import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { Field, Form } from 'react-final-form';
 
-import { composeValidators, Required, Max100Lines } from '../../../../../../components/forms/validations';
-import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
+import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { Max100Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
 import { supervisorManagementPermissions } from '../../../../../../modules/api/uriel/contestSupervisor';
 
 export default class ContestSupervisorAddForm extends Component {

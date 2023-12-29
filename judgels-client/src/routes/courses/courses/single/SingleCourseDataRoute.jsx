@@ -1,10 +1,11 @@
 import { Component } from 'react';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { selectCourse } from '../modules/courseSelectors';
-import * as courseActions from '../modules/courseActions';
+
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as courseActions from '../modules/courseActions';
 
 class SingleCourseDataRoute extends Component {
   async componentDidMount() {

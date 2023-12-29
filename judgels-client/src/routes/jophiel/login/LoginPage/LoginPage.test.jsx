@@ -5,6 +5,7 @@ import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import LoginPage from './LoginPage';
+
 import * as loginActions from '../modules/loginActions';
 
 jest.mock('../modules/loginActions');

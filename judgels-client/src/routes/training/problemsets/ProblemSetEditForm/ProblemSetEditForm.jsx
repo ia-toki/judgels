@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { composeValidators, Required, Slug } from '../../../../components/forms/validations';
-import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
-import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormDateInput } from '../../../../components/forms/FormDateInput/FormDateInput';
+import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
+import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 
 export default function ProblemSetEditForm({ onSubmit, initialValues, renderFormComponents }) {
   const slugField = {

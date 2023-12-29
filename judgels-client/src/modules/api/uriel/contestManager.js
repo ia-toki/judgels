@@ -1,7 +1,6 @@
 import { stringify } from 'query-string';
 
 import { get, post } from '../http';
-
 import { baseContestURL } from './contest';
 
 const baseURL = contestJid => `${baseContestURL(contestJid)}/managers`;

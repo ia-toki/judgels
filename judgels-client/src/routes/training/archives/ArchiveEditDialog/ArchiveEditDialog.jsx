@@ -1,4 +1,4 @@
-import { Classes, Button, Dialog } from '@blueprintjs/core';
+import { Button, Classes, Dialog } from '@blueprintjs/core';
 
 import ArchiveEditForm from '../ArchiveEditForm/ArchiveEditForm';
 

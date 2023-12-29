@@ -3,12 +3,12 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
+import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
-
-import ContestEditGeneralTab from './ContestEditGeneralTab';
-import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestEditGeneralTab from './ContestEditGeneralTab';
+
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 

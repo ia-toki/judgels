@@ -5,16 +5,16 @@ import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
+import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
-import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
-import ProblemSubmissionRoutes from './submissions/ProblemSubmissionRoutes';
-import ProblemItemSubmissionRoutes from './results/ProblemItemSubmissionRoutes';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../modules/problemSetProblemSelectors';
+import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
+import ProblemItemSubmissionRoutes from './results/ProblemItemSubmissionRoutes';
+import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
+import ProblemSubmissionRoutes from './submissions/ProblemSubmissionRoutes';
 
 import './SingleProblemSetProblemRoutes.scss';
 

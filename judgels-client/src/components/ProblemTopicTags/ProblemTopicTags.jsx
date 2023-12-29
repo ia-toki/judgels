@@ -1,4 +1,4 @@
-import { Tag, Intent } from '@blueprintjs/core';
+import { Intent, Tag } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 

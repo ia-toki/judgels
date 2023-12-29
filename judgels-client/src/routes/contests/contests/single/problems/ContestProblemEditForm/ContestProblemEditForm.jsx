@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { withSubmissionError } from '../../../../../../modules/form/submissionError';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
-import { composeValidators, Required, Max100Lines } from '../../../../../../components/forms/validations';
+import { Max100Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
+import { withSubmissionError } from '../../../../../../modules/form/submissionError';
 
 export default function ContestProblemEditForm({ onSubmit, initialValues, renderFormComponents, validator }) {
   const problemsField = {

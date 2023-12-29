@@ -3,8 +3,8 @@ import { withRouter } from 'react-router';
 
 import { ContestStyle } from '../../../../../../../modules/api/uriel/contest';
 import { selectContest } from '../../../../modules/contestSelectors';
-import ContestProgrammingProblemPage from './Programming/ContestProblemPage';
 import ContestBundleProblemPage from './Bundle/ContestProblemPage';
+import ContestProgrammingProblemPage from './Programming/ContestProblemPage';
 
 export function ContestProblemPage({ contest }) {
   if (contest.style === ContestStyle.Bundle) {

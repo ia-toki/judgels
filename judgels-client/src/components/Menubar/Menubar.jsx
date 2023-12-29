@@ -1,6 +1,6 @@
 import { Tab, Tabs } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
-import { matchPath, Link } from 'react-router-dom';
+import { Link, matchPath } from 'react-router-dom';
 
 import './Menubar.scss';
 

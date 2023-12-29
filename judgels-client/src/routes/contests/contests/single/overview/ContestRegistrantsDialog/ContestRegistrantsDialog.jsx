@@ -1,12 +1,13 @@
-import { Classes, Button, Dialog, HTMLTable } from '@blueprintjs/core';
+import { Button, Classes, Dialog, HTMLTable } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { getCountryName } from '../../../../../../assets/data/countries';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { selectContest } from '../../../modules/contestSelectors';
+
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
 import './ContestRegistrantsDialog.scss';

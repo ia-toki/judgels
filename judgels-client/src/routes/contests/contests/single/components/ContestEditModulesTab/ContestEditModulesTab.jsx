@@ -2,12 +2,13 @@ import { Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { allModules } from '../../../../../../modules/api/uriel/contestModule';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { allModules } from '../../../../../../modules/api/uriel/contestModule';
 import { selectContest } from '../../../modules/contestSelectors';
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
-import * as contestWebActions from '../../modules/contestWebActions';
+
 import * as contestModuleActions from '../../modules/contestModuleActions';
+import * as contestWebActions from '../../modules/contestWebActions';
 
 class ContestEditModulesTab extends Component {
   state = {

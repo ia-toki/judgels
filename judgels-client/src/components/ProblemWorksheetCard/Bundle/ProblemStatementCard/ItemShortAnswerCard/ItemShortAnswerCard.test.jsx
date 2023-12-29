@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 
-import { ItemShortAnswerCard } from './ItemShortAnswerCard';
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemShortAnswerCard } from './ItemShortAnswerCard';
 
 describe('ItemShortAnswerCard', () => {
   let wrapper;

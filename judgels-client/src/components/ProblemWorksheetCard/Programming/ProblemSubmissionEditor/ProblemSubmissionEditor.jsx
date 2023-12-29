@@ -2,10 +2,6 @@ import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
 import { Field, Form } from 'react-final-form';
 
-import { ContentCard } from '../../../ContentCard/ContentCard';
-import { MaxCodeLength50KB, Required, composeValidators } from '../../../forms/validations';
-import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor';
-import { FormSelect2 } from '../../../forms/FormSelect2/FormSelect2';
 import {
   getAllowedGradingLanguages,
   getGradingLanguageEditorSubmissionFilename,
@@ -13,6 +9,10 @@ import {
   gradingLanguageNamesMap,
 } from '../../../../modules/api/gabriel/language.js';
 import { decodeBase64 } from '../../../../utils/base64';
+import { ContentCard } from '../../../ContentCard/ContentCard';
+import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor';
+import { FormSelect2 } from '../../../forms/FormSelect2/FormSelect2';
+import { MaxCodeLength50KB, Required, composeValidators } from '../../../forms/validations';
 
 import './ProblemSubmissionEditor.scss';
 

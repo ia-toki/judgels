@@ -1,7 +1,8 @@
-import { Switch, Alignment } from '@blueprintjs/core';
+import { Alignment, Switch } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 
 import { selectShowProblemDifficulty, selectShowProblemTopicTags } from '../../modules/webPrefs/webPrefsSelectors';
+
 import * as webPrefsActions from '../../modules/webPrefs/webPrefsActions';
 
 import './ProblemSpoilerWidget.scss';

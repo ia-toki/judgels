@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { withSubmissionError } from '../../../../modules/form/submissionError';
-import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
+import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 export default function ContestCreateForm({ onSubmit, renderFormComponents }) {
   const slugField = {

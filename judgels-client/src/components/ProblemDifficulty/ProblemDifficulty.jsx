@@ -1,4 +1,4 @@
-import { Tag, Intent } from '@blueprintjs/core';
+import { Intent, Tag } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 
 import { ProblemType } from '../../modules/api/sandalphon/problem';

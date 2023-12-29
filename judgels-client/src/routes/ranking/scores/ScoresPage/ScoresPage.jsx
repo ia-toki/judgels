@@ -5,9 +5,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
-import Pagination from '../../../../components/Pagination/Pagination';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
+
 import * as rankingActions from '../../modules/rankingActions';
 
 import './ScoresPage.scss';

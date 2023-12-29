@@ -1,7 +1,6 @@
 import { stringify } from 'query-string';
 
 import { get, put } from '../http';
-
 import { baseContestURL } from './contest';
 
 export const ContestProblemStatus = {

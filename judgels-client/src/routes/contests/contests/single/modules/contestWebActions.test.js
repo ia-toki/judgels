@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../utils/nock';
+
 import * as contestWebActions from './contestWebActions';
 
 const contestJid = 'contestJid';
@@ -16,7 +17,7 @@ describe('contestWebActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -27,9 +28,7 @@ describe('contestWebActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contest-web/slug/${contestSlug}/with-config`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contest-web/slug/${contestSlug}/with-config`).reply(200, responseBody);
 
       const response = await store.dispatch(contestWebActions.getContestBySlugWithWebConfig(contestSlug));
       expect(response).toEqual(responseBody);
@@ -43,9 +42,7 @@ describe('contestWebActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contest-web/${contestJid}/with-config`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contest-web/${contestJid}/with-config`).reply(200, responseBody);
 
       const response = await store.dispatch(contestWebActions.getContestByJidWithWebConfig(contestJid));
       expect(response).toEqual(responseBody);
@@ -58,9 +55,7 @@ describe('contestWebActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contest-web/${contestJid}/config`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contest-web/${contestJid}/config`).reply(200, responseBody);
 
       await store.dispatch(contestWebActions.getWebConfig(contestJid));
     });

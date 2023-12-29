@@ -3,10 +3,11 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
+import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
+
 import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
-import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 
 class ContestClarificationsWidget extends Component {
   render() {

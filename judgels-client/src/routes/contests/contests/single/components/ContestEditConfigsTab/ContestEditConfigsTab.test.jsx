@@ -4,8 +4,9 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import { parseDuration } from '../../../../../../utils/duration';
-import ContestEditConfigsTab from './ContestEditConfigsTab';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestEditConfigsTab from './ContestEditConfigsTab';
+
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
 jest.mock('../../modules/contestModuleActions');

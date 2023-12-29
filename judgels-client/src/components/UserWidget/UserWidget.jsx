@@ -1,13 +1,14 @@
-import { Alignment, MenuDivider, Menu, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
+import { Alignment, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
 import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { isTLX } from '../../conf';
-import MenuItemLink from '../MenuItemLink/MenuItemLink';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
-import { selectUserProfile, selectIsUserWebConfigLoaded } from '../../routes/jophiel/modules/userWebSelectors';
+import { selectIsUserWebConfigLoaded, selectUserProfile } from '../../routes/jophiel/modules/userWebSelectors';
+import MenuItemLink from '../MenuItemLink/MenuItemLink';
+
 import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
 
 import './UserWidget.scss';

@@ -2,16 +2,17 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../../modules/problemSetProblemSelectors';
+
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 import * as toastActions from '../../../../../../../../../modules/toast/toastActions';
+import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 
 export class ProblemSubmissionPage extends Component {
   state = {

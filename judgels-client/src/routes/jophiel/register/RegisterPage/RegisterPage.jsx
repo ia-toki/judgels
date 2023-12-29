@@ -6,6 +6,7 @@ import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/Si
 import GoogleAuth from '../../components/GoogleAuth/GoogleAuth';
 import ResendActivationEmailButton from '../../components/ResendActivationEmailButton/ResendActivationEmailButton';
 import RegisterForm from '../RegisterForm/RegisterForm';
+
 import * as registerActions from '../modules/registerActions';
 
 import './RegisterPage.scss';

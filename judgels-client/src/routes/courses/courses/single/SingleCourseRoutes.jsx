@@ -2,11 +2,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
+import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { selectCourse } from '../modules/courseSelectors';
 import CourseChaptersSidebar from './CourseChaptersSidebar/CourseChaptersSidebar';
 import SingleCourseContentRoutes from './SingleCourseContentRoutes';
-import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { selectCourse } from '../modules/courseSelectors';
 
 import './SingleCourseRoutes.scss';
 

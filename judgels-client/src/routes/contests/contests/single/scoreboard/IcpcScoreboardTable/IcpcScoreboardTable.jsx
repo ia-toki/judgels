@@ -68,8 +68,8 @@ export function IcpcScoreboardTable({
       state === IcpcScoreboardProblemState.NotAccepted
         ? '-'
         : state === IcpcScoreboardProblemState.Frozen
-        ? '?'
-        : '' + penalty;
+          ? '?'
+          : '' + penalty;
 
     const clickable = canViewSubmissions && attempted;
 

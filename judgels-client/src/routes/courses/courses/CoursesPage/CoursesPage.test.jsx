@@ -4,8 +4,9 @@ import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import CoursesPage from './CoursesPage';
 import courseReducer from '../modules/courseReducer';
+import CoursesPage from './CoursesPage';
+
 import * as courseActions from '../modules/courseActions';
 
 jest.mock('../modules/courseActions');

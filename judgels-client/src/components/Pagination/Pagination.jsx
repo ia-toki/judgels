@@ -1,10 +1,10 @@
 import { Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { push, replace } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import ReactPaginate from 'react-paginate';
 import { connect } from 'react-redux';
-import { push, replace } from 'connected-react-router';
 import { withRouter } from 'react-router';
 
 import './Pagination.scss';

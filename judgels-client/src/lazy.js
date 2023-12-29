@@ -1,5 +1,5 @@
 // https://www.codemzy.com/blog/fix-chunkloaderror-react
-export const lazyRetry = function(componentImport) {
+export const lazyRetry = function (componentImport) {
   return new Promise((resolve, reject) => {
     // check if the window has already been refreshed
     const hasRefreshed = JSON.parse(window.sessionStorage.getItem('retry-lazy-refreshed') || 'false');

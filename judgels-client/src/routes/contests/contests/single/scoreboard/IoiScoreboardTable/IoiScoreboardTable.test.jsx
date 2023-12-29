@@ -86,10 +86,7 @@ describe('IoiScoreboardTable', () => {
   test('points', () => {
     const mapCell = td => td.text();
     const mapRow = tr => [2, 3, 4, 5].map(x => tr.childAt(x)).map(mapCell);
-    const points = wrapper
-      .find('tbody')
-      .children()
-      .map(mapRow);
+    const points = wrapper.find('tbody').children().map(mapRow);
     expect(points).toEqual([
       ['100', '70', '30', '0'],
       ['60', '50', '-', '10'],
@@ -111,21 +108,13 @@ describe('IoiScoreboardTable', () => {
       });
 
       test('shows submission for attempted cell', () => {
-        wrapper
-          .find('tbody')
-          .childAt(0)
-          .childAt(3)
-          .simulate('click');
+        wrapper.find('tbody').childAt(0).childAt(3).simulate('click');
 
         expect(onOpenSubmissionImage).toHaveBeenCalledWith(contestJid, 'JIDUSER2', 'JIDPROG1');
       });
 
       test('does not show submission for unattempted cell', () => {
-        wrapper
-          .find('tbody')
-          .childAt(1)
-          .childAt(4)
-          .simulate('click');
+        wrapper.find('tbody').childAt(1).childAt(4).simulate('click');
 
         expect(onOpenSubmissionImage).not.toBeCalled();
       });
@@ -145,11 +134,7 @@ describe('IoiScoreboardTable', () => {
       });
 
       test('does not show submission', () => {
-        wrapper
-          .find('tbody')
-          .childAt(0)
-          .childAt(3)
-          .simulate('click');
+        wrapper.find('tbody').childAt(0).childAt(3).simulate('click');
 
         expect(onOpenSubmissionImage).not.toBeCalled();
       });

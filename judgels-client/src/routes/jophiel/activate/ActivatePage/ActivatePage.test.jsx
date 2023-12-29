@@ -5,6 +5,7 @@ import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import ActivatePage from './ActivatePage';
+
 import * as activateActions from '../modules/activateActions';
 
 jest.mock('../modules/activateActions');

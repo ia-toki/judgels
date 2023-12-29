@@ -3,15 +3,16 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { ButtonLink } from '../../../../../../../../../../../../components/ButtonLink/ButtonLink';
+import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { VerdictCode } from '../../../../../../../../../../../../modules/api/gabriel/verdict';
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
 import { RefreshChapterProblem } from '../../../../modules/chapterProblemReducer';
-import { VerdictCode } from '../../../../../../../../../../../../modules/api/gabriel/verdict';
+
 import * as breadcrumbsActions from '../../../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 

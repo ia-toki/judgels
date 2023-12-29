@@ -1,16 +1,17 @@
+import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
-import { applyMiddleware, createStore, combineReducers } from 'redux';
-import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import courseReducer, { PutCourse } from '../../../modules/courseReducer';
 import courseChapterReducer from '../modules/courseChapterReducer';
 import SingleCourseChapterDataRoute from './SingleCourseChapterDataRoute';
-import * as courseChapterActions from '../modules/courseChapterActions';
+
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as courseChapterActions from '../modules/courseChapterActions';
 
 jest.mock('../modules/courseChapterActions');
 jest.mock('../../../../../../modules/breadcrumbs/breadcrumbsActions');

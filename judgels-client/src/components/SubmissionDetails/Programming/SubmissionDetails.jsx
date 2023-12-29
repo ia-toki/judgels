@@ -1,22 +1,22 @@
-import { HTMLTable, Button, ProgressBar } from '@blueprintjs/core';
+import { Button, HTMLTable, ProgressBar } from '@blueprintjs/core';
 import { Download } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
-import SourceCode from '../../SourceCode/SourceCode';
-import { FormattedDate } from '../../FormattedDate/FormattedDate';
-import { UserRef } from '../../UserRef/UserRef';
-import { ContentCard } from '../../ContentCard/ContentCard';
-import { VerdictTag } from '../../VerdictTag/VerdictTag';
-import { GradingVerdictTag } from '../../GradingVerdictTag/GradingVerdictTag';
-import { constructProblemName } from '../../../modules/api/sandalphon/problem';
+import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
 import {
   getGradingLanguageName,
   getGradingLanguageSyntaxHighlighterValue,
 } from '../../../modules/api/gabriel/language.js';
-import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
 import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
+import { constructProblemName } from '../../../modules/api/sandalphon/problem';
 import { decodeBase64 } from '../../../utils/base64';
+import { ContentCard } from '../../ContentCard/ContentCard';
+import { FormattedDate } from '../../FormattedDate/FormattedDate';
+import { GradingVerdictTag } from '../../GradingVerdictTag/GradingVerdictTag';
+import SourceCode from '../../SourceCode/SourceCode';
+import { UserRef } from '../../UserRef/UserRef';
+import { VerdictTag } from '../../VerdictTag/VerdictTag';
 
 import './SubmissionDetails.scss';
 

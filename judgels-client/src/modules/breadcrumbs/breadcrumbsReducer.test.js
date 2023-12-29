@@ -1,4 +1,4 @@
-import breadcrumbsReducer, { PushBreadcrumb, PopBreadcrumb } from './breadcrumbsReducer';
+import breadcrumbsReducer, { PopBreadcrumb, PushBreadcrumb } from './breadcrumbsReducer';
 
 describe('breadcrumbsReducer', () => {
   test('PUSH', () => {

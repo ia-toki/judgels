@@ -1,6 +1,6 @@
-import { DelCourse, PutCourse } from './courseReducer';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { courseAPI } from '../../../../modules/api/jerahmeel/course';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { DelCourse, PutCourse } from './courseReducer';
 
 export function getCourses() {
   return async (dispatch, getState) => {

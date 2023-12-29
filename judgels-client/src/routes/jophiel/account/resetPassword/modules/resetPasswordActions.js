@@ -1,5 +1,5 @@
-import { selectUserEmail } from '../../../../../modules/session/sessionSelectors';
 import { userAccountAPI } from '../../../../../modules/api/jophiel/userAccount';
+import { selectUserEmail } from '../../../../../modules/session/sessionSelectors';
 
 export function requestToResetPassword() {
   return async (dispatch, getState) => {

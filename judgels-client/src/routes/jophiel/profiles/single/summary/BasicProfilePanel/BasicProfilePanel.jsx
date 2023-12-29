@@ -1,8 +1,8 @@
 import { HTMLTable } from '@blueprintjs/core';
 
+import { getCountryName } from '../../../../../../assets/data/countries';
 import { Card } from '../../../../../../components/Card/Card';
 import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
-import { getCountryName } from '../../../../../../assets/data/countries';
 
 import './BasicProfilePanel.scss';
 

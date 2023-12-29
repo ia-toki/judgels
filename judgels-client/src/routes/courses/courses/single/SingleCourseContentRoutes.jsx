@@ -1,7 +1,7 @@
 import { Route, Switch, withRouter } from 'react-router';
 
-import MainSingleCourseChapterRoutes from './chapters/single/MainSingleCourseChapterRoutes';
 import CourseOverview from './CourseOverview/CourseOverview';
+import MainSingleCourseChapterRoutes from './chapters/single/MainSingleCourseChapterRoutes';
 
 function SingleCourseContentRoutes() {
   return (

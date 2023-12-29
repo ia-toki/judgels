@@ -1,5 +1,6 @@
-import { selectToken } from '../../../modules/session/sessionSelectors';
 import { userAvatarAPI } from '../../../modules/api/jophiel/userAvatar';
+import { selectToken } from '../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../modules/toast/toastActions';
 
 export function avatarExists(userJid) {

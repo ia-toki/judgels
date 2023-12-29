@@ -1,4 +1,4 @@
-import { Button, Intent, Classes, ControlGroup, Callout } from '@blueprintjs/core';
+import { Button, Callout, Classes, ControlGroup, Intent } from '@blueprintjs/core';
 import { BanCircle, Circle, Confirm, Remove } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { PureComponent } from 'react';

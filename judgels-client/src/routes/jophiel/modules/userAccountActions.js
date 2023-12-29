@@ -1,4 +1,5 @@
 import { userAccountAPI } from '../../../modules/api/jophiel/userAccount';
+
 import * as toastActions from '../../../modules/toast/toastActions';
 
 export function resendActivationEmail(email) {

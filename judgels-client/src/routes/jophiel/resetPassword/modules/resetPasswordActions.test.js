@@ -4,6 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockJophiel } from '../../../../utils/nock';
+
 import * as resetPasswordActions from './resetPasswordActions';
 
 const emailCode = 'code123';
@@ -17,16 +18,14 @@ describe('resetPasswordActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
   describe('resetPassword()', () => {
     describe('when the email code is valid', () => {
       it('succeeds', async () => {
-        nockJophiel()
-          .post(`/user-account/reset-password`, { emailCode, newPassword })
-          .reply(200);
+        nockJophiel().post(`/user-account/reset-password`, { emailCode, newPassword }).reply(200);
 
         await store.dispatch(resetPasswordActions.resetPassword(emailCode, newPassword));
 
@@ -36,9 +35,7 @@ describe('resetPasswordActions', () => {
 
     describe('when the email code is invalid', () => {
       it('throws a more descriptive error', async () => {
-        nockJophiel()
-          .post(`/user-account/reset-password`, { emailCode, newPassword })
-          .reply(400);
+        nockJophiel().post(`/user-account/reset-password`, { emailCode, newPassword }).reply(400);
 
         await expect(store.dispatch(resetPasswordActions.resetPassword(emailCode, newPassword))).rejects.toEqual(
           new Error('Invalid code.')

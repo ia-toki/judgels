@@ -1,8 +1,8 @@
 import { Button, HTMLTable } from '@blueprintjs/core';
 import { Refresh } from '@blueprintjs/icons';
 
-import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
 import { ContentCard } from '../../../ContentCard/ContentCard';
+import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
 import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 

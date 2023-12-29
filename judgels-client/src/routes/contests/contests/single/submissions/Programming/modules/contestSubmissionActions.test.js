@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 
 import { NotFoundError } from '../../../../../../../modules/api/error';
 import { nockUriel } from '../../../../../../../utils/nock';
+
 import * as contestSubmissionActions from './contestSubmissionActions';
 
 const contestJid = 'contest-jid';
@@ -21,7 +22,7 @@ describe('contestSubmissionProgrammingActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -104,9 +105,7 @@ describe('contestSubmissionProgrammingActions', () => {
     const contestSlug = 'contest-a';
 
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/submissions/programming`)
-        .reply(200);
+      nockUriel().post(`/contests/submissions/programming`).reply(200);
 
       await store.dispatch(contestSubmissionActions.createSubmission(contestJid, contestSlug, problemJid, data));
       expect(store.getActions()).toContainEqual(push(`/contests/contest-a/submissions`));

@@ -1,13 +1,12 @@
 import { Divider } from '@blueprintjs/core';
 
+import { ItemType } from '../../../../modules/api/sandalphon/problemBundle';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import { HtmlText } from '../../../HtmlText/HtmlText';
-import { ItemType } from '../../../../modules/api/sandalphon/problemBundle';
-
-import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
+import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';
 import { ItemShortAnswerCard } from './ItemShortAnswerCard/ItemShortAnswerCard';
-import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';
+import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 
 import './ProblemStatementCard.scss';
 

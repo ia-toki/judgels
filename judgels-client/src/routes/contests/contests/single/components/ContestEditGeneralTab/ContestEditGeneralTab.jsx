@@ -4,9 +4,10 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
-import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
-import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { selectContest } from '../../../modules/contestSelectors';
+import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
+import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
+
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 

@@ -2,15 +2,15 @@ import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
-import { isTLX } from '../../../../conf';
-import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
-import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
+import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
+import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { isTLX } from '../../../../conf';
+import { selectUserJid, selectUsername } from '../../modules/profileSelectors';
 import ContestHistoryPage from './contestHistory/ContestHistoryPage/ContestHistoryPage';
 import SubmissionHistoryPage from './submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage';
-import { selectUserJid, selectUsername } from '../../modules/profileSelectors';
+import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
 
 function SingleProfileRoutes({ match, userJid, username }) {
   // Optimization:

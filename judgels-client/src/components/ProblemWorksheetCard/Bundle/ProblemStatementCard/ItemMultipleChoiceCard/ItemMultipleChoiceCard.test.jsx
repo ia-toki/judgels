@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 
-import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
 
 describe('ItemMultipleChoiceCard', () => {
   let wrapper;
@@ -39,29 +39,17 @@ describe('ItemMultipleChoiceCard', () => {
   });
 
   test('Answer the question by clicking a radio button', () => {
-    const radioButton = wrapper
-      .find('label')
-      .children()
-      .find('input')
-      .first();
+    const radioButton = wrapper.find('label').children().find('input').first();
     radioButton.getDOMNode().checked = true;
     radioButton.simulate('change');
     expect(onChoiceChangeFn).toBeCalled();
   });
 
   test('Answer the question and change the answer', () => {
-    const prevAnswer = wrapper
-      .find('label')
-      .children()
-      .find('input')
-      .first();
+    const prevAnswer = wrapper.find('label').children().find('input').first();
     prevAnswer.getDOMNode().checked = true;
     prevAnswer.simulate('click');
-    const currentAnswer = wrapper
-      .find('label')
-      .children()
-      .find('input')
-      .last();
+    const currentAnswer = wrapper.find('label').children().find('input').last();
     currentAnswer.getDOMNode().checked = true;
     currentAnswer.simulate('change');
     expect(onChoiceChangeFn).toHaveBeenCalled();

@@ -47,7 +47,7 @@ export class HtmlText extends Component {
     const spoilers = this.ref.getElementsByClassName('spoiler');
     for (let i = 0; i < spoilers.length; i++) {
       const spoiler = spoilers[i];
-      spoiler.onclick = function() {
+      spoiler.onclick = function () {
         const content = this.getElementsByTagName('div');
         if (content.length > 0) {
           content[0].style.display = content[0].style.display === 'block' ? 'none' : 'block';

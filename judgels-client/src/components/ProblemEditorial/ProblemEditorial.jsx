@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
-import { UserRef } from '../UserRef/UserRef';
 import RichStatementText from '../RichStatementText/RichStatementText';
+import { UserRef } from '../UserRef/UserRef';
 
 export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
   const renderWriters = () => {

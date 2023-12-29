@@ -1,7 +1,7 @@
 import { Route, withRouter } from 'react-router';
 
-import SingleProblemSetProblemRoutes from './SingleProblemSetProblemRoutes';
 import SingleProblemSetProblemDataRoute from './SingleProblemSetProblemDataRoute';
+import SingleProblemSetProblemRoutes from './SingleProblemSetProblemRoutes';
 
 function MainSingleProblemSetProblemRoutes() {
   return (

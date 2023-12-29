@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/prism-light';
+
 import c from 'react-syntax-highlighter/languages/prism/c';
 import cpp from 'react-syntax-highlighter/languages/prism/cpp';
 import go from 'react-syntax-highlighter/languages/prism/go';
@@ -7,6 +7,7 @@ import java from 'react-syntax-highlighter/languages/prism/java';
 import pascal from 'react-syntax-highlighter/languages/prism/pascal';
 import python from 'react-syntax-highlighter/languages/prism/python';
 import rust from 'react-syntax-highlighter/languages/prism/rust';
+import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/prism-light';
 import coy from 'react-syntax-highlighter/styles/prism/coy';
 import tomorrow from 'react-syntax-highlighter/styles/prism/tomorrow';
 

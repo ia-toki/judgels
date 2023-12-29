@@ -4,10 +4,11 @@ import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ChapterResourcesPage from './ChapterResourcesPage';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import courseReducer, { PutCourse } from '../../../../../modules/courseReducer';
 import courseChapterReducer, { PutCourseChapter } from '../../../modules/courseChapterReducer';
+import ChapterResourcesPage from './ChapterResourcesPage';
+
 import * as chapterResourceActions from '../modules/chapterResourceActions';
 
 jest.mock('../modules/chapterResourceActions');

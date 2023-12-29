@@ -1,7 +1,7 @@
-import { HtmlText } from '../../../../components/HtmlText/HtmlText';
-import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
-import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
+import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
+import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
 
 import './CourseCard.scss';
 

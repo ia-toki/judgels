@@ -1,12 +1,13 @@
+import { parse } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { parse } from 'query-string';
 
+import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
-import { Card } from '../../../../components/Card/Card';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
+
 import * as problemSetActions from '../modules/problemSetActions';
 
 class ProblemSetsPage extends Component {

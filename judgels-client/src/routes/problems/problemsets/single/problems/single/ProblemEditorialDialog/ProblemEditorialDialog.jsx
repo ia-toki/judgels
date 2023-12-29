@@ -1,13 +1,14 @@
-import { Intent, Card, Button, Classes, Dialog } from '@blueprintjs/core';
+import { Button, Card, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
 import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';
+import { selectEditorialLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../modules/problemSetProblemSelectors';
-import { selectEditorialLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
+
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
 import './ProblemEditorialDialog.scss';

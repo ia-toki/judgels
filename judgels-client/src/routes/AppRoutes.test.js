@@ -1,6 +1,5 @@
-import { JophielRole } from '../modules/api/jophiel/role';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
-
+import { JophielRole } from '../modules/api/jophiel/role';
 import { getVisibleAppRoutes } from './AppRoutes';
 
 describe('AppRoutes', () => {

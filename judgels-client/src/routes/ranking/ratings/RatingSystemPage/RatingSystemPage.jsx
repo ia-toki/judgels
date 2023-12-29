@@ -1,7 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
 
-import { Card } from '../../../../components/Card/Card';
 import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { Card } from '../../../../components/Card/Card';
 import { getRatingClass } from '../../../../modules/api/jophiel/userRating';
 
 import './RatingSystemPage.scss';

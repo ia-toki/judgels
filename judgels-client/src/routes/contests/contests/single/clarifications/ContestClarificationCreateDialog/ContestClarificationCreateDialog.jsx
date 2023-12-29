@@ -1,4 +1,4 @@
-import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
 import { Component } from 'react';
 

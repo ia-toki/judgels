@@ -1,5 +1,6 @@
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { contestManagerAPI } from '../../../../../../modules/api/uriel/contestManager';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export function getManagers(contestJid, page) {

@@ -65,10 +65,7 @@ describe('ItemShortAnswerForm', () => {
         const textInput = wrapper.find('input');
         textInput.getDOMNode().value = 'answer';
         textInput.simulate('input');
-        const helpText = wrapper
-          .find('div')
-          .at(1)
-          .text();
+        const helpText = wrapper.find('div').at(1).text();
         expect(helpText).toContain('Wrong answer format!');
       });
 
@@ -137,10 +134,7 @@ describe('ItemShortAnswerForm', () => {
         const textInput = wrapper.find('input');
         textInput.getDOMNode().value = 'answer';
         textInput.simulate('input');
-        const helpText = wrapper
-          .find('div')
-          .at(1)
-          .text();
+        const helpText = wrapper.find('div').at(1).text();
         expect(helpText).toContain('Wrong answer format!');
       });
 

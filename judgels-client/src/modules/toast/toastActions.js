@@ -1,4 +1,4 @@
-import { Intent, Position, OverlayToaster } from '@blueprintjs/core';
+import { Intent, OverlayToaster, Position } from '@blueprintjs/core';
 import { Envelope, Tick, WarningSign } from '@blueprintjs/icons';
 
 import { ForbiddenError, NotFoundError, RemoteError } from '../api/error';

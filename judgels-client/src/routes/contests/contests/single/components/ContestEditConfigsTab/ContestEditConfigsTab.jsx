@@ -3,13 +3,13 @@ import { Edit } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
-
-import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
-import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { selectContest } from '../../../modules/contestSelectors';
+import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
+import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
+
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
 class ContestEditConfigsTab extends Component {

@@ -4,10 +4,11 @@ import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestSubmissionPage from './ContestSubmissionPage';
 import { OutputOnlyOverrides } from '../../../../../../../../modules/api/gabriel/language';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
+import ContestSubmissionPage from './ContestSubmissionPage';
+
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 
 jest.mock('../../modules/contestSubmissionActions');

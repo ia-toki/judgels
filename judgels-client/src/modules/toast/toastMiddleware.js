@@ -1,4 +1,5 @@
 import { SubmissionError } from '../form/submissionError';
+
 import * as toastActions from './toastActions';
 
 const toastMiddleware = store => next => async action => {

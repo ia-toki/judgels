@@ -1,11 +1,11 @@
-import { Callout, Classes, Button, Intent, Dialog } from '@blueprintjs/core';
+import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { ChapterProblemsTable } from '../ChapterProblemsTable/ChapterProblemsTable';
+import { Alias } from '../../../../components/forms/validations';
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
 import ChapterProblemEditForm from '../ChapterProblemEditForm/ChapterProblemEditForm';
-import { Alias } from '../../../../components/forms/validations';
+import { ChapterProblemsTable } from '../ChapterProblemsTable/ChapterProblemsTable';
 
 export class ChapterProblemEditDialog extends Component {
   state = {

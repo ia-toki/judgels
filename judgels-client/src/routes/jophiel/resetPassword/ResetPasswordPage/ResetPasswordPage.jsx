@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
+
 import * as resetPasswordActions from '../modules/resetPasswordActions';
 
 export const ResetPasswordPage = ({ onResetPassword }) => (

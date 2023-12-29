@@ -5,6 +5,7 @@ import { sessionAPI } from '../../../modules/api/jophiel/session';
 import { userAccountAPI } from '../../../modules/api/jophiel/userAccount';
 import { userSearchAPI } from '../../../modules/api/jophiel/userSearch';
 import { SubmissionError } from '../../../modules/form/submissionError';
+
 import { afterLogin } from '../login/modules/loginActions';
 
 export function logIn(idToken) {

@@ -1,5 +1,6 @@
-import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { contestModuleAPI } from '../../../../../modules/api/uriel/contestModule';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../../modules/toast/toastActions';
 
 export function getModules(contestJid) {

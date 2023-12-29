@@ -2,9 +2,10 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { nockUriel } from '../../../../../../utils/nock';
-import { SubmissionError } from '../../../../../../modules/form/submissionError';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
+import { SubmissionError } from '../../../../../../modules/form/submissionError';
+import { nockUriel } from '../../../../../../utils/nock';
+
 import * as contestProblemActions from './contestProblemActions';
 
 const contestJid = 'contest-jid';
@@ -17,7 +18,7 @@ describe('contestProblemActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -27,9 +28,7 @@ describe('contestProblemActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/problems`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/problems`).reply(200, responseBody);
 
       const response = await store.dispatch(contestProblemActions.getProblems(contestJid));
       expect(response).toEqual(responseBody);

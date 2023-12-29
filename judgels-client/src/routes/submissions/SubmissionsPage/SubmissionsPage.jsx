@@ -7,8 +7,9 @@ import { withRouter } from 'react-router';
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import Pagination from '../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { selectMaybeUserJid, selectMaybeUsername } from '../../../modules/session/sessionSelectors';
+import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
+
 import * as submissionActions from '../modules/submissionActions';
 
 export class SubmissionsPage extends Component {

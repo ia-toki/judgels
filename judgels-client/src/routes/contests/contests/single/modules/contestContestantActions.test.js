@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../utils/nock';
+
 import * as contestContestantActions from './contestContestantActions';
 
 const contestJid = 'contestJid';
@@ -15,7 +16,7 @@ describe('contestContestantActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
@@ -23,9 +24,7 @@ describe('contestContestantActions', () => {
     const responseBody = { data: 'CONTESTANT' };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/contestants/me/state`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/contestants/me/state`).reply(200, responseBody);
 
       const response = await store.dispatch(contestContestantActions.getMyContestantState(contestJid));
       expect(response).toEqual(responseBody);
@@ -41,10 +40,7 @@ describe('contestContestantActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/contestants`)
-        .query({ page })
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/contestants`).query({ page }).reply(200, responseBody);
 
       const response = await store.dispatch(contestContestantActions.getContestants(contestJid, page));
       expect(response).toEqual(responseBody);
@@ -55,9 +51,7 @@ describe('contestContestantActions', () => {
     const responseBody = 3;
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/contestants/approved/count`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/contestants/approved/count`).reply(200, responseBody);
 
       const response = await store.dispatch(contestContestantActions.getApprovedContestantsCount(contestJid));
       expect(response).toEqual(responseBody);
@@ -72,9 +66,7 @@ describe('contestContestantActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .get(`/contests/${contestJid}/contestants/approved`)
-        .reply(200, responseBody);
+      nockUriel().get(`/contests/${contestJid}/contestants/approved`).reply(200, responseBody);
 
       const response = await store.dispatch(contestContestantActions.getApprovedContestants(contestJid));
       expect(response).toEqual(responseBody);
@@ -83,9 +75,7 @@ describe('contestContestantActions', () => {
 
   describe('registerMyselfAsContestant()', () => {
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/contestants/me`)
-        .reply(200);
+      nockUriel().post(`/contests/${contestJid}/contestants/me`).reply(200);
 
       await store.dispatch(contestContestantActions.registerMyselfAsContestant(contestJid));
     });
@@ -110,9 +100,7 @@ describe('contestContestantActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/contestants/batch-upsert`, usernames)
-        .reply(200, responseBody);
+      nockUriel().post(`/contests/${contestJid}/contestants/batch-upsert`, usernames).reply(200, responseBody);
 
       const response = await store.dispatch(contestContestantActions.upsertContestants(contestJid, usernames));
       expect(response).toEqual(responseBody);
@@ -126,9 +114,7 @@ describe('contestContestantActions', () => {
     };
 
     it('calls API', async () => {
-      nockUriel()
-        .post(`/contests/${contestJid}/contestants/batch-delete`, usernames)
-        .reply(200, responseBody);
+      nockUriel().post(`/contests/${contestJid}/contestants/batch-delete`, usernames).reply(200, responseBody);
 
       const response = await store.dispatch(contestContestantActions.deleteContestants(contestJid, usernames));
       expect(response).toEqual(responseBody);

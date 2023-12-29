@@ -2,11 +2,12 @@ import { push } from 'connected-react-router';
 
 import { isTLX } from '../../../../conf';
 import { BadRequestError, NotFoundError, RemoteError } from '../../../../modules/api/error';
-import { SubmissionError } from '../../../../modules/form/submissionError';
-import { contestAPI, ContestErrors } from '../../../../modules/api/uriel/contest';
 import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
+import { ContestErrors, contestAPI } from '../../../../modules/api/uriel/contest';
+import { SubmissionError } from '../../../../modules/form/submissionError';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { DelContest, EditContest, PutContest } from './contestReducer';
+
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function createContest(data) {

@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTag/GradingVerdictTag';
-import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { constructContainerUrl, constructProblemUrl } from '../../../../../../modules/api/jerahmeel/submission';
 import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
+import { constructContainerUrl, constructProblemUrl } from '../../../../../../modules/api/jerahmeel/submission';
+import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
 
 import '../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
 

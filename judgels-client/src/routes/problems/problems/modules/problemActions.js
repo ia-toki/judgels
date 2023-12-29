@@ -1,5 +1,5 @@
-import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { problemAPI } from '../../../../modules/api/jerahmeel/problem';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
 
 export function getProblems(tags, page) {
   return async (dispatch, getState) => {

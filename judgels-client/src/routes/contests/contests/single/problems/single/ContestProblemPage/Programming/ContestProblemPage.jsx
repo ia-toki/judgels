@@ -2,17 +2,18 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { selectContest } from '../../../../../modules/contestSelectors';
-import * as contestProblemActions from '../../../modules/contestProblemActions';
-import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
-import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
+
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
+import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 import './ContestProblemPage.scss';
 

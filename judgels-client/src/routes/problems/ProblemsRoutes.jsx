@@ -1,12 +1,12 @@
 import { Manual, PanelStats } from '@blueprintjs/icons';
 import { Route } from 'react-router';
 
-import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import ProblemsPage from './problems/ProblemsPage/ProblemsPage';
+import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import ProblemTagFilter from './problems/ProblemTagFilter/ProblemTagFilter';
-import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
+import ProblemsPage from './problems/ProblemsPage/ProblemsPage';
 import ProblemSetArchiveFilter from './problemsets/ProblemSetArchiveFilter/ProblemSetArchiveFilter';
+import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 
 import './ProblemsRoutes.scss';
 

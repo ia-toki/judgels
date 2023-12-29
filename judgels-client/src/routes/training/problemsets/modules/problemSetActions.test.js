@@ -3,8 +3,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
-import { SubmissionError } from '../../../../modules/form/submissionError';
 import { ProblemSetErrors } from '../../../../modules/api/jerahmeel/problemSet';
+import { SubmissionError } from '../../../../modules/form/submissionError';
+
 import * as problemSetActions from './problemSetActions';
 
 const problemSetJid = 'problemSet-jid';
@@ -17,7 +18,7 @@ describe('problemSetActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 

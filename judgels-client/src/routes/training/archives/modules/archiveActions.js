@@ -1,7 +1,8 @@
-import { selectToken } from '../../../../modules/session/sessionSelectors';
-import { SubmissionError } from '../../../../modules/form/submissionError';
 import { BadRequestError } from '../../../../modules/api/error';
-import { archiveAPI, ArchiveErrors } from '../../../../modules/api/jerahmeel/archive';
+import { ArchiveErrors, archiveAPI } from '../../../../modules/api/jerahmeel/archive';
+import { SubmissionError } from '../../../../modules/form/submissionError';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function createArchive(data) {

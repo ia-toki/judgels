@@ -3,8 +3,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
-import { SubmissionError } from '../../../../modules/form/submissionError';
 import { ArchiveErrors } from '../../../../modules/api/jerahmeel/archive';
+import { SubmissionError } from '../../../../modules/form/submissionError';
+
 import * as archiveActions from './archiveActions';
 
 const archiveJid = 'archive-jid';
@@ -17,7 +18,7 @@ describe('archiveActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 

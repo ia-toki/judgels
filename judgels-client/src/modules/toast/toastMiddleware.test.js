@@ -1,5 +1,6 @@
 import { NotFoundError } from '../api/error';
 import toastMiddleware from './toastMiddleware';
+
 import * as toastActions from './toastActions';
 
 jest.mock('./toastActions');

@@ -1,8 +1,8 @@
 import { FormGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { getIntent } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
+import { getIntent } from '../meta';
 
 import './FormTableInput.scss';
 

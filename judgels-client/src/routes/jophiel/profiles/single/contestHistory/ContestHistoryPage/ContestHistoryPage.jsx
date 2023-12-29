@@ -7,6 +7,7 @@ import { ContestLink } from '../../../../../../components/ContestLink/ContestLin
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
+
 import * as profileActions from '../../modules/profileActions';
 
 import './ContestHistoryPage.scss';

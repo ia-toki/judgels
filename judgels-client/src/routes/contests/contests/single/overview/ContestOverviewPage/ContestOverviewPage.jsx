@@ -1,11 +1,12 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
+import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectContest } from '../../../modules/contestSelectors';
+import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
+
 import * as contestActions from '../../../modules/contestActions';
 
 import './ContestOverviewPage.scss';

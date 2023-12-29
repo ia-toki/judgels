@@ -24,12 +24,14 @@
   &--future {
     background-color: inherit;
 
-    a h4, .chapter-problem-card__heading > .bp5-icon {
+    a h4,
+    .chapter-problem-card__heading > .bp5-icon {
       font-weight: normal !important;
       color: #bcc0c2;
     }
 
-    a:hover h4, a:hover .chapter-problem-card__heading > .bp5-icon {
+    a:hover h4,
+    a:hover .chapter-problem-card__heading > .bp5-icon {
       color: inherit !important;
     }
 
@@ -44,7 +46,8 @@
     &--future {
       background-color: inherit;
 
-      a h4, .chapter-problem-card__heading > .bp5-icon {
+      a h4,
+      .chapter-problem-card__heading > .bp5-icon {
         font-weight: normal !important;
         color: #5d6c79;
       }

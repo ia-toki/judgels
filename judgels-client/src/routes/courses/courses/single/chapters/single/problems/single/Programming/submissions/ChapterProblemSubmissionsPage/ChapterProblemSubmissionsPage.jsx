@@ -5,18 +5,19 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
-import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
-import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
+import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../../../../../components/Pagination/Pagination';
-import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTable/ChapterProblemSubmissionsTable';
+import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import {
   selectMaybeUserJid,
   selectMaybeUsername,
 } from '../../../../../../../../../../../modules/session/sessionSelectors';
+import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
 import { selectCourse } from '../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../modules/courseChapterSelectors';
+import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTable/ChapterProblemSubmissionsTable';
+
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
 
 class ChapterProblemSubmissionsPage extends Component {

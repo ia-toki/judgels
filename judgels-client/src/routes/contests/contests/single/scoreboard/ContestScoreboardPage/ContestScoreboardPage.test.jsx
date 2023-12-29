@@ -1,16 +1,17 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
-import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
-import ContestScoreboardPage from './ContestScoreboardPage';
-import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
-import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
+import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
+import ContestScoreboardPage from './ContestScoreboardPage';
+
+import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 jest.mock('../modules/contestScoreboardActions');
 

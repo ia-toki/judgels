@@ -3,9 +3,9 @@ import { Route, Switch, withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
-import ChapterResourcesPage from './resources/ChapterResourcesPage/ChapterResourcesPage';
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
+import ChapterResourcesPage from './resources/ChapterResourcesPage/ChapterResourcesPage';
 
 function SingleCourseChapterRoutes({ chapter, match }) {
   // Optimization:

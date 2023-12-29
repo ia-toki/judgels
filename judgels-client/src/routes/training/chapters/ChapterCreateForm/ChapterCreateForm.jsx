@@ -1,8 +1,8 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { Required } from '../../../../components/forms/validations';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { Required } from '../../../../components/forms/validations';
 
 export default function ChapterCreateForm({ onSubmit, renderFormComponents }) {
   const nameField = {

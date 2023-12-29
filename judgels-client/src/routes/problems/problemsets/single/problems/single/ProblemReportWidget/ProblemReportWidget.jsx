@@ -1,19 +1,20 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 
-import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
-import ProblemSpoilerWidget from '../../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import ProblemDifficulty from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
+import ProblemSpoilerWidget from '../../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import ProblemTopicTags from '../../../../../../../components/ProblemTopicTags/ProblemTopicTags';
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
+import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
-import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../modules/problemSetProblemSelectors';
+import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
+
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
 import './ProblemReportWidget.scss';

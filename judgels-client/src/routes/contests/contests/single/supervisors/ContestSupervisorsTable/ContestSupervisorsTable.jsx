@@ -6,7 +6,6 @@ import {
   supervisorManagementPermissionShortNamesMap,
 } from '../../../../../../modules/api/uriel/contestSupervisor';
 import { ContestTab } from '../../../../../../modules/api/uriel/contestWeb';
-
 import { contestIcon } from '../../modules/contestIcon';
 
 import './ContestSupervisorsTable.scss';

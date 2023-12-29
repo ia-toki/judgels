@@ -13,9 +13,7 @@ export class InfoPanel extends Component {
   };
 
   render() {
-    const action = this.state.isEditing ? (
-      undefined
-    ) : (
+    const action = this.state.isEditing ? undefined : (
       <Button small data-key="edit" text="Edit" intent={Intent.PRIMARY} onClick={this.toggleEdit} />
     );
 

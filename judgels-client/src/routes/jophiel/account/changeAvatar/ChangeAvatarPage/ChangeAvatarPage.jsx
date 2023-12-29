@@ -2,11 +2,12 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { Card } from '../../../../../components/Card/Card';
 import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import ChangeAvatarForm from './ChangeAvatarForm';
+import { Card } from '../../../../../components/Card/Card';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
+import ChangeAvatarForm from './ChangeAvatarForm';
+
 import * as avatarActions from '../../../modules/avatarActions';
 
 import './ChangeAvatarPanel.scss';

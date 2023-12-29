@@ -1,12 +1,13 @@
 import { languageDisplayNamesMap } from '../api/sandalphon/language';
 import {
-  PutStatementLanguage,
   PutEditorialLanguage,
   PutGradingLanguage,
   PutIsDarkMode,
   PutShowProblemDifficulty,
   PutShowProblemTopicTags,
+  PutStatementLanguage,
 } from './webPrefsReducer';
+
 import * as toastActions from '../toast/toastActions';
 
 export const switchDarkMode = PutIsDarkMode;

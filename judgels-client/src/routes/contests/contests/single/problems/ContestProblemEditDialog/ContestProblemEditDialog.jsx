@@ -1,4 +1,4 @@
-import { Callout, Classes, Button, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { Component } from 'react';

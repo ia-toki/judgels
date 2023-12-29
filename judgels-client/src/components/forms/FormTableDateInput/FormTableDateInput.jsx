@@ -2,10 +2,9 @@ import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 
 import { formatDateTime, parseDateTime } from '../../../utils/datetime';
-
-import { getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
+import { getIntentClassName } from '../meta';
 
 import './FormTableDateInput.scss';
 

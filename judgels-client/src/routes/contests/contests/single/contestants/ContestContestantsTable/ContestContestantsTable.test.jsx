@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 
-import { ContestContestantsTable } from './ContestContestantsTable';
-import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
 import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { ContestContestantsTable } from './ContestContestantsTable';
 
 describe('ContestContestantsTable', () => {
   let virtualModuleConfig;
@@ -57,13 +57,7 @@ describe('ContestContestantsTable', () => {
       const usernames = wrapper
         .find('tbody')
         .children()
-        .map(
-          tr =>
-            tr
-              .childAt(1)
-              .find(UserRef)
-              .props().profile.username
-        );
+        .map(tr => tr.childAt(1).find(UserRef).props().profile.username);
       expect(usernames).toEqual(['userA', 'userB', 'userC', 'userD', 'userE']);
     });
   });
@@ -86,35 +80,19 @@ describe('ContestContestantsTable', () => {
       const usernames = wrapper
         .find('tbody')
         .children()
-        .map(
-          tr =>
-            tr
-              .childAt(1)
-              .find(UserRef)
-              .props().profile.username
-        );
+        .map(tr => tr.childAt(1).find(UserRef).props().profile.username);
       expect(usernames).toEqual(['userA', 'userD', 'userE', 'userB', 'userC']);
 
       const progresses = wrapper
         .find('tbody')
         .children()
-        .map(tr =>
-          tr
-            .childAt(2)
-            .find(ProgressBar)
-            .map(mapProgressBar)
-        );
+        .map(tr => tr.childAt(2).find(ProgressBar).map(mapProgressBar));
       expect(progresses).toEqual([[[50, 50]], [[40, 50]], [[10, 50]], [], []]);
 
       const startTimes = wrapper
         .find('tbody')
         .children()
-        .map(tr =>
-          tr
-            .childAt(3)
-            .find(FormattedDate)
-            .map(mapStartTime)
-        );
+        .map(tr => tr.childAt(3).find(FormattedDate).map(mapStartTime));
       expect(startTimes).toEqual([[20], [30], [65], [], []]);
     });
   });

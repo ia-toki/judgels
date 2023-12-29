@@ -1,5 +1,6 @@
-import { selectToken } from '../../../modules/session/sessionSelectors';
 import { userInfoAPI } from '../../../modules/api/jophiel/userInfo';
+import { selectToken } from '../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../modules/toast/toastActions';
 
 export function getInfo(userJid) {

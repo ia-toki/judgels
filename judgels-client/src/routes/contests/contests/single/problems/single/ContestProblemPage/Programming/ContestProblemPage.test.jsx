@@ -1,20 +1,21 @@
+import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { act } from 'preact/test-utils';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
-import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
-import ContestProblemPage from './ContestProblemPage';
+import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
-import * as contestProblemActions from '../../../modules/contestProblemActions';
-import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
-import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import ContestProblemPage from './ContestProblemPage';
+
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
+import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 jest.mock('../../../modules/contestProblemActions');
 jest.mock('../../../../submissions/Programming/modules/contestSubmissionActions');

@@ -1,8 +1,9 @@
 import { Component } from 'react';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
+
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 

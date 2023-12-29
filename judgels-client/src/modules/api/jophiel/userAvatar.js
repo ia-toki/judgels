@@ -1,5 +1,4 @@
 import { delete_, get, postMultipart } from '../http';
-
 import { baseUserURL } from './user';
 
 const baseURL = userJid => `${baseUserURL(userJid)}/avatar`;

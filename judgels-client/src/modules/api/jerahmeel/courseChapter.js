@@ -1,5 +1,4 @@
 import { get, put } from '../http';
-
 import { baseCourseURL } from './course';
 
 const baseURL = courseJid => `${baseCourseURL(courseJid)}/chapters`;

@@ -1,8 +1,8 @@
 import { Checkbox } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { getIntentClassName } from '../meta';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
+import { getIntentClassName } from '../meta';
 
 import './FormTableCheckbox.scss';
 

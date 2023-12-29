@@ -1,13 +1,13 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { withSubmissionError } from '../../../../../../modules/form/submissionError';
-import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
-import { composeValidators, Required, Slug } from '../../../../../../components/forms/validations';
-import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
-import { FormTableSelect2 } from '../../../../../../components/forms/FormTableSelect2/FormTableSelect2';
 import { FormTableDateInput } from '../../../../../../components/forms/FormTableDateInput/FormTableDateInput';
+import { FormTableSelect2 } from '../../../../../../components/forms/FormTableSelect2/FormTableSelect2';
+import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { Required, Slug, composeValidators } from '../../../../../../components/forms/validations';
+import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
+import { withSubmissionError } from '../../../../../../modules/form/submissionError';
 
 export default function ContestEditGeneralForm({ onSubmit, initialValues, onCancel }) {
   const slugField = {

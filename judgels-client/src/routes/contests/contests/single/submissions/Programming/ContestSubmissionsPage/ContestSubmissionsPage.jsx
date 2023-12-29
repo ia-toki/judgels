@@ -1,17 +1,18 @@
+import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
 
-import { reallyConfirm } from '../../../../../../../utils/confirmation';
-import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
-import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
-import Pagination from '../../../../../../../components/Pagination/Pagination';
-import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
+import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../../../components/Pagination/Pagination';
+import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
+import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { reallyConfirm } from '../../../../../../../utils/confirmation';
 import { selectContest } from '../../../../modules/contestSelectors';
+import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
+
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 export class ContestSubmissionsPage extends Component {

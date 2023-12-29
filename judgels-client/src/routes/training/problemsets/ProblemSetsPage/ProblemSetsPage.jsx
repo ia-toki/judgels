@@ -2,13 +2,14 @@ import { parse } from 'query-string';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Pagination from '../../../../components/Pagination/Pagination';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import Pagination from '../../../../components/Pagination/Pagination';
 import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
 import { ProblemSetEditDialog } from '../ProblemSetEditDialog/ProblemSetEditDialog';
 import { ProblemSetProblemEditDialog } from '../ProblemSetProblemEditDialog/ProblemSetProblemEditDialog';
 import { ProblemSetsTable } from '../ProblemSetsTable/ProblemSetsTable';
+
 import * as problemSetActions from '../modules/problemSetActions';
 
 class ProblemSetsPage extends Component {

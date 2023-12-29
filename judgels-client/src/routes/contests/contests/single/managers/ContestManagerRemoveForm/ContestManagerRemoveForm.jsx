@@ -1,8 +1,8 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { composeValidators, Required, Max100Lines } from '../../../../../../components/forms/validations';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { Max100Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
 
 export default function ContestManagerRemoveForm({ onSubmit, renderFormComponents }) {
   const usernamesField = {

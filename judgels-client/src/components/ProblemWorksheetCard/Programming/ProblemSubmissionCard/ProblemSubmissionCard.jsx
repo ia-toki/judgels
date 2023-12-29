@@ -1,8 +1,8 @@
 import { Callout } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
 
-import { ContentCard } from '../../../ContentCard/ContentCard';
 import { getAllowedGradingLanguages } from '../../../../modules/api/gabriel/language.js';
+import { ContentCard } from '../../../ContentCard/ContentCard';
 import ProblemSubmissionForm from '../ProblemSubmissionForm/ProblemSubmissionForm';
 
 export function ProblemSubmissionCard({

@@ -1,8 +1,9 @@
-import { selectToken } from '../../../../modules/session/sessionSelectors';
-import { SubmissionError } from '../../../../modules/form/submissionError';
 import { BadRequestError } from '../../../../modules/api/error';
-import { courseAPI, CourseErrors } from '../../../../modules/api/jerahmeel/course';
+import { CourseErrors, courseAPI } from '../../../../modules/api/jerahmeel/course';
 import { courseChapterAPI } from '../../../../modules/api/jerahmeel/courseChapter';
+import { SubmissionError } from '../../../../modules/form/submissionError';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function createCourse(data) {

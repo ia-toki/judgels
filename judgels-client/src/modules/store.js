@@ -1,18 +1,18 @@
-import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { createBrowserHistory } from 'history';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
 
+import breadcrumbsReducer from './breadcrumbs/breadcrumbsReducer';
+import jerahmeelReducer from './jerahmeel/jerahmeelReducer';
+import jophielReducer from './jophiel/jophielReducer';
 import sessionReducer from './session/sessionReducer';
-import webPrefsReducer from './webPrefs/webPrefsReducer';
 import toastMiddleware from './toast/toastMiddleware';
 import tokenGateMiddleware from './tokenGate/tokenGateMiddleware';
-import jophielReducer from './jophiel/jophielReducer';
 import urielReducer from './uriel/urielReducer';
-import jerahmeelReducer from './jerahmeel/jerahmeelReducer';
-import breadcrumbsReducer from './breadcrumbs/breadcrumbsReducer';
+import webPrefsReducer from './webPrefs/webPrefsReducer';
 
 export const history = createBrowserHistory();
 

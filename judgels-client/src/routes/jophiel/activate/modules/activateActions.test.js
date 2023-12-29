@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { nockJophiel } from '../../../../utils/nock';
+
 import * as activateActions from './activateActions';
 
 const emailCode = 'code';
@@ -15,15 +16,13 @@ describe('activateActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
   describe('activateUser()', () => {
     it('calls API', async () => {
-      nockJophiel()
-        .post(`/user-account/activate/${emailCode}`)
-        .reply(200);
+      nockJophiel().post(`/user-account/activate/${emailCode}`).reply(200);
 
       await store.dispatch(activateActions.activateUser(emailCode));
     });

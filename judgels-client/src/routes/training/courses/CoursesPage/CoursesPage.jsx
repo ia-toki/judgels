@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import { CourseChapterEditDialog } from '../CourseChapterEditDialog/CourseChapterEditDialog';
 import { CourseCreateDialog } from '../CourseCreateDialog/CourseCreateDialog';
 import { CourseEditDialog } from '../CourseEditDialog/CourseEditDialog';
 import { CoursesTable } from '../CoursesTable/CoursesTable';
-import { CourseChapterEditDialog } from '../CourseChapterEditDialog/CourseChapterEditDialog';
+
 import * as courseActions from '../modules/courseActions';
 
 class CoursesPage extends Component {

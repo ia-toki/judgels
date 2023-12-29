@@ -1,11 +1,12 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { isTLX } from '../../../../../../conf';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { isTLX } from '../../../../../../conf';
+import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
-import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
+
 import * as avatarActions from '../../../../modules/avatarActions';
 import * as profileActions from '../../modules/profileActions';
 

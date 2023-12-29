@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router';
+import { Route, withRouter } from 'react-router';
 
-import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
-import ContestSubmissionSummaryPage from './ContestSubmissionSummaryPage/ContestSubmissionSummaryPage';
-import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import { ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
+import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
+import ContestSubmissionSummaryPage from './ContestSubmissionSummaryPage/ContestSubmissionSummaryPage';
+import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
 
 function ContestSubmissionRoutes({ webConfig }) {
   if (!webConfig) {

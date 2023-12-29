@@ -1,14 +1,14 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { getGradingLanguageName, gradingLanguages } from '../../../../../../modules/api/gabriel/language.js';
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
-import { FormTableInput } from '../../../../../../components/forms/FormTableInput/FormTableInput';
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
-import { FormTableCheckbox } from '../../../../../../components/forms/FormTableCheckbox/FormTableCheckbox';
-import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
-import { composeValidators, NonnegativeNumber, Required } from '../../../../../../components/forms/validations';
+import { FormTableCheckbox } from '../../../../../../components/forms/FormTableCheckbox/FormTableCheckbox';
+import { FormTableInput } from '../../../../../../components/forms/FormTableInput/FormTableInput';
+import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { NonnegativeNumber, Required, composeValidators } from '../../../../../../components/forms/validations';
+import { getGradingLanguageName, gradingLanguages } from '../../../../../../modules/api/gabriel/language.js';
 
 import './ContestEditConfigsForm.scss';
 

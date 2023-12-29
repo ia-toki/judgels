@@ -1,19 +1,18 @@
-import { Switch, withRouter, Route } from 'react-router';
+import { Route, Switch, withRouter } from 'react-router';
 
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
-
 import HomePage from '../home/HomePage/HomePage';
+import JophielAccountRoutes from './JophielAccountRoutes';
+import JophielProfilesRoutes from './JophielProfilesRoutes';
+import ActivatePage from './activate/ActivatePage/ActivatePage';
+import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
 import LoginPage from './login/LoginPage/LoginPage';
 import LogoutPage from './logout/LogoutPage/LogoutPage';
 import NeedActivationPage from './needActivation/NeedActivationPage/NeedActivationPage';
 import RegisterPage from './register/RegisterPage/RegisterPage';
 import RegisteredPage from './registered/RegisteredPage/RegisteredPage';
-import ActivatePage from './activate/ActivatePage/ActivatePage';
-import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
-import JophielAccountRoutes from './JophielAccountRoutes';
-import JophielProfilesRoutes from './JophielProfilesRoutes';
 
 function JophielRoutes() {
   return (

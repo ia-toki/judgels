@@ -1,6 +1,6 @@
-import { formatDateTime } from '../../../../../../utils/datetime';
-import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
+import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
+import { formatDateTime } from '../../../../../../utils/datetime';
 
 export function ContestEditGeneralTable({ contest }) {
   const rows = [

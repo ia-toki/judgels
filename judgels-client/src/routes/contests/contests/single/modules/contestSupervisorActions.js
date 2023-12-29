@@ -1,5 +1,6 @@
-import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { contestSupervisorAPI } from '../../../../../modules/api/uriel/contestSupervisor';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
+
 import * as toastActions from '../../../../../modules/toast/toastActions';
 
 export function getSupervisors(contestJid, page) {

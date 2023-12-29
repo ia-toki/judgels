@@ -1,7 +1,6 @@
 import { Route, Switch } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-
 import CoursesRoutes from './CoursesRoutes';
 import MainSingleCourseRoutes from './courses/single/MainSingleCourseRoutes';
 

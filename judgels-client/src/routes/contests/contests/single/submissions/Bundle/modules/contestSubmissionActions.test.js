@@ -1,6 +1,7 @@
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+
 import { nockUriel } from '../../../../../../../utils/nock';
 
 import * as contestSubmissionActions from './contestSubmissionActions';
@@ -16,7 +17,7 @@ describe('contestSubmissionBundleActions', () => {
     store = mockStore({});
   });
 
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 

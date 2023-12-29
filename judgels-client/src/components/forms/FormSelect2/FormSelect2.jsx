@@ -3,8 +3,8 @@ import { CaretDown } from '@blueprintjs/icons';
 import { Select } from '@blueprintjs/select';
 import classNames from 'classnames';
 
-import { getIntent, getIntentClassName } from '../meta';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
+import { getIntent, getIntentClassName } from '../meta';
 
 export function FormSelect2({ input, className, label, meta, optionValues, optionNamesMap, small }) {
   const isUsingFilter = optionValues.length >= 10;

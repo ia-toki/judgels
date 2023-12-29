@@ -1,4 +1,4 @@
-import { Route, withRouter, Switch } from 'react-router';
+import { Route, Switch, withRouter } from 'react-router';
 
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage';
 import ChapterProblemSubmissionPage from './single/ChapterProblemSubmissionPage/ChapterProblemSubmissionPage';

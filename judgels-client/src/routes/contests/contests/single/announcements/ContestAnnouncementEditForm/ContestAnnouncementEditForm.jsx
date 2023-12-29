@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { Required } from '../../../../../../components/forms/validations';
-import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
-import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
+import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
+import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
+import { Required } from '../../../../../../components/forms/validations';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 
 export default function ContestAnnouncementEditForm({ onSubmit, initialValues, renderFormComponents }) {

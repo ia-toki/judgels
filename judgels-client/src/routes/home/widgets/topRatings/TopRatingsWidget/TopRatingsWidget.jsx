@@ -3,8 +3,9 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
-import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import { UserRef } from '../../../../../components/UserRef/UserRef';
+
 import * as widgetActions from '../../modules/widgetActions';
 
 import './TopRatingsWidget.scss';

@@ -6,10 +6,11 @@ import { connect } from 'react-redux';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
 import { selectIsLoggedIn } from '../../../../../../modules/session/sessionSelectors';
-import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import * as contestWebActions from '../../modules/contestWebActions';
+import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
+
 import * as contestContestantActions from '../../modules/contestContestantActions';
+import * as contestWebActions from '../../modules/contestWebActions';
 
 import './ContestRegistrationCard.scss';
 

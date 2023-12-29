@@ -2,14 +2,15 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
-import ProblemSpoilerWidget from '../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
+import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { ProblemSetProblemCard } from '../../../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
+import ProblemSpoilerWidget from '../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+import { selectProblemSet } from '../../../modules/problemSetSelectors';
+
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
 export class ProblemSetProblemsPage extends Component {

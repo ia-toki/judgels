@@ -1,10 +1,11 @@
 import { Classes, Dialog } from '@blueprintjs/core';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { APP_CONFIG } from '../../../../conf';
 import GoogleAuthRegisterForm from '../GoogleAuthRegisterForm/GoogleAuthRegisterForm';
+
 import * as googleAuthActions from '../../modules/googleAuthActions';
 
 import './GoogleAuth.scss';
@@ -103,7 +104,7 @@ function decodeJwtResponse(token) {
     window
       .atob(base64)
       .split('')
-      .map(function(c) {
+      .map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       })
       .join('')

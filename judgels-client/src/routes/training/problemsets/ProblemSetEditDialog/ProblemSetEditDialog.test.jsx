@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
 import { parseDateTime } from '../../../../utils/datetime';
-
 import { ProblemSetEditDialog } from './ProblemSetEditDialog';
 
 const problemSet = {

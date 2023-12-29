@@ -4,8 +4,9 @@ import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import ContestAnnouncementsPage from './ContestAnnouncementsPage';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import ContestAnnouncementsPage from './ContestAnnouncementsPage';
+
 import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
 jest.mock('../modules/contestAnnouncementActions');
@@ -124,10 +125,7 @@ describe('ContestAnnouncementsPage', () => {
           expect(
             cards.map(card => [
               card.find('h5').text(),
-              card
-                .find('p')
-                .text()
-                .replace(/\s+/g, ' '),
+              card.find('p').text().replace(/\s+/g, ' '),
               card.find('.html-text').text(),
             ])
           ).toEqual([
@@ -149,10 +147,7 @@ describe('ContestAnnouncementsPage', () => {
           expect(
             cards.map(card => [
               card.find('h5').text(),
-              card
-                .find('p')
-                .text()
-                .replace(/\s+/g, ' '),
+              card.find('p').text().replace(/\s+/g, ' '),
               card.find('.html-text').text(),
             ])
           ).toEqual([
@@ -174,10 +169,7 @@ describe('ContestAnnouncementsPage', () => {
           expect(
             cards.map(card => [
               card.find('h5').text(),
-              card
-                .find('p')
-                .text()
-                .replace(/\s+/g, ' '),
+              card.find('p').text().replace(/\s+/g, ' '),
               card.find('.html-text').text(),
             ])
           ).toEqual([

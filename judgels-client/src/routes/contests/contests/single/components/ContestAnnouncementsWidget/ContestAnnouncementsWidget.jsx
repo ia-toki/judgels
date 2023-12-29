@@ -2,11 +2,11 @@ import { Tag } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 
 import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
-import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 
 class ContestAnnouncementsWidget extends Component {
   render() {

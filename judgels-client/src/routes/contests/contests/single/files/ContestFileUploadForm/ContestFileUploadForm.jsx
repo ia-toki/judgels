@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
 import { FormTableFileInput } from '../../../../../../components/forms/FormTableFileInput/FormTableFileInput';
-import { composeValidators, MaxFileSize20MB, Required } from '../../../../../../components/forms/validations';
+import { MaxFileSize20MB, Required, composeValidators } from '../../../../../../components/forms/validations';
 
 import './ContestFileUploadForm.scss';
 
