@@ -1,6 +1,7 @@
 {
   "arrowParens": "avoid",
   "importOrder": [
+    "^tinymce/(plugins|themes)",
     "^ace-",
     "^react-syntax-highlighter/",
     "^(?!.*(Actions|.s?css|/routes/App)$)[./]",
