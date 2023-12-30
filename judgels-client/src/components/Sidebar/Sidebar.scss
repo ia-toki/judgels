@@ -21,26 +21,68 @@
 
   .bp5-tab-indicator {
     border-radius: 0 !important;
+
+    .bp5-light & {
+      background-color: $secondary-background-color !important;
+      border-left: 3px solid $primary-color;
+    }
+
+    .bp5-dark & {
+      background-color: $dark-secondary-background-color !important;
+      border-left: 3px solid $gray3;
+    }
   }
 
   .bp5-tab {
-    a {
-      width: 100%;
-    }
-
     position: relative;
     padding-left: 20px !important;
     line-height: 50px;
     height: 50px;
-  }
 
-  .bp5-tab[aria-selected='true'] {
-    font-weight: bold;
+    &:hover {
+      .bp5-light & {
+        background-color: $tertiary-background-color !important;
+      }
+
+      .bp5-dark & {
+        background-color: $dark-tertiary-background-color !important;
+      }
+    }
+
+    &[aria-selected='true'] {
+      font-weight: bold;
+
+      .bp5-light & {
+        color: $text-color;
+      }
+
+      .bp5-dark & {
+        color: inherit;
+      }
+    }
+
+    &[aria-selected='false'] {
+      .bp5-light & {
+        color: $primary-color;
+      }
+    }
+
+    a {
+      width: 100%;
+
+      .bp5-dark & {
+        color: $dark-text-color !important;
+      }
+    }
   }
 }
 
 .card-sidebar__arrow {
   float: right;
+
+  .bp5-light & {
+    color: $primary-color !important;
+  }
 }
 
 .card-sidebar__full {
@@ -70,47 +112,5 @@
     .bp5-icon {
       padding-bottom: 0 !important;
     }
-  }
-}
-
-.bp5-light .card-sidebar {
-  .card-sidebar__arrow {
-    color: $primary-color !important;
-  }
-
-  .bp5-tab-indicator {
-    background-color: $secondary-background-color !important;
-    border-left: 3px solid $primary-color;
-  }
-
-  .bp5-tab:hover {
-    background-color: $tertiary-background-color !important;
-  }
-
-  .bp5-tab[aria-selected='true'] {
-    color: $text-color;
-  }
-
-  .bp5-tab[aria-selected='false'] {
-    color: $primary-color;
-  }
-}
-
-.bp5-dark .card-sidebar {
-  .bp5-tab a {
-    color: $dark-text-color !important;
-  }
-
-  .bp5-tab[aria-selected='true'] {
-    color: inherit;
-  }
-
-  .bp5-tab-indicator {
-    background-color: $dark-secondary-background-color !important;
-    border-left: 3px solid $gray3;
-  }
-
-  .bp5-tab:hover {
-    background-color: $dark-tertiary-background-color !important;
   }
 }

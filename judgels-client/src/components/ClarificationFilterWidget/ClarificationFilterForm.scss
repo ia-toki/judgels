@@ -8,13 +8,15 @@
 
   .form-status {
     float: right;
+
     label {
       float: left;
       width: initial;
       line-height: 30px;
       margin-right: 5px;
     }
-    .form-group-select {
+
+    .form-group__select {
       float: left;
       width: initial;
     }
@@ -22,6 +24,5 @@
 
   button {
     float: right;
-    margin-left: 5px;
   }
 }

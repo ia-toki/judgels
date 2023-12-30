@@ -8,30 +8,28 @@
 @import './table';
 @import './ratings';
 
-.bp5-dark,
-.bp5-dark td,
-.bp5-dark th,
-.bp5-dark table.bp5-html-table td,
-.bp5-dark table.bp5-html-table th,
-.bp5-dark label,
-.bp5-dark .bp5-control,
-.bp5-dark .bp5-dialog,
-.bp5-dark .bp5-tag.bp5-intent-primary,
-.bp5-dark .bp5-breadcrumb-current {
-  color: $dark-text-color;
-}
-
 body {
   font-family: $primary-font;
   background-color: $background-color;
+
+  .bp5-dark {
+    background-color: $dark-background-color !important;
+  }
 }
 
-body .bp5-dark {
-  background-color: $dark-background-color !important;
-}
-
-.secondary-info {
-  font-family: $accent-font;
+.bp5-dark {
+  &,
+  td,
+  th,
+  table.bp5-html-table td,
+  table.bp5-html-table th,
+  label,
+  .bp5-control,
+  .bp5-dialog,
+  .bp5-tag.bp5-intent-primary,
+  .bp5-breadcrumb-current {
+    color: $dark-text-color;
+  }
 }
 
 h1,
@@ -50,22 +48,22 @@ p {
 
 small {
   line-height: 14px !important;
-}
 
-.bp5-light small {
-  color: $secondary-text-color;
-}
+  .bp5-light & {
+    color: $secondary-text-color;
+  }
 
-.bp5-dark small {
-  color: $dark-secondary-text-color !important;
+  .bp5-dark & {
+    color: $dark-secondary-text-color !important;
+  }
 }
 
 strong {
   font-weight: 700;
-}
 
-.bp5-dark strong {
-  color: #eeeeee;
+  .bp5-dark & {
+    color: #eeeeee;
+  }
 }
 
 h2 {
@@ -97,26 +95,24 @@ hr {
   margin-top: 15px !important;
   margin-bottom: 15px !important;
   width: 100%;
-
   border: none;
-  border-bottom: 1px solid rgba($text-color, 0.15);
-}
 
-.bp5-light hr {
-  border-bottom: 1px solid $border-color;
-}
+  .bp5-light & {
+    border-bottom: 1px solid $border-color;
+  }
 
-.bp5-dark hr {
-  border-bottom: 1px solid $dark-border-color;
+  .bp5-dark & {
+    border-bottom: 1px solid $dark-border-color;
+  }
 }
 
 a {
   color: $primary-color;
-}
 
-.bp5-dark a,
-.bp5-dark a:hover {
-  color: #48aff0;
+  .bp5-dark &,
+  .bp5-dark &:hover {
+    color: #48aff0;
+  }
 }
 
 ol {
@@ -144,6 +140,11 @@ pre {
   background-color: #f5f5f5;
   border: 1px solid #cccccc;
   border-radius: 4px;
+
+  .bp5-dark & {
+    background-color: #293742;
+    border-color: #202b33;
+  }
 }
 
 code {
@@ -161,12 +162,6 @@ pre {
     border: initial;
     border-radius: initial;
   }
-}
-
-.bp5-dark code,
-.bp5-dark pre {
-  border-color: #202b33;
-  background-color: #293742;
 }
 
 em {
@@ -193,9 +188,11 @@ table {
   width: 100%;
 }
 
-.bp5-dark td,
-.bp5-dark th {
-  border-color: $dark-secondary-background-color !important;
+td,
+th {
+  .bp5-dark & {
+    border-color: $dark-secondary-background-color !important;
+  }
 }
 
 blockquote {
@@ -210,75 +207,139 @@ blockquote {
   margin-top: 50px;
 }
 
-.bp5-button.bp5-intent-primary,
-.bp5-tag.bp5-intent-primary {
-  background-color: $primary-color;
+.bp5-intent-primary {
+  &.bp5-button,
+  &.bp5-tag {
+    background-color: $primary-color;
+  }
 }
 
-.bp5-button.bp5-intent-warning,
-.bp5-tag.bp5-intent-warning {
-  background-color: #d9822b;
-  color: #fff !important;
+.bp5-intent-warning {
+  &.bp5-button,
+  &.bp5-tag {
+    color: #fff !important;
+    background-color: #d9822b;
+  }
 }
 
-.bp5-dark .bp5-button:not([class*='bp5-intent-']) {
-  background-color: #394b59;
-}
+.bp5-button:not([class*='bp5-intent-']) {
+  .bp5-dark & {
+    background-color: $dark-background-color;
+  }
 
-.bp5-dark .bp5-button:not([class*='bp5-intent-']).bp5-active {
-  background-color: #202b33;
-}
+  .bp5-dark &:hover {
+    background-color: $dark-tertiary-background-color;
+  }
 
-.bp5-dark .bp5-callout.bp5-intent-primary {
-  color: unset;
+  .bp5-dark &.bp5-active {
+    background-color: #202b33;
+  }
+
+  .bp5-dark &.bp5-disabled {
+    background-color: $dark-background-color;
+  }
 }
 
 .bp5-callout {
   padding: 10px 12px 9px;
-}
 
-.bp5-callout.bp5-intent-primary {
-  color: inherit;
-  background-color: rgba(19, 124, 189, 0.15);
-}
+  .bp5-dark &:not([class*='bp5-intent-']) {
+    background-color: $dark-tertiary-background-color;
+  }
 
-.bp5-callout.bp5-callout-icon > .bp5-icon:first-child {
-  top: 12px;
-}
+  &.bp5-callout-icon > .bp5-icon:first-child {
+    top: 12px;
+  }
 
-.bp5-dark .bp5-callout.bp5-intent-primary {
-  background-color: rgba(19, 124, 189, 0.25);
+  &.bp5-intent-primary {
+    color: inherit;
+    background-color: rgba(19, 124, 189, 0.15);
+
+    .bp5-dark & {
+      color: unset;
+      background-color: $dark-blue-secondary-background-color;
+    }
+  }
 }
 
 table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
   background-color: rgba(191, 204, 214, 0.15);
+
+  .bp5-dark & {
+    background-color: rgba(92, 112, 128, 0.15);
+  }
 }
 
-.bp5-dark table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
-  background-color: rgba(92, 112, 128, 0.15);
+.bp5-card {
+  .bp5-dark & {
+    background-color: $dark-card-background-color;
+    box-shadow:
+      0 0 0 1px rgba(16, 22, 26, 0.4),
+      0 0 0 rgba(16, 22, 26, 0),
+      0 0 0 rgba(16, 22, 26, 0);
+  }
 }
 
 .bp5-dialog {
   background-color: rgb(235, 241, 245);
+
+  .bp5-dark & {
+    background-color: $dark-card-background-color;
+  }
 }
 
-.bp5-dark .bp5-dialog {
-  background-color: #293742;
-  box-shadow:
-    0 0 0 1px rgba(16, 22, 26, 0.4),
-    0 0 0 rgba(16, 22, 26, 0),
-    0 0 0 rgba(16, 22, 26, 0);
+.bp5-dialog-header {
+  .bp5-dark & {
+    background-color: $dark-tertiary-background-color;
+  }
+
+  .bp5-dark & .bp5-button {
+    background-color: $dark-tertiary-background-color;
+  }
 }
 
-.bp5-dark .bp5-dialog-header {
-  background-color: #30404d;
-  box-shadow:
-    0 0 0 1px rgba(16, 22, 26, 0.4),
-    0 0 0 rgba(16, 22, 26, 0),
-    0 0 0 rgba(16, 22, 26, 0);
+.bp5-menu {
+  .bp5-dark & {
+    background-color: $dark-background-color;
+  }
+}
+
+.bp5-menu-item.bp5-active {
+  .bp5-dark & {
+    color: inherit;
+    background-color: $dark-blue-secondary-background-color;
+  }
+}
+
+.bp5-popover {
+  .bp5-dark & {
+    box-shadow:
+      0 0 0 1px rgba(17, 20, 24, 0.1),
+      0 2px 4px rgba(17, 20, 24, 0.2),
+      0 8px 24px rgba(17, 20, 24, 0.2);
+  }
+
+  .bp5-dark & .bp5-popover-arrow-fill {
+    fill: $dark-background-color;
+  }
+
+  .bp5-dark & .bp5-popover-arrow-border {
+    fill: $dark-background-color;
+    fill-opacity: 1;
+  }
+}
+
+.bp5-file-upload-input::after {
+  .bp5-dark & {
+    background-color: $dark-background-color;
+  }
 }
 
 /* End Blueprint overrides */
+
+.secondary-info {
+  font-family: $accent-font;
+}
 
 .float-left {
   float: left;

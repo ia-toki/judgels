@@ -29,32 +29,54 @@
     padding-left: 20px !important;
     line-height: 40px;
     height: 40px;
+
+    &[aria-selected='true'] {
+      left: -3px;
+      border-radius: 0 !important;
+      font-weight: bold;
+
+      .bp5-light & {
+        background-color: white !important;
+        border-left: 3px solid $primary-color;
+        color: $text-color;
+      }
+
+      .bp5-dark & {
+        color: inherit !important;
+        background-color: $dark-secondary-background-color !important;
+        border-left: 3px solid $gray3;
+      }
+
+      svg {
+        display: initial;
+        height: 40px;
+      }
+    }
+
+    &[aria-selected='false'] {
+      svg {
+        display: none;
+      }
+    }
+
+    &:not([aria-disabled='true']):hover {
+      .bp5-dark & {
+        color: #48aff0;
+      }
+    }
   }
 
   .bp5-tab span:first-child {
     width: 100%;
   }
 
-  .bp5-tab[aria-selected='true'] {
-    left: -3px;
-    border-radius: 0 !important;
-    font-weight: bold;
-
-    svg {
-      display: initial;
-      height: 40px;
-    }
-  }
-
-  .bp5-tab[aria-selected='false'] {
-    svg {
-      display: none;
-    }
-  }
-
   .contest-edit-dialog__arrow {
     line-height: 0 !important;
     float: right;
+
+    .bp5-light & {
+      color: $primary-color !important;
+    }
   }
 
   .right-action-button {
@@ -106,25 +128,5 @@
 
   .contest-edit-dialog__content {
     max-height: 460px;
-  }
-}
-
-.bp5-light .contest-edit-dialog {
-  .contest-edit-dialog__arrow {
-    color: $primary-color !important;
-  }
-
-  .bp5-tab[aria-selected='true'] {
-    background-color: white !important;
-    border-left: 3px solid $primary-color;
-    color: $text-color;
-  }
-}
-
-.bp5-dark .contest-edit-dialog {
-  .bp5-tab[aria-selected='true'] {
-    color: inherit !important;
-    background-color: $dark-secondary-background-color !important;
-    border-left: 3px solid $gray3;
   }
 }

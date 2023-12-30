@@ -2,32 +2,32 @@
 
 .header {
   height: 50px;
-}
-
-.bp5-light .header {
-  background-color: $primary-color !important;
-  height: 50px;
-}
-
-.bp5-dark .header {
-  color: $dark-text-color !important;
-  background-color: $dark-blue-main-background-color !important;
-  box-shadow:
-    0 0 0 1px rgba(17, 20, 24, 0.1),
-    0 1px 1px rgba(17, 20, 24, 0.2);
-}
-
-.bp5-dark .header a {
-  color: $dark-text-color !important;
-}
-
-.header,
-.header a {
   color: white;
-}
 
-.header a:hover {
-  text-decoration: none;
+  .bp5-light & {
+    background-color: $primary-color !important;
+    height: 50px;
+  }
+
+  .bp5-dark & {
+    color: $dark-text-color !important;
+    background-color: $dark-blue-main-background-color !important;
+    box-shadow:
+      0 0 0 1px rgba(17, 20, 24, 0.1),
+      0 1px 1px rgba(17, 20, 24, 0.2);
+  }
+
+  a {
+    color: white;
+
+    .bp5-dark & {
+      color: $dark-text-color !important;
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .header__wrapper {

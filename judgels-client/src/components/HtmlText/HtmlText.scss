@@ -47,30 +47,27 @@
     cursor: pointer;
     font-family: $accent-font;
     font-weight: bold;
-  }
 
-  .spoiler:hover {
-    background-color: #e7e7e7;
-  }
+    .bp5-dark & {
+      background-color: $dark-secondary-background-color;
+    }
 
-  .spoiler .spoiler-content {
-    display: none;
-    border-top: 1px solid;
-    margin-top: 5px;
-    padding-top: 15px;
-    font-family: $primary-font;
-    font-style: normal;
-    font-weight: normal;
-  }
-}
+    &:hover {
+      background-color: #e7e7e7;
 
-.bp5-dark .html-text {
-  .spoiler {
-    background-color: #5c7080;
-    border: 2px dashed $gray5;
-  }
+      .bp5-dark & {
+        background-color: $dark-background-color;
+      }
+    }
 
-  .spoiler:hover {
-    background-color: $dark-background-color;
+    .spoiler-content {
+      display: none;
+      border-top: 1px solid;
+      margin-top: 5px;
+      padding-top: 15px;
+      font-family: $primary-font;
+      font-style: normal;
+      font-weight: normal;
+    }
   }
 }

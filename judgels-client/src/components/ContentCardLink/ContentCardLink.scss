@@ -10,14 +10,14 @@
 .content-card-link:hover {
   cursor: pointer;
   text-decoration: none;
-}
 
-.bp5-light .content-card-link:hover {
-  background-color: $secondary-background-color;
-}
+  .bp5-light & {
+    background-color: $secondary-background-color;
+  }
 
-.bp5-dark .content-card-link:hover {
-  background-color: $dark-secondary-background-color;
+  .bp5-dark & {
+    background-color: $dark-secondary-background-color;
+  }
 }
 
 .content-card-link__content {
