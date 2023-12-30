@@ -24,35 +24,25 @@
   &--future {
     background-color: inherit;
 
-    a h4,
+    h4,
     .chapter-problem-card__heading > .bp5-icon {
       font-weight: normal !important;
       color: #bcc0c2;
-    }
 
-    a:hover h4,
-    a:hover .chapter-problem-card__heading > .bp5-icon {
-      color: inherit !important;
+      .bp5-dark & {
+        color: #5d6c79;
+      }
+
+      a:hover & {
+        color: inherit !important;
+        font-weight: inherit !important;
+      }
     }
 
     .bp5-tag {
       background-color: #ced4d8;
-    }
-  }
-}
 
-.bp5-dark {
-  .chapter-problem-card {
-    &--future {
-      background-color: inherit;
-
-      a h4,
-      .chapter-problem-card__heading > .bp5-icon {
-        font-weight: normal !important;
-        color: #5d6c79;
-      }
-
-      .bp5-tag {
+      .bp5-dark & {
         background-color: #5f6d79;
       }
     }

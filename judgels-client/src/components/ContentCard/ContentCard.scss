@@ -5,13 +5,13 @@
   margin-bottom: 10px;
   overflow: auto;
 
+  .bp5-dark & {
+    box-shadow: 0 0 0 0.5px $dark-secondary-background-color !important;
+  }
+
   h3 {
     margin-bottom: 5px;
   }
-}
-
-.bp5-dark .content-card {
-  box-shadow: 0 0 0 0.5px #5c7080 !important;
 }
 
 .content-card__section {

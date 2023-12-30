@@ -32,7 +32,7 @@ export function ProblemStatementCard({ alias, statement: { title, text }, limits
         {alias ? `${alias}. ` : ''}
         {title}
       </h2>
-      <HTMLTable condensed className="programming-problem-statement__limits">
+      <HTMLTable compact className="programming-problem-statement__limits">
         <tbody>
           <tr>
             <td>Time limit</td>

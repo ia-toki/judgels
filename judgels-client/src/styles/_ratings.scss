@@ -1,59 +1,63 @@
 .rating-unrated {
   color: #252527 !important;
   font-weight: 600;
-}
 
-.bp5-dark .rating-unrated {
-  color: #f5f8fa !important;
+  .bp5-dark & {
+    color: #f5f8fa !important;
+  }
 }
 
 .rating-gray {
   color: #b7b7b7 !important;
   font-weight: bold;
+
+  .bp5-dark & {
+    color: #738694 !important;
+  }
 }
 
-.bp5-dark .rating-gray {
-  color: #738694 !important;
-}
-
-.rating-green,
-.bp5-dark .rating-green {
-  color: #70ad47 !important;
-  font-weight: bold;
+.rating-green {
+  &,
+  .bp5-dark & {
+    color: #70ad47 !important;
+    font-weight: bold;
+  }
 }
 
 .rating-blue {
   color: #3c78d8 !important;
   font-weight: bold;
-}
 
-.bp5-dark .rating-blue {
-  color: #39ace7 !important;
-  font-weight: bold;
+  .bp5-dark & {
+    color: #39ace7 !important;
+    font-weight: bold;
+  }
 }
 
 .rating-purple {
   color: #7030a0 !important;
   font-weight: bold;
+
+  .bp5-dark & {
+    color: #cc99cd !important;
+  }
 }
 
-.bp5-dark .rating-purple {
-  color: #cc99cd !important;
-}
-
-.rating-orange,
-.bp-dark .rating-orange {
-  color: #f6b26b !important;
-  font-weight: bold;
+.rating-orange {
+  &,
+  .bp-dark & {
+    color: #f6b26b !important;
+    font-weight: bold;
+  }
 }
 
 .rating-red {
   color: #ff0000 !important;
   font-weight: bold;
-}
 
-.bp5-dark .rating-red {
-  color: #ff4545 !important;
+  .bp5-dark & {
+    color: #ff4545 !important;
+  }
 }
 
 .rating-legend {
@@ -61,11 +65,10 @@
   background: linear-gradient(0deg, #bb0000 0%, #bb0000 50%, #000000 51%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
 
-.bp5-dark .rating-legend {
-  font-weight: bold;
-  background: linear-gradient(0deg, #ff4545 0%, #ff4545 50%, #f5f8fa 51%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  .bp5-dark & {
+    background: linear-gradient(0deg, #ff4545 0%, #ff4545 50%, #f5f8fa 51%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }

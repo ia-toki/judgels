@@ -4,14 +4,14 @@
   margin: -35px -10px 20px -10px;
   padding-top: 40px;
   padding-bottom: 20px;
-}
 
-.bp5-light .home-banner {
-  background-color: $primary-color;
-}
+  .bp5-light & {
+    background-color: $primary-color;
+  }
 
-.bp5-dark .home-banner {
-  background-color: rgba(19, 124, 189, 0.25);
+  .bp5-dark & {
+    background-color: rgba(19, 124, 189, 0.25);
+  }
 }
 
 .home-banner__contents {
@@ -21,6 +21,10 @@
 
 .home-banner__text {
   color: white !important;
+
+  .bp5-dark & {
+    color: $dark-text-color !important;
+  }
 }
 
 .home-banner__title {
@@ -42,10 +46,6 @@
   font-weight: normal !important;
   line-height: 24px !important;
   margin-bottom: 5px !important;
-}
-
-.bp5-dark .home-banner__text {
-  color: $dark-text-color !important;
 }
 
 .home-banner__buttons {

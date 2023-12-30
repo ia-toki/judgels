@@ -8,6 +8,14 @@
   line-height: 30px;
   vertical-align: middle !important;
 
+  .bp5-light & {
+    background-color: #f4f5f6;
+  }
+
+  .bp5-dark & {
+    background-color: $dark-background-color;
+  }
+
   svg {
     vertical-align: middle !important;
   }
@@ -16,14 +24,6 @@
 .bp5-menu li,
 .bp5-menu li a {
   color: inherit;
-}
-
-.bp5-light .widget-user__profile {
-  background-color: #f4f5f6;
-}
-
-.bp5-dark .widget-user__profile {
-  background-color: $dark-background-color;
 }
 
 .widget-user__avatar-wrapper {
