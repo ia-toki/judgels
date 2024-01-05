@@ -7,7 +7,8 @@
 
 .chapter-resources-page__title {
   margin-bottom: 20px;
-  line-height: 20px !important;
+  font-size: 22px !important;
+  line-height: 24px !important;
 }
 
 .chapter-resources-page__title--link {
@@ -17,8 +18,13 @@
     text-decoration: none;
     color: $primary-color !important;
   }
+
+  & .bp5-icon {
+    height: 22px;
+  }
 }
 
 .chapter-resources-page__title--chevron {
+  height: 24px;
   color: $dark-secondary-background-color !important;
 }

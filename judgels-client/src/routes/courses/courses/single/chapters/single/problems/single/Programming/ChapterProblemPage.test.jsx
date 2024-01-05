@@ -71,6 +71,6 @@ describe('ChapterProblemProgrammingPage', () => {
   });
 
   test('page', () => {
-    expect(wrapper.text()).toContain('A. Problem');
+    expect(wrapper.text()).toContain('This is problem description');
   });
 });

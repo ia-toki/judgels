@@ -1,4 +1,4 @@
-import { ChevronRight } from '@blueprintjs/icons';
+import { ChevronRight, Home } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -79,23 +79,25 @@ export class ChapterProblemPage extends Component {
 
   renderHeader = () => {
     const { course, chapter, match } = this.props;
+    const { response } = this.state;
+    const problemTitle = response && response.worksheet.statement.title;
 
     return (
       <div className="chapter-problem-page__title">
         <h3>
           <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}`}>
-            {course.name}
+            <Home />
           </Link>
           &nbsp;
           <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
           &nbsp;
           <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
-            {chapter.alias}. {chapter.name}
+            {chapter.alias}
           </Link>
           &nbsp;
           <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
           &nbsp;
-          {match.params.problemAlias}
+          {match.params.problemAlias}. {problemTitle}
         </h3>
 
         {this.renderProgress()}
