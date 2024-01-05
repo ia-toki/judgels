@@ -13,6 +13,7 @@
 }
 
 .chapter-problem-page__title h3 {
+  font-size: 22px !important;
   line-height: 24px !important;
   margin-bottom: 0;
 }
@@ -24,9 +25,14 @@
     text-decoration: none;
     color: $primary-color !important;
   }
+
+  & .bp5-icon {
+    height: 22px;
+  }
 }
 
 .chapter-problem-page__title--chevron {
+  height: 24px;
   color: $dark-secondary-background-color !important;
 }
 

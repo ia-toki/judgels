@@ -5,7 +5,13 @@ import RichStatementText from '../../../RichStatementText/RichStatementText';
 
 import './ProblemStatementCard.scss';
 
-export function ProblemStatementCard({ alias, statement: { title, text }, limits: { timeLimit, memoryLimit } }) {
+export function ProblemStatementCard({
+  alias,
+  statement: { title, text },
+  limits: { timeLimit, memoryLimit },
+  showTitle = true,
+  showLimits = true,
+}) {
   const renderTimeLimit = timeLimit => {
     if (!timeLimit) {
       return '-';
@@ -28,22 +34,26 @@ export function ProblemStatementCard({ alias, statement: { title, text }, limits
 
   return (
     <ContentCard>
-      <h2 className="programming-problem-statement__name">
-        {alias ? `${alias}. ` : ''}
-        {title}
-      </h2>
-      <HTMLTable compact className="programming-problem-statement__limits">
-        <tbody>
-          <tr>
-            <td>Time limit</td>
-            <td>{renderTimeLimit(timeLimit)}</td>
-          </tr>
-          <tr>
-            <td>Memory limit</td>
-            <td>{renderMemoryLimit(memoryLimit)}</td>
-          </tr>
-        </tbody>
-      </HTMLTable>
+      {showTitle && (
+        <h2 className="programming-problem-statement__name">
+          {alias ? `${alias}. ` : ''}
+          {title}
+        </h2>
+      )}
+      {showLimits && (
+        <HTMLTable compact className="programming-problem-statement__limits">
+          <tbody>
+            <tr>
+              <td>Time limit</td>
+              <td>{renderTimeLimit(timeLimit)}</td>
+            </tr>
+            <tr>
+              <td>Memory limit</td>
+              <td>{renderMemoryLimit(memoryLimit)}</td>
+            </tr>
+          </tbody>
+        </HTMLTable>
+      )}
       <div className="programming-problem-statement__text">
         <RichStatementText key={alias}>{text}</RichStatementText>
       </div>

@@ -60,7 +60,16 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
       );
     }
 
-    return <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} />;
+    const isIntroductoryProblem = !worksheet.worksheet.submissionConfig.gradingEngine.endsWith('Subtasks');
+
+    return (
+      <ProblemWorksheetCard
+        alias={problem.alias}
+        worksheet={worksheet.worksheet}
+        showTitle={!isIntroductoryProblem}
+        showLimits={!isIntroductoryProblem}
+      />
+    );
   };
 
   return (
