@@ -33,11 +33,6 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
   };
 
   const renderLimits = () => {
-    const isIntroductoryProblem = !worksheet.worksheet.submissionConfig.gradingEngine.endsWith('Subtasks');
-    if (isIntroductoryProblem) {
-      return null;
-    }
-
     const { timeLimit, memoryLimit } = worksheet.worksheet.limits;
     return (
       <small className="statement-header__limits">
