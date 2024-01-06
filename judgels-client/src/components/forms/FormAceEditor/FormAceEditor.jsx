@@ -17,12 +17,12 @@ import './FormAceEditor.scss';
 
 function FormAceEditor({ input, meta, autoFocus, isDarkMode, gradingLanguage }) {
   return (
-    <FormGroup intent={getIntent(meta)}>
+    <FormGroup intent={getIntent(meta)} className="form-group-editor">
       <AceEditor
         mode={getGradingLanguageFamily(gradingLanguage) === 'C++' ? 'c_cpp' : 'plain_text'}
         theme={isDarkMode ? 'tomorrow_night' : 'tomorrow'}
         width="100%"
-        height="600px"
+        height="100%"
         fontSize={14}
         showPrintMargin={false}
         editorProps={{ $blockScrolling: true }}

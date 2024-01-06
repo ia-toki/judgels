@@ -1,3 +1,18 @@
+.form-group-editor {
+  height: 100%;
+  width: 100%;
+
+  > div {
+    height: 100%;
+  }
+}
+
 #editor {
   margin-bottom: 15px;
+}
+
+@media only screen and (max-width: 1024px) {
+  #editor {
+    min-height: 500px;
+  }
 }

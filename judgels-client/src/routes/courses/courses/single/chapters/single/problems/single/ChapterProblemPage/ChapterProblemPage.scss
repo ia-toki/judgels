@@ -4,6 +4,12 @@
   flex: 1 1;
 }
 
+@media only screen and (min-width: 1025px) {
+  .chapter-problem-page {
+    height: calc(100vh - 85px);
+  }
+}
+
 .chapter-problem-page__title {
   display: flex;
   flex-wrap: wrap;
