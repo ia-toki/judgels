@@ -22,12 +22,22 @@ export class ChapterResourcesPage extends Component {
     response: undefined,
   };
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.refreshResources();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.chapter.jid !== prevProps.chapter.jid) {
+      this.refreshResources();
+    }
+  }
+
+  refreshResources = async () => {
     const response = await this.props.onGetResources(this.props.chapter.jid);
     this.setState({
       response,
     });
-  }
+  };
 
   render() {
     return (
