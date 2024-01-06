@@ -12,7 +12,42 @@ import { selectCourseChapter } from '../../../../../modules/courseChapterSelecto
 import './ChapterProblemStatementPage.scss';
 
 function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
-  const renderStatementLanguageWidget = () => {
+  const renderTimeLimit = timeLimit => {
+    if (!timeLimit) {
+      return '-';
+    }
+    if (timeLimit % 1000 === 0) {
+      return timeLimit / 1000 + ' s';
+    }
+    return timeLimit + ' ms';
+  };
+
+  const renderMemoryLimit = memoryLimit => {
+    if (!memoryLimit) {
+      return '-';
+    }
+    if (memoryLimit % 1024 === 0) {
+      return memoryLimit / 1024 + ' MB';
+    }
+    return memoryLimit + ' KB';
+  };
+
+  const renderLimits = () => {
+    const isIntroductoryProblem = !worksheet.worksheet.submissionConfig.gradingEngine.endsWith('Subtasks');
+    if (isIntroductoryProblem) {
+      return null;
+    }
+
+    const { timeLimit, memoryLimit } = worksheet.worksheet.limits;
+    return (
+      <small className="statement-header__limits">
+        Time limit:&nbsp;&nbsp;{renderTimeLimit(timeLimit)}
+        &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;Memory limit:&nbsp;&nbsp;{renderMemoryLimit(memoryLimit)}
+      </small>
+    );
+  };
+
+  const renderStatementHeader = () => {
     const { defaultLanguage, languages } = worksheet;
     if (!defaultLanguage || !languages) {
       return null;
@@ -22,8 +57,9 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
       statementLanguages: languages,
     };
     return (
-      <div className="language-widget-wrapper">
-        <StatementLanguageWidget {...props} />
+      <div className="statement-header">
+        {renderLimits()}
+        <StatementLanguageWidget className="statement-header__language-widget" {...props} />
       </div>
     );
   };
@@ -60,21 +96,19 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
       );
     }
 
-    const isIntroductoryProblem = !worksheet.worksheet.submissionConfig.gradingEngine.endsWith('Subtasks');
-
     return (
       <ProblemWorksheetCard
         alias={problem.alias}
         worksheet={worksheet.worksheet}
-        showTitle={!isIntroductoryProblem}
-        showLimits={!isIntroductoryProblem}
+        showTitle={false}
+        showLimits={false}
       />
     );
   };
 
   return (
     <ContentCard className="chapter-programming-problem-statement-page">
-      {renderStatementLanguageWidget()}
+      {renderStatementHeader()}
       {renderStatement()}
       <div className="chapter-programming-problem-statement-page__footer">
         {renderReview()}
