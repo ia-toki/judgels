@@ -33,6 +33,9 @@ export class ChapterResourcesPage extends Component {
   }
 
   refreshResources = async () => {
+    this.setState({
+      response: undefined,
+    });
     const response = await this.props.onGetResources(this.props.chapter.jid);
     this.setState({
       response,
