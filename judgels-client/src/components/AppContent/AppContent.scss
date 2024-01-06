@@ -2,14 +2,17 @@
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 35px;
-}
-
-.app-content:not(:has(.chapter-problem-statement-routes)) {
   overflow-x: auto;
 }
 
 @media only screen and (max-width: 1024px) {
   .app-content {
     padding-top: 15px;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .app-content.is-course-chapter-problem {
+    height: calc(100vh - 50px);
   }
 }

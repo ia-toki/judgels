@@ -3,6 +3,16 @@
   column-gap: 5px;
 }
 
+@media only screen and (min-width: 1025px) {
+  .chapter-programming-problem-page {
+    height: calc(100vh - 146px);
+
+    & > .content-card {
+      margin-bottom: 0;
+    }
+  }
+}
+
 @media only screen and (max-width: 1024px) {
   .chapter-programming-problem-page {
     display: block;

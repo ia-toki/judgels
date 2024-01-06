@@ -84,7 +84,7 @@ export function ProblemSubmissionEditor({
 
           return (
             <form onSubmit={handleSubmit}>
-              <div className="editor-heading">
+              <div className="editor-header">
                 <Field component={FormSelect2} {...gradingLanguageField} />
                 <p>
                   <Tag intent={Intent.WARNING}>BETA</Tag>
@@ -98,7 +98,12 @@ export function ProblemSubmissionEditor({
                   <small>{submissionHint}</small>
                 </p>
               )}
-              <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
+              <Field
+                component={FormAceEditor}
+                {...editorField}
+                className="jagi"
+                gradingLanguage={values.gradingLanguage}
+              />
               <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} disabled={!dirty} />
             </form>
           );
@@ -107,5 +112,5 @@ export function ProblemSubmissionEditor({
     );
   };
 
-  return <ContentCard>{renderEditor()}</ContentCard>;
+  return <ContentCard className="problem-submission-editor">{renderEditor()}</ContentCard>;
 }

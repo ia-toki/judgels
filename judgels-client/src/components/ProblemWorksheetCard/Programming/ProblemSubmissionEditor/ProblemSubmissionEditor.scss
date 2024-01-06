@@ -1,12 +1,24 @@
-.editor-heading {
-  display: flex;
-  gap: 10px;
+.problem-submission-editor {
+  flex-grow: 1;
+  margin-bottom: 0;
 
-  .bp5-form-group {
-    margin: 0;
-  }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
 
-  .bp5-tag {
-    padding-top: 1px;
+    .editor-header {
+      display: flex;
+      gap: 10px;
+
+      .bp5-form-group {
+        margin: 0;
+      }
+
+      .bp5-tag {
+        padding-top: 1px;
+      }
+    }
   }
 }
