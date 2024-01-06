@@ -11,6 +11,21 @@
     display: inline;
   }
 
+  .statement-header {
+    display: flex;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .statement-header__limits {
+      line-height: 28px !important;
+    }
+
+    .statement-header__language-widget {
+      margin-left: auto;
+    }
+  }
+
   .chapter-programming-problem-statement-page__footer {
     max-width: 800px;
     margin-left: auto;

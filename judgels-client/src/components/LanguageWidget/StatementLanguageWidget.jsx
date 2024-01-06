@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
@@ -8,7 +9,13 @@ import * as webPrefsActions from '../../modules/webPrefs/webPrefsActions';
 
 import './LanguageWidget.scss';
 
-function StatementLanguageWidget({ defaultLanguage, statementLanguages, statementLanguage, onChangeLanguage }) {
+function StatementLanguageWidget({
+  className,
+  defaultLanguage,
+  statementLanguages,
+  statementLanguage,
+  onChangeLanguage,
+}) {
   let initialLanguage;
   if (statementLanguages.indexOf(statementLanguage) !== -1) {
     initialLanguage = statementLanguage;
@@ -24,7 +31,7 @@ function StatementLanguageWidget({ defaultLanguage, statementLanguages, statemen
   };
 
   return (
-    <div className="language-widget">
+    <div className={classNames('language-widget', className)}>
       <div className="language-widget__right">
         <LanguageForm onSubmit={onChangeLanguage} {...formProps} />
       </div>
