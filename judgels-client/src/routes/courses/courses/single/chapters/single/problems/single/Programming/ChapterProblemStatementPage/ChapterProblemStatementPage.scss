@@ -26,6 +26,10 @@
     }
   }
 
+  .html-text > h3:first-child {
+    margin-top: 0;
+  }
+
   .chapter-programming-problem-statement-page__footer {
     max-width: 800px;
     margin-left: auto;
