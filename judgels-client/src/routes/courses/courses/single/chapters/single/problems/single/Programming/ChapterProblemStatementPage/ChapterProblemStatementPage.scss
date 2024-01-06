@@ -13,16 +13,14 @@
 
   .statement-header {
     display: flex;
+    flex-direction: row-reverse;
+    column-gap: 15px;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
 
     .statement-header__limits {
       line-height: 28px !important;
-    }
-
-    .statement-header__language-widget {
-      margin-left: auto;
     }
   }
 

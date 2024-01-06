@@ -53,8 +53,8 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
     };
     return (
       <div className="statement-header">
+        <StatementLanguageWidget {...props} />
         {renderLimits()}
-        <StatementLanguageWidget className="statement-header__language-widget" {...props} />
       </div>
     );
   };
