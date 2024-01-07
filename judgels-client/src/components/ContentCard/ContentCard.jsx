@@ -3,9 +3,9 @@ import classNames from 'classnames';
 
 import './ContentCard.scss';
 
-export function ContentCard({ className, elevation, children }) {
+export function ContentCard({ id, className, elevation, children }) {
   return (
-    <Card className={classNames(className, 'content-card')} elevation={elevation}>
+    <Card id={id} className={classNames(className, 'content-card')} elevation={elevation}>
       {children}
     </Card>
   );

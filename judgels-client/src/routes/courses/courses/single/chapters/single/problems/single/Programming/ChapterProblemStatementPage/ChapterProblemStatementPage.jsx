@@ -1,4 +1,3 @@
-import { Intent, Tag } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -59,37 +58,26 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
     );
   };
 
-  const renderReview = () => {
+  const renderEditorial = () => {
     const { problem, editorial } = worksheet;
     if (!editorial) {
       return null;
     }
     return (
       <>
-        <Tag intent={Intent.SUCCESS} style={{ width: '100%' }}></Tag>
+        <hr />
         <ProblemEditorialCard
           alias={problem.alias}
           statement={worksheet.worksheet.statement}
           editorial={editorial}
-          titleSuffix=" (Review)"
+          showTitle={false}
         />
       </>
     );
   };
 
   const renderStatement = () => {
-    const { problem, editorial } = worksheet;
-
-    if (editorial) {
-      return (
-        <details>
-          <summary>
-            <small>Problem</small>
-          </summary>
-          <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet.worksheet} />
-        </details>
-      );
-    }
+    const { problem } = worksheet;
 
     return (
       <ProblemWorksheetCard
@@ -102,11 +90,11 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
   };
 
   return (
-    <ContentCard className="chapter-programming-problem-statement-page">
+    <ContentCard id="chapter-problem-statement" className="chapter-programming-problem-statement-page">
       {renderStatementHeader()}
       {renderStatement()}
       <div className="chapter-programming-problem-statement-page__footer">
-        {renderReview()}
+        {renderEditorial()}
         <div className="chapter-programming-problem-statement-page__navigation">{renderNavigation()}</div>
       </div>
     </ContentCard>

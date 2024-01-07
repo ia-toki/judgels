@@ -15,7 +15,10 @@ import { selectCourseChapters } from '../../../../modules/courseChaptersSelector
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
-import { selectChapterProblemRefreshKey } from '../modules/chapterProblemSelectors';
+import {
+  selectChapterProblemRefreshKey,
+  selectChapterProblemShouldScrollToEditorial,
+} from '../modules/chapterProblemSelectors';
 
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
@@ -37,7 +40,10 @@ export class ChapterProblemPage extends Component {
       this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey ||
       this.props.match.params.problemAlias !== prevProps.match.params.problemAlias
     ) {
-      await this.refreshProblem();
+      const shouldScrollToEditorial =
+        this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey &&
+        this.props.shouldScrollToEditorial;
+      await this.refreshProblem(shouldScrollToEditorial);
     }
   }
 
@@ -55,7 +61,12 @@ export class ChapterProblemPage extends Component {
     );
   }
 
-  refreshProblem = async () => {
+  refreshProblem = async shouldScrollToEditorial => {
+    const problemStatementEl = document.getElementById('chapter-problem-statement');
+    if (problemStatementEl) {
+      problemStatementEl.scrollTop = 0;
+    }
+
     const response = await this.props.onGetProblemWorksheet(
       this.props.chapter.jid,
       this.props.match.params.problemAlias,
@@ -75,6 +86,13 @@ export class ChapterProblemPage extends Component {
       action: 'View problem',
       label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
     });
+
+    if (shouldScrollToEditorial) {
+      const problemStatementEl = document.getElementById('chapter-problem-statement');
+      if (problemStatementEl) {
+        problemStatementEl.scrollTo({ top: problemStatementEl.scrollHeight, behavior: 'smooth' });
+      }
+    }
   };
 
   renderHeader = () => {
@@ -159,6 +177,7 @@ const mapStateToProps = state => ({
   chapter: selectCourseChapter(state),
   chapters: selectCourseChapters(state),
   chapterProblemRefreshKey: selectChapterProblemRefreshKey(state),
+  chapterProblemShouldScrollToEditorial: selectChapterProblemShouldScrollToEditorial(state),
   statementLanguage: selectStatementLanguage(state),
 });
 const mapDispatchToProps = {

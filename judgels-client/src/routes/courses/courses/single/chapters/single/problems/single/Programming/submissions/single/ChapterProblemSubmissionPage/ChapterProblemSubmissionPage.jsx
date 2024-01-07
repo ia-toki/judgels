@@ -81,7 +81,10 @@ export class ChapterProblemSubmissionPage extends Component {
     } else {
       if (this.currentTimeout) {
         clearTimeout(this.currentTimeout);
-        this.props.onRefreshChapterProblem(Date.now());
+        this.props.onRefreshChapterProblem({
+          refreshKey: Date.now(),
+          shouldScrollToEditorial: verdictCode === VerdictCode.AC,
+        });
       }
     }
   };
