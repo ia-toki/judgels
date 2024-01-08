@@ -42,7 +42,7 @@ export class ChapterProblemPage extends Component {
     ) {
       const shouldScrollToEditorial =
         this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey &&
-        this.props.shouldScrollToEditorial;
+        this.props.chapterProblemShouldScrollToEditorial;
       await this.refreshProblem(shouldScrollToEditorial);
     }
   }
@@ -62,10 +62,9 @@ export class ChapterProblemPage extends Component {
   }
 
   refreshProblem = async shouldScrollToEditorial => {
-    const problemStatementEl = document.getElementById('chapter-problem-statement');
-    if (problemStatementEl) {
-      problemStatementEl.scrollTop = 0;
-    }
+    this.setState({
+      response: undefined,
+    });
 
     const response = await this.props.onGetProblemWorksheet(
       this.props.chapter.jid,
@@ -73,9 +72,19 @@ export class ChapterProblemPage extends Component {
       this.props.statementLanguage
     );
 
-    this.setState({
-      response,
-    });
+    this.setState(
+      {
+        response,
+      },
+      () => {
+        if (shouldScrollToEditorial && response.editorial) {
+          const problemStatementEl = document.getElementById('chapter-problem-statement');
+          if (problemStatementEl) {
+            problemStatementEl.scrollTo({ top: problemStatementEl.scrollHeight, behavior: 'smooth' });
+          }
+        }
+      }
+    );
 
     this.props.onPushBreadcrumb(this.props.match.path, response.problem.alias);
 
@@ -86,13 +95,6 @@ export class ChapterProblemPage extends Component {
       action: 'View problem',
       label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
     });
-
-    if (shouldScrollToEditorial) {
-      const problemStatementEl = document.getElementById('chapter-problem-statement');
-      if (problemStatementEl) {
-        problemStatementEl.scrollTo({ top: problemStatementEl.scrollHeight, behavior: 'smooth' });
-      }
-    }
   };
 
   renderHeader = () => {
