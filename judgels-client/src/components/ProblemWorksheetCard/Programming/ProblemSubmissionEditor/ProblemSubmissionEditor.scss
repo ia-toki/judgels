@@ -8,6 +8,14 @@
     align-items: flex-start;
     height: 100%;
 
+    @media only screen and (max-width: 1024px) {
+      display: none;
+
+      &.show {
+        display: flex;
+      }
+    }
+
     .editor-header {
       display: flex;
       gap: 10px;
@@ -19,6 +27,14 @@
       .bp5-tag {
         padding-top: 1px;
       }
+    }
+  }
+
+  .responsive-button {
+    display: none;
+
+    @media only screen and (max-width: 1024px) {
+      display: block;
     }
   }
 }
