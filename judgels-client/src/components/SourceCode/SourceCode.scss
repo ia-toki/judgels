@@ -3,6 +3,7 @@
 pre.source-code {
   border-color: #cccccc;
   background-color: #f5f5f5 !important;
+  overflow-y: auto !important;
 
   .bp5-dark & {
     border-color: #202b33;
