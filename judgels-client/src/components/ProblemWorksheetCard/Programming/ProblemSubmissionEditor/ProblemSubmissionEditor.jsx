@@ -1,5 +1,7 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
+import classNames from 'classnames';
+import { Component } from 'react';
 import { Field, Form } from 'react-final-form';
 
 import {
@@ -16,14 +18,17 @@ import { MaxCodeLength50KB, Required, composeValidators } from '../../../forms/v
 
 import './ProblemSubmissionEditor.scss';
 
-export function ProblemSubmissionEditor({
-  skeletons,
-  config: { sourceKeys, gradingEngine, gradingLanguageRestriction },
-  onSubmit,
-  reasonNotAllowedToSubmit,
-  preferredGradingLanguage,
-}) {
-  const onSubmitEditor = data => {
+export class ProblemSubmissionEditor extends Component {
+  state = {
+    isResponsiveButtonClicked: false,
+  };
+
+  onSubmitEditor = data => {
+    const {
+      config: { sourceKeys },
+      onSubmit,
+    } = this.props;
+
     const sourceFiles = {};
     Object.keys(sourceKeys).forEach(key => {
       sourceFiles[key] = new File([data.editor], getGradingLanguageEditorSubmissionFilename(data.gradingLanguage), {
@@ -37,7 +42,14 @@ export function ProblemSubmissionEditor({
     });
   };
 
-  const renderEditor = () => {
+  renderEditor = () => {
+    const {
+      skeletons,
+      config: { gradingEngine, gradingLanguageRestriction },
+      reasonNotAllowedToSubmit,
+      preferredGradingLanguage,
+    } = this.props;
+
     if (reasonNotAllowedToSubmit) {
       return (
         <Callout icon={<BanCircle />} className="secondary-info">
@@ -78,12 +90,12 @@ export function ProblemSubmissionEditor({
     });
 
     return (
-      <Form onSubmit={onSubmitEditor} initialValues={initialValues}>
+      <Form onSubmit={this.onSubmitEditor} initialValues={initialValues}>
         {({ values, handleSubmit, submitting, dirty }) => {
           const submissionHint = getGradingLanguageEditorSubmissionHint(values.gradingLanguage);
 
           return (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={classNames({ show: this.state.isResponsiveButtonClicked })}>
               <div className="editor-header">
                 <Field component={FormSelect2} {...gradingLanguageField} />
                 <p>
@@ -98,12 +110,7 @@ export function ProblemSubmissionEditor({
                   <small>{submissionHint}</small>
                 </p>
               )}
-              <Field
-                component={FormAceEditor}
-                {...editorField}
-                className="jagi"
-                gradingLanguage={values.gradingLanguage}
-              />
+              <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
               <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} disabled={!dirty} />
             </form>
           );
@@ -112,5 +119,23 @@ export function ProblemSubmissionEditor({
     );
   };
 
-  return <ContentCard className="problem-submission-editor">{renderEditor()}</ContentCard>;
+  clickResponsiveButton = () => {
+    this.setState({ isResponsiveButtonClicked: true });
+  };
+
+  renderResponsiveButton = () => {
+    if (this.state.isResponsiveButtonClicked) {
+      return null;
+    }
+    return <Button className="responsive-button" text="Click to solve" small onClick={this.clickResponsiveButton} />;
+  };
+
+  render() {
+    return (
+      <ContentCard className="problem-submission-editor">
+        {this.renderResponsiveButton()}
+        {this.renderEditor()}
+      </ContentCard>
+    );
+  }
 }
