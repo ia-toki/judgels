@@ -21,7 +21,7 @@ function ChapterProblemWorkspacePage({
   onUpdateGradingLanguage,
 }) {
   const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
-  const { problem, skeletons } = worksheet;
+  const { problem, skeletons, lastSubmission, lastSubmissionSource } = worksheet;
 
   const createSubmission = async data => {
     onUpdateGradingLanguage(data.gradingLanguage);
@@ -58,6 +58,8 @@ function ChapterProblemWorkspacePage({
   return (
     <ProblemSubmissionEditor
       skeletons={skeletons}
+      lastSubmission={lastSubmission}
+      lastSubmissionSource={lastSubmissionSource}
       config={submissionConfig}
       onSubmit={createSubmission}
       reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}

@@ -45,6 +45,7 @@ export class ProblemSubmissionEditor extends Component {
   renderEditor = () => {
     const {
       skeletons,
+      lastSubmissionSource,
       config: { gradingEngine, gradingLanguageRestriction },
       reasonNotAllowedToSubmit,
       preferredGradingLanguage,
@@ -88,6 +89,12 @@ export class ProblemSubmissionEditor extends Component {
         initialValues.editor = decodeBase64(skeleton.content);
       }
     });
+
+    if (lastSubmissionSource) {
+      Object.keys(lastSubmissionSource.submissionFiles).forEach(key => {
+        initialValues.editor = decodeBase64(lastSubmissionSource.submissionFiles[key].content);
+      });
+    }
 
     return (
       <Form onSubmit={this.onSubmitEditor} initialValues={initialValues}>
