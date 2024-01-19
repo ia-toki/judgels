@@ -79,7 +79,7 @@ export default function ProblemSubmissionForm({
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           {renderWarning()}
-          <table className="programming-problem-submission-form__tablde">
+          <table className="programming-problem-submission-form__table">
             <tbody>
               {renderSourceFields()}
               {renderGradingLanguageFields()}
