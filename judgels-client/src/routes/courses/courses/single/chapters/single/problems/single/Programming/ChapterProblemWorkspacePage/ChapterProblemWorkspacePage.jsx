@@ -8,6 +8,8 @@ import { getGradingLanguageFamily } from '../../../../../../../../../../modules/
 import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
+import { RefreshChapterProblem } from '../../modules/chapterProblemReducer.js';
+import { selectChapterProblemShouldResetEditor } from '../../modules/chapterProblemSelectors.js';
 
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
@@ -16,9 +18,11 @@ function ChapterProblemWorkspacePage({
   worksheet,
   course,
   chapter,
+  shouldResetEditor,
   gradingLanguage,
   onCreateSubmission,
   onUpdateGradingLanguage,
+  onRefreshChapterProblem,
 }) {
   const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
   const { problem, skeletons, lastSubmission, lastSubmissionSource } = worksheet;
@@ -44,6 +48,12 @@ function ChapterProblemWorkspacePage({
     return await onCreateSubmission(course.slug, chapter.jid, chapter.alias, problem.problemJid, problem.alias, data);
   };
 
+  const resetEditor = () => {
+    if (window.confirm('Are you sure to reset your code to the initial state?')) {
+      onRefreshChapterProblem({ refreshKey: new Date(), shouldResetEditor: true });
+    }
+  };
+
   if (isOutputOnly(submissionConfig.gradingEngine)) {
     return (
       <ProblemSubmissionCard
@@ -57,6 +67,8 @@ function ChapterProblemWorkspacePage({
 
   return (
     <ProblemSubmissionEditor
+      shouldReset={shouldResetEditor}
+      onReset={resetEditor}
       skeletons={skeletons}
       lastSubmission={lastSubmission}
       lastSubmissionSource={lastSubmissionSource}
@@ -71,12 +83,14 @@ function ChapterProblemWorkspacePage({
 const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
+  shouldResetEditor: selectChapterProblemShouldResetEditor(state),
   gradingLanguage: selectGradingLanguage(state),
 });
 
 const mapDispatchToProps = {
   onCreateSubmission: chapterProblemSubmissionActions.createSubmission,
   onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
+  onRefreshChapterProblem: RefreshChapterProblem,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChapterProblemWorkspacePage);

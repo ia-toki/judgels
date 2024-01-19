@@ -44,6 +44,8 @@ export class ProblemSubmissionEditor extends Component {
 
   renderEditor = () => {
     const {
+      shouldReset,
+      onReset,
       skeletons,
       lastSubmissionSource,
       config: { gradingEngine, gradingLanguageRestriction },
@@ -90,7 +92,7 @@ export class ProblemSubmissionEditor extends Component {
       }
     });
 
-    if (lastSubmissionSource) {
+    if (!shouldReset && lastSubmissionSource) {
       Object.keys(lastSubmissionSource.submissionFiles).forEach(key => {
         initialValues.editor = decodeBase64(lastSubmissionSource.submissionFiles[key].content);
       });
@@ -105,12 +107,7 @@ export class ProblemSubmissionEditor extends Component {
             <form onSubmit={handleSubmit} className={classNames({ show: this.state.isResponsiveButtonClicked })}>
               <div className="editor-header">
                 <Field component={FormSelect2} {...gradingLanguageField} />
-                <p>
-                  <Tag intent={Intent.WARNING}>BETA</Tag>
-                </p>
-                <p>
-                  <small>Type or paste your code here</small>
-                </p>
+                <Button className="reset-button" small text="Reset code" intent={Intent.NONE} onClick={onReset} />
               </div>
               {submissionHint && (
                 <p>
