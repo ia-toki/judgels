@@ -25,6 +25,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemData;
@@ -35,10 +36,14 @@ import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.resource.ChapterResourceStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
+import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
 import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.ProblemEditorialInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
+import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -50,6 +55,8 @@ public class ChapterProblemResource {
     @Inject protected ChapterResourceStore resourceStore;
     @Inject protected ChapterProblemStore problemStore;
     @Inject protected StatsStore statsStore;
+    @Inject @JerahmeelSubmissionStore protected SubmissionStore submissionStore;
+    @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
     @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ChapterProblemResource() {}
@@ -143,6 +150,15 @@ public class ChapterProblemResource {
                 editorial = sandalphonClient.getProblemEditorial(problemJid, uriInfo.getBaseUri(), language);
             }
 
+            Optional<Submission> lastSubmission = Optional.empty();
+            Optional<SubmissionSource> lastSubmissionSource = Optional.empty();
+
+            Optional<Submission> submission = submissionStore.getLatestSubmission(Optional.of(chapterJid), Optional.of(actorJid), Optional.of(problemJid));
+            if (submission.isPresent()) {
+                lastSubmission = submissionStore.getSubmissionById(submission.get().getId());
+                lastSubmissionSource = Optional.of(submissionSourceBuilder.fromPastSubmission(submission.get().getJid(), true));
+            }
+
             return new judgels.jerahmeel.api.chapter.problem.programming.ChapterProblemWorksheet.Builder()
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
@@ -154,6 +170,8 @@ public class ChapterProblemResource {
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .skeletons(sandalphonClient.getProgrammingProblemSkeletons(problemJid))
+                    .lastSubmission(lastSubmission)
+                    .lastSubmissionSource(lastSubmissionSource)
                     .progress(progress)
                     .editorial(editorial)
                     .build();
