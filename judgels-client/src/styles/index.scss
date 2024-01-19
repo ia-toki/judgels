@@ -229,6 +229,7 @@ blockquote {
 
 .bp5-button:not([class*='bp5-intent-']) {
   .bp5-dark & {
+    color: $dark-text-color;
     background-color: $dark-background-color;
   }
 
@@ -336,6 +337,11 @@ table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
 
 .bp5-file-upload-input::after {
   .bp5-dark & {
+    color: $dark-text-color;
+    background-color: $dark-background-color;
+  }
+
+  .bp5-dark &:hover {
     background-color: $dark-background-color;
   }
 }
