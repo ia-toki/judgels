@@ -2,6 +2,10 @@
   flex-grow: 1;
   margin-bottom: 0;
 
+  @media only screen and (max-width: 1024px) {
+    margin-bottom: 1px;
+  }
+
   form {
     display: flex;
     flex-direction: column;
