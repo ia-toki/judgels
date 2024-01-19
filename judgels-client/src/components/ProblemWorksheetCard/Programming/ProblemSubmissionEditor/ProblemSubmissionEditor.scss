@@ -18,7 +18,9 @@
 
     .editor-header {
       display: flex;
+      width: 100%;
       gap: 10px;
+      margin-bottom: 10px;
 
       .bp5-form-group {
         margin: 0;
@@ -26,6 +28,10 @@
 
       .bp5-tag {
         padding-top: 1px;
+      }
+
+      .reset-button {
+        margin-left: auto;
       }
     }
   }

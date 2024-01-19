@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsReducer';
 import courseReducer, { PutCourse } from '../../../../../../modules/courseReducer';
 import courseChapterReducer, { PutCourseChapter } from '../../../../modules/courseChapterReducer';
+import chapterProblemReducer from '../modules/chapterProblemReducer';
 import ChapterProblemPage from './ChapterProblemPage';
 
 describe('ChapterProblemProgrammingPage', () => {
@@ -43,7 +44,11 @@ describe('ChapterProblemProgrammingPage', () => {
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
-        jerahmeel: combineReducers({ course: courseReducer, courseChapter: courseChapterReducer }),
+        jerahmeel: combineReducers({
+          course: courseReducer,
+          courseChapter: courseChapterReducer,
+          chapterProblem: chapterProblemReducer,
+        }),
       }),
       applyMiddleware(thunk)
     );
