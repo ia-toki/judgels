@@ -5,7 +5,3 @@ export function selectChapterProblemRefreshKey(state) {
 export function selectChapterProblemShouldScrollToEditorial(state) {
   return state.jerahmeel.chapterProblem.shouldScrollToEditorial;
 }
-
-export function selectChapterProblemShouldResetEditor(state) {
-  return state.jerahmeel.chapterProblem.shouldResetEditor;
-}

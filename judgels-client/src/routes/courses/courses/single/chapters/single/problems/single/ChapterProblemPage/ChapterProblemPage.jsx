@@ -37,12 +37,11 @@ export class ChapterProblemPage extends Component {
   async componentDidUpdate(prevProps) {
     if (
       this.props.statementLanguage !== prevProps.statementLanguage ||
-      this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey ||
+      this.props.refreshKey !== prevProps.refreshKey ||
       this.props.match.params.problemAlias !== prevProps.match.params.problemAlias
     ) {
       const shouldScrollToEditorial =
-        this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey &&
-        this.props.chapterProblemShouldScrollToEditorial;
+        this.props.refreshKey !== prevProps.refreshKey && this.props.shouldScrollToEditorial;
       await this.refreshProblem(shouldScrollToEditorial);
     }
   }
@@ -178,8 +177,8 @@ const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   chapters: selectCourseChapters(state),
-  chapterProblemRefreshKey: selectChapterProblemRefreshKey(state),
-  chapterProblemShouldScrollToEditorial: selectChapterProblemShouldScrollToEditorial(state),
+  refreshKey: selectChapterProblemRefreshKey(state),
+  shouldScrollToEditorial: selectChapterProblemShouldScrollToEditorial(state),
   statementLanguage: selectStatementLanguage(state),
 });
 const mapDispatchToProps = {

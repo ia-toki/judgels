@@ -11,9 +11,9 @@ import { VerdictCode } from '../../../../../../../../../../../../modules/api/gab
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
-import { RefreshChapterProblem } from '../../../../modules/chapterProblemReducer';
 
 import * as breadcrumbsActions from '../../../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as chapterProblemActions from '../../../../../modules/chapterProblemActions';
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
 export class ChapterProblemSubmissionPage extends Component {
@@ -81,8 +81,7 @@ export class ChapterProblemSubmissionPage extends Component {
     } else {
       if (this.currentTimeout) {
         clearTimeout(this.currentTimeout);
-        this.props.onRefreshChapterProblem({
-          refreshKey: Date.now(),
+        this.props.onRefreshProblem({
           shouldScrollToEditorial: verdictCode === VerdictCode.AC,
         });
       }
@@ -119,7 +118,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  onRefreshChapterProblem: RefreshChapterProblem,
+  onRefreshProblem: chapterProblemActions.refreshProblem,
   onGetSubmissionWithSource: chapterProblemSubmissionActions.getSubmissionWithSource,
   onGetSubmissionSourceImage: chapterProblemSubmissionActions.getSubmissionSourceImage,
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,

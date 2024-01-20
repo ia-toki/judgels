@@ -86,9 +86,12 @@ export class ProblemSubmissionEditor extends Component {
       gradingLanguage: defaultGradingLanguage,
     };
 
+    let canReset = false;
+
     (skeletons || []).forEach(skeleton => {
       if (skeleton.languages.indexOf(defaultGradingLanguage) >= 0) {
         initialValues.editor = decodeBase64(skeleton.content);
+        canReset = true;
       }
     });
 
@@ -107,7 +110,9 @@ export class ProblemSubmissionEditor extends Component {
             <form onSubmit={handleSubmit} className={classNames({ show: this.state.isResponsiveButtonClicked })}>
               <div className="editor-header">
                 <Field component={FormSelect2} {...gradingLanguageField} />
-                <Button className="reset-button" small text="Reset code" intent={Intent.NONE} onClick={onReset} />
+                {canReset && (
+                  <Button className="reset-button" small text="Reset code" intent={Intent.NONE} onClick={onReset} />
+                )}
               </div>
               {submissionHint && (
                 <p>
