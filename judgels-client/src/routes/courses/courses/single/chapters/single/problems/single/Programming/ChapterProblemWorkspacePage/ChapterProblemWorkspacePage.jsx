@@ -63,7 +63,7 @@ class ChapterProblemWorkspacePage extends Component {
       return (
         <ProblemSubmissionCard
           config={submissionConfig}
-          onSubmit={createSubmission}
+          onSubmit={this.createSubmission}
           reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
           preferredGradingLanguage={gradingLanguage}
         />
