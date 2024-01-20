@@ -41,9 +41,9 @@ class ContestEditModulesTab extends Component {
 
     return (
       <div className="contest-edit-dialog__content">
-        {this.renderEnabledModules(enabledModules)}
+        <>{this.renderEnabledModules(enabledModules)}</>
         <hr />
-        {this.renderDisabledModules(disabledModules)}
+        <>{this.renderDisabledModules(disabledModules)}</>
       </div>
     );
   };
