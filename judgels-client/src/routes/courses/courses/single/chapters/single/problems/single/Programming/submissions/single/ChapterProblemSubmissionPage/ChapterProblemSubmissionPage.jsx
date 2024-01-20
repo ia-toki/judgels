@@ -13,7 +13,7 @@ import { selectCourse } from '../../../../../../../../../modules/courseSelectors
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
 
 import * as breadcrumbsActions from '../../../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import * as chapterProblemActions from '../../../../../modules/chapterProblemActions';
+import * as chapterProblemActions from '../../../../modules/chapterProblemActions';
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
 export class ChapterProblemSubmissionPage extends Component {

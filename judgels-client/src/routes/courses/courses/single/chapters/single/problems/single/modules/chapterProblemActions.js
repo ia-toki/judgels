@@ -1,6 +1,6 @@
-import { chapterProblemAPI } from '../../../../../../../../modules/api/jerahmeel/chapterProblem';
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { RefreshChapterProblem } from '../single/modules/chapterProblemReducer';
+import { chapterProblemAPI } from '../../../../../../../../../modules/api/jerahmeel/chapterProblem';
+import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
+import { RefreshChapterProblem } from './chapterProblemReducer';
 
 export function getProblemWorksheet(chapterJid, problemAlias, language) {
   return async (dispatch, getState) => {

@@ -2,7 +2,7 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { nockJerahmeel } from '../../../../../../../../utils/nock';
+import { nockJerahmeel } from '../../../../../../../../../utils/nock';
 
 import * as chapterProblemActions from './chapterProblemActions';
 

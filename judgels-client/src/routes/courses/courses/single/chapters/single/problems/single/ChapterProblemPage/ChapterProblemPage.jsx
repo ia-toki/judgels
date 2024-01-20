@@ -21,7 +21,7 @@ import {
 } from '../modules/chapterProblemSelectors';
 
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import * as chapterProblemActions from '../../modules/chapterProblemActions';
+import * as chapterProblemActions from '../modules/chapterProblemActions';
 
 import './ChapterProblemPage.scss';
 

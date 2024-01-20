@@ -13,7 +13,7 @@ import { selectCourseChapters } from '../../../../modules/courseChaptersSelector
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import * as chapterLessonActions from '../../modules/chapterLessonActions';
+import * as chapterLessonActions from '../modules/chapterLessonActions';
 
 import './ChapterLessonPage.scss';
 
