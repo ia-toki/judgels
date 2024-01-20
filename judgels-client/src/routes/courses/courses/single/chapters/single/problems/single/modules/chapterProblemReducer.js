@@ -1,13 +1,12 @@
 export const initialState = {
   refreshKey: undefined,
   shouldScrollToEditorial: false,
-  shouldResetEditor: false,
 };
 
-export function RefreshChapterProblem({ refreshKey, shouldScrollToEditorial, shouldResetEditor }) {
+export function RefreshChapterProblem({ refreshKey, shouldScrollToEditorial }) {
   return {
     type: 'jerahmeel/chapterProblem/REFRESH',
-    payload: { refreshKey, shouldScrollToEditorial, shouldResetEditor },
+    payload: { refreshKey, shouldScrollToEditorial },
   };
 }
 
