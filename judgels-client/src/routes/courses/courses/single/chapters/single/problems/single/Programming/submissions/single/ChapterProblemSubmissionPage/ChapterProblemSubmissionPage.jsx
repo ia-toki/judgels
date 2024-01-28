@@ -7,13 +7,11 @@ import { ButtonLink } from '../../../../../../../../../../../../components/Butto
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { VerdictCode } from '../../../../../../../../../../../../modules/api/gabriel/verdict';
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
 
 import * as breadcrumbsActions from '../../../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import * as chapterProblemActions from '../../../../modules/chapterProblemActions';
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
 export class ChapterProblemSubmissionPage extends Component {
@@ -70,22 +68,6 @@ export class ChapterProblemSubmissionPage extends Component {
       problemName,
       containerName,
     });
-
-    if (sourceImageUrl) {
-      return;
-    }
-
-    const verdictCode = data.submission.latestGrading?.verdict.code || VerdictCode.PND;
-    if (verdictCode === VerdictCode.PND) {
-      this.currentTimeout = setTimeout(this.refreshSubmission, 1500);
-    } else {
-      if (this.currentTimeout) {
-        clearTimeout(this.currentTimeout);
-        this.props.onRefreshProblem({
-          shouldScrollToEditorial: verdictCode === VerdictCode.AC,
-        });
-      }
-    }
   };
 
   renderSubmission = () => {
@@ -118,7 +100,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  onRefreshProblem: chapterProblemActions.refreshProblem,
   onGetSubmissionWithSource: chapterProblemSubmissionActions.getSubmissionWithSource,
   onGetSubmissionSourceImage: chapterProblemSubmissionActions.getSubmissionSourceImage,
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,

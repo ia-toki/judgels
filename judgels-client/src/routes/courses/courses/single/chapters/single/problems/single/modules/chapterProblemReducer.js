@@ -1,18 +1,17 @@
 export const initialState = {
-  refreshKey: undefined,
-  shouldScrollToEditorial: false,
+  reloadKey: undefined,
 };
 
-export function RefreshChapterProblem({ refreshKey, shouldScrollToEditorial }) {
+export function ReloadChapterProblem({ reloadKey }) {
   return {
-    type: 'jerahmeel/chapterProblem/REFRESH',
-    payload: { refreshKey, shouldScrollToEditorial },
+    type: 'jerahmeel/chapterProblem/RELOAD',
+    payload: { reloadKey },
   };
 }
 
 export default function chapterProblemReducer(state = initialState, action) {
   switch (action.type) {
-    case 'jerahmeel/chapterProblem/REFRESH':
+    case 'jerahmeel/chapterProblem/RELOAD':
       return action.payload;
     default:
       return state;

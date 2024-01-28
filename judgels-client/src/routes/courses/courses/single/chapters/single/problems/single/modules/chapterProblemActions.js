@@ -1,6 +1,6 @@
 import { chapterProblemAPI } from '../../../../../../../../../modules/api/jerahmeel/chapterProblem';
 import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
-import { RefreshChapterProblem } from './chapterProblemReducer';
+import { ReloadChapterProblem } from './chapterProblemReducer';
 
 export function getProblemWorksheet(chapterJid, problemAlias, language) {
   return async (dispatch, getState) => {
@@ -9,8 +9,8 @@ export function getProblemWorksheet(chapterJid, problemAlias, language) {
   };
 }
 
-export function refreshProblem({ shouldScrollToEditorial }) {
+export function reloadProblem() {
   return async dispatch => {
-    await dispatch(RefreshChapterProblem({ refreshKey: Date.now(), shouldScrollToEditorial }));
+    await dispatch(ReloadChapterProblem({ reloadKey: Date.now() }));
   };
 }
