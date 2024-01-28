@@ -1,4 +1,4 @@
-import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
+import { Button, Callout, Intent } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { Component } from 'react';
@@ -10,20 +10,27 @@ import {
   getGradingLanguageEditorSubmissionHint,
   gradingLanguageNamesMap,
 } from '../../../../modules/api/gabriel/language.js';
+import { VerdictCode } from '../../../../modules/api/gabriel/verdict.js';
 import { decodeBase64 } from '../../../../utils/base64';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor';
 import { FormSelect2 } from '../../../forms/FormSelect2/FormSelect2';
 import { MaxCodeLength50KB, Required, composeValidators } from '../../../forms/validations';
+import { ProblemSubmissionSummary } from '../ProblemSubmissionSummary/ProblemSubmissionSummary';
 
 import './ProblemSubmissionEditor.scss';
 
 export class ProblemSubmissionEditor extends Component {
+  currentTimeout;
+
   state = {
     isResponsiveButtonClicked: false,
+    lastSubmissionId: null,
+    submission: undefined,
+    submissionUrl: undefined,
   };
 
-  onSubmitEditor = data => {
+  submit = async data => {
     const {
       config: { sourceKeys },
       onSubmit,
@@ -36,10 +43,40 @@ export class ProblemSubmissionEditor extends Component {
       });
     });
 
-    return onSubmit({
+    const { submission, submissionUrl } = await onSubmit({
       gradingLanguage: data.gradingLanguage,
       sourceFiles,
     });
+
+    this.setState(
+      {
+        lastSubmissionId: submission.id,
+        submission: undefined,
+        submissionUrl,
+      },
+      () => {
+        this.reloadSubmission();
+      }
+    );
+  };
+
+  reloadSubmission = async () => {
+    const { data } = await this.props.onGetSubmissionWithSource(this.state.lastSubmissionId);
+
+    this.setState({
+      submission: data.submission,
+    });
+
+    const verdictCode = data.submission.latestGrading?.verdict.code || VerdictCode.PND;
+    if (verdictCode === VerdictCode.PND) {
+      this.currentTimeout = setTimeout(this.reloadSubmission, 1500);
+    } else {
+      if (this.currentTimeout) {
+        clearTimeout(this.currentTimeout);
+        this.currentTimeout = undefined;
+        this.props.onReloadProblem();
+      }
+    }
   };
 
   renderEditor = () => {
@@ -102,7 +139,7 @@ export class ProblemSubmissionEditor extends Component {
     }
 
     return (
-      <Form onSubmit={this.onSubmitEditor} initialValues={initialValues}>
+      <Form onSubmit={this.submit} initialValues={initialValues}>
         {({ values, handleSubmit, submitting, dirty }) => {
           const submissionHint = getGradingLanguageEditorSubmissionHint(values.gradingLanguage);
 
@@ -120,7 +157,18 @@ export class ProblemSubmissionEditor extends Component {
                 </p>
               )}
               <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
-              <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} disabled={!dirty} />
+              <ProblemSubmissionSummary
+                submissionId={this.state.lastSubmissionId}
+                submission={this.state.submission}
+                submissionUrl={this.state.submissionUrl}
+              />
+              <Button
+                type="submit"
+                text="Submit"
+                intent={Intent.PRIMARY}
+                loading={submitting}
+                disabled={!dirty || this.currentTimeout}
+              />
             </form>
           );
         }}

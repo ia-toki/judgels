@@ -10,7 +10,7 @@ import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { selectCourse } from '../../modules/courseSelectors';
 import { PutCourseChapter } from '../chapters/modules/courseChapterReducer';
-import { selectChapterProblemRefreshKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
+import { selectChapterProblemReloadKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
 
 import * as courseChapterActions from '../chapters/modules/courseChapterActions';
 
@@ -27,7 +27,7 @@ class CourseChaptersSidebar extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if (this.props.chapterProblemRefreshKey !== prevProps.chapterProblemRefreshKey) {
+    if (this.props.chapterProblemReloadKey !== prevProps.chapterProblemReloadKey) {
       await this.refreshChapters();
     }
   }
@@ -186,7 +186,7 @@ class CourseChaptersSidebar extends Component {
 
 const mapStateToProps = state => ({
   course: selectCourse(state),
-  chapterProblemRefreshKey: selectChapterProblemRefreshKey(state),
+  chapterProblemReloadKey: selectChapterProblemReloadKey(state),
 });
 
 const mapDispatchToProps = {

@@ -1,0 +1,22 @@
+.problem-submission-summary {
+  padding: 10px;
+  width: 100%;
+
+  &__result {
+    display: flex;
+    gap: 10px;
+
+    .bp5-tag {
+      height: 100%;
+    }
+
+    .details-button {
+      height: 100%;
+      margin-left: auto;
+    }
+  }
+
+  .verdict-tag {
+    width: 100%;
+  }
+}

@@ -11,6 +11,7 @@ import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
 class ChapterProblemWorkspacePage extends Component {
@@ -38,7 +39,11 @@ class ChapterProblemWorkspacePage extends Component {
       });
     }
 
-    return await onCreateSubmission(course.slug, chapter.jid, chapter.alias, problem.problemJid, problem.alias, data);
+    const submission = await onCreateSubmission(chapter.jid, problem.problemJid, data);
+    return {
+      submission,
+      submissionUrl: `/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}/submissions/${submission.id}`,
+    };
   };
 
   resetEditor = () => {
@@ -50,7 +55,7 @@ class ChapterProblemWorkspacePage extends Component {
   };
 
   render() {
-    const { gradingLanguage, worksheet } = this.props;
+    const { gradingLanguage, worksheet, onGetSubmissionWithSource, onReloadProblem } = this.props;
     const { skeletons, lastSubmission, lastSubmissionSource } = worksheet;
     const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
     const { shouldResetEditor } = this.state;
@@ -81,6 +86,8 @@ class ChapterProblemWorkspacePage extends Component {
         shouldReset={shouldResetEditor}
         onSubmit={this.createSubmission}
         onReset={this.resetEditor}
+        onGetSubmissionWithSource={onGetSubmissionWithSource}
+        onReloadProblem={onReloadProblem}
       />
     );
   }
@@ -93,7 +100,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+  onReloadProblem: chapterProblemActions.reloadProblem,
   onCreateSubmission: chapterProblemSubmissionActions.createSubmission,
+  onGetSubmissionWithSource: chapterProblemSubmissionActions.getSubmissionWithSource,
   onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
 };
 

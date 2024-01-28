@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../../ga';
+import { VerdictCode } from '../../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
@@ -15,10 +16,7 @@ import { selectCourseChapters } from '../../../../modules/courseChaptersSelector
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
-import {
-  selectChapterProblemRefreshKey,
-  selectChapterProblemShouldScrollToEditorial,
-} from '../modules/chapterProblemSelectors';
+import { selectChapterProblemReloadKey } from '../modules/chapterProblemSelectors';
 
 import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterProblemActions from '../modules/chapterProblemActions';
@@ -37,12 +35,11 @@ export class ChapterProblemPage extends Component {
   async componentDidUpdate(prevProps) {
     if (
       this.props.statementLanguage !== prevProps.statementLanguage ||
-      this.props.refreshKey !== prevProps.refreshKey ||
+      this.props.reloadKey !== prevProps.reloadKey ||
       this.props.match.params.problemAlias !== prevProps.match.params.problemAlias
     ) {
-      const shouldScrollToEditorial =
-        this.props.refreshKey !== prevProps.refreshKey && this.props.shouldScrollToEditorial;
-      await this.refreshProblem(shouldScrollToEditorial);
+      const isReloadingProblem = this.props.reloadKey !== prevProps.reloadKey;
+      await this.refreshProblem(isReloadingProblem);
     }
   }
 
@@ -60,10 +57,15 @@ export class ChapterProblemPage extends Component {
     );
   }
 
-  refreshProblem = async shouldScrollToEditorial => {
-    this.setState({
-      response: undefined,
-    });
+  refreshProblem = async (isReloadingProblem = false) => {
+    let oldProgress = undefined;
+    if (isReloadingProblem) {
+      oldProgress = this.state.response.progress;
+    } else {
+      this.setState({
+        response: undefined,
+      });
+    }
 
     const response = await this.props.onGetProblemWorksheet(
       this.props.chapter.jid,
@@ -76,11 +78,9 @@ export class ChapterProblemPage extends Component {
         response,
       },
       () => {
-        if (shouldScrollToEditorial && response.editorial) {
-          const problemStatementEl = document.getElementById('chapter-problem-statement');
-          if (problemStatementEl) {
-            problemStatementEl.scrollTo({ top: problemStatementEl.scrollHeight, behavior: 'smooth' });
-          }
+        if (isReloadingProblem) {
+          const newProgress = response.progress;
+          this.checkEditorial(oldProgress, newProgress);
         }
       }
     );
@@ -94,6 +94,19 @@ export class ChapterProblemPage extends Component {
       action: 'View problem',
       label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
     });
+  };
+
+  checkEditorial = (oldProgress, newProgress) => {
+    if (
+      oldProgress?.verdict !== VerdictCode.AC &&
+      newProgress?.verdict == VerdictCode.AC &&
+      this.state.response.editorial
+    ) {
+      const problemEditorialEl = document.querySelector('.problem-editorial');
+      if (problemEditorialEl) {
+        problemEditorialEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   renderHeader = () => {
@@ -177,8 +190,7 @@ const mapStateToProps = state => ({
   course: selectCourse(state),
   chapter: selectCourseChapter(state),
   chapters: selectCourseChapters(state),
-  refreshKey: selectChapterProblemRefreshKey(state),
-  shouldScrollToEditorial: selectChapterProblemShouldScrollToEditorial(state),
+  reloadKey: selectChapterProblemReloadKey(state),
   statementLanguage: selectStatementLanguage(state),
 });
 const mapDispatchToProps = {
