@@ -6,8 +6,8 @@ import './ChapterProblemPage.scss';
 export default function ChapterProblemPage({ worksheet, renderNavigation }) {
   return (
     <div className="chapter-programming-problem-page">
-      <ChapterProblemStatementPage worksheet={worksheet} renderNavigation={renderNavigation} />
-      <ChapterProblemStatementRoutes worksheet={worksheet} />
+      <ChapterProblemStatementPage worksheet={worksheet} />
+      <ChapterProblemStatementRoutes worksheet={worksheet} renderNavigation={renderNavigation} />
     </div>
   );
 }
