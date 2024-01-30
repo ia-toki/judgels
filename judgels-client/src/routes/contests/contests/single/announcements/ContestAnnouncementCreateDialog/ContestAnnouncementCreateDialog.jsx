@@ -54,7 +54,7 @@ export class ContestAnnouncementCreateDialog extends Component {
 
   renderDialogForm = (fields, submitButton) => (
     <>
-      <div className={classNames(Classes.DIALOG_BODY, 'contest-announcement-create-dialog-body')}>{fields}</div>
+      <div className={classNames(Classes.DIALOG_BODY)}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={this.toggleDialog} />

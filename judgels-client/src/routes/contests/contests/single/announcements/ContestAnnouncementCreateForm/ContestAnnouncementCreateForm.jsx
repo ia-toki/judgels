@@ -6,7 +6,7 @@ import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/Form
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../../../components/forms/validations';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
-import { ContestAnnouncementInstruction } from "../ContestAnnouncementInstruction/ContestAnnouncementInstruction";
+import { ContestAnnouncementInstruction } from '../ContestAnnouncementInstruction/ContestAnnouncementInstruction';
 
 export default function ContestAnnouncementCreateForm({ onSubmit, renderFormComponents }) {
   const statusField = {
