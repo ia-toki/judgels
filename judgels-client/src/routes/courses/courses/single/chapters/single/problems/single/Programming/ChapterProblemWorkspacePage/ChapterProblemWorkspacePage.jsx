@@ -55,7 +55,7 @@ class ChapterProblemWorkspacePage extends Component {
   };
 
   render() {
-    const { gradingLanguage, worksheet, onGetSubmissionWithSource, onReloadProblem } = this.props;
+    const { gradingLanguage, worksheet, onGetSubmissionWithSource, onReloadProblem, renderNavigation } = this.props;
     const { skeletons, lastSubmission, lastSubmissionSource } = worksheet;
     const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
     const { shouldResetEditor } = this.state;
@@ -88,6 +88,7 @@ class ChapterProblemWorkspacePage extends Component {
         onReset={this.resetEditor}
         onGetSubmissionWithSource={onGetSubmissionWithSource}
         onReloadProblem={onReloadProblem}
+        renderNavigation={renderNavigation}
       />
     );
   }

@@ -88,6 +88,7 @@ export class ProblemSubmissionEditor extends Component {
       config: { gradingEngine, gradingLanguageRestriction },
       reasonNotAllowedToSubmit,
       preferredGradingLanguage,
+      renderNavigation,
     } = this.props;
 
     if (reasonNotAllowedToSubmit) {
@@ -162,13 +163,17 @@ export class ProblemSubmissionEditor extends Component {
                 submission={this.state.submission}
                 submissionUrl={this.state.submissionUrl}
               />
-              <Button
-                type="submit"
-                text="Submit"
-                intent={Intent.PRIMARY}
-                loading={submitting}
-                disabled={!dirty || this.currentTimeout}
-              />
+              <div className="editor-buttons">
+                <Button
+                  type="submit"
+                  text="Submit"
+                  small
+                  intent={Intent.PRIMARY}
+                  loading={submitting}
+                  disabled={!dirty || this.currentTimeout}
+                />
+                <div className="editor-navigation">{renderNavigation({ hidePrev: true })}</div>
+              </div>
             </form>
           );
         }}

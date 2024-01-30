@@ -152,7 +152,7 @@ export class ChapterProblemPage extends Component {
     return <ChapterProblemProgressTag verdict={progress.verdict} />;
   };
 
-  renderNavigation = () => {
+  renderNavigation = ({ hidePrev } = { hidePrev: false }) => {
     const { course, chapter, chapters } = this.props;
     const { response } = this.state;
     if (!response) {
@@ -164,9 +164,10 @@ export class ChapterProblemPage extends Component {
       <ChapterNavigation
         courseSlug={course.slug}
         chapterAlias={chapter.alias}
-        previousResourcePath={previousResourcePath}
+        previousResourcePath={hidePrev ? null : previousResourcePath}
         nextResourcePath={nextResourcePath}
         chapters={chapters}
+        disableNext={response.progress?.verdict.code !== VerdictCode.AC}
       />
     );
   };

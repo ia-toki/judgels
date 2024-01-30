@@ -10,7 +10,7 @@ import { selectCourseChapter } from '../../../../../modules/courseChapterSelecto
 
 import './ChapterProblemStatementPage.scss';
 
-function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
+function ChapterProblemStatementPage({ worksheet }) {
   const renderTimeLimit = timeLimit => {
     if (!timeLimit) {
       return '-';
@@ -93,10 +93,7 @@ function ChapterProblemStatementPage({ worksheet, renderNavigation }) {
     <ContentCard id="chapter-problem-statement" className="chapter-programming-problem-statement-page">
       {renderStatementHeader()}
       {renderStatement()}
-      <div className="chapter-programming-problem-statement-page__footer">
-        {renderEditorial()}
-        <div className="chapter-programming-problem-statement-page__navigation">{renderNavigation()}</div>
-      </div>
+      <div className="chapter-programming-problem-statement-page__footer">{renderEditorial()}</div>
     </ContentCard>
   );
 }
