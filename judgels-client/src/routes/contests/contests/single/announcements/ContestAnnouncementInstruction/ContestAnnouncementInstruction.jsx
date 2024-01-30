@@ -2,7 +2,7 @@ import { Callout } from "@blueprintjs/core";
 
 export function ContestAnnouncementInstruction() {
   return (
-    <Callout className="bp5-icon-info-sign heading-with-button-action">
+    <Callout className="bp5-icon-info-sign">
       <h5>Add Image to Your Contest Announcement</h5>
       <ol>
         <li>
