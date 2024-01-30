@@ -3,16 +3,18 @@ import { Callout } from "@blueprintjs/core";
 export function ContestAnnouncementInstruction() {
   return (
     <Callout className="bp5-icon-info-sign heading-with-button-action">
-      <h5 className="">Add an Image to Your Announcement</h5>
-      <p>
-        Want to make your announcement pop? Try adding an image! Here's how:
-        <ul>
-          <li>First, go to Settings and turn on the 'Files' module.</li>
-          <li>Then, in the 'Files' area, click 'Upload File' to upload your picture.</li>
-          <li>Now, just write <code>download/[your-image-name].jpg</code> in the announcement where you want the image. Make sure to change <code>[your-image-name]</code> to the name of the file you uploaded.</li>
-        </ul>
-        That's it! A little picture can say a lot.
-      </p>
+      <h5>Add Image to Your Contest Announcement</h5>
+      <ol>
+        <li>
+          Navigate to <strong>Settings</strong> and enable the <strong>Files</strong> module.
+        </li>
+        <li>
+          In the <strong>Contest Menu</strong> &gt; <strong>Files</strong> section, click on <strong>Upload File</strong> to upload your desired image.
+        </li>
+        <li>
+          Insert the uploaded image in the Content form below using the following format: <code>download/&lt;your-image-file-name.jpg&gt;</code>
+        </li>
+      </ol>
     </Callout>
   );
 }
