@@ -167,7 +167,7 @@ export class ChapterProblemPage extends Component {
         previousResourcePath={hidePrev ? null : previousResourcePath}
         nextResourcePath={nextResourcePath}
         chapters={chapters}
-        disableNext={response.progress?.verdict.code !== VerdictCode.AC}
+        disableNext={response.progress?.verdict !== VerdictCode.AC}
       />
     );
   };
