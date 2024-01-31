@@ -159,7 +159,7 @@ export class ChapterProblemPage extends Component {
       return null;
     }
 
-    const { previousResourcePath, nextResourcePath } = response;
+    const { problem, progress, previousResourcePath, nextResourcePath } = response;
     return (
       <ChapterNavigation
         courseSlug={course.slug}
@@ -167,7 +167,7 @@ export class ChapterProblemPage extends Component {
         previousResourcePath={hidePrev ? null : previousResourcePath}
         nextResourcePath={nextResourcePath}
         chapters={chapters}
-        disableNext={response.progress?.verdict !== VerdictCode.AC}
+        disableNext={problem.type === ProblemType.Programming && progress?.verdict !== VerdictCode.AC}
       />
     );
   };
