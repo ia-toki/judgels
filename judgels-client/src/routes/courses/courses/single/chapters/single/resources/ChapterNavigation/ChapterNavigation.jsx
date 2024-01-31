@@ -59,7 +59,12 @@ export function ChapterNavigation({
       if (chapters[i].alias === chapterAlias) {
         if (i + 1 < chapters.length) {
           return (
-            <ButtonLink small intent={Intent.WARNING} to={`/courses/${courseSlug}/chapters/${chapters[i + 1].alias}`}>
+            <ButtonLink
+              small
+              disabled={disableNext}
+              intent={Intent.WARNING}
+              to={`/courses/${courseSlug}/chapters/${chapters[i + 1].alias}`}
+            >
               Next chapter &nbsp;&nbsp;
               <ChevronRight />
             </ButtonLink>
