@@ -1,9 +1,11 @@
 import { ProgressBar } from '@blueprintjs/core';
 import { Tag } from '@blueprintjs/core';
 
+import { getGradingLanguageSyntaxHighlighterValue } from '../../../../modules/api/gabriel/language';
 import { VerdictCode } from '../../../../modules/api/gabriel/verdict';
 import { ButtonLink } from '../../../ButtonLink/ButtonLink';
 import { ContentCard } from '../../../ContentCard/ContentCard';
+import SourceCode from '../../../SourceCode/SourceCode';
 import { VerdictTag } from '../../../VerdictTag/VerdictTag';
 
 import './ProblemSubmissionSummary.scss';
@@ -27,6 +29,24 @@ export function ProblemSubmissionSummary({ submissionId, submission, submissionU
     }
 
     return <Tag>{score}</Tag>;
+  };
+
+  const renderDetails = () => {
+    const { latestGrading, gradingLanguage } = submission;
+    const verdictCode = latestGrading.verdict.code;
+
+    if (verdictCode === VerdictCode.CE) {
+      const { compilationOutputs } = latestGrading.details;
+      if (compilationOutputs) {
+        return Object.keys(compilationOutputs).map(key => (
+          <SourceCode showLineNumbers={false} language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
+            {compilationOutputs[key].trim()}
+          </SourceCode>
+        ));
+      }
+    }
+
+    return null;
   };
 
   const renderSubmission = () => {
@@ -55,6 +75,7 @@ export function ProblemSubmissionSummary({ submissionId, submission, submissionU
           </ButtonLink>
         </div>
         <VerdictTag square verdictCode={verdictCode} />
+        {renderDetails()}
       </>
     );
   };
