@@ -93,7 +93,7 @@ function ChapterProblemStatementPage({ worksheet }) {
     <ContentCard id="chapter-problem-statement" className="chapter-programming-problem-statement-page">
       {renderStatementHeader()}
       {renderStatement()}
-      <div className="chapter-programming-problem-statement-page__footer">{renderEditorial()}</div>
+      <div className="chapter-problem-editorial">{renderEditorial()}</div>
     </ContentCard>
   );
 }

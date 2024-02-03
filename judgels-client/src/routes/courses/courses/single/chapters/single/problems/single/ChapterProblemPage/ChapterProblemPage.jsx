@@ -102,7 +102,7 @@ export class ChapterProblemPage extends Component {
       newProgress?.verdict == VerdictCode.AC &&
       this.state.response.editorial
     ) {
-      const problemEditorialEl = document.querySelector('.problem-editorial');
+      const problemEditorialEl = document.querySelector('.chapter-problem-editorial');
       if (problemEditorialEl) {
         problemEditorialEl.scrollIntoView({ behavior: 'smooth' });
       }

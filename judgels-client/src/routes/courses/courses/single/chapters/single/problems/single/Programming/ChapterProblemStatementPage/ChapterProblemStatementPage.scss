@@ -31,7 +31,7 @@
     margin-top: 0;
   }
 
-  .chapter-programming-problem-statement-page__footer {
+  .chapter-problem-editorial {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -42,9 +42,12 @@
     }
 
     .problem-editorial {
-      border: 2px solid #238551;
-      border-radius: 4px;
+      background-color: #72ca9b;
       box-shadow: none;
+
+      .bp5-dark & {
+        background-color: #1c6e42;
+      }
     }
   }
   .chapter-programming-problem-statement-page__navigation {
