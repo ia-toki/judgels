@@ -10,7 +10,7 @@ import { VerdictTag } from '../../../VerdictTag/VerdictTag';
 
 import './ProblemSubmissionSummary.scss';
 
-export function ProblemSubmissionSummary({ submissionId, submission, submissionUrl }) {
+export function ProblemSubmissionSummary({ submissionJid, submission, submissionUrl }) {
   const renderScore = grading => {
     const verdict = grading.verdict;
 
@@ -80,7 +80,7 @@ export function ProblemSubmissionSummary({ submissionId, submission, submissionU
     );
   };
 
-  if (!submissionId) {
+  if (!submissionJid) {
     return null;
   }
 

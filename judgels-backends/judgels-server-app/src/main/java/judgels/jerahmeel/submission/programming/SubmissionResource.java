@@ -154,6 +154,14 @@ public class SubmissionResource {
     }
 
     @GET
+    @Path("/{submissionJid}")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public Submission getSubmission(@PathParam("submissionJid") String submissionJid) {
+        return checkFound(submissionStore.getSubmissionByJid(submissionJid));
+    }
+
+    @GET
     @Path("/id/{submissionId}")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
