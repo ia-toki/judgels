@@ -55,7 +55,7 @@ export class ProblemSubmissionEditor extends Component {
         submissionUrl,
       },
       () => {
-        this.reloadSubmission();
+        this.currentTimeout = setTimeout(this.reloadSubmission, 0);
       }
     );
   };
