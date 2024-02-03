@@ -25,7 +25,7 @@ export class ProblemSubmissionEditor extends Component {
 
   state = {
     isResponsiveButtonClicked: false,
-    lastSubmissionId: null,
+    lastSubmissionJid: null,
     submission: undefined,
     submissionUrl: undefined,
   };
@@ -50,7 +50,7 @@ export class ProblemSubmissionEditor extends Component {
 
     this.setState(
       {
-        lastSubmissionId: submission.id,
+        lastSubmissionJid: submission.jid,
         submission: undefined,
         submissionUrl,
       },
@@ -61,13 +61,13 @@ export class ProblemSubmissionEditor extends Component {
   };
 
   reloadSubmission = async () => {
-    const { data } = await this.props.onGetSubmissionWithSource(this.state.lastSubmissionId);
+    const submission = await this.props.onGetSubmission(this.state.lastSubmissionJid);
 
     this.setState({
-      submission: data.submission,
+      submission: submission,
     });
 
-    const verdictCode = data.submission.latestGrading?.verdict.code || VerdictCode.PND;
+    const verdictCode = submission.latestGrading?.verdict.code || VerdictCode.PND;
     if (verdictCode === VerdictCode.PND) {
       this.currentTimeout = setTimeout(this.reloadSubmission, 1500);
     } else {
@@ -159,7 +159,7 @@ export class ProblemSubmissionEditor extends Component {
               )}
               <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
               <ProblemSubmissionSummary
-                submissionId={this.state.lastSubmissionId}
+                submissionJid={this.state.lastSubmissionJid}
                 submission={this.state.submission}
                 submissionUrl={this.state.submissionUrl}
               />

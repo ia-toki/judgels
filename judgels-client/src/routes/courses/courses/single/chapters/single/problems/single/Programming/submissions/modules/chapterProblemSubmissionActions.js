@@ -4,6 +4,12 @@ import { selectIsDarkMode } from '../../../../../../../../../../../modules/webPr
 
 import { toastActions } from '../../../../../../../../../../../modules/toast/toastActions';
 
+export function getSubmission(submissionJid) {
+  return async () => {
+    return await submissionProgrammingAPI.getSubmission(submissionJid);
+  };
+}
+
 export function getSubmissions(chapterJid, problemAlias, username, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
