@@ -74,6 +74,11 @@ public final class AwsFileSystem implements FileSystem {
     }
 
     @Override
+    public void copyDirectory(Path srcPath, Path destPath) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void createFile(Path filePath) {
         throw new UnsupportedOperationException();
     }
@@ -212,15 +217,5 @@ public final class AwsFileSystem implements FileSystem {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void copyDirectory(Path src, Path dest) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void copy(Path src, Path dest) {
-        throw new UnsupportedOperationException();
     }
 }

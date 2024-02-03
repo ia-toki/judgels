@@ -8,6 +8,7 @@ import java.util.List;
 public interface FileSystem {
     void createDirectory(Path dirPath);
     boolean directoryExists(Path dirPath);
+    void copyDirectory(Path srcPath, Path destPath);
     void createFile(Path filePath);
     void removeFile(Path filePath);
     File getFile(Path filePath);
@@ -28,7 +29,4 @@ public interface FileSystem {
     default String readFromFile(Path filePath) {
         return new String(readByteArrayFromFile(filePath));
     }
-
-    void copyDirectory(Path src, Path dest);
-    void copy(Path src, Path dest);
 }
