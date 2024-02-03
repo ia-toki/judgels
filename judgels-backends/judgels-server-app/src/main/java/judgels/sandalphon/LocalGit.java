@@ -45,13 +45,11 @@ public final class LocalGit implements Git {
 
     @Override
     public void clone(Path originDirPath, Path rootDirPath) {
-        String srcDirAbsolutePath = fs.getFile(originDirPath).getAbsolutePath();
-        String destDirAbsolutePath = fs.getFile(rootDirPath).getAbsolutePath();
-
-        fs.copyDirectory(Path.of(srcDirAbsolutePath), Path.of(destDirAbsolutePath));
+        fs.createDirectory(rootDirPath);
+        fs.copyDirectory(originDirPath, rootDirPath);
 
         File destDir = fs.getFile(rootDirPath);
-        String destURI = "file://" + srcDirAbsolutePath;
+        String destURI = "file://" + fs.getFile(originDirPath).getAbsolutePath();
 
         try {
             org.eclipse.jgit.api.Git.open(destDir).remoteAdd().setName("origin").setUri(new URIish(destURI)).call();
