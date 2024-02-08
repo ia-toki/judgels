@@ -12,26 +12,26 @@ const verdictIntentMap = {
   [Verdict.WRONG_ANSWER]: Intent.DANGER,
 };
 
-const verdictDisplayCode = {
-  [Verdict.ACCEPTED]: 'AC',
+const verdictDisplayName = {
+  [Verdict.ACCEPTED]: 'Correct',
   [Verdict.INTERNAL_ERROR]: '???',
   [Verdict.OK]: 'OK',
-  [Verdict.PENDING_REGRADE]: 'PENDING',
-  [Verdict.PENDING_MANUAL_GRADING]: 'MANUAL',
-  [Verdict.WRONG_ANSWER]: 'WA',
+  [Verdict.PENDING_REGRADE]: 'Pending',
+  [Verdict.PENDING_MANUAL_GRADING]: 'Manual',
+  [Verdict.WRONG_ANSWER]: 'Incorrect',
 };
 
 export function VerdictTag({ verdict }) {
   const intent = verdictIntentMap[verdict] || Intent.NONE;
-  let displayCode = verdictDisplayCode[verdict] || verdict;
+  let displayName = verdictDisplayName[verdict] || verdict;
   if (verdict === Verdict.PENDING_REGRADE) {
-    displayCode = <Time />;
+    displayName = <Time />;
   } else if (verdict === Verdict.PENDING_MANUAL_GRADING) {
-    displayCode = <Follower />;
+    displayName = <Follower />;
   }
   return (
     <Tag round intent={intent}>
-      {displayCode}
+      {displayName}
     </Tag>
   );
 }

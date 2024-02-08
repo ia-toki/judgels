@@ -75,6 +75,7 @@ export class ChapterProblemStatementPage extends Component {
         latestSubmissions={latestSubmissions}
         onAnswerItem={this.createSubmission}
         worksheet={{ ...worksheet, reasonNotAllowedToSubmit }}
+        showTitle={false}
         resultsUrl={resultsUrl}
       />
     );

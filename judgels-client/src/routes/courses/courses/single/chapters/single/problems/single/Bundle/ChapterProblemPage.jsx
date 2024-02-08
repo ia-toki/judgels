@@ -3,11 +3,11 @@ import ChapterProblemSubmissionRoutes from './submissions/ChapterProblemSubmissi
 
 import './ChapterProblemPage.scss';
 
-export default function ChapterProblemPage({ worksheet }) {
+export default function ChapterProblemPage({ worksheet, renderNavigation }) {
   return (
     <div className="chapter-bundle-problem-page">
       <ChapterProblemStatementPage worksheet={worksheet} />
-      <ChapterProblemSubmissionRoutes />
+      <ChapterProblemSubmissionRoutes renderNavigation={renderNavigation} />
     </div>
   );
 }

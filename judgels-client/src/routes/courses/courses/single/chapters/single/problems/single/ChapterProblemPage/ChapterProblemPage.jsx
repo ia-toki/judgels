@@ -182,7 +182,7 @@ export class ChapterProblemPage extends Component {
     if (problem.type === ProblemType.Programming) {
       return <ChapterProblemProgrammingPage worksheet={response} renderNavigation={this.renderNavigation} />;
     } else {
-      return <ChapterProblemBundlePage worksheet={response} />;
+      return <ChapterProblemBundlePage worksheet={response} renderNavigation={this.renderNavigation} />;
     }
   };
 }

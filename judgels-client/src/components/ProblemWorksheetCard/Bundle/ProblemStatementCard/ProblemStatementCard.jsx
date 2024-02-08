@@ -10,7 +10,15 @@ import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 
 import './ProblemStatementCard.scss';
 
-export function ProblemStatementCard({ items, alias, statement, onAnswerItem, latestSubmissions, disabled }) {
+export function ProblemStatementCard({
+  items,
+  alias,
+  statement,
+  showTitle = true,
+  onAnswerItem,
+  latestSubmissions,
+  disabled,
+}) {
   const generateOnAnswer = itemJid => {
     return async answer => {
       return await onAnswerItem(itemJid, answer || '');
@@ -71,14 +79,15 @@ export function ProblemStatementCard({ items, alias, statement, onAnswerItem, la
 
   return (
     <ContentCard>
-      <h2 className="bundle-problem-statement__name">
-        {alias ? `${alias}. ` : ''}
-        {statement.title}
-      </h2>
+      {showTitle && (
+        <h2 className="bundle-problem-statement__name">
+          {alias ? `${alias}. ` : ''}
+          {statement.title}
+        </h2>
+      )}
       <div className="bundle-problem-statement__text">
         <HtmlText>{statement.text}</HtmlText>
       </div>
-      <Divider />
       {items.map(item => {
         switch (item.type) {
           case ItemType.MultipleChoice:
