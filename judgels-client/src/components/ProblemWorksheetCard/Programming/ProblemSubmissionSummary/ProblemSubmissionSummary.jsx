@@ -1,5 +1,5 @@
-import { ProgressBar } from '@blueprintjs/core';
-import { Tag } from '@blueprintjs/core';
+import { Button, Intent, ProgressBar, Tag } from '@blueprintjs/core';
+import { Clipboard, Cross } from '@blueprintjs/icons';
 
 import { getGradingLanguageSyntaxHighlighterValue } from '../../../../modules/api/gabriel/language';
 import { VerdictCode } from '../../../../modules/api/gabriel/verdict';
@@ -10,7 +10,7 @@ import { VerdictTag } from '../../../VerdictTag/VerdictTag';
 
 import './ProblemSubmissionSummary.scss';
 
-export function ProblemSubmissionSummary({ submissionJid, submission, submissionUrl }) {
+export function ProblemSubmissionSummary({ submissionJid, submission, submissionUrl, onClose }) {
   const renderScore = grading => {
     const verdict = grading.verdict;
 
@@ -35,15 +35,17 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
     const { latestGrading, gradingLanguage } = submission;
     const verdictCode = latestGrading.verdict.code;
 
-    if (verdictCode === VerdictCode.CE) {
-      const { compilationOutputs } = latestGrading.details;
-      if (compilationOutputs) {
-        return Object.keys(compilationOutputs).map(key => (
-          <SourceCode showLineNumbers={false} language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
-            {compilationOutputs[key].trim()}
-          </SourceCode>
-        ));
-      }
+    if (verdictCode !== VerdictCode.CE) {
+      return null;
+    }
+
+    const { compilationOutputs } = latestGrading.details;
+    if (compilationOutputs) {
+      return Object.keys(compilationOutputs).map(key => (
+        <SourceCode showLineNumbers={false} language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
+          {compilationOutputs[key].trim()}
+        </SourceCode>
+      ));
     }
     return null;
   };
@@ -74,11 +76,19 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
     const { latestGrading } = submission;
     const verdictCode = latestGrading.verdict.code;
 
-    if (verdictCode == VerdictCode.AC || verdictCode == VerdictCode.WA) {
-      const { details } = latestGrading;
-      for (const testGroupResult of details.testDataResults) {
-        if (testGroupResult.id === -1) {
-          return testGroupResult.testCaseResults.map(renderTestCaseResult);
+    if (verdictCode !== VerdictCode.AC && verdictCode !== VerdictCode.WA) {
+      return null;
+    }
+
+    for (const testGroupResult of latestGrading.details.testDataResults) {
+      if (testGroupResult.id === -1) {
+        if (testGroupResult.testCaseResults.some(r => r.hasOwnProperty('revealedSolutionOutput'))) {
+          return (
+            <div className="problem-submission-summary__evaluation">
+              <Button small intent={Intent.NONE} icon={<Cross />} onClick={onClose} />
+              {testGroupResult.testCaseResults.map(renderTestCaseResult)}
+            </div>
+          );
         }
       }
     }
@@ -103,7 +113,7 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
 
     return (
       <>
-        <div className="problem-submission-summary__evaluation">{renderEvaluationResults()}</div>
+        {renderEvaluationResults()}
         <div className="problem-submission-summary__verdict">
           <h5>Verdict</h5>
           {renderScore(latestGrading)}

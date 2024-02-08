@@ -2,6 +2,15 @@
   width: 100%;
   padding: 10px;
 
+  &__evaluation {
+    position: relative;
+
+    button {
+      position: absolute;
+      right: 0;
+    }
+  }
+
   &__evaluation-result {
     display: flex;
     flex-direction: column;

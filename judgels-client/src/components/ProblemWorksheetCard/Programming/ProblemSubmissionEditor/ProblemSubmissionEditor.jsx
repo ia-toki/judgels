@@ -79,6 +79,10 @@ export class ProblemSubmissionEditor extends Component {
     }
   };
 
+  closeSubmissionSummary = () => {
+    this.setState({ lastSubmissionJid: null });
+  };
+
   renderEditor = () => {
     const {
       shouldReset,
@@ -162,6 +166,7 @@ export class ProblemSubmissionEditor extends Component {
                 submissionJid={this.state.lastSubmissionJid}
                 submission={this.state.submission}
                 submissionUrl={this.state.submissionUrl}
+                onClose={this.closeSubmissionSummary}
               />
               <div className="editor-buttons">
                 <Button
