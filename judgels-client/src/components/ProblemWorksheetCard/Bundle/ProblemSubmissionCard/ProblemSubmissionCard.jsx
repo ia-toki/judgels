@@ -15,7 +15,7 @@ export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) 
     }
     return (
       <ButtonLink intent={Intent.PRIMARY} to={resultsUrl}>
-        Finish and show results
+        Submit
       </ButtonLink>
     );
   };

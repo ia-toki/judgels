@@ -52,13 +52,14 @@ class ChapterProblemSubmissionsPage extends Component {
   }
 
   render() {
-    const { course, chapter, match } = this.props;
+    const { course, chapter, match, renderNavigation } = this.props;
 
     return (
       <ContentCard className="chapter-bundle-problem-submissions-page">
         <ScrollToTopOnMount />
         <h3 className="heading-with-button-action">Results</h3>
         <ButtonLink
+          small
           intent={Intent.PRIMARY}
           to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${match.params.problemAlias}`}
         >
@@ -66,6 +67,7 @@ class ChapterProblemSubmissionsPage extends Component {
         </ButtonLink>
         <hr />
         {this.renderResults()}
+        {renderNavigation({ hidePrev: true })}
       </ContentCard>
     );
   }
@@ -88,7 +90,7 @@ class ChapterProblemSubmissionsPage extends Component {
     return (
       <>
         {this.state.problemSummaries.map(props => (
-          <SubmissionDetails key={props.alias} {...props} />
+          <SubmissionDetails key={props.alias} {...props} showTitle={false} />
         ))}
       </>
     );
