@@ -27,6 +27,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
@@ -261,7 +262,8 @@ public class SubmissionResource {
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
         ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
-        Submission submission = submissionClient.submit(data, source, config);
+        GradingOptions options = new GradingOptions.Builder().shouldRevealEvaluation(true).build();
+        Submission submission = submissionClient.submit(data, source, config, options);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
 

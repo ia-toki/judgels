@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 public interface GenerationResult {
     Optional<TestCaseVerdict> getVerdict();
     SandboxExecutionResult getExecutionResult();
+    Optional<String> getRevealedSolutionOutput();
 
     class Builder extends ImmutableGenerationResult.Builder {}
 }

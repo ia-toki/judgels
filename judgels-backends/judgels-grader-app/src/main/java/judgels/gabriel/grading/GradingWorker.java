@@ -19,6 +19,7 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingEngine;
 import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.GradingResponse;
 import judgels.gabriel.api.GradingResult;
@@ -56,6 +57,7 @@ public class GradingWorker {
 
     private GradingEngine engine;
     private GradingConfig config;
+    private GradingOptions options;
     private GradingLanguage language;
     private SubmissionSource source;
 
@@ -117,6 +119,7 @@ public class GradingWorker {
     private void initializeWorker() {
         LOGGER.info("Worker initialization started.");
 
+        options = request.getGradingOptions();
         source = request.getSubmissionSource();
 
         try {
@@ -146,7 +149,7 @@ public class GradingWorker {
                 .testDataFiles(testDataFiles)
                 .helperFiles(helperFiles)
                 .build();
-        result = engine.grade(engineDir.toFile(), config, language, source, sandboxFactory);
+        result = engine.grade(engineDir.toFile(), config, options, language, source, sandboxFactory);
 
         LOGGER.info("Grading finished. Result: {} {}", result.getVerdict().getCode(), result.getScore());
     }

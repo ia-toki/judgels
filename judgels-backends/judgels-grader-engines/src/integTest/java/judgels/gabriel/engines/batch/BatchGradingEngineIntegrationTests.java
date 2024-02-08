@@ -8,10 +8,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.util.List;
 import judgels.gabriel.api.GradingException;
+import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestCaseResult;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.BlackboxGradingEngineIntegrationTests;
 import org.junit.jupiter.api.Test;
@@ -167,5 +170,32 @@ class BatchGradingEngineIntegrationTests extends BlackboxGradingEngineIntegratio
 
         GradingResultDetails details = getDetails(result);
         assertThat(details.getCompilationOutputs().get("source")).contains("BB");
+    }
+
+    @Test
+    void with_revealed_evaluation_result() throws GradingException {
+        addSourceFile("source", "aplusb-WA-at-1_1.cpp");
+
+        BatchGradingConfig config = new BatchGradingConfig.Builder()
+                .from(ENGINE.createDefaultConfig())
+                .testData(List.of(
+                        TestGroup.of(0, List.of()),
+                        TestGroup.of(-1, List.of(
+                                TestCase.of("1_1.in", "1_1.out", ImmutableSet.of(-1)),
+                                TestCase.of("1_2.in", "1_2.out", ImmutableSet.of(-1)),
+                                TestCase.of("2_1.in", "2_1.out", ImmutableSet.of(-1))))))
+                .build();
+        GradingOptions options = new GradingOptions.Builder().shouldRevealEvaluation(true).build();
+
+        GradingResult result = runEngine(config, options);
+        GradingResultDetails details = getDetails(result);
+
+        List<TestCaseResult> testCaseResults = details.getTestDataResults().get(1).getTestCaseResults();
+        assertThat(testCaseResults.get(0).getRevealedInput()).contains("1 1\n");
+        assertThat(testCaseResults.get(0).getRevealedSolutionOutput()).contains("Case #1:\n-1\n");
+        assertThat(testCaseResults.get(1).getRevealedInput()).contains("1 2\n");
+        assertThat(testCaseResults.get(1).getRevealedSolutionOutput()).contains("Case #1:\n3\n");
+        assertThat(testCaseResults.get(2).getRevealedInput()).contains("2 1\n");
+        assertThat(testCaseResults.get(2).getRevealedSolutionOutput()).contains("Case #1:\n3\n");
     }
 }
