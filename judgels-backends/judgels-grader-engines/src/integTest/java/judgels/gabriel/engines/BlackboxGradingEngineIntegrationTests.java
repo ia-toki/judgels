@@ -20,6 +20,7 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingEngine;
 import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.GradingSource;
@@ -40,6 +41,7 @@ public class BlackboxGradingEngineIntegrationTests {
     protected static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
 
     private GradingEngine engine;
+    private GradingOptions options;
     private GradingLanguage language;
 
     private File workerDir;
@@ -99,13 +101,17 @@ public class BlackboxGradingEngineIntegrationTests {
     }
 
     protected GradingResult runEngine(GradingConfig config) throws GradingException {
+        return runEngine(config, new GradingOptions.Builder().build());
+    }
+
+    protected GradingResult runEngine(GradingConfig config, GradingOptions options) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         GradingSource source = new GradingSource.Builder()
                 .sourceFiles(sourceFiles)
                 .testDataFiles(testDataFiles)
                 .helperFiles(helperFiles)
                 .build();
-        return engine.grade(gradingDir, config, language, source, sandboxFactory);
+        return engine.grade(gradingDir, config, options, language, source, sandboxFactory);
     }
 
     protected GradingResultDetails getDetails(GradingResult result) {

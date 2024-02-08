@@ -10,8 +10,9 @@ public interface GradingRequest {
     String getGradingJid();
     String getProblemJid();
     String getGradingLanguage();
-    Instant getGradingLastUpdateTime();
     SubmissionSource getSubmissionSource();
+    Instant getGradingLastUpdateTime();
+    GradingOptions getGradingOptions();
 
     class Builder extends ImmutableGradingRequest.Builder {}
 }

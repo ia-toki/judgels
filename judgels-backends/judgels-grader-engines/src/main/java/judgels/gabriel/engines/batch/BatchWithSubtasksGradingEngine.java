@@ -11,6 +11,7 @@ import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxFactory;
@@ -73,6 +74,7 @@ public class BatchWithSubtasksGradingEngine extends BlackboxGradingEngine {
     @Override
     public void prepare(
             GradingConfig config,
+            GradingOptions options,
             GradingLanguage language,
             Map<String, File> sourceFiles,
             Map<String, File> helperFiles,
@@ -101,7 +103,8 @@ public class BatchWithSubtasksGradingEngine extends BlackboxGradingEngine {
                 language,
                 sourceFile,
                 cfg.getTimeLimit(),
-                cfg.getMemoryLimit());
+                cfg.getMemoryLimit(),
+                false);
     }
 
     @Override

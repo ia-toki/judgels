@@ -23,6 +23,7 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingEngine;
 import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.GradingSource;
@@ -51,6 +52,7 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
     private File evaluationDir;
 
     private GradingConfig config;
+    private GradingOptions options;
     private GradingLanguage language;
     private GradingSource source;
     private SandboxFactory sandboxFactory;
@@ -74,12 +76,14 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
     public GradingResult grade(
             File gradingDir,
             GradingConfig config,
+            GradingOptions options,
             GradingLanguage language,
             GradingSource source,
             SandboxFactory sandboxFactory) throws GradingException {
 
         this.gradingDir = gradingDir;
         this.config = config;
+        this.options = options;
         this.language = language;
         this.source = source;
         this.sandboxFactory = sandboxFactory;
@@ -98,6 +102,7 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
     protected abstract Aggregator getAggregator();
     protected abstract void prepare(
             GradingConfig config,
+            GradingOptions options,
             GradingLanguage language,
             Map<String, File> sourceFiles,
             Map<String, File> helperFiles,
@@ -148,6 +153,7 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
     private void prepareEngine() throws PreparationException {
         prepare(
                 config,
+                options,
                 language,
                 source.getSourceFiles(),
                 source.getHelperFiles(),
@@ -297,11 +303,15 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
                     testCaseScore += testCaseScore.isEmpty() ? "" : " ";
                     testCaseScore += "[" + testCaseVerdict.getFeedback().get() + "]";
                 }
+
+                EvaluationResult evaluationResult = testGroupEvaluationResults.get(i).get(j);
                 testCaseResults.add(new TestCaseResult.Builder()
                         .verdict(testCaseVerdict.getVerdict())
                         .score(testCaseScore)
-                        .executionResult(testGroupEvaluationResults.get(i).get(j).getExecutionResult())
+                        .executionResult(evaluationResult.getExecutionResult())
                         .subtaskIds(testCase.getSubtaskIds())
+                        .revealedInput(evaluationResult.getRevealedInput())
+                        .revealedSolutionOutput(evaluationResult.getRevealedSolutionOutput())
                         .build());
             }
             testGroupResults.add(new TestGroupResult.Builder()
