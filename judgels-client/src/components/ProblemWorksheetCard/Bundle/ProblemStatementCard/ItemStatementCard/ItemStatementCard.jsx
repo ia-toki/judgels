@@ -1,11 +1,11 @@
 import { Card } from '@blueprintjs/core';
 
-import { HtmlText } from '../../../../HtmlText/HtmlText';
+import RichStatementText from '../../../../RichStatementText/RichStatementText';
 
 export function ItemStatementCard({ className, config: { statement } }) {
   return (
     <Card className={className}>
-      <HtmlText>{statement}</HtmlText>
+      <RichStatementText>{statement}</RichStatementText>
     </Card>
   );
 }

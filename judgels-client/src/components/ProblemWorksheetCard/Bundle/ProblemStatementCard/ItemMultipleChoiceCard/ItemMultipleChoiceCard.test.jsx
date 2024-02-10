@@ -1,4 +1,6 @@
 import { mount } from 'enzyme';
+import { Provider } from 'react-redux';
+import createMockStore from 'redux-mock-store';
 
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
@@ -34,8 +36,13 @@ describe('ItemMultipleChoiceCard', () => {
   };
 
   beforeEach(() => {
+    const store = createMockStore()({});
     const props = multipleChoiceCardProps;
-    wrapper = mount(<ItemMultipleChoiceCard {...props} />);
+    wrapper = mount(
+      <Provider store={store}>
+        <ItemMultipleChoiceCard {...props} />
+      </Provider>
+    );
   });
 
   test('Answer the question by clicking a radio button', () => {

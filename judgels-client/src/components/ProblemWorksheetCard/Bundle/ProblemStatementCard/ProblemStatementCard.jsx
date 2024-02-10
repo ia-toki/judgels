@@ -2,7 +2,7 @@ import { Divider } from '@blueprintjs/core';
 
 import { ItemType } from '../../../../modules/api/sandalphon/problemBundle';
 import { ContentCard } from '../../../ContentCard/ContentCard';
-import { HtmlText } from '../../../HtmlText/HtmlText';
+import RichStatementText from '../../../RichStatementText/RichStatementText';
 import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';
 import { ItemShortAnswerCard } from './ItemShortAnswerCard/ItemShortAnswerCard';
@@ -86,7 +86,7 @@ export function ProblemStatementCard({
         </h2>
       )}
       <div className="bundle-problem-statement__text">
-        <HtmlText>{statement.text}</HtmlText>
+        <RichStatementText>{statement.text}</RichStatementText>
       </div>
       {items.map(item => {
         switch (item.type) {

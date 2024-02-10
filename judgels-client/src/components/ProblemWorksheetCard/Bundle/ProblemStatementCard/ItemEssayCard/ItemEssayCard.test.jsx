@@ -1,4 +1,6 @@
 import { mount } from 'enzyme';
+import { Provider } from 'react-redux';
+import createMockStore from 'redux-mock-store';
 
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 import { ItemEssayCard } from './ItemEssayCard';
@@ -20,7 +22,12 @@ describe('ItemEssayCard', () => {
   };
 
   beforeEach(() => {
-    wrapper = mount(<ItemEssayCard {...props} />);
+    const store = createMockStore()({});
+    wrapper = mount(
+      <Provider store={store}>
+        <ItemEssayCard {...props} />
+      </Provider>
+    );
   });
 
   it('should render item statement', () => {
