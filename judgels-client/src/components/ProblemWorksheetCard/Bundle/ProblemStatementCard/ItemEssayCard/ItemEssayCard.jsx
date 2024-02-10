@@ -1,6 +1,6 @@
 import { Card } from '@blueprintjs/core';
 
-import { HtmlText } from '../../../../HtmlText/HtmlText';
+import RichStatementText from '../../../../RichStatementText/RichStatementText';
 import { AnswerState } from '../../itemStatement';
 import ItemEssayForm from './ItemEssayForm/ItemEssayForm';
 
@@ -11,7 +11,7 @@ export function ItemEssayCard(props) {
       <div className="bundle-problem-statement-item__statement">
         <div className="__item-num">{itemNumber}.</div>
         <div className="__item-statement">
-          <HtmlText>{config.statement}</HtmlText>
+          <RichStatementText>{config.statement}</RichStatementText>
         </div>
       </div>
       <ItemEssayForm
