@@ -141,10 +141,9 @@ public class ChapterProblemResource {
 
         List<Optional<String>> previousAndNextResourcePaths =
                 resourceStore.getPreviousAndNextResourcePathsForProblem(chapterJid, problemAlias);
+        ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid);
 
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
-            ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid);
-
             Optional<ProblemEditorialInfo> editorial = Optional.empty();
             if (progress.getVerdict().equals(Verdict.ACCEPTED.getCode())) {
                 editorial = sandalphonClient.getProblemEditorial(problemJid, uriInfo.getBaseUri(), language);
@@ -186,6 +185,7 @@ public class ChapterProblemResource {
                             .from(sandalphonClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
+                    .progress(progress)
                     .build();
         }
     }

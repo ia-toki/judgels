@@ -71,7 +71,7 @@ public class StatsStore {
             }
 
             Set<String> problemJids = new HashSet<>();
-            for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).whereTypeIs(PROGRAMMING.name()).all()) {
+            for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).all()) {
                 problemJids.add(model.problemJid);
             }
 
@@ -109,7 +109,7 @@ public class StatsStore {
         for (String chapterJid : chapterJids) {
             totalProblemsMap.put(chapterJid, 0);
         }
-        for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).whereTypeIs(PROGRAMMING.name()).all()) {
+        for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).all()) {
             totalProblemsMap.put(model.chapterJid, 1 + totalProblemsMap.get(model.chapterJid));
         }
         return ImmutableMap.copyOf(totalProblemsMap);
@@ -124,7 +124,7 @@ public class StatsStore {
             chapterProblemJidsMap.put(chapterJid, new HashSet<>());
         }
         Set<String> problemJids = new HashSet<>();
-        for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).whereTypeIs(PROGRAMMING.name()).all()) {
+        for (ChapterProblemModel model : chapterProblemDao.selectByChapterJids(chapterJids).all()) {
             chapterProblemJidsMap.get(model.chapterJid).add(model.problemJid);
             problemJids.add(model.problemJid);
         }

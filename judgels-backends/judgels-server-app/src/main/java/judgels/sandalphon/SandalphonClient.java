@@ -122,6 +122,11 @@ public class SandalphonClient {
                 .findAny();
     }
 
+    public List<Item> getItems(String problemJid) {
+        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(null, null, problemJid, Optional.empty());
+        return worksheet.getItems();
+    }
+
     public Map<String, Item> getItems(Collection<String> problemJids, Collection<String> itemJids) {
         Map<String, Item> itemsByItemJid = new HashMap<>();
         for (String problemJid : Set.copyOf(problemJids)) {

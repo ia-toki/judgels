@@ -46,6 +46,7 @@ import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
+import judgels.sandalphon.submission.bundle.ItemSubmissionConsumer;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -63,6 +64,7 @@ public class ItemSubmissionResource {
     @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
     @Inject protected JophielClient jophielClient;
     @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ItemSubmissionConsumer itemSubmissionConsumer;
 
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected ChapterProblemStore chapterProblemStore;
@@ -134,7 +136,8 @@ public class ItemSubmissionResource {
 
         String actorJid = actorChecker.check(authHeader);
 
-        Item item = checkFound(sandalphonClient.getItem(data.getProblemJid(), data.getItemJid()));
+        List<Item> items = sandalphonClient.getItems(data.getProblemJid());
+        Item item = checkFound(items.stream().filter(it -> it.getJid().equals(data.getItemJid())).findAny());
 
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
@@ -144,13 +147,29 @@ public class ItemSubmissionResource {
                     .get(item.getType())
                     .grade(item, data.getAnswer());
 
-            submissionStore.upsertSubmission(
+            ItemSubmission submission = submissionStore.upsertSubmission(
                     data.getContainerJid(),
                     data.getProblemJid(),
                     data.getItemJid(),
                     data.getAnswer(),
                     grading,
                     actorJid);
+
+            List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
+                    data.getContainerJid(),
+                    data.getProblemJid(),
+                    actorJid);
+
+            Map<String, Optional<Grading>> itemGradingsMap = new HashMap<>();
+            for (Item it : items) {
+                if (it.getNumber().isPresent()) {
+                    itemGradingsMap.put(it.getJid(), Optional.empty());
+                }
+            }
+            for (ItemSubmission s : submissions) {
+                itemGradingsMap.put(s.getItemJid(), s.getGrading());
+            }
+            itemSubmissionConsumer.accept(submission, itemGradingsMap);
         }
     }
 
