@@ -7,7 +7,6 @@ import { ButtonLink } from '../../../../../../../../../../../components/ButtonLi
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import ItemSubmissionUserFilter from '../../../../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
-import { ScrollToTopOnMount } from '../../../../../../../../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { selectMaybeUserJid } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -56,7 +55,6 @@ class ChapterProblemSubmissionsPage extends Component {
 
     return (
       <ContentCard className="chapter-bundle-problem-submissions-page">
-        <ScrollToTopOnMount />
         <h3 className="heading-with-button-action">Results</h3>
         <ButtonLink
           small

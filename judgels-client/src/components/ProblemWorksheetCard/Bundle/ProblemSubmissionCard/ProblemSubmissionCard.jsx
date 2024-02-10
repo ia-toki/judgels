@@ -1,10 +1,13 @@
-import { Callout, Intent } from '@blueprintjs/core';
+import { Button, Callout, Intent } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
 
-import { ButtonLink } from '../../../ButtonLink/ButtonLink';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 
 export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) {
+  const redirectToResultsUrl = () => {
+    window.location.href = resultsUrl;
+  };
+
   const renderSubmissionForm = () => {
     if (reasonNotAllowedToSubmit) {
       return (
@@ -14,9 +17,9 @@ export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) 
       );
     }
     return (
-      <ButtonLink intent={Intent.PRIMARY} to={resultsUrl}>
+      <Button intent={Intent.PRIMARY} onClick={redirectToResultsUrl}>
         Submit
-      </ButtonLink>
+      </Button>
     );
   };
 
