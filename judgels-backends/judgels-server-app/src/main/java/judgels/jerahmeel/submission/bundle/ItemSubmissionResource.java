@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +39,9 @@ import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.SandalphonClient;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
-import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
@@ -107,7 +106,7 @@ public class ItemSubmissionResource {
         Map<String, String> problemAliasesMap = getProblemAliasesMap(containerJid, problemJids);
 
         var itemJids = Lists.transform(submissions.getPage(), ItemSubmission::getItemJid);
-        Map<String, Item> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
+        Map<String, BundleItem> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -136,8 +135,7 @@ public class ItemSubmissionResource {
 
         String actorJid = actorChecker.check(authHeader);
 
-        List<Item> items = sandalphonClient.getItems(data.getProblemJid());
-        Item item = checkFound(items.stream().filter(it -> it.getJid().equals(data.getItemJid())).findAny());
+        Item item = checkFound(sandalphonClient.getItem(data.getProblemJid(), data.getItemJid()));
 
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
@@ -161,9 +159,9 @@ public class ItemSubmissionResource {
                     actorJid);
 
             Map<String, Optional<Grading>> itemGradingsMap = new HashMap<>();
-            for (Item it : items) {
-                if (it.getNumber().isPresent()) {
-                    itemGradingsMap.put(it.getJid(), Optional.empty());
+            for (BundleItem bundleItem : sandalphonClient.getItems(data.getProblemJid())) {
+                if (bundleItem.getNumber().isPresent()) {
+                    itemGradingsMap.put(bundleItem.getJid(), Optional.empty());
                 }
             }
             for (ItemSubmission s : submissions) {
@@ -250,15 +248,9 @@ public class ItemSubmissionResource {
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
 
         for (String pJid : problemJids) {
-            ProblemWorksheet worksheet = sandalphonClient.getBundleProblemWorksheet(null, null, pJid, language);
-            List<Item> items = worksheet.getItems().stream()
-                    .filter(item -> !item.getType().equals(ItemType.STATEMENT))
-                    .collect(Collectors.toList());
-            items.sort(Comparator.comparingInt(item -> item.getNumber().get()));
-
+            List<BundleItem> items = sandalphonClient.getItems(pJid);
             items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
-
-            itemJidsByProblemJid.put(pJid, items.stream().map(Item::getJid).collect(Collectors.toList()));
+            itemJidsByProblemJid.put(pJid, items.stream().map(BundleItem::getJid).collect(Collectors.toList()));
         }
 
         Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(ImmutableSet.copyOf(problemJids), language);

@@ -34,6 +34,7 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
@@ -148,7 +149,7 @@ public class ContestItemSubmissionResource {
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
         var itemJids = Lists.transform(submissions.getPage(), ItemSubmission::getItemJid);
-        Map<String, Item> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
+        Map<String, BundleItem> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
