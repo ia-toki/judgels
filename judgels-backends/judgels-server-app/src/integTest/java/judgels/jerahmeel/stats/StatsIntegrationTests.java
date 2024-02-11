@@ -1,10 +1,11 @@
-package judgels.jerahmeel.submission.programming;
+package judgels.jerahmeel.stats;
 
 import static judgels.gabriel.api.Verdict.ACCEPTED;
 import static judgels.gabriel.api.Verdict.OK;
 import static judgels.gabriel.api.Verdict.PENDING;
 import static judgels.gabriel.api.Verdict.RUNTIME_ERROR;
 import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
+import static judgels.sandalphon.api.problem.ProblemType.BUNDLE;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,6 +15,7 @@ import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
@@ -59,8 +61,8 @@ import judgels.jerahmeel.persistence.StatsUserModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
-import judgels.jerahmeel.stats.StatsStore;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import org.hibernate.SessionFactory;
@@ -78,12 +80,13 @@ import org.junit.jupiter.api.Test;
         ProblemContestModel.class,
         StatsUserModel.class,
         StatsUserProblemModel.class})
-class StatsProcessorIntegrationTests extends BaseJerahmeelIntegrationTests {
+class StatsIntegrationTests extends BaseJerahmeelIntegrationTests {
     private static final String USER_JID_1 = "JIDUSER-1";
     private static final String USER_JID_2 = "JIDUSER-2";
     private static final String PROBLEM_JID_1 = "JIDPROG-1";
     private static final String PROBLEM_JID_2 = "JIDPROG-2";
     private static final String PROBLEM_JID_3 = "JIDPROG-3";
+    private static final String PROBLEM_JID_4 = "JIDBUND-4";
 
     private CourseStore courseStore;
     private CourseChapterStore courseChapterStore;
@@ -92,8 +95,11 @@ class StatsProcessorIntegrationTests extends BaseJerahmeelIntegrationTests {
     private ArchiveStore archiveStore;
     private ProblemSetStore problemSetStore;
     private ProblemSetProblemStore problemSetProblemStore;
-    private StatsProcessor statsProcessor;
     private StatsStore statsStore;
+
+    private judgels.jerahmeel.submission.programming.StatsProcessor programmingStatsProcessor;
+    private judgels.jerahmeel.submission.bundle.StatsProcessor bundleStatsProcessor;
+
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
@@ -106,8 +112,9 @@ class StatsProcessorIntegrationTests extends BaseJerahmeelIntegrationTests {
         archiveStore = component.archiveStore();
         problemSetStore = component.problemSetStore();
         problemSetProblemStore = component.problemSetProblemStore();
-        statsProcessor = component.statsProcessor();
         statsStore = component.statsStore();
+        programmingStatsProcessor = component.programmingStatsProcessor();
+        bundleStatsProcessor = component.bundleStatsProcessor();
     }
 
     @Test
@@ -127,42 +134,53 @@ class StatsProcessorIntegrationTests extends BaseJerahmeelIntegrationTests {
                 new ChapterProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_1).build()));
         chapterProblemStore.setProblems(chapter2.getJid(), ImmutableList.of(
                 new ChapterProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_2).build(),
-                new ChapterProblem.Builder().alias("B").type(PROGRAMMING).problemJid(PROBLEM_JID_3).build()));
+                new ChapterProblem.Builder().alias("B").type(PROGRAMMING).problemJid(PROBLEM_JID_3).build(),
+                new ChapterProblem.Builder().alias("C").type(BUNDLE).problemJid(PROBLEM_JID_4).build()));
 
         submit(USER_JID_1, "randomJid", "randomJid", ACCEPTED, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 3);
-        assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 0, 4);
+        assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 3);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 20, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 3);
-        assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 0, 4);
+        assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 3);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 70, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 3);
-        assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 0, 4);
+        assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 3);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 0, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 3);
-        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 1, 4);
+        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 3);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 50, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 3);
-        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 1, 4);
+        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 3);
 
         submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_2, ACCEPTED, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 2, 3);
-        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 1, 2);
+        assertCourseProgress(course.getJid(), 2, 4);
+        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 1, 3);
 
         submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_3, OK, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 3, 3);
-        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 2);
+        assertCourseProgress(course.getJid(), 3, 4);
+        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 3);
+
+        submitItem(USER_JID_1, chapter2.getJid(), PROBLEM_JID_4, judgels.sandalphon.api.submission.bundle.Verdict.WRONG_ANSWER);
+
+        assertCourseProgress(course.getJid(), 3, 4);
+        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 3);
+
+        submitItem(USER_JID_1, chapter2.getJid(), PROBLEM_JID_4, judgels.sandalphon.api.submission.bundle.Verdict.ACCEPTED);
+
+        assertCourseProgress(course.getJid(), 4, 4);
+        assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 3, 3);
     }
 
     @Test
@@ -329,7 +347,7 @@ class StatsProcessorIntegrationTests extends BaseJerahmeelIntegrationTests {
     private void submit(
             String userJid, String containerJid, String problemJid, Verdict verdict, int score, int time, int memory) {
 
-        statsProcessor.accept(new Submission.Builder()
+        programmingStatsProcessor.accept(new Submission.Builder()
                 .id(1)
                 .jid("JIDSUBM")
                 .userJid(userJid)
@@ -359,6 +377,22 @@ class StatsProcessorIntegrationTests extends BaseJerahmeelIntegrationTests {
                                 .build())
                         .build())
                 .build());
+    }
+
+    private void submitItem(String userJid, String containerJid, String problemJid, judgels.sandalphon.api.submission.bundle.Verdict verdict) {
+        judgels.sandalphon.api.submission.bundle.Grading grading = new judgels.sandalphon.api.submission.bundle.Grading.Builder()
+                .verdict(verdict)
+                .build();
+        bundleStatsProcessor.accept(new ItemSubmission.Builder()
+                .jid("JIDSUBB")
+                .userJid(userJid)
+                .containerJid(containerJid)
+                .problemJid(problemJid)
+                .itemJid("itemJid")
+                .answer("a")
+                .time(Instant.now())
+                .grading(grading)
+                .build(), Map.of("itemJid", Optional.of(grading)));
     }
 
     private void assertCourseProgress(String courseJid, int solvedProblems, int totalProblems) {

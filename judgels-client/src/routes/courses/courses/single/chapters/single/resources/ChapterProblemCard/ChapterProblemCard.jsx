@@ -4,13 +4,14 @@ import classNames from 'classnames';
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
+import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
 
 import './ChapterProblemCard.scss';
 
 export function ChapterProblemCard({ course, chapter, problem, progress, problemName, isFuture }) {
   const renderProgress = () => {
-    if (problem.type === ProblemType.Bundle || !progress) {
+    if (!progress) {
       return null;
     }
 
@@ -19,10 +20,18 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
   };
 
   const renderProgressBar = () => {
-    if (problem.type === ProblemType.Bundle || !progress) {
+    if (!progress) {
       return null;
     }
-    return <ProgressBar num={progress.score} denom={100} />;
+
+    const { verdict } = progress;
+
+    let score = progress.score;
+    if (problem.type === ProblemType.Bundle) {
+      score = verdict === VerdictCode.AC ? 100 : 0;
+    }
+
+    return <ProgressBar num={score} denom={100} />;
   };
 
   return (
