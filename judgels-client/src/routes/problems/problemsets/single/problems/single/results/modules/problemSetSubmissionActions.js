@@ -21,7 +21,6 @@ export function createItemSubmission(problemSetJid, problemJid, itemJid, answer)
     };
 
     await submissionBundleAPI.createItemSubmission(token, data);
-    toastActions.showToast('Answer saved.');
   };
 }
 

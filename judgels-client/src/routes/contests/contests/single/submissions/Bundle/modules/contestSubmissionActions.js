@@ -21,7 +21,6 @@ export function createItemSubmission(contestJid, problemJid, itemJid, answer) {
     };
 
     await contestSubmissionBundleAPI.createItemSubmission(token, data);
-    toastActions.showToast('Answer saved.');
   };
 }
 
