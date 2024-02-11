@@ -248,7 +248,9 @@ public class ItemSubmissionResource {
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
 
         for (String pJid : problemJids) {
-            List<BundleItem> items = sandalphonClient.getItems(pJid);
+            List<BundleItem> items = sandalphonClient.getItems(pJid).stream()
+                    .filter(item -> item.getNumber().isPresent())
+                    .collect(Collectors.toList());
             items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
             itemJidsByProblemJid.put(pJid, items.stream().map(BundleItem::getJid).collect(Collectors.toList()));
         }
