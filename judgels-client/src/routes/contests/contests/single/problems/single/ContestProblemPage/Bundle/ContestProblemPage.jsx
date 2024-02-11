@@ -91,12 +91,15 @@ export class ContestProblemPage extends Component {
     if (!latestSubmissions) {
       return <LoadingState />;
     }
+
+    const resultsUrl = `/contests/${this.props.contest.slug}/submissions`;
     return (
       <ProblemWorksheetCard
         alias={problem.alias}
         latestSubmissions={latestSubmissions}
         onAnswerItem={this.onCreateSubmission}
         worksheet={worksheet}
+        resultsUrl={resultsUrl}
       />
     );
   };
