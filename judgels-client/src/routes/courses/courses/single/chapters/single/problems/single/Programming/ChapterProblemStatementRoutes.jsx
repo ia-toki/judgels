@@ -10,7 +10,7 @@ export default function ChapterProblemStatementRoutes({ worksheet, renderNavigat
   const topbarItems = [
     {
       id: '@',
-      title: 'Submit',
+      title: 'Code',
       routeComponent: Route,
       render: props => (
         <ChapterProblemWorkspacePage {...props} worksheet={worksheet} renderNavigation={renderNavigation} />
