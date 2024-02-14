@@ -85,7 +85,7 @@ export class ChapterProblemPage extends Component {
       }
     );
 
-    this.props.onPushBreadcrumb(this.props.match.path, response.problem.alias);
+    this.props.onPushBreadcrumb(this.props.match.path, this.props.chapter.alias + ' / ' + response.problem.alias);
 
     sendGAEvent({ category: 'Courses', action: 'View course problem', label: this.props.course.name });
     sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: this.props.chapter.name });
