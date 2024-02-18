@@ -60,7 +60,7 @@ export class ItemMultipleChoiceCard extends Component {
                 <HtmlText>{choice.alias}</HtmlText>
               </Tag>
               <div className="__content">
-                <RichStatementText>{choice.content}</RichStatementText>
+                <RichStatementText>{choice.content.replace('<br>', '\n')}</RichStatementText>
               </div>
             </Radio>
           ))}
