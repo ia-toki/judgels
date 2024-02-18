@@ -22,13 +22,16 @@
   }
 
   .essay-callout {
-    width: 85%;
     height: 35px;
-    line-height: 18px;
+    line-height: 14px;
+
+    .bp5-icon {
+      top: 10px !important;
+    }
   }
 
   .essay-callout-edit {
-    width: 70%;
+    height: 35px;
     background-color: white;
     color: white;
   }

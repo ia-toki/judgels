@@ -1,8 +1,6 @@
 .item-short-answer-form {
-  .answer-form {
-    float: left;
-    width: 70%;
-  }
+  display: flex;
+  gap: 1px;
 
   .text-input {
     margin-left: 25px;
@@ -17,9 +15,12 @@
   }
 
   .callout {
-    float: right;
-    width: 30%;
+    width: 150px;
     height: 35px;
-    line-height: 18px;
+    line-height: 14px;
+
+    .bp5-icon {
+      top: 10px !important;
+    }
   }
 }
