@@ -22,13 +22,13 @@ public class FilePeeker {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < lines.length && i < 3; i++) {
                 String line = lines[i];
-                if (line.length() > 256) {
-                    line = line.substring(0, 256) + "... (truncated)";
+                if (line.length() > 128) {
+                    line = line.substring(0, 128) + "... (truncated)";
                 }
                 sb.append(line).append('\n');
             }
 
-            if (lines.length > 3) {
+            if (lines.length > 10) {
                 sb.append("... (truncated)\n");
             }
             return sb.toString();
