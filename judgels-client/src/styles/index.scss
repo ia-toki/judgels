@@ -227,11 +227,21 @@ blockquote {
   &.bp5-toast .bp5-button,
   &.bp5-toast .bp5-button svg {
     color: #fff !important;
-    background-color: #d9822b !important;
   }
 
   &.bp5-toast .bp5-button:hover svg {
     background-color: inherit !important;
+  }
+}
+
+.bp5-intent-warning:not(.bp5-disabled) {
+  &.bp5-button,
+  &.bp5-tag,
+  &.bp5-toast,
+  &.bp5-toast .bp5-icon,
+  &.bp5-toast .bp5-button,
+  &.bp5-toast .bp5-button svg {
+    background-color: #d9822b !important;
   }
 }
 
