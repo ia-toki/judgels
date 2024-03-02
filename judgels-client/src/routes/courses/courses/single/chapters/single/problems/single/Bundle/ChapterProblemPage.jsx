@@ -7,7 +7,7 @@ export default function ChapterProblemPage({ worksheet, renderNavigation }) {
   return (
     <div className="chapter-bundle-problem-page">
       <ChapterProblemStatementPage worksheet={worksheet} />
-      <ChapterProblemSubmissionRoutes renderNavigation={renderNavigation} />
+      <ChapterProblemSubmissionRoutes worksheet={worksheet} renderNavigation={renderNavigation} />
     </div>
   );
 }

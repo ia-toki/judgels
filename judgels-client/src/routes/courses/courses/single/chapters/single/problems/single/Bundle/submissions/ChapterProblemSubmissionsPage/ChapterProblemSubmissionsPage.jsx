@@ -7,6 +7,7 @@ import { ButtonLink } from '../../../../../../../../../../../components/ButtonLi
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import ItemSubmissionUserFilter from '../../../../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
+import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { selectMaybeUserJid } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -65,6 +66,7 @@ class ChapterProblemSubmissionsPage extends Component {
         </ButtonLink>
         <hr />
         {this.renderResults()}
+        {this.renderEditorial()}
         {renderNavigation({ hidePrev: true })}
       </ContentCard>
     );
@@ -91,6 +93,25 @@ class ChapterProblemSubmissionsPage extends Component {
           <SubmissionDetails key={props.alias} {...props} showTitle={false} />
         ))}
       </>
+    );
+  };
+
+  renderEditorial = () => {
+    const { worksheet } = this.props;
+    const { problem, editorial } = worksheet;
+    if (!editorial) {
+      return null;
+    }
+    return (
+      <div className="chapter-problem-editorial">
+        <hr />
+        <ProblemEditorialCard
+          alias={problem.alias}
+          statement={worksheet.worksheet.statement}
+          editorial={editorial}
+          showTitle={false}
+        />
+      </div>
     );
   };
 }
