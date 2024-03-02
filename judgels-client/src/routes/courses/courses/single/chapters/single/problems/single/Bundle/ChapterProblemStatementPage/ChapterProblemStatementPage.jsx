@@ -1,3 +1,4 @@
+import { replace } from 'connected-react-router';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -6,6 +7,7 @@ import { ContentCard } from '../../../../../../../../../../components/ContentCar
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { VerdictCode } from '../../../../../../../../../../modules/api/gabriel/verdict';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
@@ -18,6 +20,14 @@ export class ChapterProblemStatementPage extends Component {
   };
 
   async componentDidMount() {
+    if (!this.isInSubmissionsPath()) {
+      const { progress } = this.props.worksheet;
+      if (progress && progress.verdict !== VerdictCode.PND) {
+        const resultsUrl = (this.props.location.pathname + '/submissions').replace('//', '/');
+        this.props.onReplace(resultsUrl);
+      }
+    }
+
     const latestSubmissions = await this.props.onGetLatestSubmissions(
       this.props.chapter.jid,
       this.props.worksheet.problem.alias
@@ -97,6 +107,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onCreateSubmission: chapterProblemSubmissionActions.createItemSubmission,
   onGetLatestSubmissions: chapterProblemSubmissionActions.getLatestSubmissions,
+  onReplace: replace,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemStatementPage));
