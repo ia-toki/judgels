@@ -234,7 +234,7 @@ blockquote {
   }
 }
 
-.bp5-intent-warning:not(.bp5-disabled) {
+.bp5-intent-warning:not(.bp5-disabled, :hover) {
   &.bp5-button,
   &.bp5-tag,
   &.bp5-toast,
@@ -245,7 +245,7 @@ blockquote {
   }
 }
 
-.bp5-button:not([class*='bp5-intent-']) {
+.bp5-button:not([class*='bp5-intent-']):not(:active) {
   .bp5-dark & {
     color: $dark-text-color;
     background-color: $dark-background-color;
