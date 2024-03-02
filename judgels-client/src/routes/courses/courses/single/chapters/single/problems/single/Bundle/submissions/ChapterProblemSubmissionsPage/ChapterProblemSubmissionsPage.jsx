@@ -52,7 +52,7 @@ class ChapterProblemSubmissionsPage extends Component {
   }
 
   render() {
-    const { course, chapter, match, renderNavigation } = this.props;
+    const { course, chapter, match } = this.props;
 
     return (
       <ContentCard className="chapter-bundle-problem-submissions-page">
@@ -67,7 +67,7 @@ class ChapterProblemSubmissionsPage extends Component {
         <hr />
         {this.renderResults()}
         {this.renderEditorial()}
-        {renderNavigation({ hidePrev: true })}
+        {this.renderNavigation()}
       </ContentCard>
     );
   }
@@ -113,6 +113,10 @@ class ChapterProblemSubmissionsPage extends Component {
         />
       </div>
     );
+  };
+
+  renderNavigation = () => {
+    return <div className="chapter-problem-navigation">{this.props.renderNavigation({ hidePrev: true })}</div>;
   };
 }
 
