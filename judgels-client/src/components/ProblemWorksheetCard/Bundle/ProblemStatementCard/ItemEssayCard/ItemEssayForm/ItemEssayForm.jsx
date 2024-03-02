@@ -38,8 +38,10 @@ export default class ItemEssayForm extends PureComponent {
   }
 
   onTextAreaInputClick = () => {
-    if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
-      this.setState({ answerState: AnswerState.Answering });
+    if (!this.props.disabled) {
+      if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
+        this.setState({ answerState: AnswerState.Answering });
+      }
     }
   };
 
