@@ -37,15 +37,14 @@ describe('ItemEssayForm', () => {
         expect(textareaValue).toEqual('');
       });
 
-      it('should be only 1 button', () => {
-        const button = wrapper.find('button');
-        expect(button.length).toEqual(1);
-        expect(button.text()).toEqual('Answer');
+      it('should be no buttons', () => {
+        const buttons = wrapper.find('button');
+        expect(buttons.length).toEqual(0);
       });
 
-      test("helptext should be 'No answered.'", () => {
+      test("helptext should be 'Unanswered.'", () => {
         const helpText = wrapper.find('div').last().text();
-        expect(helpText).toContain('Not answered.');
+        expect(helpText).toContain('Unanswered.');
       });
     });
 
@@ -63,13 +62,11 @@ describe('ItemEssayForm', () => {
         expect(value).toEqual('answer');
       });
 
-      test('cancel filling the answer should render 1 button', () => {
+      test('cancel filling the answer should render no buttons', () => {
         const cancelButton = wrapper.find('button').last();
         cancelButton.simulate('click');
-        const button = wrapper.find('button');
-        expect(button.length).toEqual(1);
-        expect(button.text()).toEqual('Answer');
-        expect(onSubmitFn).not.toBeCalled();
+        const buttons = wrapper.find('button');
+        expect(buttons.length).toEqual(0);
       });
 
       test('submit the answer', () => {
@@ -105,11 +102,9 @@ describe('ItemEssayForm', () => {
         expect(textareaValue).toEqual(props.initialAnswer);
       });
 
-      it('should render two buttons', () => {
+      it('should render Clear button', () => {
         const button = wrapper.find('button');
-        const buttonText = button.map(bt => bt.text());
-        expect(button.length).toEqual(2);
-        expect(buttonText).toEqual(['Change', 'Clear']);
+        expect(button.text()).toEqual('Clear');
       });
 
       test("helptext should be 'Answered'", () => {
@@ -132,13 +127,11 @@ describe('ItemEssayForm', () => {
         expect(value).toEqual('answer');
       });
 
-      test('cancel filling the answer should render 2 buttons', async () => {
+      test('cancel filling the answer should render Clear button', async () => {
         const cancelButton = wrapper.find('button').last();
         await cancelButton.simulate('click');
         const button = wrapper.find('button');
-        const buttonText = button.map(bt => bt.text());
-        expect(button.length).toEqual(2);
-        expect(buttonText).toEqual(['Change', 'Clear']);
+        expect(button.text()).toEqual('Clear');
       });
 
       test('submit the answer', async () => {
@@ -177,11 +170,9 @@ describe('ItemEssayForm', () => {
       wrapper = mount(<ItemEssayForm {...props} />);
     });
 
-    it('buttons disabled', () => {
+    it('button disabled', () => {
       const button = wrapper.find('button');
-      const buttonsDisabled = button.map(bt => bt.props().disabled);
-      expect(button.length).toBeGreaterThan(1);
-      expect(buttonsDisabled).toEqual([true, true]);
+      expect(button.props().disabled).toEqual(true);
     });
   });
 });

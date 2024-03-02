@@ -28,7 +28,7 @@ export default class ItemShortAnswerForm extends PureComponent {
       case AnswerState.NotAnswered:
         return (
           <Callout intent={Intent.NONE} icon={<Circle />} className="callout">
-            Not answered.
+            Unanswered.
           </Callout>
         );
       case AnswerState.SavingAnswer:
@@ -55,22 +55,22 @@ export default class ItemShortAnswerForm extends PureComponent {
   }
 
   renderSubmitButton() {
-    let buttonText;
-    let intent = Intent.PRIMARY;
     const disabledState =
-      this.props.disabled || (this.state.wrongFormat && this.state.answerState === AnswerState.Answering);
-    switch (this.state.answerState) {
-      case AnswerState.NotAnswered:
-        buttonText = StatementButtonText.Answer;
-        break;
-      case AnswerState.AnswerSaved:
-        buttonText = StatementButtonText.Change;
-        intent = Intent.NONE;
-        break;
-      default:
-        buttonText = StatementButtonText.Submit;
-    }
-    return <Button type="submit" text={buttonText} intent={intent} disabled={disabledState} className="button" />;
+      this.props.disabled ||
+      !this.state.answer ||
+      (this.state.wrongFormat && this.state.answerState === AnswerState.Answering);
+
+    return (
+      this.state.answerState == AnswerState.Answering && (
+        <Button
+          type="submit"
+          text={StatementButtonText.Submit}
+          intent={Intent.WARNING}
+          disabled={disabledState}
+          className="button"
+        />
+      )
+    );
   }
 
   renderCancelButton() {
@@ -79,7 +79,6 @@ export default class ItemShortAnswerForm extends PureComponent {
         <Button
           type="button"
           text={StatementButtonText.Cancel}
-          intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
           className="button"
           disabled={this.props.disabled}
@@ -90,7 +89,7 @@ export default class ItemShortAnswerForm extends PureComponent {
 
   renderClearAnswerButton() {
     return (
-      (this.state.answerState === AnswerState.AnswerSaved || this.state.answerState === AnswerState.ClearingAnswer) && (
+      this.state.answerState === AnswerState.AnswerSaved && (
         <Button
           type="button"
           text={StatementButtonText.ClearAnswer}
@@ -144,18 +143,23 @@ export default class ItemShortAnswerForm extends PureComponent {
     const readOnlyClass = readOnly ? 'readonly' : '';
     return (
       <input
-        placeholder={
-          this.state.answerState === AnswerState.NotAnswered ? '(click Answer button to input answer)' : undefined
-        }
+        placeholder={this.state.answerState === AnswerState.NotAnswered ? '(click to input answer)' : undefined}
         name={this.props.meta}
         value={this.state.answer}
         onChange={this.onTextInputChange}
+        onClick={this.onTextInputClick}
         readOnly={readOnly}
         ref={input => (this._input = input)}
         className={`text-input ${readOnlyClass} ${classNames(Classes.INPUT)}`}
       />
     );
   }
+
+  onTextInputClick = () => {
+    if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
+      this.setState({ answerState: AnswerState.Answering });
+    }
+  };
 
   onTextInputChange = event => {
     const value = event.target.value;
@@ -205,8 +209,8 @@ export default class ItemShortAnswerForm extends PureComponent {
           {this.renderCancelButton()}
           {this.renderClearAnswerButton()}
         </ControlGroup>
-        <div>{this.renderWrongFormatNotice()}</div>
-        <div>{this.renderHelpText()}</div>
+        {this.renderWrongFormatNotice()}
+        {this.renderHelpText()}
         <div className="clearfix" />
       </form>
     );

@@ -7,9 +7,7 @@ export const AnswerState = {
 };
 
 export const StatementButtonText = {
-  Answer: 'Answer',
-  Change: 'Change',
-  Submit: 'Submit',
+  Submit: 'Confirm answer',
   Cancel: 'Cancel',
   ClearAnswer: 'Clear',
 };
