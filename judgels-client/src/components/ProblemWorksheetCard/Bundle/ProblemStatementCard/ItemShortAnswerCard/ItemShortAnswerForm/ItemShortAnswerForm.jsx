@@ -143,6 +143,7 @@ export default class ItemShortAnswerForm extends PureComponent {
     const readOnlyClass = readOnly ? 'readonly' : '';
     return (
       <input
+        type="text"
         placeholder={this.state.answerState === AnswerState.NotAnswered ? '(click to input answer)' : undefined}
         name={this.props.meta}
         value={this.state.answer}
