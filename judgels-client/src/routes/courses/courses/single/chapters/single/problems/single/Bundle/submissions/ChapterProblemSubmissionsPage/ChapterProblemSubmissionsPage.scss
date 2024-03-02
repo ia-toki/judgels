@@ -1,3 +1,23 @@
 .chapter-bundle-problem-submissions-page {
   flex: 1 1;
+
+  .chapter-problem-editorial {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+
+    > hr {
+      margin-top: 25px !important;
+      margin-bottom: 25px !important;
+    }
+
+    .problem-editorial {
+      background-color: #72ca9b;
+      box-shadow: none;
+
+      .bp5-dark & {
+        background-color: #1c6e42;
+      }
+    }
+  }
 }
