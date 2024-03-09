@@ -108,7 +108,6 @@ class CourseChaptersSidebar extends Component {
           &nbsp;&nbsp;
           {this.renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
         </div>
-        {!this.isInProblemPath() && this.renderProgressBar(chapterProgressesMap[courseChapter.chapterJid])}
       </Link>
     ));
   };

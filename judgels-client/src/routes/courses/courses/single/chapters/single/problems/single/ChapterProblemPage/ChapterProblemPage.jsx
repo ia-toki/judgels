@@ -51,7 +51,6 @@ export class ChapterProblemPage extends Component {
     return (
       <div className="chapter-problem-page">
         {this.renderHeader()}
-        <hr />
         {this.renderContent()}
       </div>
     );

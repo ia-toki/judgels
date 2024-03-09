@@ -52,7 +52,6 @@ export class ChapterLessonPage extends Component {
     return (
       <div className="chapter-lesson-page">
         {this.renderHeader()}
-        <hr />
         <ContentCard>
           {this.renderStatementLanguageWidget()}
           {this.renderStatement()}

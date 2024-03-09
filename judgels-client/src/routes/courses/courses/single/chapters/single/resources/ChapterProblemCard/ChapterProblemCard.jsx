@@ -19,21 +19,6 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
     return <ChapterProblemProgressTag className="chapter-problem-card__progress" verdict={verdict} />;
   };
 
-  const renderProgressBar = () => {
-    if (!progress) {
-      return null;
-    }
-
-    const { verdict } = progress;
-
-    let score = progress.score;
-    if (problem.type === ProblemType.Bundle) {
-      score = verdict === VerdictCode.AC ? 100 : 0;
-    }
-
-    return <ProgressBar num={score} denom={100} />;
-  };
-
   return (
     <ContentCardLink
       className={classNames('chapter-problem-card', { 'chapter-problem-card--future': isFuture })}
@@ -46,7 +31,6 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
         </h4>
         {renderProgress()}
       </div>
-      {renderProgressBar()}
     </ContentCardLink>
   );
 }

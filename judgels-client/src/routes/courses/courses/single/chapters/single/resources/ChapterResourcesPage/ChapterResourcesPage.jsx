@@ -46,7 +46,6 @@ export class ChapterResourcesPage extends Component {
     return (
       <div className="chapter-resources-page">
         {this.renderHeader()}
-        <hr />
         {this.renderResources()}
       </div>
     );
