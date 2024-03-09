@@ -27,7 +27,6 @@ function CourseOverview({ course, chapters }) {
   return (
     <div className="course-overview">
       <h2>{course.name}</h2>
-      <hr />
       <HtmlText>{course.description}</HtmlText>
       <br />
       {renderStartButton()}

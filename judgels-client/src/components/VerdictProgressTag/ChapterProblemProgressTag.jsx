@@ -9,7 +9,7 @@ export const ChapterProblemProgressTag = ({ verdict }) => {
   if (verdict === VerdictCode.AC) {
     return (
       <Tag className="chapter-problem-progress-tag" intent={Intent.SUCCESS}>
-        🎉 solved&nbsp;&nbsp;
+        solved&nbsp;&nbsp;
         <Confirm />
       </Tag>
     );
