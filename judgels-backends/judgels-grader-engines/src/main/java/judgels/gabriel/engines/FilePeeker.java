@@ -20,7 +20,7 @@ public class FilePeeker {
             String[] lines = str.split("\n");
 
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < lines.length && i < 3; i++) {
+            for (int i = 0; i < lines.length && i < 10; i++) {
                 String line = lines[i];
                 if (line.length() > 128) {
                     line = line.substring(0, 128) + "... (truncated)";
