@@ -1,7 +1,8 @@
 @import '../../styles/base';
 
 .html-text {
-  line-height: 20px !important;
+  font-size: 15px;
+  line-height: 1.5 !important;
 
   h2,
   h3,
@@ -35,7 +36,12 @@
   }
 
   pre {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+  }
+
+  pre,
+  pre span {
+    font-size: 14px !important;
   }
 
   .spoiler {
@@ -70,4 +76,8 @@
       font-weight: normal;
     }
   }
+}
+
+small .html-text {
+  font-size: 12px;
 }
