@@ -313,6 +313,10 @@ input[type="text"], input[type="password"], textarea {
   min-height: 800px;
 }
 
+.content-text .katex {
+  font-size: 17px !important;
+}
+
 th {
   font-family: var(--accent-font);
   font-weight: bold;
