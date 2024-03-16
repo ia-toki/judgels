@@ -224,6 +224,11 @@ input[type="text"], input[type="password"], textarea {
   margin-bottom: 10px;
 }
 
+.content-text {
+  font-size: 15px;
+  line-height: 1.5;
+ }
+
 .content-text.scrollable {
   height: 600px;
   padding: 15px;
@@ -259,6 +264,10 @@ input[type="text"], input[type="password"], textarea {
 
 .content-text ol li, .content-text ul li {
   margin-left: 25px;
+}
+
+.content-text pre, .content-text pre span {
+  font-size: 14px !important;
 }
 
 .content-text ol.breadcrumb li {
