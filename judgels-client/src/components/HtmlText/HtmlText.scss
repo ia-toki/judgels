@@ -76,6 +76,19 @@
       font-weight: normal;
     }
   }
+
+  .highlight {
+    background-color: #fbd065;
+    margin: -20px;
+    margin-bottom: 15px;
+    padding: 20px;
+    padding-bottom: 10px;
+    border-radius: 3px;
+
+    .bp5-dark & {
+      background-color: #5a701a;
+    }
+  }
 }
 
 small .html-text {
