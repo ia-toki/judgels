@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', function() {
     pre {
       padding: 9.5px;
       margin: 0 0 10px;
-      border: 1px solid #ccc;
       border-radius: 4px;
     }
 
     pre, code {
       background-color: #f5f5f5;
+      border: 1px solid #ccc;
     }
 
     code {
