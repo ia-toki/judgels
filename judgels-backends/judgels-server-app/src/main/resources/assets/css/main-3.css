@@ -274,6 +274,7 @@ input[type="text"], input[type="password"], textarea {
 .content-text pre, .content-text code {
   color: #1c2127;
   background-color: #f5f5f5;
+  border: 1px solid #ccc;
 }
 
 .content-text ol.breadcrumb li {
@@ -312,6 +313,14 @@ input[type="text"], input[type="password"], textarea {
   font-family: var(--primary-font);
   font-style: normal;
   font-weight: normal;
+}
+
+.content-text .highlight {
+  background-color: #fbd065;
+  margin: -10px;
+  margin-bottom: 15px;
+  padding: 15px;
+  padding-bottom: 10px;
 }
 
 .content-text embed {

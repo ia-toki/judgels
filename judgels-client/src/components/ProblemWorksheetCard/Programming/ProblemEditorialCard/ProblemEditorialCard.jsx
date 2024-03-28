@@ -3,7 +3,7 @@ import RichStatementText from '../../../RichStatementText/RichStatementText';
 
 export function ProblemEditorialCard({ alias, statement: { title }, editorial: { text }, showTitle = true }) {
   return (
-    <ContentCard className="problem-editorial">
+    <ContentCard>
       {showTitle && (
         <h2 className="programming-problem-statement__name">
           {alias ? `${alias}. ` : ''}
