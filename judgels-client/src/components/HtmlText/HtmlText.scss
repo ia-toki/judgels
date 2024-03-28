@@ -79,14 +79,26 @@
 
   .highlight {
     background-color: #fbd065;
-    margin: -20px;
-    margin-bottom: 15px;
-    padding: 20px;
-    padding-bottom: 10px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
     border-radius: 3px;
 
     .bp5-dark & {
       background-color: #5a701a;
+    }
+
+    &:first-child {
+      margin-top: -15px;
+    }
+
+    &:not(:first-child) {
+      margin-top: 15px;
+    }
+
+    &:last-child {
+      margin-bottom: -15px;
     }
   }
 }
