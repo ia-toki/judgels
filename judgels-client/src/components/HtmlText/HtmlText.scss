@@ -100,6 +100,10 @@
     &:last-child {
       margin-bottom: -15px;
     }
+
+    h3:first-child {
+      margin-top: 5px;
+    }
   }
 }
 
