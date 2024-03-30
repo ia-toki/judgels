@@ -316,11 +316,17 @@ input[type="text"], input[type="password"], textarea {
 }
 
 .content-text .highlight {
-  background-color: #fbd065;
-  margin: -10px;
+  background-color: #ffe39f;
+  margin-top: 0;
   margin-bottom: 15px;
+  margin-left: -10px;
+  margin-right: -10px;
   padding: 15px;
   padding-bottom: 10px;
+}
+
+.content-text .highlight > h3:first-child {
+  margin-top: 0;
 }
 
 .content-text embed {
