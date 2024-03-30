@@ -66,6 +66,15 @@ public final class LocalFileSystem implements FileSystem {
     }
 
     @Override
+    public void copyDirectory(Path srcPath, Path destPath) {
+        try (Stream<Path> stream = Files.walk(baseDir.resolve(srcPath))) {
+            stream.forEach(src -> copy(src, baseDir.resolve(destPath).resolve(baseDir.resolve(srcPath).relativize(src))));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void createFile(Path filePath) {
         writeByteArrayToFile(filePath, new byte[0]);
     }
@@ -218,20 +227,10 @@ public final class LocalFileSystem implements FileSystem {
         }
     }
 
-    @Override
-    public void copyDirectory(Path src, Path dest) {
-        try (Stream<Path> stream = Files.walk(src)) {
-            stream.forEach(source -> copy(source, dest.resolve(src.relativize(source))));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void copy(Path src, Path dest) {
+    private static void copy(Path src, Path dest) {
         try {
             Files.copy(src, dest, REPLACE_EXISTING, COPY_ATTRIBUTES);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }

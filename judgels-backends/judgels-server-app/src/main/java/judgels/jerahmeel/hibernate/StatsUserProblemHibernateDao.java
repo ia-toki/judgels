@@ -1,5 +1,6 @@
 package judgels.jerahmeel.hibernate;
 
+import java.time.Clock;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,9 +21,25 @@ import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 
 public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemModel> implements StatsUserProblemDao {
+    private final Clock clock;
+
     @Inject
     public StatsUserProblemHibernateDao(HibernateDaoData data) {
         super(data);
+        this.clock = data.getClock();
+    }
+
+    @Override
+    public StatsUserProblemModel insert(StatsUserProblemModel model) {
+        model.createdAt = clock.instant();
+        model.updatedAt = model.createdAt;
+        return super.persist(model);
+    }
+
+    @Override
+    public StatsUserProblemModel update(StatsUserProblemModel model) {
+        model.updatedAt = clock.instant();
+        return super.persist(model);
     }
 
     @Override

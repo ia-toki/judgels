@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.EvaluationResult;
 import judgels.gabriel.api.Evaluator;
@@ -17,6 +18,7 @@ import judgels.gabriel.api.Scorer;
 import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.api.ScoringResult;
 import judgels.gabriel.api.TestCaseVerdict;
+import judgels.gabriel.engines.FilePeeker;
 import judgels.gabriel.helpers.TestCaseVerdictParser;
 import org.apache.commons.io.FileUtils;
 
@@ -34,6 +36,8 @@ public class BatchEvaluator implements Evaluator {
     private String executableFilename;
     private List<String> solutionCommand;
 
+    boolean shouldRevealEvaluation;
+
     public BatchEvaluator() {
         this.verdictParser = new TestCaseVerdictParser();
     }
@@ -46,7 +50,8 @@ public class BatchEvaluator implements Evaluator {
             GradingLanguage language,
             File sourceFile,
             int timeLimitInMilliseconds,
-            int memoryLimitInKilobytes) {
+            int memoryLimitInKilobytes,
+            boolean shouldRevealEvaluation) {
 
         sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
@@ -58,6 +63,7 @@ public class BatchEvaluator implements Evaluator {
         this.evaluationDir = evaluationDir;
         this.executableFilename = language.getExecutableFilename(sourceFile.getName());
         this.solutionCommand = language.getExecutionCommand(sourceFile.getName());
+        this.shouldRevealEvaluation = shouldRevealEvaluation;
     }
 
     @Override
@@ -71,7 +77,6 @@ public class BatchEvaluator implements Evaluator {
         }
 
         TestCaseVerdict verdict;
-
         GenerationResult generationResult = generate(input, output);
         if (generationResult.getVerdict().isPresent()) {
             verdict = generationResult.getVerdict().get();
@@ -80,8 +85,20 @@ public class BatchEvaluator implements Evaluator {
             verdict = scoringResult.getVerdict();
         }
 
+        Optional<String> revealedInput = Optional.empty();
+        if (shouldRevealEvaluation) {
+            try {
+                String evaluationInput = FilePeeker.peekInputOutput(input);
+                revealedInput = Optional.of(evaluationInput);
+            } catch (IOException e) {
+                throw new EvaluationException(e);
+            }
+        }
+
         return new EvaluationResult.Builder()
                 .verdict(verdict)
+                .revealedInput(revealedInput)
+                .revealedSolutionOutput(generationResult.getRevealedSolutionOutput())
                 .executionResult(generationResult.getExecutionResult())
                 .build();
     }
@@ -93,12 +110,24 @@ public class BatchEvaluator implements Evaluator {
         sandbox.redirectStandardInput(input.getName());
         sandbox.redirectStandardOutput(EVALUATION_OUTPUT_FILENAME);
 
+        Optional<String> revealedSolutionOutput = Optional.empty();
         SandboxExecutionResult result = sandbox.execute(solutionCommand);
         if (result.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {
+            File evaluationOutputFile;
             try {
-                FileUtils.copyFileToDirectory(sandbox.getFile(EVALUATION_OUTPUT_FILENAME), evaluationDir);
+                evaluationOutputFile = sandbox.getFile(EVALUATION_OUTPUT_FILENAME);
+                FileUtils.copyFileToDirectory(evaluationOutputFile, evaluationDir);
             } catch (IOException e) {
                 throw new GenerationException(e);
+            }
+
+            if (shouldRevealEvaluation) {
+                try {
+                    String evaluationOutput = FilePeeker.peekInputOutput(evaluationOutputFile);
+                    revealedSolutionOutput = Optional.of(evaluationOutput);
+                } catch (IOException e) {
+                    throw new GenerationException(e);
+                }
             }
         } else if (result.getStatus() == SandboxExecutionStatus.INTERNAL_ERROR) {
             throw new GenerationException(String.join(" ", solutionCommand) + " resulted in " + result);
@@ -108,6 +137,7 @@ public class BatchEvaluator implements Evaluator {
 
         return new GenerationResult.Builder()
                 .verdict(verdictParser.parseExecutionResult(result))
+                .revealedSolutionOutput(revealedSolutionOutput)
                 .executionResult(result)
                 .build();
     }

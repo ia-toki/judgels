@@ -29,6 +29,11 @@ public final class DuplexFileSystem implements FileSystem {
     }
 
     @Override
+    public void copyDirectory(Path srcPath, Path destPath) {
+        local.copyDirectory(srcPath, destPath);
+    }
+
+    @Override
     public void createFile(Path filePath) {
         local.createFile(filePath);
     }
@@ -101,15 +106,5 @@ public final class DuplexFileSystem implements FileSystem {
         } catch (RuntimeException e) {
             return aws.readByteArrayFromFile(filePath);
         }
-    }
-
-    @Override
-    public void copyDirectory(Path src, Path dest) {
-        local.copyDirectory(src, dest);
-    }
-
-    @Override
-    public void copy(Path src, Path dest) {
-        local.copy(src, dest);
     }
 }

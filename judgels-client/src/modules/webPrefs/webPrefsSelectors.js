@@ -1,5 +1,5 @@
 export function selectIsDarkMode(state) {
-  return !!state.webPrefs.isDarkMode;
+  return !!state.webPrefs?.isDarkMode;
 }
 
 export function selectShowProblemDifficulty(state) {

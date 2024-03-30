@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -59,12 +60,14 @@ export class ProblemStatementPage extends Component {
     if (!latestSubmissions) {
       return <LoadingState />;
     }
+    const resultsUrl = (this.props.location.pathname + '/results').replace('//', '/');
 
     return (
       <ProblemWorksheetCard
         latestSubmissions={latestSubmissions}
         onAnswerItem={this.createSubmission}
         worksheet={worksheet}
+        resultsUrl={resultsUrl}
       />
     );
   };
@@ -82,4 +85,4 @@ const mapDispatchToProps = {
   onCreateSubmission: problemSetSubmissionActions.createItemSubmission,
   onGetLatestSubmissions: problemSetSubmissionActions.getLatestSubmissions,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage));

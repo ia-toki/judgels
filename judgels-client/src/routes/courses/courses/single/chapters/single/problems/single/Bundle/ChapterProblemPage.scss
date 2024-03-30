@@ -4,6 +4,16 @@
   justify-content: center;
 }
 
+@media only screen and (min-width: 1025px) {
+  .chapter-bundle-problem-page {
+    height: calc(100vh - 125px);
+
+    & > .content-card {
+      margin-bottom: 0;
+    }
+  }
+}
+
 @media only screen and (max-width: 1024px) {
   .chapter-bundle-problem-page {
     display: block;

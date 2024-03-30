@@ -13,6 +13,7 @@ import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
+import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jophiel.DaggerJophielComponent;
 import judgels.jophiel.JophielComponent;
 import judgels.jophiel.JophielConfiguration;
@@ -243,6 +244,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),
                         jerahmeelConfig.getStatsConfig()))
+                .itemSubmissionModule(new ItemSubmissionModule(jerahmeelConfig.getStatsConfig()))
                 .build();
 
         env.jersey().register(component.archiveResource());

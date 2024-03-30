@@ -11,6 +11,7 @@ import './SubmissionDetails.scss';
 export function SubmissionDetails({
   name,
   alias,
+  showTitle = true,
   itemJids,
   submissionsByItemJid,
   itemTypesMap,
@@ -28,13 +29,10 @@ export function SubmissionDetails({
             <FormattedAnswer answer={submission.answer} type={itemTypesMap[itemJid]} />
           </td>
           {canViewGrading && (
-            <td className="col-verdict">
+            <td className="col-fit">
               {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
             </td>
           )}
-          <td className="col-time">
-            <FormattedRelative value={submission.time} />
-          </td>
         </tr>
       );
     } else {
@@ -42,8 +40,7 @@ export function SubmissionDetails({
         <tr key={itemJid}>
           <td className="col-item-num">{index + 1}</td>
           <td>-</td>
-          {canViewGrading && <td className="col-verdict">-</td>}
-          <td className="col-time">-</td>
+          {canViewGrading && <td className="col-fit">-</td>}
         </tr>
       );
     }
@@ -65,10 +62,12 @@ export function SubmissionDetails({
   return (
     <ContentCard className="bundle-submission-details">
       <div className="card-header">
-        <h4>
-          {alias ? `${alias} . ` : ''}
-          {name}
-        </h4>
+        {showTitle && (
+          <h4>
+            {alias ? `${alias} . ` : ''}
+            {name}
+          </h4>
+        )}
         {canManage && onRegrade && (
           <Button intent="primary" icon={<Refresh />} onClick={onRegrade}>
             Regrade
@@ -81,8 +80,7 @@ export function SubmissionDetails({
           <tr>
             <th className="col-item-num">No.</th>
             <th>Answer</th>
-            {canViewGrading && <th className="col-verdict">Verdict</th>}
-            <th className="col-time">Time</th>
+            {canViewGrading && <th className="col-fit">Verdict</th>}
           </tr>
         </thead>
         <tbody>{itemJids.map(renderSingleRow)}</tbody>

@@ -12,14 +12,11 @@ import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
-import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
 import judgels.messaging.MessageClient;
-import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
-import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
@@ -74,13 +71,6 @@ public class SubmissionModule {
 
         return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
     }
-
-    @Provides
-    @Singleton
-    static ItemSubmissionStore itemSubmissionStore(BundleItemSubmissionDao submissionDao) {
-        return new BaseItemSubmissionStore<>(submissionDao);
-    }
-
 
     @Provides
     @Singleton

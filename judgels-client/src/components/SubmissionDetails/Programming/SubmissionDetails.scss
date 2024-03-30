@@ -1,4 +1,8 @@
 .programming-submission-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
   pre {
     line-height: 18px;
   }
@@ -34,10 +38,6 @@
 
   .col-centered {
     text-align: center;
-  }
-
-  .general-info {
-    margin-bottom: 25px;
   }
 
   .general-info__time {
@@ -80,7 +80,6 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-    margin-bottom: 20px;
   }
 
   .details-card {

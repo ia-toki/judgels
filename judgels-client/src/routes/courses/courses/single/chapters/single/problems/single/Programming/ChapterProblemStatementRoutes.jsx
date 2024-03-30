@@ -6,13 +6,15 @@ import ChapterProblemSubmissionRoutes from './submissions/ChapterProblemSubmissi
 
 import './ChapterProblemStatementRoutes.scss';
 
-export default function ChapterProblemStatementRoutes({ worksheet }) {
+export default function ChapterProblemStatementRoutes({ worksheet, renderNavigation }) {
   const topbarItems = [
     {
       id: '@',
-      title: 'Submit',
+      title: 'Code',
       routeComponent: Route,
-      render: props => <ChapterProblemWorkspacePage {...props} worksheet={worksheet} />,
+      render: props => (
+        <ChapterProblemWorkspacePage {...props} worksheet={worksheet} renderNavigation={renderNavigation} />
+      ),
     },
     {
       id: 'submissions',

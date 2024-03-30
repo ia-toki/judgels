@@ -1,25 +1,26 @@
 .item-short-answer-form {
-  .answer-form {
-    float: left;
-    width: 70%;
-  }
+  display: flex;
+  gap: 1px;
 
   .text-input {
     margin-left: 25px;
     &.readonly {
       background-color: rgba(206, 217, 224, 0.5);
-      cursor: not-allowed;
     }
   }
 
   .button {
-    width: 85px;
+    flex-shrink: 0 !important;
   }
 
   .callout {
-    float: right;
-    width: 30%;
     height: 35px;
-    line-height: 18px;
+    line-height: 14px;
+    flex-shrink: 0;
+    flex-basis: fit-content;
+
+    .bp5-icon {
+      top: 10px !important;
+    }
   }
 }

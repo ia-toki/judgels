@@ -7,6 +7,8 @@ import org.immutables.value.Value;
 public interface EvaluationResult {
     TestCaseVerdict getVerdict();
     Optional<SandboxExecutionResult> getExecutionResult();
+    Optional<String> getRevealedInput();
+    Optional<String> getRevealedSolutionOutput();
 
     static EvaluationResult skippedResult() {
         TestCaseVerdict verdict = new TestCaseVerdict.Builder().verdict(Verdict.SKIPPED).build();

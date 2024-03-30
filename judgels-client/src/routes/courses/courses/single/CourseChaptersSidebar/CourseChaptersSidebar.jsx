@@ -103,11 +103,11 @@ class CourseChaptersSidebar extends Component {
         }}
       >
         <div className="course-chapters-sidebar__item-title">
-          {courseChapter.alias} {showName && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
+          {courseChapter.alias}
+          {showName && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
           &nbsp;&nbsp;
           {this.renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
         </div>
-        {!this.isInProblemPath() && this.renderProgressBar(chapterProgressesMap[courseChapter.chapterJid])}
       </Link>
     ));
   };

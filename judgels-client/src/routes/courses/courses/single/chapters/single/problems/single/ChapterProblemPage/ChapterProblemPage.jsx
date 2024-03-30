@@ -51,7 +51,6 @@ export class ChapterProblemPage extends Component {
     return (
       <div className="chapter-problem-page">
         {this.renderHeader()}
-        <hr />
         {this.renderContent()}
       </div>
     );
@@ -85,7 +84,7 @@ export class ChapterProblemPage extends Component {
       }
     );
 
-    this.props.onPushBreadcrumb(this.props.match.path, response.problem.alias);
+    this.props.onPushBreadcrumb(this.props.match.path, this.props.chapter.alias + ' / ' + response.problem.alias);
 
     sendGAEvent({ category: 'Courses', action: 'View course problem', label: this.props.course.name });
     sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: this.props.chapter.name });
@@ -102,7 +101,7 @@ export class ChapterProblemPage extends Component {
       newProgress?.verdict == VerdictCode.AC &&
       this.state.response.editorial
     ) {
-      const problemEditorialEl = document.querySelector('.problem-editorial');
+      const problemEditorialEl = document.querySelector('.chapter-problem-editorial');
       if (problemEditorialEl) {
         problemEditorialEl.scrollIntoView({ behavior: 'smooth' });
       }
@@ -152,21 +151,22 @@ export class ChapterProblemPage extends Component {
     return <ChapterProblemProgressTag verdict={progress.verdict} />;
   };
 
-  renderNavigation = () => {
+  renderNavigation = ({ hidePrev } = { hidePrev: false }) => {
     const { course, chapter, chapters } = this.props;
     const { response } = this.state;
     if (!response) {
       return null;
     }
 
-    const { previousResourcePath, nextResourcePath } = response;
+    const { progress, previousResourcePath, nextResourcePath } = response;
     return (
       <ChapterNavigation
         courseSlug={course.slug}
         chapterAlias={chapter.alias}
-        previousResourcePath={previousResourcePath}
+        previousResourcePath={hidePrev ? null : previousResourcePath}
         nextResourcePath={nextResourcePath}
         chapters={chapters}
+        disableNext={progress?.verdict !== VerdictCode.AC}
       />
     );
   };
@@ -181,7 +181,7 @@ export class ChapterProblemPage extends Component {
     if (problem.type === ProblemType.Programming) {
       return <ChapterProblemProgrammingPage worksheet={response} renderNavigation={this.renderNavigation} />;
     } else {
-      return <ChapterProblemBundlePage worksheet={response} />;
+      return <ChapterProblemBundlePage worksheet={response} renderNavigation={this.renderNavigation} />;
     }
   };
 }

@@ -116,21 +116,35 @@ public class SandalphonClient {
     }
 
     public Optional<Item> getItem(String problemJid, String itemJid) {
-        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(null, null, problemJid, Optional.empty());
-        return worksheet.getItems().stream()
-                .filter(item -> itemJid.equals(item.getJid()))
-                .findAny();
+        String defaultLanguage = problemStatementStore.getStatementDefaultLanguage(null, problemJid);
+        for (BundleItem item : bundleItemStore.getNumberedItems(null, problemJid)) {
+            if (item.getJid().equals(itemJid)) {
+                ItemConfig config = bundleItemStore.getItemConfig(null, problemJid, item, defaultLanguage, defaultLanguage);
+                return Optional.of(new Item.Builder()
+                        .jid(item.getJid())
+                        .type(item.getType())
+                        .number(item.getNumber())
+                        .meta(item.getMeta())
+                        .config(config)
+                        .build());
+            }
+        }
+
+        return Optional.empty();
     }
 
-    public Map<String, Item> getItems(Collection<String> problemJids, Collection<String> itemJids) {
-        Map<String, Item> itemsByItemJid = new HashMap<>();
+    public Map<String, BundleItem> getItems(Collection<String> problemJids, Collection<String> itemJids) {
+        Map<String, BundleItem> itemsByItemJid = new HashMap<>();
         for (String problemJid : Set.copyOf(problemJids)) {
-            judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(null, null, problemJid, Optional.empty());
-            worksheet.getItems().stream()
+            getItems(problemJid).stream()
                     .filter(item -> itemJids.contains(item.getJid()))
                     .forEach(item -> itemsByItemJid.put(item.getJid(), item));
         }
         return itemsByItemJid;
+    }
+
+    public List<BundleItem> getItems(String problemJid) {
+        return bundleItemStore.getNumberedItems(null, problemJid);
     }
 
     public ProblemSubmissionConfig getProgrammingProblemSubmissionConfig(String problemJid) {

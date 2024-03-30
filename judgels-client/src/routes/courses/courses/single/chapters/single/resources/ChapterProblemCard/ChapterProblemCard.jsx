@@ -4,25 +4,19 @@ import classNames from 'classnames';
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
+import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
 
 import './ChapterProblemCard.scss';
 
 export function ChapterProblemCard({ course, chapter, problem, progress, problemName, isFuture }) {
   const renderProgress = () => {
-    if (problem.type === ProblemType.Bundle || !progress) {
+    if (!progress) {
       return null;
     }
 
     const { verdict } = progress;
     return <ChapterProblemProgressTag className="chapter-problem-card__progress" verdict={verdict} />;
-  };
-
-  const renderProgressBar = () => {
-    if (problem.type === ProblemType.Bundle || !progress) {
-      return null;
-    }
-    return <ProgressBar num={progress.score} denom={100} />;
   };
 
   return (
@@ -37,7 +31,6 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
         </h4>
         {renderProgress()}
       </div>
-      {renderProgressBar()}
     </ContentCardLink>
   );
 }

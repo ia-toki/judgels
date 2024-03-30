@@ -1,7 +1,8 @@
 @import '../../styles/base';
 
 .html-text {
-  line-height: 20px !important;
+  font-size: 15px;
+  line-height: 1.5 !important;
 
   h2,
   h3,
@@ -9,6 +10,10 @@
     margin-top: 20px;
     margin-bottom: 10px !important;
     line-height: 20px !important;
+
+    &:first-child {
+      margin-top: 0px;
+    }
   }
 
   ol,
@@ -35,7 +40,12 @@
   }
 
   pre {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+  }
+
+  pre,
+  pre span {
+    font-size: 14px !important;
   }
 
   .spoiler {
@@ -70,4 +80,37 @@
       font-weight: normal;
     }
   }
+
+  .highlight {
+    background-color: #ffe39f;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    border-radius: 3px;
+
+    .bp5-dark & {
+      background-color: #0c5174;
+    }
+
+    &:first-child {
+      margin-top: -15px;
+    }
+
+    &:not(:first-child) {
+      margin-top: 15px;
+    }
+
+    &:last-child {
+      margin-bottom: -15px;
+    }
+
+    h3:first-child {
+      margin-top: 5px;
+    }
+  }
+}
+
+small .html-text {
+  font-size: 12px;
 }

@@ -11,6 +11,7 @@ import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxFactory;
@@ -74,6 +75,7 @@ public class BatchGradingEngine extends BlackboxGradingEngine {
     @Override
     public void prepare(
             GradingConfig config,
+            GradingOptions options,
             GradingLanguage language,
             Map<String, File> sourceFiles,
             Map<String, File> helperFiles,
@@ -95,14 +97,22 @@ public class BatchGradingEngine extends BlackboxGradingEngine {
         Scorer scorer = ScorerRegistry.getAndPrepare(cfg.getCustomScorer(), helperFiles, scorerSandbox, evaluationDir);
 
         evaluatorSandbox = sandboxFactory.newSandbox();
+
+        boolean shouldRevealEvaluation = options.getShouldRevealEvaluation()
+                && config.getTestData().size() == 2
+                && config.getTestData().get(0).getTestCases().isEmpty() // no sample test data
+                && config.getTestData().get(1).getTestCases().size() <= 3; // official test data consists of at most 3 test cases
+
         evaluator.prepare(
                 evaluatorSandbox,
-                scorer, compilationDir,
+                scorer,
+                compilationDir,
                 evaluationDir,
                 language,
                 sourceFile,
                 cfg.getTimeLimit(),
-                cfg.getMemoryLimit());
+                cfg.getMemoryLimit(),
+                shouldRevealEvaluation);
     }
 
     @Override

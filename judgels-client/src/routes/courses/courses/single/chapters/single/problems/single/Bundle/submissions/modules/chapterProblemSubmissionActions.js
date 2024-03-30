@@ -1,8 +1,6 @@
 import { submissionBundleAPI } from '../../../../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { selectToken } from '../../../../../../../../../../../modules/session/sessionSelectors';
 
-import { toastActions } from '../../../../../../../../../../../modules/toast/toastActions';
-
 export function getSubmissions(chapterJid, username, problemAlias, page) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
@@ -21,7 +19,6 @@ export function createItemSubmission(chapterJid, problemJid, itemJid, answer) {
     };
 
     await submissionBundleAPI.createItemSubmission(token, data);
-    toastActions.showToast('Answer saved.');
   };
 }
 

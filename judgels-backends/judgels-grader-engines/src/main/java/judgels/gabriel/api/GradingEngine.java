@@ -11,6 +11,7 @@ public interface GradingEngine {
     GradingResult grade(
             File gradingDir,
             GradingConfig config,
+            GradingOptions options,
             GradingLanguage language,
             GradingSource source,
             SandboxFactory sandboxFactory) throws GradingException;

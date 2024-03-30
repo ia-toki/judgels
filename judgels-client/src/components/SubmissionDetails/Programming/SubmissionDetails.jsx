@@ -110,7 +110,7 @@ export function SubmissionDetails({
 
           <div className="details-content">
             <hr />
-            <HTMLTable striped className="programming-submission-details">
+            <HTMLTable striped>
               <thead>
                 <tr>
                   <th className="col-id">ID</th>
@@ -180,7 +180,7 @@ export function SubmissionDetails({
           </summary>
 
           <div className="details-content">
-            <HTMLTable striped className="programming-submission-details">
+            <HTMLTable striped>
               <thead>
                 <tr>
                   <th className="col-id">ID</th>
@@ -233,7 +233,7 @@ export function SubmissionDetails({
           </summary>
 
           <div className="details-content">
-            <HTMLTable striped className="programming-submission-details">
+            <HTMLTable striped>
               <thead>
                 <tr>
                   <th className="col-id">ID</th>

@@ -42,6 +42,15 @@
         margin-left: auto;
       }
     }
+
+    .editor-buttons {
+      display: flex;
+      width: 100%;
+
+      .editor-navigation {
+        margin-left: auto;
+      }
+    }
   }
 
   .responsive-button {

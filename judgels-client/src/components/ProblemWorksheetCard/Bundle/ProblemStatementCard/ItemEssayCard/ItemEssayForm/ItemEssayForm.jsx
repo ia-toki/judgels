@@ -23,12 +23,11 @@ export default class ItemEssayForm extends PureComponent {
     const readOnlyClass = readOnly ? 'readonly' : 'live';
     return (
       <textarea
-        placeholder={
-          this.state.answerState === AnswerState.NotAnswered ? '(click Answer button to input answer)' : undefined
-        }
+        placeholder={this.state.answerState === AnswerState.NotAnswered ? '(click to input answer)' : undefined}
         name={this.props.meta}
         value={this.state.answer}
         onChange={this.onTextAreaInputChange}
+        onClick={this.onTextAreaInputClick}
         readOnly={readOnly}
         className={`form-textarea--code text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
         onKeyDown={this.onKeyDown}
@@ -38,24 +37,32 @@ export default class ItemEssayForm extends PureComponent {
     );
   }
 
+  onTextAreaInputClick = () => {
+    if (!this.props.disabled) {
+      if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
+        this.setState({ answerState: AnswerState.Answering });
+      }
+    }
+  };
+
   renderSubmitButton() {
-    let buttonText;
-    let intent = Intent.PRIMARY;
-    let disabled = this.props.disabled;
+    const disabled = this.props.disabled || this.state.answer === '';
+
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
-        buttonText = StatementButtonText.Answer;
-        break;
       case AnswerState.AnswerSaved:
       case AnswerState.ClearingAnswer:
-        buttonText = StatementButtonText.Change;
-        intent = Intent.NONE;
-        break;
-      default:
-        buttonText = StatementButtonText.Submit;
-        disabled = disabled || this.state.answer === '';
+        return null;
     }
-    return <Button type="submit" text={buttonText} intent={intent} disabled={disabled} className="essay-button" />;
+    return (
+      <Button
+        type="submit"
+        text={StatementButtonText.Submit}
+        intent={Intent.WARNING}
+        disabled={disabled}
+        className="essay-button"
+      />
+    );
   }
 
   renderCancelButton() {
@@ -64,7 +71,6 @@ export default class ItemEssayForm extends PureComponent {
         <Button
           type="button"
           text={StatementButtonText.Cancel}
-          intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
           className="essay-button"
           disabled={this.props.disabled}
@@ -78,7 +84,7 @@ export default class ItemEssayForm extends PureComponent {
       case AnswerState.NotAnswered:
         return (
           <Callout intent={Intent.NONE} icon={<Circle />} className="essay-callout">
-            Not answered.
+            Unanswered.
           </Callout>
         );
       case AnswerState.SavingAnswer:

@@ -1,10 +1,20 @@
-import { Callout, Intent } from '@blueprintjs/core';
+import { Button, Callout, Intent } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
 
-import { ButtonLink } from '../../../ButtonLink/ButtonLink';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 
 export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) {
+  const redirectToResultsUrl = () => {
+    const unconfirmedShortAnswers = document.querySelectorAll('input[type="text"]:not([readonly])');
+    const unconfirmedEssays = document.querySelectorAll('textarea:not([readonly])');
+    if (unconfirmedShortAnswers.length > 0 || unconfirmedEssays.length > 0) {
+      window.alert('There are still unconfirmed answers! Make sure to click "Confirm answer" button.');
+      return;
+    }
+
+    window.location.href = resultsUrl;
+  };
+
   const renderSubmissionForm = () => {
     if (reasonNotAllowedToSubmit) {
       return (
@@ -14,9 +24,9 @@ export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) 
       );
     }
     return (
-      <ButtonLink intent={Intent.PRIMARY} to={resultsUrl}>
-        Finish and show results
-      </ButtonLink>
+      <Button intent={Intent.PRIMARY} onClick={redirectToResultsUrl}>
+        Submit
+      </Button>
     );
   };
 

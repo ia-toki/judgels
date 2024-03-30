@@ -29,6 +29,9 @@ public class InMemoryFileSystem implements FileSystem {
     }
 
     @Override
+    public void copyDirectory(Path srcPath, Path destPath) {}
+
+    @Override
     public void createFile(Path filePath) {
         throw new UnsupportedOperationException();
     }
@@ -135,10 +138,4 @@ public class InMemoryFileSystem implements FileSystem {
     public byte[] readByteArrayFromFile(Path filePath) {
         return fs.get(filePath);
     }
-
-    @Override
-    public void copyDirectory(Path src, Path dest) {}
-
-    @Override
-    public void copy(Path src, Path dest) {}
 }

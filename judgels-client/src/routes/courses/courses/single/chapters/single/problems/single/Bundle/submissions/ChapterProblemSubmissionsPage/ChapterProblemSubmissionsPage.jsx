@@ -7,7 +7,7 @@ import { ButtonLink } from '../../../../../../../../../../../components/ButtonLi
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import ItemSubmissionUserFilter from '../../../../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
-import { ScrollToTopOnMount } from '../../../../../../../../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { selectMaybeUserJid } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -56,9 +56,9 @@ class ChapterProblemSubmissionsPage extends Component {
 
     return (
       <ContentCard className="chapter-bundle-problem-submissions-page">
-        <ScrollToTopOnMount />
         <h3 className="heading-with-button-action">Results</h3>
         <ButtonLink
+          small
           intent={Intent.PRIMARY}
           to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${match.params.problemAlias}`}
         >
@@ -66,6 +66,8 @@ class ChapterProblemSubmissionsPage extends Component {
         </ButtonLink>
         <hr />
         {this.renderResults()}
+        {this.renderEditorial()}
+        {this.renderNavigation()}
       </ContentCard>
     );
   }
@@ -88,10 +90,33 @@ class ChapterProblemSubmissionsPage extends Component {
     return (
       <>
         {this.state.problemSummaries.map(props => (
-          <SubmissionDetails key={props.alias} {...props} />
+          <SubmissionDetails key={props.alias} {...props} showTitle={false} />
         ))}
       </>
     );
+  };
+
+  renderEditorial = () => {
+    const { worksheet } = this.props;
+    const { problem, editorial } = worksheet;
+    if (!editorial) {
+      return null;
+    }
+    return (
+      <div className="chapter-problem-editorial">
+        <hr />
+        <ProblemEditorialCard
+          alias={problem.alias}
+          statement={worksheet.worksheet.statement}
+          editorial={editorial}
+          showTitle={false}
+        />
+      </div>
+    );
+  };
+
+  renderNavigation = () => {
+    return <div className="chapter-problem-navigation">{this.props.renderNavigation({ hidePrev: true })}</div>;
   };
 }
 

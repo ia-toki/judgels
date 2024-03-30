@@ -3,7 +3,14 @@ import { ChevronLeft, ChevronRight } from '@blueprintjs/icons';
 
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 
-export function ChapterNavigation({ courseSlug, chapterAlias, previousResourcePath, nextResourcePath, chapters }) {
+export function ChapterNavigation({
+  courseSlug,
+  chapterAlias,
+  previousResourcePath,
+  nextResourcePath,
+  chapters,
+  disableNext,
+}) {
   const scrollToTop = () => {
     window.scrollTo(0, 0);
   };
@@ -32,6 +39,7 @@ export function ChapterNavigation({ courseSlug, chapterAlias, previousResourcePa
     return (
       <ButtonLink
         small
+        disabled={disableNext}
         intent={Intent.WARNING}
         to={`/courses/${courseSlug}/chapters/${chapterAlias}${nextResourcePath}`}
         onClick={scrollToTop}
@@ -51,7 +59,12 @@ export function ChapterNavigation({ courseSlug, chapterAlias, previousResourcePa
       if (chapters[i].alias === chapterAlias) {
         if (i + 1 < chapters.length) {
           return (
-            <ButtonLink small intent={Intent.WARNING} to={`/courses/${courseSlug}/chapters/${chapters[i + 1].alias}`}>
+            <ButtonLink
+              small
+              disabled={disableNext}
+              intent={Intent.WARNING}
+              to={`/courses/${courseSlug}/chapters/${chapters[i + 1].alias}`}
+            >
               Next chapter &nbsp;&nbsp;
               <ChevronRight />
             </ButtonLink>

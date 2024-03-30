@@ -2,6 +2,7 @@ import { Card, Divider, Radio, RadioGroup, Tag } from '@blueprintjs/core';
 import { Component } from 'react';
 
 import { HtmlText } from '../../../../HtmlText/HtmlText';
+import RichStatementText from '../../../../RichStatementText/RichStatementText';
 
 import './ItemMultipleChoiceCard.scss';
 
@@ -38,7 +39,7 @@ export class ItemMultipleChoiceCard extends Component {
         <div className="bundle-problem-statement-item__statement">
           <div className="__item-num">{this.props.itemNumber}.</div>
           <div className="__item-statement">
-            <HtmlText>{config.statement}</HtmlText>
+            <RichStatementText>{config.statement}</RichStatementText>
           </div>
         </div>
         <Divider />
@@ -59,7 +60,7 @@ export class ItemMultipleChoiceCard extends Component {
                 <HtmlText>{choice.alias}</HtmlText>
               </Tag>
               <div className="__content">
-                <HtmlText>{choice.content}</HtmlText>
+                <RichStatementText>{choice.content.replace('<br>', '\n')}</RichStatementText>
               </div>
             </Radio>
           ))}

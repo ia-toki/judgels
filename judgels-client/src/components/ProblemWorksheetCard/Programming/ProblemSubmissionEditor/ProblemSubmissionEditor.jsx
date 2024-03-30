@@ -25,7 +25,7 @@ export class ProblemSubmissionEditor extends Component {
 
   state = {
     isResponsiveButtonClicked: false,
-    lastSubmissionId: null,
+    lastSubmissionJid: null,
     submission: undefined,
     submissionUrl: undefined,
   };
@@ -50,24 +50,24 @@ export class ProblemSubmissionEditor extends Component {
 
     this.setState(
       {
-        lastSubmissionId: submission.id,
+        lastSubmissionJid: submission.jid,
         submission: undefined,
         submissionUrl,
       },
       () => {
-        this.reloadSubmission();
+        this.currentTimeout = setTimeout(this.reloadSubmission, 0);
       }
     );
   };
 
   reloadSubmission = async () => {
-    const { data } = await this.props.onGetSubmissionWithSource(this.state.lastSubmissionId);
+    const submission = await this.props.onGetSubmission(this.state.lastSubmissionJid);
 
     this.setState({
-      submission: data.submission,
+      submission: submission,
     });
 
-    const verdictCode = data.submission.latestGrading?.verdict.code || VerdictCode.PND;
+    const verdictCode = submission.latestGrading?.verdict.code || VerdictCode.PND;
     if (verdictCode === VerdictCode.PND) {
       this.currentTimeout = setTimeout(this.reloadSubmission, 1500);
     } else {
@@ -79,6 +79,10 @@ export class ProblemSubmissionEditor extends Component {
     }
   };
 
+  closeSubmissionSummary = () => {
+    this.setState({ lastSubmissionJid: null });
+  };
+
   renderEditor = () => {
     const {
       shouldReset,
@@ -88,6 +92,7 @@ export class ProblemSubmissionEditor extends Component {
       config: { gradingEngine, gradingLanguageRestriction },
       reasonNotAllowedToSubmit,
       preferredGradingLanguage,
+      renderNavigation,
     } = this.props;
 
     if (reasonNotAllowedToSubmit) {
@@ -158,17 +163,22 @@ export class ProblemSubmissionEditor extends Component {
               )}
               <Field component={FormAceEditor} {...editorField} gradingLanguage={values.gradingLanguage} />
               <ProblemSubmissionSummary
-                submissionId={this.state.lastSubmissionId}
+                submissionJid={this.state.lastSubmissionJid}
                 submission={this.state.submission}
                 submissionUrl={this.state.submissionUrl}
+                onClose={this.closeSubmissionSummary}
               />
-              <Button
-                type="submit"
-                text="Submit"
-                intent={Intent.PRIMARY}
-                loading={submitting}
-                disabled={!dirty || this.currentTimeout}
-              />
+              <div className="editor-buttons">
+                <Button
+                  type="submit"
+                  text="Submit"
+                  small
+                  intent={Intent.PRIMARY}
+                  loading={submitting}
+                  disabled={!dirty || this.currentTimeout}
+                />
+                <div className="editor-navigation">{renderNavigation({ hidePrev: true })}</div>
+              </div>
             </form>
           );
         }}

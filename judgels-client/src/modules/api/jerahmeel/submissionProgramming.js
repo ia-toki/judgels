@@ -6,6 +6,10 @@ import { get, post, postMultipart } from '../http';
 export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/submissions/programming`;
 
 export const submissionProgrammingAPI = {
+  getSubmission: submissionJid => {
+    return get(`${baseSubmissionsURL}/${submissionJid}`);
+  },
+
   getSubmissions: (token, containerJid, username, problemJid, problemAlias, page) => {
     const params = stringify({ containerJid, username, problemJid, problemAlias, page });
     return get(`${baseSubmissionsURL}?${params}`, token);

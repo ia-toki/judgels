@@ -1,11 +1,11 @@
 import { contestFileAPI } from '../../modules/api/uriel/contestFile';
-import { HtmlText } from '../HtmlText/HtmlText';
+import RichStatementText from '../RichStatementText/RichStatementText';
 
 export function FormattedContent({ context, children }) {
   let res = children;
   res = formatDownloadUrls(res, context);
 
-  return <HtmlText>{res}</HtmlText>;
+  return <RichStatementText>{res}</RichStatementText>;
 }
 
 function formatDownloadUrls(text, context) {
