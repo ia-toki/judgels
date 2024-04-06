@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {Callout, Collapse, Button} from "@blueprintjs/core";
+import { Button, Callout, Collapse } from '@blueprintjs/core';
+import { useState } from 'react';
 
 export function ContestAnnouncementInstruction() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,9 +10,9 @@ export function ContestAnnouncementInstruction() {
     <div>
       <Button
         onClick={handleToggle}
-        rightIcon={isOpen ? "chevron-up" : "chevron-down"}
+        rightIcon={isOpen ? 'chevron-up' : 'chevron-down'}
         text="Add Image to Your Contest Announcement"
-        style={{marginBottom: "10px"}}
+        style={{ marginBottom: '10px' }}
       />
       <Collapse isOpen={isOpen}>
         <Callout className="bp5-icon-info-sign content-card__section">
@@ -21,12 +21,12 @@ export function ContestAnnouncementInstruction() {
               Navigate to <strong>Settings</strong> and enable the <strong>Files</strong> module.
             </li>
             <li>
-              In the <strong>Contest Menu</strong> &gt; <strong>Files</strong> section, click on <strong>Upload
-              File</strong> to upload your desired image.
+              In the <strong>Contest Menu</strong> &gt; <strong>Files</strong> section, click on{' '}
+              <strong>Upload File</strong> to upload your desired image.
             </li>
             <li>
-              Insert the uploaded image in the Content form below using the following
-              format: <code>download/&lt;your-image-file-name.jpg&gt;</code>
+              Insert the uploaded image in the Content form below using the following format:{' '}
+              <code>download/&lt;your-image-file-name.jpg&gt;</code>
             </li>
           </ol>
         </Callout>
