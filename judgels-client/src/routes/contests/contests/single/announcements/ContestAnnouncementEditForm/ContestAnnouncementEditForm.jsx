@@ -6,6 +6,7 @@ import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/Form
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../../../components/forms/validations';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncementInstruction } from '../ContestAnnouncementInstruction/ContestAnnouncementInstruction';
 
 export default function ContestAnnouncementEditForm({ onSubmit, initialValues, renderFormComponents }) {
   const statusField = {
@@ -33,6 +34,7 @@ export default function ContestAnnouncementEditForm({ onSubmit, initialValues, r
     <>
       <Field component={FormSelect2} {...statusField} />
       <Field component={FormTextInput} {...titleField} />
+      <ContestAnnouncementInstruction />
       <Field component={FormRichTextArea} {...contentField} />
     </>
   );
