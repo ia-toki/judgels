@@ -53,7 +53,7 @@ export default function ProblemSubmissionForm({
         const fieldFile = {
           name: 'sourceFiles.' + key,
           label: sourceKeys[key] + ' file',
-          validate: composeValidators( maxFileSize, CompatibleFilenameExtensionForGradingLanguage),
+          validate: composeValidators(maxFileSize, CompatibleFilenameExtensionForGradingLanguage),
         };
         const fieldText = {
           name: 'sourceTexts.' + key,
