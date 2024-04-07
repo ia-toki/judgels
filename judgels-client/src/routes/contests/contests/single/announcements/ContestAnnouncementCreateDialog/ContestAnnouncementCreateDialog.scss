@@ -1,20 +1,3 @@
 .contest-announcement-create-dialog {
   width: 750px;
-  height: 650px;
-}
-
-.contest-announcement-create-dialog-body {
-  height: 520px;
-}
-
-// This is to compensate the increase in toolbar height
-
-@media only screen and (max-width: 600px) {
-  .contest-announcement-create-dialog {
-    height: 700px;
-  }
-
-  .contest-announcement-create-dialog-body {
-    height: 570px;
-  }
 }

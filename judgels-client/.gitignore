@@ -10,5 +10,6 @@ judgels-client.js
 !public/skins/**/*.css
 
 .idea/
+coverage/
 
 *.retry

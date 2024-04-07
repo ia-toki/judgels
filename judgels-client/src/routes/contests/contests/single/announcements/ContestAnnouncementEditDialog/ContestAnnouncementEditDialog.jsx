@@ -8,7 +8,7 @@ import './ContestAnnouncementEditDialog.scss';
 export function ContestAnnouncementEditDialog({ contest, announcement, onToggleEditDialog, onUpdateAnnouncement }) {
   const renderDialogForm = (fields, submitButton) => (
     <>
-      <div className={classNames(Classes.DIALOG_BODY, 'contest-announcement-edit-dialog-body')}>{fields}</div>
+      <div className={classNames(Classes.DIALOG_BODY)}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={closeDialog} />
