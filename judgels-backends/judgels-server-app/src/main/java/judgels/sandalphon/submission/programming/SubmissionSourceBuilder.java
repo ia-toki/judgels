@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
-import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
@@ -49,9 +48,9 @@ public class SubmissionSourceBuilder {
                 throw new IllegalArgumentException(e);
             }
             String sourceKey = key.substring(SOURCE_FILES_PART_PREFIX.length());
-            String fileName = Optional.
-                    ofNullable(value.getContentDisposition().getFileName()).
-                    orElse(sourceKey + "." + defaultFileExtension);
+            String fileName = Optional
+                    .ofNullable(value.getContentDisposition().getFileName())
+                    .orElse(sourceKey + "." + defaultFileExtension);
             SourceFile sourceFile = new SourceFile.Builder()
                     .name(fileName)
                     .content(content)
