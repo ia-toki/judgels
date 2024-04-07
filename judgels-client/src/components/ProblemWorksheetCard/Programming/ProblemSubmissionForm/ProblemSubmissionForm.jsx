@@ -6,6 +6,7 @@ import { isOutputOnly } from '../../../../modules/api/gabriel/engine';
 import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
 import { FormTableFileInput } from '../../../forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from '../../../forms/FormTableSelect2/FormTableSelect2';
+import { FormTableTextArea } from '../../../forms/FormTableTextArea/FormTableTextArea.jsx';
 import {
   CompatibleFilenameExtensionForGradingLanguage,
   MaxFileSize10MB,
@@ -49,12 +50,27 @@ export default function ProblemSubmissionForm({
     return Object.keys(sourceKeys)
       .sort()
       .map(key => {
-        const field = {
+        const fieldFile = {
           name: 'sourceFiles.' + key,
-          label: sourceKeys[key],
-          validate: composeValidators(Required, maxFileSize, CompatibleFilenameExtensionForGradingLanguage),
+          label: sourceKeys[key] + ' file',
+          validate: composeValidators( maxFileSize, CompatibleFilenameExtensionForGradingLanguage),
         };
-        return <Field key={key} component={FormTableFileInput} {...field} />;
+        const fieldText = {
+          name: 'sourceTexts.' + key,
+          label: sourceKeys[key],
+          isCode: true,
+          rows: 10,
+        };
+        return (
+          <>
+            <Field
+              component={FormTableTextArea}
+              keyClassName="programming-problem-submission-form__table_key"
+              {...fieldText}
+            />
+            <Field key={key} component={FormTableFileInput} {...fieldFile} />
+          </>
+        );
       });
   };
 

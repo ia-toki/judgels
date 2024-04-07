@@ -9,8 +9,10 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
+import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
@@ -27,7 +29,7 @@ public class SubmissionSourceBuilder {
     }
 
     // TODO(fushar): unit test
-    public SubmissionSource fromNewSubmission(FormDataMultiPart parts) {
+    public SubmissionSource fromNewSubmission(FormDataMultiPart parts, String defaultFileExtension) {
         Map<String, SourceFile> submissionFiles = new HashMap<>();
         for (Map.Entry<String, List<FormDataBodyPart>> entry : parts.getFields().entrySet()) {
             String key = entry.getKey();
@@ -46,14 +48,23 @@ public class SubmissionSourceBuilder {
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
+            String sourceKey = key.substring(SOURCE_FILES_PART_PREFIX.length());
+            String fileName = Optional.
+                    ofNullable(value.getContentDisposition().getFileName()).
+                    orElse(sourceKey + "." + defaultFileExtension);
             SourceFile sourceFile = new SourceFile.Builder()
-                    .name(value.getContentDisposition().getFileName())
+                    .name(fileName)
                     .content(content)
                     .build();
 
-            submissionFiles.put(key.substring(SOURCE_FILES_PART_PREFIX.length()), sourceFile);
+            submissionFiles.put(sourceKey, sourceFile);
         }
         return new SubmissionSource.Builder().putAllSubmissionFiles(submissionFiles).build();
+    }
+
+
+    public SubmissionSource fromNewSubmission(FormDataMultiPart parts) {
+        return fromNewSubmission(parts, "");
     }
 
     // TODO(fushar): unit test
