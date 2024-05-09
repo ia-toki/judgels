@@ -123,9 +123,6 @@ export function SubmissionDetails({
               <tbody>
                 {latestGrading.details.testDataResults.map(testGroupResult =>
                   testGroupResult.testCaseResults.map((testCaseResult, testCaseIdx) => {
-                    if (testCaseResult.subtaskIds.indexOf(subtaskResult.id) < 0) {
-                      return null;
-                    }
                     const testCaseId = `${testGroupResult.id}_${testCaseIdx + 1}`;
                     return (
                       <tr key={testCaseId}>
@@ -244,17 +241,22 @@ export function SubmissionDetails({
                 </tr>
               </thead>
               <tbody>
-                {details.testDataResults[1].testCaseResults.map((result, idx) => (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td>
-                      <VerdictTag verdictCode={result.verdict.code} />
-                    </td>
-                    <td>{renderExecutionTime(result)}</td>
-                    <td>{renderExecutionMemory(result)}</td>
-                    <td>{result.score}</td>
-                  </tr>
-                ))}
+                {details.testDataResults.map((testGroupResult, testGroupIdx) => {
+                  if (testGroupIdx === 0) {
+                    return null;
+                  }
+                  return testGroupResult.testCaseResults.map((result, idx) => (
+                    <tr key={idx}>
+                      <td>{`${testGroupIdx === 1 ? '' : testGroupIdx + '_'}${idx + 1}`}</td>
+                      <td>
+                        <VerdictTag verdictCode={result.verdict.code} />
+                      </td>
+                      <td>{renderExecutionTime(result)}</td>
+                      <td>{renderExecutionMemory(result)}</td>
+                      <td>{result.score}</td>
+                    </tr>
+                  ));
+                })}
               </tbody>
             </HTMLTable>
           </div>
