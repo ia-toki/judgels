@@ -51,7 +51,6 @@ public final class DuplexFileSystem implements FileSystem {
     @Override
     public void uploadPublicFile(Path filePath, InputStream content) {
         aws.uploadPublicFile(filePath, content);
-        local.uploadPublicFile(filePath, content);
     }
 
     @Override
@@ -62,7 +61,6 @@ public final class DuplexFileSystem implements FileSystem {
     @Override
     public void uploadPrivateFile(Path filePath, InputStream content) {
         aws.uploadPrivateFile(filePath, content);
-        local.uploadPrivateFile(filePath, content);
     }
 
     @Override
@@ -72,7 +70,7 @@ public final class DuplexFileSystem implements FileSystem {
 
     @Override
     public void uploadZippedFiles(Path dirPath, InputStream content) {
-        local.uploadZippedFiles(dirPath, content);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -96,7 +94,6 @@ public final class DuplexFileSystem implements FileSystem {
     @Override
     public void writeByteArrayToFile(Path filePath, byte[] content) {
         aws.writeByteArrayToFile(filePath, content);
-        local.writeByteArrayToFile(filePath, content);
     }
 
     @Override
