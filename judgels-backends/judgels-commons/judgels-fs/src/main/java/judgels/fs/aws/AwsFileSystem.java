@@ -205,6 +205,7 @@ public final class AwsFileSystem implements FileSystem {
         String key = filePath.toString();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(content.length);
         objectMetadata.setContentType(URLConnection.guessContentTypeFromName(key));
 
         s3.putObject(bucketName, key, new ByteArrayInputStream(content), objectMetadata);
