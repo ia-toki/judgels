@@ -6,7 +6,6 @@ import static java.util.Optional.of;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.servlets.tasks.Task;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -63,7 +62,7 @@ public class SubmissionsDuplexToAwsTask extends Task {
             submissionSourceBuilder.storeSubmissionSource(s.getJid(), source);
 
             // Remove from local
-            submissionFs.removeFile(Paths.get(s.getJid()));
+            output.write(s.getJid() + "\n");
 
             lastSubmission = s;
         }
