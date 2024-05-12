@@ -7,8 +7,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.MoreFiles;
-import com.google.common.io.RecursiveDeleteOption;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +30,7 @@ import java.util.zip.ZipInputStream;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.fs.NaturalFilenameComparator;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 public final class LocalFileSystem implements FileSystem {
@@ -82,7 +81,7 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void removeFile(Path filePath) {
         try {
-            MoreFiles.deleteRecursively(baseDir.resolve(filePath), RecursiveDeleteOption.ALLOW_INSECURE);
+            FileUtils.deleteDirectory(baseDir.resolve(filePath).toFile());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

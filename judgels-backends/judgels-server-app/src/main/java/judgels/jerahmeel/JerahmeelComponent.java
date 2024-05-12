@@ -24,6 +24,7 @@ import judgels.jerahmeel.submission.programming.ProblemSetStatsTask;
 import judgels.jerahmeel.submission.programming.StatsModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
+import judgels.jerahmeel.submission.programming.SubmissionsDuplexToAwsTask;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -83,4 +84,5 @@ public interface JerahmeelComponent {
     GradingResponsePoller gradingResponsePoller();
     ProblemSetStatsTask problemSetStatsTask();
     ContestStatsTask contestStatsTask();
+    SubmissionsDuplexToAwsTask submissionsDuplexToAwsTask();
 }
