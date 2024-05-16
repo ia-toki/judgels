@@ -123,6 +123,9 @@ export function SubmissionDetails({
               <tbody>
                 {latestGrading.details.testDataResults.map(testGroupResult =>
                   testGroupResult.testCaseResults.map((testCaseResult, testCaseIdx) => {
+                    if (testCaseResult.subtaskIds.indexOf(subtaskResult.id) < 0) {
+                      return null;
+                    }
                     const testCaseId = `${testGroupResult.id}_${testCaseIdx + 1}`;
                     return (
                       <tr key={testCaseId}>
