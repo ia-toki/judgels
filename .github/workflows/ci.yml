@@ -100,7 +100,7 @@ jobs:
 
       - name: Install docker for ansible
         run: |
-          ansible-galaxy collection install community.docker:3.4.5
+          ansible-galaxy collection install community.docker:3.10.2
           pipx inject ansible-core docker six
 
       - id: changed-files
