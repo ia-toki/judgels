@@ -137,7 +137,6 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Build judgels-server
-        if: false
         run: ./deployment/scripts/build_judgels_server.sh
 
       - name: Build judgels-client
@@ -145,7 +144,7 @@ jobs:
         run: ./deployment/scripts/build_judgels_client.sh
 
       - name: Build judgels-grader
-        if: steps.changed-files.outputs.judgels-grader == '1'
+        if: false
         run: ./deployment/scripts/build_judgels_grader.sh
 
   deploy-web:
