@@ -10,12 +10,14 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -287,7 +289,7 @@ public class SubmissionResource {
 
     @POST
     @Path("/regrade")
-    @UnitOfWork
+    @UnitOfWork(transactional = false)
     public void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("containerJid") Optional<String> containerJid,
@@ -298,20 +300,24 @@ public class SubmissionResource {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
+        Map<String, ProblemSubmissionConfig> configsMap = new HashMap<>();
+
         for (int pageNumber = 1;; pageNumber++) {
             List<Submission> submissions = submissionStore.getSubmissions(
                     containerJid,
                     byUserJid(username),
                     byProblemJid(containerJid, problemJid, problemAlias),
                     pageNumber,
-                    PAGE_SIZE).getPage();
+                    100).getPage();
 
             if (submissions.isEmpty()) {
                 break;
             }
 
             var problemJids = Lists.transform(submissions, Submission::getProblemJid);
-            Map<String, ProblemSubmissionConfig> configsMap = sandalphonClient.getProgrammingProblemSubmissionConfigs(problemJids);
+            configsMap.putAll(sandalphonClient.getProgrammingProblemSubmissionConfigs(
+                    Sets.difference(Set.copyOf(problemJids), configsMap.keySet())));
+
             submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
     }
