@@ -56,6 +56,8 @@ public class GradingResponseProcessor {
                 submissionConsumer.accept(submission.get());
                 messageClient.confirmMessage(message.getId());
                 break;
+            } else {
+                LOGGER.warn("Was not able to find grading jid {}", response.getGradingJid());
             }
 
             try {
