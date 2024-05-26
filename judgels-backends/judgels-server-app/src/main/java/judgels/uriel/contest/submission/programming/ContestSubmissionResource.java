@@ -14,9 +14,12 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -318,7 +321,7 @@ public class ContestSubmissionResource {
 
     @POST
     @Path("/regrade")
-    @UnitOfWork
+    @UnitOfWork(transactional = false)
     public void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
@@ -331,20 +334,24 @@ public class ContestSubmissionResource {
 
         Optional<String> problemJid = byProblemJid(contestJid, problemAlias);
 
+        Map<String, ProblemSubmissionConfig> configsMap = new HashMap<>();
+
         for (int pageNumber = 1;; pageNumber++) {
             List<Submission> submissions = submissionStore.getSubmissions(
                     Optional.of(contestJid),
                     byUserJid(username),
                     problemJid,
                     pageNumber,
-                    PAGE_SIZE).getPage();
+                    100).getPage();
 
             if (submissions.isEmpty()) {
                 break;
             }
 
             var problemJids = Lists.transform(submissions, Submission::getProblemJid);
-            Map<String, ProblemSubmissionConfig> configsMap = sandalphonClient.getProgrammingProblemSubmissionConfigs(problemJids);
+            configsMap.putAll(sandalphonClient.getProgrammingProblemSubmissionConfigs(
+                    Sets.difference(Set.copyOf(problemJids), configsMap.keySet())));
+
             submissionRegrader.regradeSubmissions(submissions, configsMap);
         }
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
