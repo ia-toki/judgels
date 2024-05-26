@@ -31,6 +31,7 @@ export class ContestSubmissionsPage extends Component {
       response: undefined,
       filter: { username, problemAlias },
       isFilterLoading: false,
+      isRegradingAll: false,
     };
   }
 
@@ -70,7 +71,7 @@ export class ContestSubmissionsPage extends Component {
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
-    return <RegradeAllButton onRegradeAll={this.onRegradeAll} />;
+    return <RegradeAllButton onRegradeAll={this.onRegradeAll} isRegradingAll={this.state.isRegradingAll} />;
   };
 
   renderFilterWidget = () => {
@@ -154,7 +155,10 @@ export class ContestSubmissionsPage extends Component {
   onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       const { username, problemAlias } = this.state.filter;
+
+      this.setState({ isRegradingAll: true });
       await this.props.onRegradeAll(this.props.contest.jid, username, problemAlias);
+      this.setState({ isRegradingAll: false });
       const queries = parse(this.props.location.search);
       await this.refreshSubmissions(username, problemAlias, queries.page);
     }
