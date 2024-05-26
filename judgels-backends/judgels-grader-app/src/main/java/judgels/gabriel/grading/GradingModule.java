@@ -4,7 +4,9 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.nio.file.Path;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -41,10 +43,11 @@ public class GradingModule {
         ExecutorService executorService = lifecycleEnv.executorService("grading-worker-%d")
                 .maxThreads(config.getNumWorkerThreads())
                 .minThreads(config.getNumWorkerThreads())
+                .workQueue(new ArrayBlockingQueue<>(config.getNumWorkerThreads()))
                 .build();
 
         return new GradingRequestPoller(
-                executorService,
+                (ThreadPoolExecutor) executorService,
                 config.getGradingRequestQueueName(),
                 messageClient,
                 workerFactory);
