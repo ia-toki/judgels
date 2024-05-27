@@ -66,7 +66,9 @@ public class SubmissionClient {
 
     public void regrade(String gradingJid, Submission submission, SubmissionSource source, ProblemSubmissionConfig config, GradingOptions options) {
         if (config.getGradingLastUpdateTime().isAfter(submission.getTime())) {
-            // TODO(fushar): update submission's grading engine
+            if (!submission.getGradingEngine().equals(config.getGradingEngine())) {
+                submissionStore.updateSubmissionGradingEngine(submission.getJid(), config.getGradingEngine());
+            }
         }
         requestGrading(gradingJid, submission, source, config, options);
     }
