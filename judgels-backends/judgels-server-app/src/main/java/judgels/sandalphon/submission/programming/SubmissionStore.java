@@ -42,6 +42,7 @@ public interface SubmissionStore {
     Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Collection<String> problemJids);
 
     Submission createSubmission(SubmissionData data, ProblemSubmissionConfig config);
+    void updateSubmissionGradingEngine(String submissionJid, String gradingEngine);
     String createGrading(Submission submission);
     Optional<Submission> updateGrading(String gradingJid, GradingResult result);
 }
