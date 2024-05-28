@@ -277,22 +277,34 @@ public class IsolateSandbox implements Sandbox {
     }
 
     private void initIsolate() {
-        ImmutableList.Builder<String> command = ImmutableList.builder();
-        command.add(isolatePath, "-b" + boxId);
-        command.add("--cg");
-        command.add("--init");
+        for (int tries = 0;; tries++) {
+            ImmutableList.Builder<String> command = ImmutableList.builder();
+            command.add(isolatePath, "-b" + boxId);
+            command.add("--cg");
+            command.add("--init");
 
-        ProcessBuilder pb = new ProcessBuilder(command.build()).redirectErrorStream(true);
+            ProcessBuilder pb = new ProcessBuilder(command.build()).redirectErrorStream(true);
 
-        try {
-            ProcessExecutionResult result = SandboxExecutor.executeProcessBuilder(pb);
-            if (result.getExitCode() != 0) {
+            try {
+                ProcessExecutionResult result = SandboxExecutor.executeProcessBuilder(pb);
+                if (result.getExitCode() == 0) {
+                    boxDir = new File(result.getOutputLines().get(0), "box");
+                    return;
+                }
+                if (tries < 1) {
+                    String errorMessage = result.getOutputLines().isEmpty() ? "" : result.getOutputLines().get(0);
+                    if (errorMessage.startsWith("Box already exists")) {
+                        // Clean up the box,
+                        cleanUpIsolate();
+
+                        // and try initializing it again.
+                        continue;
+                    }
+                }
                 throw new SandboxException("Cannot initialize Isolate!");
+            } catch (IOException | InterruptedException e) {
+                throw new SandboxException(e);
             }
-
-            boxDir = new File(result.getOutputLines().get(0), "box");
-        } catch (IOException | InterruptedException e) {
-            throw new SandboxException(e);
         }
     }
 
@@ -304,7 +316,7 @@ public class IsolateSandbox implements Sandbox {
             if (result.getExitCode() != 0) {
                 throw new SandboxException("Cannot clean up Isolate!");
             }
-            if (boxDir.exists()) {
+            if (boxDir != null && boxDir.exists()) {
                 FileUtils.forceDelete(boxDir);
             }
         } catch (IOException | InterruptedException e) {
