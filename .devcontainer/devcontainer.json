@@ -1,0 +1,17 @@
+{
+  "name": "Judgels Dev",
+  "dockerFile": "Dockerfile",
+  "runArgs": [
+    "--privileged"
+  ],
+  "remoteUser": "tokidev",
+  "containerUser": "tokidev",
+  "postCreateCommand": "echo 'yes' | bin/bootstrap_system.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack"
+      ]
+    }
+  }
+}
