@@ -224,8 +224,8 @@ blockquote {
   }
 }
 
-.bp5-intent-warning:not(.bp5-disabled, :hover) {
-  &.bp5-button,
+.bp5-intent-warning:not(.bp5-disabled) {
+  &:not(:hover).bp5-button,
   &.bp5-tag,
   &.bp5-toast,
   &.bp5-toast .bp5-icon,
