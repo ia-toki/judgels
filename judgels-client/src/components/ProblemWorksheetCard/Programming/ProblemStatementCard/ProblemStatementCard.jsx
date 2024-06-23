@@ -33,7 +33,7 @@ export function ProblemStatementCard({
   };
 
   return (
-    <ContentCard>
+    <ContentCard secondary>
       {showTitle && (
         <h2 className="programming-problem-statement__name">
           {alias ? `${alias}. ` : ''}

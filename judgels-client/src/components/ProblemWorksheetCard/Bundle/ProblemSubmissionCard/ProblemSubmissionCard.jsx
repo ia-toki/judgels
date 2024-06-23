@@ -30,5 +30,5 @@ export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) 
     );
   };
 
-  return <ContentCard>{renderSubmissionForm()}</ContentCard>;
+  return <ContentCard secondary>{renderSubmissionForm()}</ContentCard>;
 }
