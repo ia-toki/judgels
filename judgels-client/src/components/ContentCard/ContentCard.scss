@@ -5,7 +5,7 @@
   margin-bottom: 10px;
   overflow: auto;
 
-  .bp5-dark & {
+  .bp5-dark &--is-secondary {
     box-shadow: 0 0 0 0.5px $dark-secondary-background-color !important;
   }
 

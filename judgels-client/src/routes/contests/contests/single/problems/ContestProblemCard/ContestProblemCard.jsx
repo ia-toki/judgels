@@ -24,7 +24,7 @@ export function ContestProblemCard({
   };
 
   return (
-    <ContentCardLink className="contest-problem-card" to={`/contests/${contest.slug}/problems/${alias}`}>
+    <ContentCardLink secondary className="contest-problem-card" to={`/contests/${contest.slug}/problems/${alias}`}>
       <div className=" float-left">
         <span data-key="name">
           {alias}. {problemName}

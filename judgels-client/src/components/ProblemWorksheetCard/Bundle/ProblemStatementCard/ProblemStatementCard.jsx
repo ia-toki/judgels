@@ -78,7 +78,7 @@ export function ProblemStatementCard({
   };
 
   return (
-    <ContentCard>
+    <ContentCard secondary>
       {showTitle && (
         <h2 className="bundle-problem-statement__name">
           {alias ? `${alias}. ` : ''}
