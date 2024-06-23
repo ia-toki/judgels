@@ -13,7 +13,7 @@ export class ContestCard extends PureComponent {
     const { contest, role } = this.props;
 
     return (
-      <ContentCardLink secondary to={`/contests/${contest.slug}`}>
+      <ContentCardLink to={`/contests/${contest.slug}`}>
         <h4 className="contest-card-name">
           {contest.name}
           <div className="contest-card-role">
