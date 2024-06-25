@@ -31,9 +31,12 @@ export function getSubmissionWithSource(contestJid, submissionId, language) {
 export function createSubmission(contestJid, contestSlug, problemJid, data) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
-    let sourceFiles = {};
-    Object.keys(data.sourceFiles).forEach(key => {
-      sourceFiles['sourceFiles.' + key] = data.sourceFiles[key];
+    let sources = {};
+    Object.keys(data.sourceTexts ?? []).forEach(key => {
+      sources['sourceFiles.' + key] = data.sourceTexts[key];
+    });
+    Object.keys(data.sourceFiles ?? []).forEach(key => {
+      sources['sourceFiles.' + key] = data.sourceFiles[key];
     });
 
     await contestSubmissionProgrammingAPI.createSubmission(
@@ -41,7 +44,7 @@ export function createSubmission(contestJid, contestSlug, problemJid, data) {
       contestJid,
       problemJid,
       data.gradingLanguage,
-      sourceFiles
+      sources
     );
 
     toastActions.showSuccessToast('Solution submitted.');
