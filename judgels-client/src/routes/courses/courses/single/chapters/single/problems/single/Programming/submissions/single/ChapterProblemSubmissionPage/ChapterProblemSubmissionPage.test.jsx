@@ -75,15 +75,4 @@ describe('ChapterProblemSubmissionPage', () => {
   test('page', () => {
     expect(wrapper.text()).toContain('Submission #10');
   });
-
-  describe('when there is no source', () => {
-    beforeEach(async () => {
-      source = null;
-      await render();
-    });
-
-    test('get source image url', () => {
-      expect(chapterProblemSubmissionActions.getSubmissionSourceImage).toHaveBeenCalledWith('submissionJid');
-    });
-  });
 });
