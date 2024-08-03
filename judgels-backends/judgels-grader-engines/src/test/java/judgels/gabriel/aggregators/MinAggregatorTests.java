@@ -79,6 +79,18 @@ class MinAggregatorTests {
     }
 
     @Test
+    void aggregate_min_ok_percentage() {
+        List<TestCaseVerdict> testCaseVerdicts = ImmutableList.of(
+                new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build(),
+                new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(25).build(),
+                new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(50).build());
+
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
+        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 17.5));
+        assertThat(result.getTestCasePoints()).containsExactly("*", "17.5", "35.0");
+    }
+
+    @Test
     void aggregate_empty() {
         List<TestCaseVerdict> testCaseVerdicts = ImmutableList.of();
 
