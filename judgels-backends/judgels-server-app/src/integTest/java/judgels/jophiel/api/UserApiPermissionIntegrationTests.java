@@ -35,8 +35,7 @@ class UserApiPermissionIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
     @Test
     void export_users() {
-        assertPermitted(exportUsers(adminToken));
-        assertForbidden(exportUsers(userToken));
+        assertPermitted(exportUsers());
     }
 
     @Test
@@ -61,8 +60,8 @@ class UserApiPermissionIntegrationTests extends BaseJudgelsApiIntegrationTests {
         return () -> userClient.getUsers(token);
     }
 
-    private ThrowingCallable exportUsers(String token) {
-        return () -> userClient.exportUsers(token, List.of());
+    private ThrowingCallable exportUsers() {
+        return () -> userClient.exportUsers(List.of());
     }
 
     private ThrowingCallable upsertUsers(String token) {

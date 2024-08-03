@@ -163,6 +163,11 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
+    public long selectTotalScoreByUserJid(String userJid) {
+        return 0;
+    }
+
+    @Override
     public Map<String, Long> selectCountsVerdictByUserJid(String userJid) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();

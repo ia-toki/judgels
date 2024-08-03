@@ -31,6 +31,10 @@ public interface UserClient {
     User getMyself(@Param("token") String token);
 
     @RequestLine("POST /api/v2/users/batch-get")
+    @Headers("Content-Type: application/json")
+    String exportUsers(List<String> usernames);
+
+    @RequestLine("POST /api/v2/users/batch-get")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     String exportUsers(@Param("token") String token, List<String> usernames);
 }
