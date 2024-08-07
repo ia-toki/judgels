@@ -56,15 +56,27 @@ class TestCaseVerdictParserTests {
         }
 
         @Test
-        void ok() throws ScoringException {
+        void ok_points() throws ScoringException {
             assertThat(parser.parseOutput("OK\n70\n")).isEqualTo(
                     new TestCaseVerdict.Builder().verdict(Verdict.OK).points(70.0).build());
         }
 
         @Test
-        void ok_with_feedback() throws ScoringException {
+        void ok_points_with_feedback() throws ScoringException {
             assertThat(parser.parseOutput("OK\n70 a feedback\n")).isEqualTo(
                     new TestCaseVerdict.Builder().verdict(Verdict.OK).points(70.0).feedback("a feedback").build());
+        }
+
+        @Test
+        void ok_percentage() throws ScoringException {
+            assertThat(parser.parseOutput("OK\n25%\n")).isEqualTo(
+                    new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(25).build());
+        }
+
+        @Test
+        void ok_percentage_with_feedback() throws ScoringException {
+            assertThat(parser.parseOutput("OK\n25% a feedback\n")).isEqualTo(
+                    new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(25).feedback("a feedback").build());
         }
 
         @Test
@@ -79,6 +91,13 @@ class TestCaseVerdictParserTests {
             assertThatThrownBy(() -> parser.parseOutput("OK\nabc\n"))
                     .isInstanceOf(ScoringException.class)
                     .hasMessage("Invalid <points> for OK: abc");
+        }
+
+        @Test
+        void ok_failed_unknown_percentage_format() {
+            assertThatThrownBy(() -> parser.parseOutput("OK\nabc%\n"))
+                    .isInstanceOf(ScoringException.class)
+                    .hasMessage("Invalid <percentage> for OK: abc%");
         }
     }
 

@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 public interface TestCaseVerdict {
     Verdict getVerdict();
     Optional<Double> getPoints();
+    Optional<Integer> getPercentage();
     Optional<String> getFeedback();
 
     class Builder extends ImmutableTestCaseVerdict.Builder {}
