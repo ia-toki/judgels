@@ -41,6 +41,14 @@
   when: not letsencrypt_certificate.stat.exists
   notify: Reload nginx
 
+- name: Set up basic auth
+  htpasswd:
+    path: /etc/nginx/passwords/{{ domain.name | mandatory }}
+    name: "{{ domain.auth_basic_user }}"
+    password: "{{ domain.auth_basic_pass }}"
+  when: domain.auth_basic_user is defined and domain.auth_basic_user != ""
+  notify: Restart Nginx
+
 - name: Add nginx domain config
   template:
     src: "{{ domain.config_template | mandatory }}"
