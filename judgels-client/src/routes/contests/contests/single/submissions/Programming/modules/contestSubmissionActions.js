@@ -1,6 +1,7 @@
 import { push } from 'connected-react-router';
 
 import { NotFoundError } from '../../../../../../../modules/api/error';
+import { getGradingLanguageEditorSubmissionFilename } from '../../../../../../../modules/api/gabriel/language';
 import { contestSubmissionProgrammingAPI } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 
@@ -33,7 +34,11 @@ export function createSubmission(contestJid, contestSlug, problemJid, data) {
     const token = selectToken(getState());
     let sources = {};
     Object.keys(data.sourceTexts ?? []).forEach(key => {
-      sources['sourceFiles.' + key] = data.sourceTexts[key];
+      sources['sourceFiles.' + key] = new File(
+        [data.sourceTexts[key]],
+        getGradingLanguageEditorSubmissionFilename(data.gradingLanguage),
+        { type: 'text/plain' }
+      );
     });
     Object.keys(data.sourceFiles ?? []).forEach(key => {
       sources['sourceFiles.' + key] = data.sourceFiles[key];
