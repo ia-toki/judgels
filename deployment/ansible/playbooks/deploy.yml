@@ -16,8 +16,8 @@
           - name: judgels-server-admin
             fqdn: "{{ nginx_domain_judgels_server_admin }}"
             config_template: "{{ playbook_dir }}/../conf/nginx-judgels-server-admin.conf.j2"
-            auth_basic_user: "{{ nginx_domain_judgels_server_admin_auth_basic_user }}"
-            auth_basic_pass: "{{ nginx_domain_judgels_server_admin_auth_basic_pass }}"
+            auth_basic_user: "{{ nginx_domain_judgels_server_admin_auth_basic_user | default('') }}"
+            auth_basic_pass: "{{ nginx_domain_judgels_server_admin_auth_basic_pass | default('') }}"
           - name: judgels-client
             fqdn: "{{ nginx_domain_judgels_client }}"
             config_template: "{{ playbook_dir }}/../conf/nginx-judgels-client.conf.j2"
