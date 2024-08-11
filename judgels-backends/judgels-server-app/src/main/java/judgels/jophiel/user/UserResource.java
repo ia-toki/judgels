@@ -1,20 +1,22 @@
 package judgels.jophiel.user;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -91,13 +93,15 @@ public class UserResource {
     @Produces(TEXT_PLAIN)
     @UnitOfWork(readOnly = true)
     public String exportUsers(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             List<String> usernames) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAdminister(actorJid));
+        boolean canAdminister = roleChecker.canAdminister(actorJid);
 
-        Map<String, User> usersMap = userStore.getUsersByUsername(ImmutableSet.copyOf(usernames));
+        checkArgument(usernames.size() <= 100, "Cannot get more than 100 users.");
+
+        Map<String, User> usersMap = userStore.getUsersByUsername(Set.copyOf(usernames));
         List<User> users = usernames.stream()
                 .filter(usersMap::containsKey)
                 .map(usersMap::get)
@@ -106,9 +110,22 @@ public class UserResource {
         StringWriter csv = new StringWriter();
         CSVWriter writer = new CSVWriter(csv);
 
-        writer.writeNext(new String[]{"jid", "username", "email"}, false);
+        List<String> header = new ArrayList<>();
+        header.add("username");
+        header.add("jid");
+        if (canAdminister) {
+            header.add("email");
+        }
+
+        writer.writeNext(header.toArray(new String[0]), false);
         for (User user : users) {
-            writer.writeNext(new String[]{user.getJid(), user.getUsername(), user.getEmail()}, false);
+            List<String> row = new ArrayList<>();
+            row.add(user.getUsername());
+            row.add(user.getJid());
+            if (canAdminister) {
+                row.add(user.getEmail());
+            }
+            writer.writeNext(row.toArray(new String[0]), false);
         }
         return csv.toString();
     }

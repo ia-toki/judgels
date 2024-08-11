@@ -30,7 +30,7 @@ public class ContestScoreboardPoller implements Runnable {
     }
 
     @Override
-    @UnitOfWork(readOnly = true)
+    @UnitOfWork(readOnly = true, transactional = false)
     public void run() {
         try {
             for (Contest contest : contestStore.getRunningContests()) {

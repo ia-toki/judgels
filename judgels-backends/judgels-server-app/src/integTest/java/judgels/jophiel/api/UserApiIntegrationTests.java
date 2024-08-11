@@ -54,9 +54,14 @@ class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(response.getLastSessionTimesMap()).doesNotContainKeys(nani.getJid());
 
         String exportedCsv = userClient.exportUsers(adminToken, List.of("nani", "nano", "bogus"));
-        assertThat(exportedCsv).isEqualTo(String.format("jid,username,email\n"
-                + "%s,nani,nani@domain.com\n"
-                + "%s,nano,nano@domain.com\n", nani.getJid(), nano.getJid()));
+        assertThat(exportedCsv).isEqualTo(String.format("username,jid,email\n"
+                + "nani,%s,nani@domain.com\n"
+                + "nano,%s,nano@domain.com\n", nani.getJid(), nano.getJid()));
+
+        exportedCsv = userClient.exportUsers(List.of("nani", "nano", "bogus"));
+        assertThat(exportedCsv).isEqualTo(String.format("username,jid\n"
+                + "nani,%s\n"
+                + "nano,%s\n", nani.getJid(), nano.getJid()));
     }
 
     @Test

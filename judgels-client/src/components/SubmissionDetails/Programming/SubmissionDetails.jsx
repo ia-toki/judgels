@@ -1,5 +1,5 @@
 import { Button, HTMLTable, ProgressBar } from '@blueprintjs/core';
-import { Download } from '@blueprintjs/icons';
+import { Download, Lock } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
@@ -30,6 +30,7 @@ export function SubmissionDetails({
   problemUrl,
   containerName,
   onDownload,
+  hideSource,
   hideSourceFilename,
   showLoaderWhenPending,
 }) {
@@ -244,17 +245,22 @@ export function SubmissionDetails({
                 </tr>
               </thead>
               <tbody>
-                {details.testDataResults[1].testCaseResults.map((result, idx) => (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td>
-                      <VerdictTag verdictCode={result.verdict.code} />
-                    </td>
-                    <td>{renderExecutionTime(result)}</td>
-                    <td>{renderExecutionMemory(result)}</td>
-                    <td>{result.score}</td>
-                  </tr>
-                ))}
+                {details.testDataResults.map((testGroupResult, testGroupIdx) => {
+                  if (testGroupIdx === 0) {
+                    return null;
+                  }
+                  return testGroupResult.testCaseResults.map((result, idx) => (
+                    <tr key={idx}>
+                      <td>{`${testGroupIdx === 1 ? '' : testGroupIdx + '_'}${idx + 1}`}</td>
+                      <td>
+                        <VerdictTag verdictCode={result.verdict.code} />
+                      </td>
+                      <td>{renderExecutionTime(result)}</td>
+                      <td>{renderExecutionMemory(result)}</td>
+                      <td>{result.score}</td>
+                    </tr>
+                  ));
+                })}
               </tbody>
             </HTMLTable>
           </div>
@@ -296,6 +302,14 @@ export function SubmissionDetails({
     }
 
     if (!source) {
+      if (hideSource) {
+        return (
+          <ContentCard>
+            <Lock /> &nbsp;<small>You cannot view other's solution before solving this problem in this course.</small>
+          </ContentCard>
+        );
+      }
+
       return (
         <>
           {renderSourceFilesHeading()}

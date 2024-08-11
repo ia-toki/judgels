@@ -12,13 +12,13 @@ jobs:
       CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
       CONTAINER_REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 50
 
       - name: Install docker for ansible
         run: |
-          ansible-galaxy collection install community.docker:3.4.5
+          ansible-galaxy collection install community.docker:3.10.2
           pipx inject ansible-core docker six
 
       - id: get-release-version

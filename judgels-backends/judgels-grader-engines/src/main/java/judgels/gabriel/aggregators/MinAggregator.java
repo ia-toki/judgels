@@ -23,7 +23,12 @@ public final class MinAggregator implements Aggregator {
 
             String points;
             if (verdict == Verdict.OK) {
-                double okPoints = testCaseVerdict.getPoints().orElse(0.0);
+                double okPoints = 0.0;
+                if (testCaseVerdict.getPercentage().isPresent()) {
+                    okPoints = testCaseVerdict.getPercentage().get() * subtaskPoints / 100.0;
+                } else if (testCaseVerdict.getPoints().isPresent()) {
+                    okPoints = testCaseVerdict.getPoints().get();
+                }
                 aggregatedPoints = Math.min(aggregatedPoints, okPoints);
                 points = "" + okPoints;
             } else if (verdict == Verdict.ACCEPTED) {

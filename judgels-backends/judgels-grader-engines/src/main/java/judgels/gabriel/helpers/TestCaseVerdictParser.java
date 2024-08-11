@@ -15,6 +15,7 @@ public class TestCaseVerdictParser {
 
         Verdict verdict;
         Optional<Double> points = Optional.empty();
+        Optional<Integer> percentage = Optional.empty();
         Optional<String> feedback = Optional.empty();
 
         switch (lines[0]) {
@@ -39,11 +40,22 @@ public class TestCaseVerdictParser {
                 if (tokens.length == 0) {
                     throw new ScoringException("Invalid <points> for OK: " + lines[1]);
                 }
-                try {
-                    points = Optional.of(Double.parseDouble(tokens[0]));
-                } catch (NumberFormatException e) {
-                    throw new ScoringException("Invalid <points> for OK: " + tokens[0]);
+                String result = tokens[0].trim();
+                if (!result.isEmpty() && result.charAt(result.length() - 1) == '%') {
+                    String percentageString = result.substring(0, result.length() - 1);
+                    try {
+                        percentage = Optional.of(Integer.parseInt(percentageString));
+                    } catch (NumberFormatException e) {
+                        throw new ScoringException("Invalid <percentage> for OK: " + result);
+                    }
+                } else {
+                    try {
+                        points = Optional.of(Double.parseDouble(result));
+                    } catch (NumberFormatException e) {
+                        throw new ScoringException("Invalid <points> for OK: " + result);
+                    }
                 }
+
                 if (tokens.length > 1) {
                     feedback = Optional.of(tokens[1]);
                 }
@@ -55,6 +67,7 @@ public class TestCaseVerdictParser {
         return new TestCaseVerdict.Builder()
                 .verdict(verdict)
                 .points(points)
+                .percentage(percentage)
                 .feedback(feedback)
                 .build();
     }

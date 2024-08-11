@@ -226,6 +226,16 @@ public class BaseSubmissionStore<
     }
 
     @Override
+    public void updateSubmissionGradingEngine(String submissionJid, String gradingEngine) {
+        Optional<SM> maybeModel = submissionDao.selectByJid(submissionJid);
+        if (maybeModel.isPresent()) {
+            SM model = maybeModel.get();
+            model.gradingEngine = gradingEngine;
+            submissionDao.update(model);
+        }
+    }
+
+    @Override
     public String createGrading(Submission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();

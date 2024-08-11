@@ -59,11 +59,9 @@ export class ChapterProblemSubmissionPage extends Component {
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
-    const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
     this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
     this.setState({
       submissionWithSource: data,
-      sourceImageUrl,
       profile,
       problemName,
       containerName,
@@ -83,9 +81,9 @@ export class ChapterProblemSubmissionPage extends Component {
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
-        sourceImageUrl={sourceImageUrl}
         profile={profile}
         problemUrl={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}`}
+        hideSource={!!!submissionWithSource.source}
         hideSourceFilename
         showLoaderWhenPending
       />
@@ -101,7 +99,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onGetSubmissionWithSource: chapterProblemSubmissionActions.getSubmissionWithSource,
-  onGetSubmissionSourceImage: chapterProblemSubmissionActions.getSubmissionSourceImage,
   onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
   onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
 };
