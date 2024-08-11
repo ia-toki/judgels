@@ -35,10 +35,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
@@ -291,8 +289,7 @@ public class ContestSubmissionResource {
                 .gradingLanguage(gradingLanguage)
                 .additionalGradingLanguageRestriction(contestGradingLanguageRestriction)
                 .build();
-        GradingLanguage language = GradingLanguageRegistry.getInstance().get(gradingLanguage);
-        SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts, language.getAllowedExtensions().get(0));
+        SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
         ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
         Submission submission = submissionClient.submit(data, source, config);
 
