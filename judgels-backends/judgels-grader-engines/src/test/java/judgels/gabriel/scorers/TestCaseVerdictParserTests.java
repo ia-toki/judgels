@@ -63,6 +63,12 @@ class TestCaseVerdictParserTests {
 
         @Test
         void ok_points_with_feedback() throws ScoringException {
+            assertThat(parser.parseOutput("OK\n70\na feedback\n")).isEqualTo(
+                    new TestCaseVerdict.Builder().verdict(Verdict.OK).points(70.0).feedback("a feedback").build());
+        }
+
+        @Test
+        void ok_points_with_feedback_on_same_line() throws ScoringException {
             assertThat(parser.parseOutput("OK\n70 a feedback\n")).isEqualTo(
                     new TestCaseVerdict.Builder().verdict(Verdict.OK).points(70.0).feedback("a feedback").build());
         }
@@ -75,6 +81,12 @@ class TestCaseVerdictParserTests {
 
         @Test
         void ok_percentage_with_feedback() throws ScoringException {
+            assertThat(parser.parseOutput("OK\n25%\na feedback\n")).isEqualTo(
+                    new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(25).feedback("a feedback").build());
+        }
+
+        @Test
+        void ok_percentage_with_feedback_on_same_line() throws ScoringException {
             assertThat(parser.parseOutput("OK\n25% a feedback\n")).isEqualTo(
                     new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(25).feedback("a feedback").build());
         }
