@@ -56,6 +56,9 @@ public class TestCaseVerdictParser {
                     }
                 }
 
+                if (lines.length > 2) {
+                    feedback = Optional.of(lines[2]);
+                }
                 if (tokens.length > 1) {
                     feedback = Optional.of(tokens[1]);
                 }
