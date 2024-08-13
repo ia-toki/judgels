@@ -12,7 +12,7 @@
     mode: 0644
   when: not letsencrypt_certificate.stat.exists
   notify: Reload nginx
-  
+
 - name: Enable nginx letsencrypt domain config
   file:
     src: /etc/nginx/sites-available/{{ domain.name | mandatory }}
@@ -40,6 +40,21 @@
       --non-interactive
   when: not letsencrypt_certificate.stat.exists
   notify: Reload nginx
+
+- name: Set up basic auth
+  when: domain.auth_basic_user is defined and domain.auth_basic_user != ""
+  block:
+    - name: Install passlib
+      package:
+        name: python3-passlib
+        state: present
+
+    - name: Generate basic auth
+      htpasswd:
+        path: /etc/nginx/passwords/{{ domain.name | mandatory }}
+        name: "{{ domain.auth_basic_user }}"
+        password: "{{ domain.auth_basic_pass }}"
+      notify: Reload nginx
 
 - name: Add nginx domain config
   template:
