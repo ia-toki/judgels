@@ -46,7 +46,7 @@
   block:
     - name: Install passlib
       package:
-        name: python-passlib
+        name: python3-passlib
         state: present
 
     - name: Generate basic auth
@@ -54,7 +54,7 @@
         path: /etc/nginx/passwords/{{ domain.name | mandatory }}
         name: "{{ domain.auth_basic_user }}"
         password: "{{ domain.auth_basic_pass }}"
-      notify: Restart Nginx
+      notify: Reload nginx
 
 - name: Add nginx domain config
   template:
