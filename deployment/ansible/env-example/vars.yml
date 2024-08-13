@@ -8,21 +8,21 @@ app_footer: © Ikatan Alumni TOKI
 nginx_domain_judgels_client: judgels.com
 nginx_domain_judgels_server_api: api.judgels.com
 nginx_domain_judgels_server_admin: admin.judgels.com
-nginx_domain_judgels_server_admin_auth_basic_user: user # <-- CHANGE THIS !!!
-nginx_domain_judgels_server_admin_auth_basic_pass: pass # <-- CHANGE THIS !!!
+# nginx_domain_judgels_server_admin_auth_basic_user: user # <-- CHANGE THIS !!!
+# nginx_domain_judgels_server_admin_auth_basic_pass: pass # <-- CHANGE THIS !!!
 nginx_certbot_email: admin@judgels.com
 
 # java_opts_judgels_server: -Xmx1g
 # java_opts_judgels_grader: -Xmx1g
 
-db_root_password: pass # <-------------------------- CHANGE THIS !!!
+db_root_password: pass # <------------------------------------- CHANGE THIS !!!
 db_username: judgels
-db_password: pass # <------------------------------- CHANGE THIS !!!
+db_password: pass # <------------------------------------------ CHANGE THIS !!!
 
 rabbitmq_username: judgels
-rabbitmq_password: pass # <------------------------- CHANGE THIS !!!
+rabbitmq_password: pass # <------------------------------------ CHANGE THIS !!!
 
-jophiel_superadmin_initialPassword: superadmin # <-- CHANGE THIS !!!
+jophiel_superadmin_initialPassword: superadmin # <------------- CHANGE THIS !!!
 jophiel_session_maxConcurrentSessionsPerUser: -1
 jophiel_session_disableLogout: false
 
