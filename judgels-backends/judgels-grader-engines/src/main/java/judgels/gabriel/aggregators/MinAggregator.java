@@ -21,16 +21,17 @@ public final class MinAggregator implements Aggregator {
                 aggregatedVerdict = verdict;
             }
 
-            String points;
+            String points = "";
             if (verdict == Verdict.OK) {
                 double okPoints = 0.0;
                 if (testCaseVerdict.getPercentage().isPresent()) {
                     okPoints = testCaseVerdict.getPercentage().get() * subtaskPoints / 100.0;
+                    points = testCaseVerdict.getPercentage().get() + "%";
                 } else if (testCaseVerdict.getPoints().isPresent()) {
                     okPoints = testCaseVerdict.getPoints().get();
+                    points = "" + okPoints;
                 }
                 aggregatedPoints = Math.min(aggregatedPoints, okPoints);
-                points = "" + okPoints;
             } else if (verdict == Verdict.ACCEPTED) {
                 points = "*";
             } else if (verdict == Verdict.SKIPPED) {

@@ -87,7 +87,7 @@ class MinAggregatorTests {
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 17.5));
-        assertThat(result.getTestCasePoints()).containsExactly("*", "17.5", "35.0");
+        assertThat(result.getTestCasePoints()).containsExactly("*", "25%", "50%");
     }
 
     @Test
