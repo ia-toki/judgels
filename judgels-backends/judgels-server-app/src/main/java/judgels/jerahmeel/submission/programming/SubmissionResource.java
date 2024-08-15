@@ -178,31 +178,35 @@ public class SubmissionResource {
 
         String containerJid = submission.getContainerJid();
         String problemJid = submission.getProblemJid();
+        String userJid = submission.getUserJid();
 
         List<String> containerPath;
         String containerName;
         String problemAlias;
+        boolean canViewSource;
+
         if (SubmissionUtils.isProblemSet(containerJid)) {
             ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(containerJid));
             ProblemSetProblem problem = checkFound(problemSetProblemStore.getProblem(problemSet.getJid(), problemJid));
             containerPath = checkFound(problemSetStore.getProblemSetPathByJid(containerJid));
             containerName = problemSet.getName();
             problemAlias = problem.getAlias();
+            canViewSource = submissionRoleChecker.canViewProblemSetSource(actorJid, userJid, problemJid);
         } else {
             Chapter chapter = checkFound(chapterStore.getChapterByJid(containerJid));
             ChapterProblem problem = checkFound(chapterProblemStore.getProblem(problemJid));
             containerPath = checkFound(chapterStore.getChapterPathByJid(containerJid));
             containerName = chapter.getName();
             problemAlias = problem.getAlias();
+            canViewSource = submissionRoleChecker.canViewChapterSource(actorJid, userJid, problemJid);
         }
 
         ProblemInfo problem = sandalphonClient.getProblem(submission.getProblemJid());
 
-        String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(jophielClient.getProfile(userJid)));
 
         SubmissionWithSource submissionWithSource;
-        if (submissionRoleChecker.canViewSource(actorJid, submission.getUserJid())) {
+        if (canViewSource) {
             SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
             submissionWithSource = new SubmissionWithSource.Builder()
                     .submission(submission)
