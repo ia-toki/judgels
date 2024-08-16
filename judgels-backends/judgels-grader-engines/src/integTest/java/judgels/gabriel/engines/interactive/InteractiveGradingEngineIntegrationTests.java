@@ -59,11 +59,11 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(ACCEPTED, "[10]", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0 [9]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [10]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [10]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [9]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [1]", -1))),
+                                testCaseResult(ACCEPTED, "20 [9]", -1),
+                                testCaseResult(ACCEPTED, "20 [10]", -1),
+                                testCaseResult(ACCEPTED, "20 [10]", -1),
+                                testCaseResult(ACCEPTED, "20 [9]", -1),
+                                testCaseResult(ACCEPTED, "20 [1]", -1))),
                 ImmutableList.of(
                         subtaskResult(-1, ACCEPTED, 100)));
     }
@@ -83,11 +83,11 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(WRONG_ANSWER, "[11]", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0 [1]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [8]", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0 [11]", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0 [11]", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0 [11]", -1))),
+                                testCaseResult(ACCEPTED, "20 [1]", -1),
+                                testCaseResult(ACCEPTED, "20 [8]", -1),
+                                testCaseResult(WRONG_ANSWER, "0 [11]", -1),
+                                testCaseResult(WRONG_ANSWER, "0 [11]", -1),
+                                testCaseResult(WRONG_ANSWER, "0 [11]", -1))),
                 ImmutableList.of(
                         subtaskResult(-1, WRONG_ANSWER, 40)));
     }
@@ -108,11 +108,11 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(ACCEPTED, "", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(OK, "10.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1))),
+                                testCaseResult(OK, "10", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1))),
                 ImmutableList.of(
                         subtaskResult(-1, OK, 90)));
     }
@@ -133,11 +133,11 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(TIME_LIMIT_EXCEEDED, "", Optional.of(SandboxExecutionStatus.TIMED_OUT), 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
-                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
-                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
-                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
-                                testCaseResult(TIME_LIMIT_EXCEEDED, "0.0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1))),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1),
+                                testCaseResult(TIME_LIMIT_EXCEEDED, "0", Optional.of(SandboxExecutionStatus.TIMED_OUT), -1))),
                 List.of(
                         subtaskResult(-1, TIME_LIMIT_EXCEEDED, 0)));
     }
@@ -201,11 +201,11 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(WRONG_ANSWER, "", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(WRONG_ANSWER, "0.0", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0", -1))),
+                                testCaseResult(WRONG_ANSWER, "0", -1),
+                                testCaseResult(WRONG_ANSWER, "0", -1),
+                                testCaseResult(WRONG_ANSWER, "0", -1),
+                                testCaseResult(WRONG_ANSWER, "0", -1),
+                                testCaseResult(WRONG_ANSWER, "0", -1))),
                 List.of(
                         subtaskResult(-1, WRONG_ANSWER, 0)));
     }
@@ -227,11 +227,11 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(ACCEPTED, "", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1))),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1))),
                 List.of(
                         subtaskResult(-1, ACCEPTED, 100)));
     }
@@ -252,11 +252,11 @@ class InteractiveGradingEngineIntegrationTests extends BlackboxGradingEngineInte
                                 testCaseResult(ACCEPTED, "[10]", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0 [9]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [10]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [10]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [9]", -1),
-                                testCaseResult(ACCEPTED, "20.0 [1]", -1))),
+                                testCaseResult(ACCEPTED, "20 [9]", -1),
+                                testCaseResult(ACCEPTED, "20 [10]", -1),
+                                testCaseResult(ACCEPTED, "20 [10]", -1),
+                                testCaseResult(ACCEPTED, "20 [9]", -1),
+                                testCaseResult(ACCEPTED, "20 [1]", -1))),
                 List.of(
                         subtaskResult(-1, ACCEPTED, 100)));
     }

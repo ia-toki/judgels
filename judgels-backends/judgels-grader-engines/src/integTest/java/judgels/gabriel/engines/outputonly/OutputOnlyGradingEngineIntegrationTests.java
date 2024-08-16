@@ -50,11 +50,11 @@ class OutputOnlyGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(ACCEPTED, "", Optional.empty(), 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1))),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1))),
                 ImmutableList.of(
                         subtaskResult(-1, ACCEPTED, 100)));
     }
@@ -74,11 +74,11 @@ class OutputOnlyGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(WRONG_ANSWER, "", Optional.empty(), 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1))),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1))),
                 ImmutableList.of(
                         subtaskResult(-1, ACCEPTED, 100)));
     }
@@ -98,11 +98,11 @@ class OutputOnlyGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(ACCEPTED, "", Optional.empty(), 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(WRONG_ANSWER, "0.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1))),
+                                testCaseResult(WRONG_ANSWER, "0", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1))),
                 ImmutableList.of(
                         subtaskResult(-1, WRONG_ANSWER, 80)));
     }
@@ -122,11 +122,11 @@ class OutputOnlyGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(ACCEPTED, "", Optional.empty(), 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(SKIPPED, "0.0", Optional.empty(), -1))),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(SKIPPED, "0", Optional.empty(), -1))),
                 ImmutableList.of(
                         subtaskResult(-1, OK, 80)));
     }
@@ -147,11 +147,11 @@ class OutputOnlyGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(ACCEPTED, "", Optional.empty(), 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(OK, "10.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1),
-                                testCaseResult(ACCEPTED, "20.0", Optional.empty(), -1))),
+                                testCaseResult(OK, "10", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1),
+                                testCaseResult(ACCEPTED, "20", Optional.empty(), -1))),
                 ImmutableList.of(
                         subtaskResult(-1, OK, 90)));
     }
