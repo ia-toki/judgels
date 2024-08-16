@@ -27,7 +27,7 @@ class SumAggregatorTests {
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 100.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.ACCEPTED, 100.0));
-        assertThat(result.getTestCasePoints()).containsExactly("50.0", "50.0");
+        assertThat(result.getTestCasePoints()).containsExactly("50", "50");
     }
 
     @Test
@@ -40,7 +40,7 @@ class SumAggregatorTests {
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 100.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.TIME_LIMIT_EXCEEDED, 55.0));
-        assertThat(result.getTestCasePoints()).containsExactly("25.0", "0.0", "30.0", "0.0");
+        assertThat(result.getTestCasePoints()).containsExactly("25", "0", "30", "0");
     }
 
     @Test
@@ -53,7 +53,7 @@ class SumAggregatorTests {
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 100.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.TIME_LIMIT_EXCEEDED, 50.0));
-        assertThat(result.getTestCasePoints()).containsExactly("25.0", "25.0", "0.0", "0.0");
+        assertThat(result.getTestCasePoints()).containsExactly("25", "25", "0", "0");
     }
 
     @Test
@@ -66,7 +66,7 @@ class SumAggregatorTests {
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 100.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 50.0));
-        assertThat(result.getTestCasePoints()).containsExactly("25.0", "25.0", "0.0", "0.0");
+        assertThat(result.getTestCasePoints()).containsExactly("25", "25", "0", "0");
     }
 
     @Test

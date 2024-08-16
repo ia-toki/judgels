@@ -37,7 +37,7 @@ public final class SumAggregator implements Aggregator {
             }
             aggregatedPoints += points;
 
-            testCasePoints.add("" + points);
+            testCasePoints.add(PointUtils.formatPoints(points));
         }
         if (aggregatedVerdict == Verdict.SKIPPED) {
             aggregatedVerdict = Verdict.OK;

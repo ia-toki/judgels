@@ -26,20 +26,20 @@ public final class MinAggregator implements Aggregator {
                 double okPoints = 0.0;
                 if (testCaseVerdict.getPercentage().isPresent()) {
                     okPoints = testCaseVerdict.getPercentage().get() * subtaskPoints / 100.0;
-                    points = testCaseVerdict.getPercentage().get() + "%";
+                    points = PointUtils.formatPoints(testCaseVerdict.getPercentage().get()) + "%";
                 } else if (testCaseVerdict.getPoints().isPresent()) {
                     okPoints = testCaseVerdict.getPoints().get();
-                    points = "" + okPoints;
+                    points = PointUtils.formatPoints(okPoints);
                 }
                 aggregatedPoints = Math.min(aggregatedPoints, okPoints);
             } else if (verdict == Verdict.ACCEPTED) {
-                points = "*";
+                points = "✓";
             } else if (verdict == Verdict.SKIPPED) {
                 aggregatedPoints = 0.0;
                 points = "?";
             } else {
                 aggregatedPoints = 0.0;
-                points = "X";
+                points = "✕";
             }
 
             testCasePoints.add(points);

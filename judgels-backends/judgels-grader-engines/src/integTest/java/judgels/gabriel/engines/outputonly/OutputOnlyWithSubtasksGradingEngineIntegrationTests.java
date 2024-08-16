@@ -47,18 +47,18 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, ACCEPTED, 70)));
@@ -74,18 +74,18 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(WRONG_ANSWER, "X", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(WRONG_ANSWER, "✕", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, WRONG_ANSWER, 0)));
@@ -101,13 +101,13 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(WRONG_ANSWER, "X", Optional.empty(), 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(WRONG_ANSWER, "✕", Optional.empty(), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2),
@@ -128,17 +128,17 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
@@ -155,12 +155,12 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(WRONG_ANSWER, "X", Optional.empty(), 1, 2),
+                                testCaseResult(WRONG_ANSWER, "✕", Optional.empty(), 1, 2),
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
@@ -183,18 +183,18 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, ACCEPTED, 70)));
@@ -211,18 +211,18 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(ACCEPTED, "*", Optional.empty(), 2),
-                                testCaseResult(WRONG_ANSWER, "X", Optional.empty(), 2))),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(ACCEPTED, "✓", Optional.empty(), 2),
+                                testCaseResult(WRONG_ANSWER, "✕", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, WRONG_ANSWER, 0)));

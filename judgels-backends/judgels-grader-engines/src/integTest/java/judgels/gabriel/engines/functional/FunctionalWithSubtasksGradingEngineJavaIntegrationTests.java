@@ -50,18 +50,18 @@ class FunctionalWithSubtasksGradingEngineJavaIntegrationTests extends BlackboxGr
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", 1, 2),
-                                testCaseResult(ACCEPTED, "*", 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(ACCEPTED, "*", 2),
-                                testCaseResult(ACCEPTED, "*", 2),
-                                testCaseResult(ACCEPTED, "*", 2))),
+                                testCaseResult(ACCEPTED, "✓", 2),
+                                testCaseResult(ACCEPTED, "✓", 2),
+                                testCaseResult(ACCEPTED, "✓", 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, ACCEPTED, 70)));
@@ -80,16 +80,16 @@ class FunctionalWithSubtasksGradingEngineJavaIntegrationTests extends BlackboxGr
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", 1, 2),
-                                testCaseResult(ACCEPTED, "*", 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(WRONG_ANSWER, "X", 2),
+                                testCaseResult(WRONG_ANSWER, "✕", 2),
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2),
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
                 ImmutableList.of(
@@ -111,16 +111,16 @@ class FunctionalWithSubtasksGradingEngineJavaIntegrationTests extends BlackboxGr
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "*", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "*", 0, 2)),
+                                testCaseResult(ACCEPTED, "✓", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "*", 1, 2),
-                                testCaseResult(ACCEPTED, "*", 1, 2)),
+                                testCaseResult(ACCEPTED, "✓", 1, 2),
+                                testCaseResult(ACCEPTED, "✓", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(WRONG_ANSWER, "X", 2),
+                                testCaseResult(WRONG_ANSWER, "✕", 2),
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2),
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
                 ImmutableList.of(

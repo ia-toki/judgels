@@ -53,11 +53,11 @@ class FunctionalGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(ACCEPTED, "", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1))),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1))),
                 ImmutableList.of(
                         subtaskResult(-1, ACCEPTED, 100)));
     }
@@ -78,11 +78,11 @@ class FunctionalGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(ACCEPTED, "", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(WRONG_ANSWER, "0.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1))),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(WRONG_ANSWER, "0", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1))),
                 ImmutableList.of(
                         subtaskResult(-1, WRONG_ANSWER, 80)));
     }
@@ -104,11 +104,11 @@ class FunctionalGradingEngineIntegrationTests extends BlackboxGradingEngineInteg
                                 testCaseResult(ACCEPTED, "", 0)),
                         testGroupResult(
                                 -1,
-                                testCaseResult(OK, "10.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1),
-                                testCaseResult(ACCEPTED, "20.0", -1))),
+                                testCaseResult(OK, "10", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1),
+                                testCaseResult(ACCEPTED, "20", -1))),
                 ImmutableList.of(
                         subtaskResult(-1, OK, 90)));
     }
