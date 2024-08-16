@@ -33,13 +33,13 @@ public final class MinAggregator implements Aggregator {
                 }
                 aggregatedPoints = Math.min(aggregatedPoints, okPoints);
             } else if (verdict == Verdict.ACCEPTED) {
-                points = "✓";
+                points = "*";
             } else if (verdict == Verdict.SKIPPED) {
                 aggregatedPoints = 0.0;
                 points = "?";
             } else {
                 aggregatedPoints = 0.0;
-                points = "✕";
+                points = "X";
             }
 
             testCasePoints.add(points);

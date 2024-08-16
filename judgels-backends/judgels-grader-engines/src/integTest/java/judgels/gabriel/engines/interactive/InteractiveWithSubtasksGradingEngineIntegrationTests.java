@@ -50,18 +50,18 @@ class InteractiveWithSubtasksGradingEngineIntegrationTests extends BlackboxGradi
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "✓ [8]", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "✓ [9]", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "✓ [10]", 0, 2)),
+                                testCaseResult(ACCEPTED, "* [8]", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "* [9]", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "* [10]", 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "✓ [9]", 1, 2),
-                                testCaseResult(ACCEPTED, "✓ [10]", 1, 2)),
+                                testCaseResult(ACCEPTED, "* [9]", 1, 2),
+                                testCaseResult(ACCEPTED, "* [10]", 1, 2)),
                         testGroupResult(
                                 2,
-                                testCaseResult(ACCEPTED, "✓ [10]", 2),
-                                testCaseResult(ACCEPTED, "✓ [9]", 2),
-                                testCaseResult(ACCEPTED, "✓ [1]", 2))),
+                                testCaseResult(ACCEPTED, "* [10]", 2),
+                                testCaseResult(ACCEPTED, "* [9]", 2),
+                                testCaseResult(ACCEPTED, "* [1]", 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, ACCEPTED, 70)));
@@ -78,13 +78,13 @@ class InteractiveWithSubtasksGradingEngineIntegrationTests extends BlackboxGradi
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "✓ [3]", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "✓ [5]", 0, 1, 2),
-                                testCaseResult(WRONG_ANSWER, "✕ [11]", 0, 2)),
+                                testCaseResult(ACCEPTED, "* [3]", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "* [5]", 0, 1, 2),
+                                testCaseResult(WRONG_ANSWER, "X [11]", 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "✓ [1]", 1, 2),
-                                testCaseResult(ACCEPTED, "✓ [8]", 1, 2)),
+                                testCaseResult(ACCEPTED, "* [1]", 1, 2),
+                                testCaseResult(ACCEPTED, "* [8]", 1, 2)),
                         testGroupResult(
                                 2,
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2),
@@ -106,13 +106,13 @@ class InteractiveWithSubtasksGradingEngineIntegrationTests extends BlackboxGradi
                 ImmutableList.of(
                         testGroupResult(
                                 0,
-                                testCaseResult(ACCEPTED, "✓ [3]", 0, 1, 2),
-                                testCaseResult(ACCEPTED, "✓ [5]", 0, 1, 2),
-                                testCaseResult(RUNTIME_ERROR, "✕", Optional.of(NONZERO_EXIT_CODE), 0, 2)),
+                                testCaseResult(ACCEPTED, "* [3]", 0, 1, 2),
+                                testCaseResult(ACCEPTED, "* [5]", 0, 1, 2),
+                                testCaseResult(RUNTIME_ERROR, "X", Optional.of(NONZERO_EXIT_CODE), 0, 2)),
                         testGroupResult(
                                 1,
-                                testCaseResult(ACCEPTED, "✓ [1]", 1, 2),
-                                testCaseResult(ACCEPTED, "✓ [8]", 1, 2)),
+                                testCaseResult(ACCEPTED, "* [1]", 1, 2),
+                                testCaseResult(ACCEPTED, "* [8]", 1, 2)),
                         testGroupResult(
                                 2,
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2),
