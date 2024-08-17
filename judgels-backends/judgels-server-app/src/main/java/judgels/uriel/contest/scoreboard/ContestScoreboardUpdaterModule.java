@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
 import judgels.jophiel.JophielClient;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.JudgelsScheduler;
@@ -58,7 +59,8 @@ public class ContestScoreboardUpdaterModule {
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
-            JophielClient jophielClient) {
+            JophielClient jophielClient,
+            SandalphonClient sandalphonClient) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdater.class,
@@ -75,7 +77,8 @@ public class ContestScoreboardUpdaterModule {
                         ScoreboardIncrementalMarker.class,
                         ScoreboardProcessorRegistry.class,
                         ContestScoreboardPusher.class,
-                        JophielClient.class},
+                        JophielClient.class,
+                        SandalphonClient.class},
                 new Object[] {
                         objectMapper,
                         contestTimer,
@@ -89,6 +92,7 @@ public class ContestScoreboardUpdaterModule {
                         scoreboardIncrementalMarker,
                         scoreboardProcessorRegistry,
                         scoreboardPusher,
-                        jophielClient});
+                        jophielClient,
+                        sandalphonClient});
     }
 }

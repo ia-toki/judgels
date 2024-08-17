@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
+import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -53,6 +55,7 @@ public class ContestScoreboardUpdater {
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final ContestScoreboardPusher scoreboardPusher;
     private final JophielClient jophielClient;
+    private final SandalphonClient sandalphonClient;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -67,7 +70,8 @@ public class ContestScoreboardUpdater {
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
-            JophielClient jophielClient) {
+            JophielClient jophielClient,
+            SandalphonClient sandalphonClient) {
 
         this.objectMapper = objectMapper;
         this.contestTimer = contestTimer;
@@ -82,6 +86,7 @@ public class ContestScoreboardUpdater {
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.scoreboardPusher = scoreboardPusher;
         this.jophielClient = jophielClient;
+        this.sandalphonClient = sandalphonClient;
     }
 
     @UnitOfWork
@@ -119,6 +124,7 @@ public class ContestScoreboardUpdater {
         Set<ContestContestant> contestants = ImmutableSet.copyOf(contestantsMap.values());
         Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJidsSet, contest.getBeginTime());
+        Map<String, ScoringConfig> scoringConfigsMap = sandalphonClient.getProgrammingProblemScoringConfigs(problemJidsSet);
 
         ScoreboardState state = new ScoreboardState.Builder()
                 .problemJids(problemJids)
@@ -201,6 +207,7 @@ public class ContestScoreboardUpdater {
                     styleModuleConfig,
                     contestants,
                     profilesMap,
+                    scoringConfigsMap,
                     programmingSubmissions,
                     bundleItemSubmissions,
                     freezeTimesMap);

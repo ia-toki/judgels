@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
@@ -56,6 +57,10 @@ public class BundleScoreboardProcessorTests {
         private Map<String, Profile> profilesMap = ImmutableMap.of(
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
+
+        private Map<String, ScoringConfig> scoringConfigsMap = Map.of(
+                "p1", ScoringConfig.DEFAULT,
+                "p2", ScoringConfig.DEFAULT);
 
         @Test
         void latest_answered_time_calculation() {
@@ -121,6 +126,7 @@ public class BundleScoreboardProcessorTests {
                     styleModuleConfig,
                     contestants,
                     profilesMap,
+                    scoringConfigsMap,
                     ImmutableList.of(),
                     submissions,
                     Map.of());
@@ -196,6 +202,7 @@ public class BundleScoreboardProcessorTests {
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         ImmutableList.of(),
                         submissions,
                         Map.of());
@@ -255,6 +262,7 @@ public class BundleScoreboardProcessorTests {
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         ImmutableList.of(),
                         submissions,
                         Map.of());

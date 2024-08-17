@@ -11,6 +11,7 @@ import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.base.BaseProblemStore;
@@ -135,6 +136,10 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
                 .gradingLanguageRestriction(getLanguageRestriction(null, problemJid))
                 .gradingLastUpdateTime(getGradingLastUpdateTime(null, problemJid))
                 .build();
+    }
+
+    public ScoringConfig getProgrammingProblemScoringConfig(String problemJid) {
+        return getGradingConfig(null, problemJid).getScoringConfig().orElse(ScoringConfig.DEFAULT);
     }
 
     private void updateGradingLastUpdateTime(String userJid, String problemJid) {
