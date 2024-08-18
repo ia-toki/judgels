@@ -24,6 +24,7 @@ import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.GradingResponse;
 import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.GradingSource;
+import judgels.gabriel.api.Osn2024Hacks;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
@@ -242,6 +243,10 @@ public class GradingWorker {
     private GradingConfig parseGradingConfig(Path problemGradingDir, GradingEngine engine) throws IOException {
         Path gradingConfig = problemGradingDir.resolve("config.json");
         String configAsJson = Files.readString(gradingConfig, StandardCharsets.UTF_8);
+
+        // HACK for OSN 2024
+        configAsJson = Osn2024Hacks.checkForHack(request.getProblemJid(), configAsJson);
+
         return engine.parseConfig(MAPPER, configAsJson);
     }
 
