@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.gabriel.api.Verdict;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.UserRating;
@@ -70,6 +71,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             Map<String, Profile> profilesMap,
+            Map<String, ScoringConfig> scoringConfigsMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Map<String, Instant> freezeTimesMap) {

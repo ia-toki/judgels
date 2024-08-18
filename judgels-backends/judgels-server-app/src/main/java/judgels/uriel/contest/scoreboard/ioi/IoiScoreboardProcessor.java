@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.ScoringConfig;
+import judgels.gabriel.api.ScoringRoundingMode;
 import judgels.gabriel.api.SubtaskResult;
 import judgels.gabriel.api.Verdict;
 import judgels.jophiel.api.profile.Profile;
@@ -72,6 +74,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             Map<String, Profile> profilesMap,
+            Map<String, ScoringConfig> scoringConfigsMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Map<String, Instant> freezeTimesMap) {
@@ -153,7 +156,12 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     }
 
                     maxScorePerSubtaskMap.put(problemJid, newMaxScorePerSubtask);
-                    score = (int) Math.round(newScore);
+
+                    if (scoringConfigsMap.get(problemJid).getRoundingMode() == ScoringRoundingMode.ROUND) {
+                        score = (int) Math.round(newScore);
+                    } else {
+                        score = (int) Math.floor(newScore);
+                    }
                 } else {
                     score = grading.getScore();
                 }

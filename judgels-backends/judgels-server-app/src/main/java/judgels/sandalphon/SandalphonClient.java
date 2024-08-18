@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.UriInfo;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.sandalphon.api.lesson.LessonStatement;
@@ -153,6 +154,14 @@ public class SandalphonClient {
 
     public Map<String, ProblemSubmissionConfig> getProgrammingProblemSubmissionConfigs(Collection<String> problemJids) {
         return Set.copyOf(problemJids).stream().collect(toMap(jid -> jid, this::getProgrammingProblemSubmissionConfig));
+    }
+
+    public ScoringConfig getProgrammingProblemScoringConfig(String problemJid) {
+        return programmingProblemStore.getProgrammingProblemScoringConfig(problemJid);
+    }
+
+    public Map<String, ScoringConfig> getProgrammingProblemScoringConfigs(Collection<String> problemJids) {
+        return Set.copyOf(problemJids).stream().collect(toMap(jid -> jid, this::getProgrammingProblemScoringConfig));
     }
 
     public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.gabriel.api.Verdict;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -61,6 +62,10 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
 
+        private Map<String, ScoringConfig> scoringConfigsMap = Map.of(
+                "p1", ScoringConfig.DEFAULT,
+                "p2", ScoringConfig.DEFAULT);
+
         @Test
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
@@ -81,6 +86,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     styleModuleConfig,
                     contestants,
                     profilesMap,
+                    scoringConfigsMap,
                     submissions,
                     ImmutableList.of(),
                     Map.of());
@@ -131,6 +137,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -181,6 +188,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -232,6 +240,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -280,6 +289,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -341,6 +351,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -414,6 +425,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -482,6 +494,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         baseSubmissions,
                         ImmutableList.of(),
                         freezeTimesMap);
@@ -531,6 +544,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTimesMap);
@@ -580,6 +594,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTimesMap);
@@ -629,6 +644,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         freezeTimesMap);
@@ -710,6 +726,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -740,6 +757,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         ImmutableList.of(),
                         ImmutableList.of(),
                         Map.of());
@@ -759,6 +777,7 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());

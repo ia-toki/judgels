@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.gabriel.api.Verdict;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -62,6 +63,10 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
 
+        private Map<String, ScoringConfig> scoringConfigsMap = Map.of(
+                "p1", ScoringConfig.DEFAULT,
+                "p2", ScoringConfig.DEFAULT);
+
         @Test
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
@@ -76,6 +81,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     styleModuleConfig,
                     contestants,
                     profilesMap,
+                    scoringConfigsMap,
                     submissions,
                     ImmutableList.of(),
                     Map.of());
@@ -121,6 +127,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     styleModuleConfig,
                     contestants,
                     profilesMap,
+                    scoringConfigsMap,
                     submissions,
                     ImmutableList.of(),
                     Map.of(contest.getJid(), Instant.ofEpochMilli(23)));
@@ -186,6 +193,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -240,6 +248,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -301,6 +310,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -346,6 +356,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -395,6 +406,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -437,6 +449,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -507,6 +520,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
@@ -535,6 +549,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         ImmutableList.of(),
                         ImmutableList.of(),
                         Map.of());
@@ -554,6 +569,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         styleModuleConfig,
                         contestants,
                         profilesMap,
+                        scoringConfigsMap,
                         submissions,
                         ImmutableList.of(),
                         Map.of());
