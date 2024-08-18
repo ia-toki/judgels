@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import judgels.fs.FileInfo;
@@ -18,6 +19,14 @@ import judgels.sandalphon.problem.base.BaseProblemStore;
 import judgels.sandalphon.problem.base.ProblemFs;
 
 public final class ProgrammingProblemStore extends BaseProblemStore {
+    // HACK for OSN 2024
+    private static final List<String> OSN_2024_CERTAIN_PROBLEMS = Arrays.asList(
+            "JIDPROG0NHjqvK7B7oiYf6mOOov",
+            "JIDPROGiZN73iuSVYJE5btHUzni",
+            "JIDPROGbDLh6vwDRHTXFijN3HYC",
+            "JIDPROGSohGUsEykcREuewkE2cn"
+    );
+
     @Inject
     public ProgrammingProblemStore(ObjectMapper mapper, @ProblemFs FileSystem problemFs) {
         super(mapper, problemFs);
@@ -49,6 +58,12 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
     public GradingConfig getGradingConfig(String userJid, String problemJid) {
         String gradingEngine = problemFs.readFromFile(getGradingEngineFilePath(userJid, problemJid));
         String gradingConfig = problemFs.readFromFile(getGradingConfigFilePath(userJid, problemJid));
+
+        // HACK for OSN 2024
+        if (OSN_2024_CERTAIN_PROBLEMS.contains(problemJid)) {
+            gradingConfig = gradingConfig.substring(0, gradingConfig.length() - 1);
+            gradingConfig = gradingConfig + ",\"scoringConfig\":{\"roundingMode\":\"FLOOR\"}}";
+        }
 
         try {
             return GradingEngineRegistry.getInstance().get(gradingEngine).parseConfig(mapper, gradingConfig);
