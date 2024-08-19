@@ -91,6 +91,16 @@ export function SubmissionDetails({
     );
   };
 
+  const renderScore = score => {
+    if (score.startsWith('*')) {
+      return '✓' + score.substring(1);
+    }
+    if (score.startsWith('X')) {
+      return '✕' + score.substring(1);
+    }
+    return score;
+  };
+
   const renderSubtaskResults = () => {
     if (!hasSubtasks) {
       return null;
@@ -136,7 +146,7 @@ export function SubmissionDetails({
                         </td>
                         <td>{renderExecutionTime(testCaseResult)}</td>
                         <td>{renderExecutionMemory(testCaseResult)}</td>
-                        <td>{testCaseResult.score}</td>
+                        <td>{renderScore(testCaseResult.score)}</td>
                       </tr>
                     );
                   })
@@ -200,7 +210,7 @@ export function SubmissionDetails({
                     </td>
                     <td>{renderExecutionTime(result)}</td>
                     <td>{renderExecutionMemory(result)}</td>
-                    <td>{result.score}</td>
+                    <td>{renderScore(result.score)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -257,7 +267,7 @@ export function SubmissionDetails({
                       </td>
                       <td>{renderExecutionTime(result)}</td>
                       <td>{renderExecutionMemory(result)}</td>
-                      <td>{result.score}</td>
+                      <td>{renderScore(result.score)}</td>
                     </tr>
                   ));
                 })}
