@@ -33,7 +33,11 @@ public final class SumAggregator implements Aggregator {
             if (verdict == Verdict.ACCEPTED) {
                 points = testCaseFullPoints;
             } else if (verdict == Verdict.OK) {
-                points = testCaseVerdict.getPoints().orElse(0.0);
+                if (testCaseVerdict.getPoints().isPresent()) {
+                    points = testCaseVerdict.getPoints().get();
+                } else if (testCaseVerdict.getPercentage().isPresent()) {
+                    points = testCaseVerdict.getPercentage().get() * testCaseFullPoints / 100.0;
+                }
             }
             aggregatedPoints += points;
 
