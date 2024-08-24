@@ -44,6 +44,19 @@ class SumAggregatorTests {
     }
 
     @Test
+    void aggregate_partial_percentage() {
+        List<TestCaseVerdict> testCaseVerdicts = ImmutableList.of(
+                new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build(),
+                new TestCaseVerdict.Builder().verdict(Verdict.TIME_LIMIT_EXCEEDED).build(),
+                new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(50.0).build(),
+                new TestCaseVerdict.Builder().verdict(Verdict.WRONG_ANSWER).build());
+
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 100.0);
+        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.TIME_LIMIT_EXCEEDED, 37.5));
+        assertThat(result.getTestCasePoints()).containsExactly("25", "0", "12.5", "0");
+    }
+
+    @Test
     void aggregate_partial_points_with_skipped() {
         List<TestCaseVerdict> testCaseVerdicts = ImmutableList.of(
                 new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build(),
