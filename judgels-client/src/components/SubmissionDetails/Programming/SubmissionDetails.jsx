@@ -113,7 +113,7 @@ export function SubmissionDetails({
       );
     }
 
-    return score;
+    return formattedScore;
   };
 
   const renderSubtaskScore = score => {
