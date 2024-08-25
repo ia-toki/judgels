@@ -92,11 +92,27 @@ export function SubmissionDetails({
   };
 
   const renderScore = score => {
+    let formattedScore = score;
+
     if (score.startsWith('*')) {
-      return '✓' + score.substring(1);
+      formattedScore = '✓' + score.substring(1);
     } else if (score.startsWith('X')) {
-      return score.substring(1);
+      formattedScore = score.substring(1);
     }
+
+    if (formattedScore.includes(' [')) {
+      const [points, feedback] = formattedScore.split(' [', 2);
+      return (
+        <>
+          {points}{' '}
+          <span style="display: inline-block">
+            {'['}
+            {feedback}
+          </span>
+        </>
+      );
+    }
+
     return score;
   };
 
