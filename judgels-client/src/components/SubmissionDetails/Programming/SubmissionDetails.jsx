@@ -92,13 +92,29 @@ export function SubmissionDetails({
   };
 
   const renderScore = score => {
+    let formattedScore = score;
+
     if (score.startsWith('*')) {
-      return '✓' + score.substring(1);
-    }
-    if (score.startsWith('X')) {
-      return '✕' + score.substring(1);
+      formattedScore = '✓' + score.substring(1);
+    } else if (score.startsWith('X')) {
+      formattedScore = '✕' + score.substring(1);
     }
     return score;
+  };
+
+  const renderSubtaskScore = score => {
+    if (Number.isInteger(score)) {
+      return <span className="subtask-score">{score}</span>;
+    }
+
+    const integer = Math.trunc(score);
+    const decimal = (score - integer).toString().replace('0.', '.');
+    return (
+      <>
+        <span className="subtask-score">{integer}</span>
+        <span className="subtask-score">{decimal}</span>
+      </>
+    );
   };
 
   const renderSubtaskResults = () => {
@@ -115,7 +131,7 @@ export function SubmissionDetails({
               <span className="subtask-verdict">
                 <VerdictTag verdictCode={subtaskResult.verdict.code} />
               </span>
-              <span className="subtask-score">{subtaskResult.score}</span>
+              {renderSubtaskScore(subtaskResult.score)}
             </h5>
           </summary>
 
