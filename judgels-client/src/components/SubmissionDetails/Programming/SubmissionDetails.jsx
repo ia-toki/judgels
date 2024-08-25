@@ -97,7 +97,7 @@ export function SubmissionDetails({
     if (score.startsWith('*')) {
       formattedScore = '✓' + score.substring(1);
     } else if (score.startsWith('X')) {
-      formattedScore = score.substring(1);
+      formattedScore = '✕' + score.substring(1);
     }
 
     if (formattedScore.includes(' [')) {
