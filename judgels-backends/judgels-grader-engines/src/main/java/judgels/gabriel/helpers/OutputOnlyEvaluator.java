@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.zip.ZipException;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.gabriel.api.EvaluationException;
@@ -33,7 +34,12 @@ public class OutputOnlyEvaluator implements Evaluator {
         try {
             fs.uploadZippedFiles(Paths.get(""), new FileInputStream(sourceFile));
         } catch (RuntimeException | FileNotFoundException e) {
-            throw new PreparationException(e);
+            if (e.getCause() instanceof ZipException) {
+                // Pass through.
+                // A possible cause is when zip file contains empty output file(s).
+            } else {
+                throw new PreparationException(e);
+            }
         }
 
         for (File file : FileUtils.listFiles(evaluationDir, null, false)) {
