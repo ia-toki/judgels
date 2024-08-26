@@ -44,9 +44,6 @@ public final class MinAggregator implements Aggregator {
 
             testCasePoints.add(points);
         }
-        if (aggregatedVerdict == Verdict.SKIPPED) {
-            aggregatedVerdict = Verdict.OK;
-        }
 
         return new AggregationResult.Builder()
                 .subtaskVerdict(SubtaskVerdict.of(aggregatedVerdict, aggregatedPoints))

@@ -142,7 +142,7 @@ class OutputOnlyWithSubtasksGradingEngineIntegrationTests extends BlackboxGradin
                                 testCaseResult(SKIPPED, "?", Optional.empty(), 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
-                        subtaskResult(2, OK, 0)));
+                        subtaskResult(2, SKIPPED, 0)));
     }
 
     @Test

@@ -62,7 +62,7 @@ class MinAggregatorTests {
                 new TestCaseVerdict.Builder().verdict(Verdict.SKIPPED).build());
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
-        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 0.0));
+        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.SKIPPED, 0.0));
         assertThat(result.getTestCasePoints()).containsExactly("*", "*", "?");
     }
 

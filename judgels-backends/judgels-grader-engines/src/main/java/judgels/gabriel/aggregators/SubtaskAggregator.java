@@ -17,6 +17,13 @@ public class SubtaskAggregator {
 
             aggregatedPoints += subtaskVerdict.getPoints();
         }
+
+        // This case can only logically happen for subtasks in an output-only problem,
+        // where the SKIPPED verdicts are due to unsubmitted output files.
+        if (aggregatedVerdict == Verdict.SKIPPED) {
+            aggregatedVerdict = Verdict.OK;
+        }
+
         return SubtaskVerdict.of(aggregatedVerdict, aggregatedPoints);
     }
 }
