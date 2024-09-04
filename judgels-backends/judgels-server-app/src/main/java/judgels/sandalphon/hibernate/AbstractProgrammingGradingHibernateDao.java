@@ -2,6 +2,7 @@ package judgels.sandalphon.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -87,5 +88,33 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
         }
 
         return ImmutableMap.copyOf(result);
+    }
+
+    @Override
+    public void dump(PrintWriter output, Collection<String> submissionJids) {
+        List<M> results = select().where(columnIn(AbstractProgrammingGradingModel_.submissionJid, submissionJids)).orderBy(Model_.ID, OrderDir.ASC).all();
+        if (results.isEmpty()) {
+            return;
+        }
+
+        output.write("INSERT IGNORE INTO uriel_contest_programming_grading (jid, submissionJid, verdictCode, verdictName, score, details, createdBy, createdAt, updatedAt) VALUES\n");
+
+        for (int i = 0; i < results.size(); i++) {
+            M m = results.get(i);
+            if (i > 0) {
+                output.write(",\n");
+            }
+            output.write(String.format("(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    escape(m.jid),
+                    escape(m.submissionJid),
+                    escape(m.verdictCode),
+                    escape(""),
+                    escape(m.score),
+                    escape(m.details),
+                    escape(m.createdBy),
+                    escape(m.createdAt),
+                    escape(m.updatedAt)));
+        }
+        output.write(";\n");
     }
 }
