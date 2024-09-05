@@ -4,6 +4,7 @@ import static judgels.uriel.hibernate.ContestRoleHibernateDao.isPublic;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.userCanView;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.userParticipated;
 
+import java.io.PrintWriter;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -51,6 +52,30 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     @Override
     public List<ContestModel> selectAllBySlugs(Collection<String> contestSlugs) {
         return select().where(columnIn(ContestModel_.slug, contestSlugs)).all();
+    }
+
+    @Override
+    public void dump(PrintWriter output, String contestJid) {
+        Optional<ContestModel> maybeModel = selectByJid(contestJid);
+        if (maybeModel.isEmpty()) {
+            return;
+        }
+
+        ContestModel m = maybeModel.get();
+
+        output.write("INSERT IGNORE INTO uriel_contest (jid, slug, name, description, style, beginTime, duration, createdBy, createdAt, updatedBy, updatedAt) VALUES\n");
+        output.write(String.format("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);\n",
+                escape(m.jid),
+                escape(m.slug),
+                escape(m.name),
+                escape(m.description),
+                escape(m.style),
+                escape(m.beginTime),
+                escape(m.duration),
+                escape(m.createdBy),
+                escape(m.createdAt),
+                escape(m.updatedBy),
+                escape(m.updatedAt)));
     }
 
     private static class ContestHibernateQueryBuilder extends HibernateQueryBuilder<ContestModel> implements ContestQueryBuilder {

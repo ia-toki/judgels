@@ -1,5 +1,6 @@
 package judgels.uriel.persistence;
 
+import java.io.PrintWriter;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +12,7 @@ public interface ContestDao extends JudgelsDao<ContestModel> {
     ContestQueryBuilder select();
     Optional<ContestModel> selectBySlug(String contestSlug);
     List<ContestModel> selectAllBySlugs(Collection<String> contestSlugs);
+    void dump(PrintWriter output, String contestJid);
 
     interface ContestQueryBuilder extends QueryBuilder<ContestModel> {
         ContestQueryBuilder wherePublic();

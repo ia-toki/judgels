@@ -19,6 +19,8 @@ import judgels.uriel.contest.ContestResource;
 import judgels.uriel.contest.announcement.ContestAnnouncementResource;
 import judgels.uriel.contest.clarification.ContestClarificationResource;
 import judgels.uriel.contest.contestant.ContestContestantResource;
+import judgels.uriel.contest.dump.ContestDumpModule;
+import judgels.uriel.contest.dump.ContestDumpTask;
 import judgels.uriel.contest.editorial.ContestEditorialResource;
 import judgels.uriel.contest.file.ContestFileResource;
 import judgels.uriel.contest.history.ContestHistoryResource;
@@ -65,7 +67,9 @@ import judgels.uriel.submission.programming.SubmissionModule;
         SubmissionModule.class,
         ItemSubmissionModule.class,
         ContestLogModule.class,
-        ContestScoreboardUpdaterModule.class})
+        ContestScoreboardUpdaterModule.class,
+
+        ContestDumpModule.class})
 @Singleton
 public interface UrielComponent {
     ContestAnnouncementResource contestAnnouncementResource();
@@ -90,4 +94,6 @@ public interface UrielComponent {
     ContestLogPoller contestLogPoller();
     ContestScoreboardPoller contestScoreboardPoller();
     GradingResponsePoller gradingResponsePoller();
+
+    ContestDumpTask contestDumpTask();
 }

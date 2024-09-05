@@ -62,7 +62,7 @@ public class ContestLogStore {
                 .problemJid(Optional.ofNullable(model.problemJid))
                 .userJid(model.createdBy)
                 .time(model.createdAt)
-                .ipAddress(model.createdIp)
+                .ipAddress(Optional.ofNullable(model.createdIp))
                 .build();
     }
 }

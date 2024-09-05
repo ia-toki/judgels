@@ -228,6 +228,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                     "uriel-grading-response-poller",
                     component.gradingResponsePoller());
         }
+
+        env.admin().addTask(component.contestDumpTask());
     }
 
     private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env) {
