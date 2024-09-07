@@ -65,7 +65,7 @@ public class ProblemVersionStore extends BaseProblemStore {
 
     public boolean pushUserClone(String userJid, String problemJid) {
         Path origin = getOriginDirPath(problemJid);
-        Path root = getRootDirPath(userJid, problemJid);
+        Path root = getCloneDirPath(userJid, problemJid);
 
         if (problemGit.push(root)) {
             problemGit.resetHard(origin);
@@ -79,13 +79,13 @@ public class ProblemVersionStore extends BaseProblemStore {
     }
 
     public boolean fetchUserClone(String userJid, String problemJid) {
-        Path root = getRootDirPath(userJid, problemJid);
+        Path root = getCloneDirPath(userJid, problemJid);
 
         return problemGit.fetch(root);
     }
 
     public void discardUserClone(String userJid, String problemJid) {
-        Path root = getRootDirPath(userJid, problemJid);
+        Path root = getCloneDirPath(userJid, problemJid);
 
         problemFs.removeFile(root);
     }
