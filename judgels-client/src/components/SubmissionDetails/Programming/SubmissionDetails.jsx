@@ -130,7 +130,7 @@ export function SubmissionDetails({
     return (
       <>
         <span className="subtask-score">{integer}</span>
-        <span className="subtask-score">{decimal}</span>
+        <span className="subtask-score-decimal">{decimal}</span>
       </>
     );
   };
