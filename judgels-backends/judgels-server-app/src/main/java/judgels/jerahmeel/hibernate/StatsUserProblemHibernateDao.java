@@ -163,8 +163,14 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public long selectTotalScoreByUserJid(String userJid) {
-        return 0;
+    public int selectTotalScoreByUserJid(String userJid) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+        Root<StatsUserProblemModel> root = cq.from(getEntityClass());
+
+        cq.select(cb.sum(root.get(StatsUserProblemModel_.score)));
+        cq.where(cb.equal(root.get(StatsUserProblemModel_.userJid), userJid));
+        return currentSession().createQuery(cq).getSingleResult();
     }
 
     @Override
