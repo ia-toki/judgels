@@ -63,6 +63,11 @@ public abstract class AbstractProgrammingSubmissionHibernateDao<M extends Abstra
     }
 
     @Override
+    public void updateContainer(String problemJid, String containerJid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Collection<String> dump(PrintWriter output, String containerJid) {
         List<M> results = select().whereContainerIs(containerJid).orderBy(Model_.ID, OrderDir.ASC).all();
         if (results.isEmpty()) {

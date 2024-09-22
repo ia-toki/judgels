@@ -12,6 +12,8 @@ import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
 import judgels.jerahmeel.curriculum.CurriculumResource;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
+import judgels.jerahmeel.problem.MoveProblemToChapterTask;
+import judgels.jerahmeel.problem.ProblemModule;
 import judgels.jerahmeel.problem.ProblemResource;
 import judgels.jerahmeel.problem.ProblemTagResource;
 import judgels.jerahmeel.problemset.ProblemSetResource;
@@ -59,6 +61,7 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         GabrielClientModule.class,
 
         // Features
+        ProblemModule.class,
         SubmissionModule.class,
         ItemSubmissionModule.class,
         StatsModule.class
@@ -82,6 +85,8 @@ public interface JerahmeelComponent {
 
     JudgelsScheduler scheduler();
     GradingResponsePoller gradingResponsePoller();
+
+    MoveProblemToChapterTask moveProblemToChapterTask();
     ProblemSetStatsTask problemSetStatsTask();
     ContestStatsTask contestStatsTask();
     SubmissionsDuplexToAwsTask submissionsDuplexToAwsTask();
