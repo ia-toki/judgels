@@ -50,6 +50,7 @@ describe('ChapterResourcesPage', () => {
               defaultLanguage: 'en',
             },
           },
+          problemSetProblemPathsMap: {},
           problemProgressesMap: {
             problemJid1: { verdict: 'AC', score: 100 },
           },

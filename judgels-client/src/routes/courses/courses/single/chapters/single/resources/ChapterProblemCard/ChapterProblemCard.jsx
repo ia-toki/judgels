@@ -9,7 +9,26 @@ import { ProblemType } from '../../../../../../../../modules/api/sandalphon/prob
 
 import './ChapterProblemCard.scss';
 
-export function ChapterProblemCard({ course, chapter, problem, progress, problemName, isFuture }) {
+export function ChapterProblemCard({
+  course,
+  chapter,
+  problem,
+  problemName,
+  problemSetProblemPaths,
+  progress,
+  isFuture,
+}) {
+  const renderProblemSetProblemPaths = () => {
+    if (!problemSetProblemPaths) {
+      return null;
+    }
+    return (
+      <div className="chapter-problem-card__problem-set-problem-paths">
+        {problemSetProblemPaths.map(p => p.join('/')).join(', ')}
+      </div>
+    );
+  };
+
   const renderProgress = () => {
     if (!progress) {
       return null;
@@ -29,6 +48,7 @@ export function ChapterProblemCard({ course, chapter, problem, progress, problem
         <h4 data-key="name">
           {problem.alias}. {problemName}
         </h4>
+        {renderProblemSetProblemPaths()}
         {renderProgress()}
       </div>
     </ContentCardLink>

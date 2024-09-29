@@ -36,9 +36,23 @@ export class ChapterResourcesPage extends Component {
     this.setState({
       response: undefined,
     });
+
     const response = await this.props.onGetResources(this.props.chapter.jid);
+    const [lessonsResponse, problemsResponse] = response;
+    const { data: lessons, lessonsMap } = lessonsResponse;
+    const { data: problems, problemsMap, problemSetProblemPathsMap, problemProgressesMap } = problemsResponse;
+
+    const firstUnsolvedProblemIndex = this.getFirstUnsolvedProblemIndex(problems, problemProgressesMap);
+
     this.setState({
       response,
+      lessons,
+      lessonsMap,
+      problems,
+      problemsMap,
+      problemSetProblemPathsMap,
+      problemProgressesMap,
+      firstUnsolvedProblemIndex,
     });
   };
 
@@ -68,14 +82,10 @@ export class ChapterResourcesPage extends Component {
   };
 
   renderResources = () => {
-    const { response } = this.state;
+    const { response, lessons, problems, problemSetProblemPathsMap } = this.state;
     if (!response) {
       return <LoadingContentCard />;
     }
-
-    const [lessonsResponse, problemsResponse] = response;
-    const { data: lessons, lessonsMap } = lessonsResponse;
-    const { data: problems, problemsMap, problemProgressesMap } = problemsResponse;
 
     if (lessons.length === 0 && problems.length === 0) {
       return (
@@ -85,32 +95,64 @@ export class ChapterResourcesPage extends Component {
       );
     }
 
-    const firstUnsolvedProblemIndex = this.getFirstUnsolvedProblemIndex(problems, problemProgressesMap);
+    const chapterProblems = problems.filter(p => !problemSetProblemPathsMap[p.problemJid]);
+    const problemSetProblems = problems.filter(p => !!problemSetProblemPathsMap[p.problemJid]);
+
+    let chapterResources = null;
+    if (lessons.length > 0 || chapterProblems.length > 0) {
+      chapterResources = (
+        <div className="chapter-resources-page__resources">
+          {lessons.map(this.renderLesson)}
+          {chapterProblems.map(this.renderProblem)}
+        </div>
+      );
+    }
+
+    let problemSetResources = null;
+    if (problemSetProblems.length > 0) {
+      problemSetResources = (
+        <div className="chapter-resources-page__problem-set-problems">
+          <h4>Practice Problems</h4>
+          <div className="chapter-resources-page__resources">
+            {problemSetProblems.map((p, idx) => this.renderProblem(p, idx + chapterProblems.length))}
+          </div>
+        </div>
+      );
+    }
 
     return (
-      <>
-        {lessons.map(lesson => {
-          const props = {
-            course: this.props.course,
-            chapter: this.props.chapter,
-            lesson,
-            lessonName: getLessonName(lessonsMap[lesson.lessonJid], undefined),
-          };
-          return <ChapterLessonCard key={lesson.lessonJid} {...props} />;
-        })}
-        {problems.map((problem, idx) => {
-          const props = {
-            course: this.props.course,
-            chapter: this.props.chapter,
-            problem,
-            problemName: getProblemName(problemsMap[problem.problemJid], undefined),
-            progress: problemProgressesMap[problem.problemJid],
-            isFuture: idx > firstUnsolvedProblemIndex,
-          };
-          return <ChapterProblemCard key={problem.problemJid} {...props} />;
-        })}
-      </>
+      <div className="chapter-resources-page__sections">
+        {chapterResources}
+        {problemSetResources}
+      </div>
     );
+  };
+
+  renderLesson = lesson => {
+    const { lessonsMap } = this.state;
+
+    const props = {
+      course: this.props.course,
+      chapter: this.props.chapter,
+      lesson,
+      lessonName: getLessonName(lessonsMap[lesson.lessonJid], undefined),
+    };
+    return <ChapterLessonCard key={lesson.lessonJid} {...props} />;
+  };
+
+  renderProblem = (problem, idx) => {
+    const { problemsMap, problemSetProblemPathsMap, problemProgressesMap, firstUnsolvedProblemIndex } = this.state;
+
+    const props = {
+      course: this.props.course,
+      chapter: this.props.chapter,
+      problem,
+      problemName: getProblemName(problemsMap[problem.problemJid], undefined),
+      problemSetProblemPaths: problemSetProblemPathsMap[problem.problemJid],
+      progress: problemProgressesMap[problem.problemJid],
+      isFuture: idx > firstUnsolvedProblemIndex,
+    };
+    return <ChapterProblemCard key={problem.problemJid} {...props} />;
   };
 
   getFirstUnsolvedProblemIndex = (problems, problemProgressesMap) => {

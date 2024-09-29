@@ -21,10 +21,14 @@
     height: 21px;
   }
 
+  &__problem-set-problem-paths {
+    font-weight: 600;
+  }
+
   &--future {
     background-color: inherit;
 
-    h4,
+    > *,
     .chapter-problem-card__heading > .bp5-icon {
       font-weight: normal !important;
       color: #bcc0c2;
