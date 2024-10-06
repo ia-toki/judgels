@@ -3,7 +3,15 @@
 .chapter-resources-page {
   flex: 1 1;
   max-width: 865px;
+}
 
+.chapter-resources-page__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.chapter-resources-page__resources {
   .content-card {
     margin-bottom: 1px;
 

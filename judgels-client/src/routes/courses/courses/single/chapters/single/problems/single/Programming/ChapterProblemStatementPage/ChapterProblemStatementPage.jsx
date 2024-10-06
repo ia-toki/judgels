@@ -41,6 +41,18 @@ function ChapterProblemStatementPage({ worksheet }) {
     );
   };
 
+  const renderProblemSetProblemPaths = () => {
+    const { problemSetProblemPaths } = worksheet;
+    if (!problemSetProblemPaths) {
+      return null;
+    }
+    return (
+      <small className="statement-header__problem-set-problem-paths">
+        {problemSetProblemPaths.map(p => p.join('/')).join(', ')}
+      </small>
+    );
+  };
+
   const renderStatementHeader = () => {
     const { defaultLanguage, languages } = worksheet;
     if (!defaultLanguage || !languages) {
@@ -54,6 +66,7 @@ function ChapterProblemStatementPage({ worksheet }) {
       <div className="statement-header">
         <StatementLanguageWidget {...props} />
         {renderLimits()}
+        {renderProblemSetProblemPaths()}
       </div>
     );
   };
