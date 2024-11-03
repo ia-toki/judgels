@@ -190,7 +190,8 @@ jobs:
 
   deploy-tlx-staging:
     needs: build
-    if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
+    # if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
+    if: False
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
