@@ -180,7 +180,7 @@ export default class ItemShortAnswerForm extends PureComponent {
     if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
       this.setState({ answerState: AnswerState.Answering });
     } else {
-      const oldValue = this.props.initialAnswer || '';
+      const oldValue = this.state.initialAnswer || '';
       const newValue = formValue;
       if (this.props.onSubmit && oldValue !== newValue) {
         this.setState({ answerState: AnswerState.SavingAnswer });
