@@ -19,6 +19,7 @@ import judgels.jerahmeel.persistence.StatsUserProblemModel_;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
+import org.hibernate.query.Query;
 
 public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemModel> implements StatsUserProblemDao {
     private final Clock clock;
@@ -192,5 +193,15 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
         return currentSession().createQuery(cq).getResultList()
                 .stream()
                 .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+    }
+
+    @Override
+    public void deleteAllByProblemJid(String problemJid) {
+        Query<?> query = currentSession().createQuery(
+                "DELETE FROM jerahmeel_stats_user_problem  "
+                        + "WHERE problemJid = :problemJid");
+
+        query.setParameter("problemJid", problemJid);
+        query.executeUpdate();
     }
 }
