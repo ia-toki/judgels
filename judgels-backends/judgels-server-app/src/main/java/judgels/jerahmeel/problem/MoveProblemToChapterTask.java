@@ -91,6 +91,6 @@ public class MoveProblemToChapterTask extends Task {
         List<ProblemSetProblemModel> problemSetProblemModels = problemSetProblemDao.selectAllByProblemJid(problemJid);
         problemSetProblemModels.forEach(problemSetProblemDao::delete);
 
-        programmingSubmissionDao.updateContainer(problemJid, toChapterJid);
+        programmingSubmissionDao.updateContainerJid(problemJid, toChapterJid);
     }
 }

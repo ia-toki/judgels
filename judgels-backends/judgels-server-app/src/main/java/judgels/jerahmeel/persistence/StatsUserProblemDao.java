@@ -19,4 +19,5 @@ public interface StatsUserProblemDao extends Dao<StatsUserProblemModel> {
     long selectCountTriedByUserJid(String userJid);
     int selectTotalScoreByUserJid(String userJid);
     Map<String, Long> selectCountsVerdictByUserJid(String userJid);
+    void deleteAllByProblemJid(String problemJid);
 }

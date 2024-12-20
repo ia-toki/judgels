@@ -12,6 +12,7 @@ import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
 import judgels.jerahmeel.curriculum.CurriculumResource;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
+import judgels.jerahmeel.problem.DeleteProblemTask;
 import judgels.jerahmeel.problem.MoveProblemToChapterTask;
 import judgels.jerahmeel.problem.ProblemModule;
 import judgels.jerahmeel.problem.ProblemResource;
@@ -86,6 +87,7 @@ public interface JerahmeelComponent {
     JudgelsScheduler scheduler();
     GradingResponsePoller gradingResponsePoller();
 
+    DeleteProblemTask deleteProblemTask();
     MoveProblemToChapterTask moveProblemToChapterTask();
     ProblemSetStatsTask problemSetStatsTask();
     ContestStatsTask contestStatsTask();
