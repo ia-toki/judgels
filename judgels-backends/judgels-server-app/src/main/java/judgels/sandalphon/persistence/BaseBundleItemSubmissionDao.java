@@ -7,6 +7,7 @@ public interface BaseBundleItemSubmissionDao<M extends AbstractBundleItemSubmiss
     M createSubmissionModel();
 
     BaseBundleItemSubmissionQueryBuilder<M> select();
+    void deleteAllByProblemJid(String problemJid);
 
     interface BaseBundleItemSubmissionQueryBuilder<M extends AbstractBundleItemSubmissionModel> extends QueryBuilder<M> {
         BaseBundleItemSubmissionQueryBuilder<M> whereContainerIs(String containerJid);
