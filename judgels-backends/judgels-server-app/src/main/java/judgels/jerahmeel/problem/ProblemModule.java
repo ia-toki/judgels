@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
+import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ChapterDao;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
@@ -25,6 +26,7 @@ public class ProblemModule {
             ProblemSetProblemDao problemSetProblemDao,
             ProgrammingSubmissionDao programmingSubmissionDao,
             ProgrammingGradingDao programmingGradingDao,
+            BundleItemSubmissionDao bundleItemSubmissionDao,
             StatsUserProblemDao statsUserProblemDao) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -35,6 +37,7 @@ public class ProblemModule {
                         ProblemSetProblemDao.class,
                         ProgrammingSubmissionDao.class,
                         ProgrammingGradingDao.class,
+                        BundleItemSubmissionDao.class,
                         StatsUserProblemDao.class},
                 new Object[] {
                         problemDao,
@@ -42,6 +45,7 @@ public class ProblemModule {
                         problemSetProblemDao,
                         programmingSubmissionDao,
                         programmingGradingDao,
+                        bundleItemSubmissionDao,
                         statsUserProblemDao});
     }
 

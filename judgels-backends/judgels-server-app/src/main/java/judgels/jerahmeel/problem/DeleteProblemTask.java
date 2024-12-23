@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
@@ -20,6 +21,7 @@ public class DeleteProblemTask extends Task {
     private final ProblemSetProblemDao problemSetProblemDao;
     private final ProgrammingSubmissionDao programmingSubmissionDao;
     private final ProgrammingGradingDao programmingGradingDao;
+    private final BundleItemSubmissionDao bundleItemSubmissionDao;
     private final StatsUserProblemDao statsUserProblemDao;
 
     public DeleteProblemTask(
@@ -28,6 +30,7 @@ public class DeleteProblemTask extends Task {
             ProblemSetProblemDao problemSetProblemDao,
             ProgrammingSubmissionDao programmingSubmissionDao,
             ProgrammingGradingDao programmingGradingDao,
+            BundleItemSubmissionDao bundleItemSubmissionDao,
             StatsUserProblemDao statsUserProblemDao) {
 
         super("jerahmeel-delete-problem");
@@ -37,6 +40,7 @@ public class DeleteProblemTask extends Task {
         this.problemSetProblemDao = problemSetProblemDao;
         this.programmingSubmissionDao = programmingSubmissionDao;
         this.programmingGradingDao = programmingGradingDao;
+        this.bundleItemSubmissionDao = bundleItemSubmissionDao;
         this.statsUserProblemDao = statsUserProblemDao;
     }
 
@@ -55,9 +59,14 @@ public class DeleteProblemTask extends Task {
         }
         String problemJid = maybeProblemModel.get().jid;
 
+        if (problemJid.startsWith("JIDPROG")) {
+            programmingGradingDao.deleteAllByProblemJid(problemJid);
+            programmingSubmissionDao.deleteAllByProblemJid(problemJid);
+        } else {
+            bundleItemSubmissionDao.deleteAllByProblemJid(problemJid);
+        }
+
         statsUserProblemDao.deleteAllByProblemJid(problemJid);
-        programmingGradingDao.deleteAllByProblemJid(problemJid);
-        programmingSubmissionDao.deleteAllByProblemJid(problemJid);
         chapterProblemDao.selectByProblemJid(problemJid).ifPresent(chapterProblemDao::delete);
         problemSetProblemDao.selectAllByProblemJid(problemJid).forEach(problemSetProblemDao::delete);
     }

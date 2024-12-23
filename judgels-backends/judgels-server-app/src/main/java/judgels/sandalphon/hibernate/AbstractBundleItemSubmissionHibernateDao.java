@@ -19,6 +19,11 @@ public abstract class AbstractBundleItemSubmissionHibernateDao<M extends Abstrac
         return new AbstractBundleItemSubmissionHibernateQueryBuilder<>(currentSession(), getEntityClass());
     }
 
+    @Override
+    public void deleteAllByProblemJid(String problemJid) {
+        throw new UnsupportedOperationException();
+    }
+
     private static class AbstractBundleItemSubmissionHibernateQueryBuilder<M extends AbstractBundleItemSubmissionModel> extends HibernateQueryBuilder<M> implements BaseBundleItemSubmissionQueryBuilder<M> {
         AbstractBundleItemSubmissionHibernateQueryBuilder(Session currentSession, Class<M> entityClass) {
             super(currentSession, entityClass);
