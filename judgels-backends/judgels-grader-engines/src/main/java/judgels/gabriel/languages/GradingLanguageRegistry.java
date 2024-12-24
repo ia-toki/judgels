@@ -13,6 +13,7 @@ import judgels.gabriel.languages.cpp.Cpp20GradingLanguage;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import judgels.gabriel.languages.go.GoGradingLanguage;
 import judgels.gabriel.languages.java.JavaGradingLanguage;
+import judgels.gabriel.languages.javascript.JavaScriptNode18GradingLanguage;
 import judgels.gabriel.languages.pascal.PascalGradingLanguage;
 import judgels.gabriel.languages.python.PyPy3GradingLanguage;
 import judgels.gabriel.languages.python.Python3GradingLanguage;
@@ -29,6 +30,7 @@ public class GradingLanguageRegistry {
             new Cpp20GradingLanguage(),
             new GoGradingLanguage(),
             new JavaGradingLanguage(),
+            new JavaScriptNode18GradingLanguage(),
             new PascalGradingLanguage(),
             new PyPy3GradingLanguage(),
             new Python3GradingLanguage(),
