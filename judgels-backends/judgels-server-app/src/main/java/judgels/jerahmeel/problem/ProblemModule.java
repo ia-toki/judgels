@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ChapterDao;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
+import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
@@ -51,7 +52,7 @@ public class ProblemModule {
 
     @Provides
     @Singleton
-    static MoveProblemToChapterTask problemMoveToChapterTask(
+    static MoveProblemToChapterTask moveProblemToChapterTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
             ChapterDao chapterDao,
@@ -70,6 +71,32 @@ public class ProblemModule {
                 new Object[] {
                         problemDao,
                         chapterDao,
+                        chapterProblemDao,
+                        problemSetProblemDao,
+                        programmingSubmissionDao});
+    }
+
+    @Provides
+    @Singleton
+    static MoveProblemToProblemSetTask moveProblemToProblemSetTask(
+            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
+            ProblemDao problemDao,
+            ProblemSetDao problemSetDao,
+            ChapterProblemDao chapterProblemDao,
+            ProblemSetProblemDao problemSetProblemDao,
+            ProgrammingSubmissionDao programmingSubmissionDao) {
+
+        return unitOfWorkAwareProxyFactory.create(
+                MoveProblemToProblemSetTask.class,
+                new Class<?>[] {
+                        ProblemDao.class,
+                        ProblemSetDao.class,
+                        ChapterProblemDao.class,
+                        ProblemSetProblemDao.class,
+                        ProgrammingSubmissionDao.class},
+                new Object[] {
+                        problemDao,
+                        problemSetDao,
                         chapterProblemDao,
                         problemSetProblemDao,
                         programmingSubmissionDao});
