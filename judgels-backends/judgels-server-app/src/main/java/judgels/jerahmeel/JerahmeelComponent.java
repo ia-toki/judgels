@@ -14,6 +14,7 @@ import judgels.jerahmeel.curriculum.CurriculumResource;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.problem.DeleteProblemTask;
 import judgels.jerahmeel.problem.MoveProblemToChapterTask;
+import judgels.jerahmeel.problem.MoveProblemToProblemSetTask;
 import judgels.jerahmeel.problem.ProblemModule;
 import judgels.jerahmeel.problem.ProblemResource;
 import judgels.jerahmeel.problem.ProblemTagResource;
@@ -89,6 +90,7 @@ public interface JerahmeelComponent {
 
     DeleteProblemTask deleteProblemTask();
     MoveProblemToChapterTask moveProblemToChapterTask();
+    MoveProblemToProblemSetTask moveProblemToProblemSetTask();
     ProblemSetStatsTask problemSetStatsTask();
     ContestStatsTask contestStatsTask();
     SubmissionsDuplexToAwsTask submissionsDuplexToAwsTask();
