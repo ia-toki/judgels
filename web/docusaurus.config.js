@@ -70,7 +70,7 @@ const config = {
       },
       footer: {
         style: 'dark',
-        copyright: `Copyright © Ikatan Alumni TOKI.`,
+        copyright: `Copyright © Ikatan Alumni TOKI. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
