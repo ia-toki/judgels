@@ -30,11 +30,11 @@ export const MaxFileSize100KB = value => {
 };
 
 export const MaxFileSize300KB = value => {
-  return value && value.size <= 300 * 1024 ? undefined : 'File size must be at most 300 KB';
+  return !value || value.size <= 300 * 1024 ? undefined : 'File size must be at most 300 KB';
 };
 
 export const MaxFileSize10MB = value => {
-  return value && value.size <= 10 * 1024 * 1024 ? undefined : 'File size must be at most 10 MB';
+  return !value || value.size <= 10 * 1024 * 1024 ? undefined : 'File size must be at most 10 MB';
 };
 
 export const MaxFileSize20MB = value => {
