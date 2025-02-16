@@ -1,0 +1,76 @@
+<div style="margin-top: -5px; margin-bottom: 5px">
+  <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#problem-slug-guide-modal">
+    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+    Slug guide
+  </button>
+</div>
+
+
+<div class="modal fade" id="problem-slug-guide-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Problem slug guide</h3>
+      </div>
+      <div class="modal-body help-modal-body">
+        <h4>General rules</h4>
+        <ul>
+          <li>A slug must be words separated by <code>-</code>. Each word must consist of lowercase letters or numbers.</li>
+          <li>Good examples: <code>a-plus-b</code>, <code>tree-reconstruction</code>, <code>2sat-construction</code>.</li>
+          <li>Bad examples: <code>a+b</code>, <code>tree--reconstruction</code>, <code>2SAT-construction</code>.</li>
+        </ul>
+        <hr>
+        <h4>Past or upcoming contest problems</h4>
+        <ul>
+          <li>The slug should follow this format: <code>&lt;contest slug&gt;-&lt;problem slug&gt;</code>.</li>
+          <li><code>&lt;contest slug&gt;</code> part:<ul>
+            <li>It should identify the contest <strong>uniquely within the platform</strong>.</li>
+            <li>Similar contests should have the same format.</li>
+            <li>Good examples: <code>ksn-2020</code>, <code>icpc-jakarta-2020</code>, <code>troc-22</code>, <code>toc-2018-feb</code>.</li>
+            <li>Bad examples (considering the above): <code>ksn</code>, <code>icpc-jakarta</code>, <code>troc</code>, <code>toc-2018</code>.</li>
+          </ul>
+          </li>
+          <li><code>&lt;problem slug&gt;</code> part:<ul>
+            <li>It should identify the problem <strong>uniquely within the contest</strong>.</li>
+            <li>It should consist of one or two <strong>key</strong> words taken from the problem title.</li>
+            <li>Good examples: <code>mencari-bola</code>, <code>police</code>, <code>near</code>.</li>
+            <li>Bad examples: <code>a</code>, <code>b</code>, <code>pohon-merah-hitam</code>, <code>daratan-dan-es</code>.</li>
+          </ul>
+          </li>
+        </ul>
+        <hr>
+        <h4>Modification of past contest problems</h4>
+        <ul>
+          <li>The slug should follow this format: <code>&lt;original slug&gt;-modified[-&lt;note&gt;]</code>.</li>
+          <li>Examples:<ul>
+            <li><code>troc-22-near-modified</code></li>
+            <li><code>troc-22-near-modified-functional</code> (the grading engine is modified to Functional)</li>
+          </ul></li>
+        </ul>
+        <hr>
+        <h4>Unused problems (yet)</h4>
+        <ul>
+          <li>The slug should start with <code>&lt;your username&gt;-</code>.</li>
+          <li>If the problem is then used for a contest, the slug must be changed based on the above rules.</li>
+          <li>Example:<code>dengklek-hello-world</code>.</li>
+        </ul>
+        <hr>
+        <h4>Problems that are just for testing</h4>
+        <ul>
+          <li>The slug should follow this format: <code>&lt;your username&gt;-TESTING-&lt;note&gt;</code>.</li>
+          <li>Please minimize the number of such problems.</li>
+          <li>Example:<code>dengklek-TESTING-grading</code>.</li>
+        </ul>
+        <hr>
+        <h4>Problems that are broken / unused</h4>
+        <ul>
+          <li>The slug should follow this format: <code>&lt;your username&gt;-UNUSED-&lt;note&gt;</code>.</li>
+          <li>Example:<code>dengklek-UNUSED-commit-error</code>.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
