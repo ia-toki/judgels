@@ -357,14 +357,14 @@ th {
   font-family: var(--accent-font);
 }
 
-.statement-help-modal-body, .statement-help-modal-body pre {
+.help-modal-body, .help-modal-body pre {
   font-size: 12px;
 }
 
-.statement-help-modal-body ol, .statement-help-modal-body ul {
+.help-modal-body ol, .help-modal-body ul {
   margin-left: 20px;
 }
 
-.statement-help-modal-body, .statement-help-modal-body p {
+.help-modal-body, .help-modal-body p {
   margin: 0;
 }
