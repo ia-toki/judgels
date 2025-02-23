@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     branches:
-      - "*"
+      - "**"
   pull_request:
     branches:
       - master
@@ -88,7 +88,7 @@ jobs:
 
   build:
     needs: test
-    if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
+    if: github.ref == 'refs/heads/release/3.0' && github.repository_owner == 'ia-toki'
     runs-on: ubuntu-22.04
     env:
       CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
