@@ -1,12 +1,8 @@
 - block:
     - name: Install docker
-      pip:
-        name: docker
-
-    - name: Downgrade requests # https://github.com/docker/docker-py/issues/3113 
-      pip: 
-        name: requests
-        version: 2.28.1
+      apt:
+        name: python3-docker
+        state: present
 
     - name: Install docker.io
       apt:
