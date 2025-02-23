@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 RUN apt-get update \
     && apt-get install -y git make gcc libcap-dev
@@ -12,7 +12,7 @@ RUN git clone --depth 1 git://git.ucw.cz/moe.git; \
     gcc -o iwrapper iwrapper.c
 
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ENV CARGO_HOME /usr
 ENV RUSTUP_HOME /usr
