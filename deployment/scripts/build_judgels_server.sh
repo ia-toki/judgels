@@ -12,4 +12,4 @@ cp init.sh build/distributions
 cd ../../deployment/ansible
 
 ansible --version
-ansible-playbook playbooks/build-judgels-server.yml
+ansible-playbook -e app_version=3.0.0-alpha playbooks/build-judgels-server.yml
