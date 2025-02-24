@@ -1,13 +1,13 @@
 - block:
   - name: Pull rabbitmq image
     docker_image:
-      name: rabbitmq:3.11.16-management-alpine
+      name: rabbitmq:3.13.7-management-alpine
       source: pull
 
   - name: Run a rabbitmq container
     docker_container:
       name: rabbitmq
-      image: rabbitmq:3.11.16-management-alpine
+      image: rabbitmq:3.13.7-management-alpine
       restart: yes
       restart_policy: on-failure
       restart_retries: 3
