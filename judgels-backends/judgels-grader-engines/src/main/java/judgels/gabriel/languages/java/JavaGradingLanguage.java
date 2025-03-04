@@ -10,7 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 public class JavaGradingLanguage implements GradingLanguage {
     @Override
     public String getName() {
-        return "Java 11";
+        return "Java 17";
     }
 
     @Override

@@ -17,7 +17,7 @@ FROM ubuntu:24.04
 ENV CARGO_HOME /usr
 ENV RUSTUP_HOME /usr
 ENV XDG_CACHE_HOME /tmp
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH $JAVA_HOME/bin:$PATH
 
 RUN apt-get update \
@@ -33,8 +33,8 @@ RUN apt-get update \
        g++-13 \
        golang \
        libcap-dev \
-       openjdk-11-jdk-headless \
-       openjdk-11-jre \
+       openjdk-17-jdk-headless \
+       openjdk-17-jre \
        pypy3 \
        python3 \
     && ln -s /usr/bin/gcc-13 /usr/bin/gcc \
