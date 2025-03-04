@@ -162,7 +162,7 @@ class ContestProblemApiIntegrationTests extends BaseUrielApiIntegrationTests {
                 .worksheet(new ProblemWorksheet.Builder()
                         .statement(new ProblemStatement.Builder()
                                 .title("Problem 1")
-                                .text("Statement 1. <img src=\"http://localhost:8080/api/v2/problems/" + problem1.getJid() + "/render/image.png\"/>")
+                                .text("Statement 1. <img src=\"" + getLocalUrl() + "/api/v2/problems/" + problem1.getJid() + "/render/image.png\"/>")
                                 .build())
                         .limits(new ProblemLimits.Builder()
                                 .timeLimit(2000)
@@ -253,7 +253,7 @@ class ContestProblemApiIntegrationTests extends BaseUrielApiIntegrationTests {
                         .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                                 .statement(new ProblemStatement.Builder()
                                         .title("Problem 3")
-                                        .text("Statement 3. <img src=\"http://localhost:8080/api/v2/problems/" + problem3.getJid() + "/render/image.png\"/>")
+                                        .text("Statement 3. <img src=\"" + getLocalUrl() + "/api/v2/problems/" + problem3.getJid() + "/render/image.png\"/>")
                                         .build())
                                 .addItems(
                                         new Item.Builder()
@@ -261,7 +261,7 @@ class ContestProblemApiIntegrationTests extends BaseUrielApiIntegrationTests {
                                                 .type(ItemType.STATEMENT)
                                                 .meta("1-2")
                                                 .config(new StatementItemConfig.Builder()
-                                                        .statement("<p>STATEMENT 1-2</p> <img src=\"http://localhost:8080/api/v2/problems/" + problem3.getJid() + "/render/statement.png\"/>")
+                                                        .statement("<p>STATEMENT 1-2</p> <img src=\"" + getLocalUrl() + "/api/v2/problems/" + problem3.getJid() + "/render/statement.png\"/>")
                                                         .build())
                                                 .build(),
                                         new Item.Builder()
@@ -276,7 +276,7 @@ class ContestProblemApiIntegrationTests extends BaseUrielApiIntegrationTests {
                                                         .addChoices(
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("a")
-                                                                        .content("answer a <img src=\"http://localhost:8080/api/v2/problems/" + problem3.getJid() + "/render/a.png\"/>")
+                                                                        .content("answer a <img src=\"" + getLocalUrl() + "/api/v2/problems/" + problem3.getJid() + "/render/a.png\"/>")
                                                                         .build(),
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("b")

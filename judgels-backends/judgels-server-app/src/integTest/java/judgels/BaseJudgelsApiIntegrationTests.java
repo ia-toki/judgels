@@ -12,11 +12,14 @@ import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
 import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.jetty.HttpConnectorFactory;
+import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.testing.DropwizardTestSupport;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,7 +139,19 @@ public abstract class BaseJudgelsApiIntegrationTests {
                 jophielConfig,
                 sandalphonConfig,
                 urielConfig,
-                jerahmeelConfig);
+                jerahmeelConfig) {
+            {
+                DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
+
+                HttpConnectorFactory appConnector = new HttpConnectorFactory();
+                appConnector.setPort(9090);
+                serverFactory.setApplicationConnectors(List.of(appConnector));
+
+                HttpConnectorFactory adminConnector = new HttpConnectorFactory();
+                adminConnector.setPort(9091);
+                serverFactory.setAdminConnectors(List.of(adminConnector));
+            }
+        };
 
         support = new DropwizardTestSupport<>(JudgelsServerApplication.class, config);
         support.before();
@@ -171,9 +186,11 @@ public abstract class BaseJudgelsApiIntegrationTests {
     }
 
     protected static <T> T createClient(Class<T> clientClass) {
-        return FeignClients.create(
-                clientClass,
-                "http://localhost:" + support.getLocalPort());
+        return FeignClients.create(clientClass, getLocalUrl());
+    }
+
+    protected static String getLocalUrl() {
+        return "http://localhost:" + support.getLocalPort();
     }
 
     protected static void assertPermitted(ThrowingCallable callable) {
