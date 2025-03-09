@@ -14,13 +14,15 @@ We will install Judgels by running an Ansible playbook from a local workstation,
 
 1. On the local workstation, clone the Judgels repository (https://github.com/ia-toki/judgels).
    - We'll assume that we clone to `~/judgels`.
-1. Copy the directory `deployment/ansible/env-example` from the cloned Judgels repository. We'll assume that we copy it and rename as `~/judgels-env`:
+1. Go to `deployment`. In this directory, you will see multiple deployment playbook directories, in the form of `<major Judgels version>-<Ubuntu version>`.
+1. Pick one of the directories. It is highly recommended that the VMs you spin up later have the exact same OS. For the purpose of this documentation, let's say you pick `v2-ubuntu-22.04`.
+1. Copy the directory `deployment/v2-ubuntu-22.04/ansible/env-example` from the cloned Judgels repository. We'll assume that we copy it and rename as `~/judgels-env`:
    ```
-   cp -R ~/judgels/deployment/ansible/env-example ~/judgels-env
+   cp -R ~/judgels/deployment/v2-ubuntu-22.04/ansible/env-example ~/judgels-env
    ```
-1. Inside `deployment/ansible`, create a symbolic link to the env directory as `env`:
+1. Inside `deployment/v2-ubuntu-22.04/ansible`, create a symbolic link to the env directory as `env`:
    ```
-   cd ~/judgels/deployment/ansible
+   cd ~/judgels/deployment/v2-ubuntu-22.04/ansible
    ln -s ~/judgels-env env
    ```
 
@@ -71,12 +73,12 @@ In `vars.yml`, generate different random strings for these values:
 
 ### F. Running Ansible playbooks
 
-1. Go to `deployment/ansible`.
-1. Edit the app version value in `env/vars.yml`:
+1. Go to `deployment/v2-ubuntu-22.04/ansible`.
+1. Optional: if the Ubuntu version that you picked is the latest version, you can edit the Judgels version value in `env/vars.yml`, e.g.:
    ```
-   app_version: '2.0'
+   app_version: '2.19'
    ```
-   You can get the latest version from https://github.com/ia-toki/judgels/releases. Enter the version without the `v` prefix.
+   You can get the latest version from https://github.com/ia-toki/judgels/releases. Enter the version without the `v` prefix. DO NOT edit the version if the Ubuntu version is not the latest one! It's pre-filled with the latest Judgels version that is compatible with the Ubuntu version.
 1. If you generate a different ssh key filename, edit the following variable in `env/vars.yml` to allow access to root:
    - `ansible_ssh_private_key_file`
       * Fill with the location of the custom ssh private key file
