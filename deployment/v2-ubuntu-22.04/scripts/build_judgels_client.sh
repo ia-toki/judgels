@@ -9,6 +9,7 @@ yarn build
 
 rm -rf dist/build && mv build dist/
 
+cd -
 cd "$(dirname "$0")"/../ansible
 
 ansible --version 0</dev/null |& cat -

@@ -9,6 +9,7 @@ tar -xf build/distributions/judgels-server-app-* --strip-components=1 -C build/d
 rm build/distributions/*.tar
 cp init.sh build/distributions
 
+cd -
 cd "$(dirname "$0")"/../ansible
 
 ansible --version

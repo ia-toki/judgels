@@ -6,6 +6,6 @@
         name: "ghcr.io/ia-toki/judgels/server:{{ app_version | default('latest', true) }}"
         push: yes
         build:
-          path: "{{ playbook_dir }}/../../../judgels-backends/judgels-server-app"
+          path: "{{ playbook_dir }}/../../../../judgels-backends/judgels-server-app"
           args:
             VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

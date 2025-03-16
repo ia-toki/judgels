@@ -9,6 +9,7 @@ tar -xf build/distributions/judgels-grader-* --strip-components=1 -C build/distr
 rm build/distributions/*.tar
 cp init.sh build/distributions
 
+cd -
 cd "$(dirname "$0")"/../ansible
 
 ansible --version
