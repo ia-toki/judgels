@@ -2,7 +2,7 @@
 
 set -ex
 
-cd deployment/ansible
+cd "$(dirname "$0")"/../ansible
 
 ansible --version
 ansible-playbook -e @env/vars.yml playbooks/deploy-judgels-server.yml
