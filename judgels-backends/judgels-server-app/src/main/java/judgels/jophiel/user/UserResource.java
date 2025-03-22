@@ -8,6 +8,8 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -37,7 +39,6 @@ import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import liquibase.util.csv.CSVWriter;
 
 @Path("/api/v2/users")
 public class UserResource {
@@ -108,7 +109,7 @@ public class UserResource {
                 .collect(Collectors.toList());
 
         StringWriter csv = new StringWriter();
-        CSVWriter writer = new CSVWriter(csv);
+        ICSVWriter writer = (new CSVWriterBuilder(csv)).build();
 
         List<String> header = new ArrayList<>();
         header.add("username");
