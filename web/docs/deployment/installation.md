@@ -15,14 +15,14 @@ We will install Judgels by running an Ansible playbook from a local workstation,
 1. On the local workstation, clone the Judgels repository (https://github.com/ia-toki/judgels).
    - We'll assume that we clone to `~/judgels`.
 1. Go to `deployment`. In this directory, you will see multiple deployment playbook directories, in the form of `<major Judgels version>-<Ubuntu version>`.
-1. Pick one of the directories. It is highly recommended that the VMs you spin up later have the exact same OS. For the purpose of this documentation, let's say you pick `v2-ubuntu-22.04`.
-1. Copy the directory `deployment/v2-ubuntu-22.04/ansible/env-example` from the cloned Judgels repository. We'll assume that we copy it and rename as `~/judgels-env`:
+1. Pick one of the directories. It is highly recommended that the VMs you spin up later have the exact same OS. For the purpose of this documentation, let's say you pick `v2-ubuntu-24.04`.
+1. Copy the directory `deployment/v2-ubuntu-24.04/ansible/env-example` from the cloned Judgels repository. We'll assume that we copy it and rename as `~/judgels-env`:
    ```
-   cp -R ~/judgels/deployment/v2-ubuntu-22.04/ansible/env-example ~/judgels-env
+   cp -R ~/judgels/deployment/v2-ubuntu-24.04/ansible/env-example ~/judgels-env
    ```
-1. Inside `deployment/v2-ubuntu-22.04/ansible`, create a symbolic link to the env directory as `env`:
+1. Inside `deployment/v2-ubuntu-24.04/ansible`, create a symbolic link to the env directory as `env`:
    ```
-   cd ~/judgels/deployment/v2-ubuntu-22.04/ansible
+   cd ~/judgels/deployment/v2-ubuntu-24.04/ansible
    ln -s ~/judgels-env env
    ```
 
@@ -37,7 +37,7 @@ It is recommended to track this env directory in a version control as the source
 
 As mentioned in the [Concepts](/docs/deployment/concepts) page, we need to spin up 1 core VM and 1 or more grader VMs. The VMs have the following requirements:
 
-- Linux. In particular, we have tested that Judgels works on Ubuntu 20.04 LTS and 22.04 LTS.
+- Linux. In particular, we have tested that Judgels works on Ubuntu 22.04 LTS and 24.04 LTS.
 - Can be accessed from the local workstation to a root user via SSH.
 
 Now, open `hosts.ini`:
@@ -73,7 +73,7 @@ In `vars.yml`, generate different random strings for these values:
 
 ### F. Running Ansible playbooks
 
-1. Go to `deployment/v2-ubuntu-22.04/ansible`.
+1. Go to `deployment/v2-ubuntu-24.04/ansible`.
 1. Optional: if the Ubuntu version that you picked is the latest version, you can edit the Judgels version value in `env/vars.yml`, e.g.:
    ```
    app_version: '2.19'

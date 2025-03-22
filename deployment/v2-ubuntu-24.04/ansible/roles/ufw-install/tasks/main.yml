@@ -1,0 +1,23 @@
+- block:
+  - name: Ensure UFW firewall is installed
+    apt:
+      name:
+        - ufw
+      state: present
+
+  - name: Allow SSH traffic through firewall
+    ufw:
+      rule: allow
+      name: OpenSSH
+
+  - name: Block all incoming traffic by default
+    ufw:
+      state: enabled
+      direction: incoming
+      policy: deny
+
+  - name: Allow all outgoing traffic by default
+    ufw:
+      state: enabled
+      direction: outgoing
+      policy: allow

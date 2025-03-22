@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     services:
       rabbitmq:
         image: rabbitmq
@@ -89,7 +89,7 @@ jobs:
   build:
     needs: test
     if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
       CONTAINER_REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
@@ -150,7 +150,7 @@ jobs:
 
   deploy-web:
     if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       WEB_HOST: ${{ secrets.WEB_HOST }}
       WEB_KNOWN_HOSTS: ${{ secrets.WEB_KNOWN_HOSTS }}
@@ -192,7 +192,7 @@ jobs:
     needs: build
     # if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
     if: False
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
