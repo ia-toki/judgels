@@ -1,4 +1,4 @@
-FROM alpine:3.18.0
+FROM alpine:3.21.3
 
 RUN apk --no-cache add openjdk11-jdk openjdk11-jmods
 RUN /usr/lib/jvm/java-11-openjdk/bin/jlink \
@@ -8,7 +8,7 @@ RUN /usr/lib/jvm/java-11-openjdk/bin/jlink \
     --output "/judgels/java"
 
 
-FROM alpine:3.18.0
+FROM alpine:3.21.3
 
 ENV JAVA_HOME=/judgels/java
 ENV PATH="$PATH:$JAVA_HOME/bin"
