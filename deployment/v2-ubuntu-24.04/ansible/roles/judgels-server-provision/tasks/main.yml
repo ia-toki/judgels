@@ -1,0 +1,29 @@
+- block:
+    - name: Create judgels server persistence mount source
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0777
+      with_items:
+        - /opt/judgels/server/var
+        - /opt/judgels/server/var/conf
+
+    - name: Allow judgels server traffic through the firewall
+      ufw:
+        rule: allow
+        to_port: '9101'
+        proto: tcp
+        comment: judgels server
+
+    - name: Allow judgels grader to rsync test data from judgels server
+      block:
+        - name: Read judgels grader public key
+          slurp:
+            path: "{{ playbook_dir }}/../env/judgels-grader.pub"
+          delegate_to: localhost
+          register: judgels_grader_pubkey
+        
+        - name: Add the public key to the authorized_keys file
+          authorized_key:
+            user: "{{ ansible_user }}"
+            key: "{{ judgels_grader_pubkey.content | b64decode }}"

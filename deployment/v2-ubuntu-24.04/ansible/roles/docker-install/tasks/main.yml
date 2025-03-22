@@ -1,0 +1,20 @@
+- block:
+    - name: Install docker
+      apt:
+        name: python3-docker
+        state: present
+
+    - name: Install docker.io
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Add cron job to prune docker system
+      cron:
+        name: Prune docker system
+        hour: '23'
+        minute: '59'
+        weekday: '0'
+        job: docker system prune -a -f
+        user: root
+        cron_file: docker-prune

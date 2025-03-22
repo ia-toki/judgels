@@ -1,0 +1,5 @@
+- block:
+    - name: Generate keypair for judgels grader
+      openssh_keypair:
+        path: "{{ playbook_dir }}/../env/judgels-grader"
+        comment: judgels-grader
