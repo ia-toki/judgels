@@ -17,7 +17,7 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.Subtask;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
-import liquibase.util.file.FilenameUtils;
+import org.apache.commons.io.FilenameUtils;
 
 public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
     protected void fillLimitsFormPartsFromConfig(GradingConfigForm form, GradingConfig config) {
