@@ -27,4 +27,4 @@ jobs:
           echo result=`echo ${{ github.ref }} | awk '{print substr($0, 12)}'` >> $GITHUB_OUTPUT 
 
       - name: Release judgels
-        run: APP_VERSION=${{ steps.get-release-version.outputs.result }} ./deployment/v2-ubuntu-22.04/scripts/release_judgels.sh
+        run: APP_VERSION=${{ steps.get-release-version.outputs.result }} ./deployment/v2-ubuntu-24.04/scripts/release_judgels.sh
