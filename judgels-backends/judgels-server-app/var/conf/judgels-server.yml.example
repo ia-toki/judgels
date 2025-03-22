@@ -15,7 +15,7 @@ server:
         archivedFileCount: 14
 
 database:
-  driverClass: com.mysql.jdbc.Driver
+  driverClass: com.mysql.cj.jdbc.Driver
   url: jdbc:mysql://localhost/judgels?useSSL=false
   user: judgels
   password: judgels
