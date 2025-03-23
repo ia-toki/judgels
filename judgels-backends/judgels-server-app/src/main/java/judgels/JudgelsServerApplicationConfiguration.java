@@ -3,7 +3,7 @@ package judgels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.palantir.websecurity.WebSecurityConfigurable;
 import com.palantir.websecurity.WebSecurityConfiguration;
-import io.dropwizard.Configuration;
+import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jophiel.JophielConfiguration;
