@@ -13,6 +13,7 @@
 - hosts: core
   gather_facts: false
   roles:
+    - name: mysql-install
     - name: judgels-server-provision
     - name: judgels-client-provision
 
