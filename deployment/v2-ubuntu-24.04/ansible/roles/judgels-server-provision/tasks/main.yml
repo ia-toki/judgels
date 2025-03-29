@@ -15,6 +15,25 @@
         proto: tcp
         comment: judgels server
 
+    - name: Create judgels user
+      mysql_user:
+        login_user: root
+        login_password: "{{ db_root_password }}"
+        name: "{{ db_username }}"
+        password: "{{ db_password }}"
+        host: '%'
+        priv: '*.*:ALL'
+        state: present
+      no_log: True
+
+    - name: Create judgels database
+      mysql_db:
+        login_user: root
+        login_password: "{{ db_root_password }}"
+        name: judgels
+        collation: utf8mb4_unicode_ci
+        state: present
+
     - name: Allow judgels grader to rsync test data from judgels server
       block:
         - name: Read judgels grader public key
