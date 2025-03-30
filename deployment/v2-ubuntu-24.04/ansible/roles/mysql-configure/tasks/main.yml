@@ -1,10 +1,3 @@
-- name: Change mysql bind-address to allow connection from phpmyadmin docker container
-  ini_file:
-    path: /etc/mysql/mysql.conf.d/mysqld.cnf
-    section: mysqld
-    option: bind-address
-    value: "0.0.0.0"
-
 - name: Restart mysql
   service:
     name: mysql
