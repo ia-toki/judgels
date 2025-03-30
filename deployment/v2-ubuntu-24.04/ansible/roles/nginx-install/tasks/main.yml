@@ -8,6 +8,12 @@
     name: nginx
     enabled: yes
 
+- name: Disable default sites config
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload nginx
+
 - name: Allow nginx HTTP traffic through the firewall
   ufw:
     rule: allow
