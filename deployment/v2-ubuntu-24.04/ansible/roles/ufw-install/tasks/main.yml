@@ -1,5 +1,5 @@
 - block:
-  - name: Ensure UFW firewall is installed
+  - name: Install ufw
     apt:
       name:
         - ufw
@@ -9,15 +9,3 @@
     ufw:
       rule: allow
       name: OpenSSH
-
-  - name: Block all incoming traffic by default
-    ufw:
-      state: enabled
-      direction: incoming
-      policy: deny
-
-  - name: Allow all outgoing traffic by default
-    ufw:
-      state: enabled
-      direction: outgoing
-      policy: allow
