@@ -2,7 +2,7 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../../../judgels-backends/judgels-grader-app
+cd "$(dirname "$0")"/../../judgels-backends/judgels-grader-app
 
 ../gradlew clean distTar
 tar -xf build/distributions/judgels-grader-* --strip-components=1 -C build/distributions
