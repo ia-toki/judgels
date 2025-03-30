@@ -12,7 +12,11 @@
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  notify: Reload nginx
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded
 
 - name: Allow nginx HTTP traffic through the firewall
   ufw:
