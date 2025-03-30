@@ -1,7 +1,6 @@
 - hosts: core
   gather_facts: false
   roles:
-    - name: mysql-install
     - name: phpmyadmin-deploy
     - name: rabbitmq-deploy
     - name: judgels-server-migrate

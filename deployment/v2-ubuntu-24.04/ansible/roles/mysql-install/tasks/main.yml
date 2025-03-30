@@ -1,5 +1,5 @@
 - block:
-  - name: Install mysql components
+  - name: Install mysql
     apt:
       name:
         - mysql-server
@@ -7,61 +7,13 @@
         - python3-mysqldb
       state: present
 
-  - name: Secure mysql installation
-    command: 'mysql -NBe "{{ item }}"'
-    with_items:
-      - DELETE FROM mysql.user WHERE User='';
-      - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-      - DROP DATABASE IF EXISTS test;
-      - DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
-    changed_when: false
-    ignore_errors: yes
-
   - name: Change mysql root password
     shell: > 
       mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH caching_sha2_password BY "{{ db_root_password }}";'
     changed_when: false
     ignore_errors: yes
 
-  - name: Change mysql bind-address to allow connection from phpmyadmin
-    ini_file:
-      path: /etc/mysql/mysql.conf.d/mysqld.cnf
-      section: mysqld
-      option: bind-address
-      value: "0.0.0.0"
-
-  - name: Change mysql max_connections to support more concurrent users
-    ini_file:
-      path: /etc/mysql/mysql.conf.d/mysqld.cnf
-      section: mysqld
-      option: max_connections
-      value: "500"
-
-  - name: Restart mysql
-    service:
-      name: mysql
-      state: restarted
-
-  - name: Create judgels user
-    mysql_user:
-      login_user: root
-      login_password: "{{ db_root_password }}"
-      name: "{{ db_username }}"
-      password: "{{ db_password }}"
-      host: '%'
-      priv: '*.*:ALL'
-      state: present
-    no_log: True
-
-  - name: Create judgels database
-    mysql_db:
-      login_user: root
-      login_password: "{{ db_root_password }}"
-      name: judgels
-      collation: utf8mb4_unicode_ci
-      state: present
-
-  - name: Allow mysql access from docker containers
+  - name: Allow mysql access from docker containers through the firewall
     ufw:
       rule: allow
       to_port: "3306"

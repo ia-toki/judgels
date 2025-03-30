@@ -1,0 +1,11 @@
+- name: Disable default sites config
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+
+- name: Generate judgels nginx config
+  template:
+    src: "{{ playbook_dir}}/../conf/nginx.conf.j2"
+    dest: /etc/nginx/conf.d/judgels.conf
+  notify: Restart nginx
