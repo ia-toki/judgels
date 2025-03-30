@@ -1,23 +1,22 @@
-- block:
-    - name: Generate judgels server config
-      template:
-        src: "{{ playbook_dir }}/../conf/judgels-server.yml.j2"
-        dest: /opt/judgels/server/var/conf/judgels-server.yml
-        mode: '0644'
+- name: Generate judgels server config
+  template:
+    src: "{{ playbook_dir }}/../conf/judgels-server.yml.j2"
+    dest: /opt/judgels/server/var/conf/judgels-server.yml
+    mode: '0644'
 
-    - name: Pull judgels server image
-      docker_image:
-        name: ghcr.io/ia-toki/judgels/server
-        tag: "{{ app_version | default('latest', true) }}"
-        source: pull
-        force_source: "{{ app_version | default('latest', true) == 'latest' }}"
+- name: Pull judgels server image
+  docker_image:
+    name: ghcr.io/ia-toki/judgels/server
+    tag: "{{ app_version | default('latest', true) }}"
+    source: pull
+    force_source: "{{ app_version | default('latest', true) == 'latest' }}"
 
-    - name: Run a judgels server container to do db migration
-      docker_container:
-        name: judgels-server-migrate
-        image: "ghcr.io/ia-toki/judgels/server:{{ app_version | default('latest', true) }}"
-        restart: yes
-        network_mode: host
-        volumes:
-          - "/opt/judgels/server/var:/judgels/server/var"
-        command: db migrate
+- name: Run a judgels server container to do db migration
+  docker_container:
+    name: judgels-server-migrate
+    image: "ghcr.io/ia-toki/judgels/server:{{ app_version | default('latest', true) }}"
+    restart: yes
+    network_mode: host
+    volumes:
+      - "/opt/judgels/server/var:/judgels/server/var"
+    command: db migrate

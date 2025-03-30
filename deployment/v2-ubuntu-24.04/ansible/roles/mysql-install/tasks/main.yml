@@ -1,22 +1,21 @@
-- block:
-  - name: Install mysql
-    apt:
-      name:
-        - mysql-server
-        - mysql-client
-        - python3-mysqldb
-      state: present
+- name: Install mysql
+  apt:
+    name:
+      - mysql-server
+      - mysql-client
+      - python3-mysqldb
+    state: present
 
-  - name: Change mysql root password
-    shell: > 
-      mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH caching_sha2_password BY "{{ db_root_password }}";'
-    changed_when: false
-    ignore_errors: yes
+- name: Change mysql root password
+  shell: > 
+    mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH caching_sha2_password BY "{{ db_root_password }}";'
+  changed_when: false
+  ignore_errors: yes
 
-  - name: Allow mysql access from docker containers through the firewall
-    ufw:
-      rule: allow
-      to_port: "3306"
-      src: 172.17.0.0/24
-      proto: tcp
-      comment: mysql access from docker containers
+- name: Allow mysql access from docker containers through the firewall
+  ufw:
+    rule: allow
+    to_port: "3306"
+    src: 172.17.0.0/24
+    proto: tcp
+    comment: mysql access from docker containers

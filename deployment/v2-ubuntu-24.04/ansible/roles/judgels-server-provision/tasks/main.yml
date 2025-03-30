@@ -1,48 +1,47 @@
-- block:
-    - name: Create judgels server persistence mount source
-      file:
-        path: "{{ item }}"
-        state: directory
-        mode: 0777
-      with_items:
-        - /opt/judgels/server/var
-        - /opt/judgels/server/var/conf
+- name: Create judgels server persistence mount source
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - /opt/judgels/server/var
+    - /opt/judgels/server/var/conf
 
-    - name: Allow judgels server traffic through the firewall
-      ufw:
-        rule: allow
-        to_port: '9101'
-        proto: tcp
-        comment: judgels server
+- name: Allow judgels server traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: '9101'
+    proto: tcp
+    comment: judgels server
 
-    - name: Create judgels user
-      mysql_user:
-        login_user: root
-        login_password: "{{ db_root_password }}"
-        name: "{{ db_username }}"
-        password: "{{ db_password }}"
-        host: '%'
-        priv: '*.*:ALL'
-        state: present
-      no_log: True
+- name: Create judgels user
+  mysql_user:
+    login_user: root
+    login_password: "{{ db_root_password }}"
+    name: "{{ db_username }}"
+    password: "{{ db_password }}"
+    host: '%'
+    priv: '*.*:ALL'
+    state: present
+  no_log: True
 
-    - name: Create judgels database
-      mysql_db:
-        login_user: root
-        login_password: "{{ db_root_password }}"
-        name: judgels
-        collation: utf8mb4_unicode_ci
-        state: present
+- name: Create judgels database
+  mysql_db:
+    login_user: root
+    login_password: "{{ db_root_password }}"
+    name: judgels
+    collation: utf8mb4_unicode_ci
+    state: present
 
-    - name: Allow judgels grader to rsync test data from judgels server
-      block:
-        - name: Read judgels grader public key
-          slurp:
-            path: "{{ playbook_dir }}/../env/judgels-grader.pub"
-          delegate_to: localhost
-          register: judgels_grader_pubkey
-        
-        - name: Add the public key to the authorized_keys file
-          authorized_key:
-            user: "{{ ansible_user }}"
-            key: "{{ judgels_grader_pubkey.content | b64decode }}"
+- name: Allow judgels grader to rsync test data from judgels server
+  block:
+    - name: Read judgels grader public key
+      slurp:
+        path: "{{ playbook_dir }}/../env/judgels-grader.pub"
+      delegate_to: localhost
+      register: judgels_grader_pubkey
+    
+    - name: Add the public key to the authorized_keys file
+      authorized_key:
+        user: "{{ ansible_user }}"
+        key: "{{ judgels_grader_pubkey.content | b64decode }}"

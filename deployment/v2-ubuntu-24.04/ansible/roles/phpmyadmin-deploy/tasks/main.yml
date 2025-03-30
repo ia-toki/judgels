@@ -1,19 +1,18 @@
-- block:
-  - name: Pull phpymyadmin image
-    docker_image:
-      name: phpmyadmin:5.2.1
-      source: pull
+- name: Pull phpymyadmin image
+  docker_image:
+    name: phpmyadmin:5.2.1
+    source: pull
 
-  - name: Run a phpmyadmin container
-    docker_container:
-      name: phpmyadmin
-      image: phpmyadmin:5.2.1
-      restart: yes
-      log_driver: json-file
-      log_options:
-        max-size: 256m
-        max-file: "2"
-      ports:
-        - '8080:80'
-      env:
-        PMA_HOST: 172.17.0.1
+- name: Run a phpmyadmin container
+  docker_container:
+    name: phpmyadmin
+    image: phpmyadmin:5.2.1
+    restart: yes
+    log_driver: json-file
+    log_options:
+      max-size: 256m
+      max-file: "2"
+    ports:
+      - '8080:80'
+    env:
+      PMA_HOST: 172.17.0.1
