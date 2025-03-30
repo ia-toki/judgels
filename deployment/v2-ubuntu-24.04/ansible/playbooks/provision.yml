@@ -3,6 +3,7 @@
   roles:
     - name: python-install
     - name: docker-install
+    - name: docker-configure
     - name: ufw-install
 
 - hosts: core
