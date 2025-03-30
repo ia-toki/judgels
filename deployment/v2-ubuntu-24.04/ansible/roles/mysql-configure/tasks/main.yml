@@ -1,26 +1,9 @@
-- name: Secure mysql installation
-  command: 'mysql -NBe "{{ item }}"'
-  with_items:
-    - DELETE FROM mysql.user WHERE User='';
-    - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-    - DROP DATABASE IF EXISTS test;
-    - DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
-  changed_when: false
-  ignore_errors: yes
-
-- name: Change mysql bind-address to allow connection from phpmyadmin
+- name: Change mysql bind-address to allow connection from phpmyadmin docker container
   ini_file:
     path: /etc/mysql/mysql.conf.d/mysqld.cnf
     section: mysqld
     option: bind-address
     value: "0.0.0.0"
-
-- name: Change mysql max_connections to support more concurrent users
-  ini_file:
-    path: /etc/mysql/mysql.conf.d/mysqld.cnf
-    section: mysqld
-    option: max_connections
-    value: "500"
 
 - name: Restart mysql
   service:
