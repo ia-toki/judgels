@@ -2,7 +2,7 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../../../judgels-client
+cd "$(dirname "$0")"/../../judgels-client
 
 yarn
 yarn build
