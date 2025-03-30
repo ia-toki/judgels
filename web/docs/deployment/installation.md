@@ -86,7 +86,12 @@ In `vars.yml`, generate different random strings for these values:
    ```
    ansible-playbook -e @env/vars.yml playbooks/provision.yml
    ```
-   This will install the prerequisites packages in the VMs. We only need to do the above provision playbook once.
+   This will install the prerequisites packages in the VMs. We only need to do the above playbook once.
+1. (Optional but recommended) Run the optimize playbook:
+   ```
+   ansible-playbook -e @env/vars.yml playbooks/optimize.yml
+   ```
+   This will configure Judgels dependencies (e.g. MySQL, Nginx) with some optimization. We only need to do the above playbook once. It is advised that you actually read the playbook tasks to see what optimization is applied in your system.
 1. Run the deploy playbook:
    ```
    ansible-playbook -e @env/vars.yml playbooks/deploy.yml
