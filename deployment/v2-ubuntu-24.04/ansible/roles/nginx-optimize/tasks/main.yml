@@ -1,4 +1,4 @@
-- name: Generate judgels nginx config
+- name: Generate nginx config optimization
   template:
     src: "{{ playbook_dir}}/../conf/nginx.conf.j2"
     dest: /etc/nginx/conf.d/judgels.conf

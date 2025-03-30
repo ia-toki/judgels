@@ -3,16 +3,13 @@
   roles:
     - name: python-install
     - name: docker-install
-    - name: docker-configure
     - name: ufw-install
 
 - hosts: core
   gather_facts: false
   roles:
     - name: mysql-install
-    - name: mysql-configure
     - name: nginx-install
-    - name: nginx-configure
 
 - hosts: localhost
   gather_facts: false
