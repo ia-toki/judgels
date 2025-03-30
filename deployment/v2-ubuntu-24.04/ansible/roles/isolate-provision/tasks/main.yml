@@ -1,32 +1,31 @@
-- block:
-    - name: Install cgroup
-      apt:
-        name: cgroup-tools
-        state: present
-        install_recommends: no
-    
-    - name: Disable cgroup v2
-      block: 
-        - name: Edit /etc/default/grub
-          lineinfile:
-            dest: "/etc/default/grub"
-            regexp: "^GRUB_CMDLINE_LINUX="
-            line: "GRUB_CMDLINE_LINUX=\"systemd.unified_cgroup_hierarchy=false systemd.legacy_systemd_cgroup_controller=false\""
+- name: Install cgroup
+  apt:
+    name: cgroup-tools
+    state: present
+    install_recommends: no
 
-        - name: Update grub
-          shell: update-grub
+- name: Disable cgroup v2
+  block: 
+    - name: Edit /etc/default/grub
+      lineinfile:
+        dest: "/etc/default/grub"
+        regexp: "^GRUB_CMDLINE_LINUX="
+        line: "GRUB_CMDLINE_LINUX=\"systemd.unified_cgroup_hierarchy=false systemd.legacy_systemd_cgroup_controller=false\""
 
-    - name: Run isolate recommendations # https://github.com/ioi/isolate/blob/master/isolate-check-environment
-      copy:
-        dest: /etc/rc.local
-        mode: 0755
-        content: |
-          #!/bin/bash
+    - name: Update grub
+      shell: update-grub
 
-          echo 0 > /proc/sys/kernel/randomize_va_space
-          echo never > /sys/kernel/mm/transparent_hugepage/enabled
-          echo never > /sys/kernel/mm/transparent_hugepage/defrag
-          echo 0 > /sys/kernel/mm/transparent_hugepage/khugepaged/defrag
+- name: Run isolate recommendations # https://github.com/ioi/isolate/blob/master/isolate-check-environment
+  copy:
+    dest: /etc/rc.local
+    mode: 0755
+    content: |
+      #!/bin/bash
 
-    - name: Reboot to apply grub and kernel changes
-      reboot:
+      echo 0 > /proc/sys/kernel/randomize_va_space
+      echo never > /sys/kernel/mm/transparent_hugepage/enabled
+      echo never > /sys/kernel/mm/transparent_hugepage/defrag
+      echo 0 > /sys/kernel/mm/transparent_hugepage/khugepaged/defrag
+
+- name: Reboot to apply grub and kernel changes
+  reboot:

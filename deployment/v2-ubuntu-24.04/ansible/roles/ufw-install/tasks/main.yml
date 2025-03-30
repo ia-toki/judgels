@@ -1,11 +1,10 @@
-- block:
-  - name: Install ufw
-    apt:
-      name:
-        - ufw
-      state: present
+- name: Install ufw
+  apt:
+    name:
+      - ufw
+    state: present
 
-  - name: Allow SSH traffic through firewall
-    ufw:
-      rule: allow
-      name: OpenSSH
+- name: Allow SSH traffic through firewall
+  ufw:
+    rule: allow
+    name: OpenSSH

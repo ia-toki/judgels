@@ -1,6 +1,5 @@
-- block:
-  - name: Log in to Docker Container Registry
-    docker_login:
-      registry_url: ghcr.io
-      username: "{{ lookup('env', 'CONTAINER_REGISTRY_USERNAME') }}"
-      password: "{{ lookup('env', 'CONTAINER_REGISTRY_TOKEN') }}"
+- name: Log in to Docker Container Registry
+  docker_login:
+    registry_url: ghcr.io
+    username: "{{ lookup('env', 'CONTAINER_REGISTRY_USERNAME') }}"
+    password: "{{ lookup('env', 'CONTAINER_REGISTRY_TOKEN') }}"

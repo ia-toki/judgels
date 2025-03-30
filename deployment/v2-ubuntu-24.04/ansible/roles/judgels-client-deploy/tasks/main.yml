@@ -1,37 +1,36 @@
-- block:
-    - name: Generate judgels client config
-      template:
-        src: "{{ playbook_dir }}/../conf/judgels-client.js.j2"
-        dest: /opt/judgels/client/var/conf/judgels-client.js
-        mode: '0644'
-      tags: config
-      register: judgels_client_config
+- name: Generate judgels client config
+  template:
+    src: "{{ playbook_dir }}/../conf/judgels-client.js.j2"
+    dest: /opt/judgels/client/var/conf/judgels-client.js
+    mode: '0644'
+  tags: config
+  register: judgels_client_config
 
-    - name: Pull judgels client image
-      docker_image:
-        name: ghcr.io/ia-toki/judgels/client
-        tag: "{{ app_version | default('latest', true) }}"
-        source: pull
-        force_source: "{{ app_version | default('latest', true) == 'latest' }}"
-      tags: config
+- name: Pull judgels client image
+  docker_image:
+    name: ghcr.io/ia-toki/judgels/client
+    tag: "{{ app_version | default('latest', true) }}"
+    source: pull
+    force_source: "{{ app_version | default('latest', true) == 'latest' }}"
+  tags: config
 
-    - name: Run a judgels client container
-      docker_container:
-        name: judgels-client
-        image: "ghcr.io/ia-toki/judgels/client:{{ app_version | default('latest', true) }}"
-        restart: "{{ judgels_client_config.changed }}"
-        restart_policy: on-failure
-        restart_retries: 3
-        log_driver: json-file
-        log_options:
-          max-size: 256m
-          max-file: "2"
-        ports:
-          - "5000:5000"
-        volumes:
-          - "/opt/judgels/client/var:/judgels/client/var"
-      tags: config
+- name: Run a judgels client container
+  docker_container:
+    name: judgels-client
+    image: "ghcr.io/ia-toki/judgels/client:{{ app_version | default('latest', true) }}"
+    restart: "{{ judgels_client_config.changed }}"
+    restart_policy: on-failure
+    restart_retries: 3
+    log_driver: json-file
+    log_options:
+      max-size: 256m
+      max-file: "2"
+    ports:
+      - "5000:5000"
+    volumes:
+      - "/opt/judgels/client/var:/judgels/client/var"
+  tags: config
 
-    - name: Append cache-busting hash to judgels-client.js
-      shell: docker exec judgels-client sed -i 's/judgels-client.js/judgels-client.{{ app_version | default('latest', true) }}.js/' index.html
-      tags: config
+- name: Append cache-busting hash to judgels-client.js
+  shell: docker exec judgels-client sed -i 's/judgels-client.js/judgels-client.{{ app_version | default('latest', true) }}.js/' index.html
+  tags: config
