@@ -1,3 +1,10 @@
+- name: Reduce the expiration time for mysql binary logs to 3 days
+  ini_file:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    section: mysqld
+    option: binlog_expire_logs_seconds
+    value: "259200"
+
 - name: Restart mysql
   service:
     name: mysql
