@@ -20,7 +20,7 @@
     login_password: "{{ db_root_password }}"
     name: "{{ db_username }}"
     password: "{{ db_password }}"
-    host: '%'
+    host: localhost
     priv: '*.*:ALL'
     state: present
   no_log: True
