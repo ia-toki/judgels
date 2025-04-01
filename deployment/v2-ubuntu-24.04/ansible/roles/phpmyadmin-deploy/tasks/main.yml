@@ -1,30 +1,60 @@
-- name: Pull phpymyadmin image
-  docker_image:
-    name: phpmyadmin:5.2.1
-    source: pull
+- name: Install dependencies
+  apt:
+    name:
+      - unzip
+      - rsync
+      - php-fpm
+      - php-mbstring
+      - php-zip
+      - php-gd
+      - php-json
+      - php-mysql
+    state: present
+    update_cache: yes
 
-- name: Run a phpmyadmin container
-  docker_container:
-    name: phpmyadmin
-    image: phpmyadmin:5.2.1
-    restart: yes
-    log_driver: json-file
-    log_options:
-      max-size: 256m
-      max-file: "2"
-    ports:
-      - '8080:80'
-    env:
-      PMA_HOST: 172.17.0.1
+- name: Download phpmyadmin
+  get_url:
+    url: "https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip"
+    dest: "/tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip"
 
-- name: Change mysql bind-address to allow connection from phpmyadmin docker container
-  ini_file:
-    path: /etc/mysql/mysql.conf.d/mysqld.cnf
-    section: mysqld
-    option: bind-address
-    value: "0.0.0.0"
+- name: Create document root directory
+  file:
+    path: /var/www/html/phpmyadmin
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
 
-- name: Restart mysql
-  service:
-    name: mysql
-    state: restarted
+- name: Unzip phpmyadmin
+  unarchive:
+    src: "/tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip"
+    remote_src: yes
+    dest: /tmp
+
+- name: Sync to /var/www/phpmyadmin
+  command: "rsync -av --delete /tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages/ /var/www/html/phpmyadmin/"
+
+- name: Add nginx site config
+  template:
+    src: nginx-phpmyadmin.conf.j2
+    dest: /etc/nginx/sites-available/phpmyadmin
+    owner: www-data
+    group: www-data
+    mode: 0644
+  notify: Reload nginx
+
+- name: Enable nginx site config
+  file:
+    src: /etc/nginx/sites-available/phpmyadmin
+    dest: /etc/nginx/sites-enabled/phpmyadmin
+    owner: www-data
+    group: www-data
+    state: link
+  notify: Reload nginx
+
+- name: Allow phpmyadmin traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "8080"
+    proto: tcp
+    comment: phpmyadmin

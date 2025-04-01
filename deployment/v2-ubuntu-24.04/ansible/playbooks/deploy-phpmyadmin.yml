@@ -2,3 +2,5 @@
   gather_facts: false
   roles:
     - name: phpmyadmin-deploy
+      vars:
+        phpmyadmin_version: '5.2.2'
