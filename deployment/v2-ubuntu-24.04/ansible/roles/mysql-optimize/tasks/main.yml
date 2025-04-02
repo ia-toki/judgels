@@ -4,8 +4,4 @@
     section: mysqld
     option: binlog_expire_logs_seconds
     value: "259200"
-
-- name: Restart mysql
-  service:
-    name: mysql
-    state: restarted
+  notify: Restart mysql
