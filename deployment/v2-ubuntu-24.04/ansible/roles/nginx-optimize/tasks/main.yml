@@ -2,8 +2,4 @@
   template:
     src: "{{ playbook_dir}}/../conf/nginx.conf.j2"
     dest: /etc/nginx/conf.d/judgels.conf
-
-- name: Reload nginx
-  service:
-    name: nginx
-    state: reloaded
+  notify: Reload nginx

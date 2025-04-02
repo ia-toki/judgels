@@ -21,7 +21,6 @@
     group: www-data
     state: link
   when: not letsencrypt_certificate.stat.exists
-  notify: Reload nginx
 
 - name: Reload nginx to apply domain config
   service:
