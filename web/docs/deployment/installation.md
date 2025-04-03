@@ -76,7 +76,7 @@ In `vars.yml`, generate different random strings for these values:
 1. Go to `deployment/v2-ubuntu-24.04/ansible`.
 1. Optional: if the Ubuntu version that you picked is the latest version, you can edit the Judgels version value in `env/vars.yml`, e.g.:
    ```
-   app_version: '2.19'
+   app_version: '2.19.0'
    ```
    You can get the latest version from https://github.com/ia-toki/judgels/releases. Enter the version without the `v` prefix. DO NOT edit the version if the Ubuntu version is not the latest one! It's pre-filled with the latest Judgels version that is compatible with the Ubuntu version.
 1. If you generate a different ssh key filename, edit the following variable in `env/vars.yml` to allow access to root:
