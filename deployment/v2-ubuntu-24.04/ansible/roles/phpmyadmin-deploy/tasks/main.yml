@@ -25,6 +25,14 @@
     group: www-data
     mode: '0755'
 
+- name: Create phpmyadmin tmp directory
+  file:
+    path: /var/www/html/phpmyadmin/tmp
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
 - name: Unzip phpmyadmin
   unarchive:
     src: "/tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip"
@@ -32,7 +40,15 @@
     dest: /tmp
 
 - name: Sync to /var/www/phpmyadmin
-  command: "rsync -av --delete /tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages/ /var/www/html/phpmyadmin/"
+  command: "rsync -av --delete --exclude=tmp/ --exclude=config.inc.php /tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages/ /var/www/html/phpmyadmin/"
+
+- name: Generate phpmyadmin config
+  template:
+    src: config.inc.php.j2
+    dest: /var/www/html/phpmyadmin/config.inc.php
+    owner: www-data
+    group: www-data
+    mode: '0644'
 
 - name: Add nginx site config
   template:
