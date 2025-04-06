@@ -9,7 +9,7 @@ export const gradingLanguageNamesMap = {
   Cpp17: 'C++17',
   Cpp20: 'C++20',
   Go: 'Go',
-  Java: 'Java 11',
+  Java: 'Java 17',
   Pascal: 'Pascal',
   Python3: 'Python 3',
   PyPy3: 'PyPy 3',
