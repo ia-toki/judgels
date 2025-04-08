@@ -1,7 +1,7 @@
 package judgels;
 
 import com.google.common.collect.ImmutableMap;
-import io.dropwizard.views.ViewBundle;
+import io.dropwizard.views.common.ViewBundle;
 import java.util.Map;
 
 public class JudgelsServerViewBundle extends ViewBundle<JudgelsServerApplicationConfiguration> {
