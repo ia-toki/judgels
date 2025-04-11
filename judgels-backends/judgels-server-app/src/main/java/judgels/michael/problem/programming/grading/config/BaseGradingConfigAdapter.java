@@ -340,6 +340,41 @@ public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {
             }
         }
 
+        if (maxTgNo == 0) {
+            // At this point, the provided test cases don't actually follow TCFrame format.
+            // We fall back to treating this problem to have a single subtask.
+
+            List<TestGroup> testGroupsPopulatedByFilename = autoPopulateTestDataByFilename(hasOutput, testDataFiles);
+
+            List<TestGroup> testGroupsWithSubtask1 = new ArrayList<>();
+            for (TestGroup testGroup : testGroupsPopulatedByFilename) {
+                int testGroupId = testGroup.getId() == 0 ? 0 : 1;
+
+                List<TestCase> testCasesForSubtask1 = new ArrayList<>();
+                for (TestCase testCase : testGroup.getTestCases()) {
+                    if (testGroupId == 0) {
+                        testCasesForSubtask1.add(new TestCase.Builder()
+                                .from(testCase)
+                                .subtaskIds(Set.of(0, 1))
+                                .build());
+                    } else {
+                        testCasesForSubtask1.add(new TestCase.Builder()
+                                .from(testCase)
+                                .subtaskIds(Set.of(1))
+                                .build());
+                    }
+                }
+
+                testGroupsWithSubtask1.add(new TestGroup.Builder()
+                        .id(testGroupId)
+                        .testCases(testCasesForSubtask1)
+                        .build());
+            }
+
+            List<Integer> subtask1Points = List.of(100);
+            return new Object[]{testGroupsWithSubtask1, subtask1Points};
+        }
+
         return new Object[]{testData, subtaskPoints};
     }
 
