@@ -193,4 +193,3 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
                 .build();
     }
 }
-

@@ -1,6 +1,6 @@
 package judgels.sandalphon.role;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.jophiel.api.actor.Actor;
 import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.user.role.UserRoleStore;

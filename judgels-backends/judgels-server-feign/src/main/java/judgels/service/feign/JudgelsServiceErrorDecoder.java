@@ -16,7 +16,7 @@ public class JudgelsServiceErrorDecoder implements ErrorDecoder {
         try {
             JudgelsServiceError error = MAPPER.readValue(response.body().asInputStream(), JudgelsServiceError.class);
             return new JudgelsServiceException(
-                    javax.ws.rs.core.Response.Status.fromStatusCode(error.getCode()),
+                    jakarta.ws.rs.core.Response.Status.fromStatusCode(error.getCode()),
                     error.getMessage(),
                     error.getArgs());
         } catch (IOException e) {

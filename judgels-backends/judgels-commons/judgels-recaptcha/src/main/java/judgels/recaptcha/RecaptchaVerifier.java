@@ -1,13 +1,13 @@
 package judgels.recaptcha;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.GenericType;
 import java.util.HashMap;
 import java.util.Map;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.GenericType;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
 public class RecaptchaVerifier {

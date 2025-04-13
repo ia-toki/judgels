@@ -20,5 +20,6 @@
         ""
     ],
     "files.trimTrailingWhitespace": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

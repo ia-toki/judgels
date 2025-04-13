@@ -5,12 +5,12 @@ import feign.Response;
 import feign.codec.Decoder;
 import feign.codec.StringDecoder;
 import feign.optionals.OptionalDecoder;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 
 public class JudgelsDecoder implements Decoder {
     private final Decoder jacksonDecoder;

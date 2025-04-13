@@ -3,11 +3,11 @@ package judgels.service.feign;
 import feign.RequestTemplate;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 
 public class JudgelsEncoder implements Encoder {
     private final Encoder jacksonEncoder;

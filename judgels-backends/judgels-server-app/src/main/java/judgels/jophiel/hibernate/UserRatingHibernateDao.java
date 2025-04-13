@@ -1,10 +1,10 @@
 package judgels.jophiel.hibernate;
 
+import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import javax.inject.Inject;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingModel;
 import judgels.jophiel.persistence.UserRatingModel_;

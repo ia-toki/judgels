@@ -1,9 +1,9 @@
 package judgels.michael.problem.programming.grading.config;
 
+import jakarta.ws.rs.FormParam;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
 public class GradingConfigForm extends HtmlForm {

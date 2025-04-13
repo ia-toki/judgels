@@ -1,9 +1,9 @@
 package judgels.sandalphon.problem.bundle.grading;
 
+import jakarta.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import judgels.sandalphon.api.problem.bundle.BundleItem;
 import judgels.sandalphon.api.problem.bundle.ItemConfig;
 import judgels.sandalphon.api.problem.bundle.ItemType;

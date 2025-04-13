@@ -2,13 +2,13 @@ package judgels.jophiel.profile;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.User;

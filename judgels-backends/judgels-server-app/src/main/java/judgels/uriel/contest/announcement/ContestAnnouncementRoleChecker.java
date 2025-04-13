@@ -2,7 +2,7 @@ package judgels.uriel.contest.announcement;
 
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.ANNOUNCEMENT;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;

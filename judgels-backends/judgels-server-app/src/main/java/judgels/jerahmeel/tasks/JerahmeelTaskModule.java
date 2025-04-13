@@ -3,7 +3,7 @@ package judgels.jerahmeel.tasks;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ChapterDao;

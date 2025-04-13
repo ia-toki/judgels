@@ -2,12 +2,12 @@ package judgels.jerahmeel.hibernate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
+import jakarta.persistence.Tuple;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.inject.Inject;
-import javax.persistence.Tuple;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel_;

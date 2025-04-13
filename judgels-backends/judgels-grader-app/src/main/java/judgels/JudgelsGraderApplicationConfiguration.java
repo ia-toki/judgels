@@ -1,7 +1,7 @@
 package judgels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.Configuration;
+import io.dropwizard.core.Configuration;
 import judgels.gabriel.GabrielConfiguration;
 
 public class JudgelsGraderApplicationConfiguration extends Configuration {

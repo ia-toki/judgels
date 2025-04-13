@@ -2,9 +2,9 @@ package judgels.gabriel;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.time.Clock;
-import javax.inject.Singleton;
 import judgels.JudgelsGraderConfiguration;
 import judgels.service.JudgelsBaseDataDir;
 

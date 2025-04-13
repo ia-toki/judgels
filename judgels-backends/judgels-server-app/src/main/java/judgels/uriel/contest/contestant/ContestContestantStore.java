@@ -3,13 +3,13 @@ package judgels.uriel.contest.contestant;
 import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;

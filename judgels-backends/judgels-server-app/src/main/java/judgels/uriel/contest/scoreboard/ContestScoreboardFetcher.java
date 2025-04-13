@@ -3,8 +3,8 @@ package judgels.uriel.contest.scoreboard;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;

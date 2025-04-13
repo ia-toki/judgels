@@ -1,7 +1,7 @@
 package judgels.sandalphon;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;

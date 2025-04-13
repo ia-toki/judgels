@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
-import javax.ws.rs.NotAuthorizedException;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.session.SessionStore;
 import judgels.service.api.actor.AuthHeader;

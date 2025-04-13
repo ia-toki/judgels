@@ -1,14 +1,14 @@
 package judgels.jophiel.user;
 
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.persistence.UserDao;

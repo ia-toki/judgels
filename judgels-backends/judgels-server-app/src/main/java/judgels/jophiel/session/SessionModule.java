@@ -3,8 +3,8 @@ package judgels.jophiel.session;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
+import jakarta.inject.Singleton;
 import java.time.Clock;
-import javax.inject.Singleton;
 
 @Module
 public class SessionModule {

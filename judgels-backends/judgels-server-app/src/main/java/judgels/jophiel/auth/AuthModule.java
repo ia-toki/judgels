@@ -2,8 +2,8 @@ package judgels.jophiel.auth;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Singleton;
 import judgels.jophiel.auth.google.GoogleAuth;
 
 @Module

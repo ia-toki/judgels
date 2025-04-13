@@ -2,12 +2,12 @@ package judgels.sandalphon.problem.bundle.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
 import judgels.sandalphon.api.problem.bundle.BundleItem;

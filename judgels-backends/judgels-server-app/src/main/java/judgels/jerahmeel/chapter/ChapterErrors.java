@@ -1,8 +1,8 @@
 package judgels.jerahmeel.chapter;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
-import javax.ws.rs.core.Response.Status;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.service.api.JudgelsServiceException;
 

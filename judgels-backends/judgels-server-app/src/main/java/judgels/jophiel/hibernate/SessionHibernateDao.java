@@ -1,10 +1,10 @@
 package judgels.jophiel.hibernate;
 
+import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.SessionModel_;

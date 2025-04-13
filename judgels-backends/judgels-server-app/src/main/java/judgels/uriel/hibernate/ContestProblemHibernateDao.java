@@ -4,10 +4,10 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDao;

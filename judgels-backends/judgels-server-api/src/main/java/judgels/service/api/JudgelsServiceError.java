@@ -3,8 +3,8 @@ package judgels.service.api;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import java.util.Map;
-import javax.annotation.Nullable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JudgelsServiceError {

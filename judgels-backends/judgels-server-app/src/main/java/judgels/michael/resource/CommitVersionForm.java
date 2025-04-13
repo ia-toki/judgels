@@ -1,6 +1,6 @@
 package judgels.michael.resource;
 
-import javax.ws.rs.FormParam;
+import jakarta.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
 public class CommitVersionForm extends HtmlForm {

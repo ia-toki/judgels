@@ -1,8 +1,8 @@
 package judgels.sandalphon.hibernate;
 
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.sandalphon.persistence.ProblemPartnerDao;

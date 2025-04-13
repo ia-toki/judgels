@@ -1,12 +1,12 @@
 package judgels.jerahmeel.difficulty;
 
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.problem.ProblemDifficulty;
 import judgels.jerahmeel.api.problem.ProblemStats;
 import judgels.jerahmeel.persistence.ProblemLevelDao;

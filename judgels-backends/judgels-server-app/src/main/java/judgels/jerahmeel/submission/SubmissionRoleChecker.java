@@ -1,7 +1,7 @@
 package judgels.jerahmeel.submission;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;

@@ -1,13 +1,11 @@
 package judgels;
 
-import com.palantir.websecurity.WebSecurityBundle;
-import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
-import io.dropwizard.bundles.webjars.WebJarBundle;
+import io.dropwizard.core.Application;
+import io.dropwizard.core.setup.Bootstrap;
+import io.dropwizard.core.setup.Environment;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
 import java.time.Duration;
 import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
@@ -59,8 +57,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new JudgelsServerMigrationsBundle());
         bootstrap.addBundle(new JudgelsServerViewBundle());
-        bootstrap.addBundle(new WebJarBundle("org.webjars.bower", "org.webjars.npm"));
-        bootstrap.addBundle(new WebSecurityBundle());
+        //bootstrap.addBundle(new WebJarBundle("org.webjars.bower", "org.webjars.npm"));
+        //bootstrap.addBundle(new WebSecurityBundle());
     }
 
     @Override
