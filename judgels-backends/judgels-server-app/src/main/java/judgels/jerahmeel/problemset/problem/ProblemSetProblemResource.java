@@ -262,6 +262,7 @@ public class ProblemSetProblemResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemEditorialResponse getProblemEditorial(
+            @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @PathParam("problemSetJid") String problemSetJid,
             @PathParam("problemAlias") String problemAlias,
@@ -270,7 +271,7 @@ public class ProblemSetProblemResource {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
-        ProblemEditorialInfo editorial = checkFound(sandalphonClient.getProblemEditorial(problem.getProblemJid(), uriInfo.getBaseUri(), language));
+        ProblemEditorialInfo editorial = checkFound(sandalphonClient.getProblemEditorial(req, uriInfo, problem.getProblemJid(), language));
         return new ProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();

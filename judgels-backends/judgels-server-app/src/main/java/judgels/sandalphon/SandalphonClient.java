@@ -3,7 +3,6 @@ package judgels.sandalphon;
 import static java.util.stream.Collectors.toMap;
 import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -247,16 +246,17 @@ public class SandalphonClient {
                 .build();
     }
 
-    public Optional<ProblemEditorialInfo> getProblemEditorial(String problemJid, URI baseUri, Optional<String> language) {
+    public Optional<ProblemEditorialInfo> getProblemEditorial(HttpServletRequest req, UriInfo uriInfo, String problemJid, Optional<String> language) {
         if (!problemEditorialStore.hasEditorial(null, problemJid)) {
             return Optional.empty();
         }
 
         String sanitizedLanguage = sanitizeProblemEditorialLanguage(problemJid, language);
         ProblemEditorial editorial = problemEditorialStore.getEditorial(null, problemJid, sanitizedLanguage);
+        String apiUrl = getApiUrl(req, uriInfo);
 
         return Optional.of(new ProblemEditorialInfo.Builder()
-                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), baseUri.toString(), problemJid))
+                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), apiUrl, problemJid))
                 .defaultLanguage(simplifyLanguageCode(problemEditorialStore.getEditorialDefaultLanguage(null, problemJid)))
                 .languages(problemEditorialStore.getEditorialLanguages(null, problemJid).stream()
                         .map(lang -> simplifyLanguageCode(lang))
@@ -264,10 +264,10 @@ public class SandalphonClient {
                 .build());
     }
 
-    public Map<String, ProblemEditorialInfo> getProblemEditorials(Collection<String> problemJids, URI baseUri, Optional<String> language) {
+    public Map<String, ProblemEditorialInfo> getProblemEditorials(HttpServletRequest req, UriInfo uriInfo, Collection<String> problemJids, Optional<String> language) {
         Map<String, ProblemEditorialInfo> editorialsMap = new HashMap<>();
         for (String problemJid : Set.copyOf(problemJids)) {
-            Optional<ProblemEditorialInfo> editorial = getProblemEditorial(problemJid, baseUri, language);
+            Optional<ProblemEditorialInfo> editorial = getProblemEditorial(req, uriInfo, problemJid, language);
             if (editorial.isPresent()) {
                 editorialsMap.put(problemJid, editorial.get());
             }

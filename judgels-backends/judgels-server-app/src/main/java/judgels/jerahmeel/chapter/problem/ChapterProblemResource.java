@@ -148,7 +148,7 @@ public class ChapterProblemResource {
         List<List<String>> problemSetProblemPaths = problemSetProblemStore.getProblemSetProblemPaths(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid);
         Optional<ProblemEditorialInfo> editorial = progress.getVerdict().equals(Verdict.ACCEPTED.getCode())
-                ? sandalphonClient.getProblemEditorial(problemJid, uriInfo.getBaseUri(), language)
+                ? sandalphonClient.getProblemEditorial(req, uriInfo, problemJid, language)
                 : Optional.empty();
 
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
