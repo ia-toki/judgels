@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -51,6 +52,7 @@ public class ContestEditorialResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestEditorialResponse getEditorial(
+            @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @PathParam("contestJid") String contestJid,
             @QueryParam("language") Optional<String> language) {
@@ -65,7 +67,7 @@ public class ContestEditorialResource {
         var problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
         Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
         Map<String, ProblemMetadata> problemMetadatasMap = sandalphonClient.getProblemMetadatas(problemJids);
-        Map<String, ProblemEditorialInfo> problemEditorialsMap = sandalphonClient.getProblemEditorials(problemJids, uriInfo.getBaseUri(), language);
+        Map<String, ProblemEditorialInfo> problemEditorialsMap = sandalphonClient.getProblemEditorials(req, uriInfo, problemJids, language);
 
         Map<String, Profile> profilesMap = Maps.newHashMap();
         profilesMap.putAll(jophielClient.parseProfiles(config.getPreface().orElse("")));
