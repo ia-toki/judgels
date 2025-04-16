@@ -3,6 +3,8 @@ import { Fragment } from 'react';
 import RichStatementText from '../RichStatementText/RichStatementText';
 import { UserRef } from '../UserRef/UserRef';
 
+import './ProblemEditorial.scss';
+
 export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
   const renderWriters = () => {
     const writerJids = settersMap.WRITER;
@@ -62,7 +64,7 @@ export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
   };
 
   return (
-    <div>
+    <div className="problem-editorial">
       <h4>{title}</h4>
       <ul>
         {renderWriters()}
