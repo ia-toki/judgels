@@ -68,6 +68,11 @@ public abstract class AbstractProgrammingSubmissionHibernateDao<M extends Abstra
     }
 
     @Override
+    public void updateProblemJid(String oldProblemJid, String newProblemJid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void deleteAllByProblemJid(String problemJid) {
         throw new UnsupportedOperationException();
     }

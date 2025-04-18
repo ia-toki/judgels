@@ -230,6 +230,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         }
 
         env.admin().addTask(component.contestDumpTask());
+        env.admin().addTask(component.replaceProblemTask());
     }
 
     private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env) {

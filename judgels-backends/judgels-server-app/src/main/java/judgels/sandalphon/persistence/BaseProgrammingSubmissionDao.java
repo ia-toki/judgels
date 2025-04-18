@@ -11,6 +11,7 @@ public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmi
     BaseProgrammingSubmissionQueryBuilder<M> select();
     Map<String, Long> selectCounts(String containerJid, String userJid, Collection<String> problemJids);
     void updateContainerJid(String problemJid, String containerJid);
+    void updateProblemJid(String oldProblemJid, String newProblemJid);
     void deleteAllByProblemJid(String problemJid);
     Collection<String> dump(PrintWriter output, String containerJid);
 

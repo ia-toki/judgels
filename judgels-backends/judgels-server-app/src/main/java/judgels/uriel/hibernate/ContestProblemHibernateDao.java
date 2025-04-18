@@ -17,6 +17,7 @@ import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 import judgels.uriel.persistence.ContestProblemModel_;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel> implements ContestProblemDao {
     @Inject
@@ -41,6 +42,18 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
         return selectByContestJid(contestJid)
                 .where(columnEq(ContestProblemModel_.alias, problemAlias))
                 .unique();
+    }
+
+    @Override
+    public void updateProblemJid(String oldProblemJid, String newProblemJid) {
+        Query<?> query = currentSession().createQuery(
+                "UPDATE uriel_contest_problem "
+                        + "SET problemJid = :newProblemJid "
+                        + "WHERE problemJid = :oldProblemJid");
+
+        query.setParameter("newProblemJid", newProblemJid);
+        query.setParameter("oldProblemJid", oldProblemJid);
+        query.executeUpdate();
     }
 
     @Override

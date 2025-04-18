@@ -13,6 +13,7 @@ import judgels.uriel.persistence.ContestLogDao;
 import judgels.uriel.persistence.ContestLogModel;
 import judgels.uriel.persistence.ContestLogModel_;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 public class ContestLogHibernateDao extends UnmodifiableHibernateDao<ContestLogModel> implements ContestLogDao {
     @Inject
@@ -23,6 +24,18 @@ public class ContestLogHibernateDao extends UnmodifiableHibernateDao<ContestLogM
     @Override
     public ContestLogQueryBuilder selectByContestJid(String contestJid) {
         return new ContestLogHibernateQueryBuilder(currentSession(), contestJid);
+    }
+
+    @Override
+    public void updateProblemJid(String oldProblemJid, String newProblemJid) {
+        Query<?> query = currentSession().createQuery(
+                "UPDATE uriel_contest_log "
+                        + "SET problemJid = :newProblemJid "
+                        + "WHERE problemJid = :oldProblemJid");
+
+        query.setParameter("newProblemJid", newProblemJid);
+        query.setParameter("oldProblemJid", oldProblemJid);
+        query.executeUpdate();
     }
 
     @Override
