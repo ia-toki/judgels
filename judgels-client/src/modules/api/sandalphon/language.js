@@ -114,6 +114,8 @@ export const languageNamesMap = {
   'zh-Hant-MO': 'Chinese',
   'zh-Hant-TW': 'Chinese',
   zu: 'Zulu',
+  'zz-Backup-01': 'Backup 1',
+  'zz-Backup-02': 'Backup 2',
 };
 
 export const languageDisplayNamesMap = Object.assign(
