@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.sandalphon.persistence.ProblemDao;
 import judgels.sandalphon.persistence.ProblemModel;
+import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestLogDao;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
@@ -17,11 +18,13 @@ public class ReplaceProblemTask extends Task {
     private final ContestProblemDao contestProblemDao;
     private final ContestProgrammingSubmissionDao contestProgrammingSubmissionDao;
     private final ContestLogDao contestLogDao;
+    private final ContestClarificationDao contestClarificationDao;
 
     public ReplaceProblemTask(
             ProblemDao problemDao,
             ContestProblemDao contestProblemDao,
             ContestProgrammingSubmissionDao contestProgrammingSubmissionDao,
+            ContestClarificationDao contestClarificationDao,
             ContestLogDao contestLogDao) {
 
         super("uriel-replace-problem");
@@ -29,6 +32,7 @@ public class ReplaceProblemTask extends Task {
         this.problemDao = problemDao;
         this.contestProblemDao = contestProblemDao;
         this.contestProgrammingSubmissionDao = contestProgrammingSubmissionDao;
+        this.contestClarificationDao = contestClarificationDao;
         this.contestLogDao = contestLogDao;
     }
 
@@ -61,6 +65,7 @@ public class ReplaceProblemTask extends Task {
 
         contestProblemDao.updateProblemJid(oldProblemJid, newProblemJid);
         contestProgrammingSubmissionDao.updateProblemJid(oldProblemJid, newProblemJid);
+        contestClarificationDao.updateTopicJid(oldProblemJid, newProblemJid);
         contestLogDao.updateProblemJid(oldProblemJid, newProblemJid);
     }
 }
