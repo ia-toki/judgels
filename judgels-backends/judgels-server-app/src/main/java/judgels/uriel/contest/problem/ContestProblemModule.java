@@ -5,6 +5,7 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
 import judgels.sandalphon.persistence.ProblemDao;
+import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestLogDao;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
@@ -20,6 +21,7 @@ public class ContestProblemModule {
             ProblemDao problemDao,
             ContestProblemDao contestProblemDao,
             ContestProgrammingSubmissionDao contestProgrammingSubmissionDao,
+            ContestClarificationDao contestClarificationDao,
             ContestLogDao contestLogDao) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -28,11 +30,13 @@ public class ContestProblemModule {
                         ProblemDao.class,
                         ContestProblemDao.class,
                         ContestProgrammingSubmissionDao.class,
+                        ContestClarificationDao.class,
                         ContestLogDao.class},
                 new Object[] {
                         problemDao,
                         contestProblemDao,
                         contestProgrammingSubmissionDao,
+                        contestClarificationDao,
                         contestLogDao});
     }
 }

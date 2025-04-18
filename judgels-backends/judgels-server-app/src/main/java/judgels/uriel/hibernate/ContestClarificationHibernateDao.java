@@ -15,6 +15,7 @@ import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestClarificationModel;
 import judgels.uriel.persistence.ContestClarificationModel_;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 public class ContestClarificationHibernateDao extends JudgelsHibernateDao<ContestClarificationModel> implements ContestClarificationDao {
     @Inject
@@ -32,6 +33,18 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
         return selectByContestJid(contestJid)
                 .where(columnEq(JudgelsModel_.jid, clarificationJid))
                 .unique();
+    }
+
+    @Override
+    public void updateTopicJid(String oldTopicJid, String newTopicJid) {
+        Query<?> query = currentSession().createQuery(
+                "UPDATE uriel_contest_clarification "
+                        + "SET topicJid = :newTopicJid "
+                        + "WHERE topicJid = :oldTopicJid");
+
+        query.setParameter("newTopicJid", newTopicJid);
+        query.setParameter("oldTopicJid", oldTopicJid);
+        query.executeUpdate();
     }
 
     @Override
