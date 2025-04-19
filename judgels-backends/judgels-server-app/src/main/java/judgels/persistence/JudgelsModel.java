@@ -1,7 +1,7 @@
 package judgels.persistence;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @MappedSuperclass

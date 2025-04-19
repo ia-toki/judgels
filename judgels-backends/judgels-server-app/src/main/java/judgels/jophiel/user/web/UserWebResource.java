@@ -1,15 +1,15 @@
 package judgels.jophiel.user.web;
 
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.api.user.web.UserWebConfig;
 import judgels.jophiel.profile.ProfileStore;

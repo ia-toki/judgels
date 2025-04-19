@@ -1,8 +1,8 @@
 package judgels.jerahmeel.submission.bundle;
 
+import jakarta.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;

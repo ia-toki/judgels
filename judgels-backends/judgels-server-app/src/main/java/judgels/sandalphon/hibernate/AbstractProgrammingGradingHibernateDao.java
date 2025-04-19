@@ -2,14 +2,14 @@ package judgels.sandalphon.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
 import judgels.persistence.UnmodifiableModel_;

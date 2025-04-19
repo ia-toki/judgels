@@ -1,9 +1,9 @@
 package judgels.jerahmeel.curriculum;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.curriculum.Curriculum;
 import judgels.jerahmeel.persistence.CurriculumDao;
 import judgels.jerahmeel.persistence.CurriculumModel;

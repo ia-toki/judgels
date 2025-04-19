@@ -1,7 +1,7 @@
 package judgels.jophiel.hibernate;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jophiel.persistence.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.jophiel.persistence.UserRegistrationEmailModel_;

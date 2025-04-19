@@ -13,9 +13,9 @@ import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
 import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.inject.Inject;
 import java.time.Duration;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;

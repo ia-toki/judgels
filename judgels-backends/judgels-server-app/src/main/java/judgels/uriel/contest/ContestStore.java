@@ -4,14 +4,14 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.stream.Collectors.toMap;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.Contest;

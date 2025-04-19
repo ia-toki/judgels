@@ -1,7 +1,7 @@
 package judgels.uriel.role;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.user.role.UserRoleStore;
 import judgels.uriel.api.role.UrielRole;

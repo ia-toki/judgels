@@ -1,8 +1,8 @@
 package judgels.michael.problem.programming.grading;
 
+import jakarta.ws.rs.FormParam;
 import java.util.HashSet;
 import java.util.Set;
-import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
 public class EditGradingLanguageRestrictionForm extends HtmlForm {

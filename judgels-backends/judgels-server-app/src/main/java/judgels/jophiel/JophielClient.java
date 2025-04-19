@@ -2,6 +2,7 @@ package judgels.jophiel;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingEvent;

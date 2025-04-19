@@ -4,12 +4,12 @@ import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIA
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 
 @Singleton

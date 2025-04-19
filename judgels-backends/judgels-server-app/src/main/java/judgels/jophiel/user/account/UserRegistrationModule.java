@@ -2,8 +2,8 @@ package judgels.jophiel.user.account;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Singleton;
 import judgels.jophiel.auth.google.GoogleAuth;
 import judgels.jophiel.mailer.Mailer;
 import judgels.jophiel.user.UserStore;

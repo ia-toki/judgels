@@ -2,8 +2,8 @@ package judgels.fs.aws;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Singleton;
 
 @Module
 public class AwsModule {

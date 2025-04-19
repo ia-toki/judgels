@@ -1,7 +1,7 @@
 package judgels.uriel.contest.rating;
 
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
@@ -9,17 +9,17 @@ import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIA
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.RatingEvent;

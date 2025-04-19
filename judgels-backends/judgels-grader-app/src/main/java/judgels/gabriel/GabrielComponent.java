@@ -1,7 +1,7 @@
 package judgels.gabriel;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.gabriel.cache.CacheModule;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.grading.GradingRequestPoller;

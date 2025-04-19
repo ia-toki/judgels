@@ -4,13 +4,13 @@ import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.ws.rs.core.Form;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.ws.rs.core.Form;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.bundle.EssayItemConfig;

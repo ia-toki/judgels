@@ -1,14 +1,14 @@
 package judgels.persistence.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.persistence.JidGenerator;
 import judgels.persistence.JudgelsDao;
 import judgels.persistence.JudgelsModel;

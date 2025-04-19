@@ -1,7 +1,7 @@
 package judgels.jophiel;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.auth.AuthModule;

@@ -1,9 +1,9 @@
 package judgels.sandalphon.submission.bundle;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.submission.bundle.Grading;

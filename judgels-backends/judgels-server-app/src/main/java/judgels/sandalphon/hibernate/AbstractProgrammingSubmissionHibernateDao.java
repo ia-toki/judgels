@@ -1,5 +1,9 @@
 package judgels.sandalphon.hibernate;
 
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,10 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
 import judgels.persistence.UnmodifiableModel_;

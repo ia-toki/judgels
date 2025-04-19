@@ -1,7 +1,7 @@
 package judgels.sandalphon.hibernate;
 
+import jakarta.inject.Inject;
 import java.util.List;
-import javax.inject.Inject;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDaoData;

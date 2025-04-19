@@ -2,6 +2,7 @@ apply from: '../../gradle/java.gradle'
 
 dependencies {
     api "com.google.dagger:dagger:$daggerVersion"
+    api "jakarta.inject:jakarta.inject-api:$jakartaInjectApiVersion"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"

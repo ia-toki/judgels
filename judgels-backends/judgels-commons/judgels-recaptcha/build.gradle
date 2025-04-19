@@ -3,6 +3,7 @@ apply from: '../../gradle/java.gradle'
 dependencies {
     api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     api "com.google.dagger:dagger:$daggerVersion"
+    api "jakarta.inject:jakarta.inject-api:$jakartaInjectApiVersion"
 
     implementation "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
 

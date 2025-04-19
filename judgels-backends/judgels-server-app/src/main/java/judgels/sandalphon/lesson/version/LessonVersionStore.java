@@ -1,9 +1,9 @@
 package judgels.sandalphon.lesson.version;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 import java.nio.file.Path;
 import java.util.List;
-import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.sandalphon.Git;
 import judgels.sandalphon.GitCommit;

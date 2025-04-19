@@ -2,8 +2,8 @@ package judgels.jerahmeel.submission;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import jakarta.inject.Qualifier;
 import java.lang.annotation.Retention;
-import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RUNTIME)

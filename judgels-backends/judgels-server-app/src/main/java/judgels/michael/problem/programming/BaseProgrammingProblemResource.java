@@ -1,6 +1,6 @@
 package judgels.michael.problem.programming;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
 

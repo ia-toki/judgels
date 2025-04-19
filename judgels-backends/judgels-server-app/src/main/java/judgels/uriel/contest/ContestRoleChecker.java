@@ -1,6 +1,6 @@
 package judgels.uriel.contest;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.persistence.ContestRoleDao;

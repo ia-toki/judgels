@@ -2,9 +2,9 @@ package judgels.uriel.contest.clarification;
 
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.CLARIFICATION;
 
+import jakarta.inject.Inject;
 import java.time.Duration;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.contest.ContestRoleChecker;

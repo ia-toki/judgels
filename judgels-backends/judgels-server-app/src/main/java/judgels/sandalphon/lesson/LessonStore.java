@@ -4,11 +4,11 @@ import static java.util.stream.Collectors.toMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;

@@ -1,10 +1,10 @@
 package judgels.uriel.api.contest;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response.Status;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.service.api.JudgelsServiceException;
 

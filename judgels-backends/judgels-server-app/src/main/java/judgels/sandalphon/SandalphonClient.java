@@ -3,6 +3,8 @@ package judgels.sandalphon;
 import static java.util.stream.Collectors.toMap;
 import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,8 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.UriInfo;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.ScoringConfig;
 import judgels.sandalphon.api.lesson.Lesson;

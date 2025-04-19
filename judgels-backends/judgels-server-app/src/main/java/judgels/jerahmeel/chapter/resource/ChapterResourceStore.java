@@ -1,9 +1,9 @@
 package judgels.jerahmeel.chapter.resource;
 
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ChapterLessonDao;
 import judgels.jerahmeel.persistence.ChapterLessonModel;
 import judgels.jerahmeel.persistence.ChapterLessonModel_;

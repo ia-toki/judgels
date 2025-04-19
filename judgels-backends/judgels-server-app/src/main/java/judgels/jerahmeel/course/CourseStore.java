@@ -1,9 +1,9 @@
 package judgels.jerahmeel.course;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.course.Course;
 import judgels.jerahmeel.api.course.CourseCreateData;
 import judgels.jerahmeel.api.course.CourseErrors;

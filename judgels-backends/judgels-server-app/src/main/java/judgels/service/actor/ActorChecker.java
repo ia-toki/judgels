@@ -2,10 +2,10 @@ package judgels.service.actor;
 
 import static judgels.service.actor.Actors.GUEST;
 
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.session.SessionStore;
 import judgels.service.api.actor.AuthHeader;

@@ -1,10 +1,13 @@
 package judgels.service;
 
-import static javax.ws.rs.core.HttpHeaders.CACHE_CONTROL;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_DISPOSITION;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static javax.ws.rs.core.HttpHeaders.LAST_MODIFIED;
+import static jakarta.ws.rs.core.HttpHeaders.CACHE_CONTROL;
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_DISPOSITION;
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static jakarta.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.Response;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -27,9 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 
 public class ServiceUtils {
     private ServiceUtils() {}

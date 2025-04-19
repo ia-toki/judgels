@@ -1,10 +1,10 @@
 package judgels.sandalphon.hibernate;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import java.util.Collection;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
