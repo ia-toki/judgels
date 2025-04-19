@@ -12,10 +12,6 @@ import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
 import judgels.jerahmeel.curriculum.CurriculumResource;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
-import judgels.jerahmeel.problem.DeleteProblemTask;
-import judgels.jerahmeel.problem.MoveProblemToChapterTask;
-import judgels.jerahmeel.problem.MoveProblemToProblemSetTask;
-import judgels.jerahmeel.problem.ProblemModule;
 import judgels.jerahmeel.problem.ProblemResource;
 import judgels.jerahmeel.problem.ProblemTagResource;
 import judgels.jerahmeel.problemset.ProblemSetResource;
@@ -23,12 +19,15 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemResource;
 import judgels.jerahmeel.stats.UserStatsResource;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
-import judgels.jerahmeel.submission.programming.ContestStatsTask;
-import judgels.jerahmeel.submission.programming.ProblemSetStatsTask;
-import judgels.jerahmeel.submission.programming.StatsModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
-import judgels.jerahmeel.submission.programming.SubmissionsDuplexToAwsTask;
+import judgels.jerahmeel.tasks.DeleteProblemTask;
+import judgels.jerahmeel.tasks.JerahmeelTaskModule;
+import judgels.jerahmeel.tasks.MoveProblemToChapterTask;
+import judgels.jerahmeel.tasks.MoveProblemToProblemSetTask;
+import judgels.jerahmeel.tasks.RefreshContestStatsTask;
+import judgels.jerahmeel.tasks.RefreshProblemSetStatsTask;
+import judgels.jerahmeel.tasks.UploadDuplexSubmissionsToAwsTask;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -63,11 +62,9 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         GabrielClientModule.class,
 
         // Features
-        ProblemModule.class,
+        JerahmeelTaskModule.class,
         SubmissionModule.class,
-        ItemSubmissionModule.class,
-        StatsModule.class
-})
+        ItemSubmissionModule.class})
 @Singleton
 public interface JerahmeelComponent {
     ArchiveResource archiveResource();
@@ -91,7 +88,7 @@ public interface JerahmeelComponent {
     DeleteProblemTask deleteProblemTask();
     MoveProblemToChapterTask moveProblemToChapterTask();
     MoveProblemToProblemSetTask moveProblemToProblemSetTask();
-    ProblemSetStatsTask problemSetStatsTask();
-    ContestStatsTask contestStatsTask();
-    SubmissionsDuplexToAwsTask submissionsDuplexToAwsTask();
+    RefreshContestStatsTask refreshContestStatsTask();
+    RefreshProblemSetStatsTask refreshProblemSetStatsTask();
+    UploadDuplexSubmissionsToAwsTask uploadDuplexSubmissionsToAwsTask();
 }

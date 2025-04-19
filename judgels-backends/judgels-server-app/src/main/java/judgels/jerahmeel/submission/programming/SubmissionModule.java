@@ -108,23 +108,6 @@ public class SubmissionModule {
 
     @Provides
     @Singleton
-    static SubmissionsDuplexToAwsTask submissionsDuplexToAwsTask(
-            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            @SubmissionFs FileSystem submissionFs,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore) {
-
-        return unitOfWorkAwareProxyFactory.create(
-                SubmissionsDuplexToAwsTask.class,
-                new Class<?>[] {
-                        FileSystem.class,
-                        SubmissionStore.class},
-                new Object[] {
-                        submissionFs,
-                        submissionStore});
-    }
-
-    @Provides
-    @Singleton
     static GradingResponsePoller gradingResponsePoller(
             JudgelsScheduler scheduler,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
