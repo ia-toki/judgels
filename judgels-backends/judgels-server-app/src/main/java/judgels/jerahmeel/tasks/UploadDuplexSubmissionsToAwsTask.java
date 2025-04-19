@@ -1,4 +1,4 @@
-package judgels.jerahmeel.submission.programming;
+package judgels.jerahmeel.tasks;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -12,24 +12,25 @@ import java.util.Optional;
 import judgels.fs.FileSystem;
 import judgels.fs.duplex.DuplexFileSystem;
 import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
+import judgels.jerahmeel.submission.programming.SubmissionFs;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 
 /**
- * Moves submission files from local to AWS S3.
+ * Uploads submission files from local to AWS S3.
  */
-public class SubmissionsDuplexToAwsTask extends Task {
+public class UploadDuplexSubmissionsToAwsTask extends Task {
     private final FileSystem submissionFs;
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
 
-    public SubmissionsDuplexToAwsTask(
+    public UploadDuplexSubmissionsToAwsTask(
             @SubmissionFs FileSystem submissionFs,
             @JerahmeelSubmissionStore SubmissionStore submissionStore) {
 
-        super("jerahmeel-submissions-duplex-to-aws");
+        super("jerahmeel-upload-duplex-submissions-to-aws");
 
         this.submissionFs = submissionFs;
         this.submissionStore = submissionStore;

@@ -229,7 +229,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                     component.gradingResponsePoller());
         }
 
-        env.admin().addTask(component.contestDumpTask());
+        env.admin().addTask(component.dumpContestTask());
         env.admin().addTask(component.replaceProblemTask());
     }
 
@@ -274,8 +274,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.admin().addTask(component.deleteProblemTask());
         env.admin().addTask(component.moveProblemToChapterTask());
         env.admin().addTask(component.moveProblemToProblemSetTask());
-        env.admin().addTask(component.problemSetStatsTask());
-        env.admin().addTask(component.contestStatsTask());
-        env.admin().addTask(component.submissionsDuplexToAwsTask());
+        env.admin().addTask(component.refreshContestStatsTask());
+        env.admin().addTask(component.refreshProblemSetStatsTask());
+        env.admin().addTask(component.uploadDuplexSubmissionsToAwsTask());
     }
 }

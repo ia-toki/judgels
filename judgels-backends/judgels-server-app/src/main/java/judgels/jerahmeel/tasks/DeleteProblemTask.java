@@ -1,4 +1,4 @@
-package judgels.jerahmeel.problem;
+package judgels.jerahmeel.tasks;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.servlets.tasks.Task;

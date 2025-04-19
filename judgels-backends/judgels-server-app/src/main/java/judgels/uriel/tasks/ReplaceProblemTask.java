@@ -1,4 +1,4 @@
-package judgels.uriel.contest.problem;
+package judgels.uriel.tasks;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.servlets.tasks.Task;

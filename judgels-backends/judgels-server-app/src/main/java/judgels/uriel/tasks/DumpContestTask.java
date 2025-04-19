@@ -1,4 +1,4 @@
-package judgels.uriel.contest.dump;
+package judgels.uriel.tasks;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.servlets.tasks.Task;
@@ -21,7 +21,7 @@ import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 import judgels.uriel.persistence.ContestScoreboardDao;
 import judgels.uriel.persistence.ContestSupervisorDao;
 
-public class ContestDumpTask extends Task {
+public class DumpContestTask extends Task {
     private final ContestDao contestDao;
     private final ContestModuleDao moduleDao;
     private final ContestManagerDao managerDao;
@@ -35,7 +35,7 @@ public class ContestDumpTask extends Task {
     private final ContestScoreboardDao scoreboardDao;
     private final ContestLogDao logDao;
 
-    public ContestDumpTask(
+    public DumpContestTask(
             ContestDao contestDao,
             ContestModuleDao moduleDao,
             ContestManagerDao managerDao,
@@ -49,7 +49,7 @@ public class ContestDumpTask extends Task {
             ContestProgrammingSubmissionDao programmingSubmissionDao,
             ContestProgrammingGradingDao programmingGradingDao) {
 
-        super("contest-dump");
+        super("uriel-dump-contest");
 
         this.contestDao = contestDao;
         this.moduleDao = moduleDao;

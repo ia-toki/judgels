@@ -19,8 +19,6 @@ import judgels.uriel.contest.ContestResource;
 import judgels.uriel.contest.announcement.ContestAnnouncementResource;
 import judgels.uriel.contest.clarification.ContestClarificationResource;
 import judgels.uriel.contest.contestant.ContestContestantResource;
-import judgels.uriel.contest.dump.ContestDumpModule;
-import judgels.uriel.contest.dump.ContestDumpTask;
 import judgels.uriel.contest.editorial.ContestEditorialResource;
 import judgels.uriel.contest.file.ContestFileResource;
 import judgels.uriel.contest.history.ContestHistoryResource;
@@ -29,9 +27,7 @@ import judgels.uriel.contest.log.ContestLogPoller;
 import judgels.uriel.contest.log.ContestLogResource;
 import judgels.uriel.contest.manager.ContestManagerResource;
 import judgels.uriel.contest.module.ContestModuleResource;
-import judgels.uriel.contest.problem.ContestProblemModule;
 import judgels.uriel.contest.problem.ContestProblemResource;
-import judgels.uriel.contest.problem.ReplaceProblemTask;
 import judgels.uriel.contest.rating.ContestRatingResource;
 import judgels.uriel.contest.scoreboard.ContestScoreboardPoller;
 import judgels.uriel.contest.scoreboard.ContestScoreboardResource;
@@ -44,6 +40,9 @@ import judgels.uriel.file.FileModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
+import judgels.uriel.tasks.DumpContestTask;
+import judgels.uriel.tasks.ReplaceProblemTask;
+import judgels.uriel.tasks.UrielTaskModule;
 
 @Component(modules = {
         // Judgels service
@@ -65,13 +64,12 @@ import judgels.uriel.submission.programming.SubmissionModule;
         GabrielClientModule.class,
 
         // Features
+        UrielTaskModule.class,
         FileModule.class,
         SubmissionModule.class,
         ItemSubmissionModule.class,
-        ContestProblemModule.class,
         ContestLogModule.class,
-        ContestScoreboardUpdaterModule.class,
-        ContestDumpModule.class})
+        ContestScoreboardUpdaterModule.class})
 @Singleton
 public interface UrielComponent {
     ContestAnnouncementResource contestAnnouncementResource();
@@ -97,6 +95,6 @@ public interface UrielComponent {
     ContestScoreboardPoller contestScoreboardPoller();
     GradingResponsePoller gradingResponsePoller();
 
-    ContestDumpTask contestDumpTask();
+    DumpContestTask dumpContestTask();
     ReplaceProblemTask replaceProblemTask();
 }
