@@ -140,7 +140,7 @@ public abstract class BaseUrielApiIntegrationTests extends BaseJudgelsApiIntegra
         Configuration config = new Configuration();
         config.setProperty(DIALECT, H2Dialect.class.getName());
         config.setProperty(DRIVER, Driver.class.getName());
-        config.setProperty(URL, "jdbc:h2:mem:./judgels");
+        config.setProperty(URL, "jdbc:h2:mem:test");
         config.setProperty(GENERATE_STATISTICS, "false");
 
         SessionFactory sessionFactory = config.buildSessionFactory();
