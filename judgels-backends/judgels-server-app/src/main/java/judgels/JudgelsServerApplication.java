@@ -3,7 +3,6 @@ package judgels;
 import com.palantir.websecurity.WebSecurityBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
-import io.dropwizard.bundles.webjars.WebJarBundle;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -56,10 +55,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(new AssetsBundle());
+        bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/webjars", null, "webjars"));
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new JudgelsServerMigrationsBundle());
         bootstrap.addBundle(new JudgelsServerViewBundle());
-        bootstrap.addBundle(new WebJarBundle("org.webjars.bower", "org.webjars.npm"));
         bootstrap.addBundle(new WebSecurityBundle());
     }
 

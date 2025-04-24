@@ -33,7 +33,6 @@ dependencies {
     implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-views-freemarker:$dropwizardVersion"
 
-    implementation "io.dropwizard-bundles:dropwizard-webjars-bundle:$dropwizardWebJarsBundleVersion"
     implementation 'javax.inject:javax.inject:1'
     implementation 'org.webjars:bootstrap:3.3.4'
     implementation 'org.webjars:jquery:2.1.4'
