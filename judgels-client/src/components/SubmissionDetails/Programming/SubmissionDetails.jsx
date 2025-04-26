@@ -336,6 +336,17 @@ export function SubmissionDetails({
   };
 
   const renderSourceFiles = () => {
+    if (problemUrl.indexOf('/contests/') === -1) {
+      return (
+        <ContentCard>
+          <Lock /> &nbsp;
+          <small>
+            Due to some reason, viewing source code is disabled for today. We apologize for the inconvenience.
+          </small>
+        </ContentCard>
+      );
+    }
+
     if (isOutputOnly(gradingEngine)) {
       return renderSourceFilesHeading();
     }
