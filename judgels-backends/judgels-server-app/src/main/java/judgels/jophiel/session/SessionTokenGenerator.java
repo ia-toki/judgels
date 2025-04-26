@@ -1,18 +1,20 @@
 package judgels.jophiel.session;
 
-import org.eclipse.jetty.server.session.DefaultSessionIdManager;
+import java.security.SecureRandom;
 
 public class SessionTokenGenerator {
-    private static final DefaultSessionIdManager MANAGER;
-
-    static {
-        MANAGER = new DefaultSessionIdManager(null);
-        MANAGER.initRandom();
-    }
+    private static final String POOL = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final int LENGTH = 28;
 
     private SessionTokenGenerator() {}
 
     public static String newToken() {
-        return MANAGER.newSessionId(System.currentTimeMillis());
+        StringBuilder token = new StringBuilder(LENGTH);
+        for (int i = 0; i < LENGTH; i++) {
+            int randomIndex = RANDOM.nextInt(POOL.length());
+            token.append(POOL.charAt(randomIndex));
+        }
+        return token.toString();
     }
 }
