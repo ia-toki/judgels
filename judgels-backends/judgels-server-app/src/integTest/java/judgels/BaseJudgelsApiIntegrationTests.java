@@ -10,7 +10,6 @@ import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
-import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.server.DefaultServerFactory;
@@ -88,6 +87,9 @@ public abstract class BaseJudgelsApiIntegrationTests {
                 .put(GENERATE_STATISTICS, "false")
                 .build());
 
+        WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
+                .build();
+
         baseDataDir = Files.createTempDirectory("judgels");
 
         JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
@@ -134,7 +136,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
 
         JudgelsServerApplicationConfiguration config = new JudgelsServerApplicationConfiguration(
                 dbConfig,
-                WebSecurityConfiguration.DEFAULT,
+                webSecurityConfig,
                 judgelsConfig,
                 jophielConfig,
                 sandalphonConfig,
