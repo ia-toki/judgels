@@ -1,8 +1,6 @@
 package judgels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.palantir.websecurity.WebSecurityConfigurable;
-import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -10,7 +8,7 @@ import judgels.jophiel.JophielConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
 import judgels.uriel.UrielConfiguration;
 
-public class JudgelsServerApplicationConfiguration extends Configuration implements WebSecurityConfigurable {
+public class JudgelsServerApplicationConfiguration extends Configuration {
     private final DataSourceFactory databaseConfig;
     private final WebSecurityConfiguration webSecurityConfig;
     private final JudgelsServerConfiguration judgelsConfig;
@@ -41,8 +39,7 @@ public class JudgelsServerApplicationConfiguration extends Configuration impleme
         return databaseConfig;
     }
 
-    @Override
-    public WebSecurityConfiguration getWebSecurityConfiguration() {
+    public WebSecurityConfiguration getWebSecurityConfig() {
         return webSecurityConfig;
     }
 

@@ -1,6 +1,5 @@
 package judgels;
 
-import com.palantir.websecurity.WebSecurityBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
@@ -59,7 +58,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new JudgelsServerMigrationsBundle());
         bootstrap.addBundle(new JudgelsServerViewBundle());
-        bootstrap.addBundle(new WebSecurityBundle());
+        bootstrap.addBundle(new JudgelsServerWebSecurityBundle());
     }
 
     @Override
