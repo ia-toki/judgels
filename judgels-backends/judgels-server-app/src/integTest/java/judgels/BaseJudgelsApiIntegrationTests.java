@@ -80,7 +80,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
     static void startApp() throws Exception {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
-        dbConfig.setUrl("jdbc:h2:mem:./judgels");
+        dbConfig.setUrl("jdbc:h2:mem:test");
         dbConfig.setProperties(ImmutableMap.<String, String>builder()
                 .put(DIALECT, H2Dialect.class.getName())
                 .put(HBM2DDL_AUTO, "create")

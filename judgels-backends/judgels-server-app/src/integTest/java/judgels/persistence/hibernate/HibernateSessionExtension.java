@@ -7,7 +7,6 @@ import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 import static org.hibernate.cfg.AvailableSettings.URL;
 
-import java.util.UUID;
 import org.h2.Driver;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -45,7 +44,7 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
 
         config.setProperty(DIALECT, H2Dialect.class.getName());
         config.setProperty(DRIVER, Driver.class.getName());
-        config.setProperty(URL, "jdbc:h2:mem:./" + UUID.randomUUID().toString());
+        config.setProperty(URL, "jdbc:h2:mem:test");
         config.setProperty(HBM2DDL_AUTO, "create");
         config.setProperty(CURRENT_SESSION_CONTEXT_CLASS, "managed");
         config.setProperty(GENERATE_STATISTICS, "false");
