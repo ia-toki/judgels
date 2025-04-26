@@ -126,7 +126,7 @@ describe('ContestEditorialPage', () => {
 
     it('shows the editorial', () => {
       const text = wrapper.find('.contest-editorial').text();
-      expect(text).not.toEqual(
+      expect(text).toEqual(
         '' +
           'Thanks for participating.' +
           'A. Soal AHello. This is editorial for problem A' +

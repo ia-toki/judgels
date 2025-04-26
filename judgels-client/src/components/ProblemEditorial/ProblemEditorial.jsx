@@ -1,4 +1,3 @@
-import { Lock } from '@blueprintjs/icons';
 import { Fragment } from 'react';
 
 import RichStatementText from '../RichStatementText/RichStatementText';
@@ -63,13 +62,6 @@ export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
       </li>
     );
   };
-
-  return (
-    <div className="problem-editorial">
-      <Lock /> &nbsp;
-      <small>Due to some reason, viewing editorial is disabled for today. We apologize for the inconvenience.</small>
-    </div>
-  );
 
   return (
     <div className="problem-editorial">
