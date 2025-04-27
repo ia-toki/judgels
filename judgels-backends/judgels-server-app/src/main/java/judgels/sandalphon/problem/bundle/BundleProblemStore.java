@@ -1,8 +1,8 @@
 package judgels.sandalphon.problem.bundle;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 import java.io.IOException;
-import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.sandalphon.api.problem.bundle.BundleItemsConfig;
 import judgels.sandalphon.problem.base.ProblemFs;

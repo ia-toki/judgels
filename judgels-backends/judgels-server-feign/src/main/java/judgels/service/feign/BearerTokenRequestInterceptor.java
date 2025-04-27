@@ -2,9 +2,9 @@ package judgels.service.feign;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import jakarta.ws.rs.core.HttpHeaders;
 import java.util.Collection;
 import java.util.Map;
-import javax.ws.rs.core.HttpHeaders;
 
 public class BearerTokenRequestInterceptor implements RequestInterceptor {
     @Override

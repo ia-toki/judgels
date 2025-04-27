@@ -1,6 +1,6 @@
 package judgels.uriel.api;
 
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static org.assertj.core.api.Assertions.assertThat;
 

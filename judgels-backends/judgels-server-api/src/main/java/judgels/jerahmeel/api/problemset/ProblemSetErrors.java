@@ -1,10 +1,10 @@
 package judgels.jerahmeel.api.problemset;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response.Status;
 import judgels.service.api.JudgelsServiceException;
 
 public class ProblemSetErrors {

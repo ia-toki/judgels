@@ -1,5 +1,6 @@
 package judgels.sandalphon.submission.programming;
 
+import jakarta.inject.Inject;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.inject.Inject;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.submission.programming.Grading;

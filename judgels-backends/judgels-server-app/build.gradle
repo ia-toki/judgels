@@ -31,8 +31,9 @@ dependencies {
     implementation "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-views-freemarker:$dropwizardVersion"
+    implementation "jakarta.inject:jakarta.inject-api:$jakartaInjectApiVersion"
+    implementation "jakarta.persistence:jakarta.persistence-api:$jakartaPersistenceApiVersion"
 
-    implementation 'javax.inject:javax.inject:1'
     implementation 'org.webjars:bootstrap:3.3.4'
     implementation 'org.webjars:jquery:2.1.4'
     implementation 'org.webjars:ckeditor:4.19.0'
@@ -59,10 +60,10 @@ dependencies {
     integTestImplementation project(':judgels-server-feign')
 
     integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
-    integTestImplementation "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
+    integTestImplementation "jakarta.ws.rs:jakarta.ws.rs-api:$jakartaRsApiVersion"
     integTestImplementation "org.subethamail:subethasmtp-wiser:$wiserVersion"
 
-    integTestRuntimeOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+    integTestRuntimeOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 
     integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     integTestAnnotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"

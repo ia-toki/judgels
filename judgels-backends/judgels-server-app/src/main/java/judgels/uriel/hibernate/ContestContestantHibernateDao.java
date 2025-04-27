@@ -2,10 +2,10 @@ package judgels.uriel.hibernate;
 
 import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
 
+import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDao;

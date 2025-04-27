@@ -2,8 +2,8 @@ package judgels.service;
 
 import dagger.Module;
 import dagger.Provides;
-import io.dropwizard.setup.Environment;
-import javax.inject.Singleton;
+import io.dropwizard.core.setup.Environment;
+import jakarta.inject.Singleton;
 
 @Module
 public class JudgelsSchedulerModule {

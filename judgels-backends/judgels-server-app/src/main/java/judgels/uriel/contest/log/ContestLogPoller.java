@@ -1,10 +1,10 @@
 package judgels.uriel.contest.log;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import javax.inject.Inject;
-import javax.inject.Named;
 import judgels.uriel.api.contest.log.ContestLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

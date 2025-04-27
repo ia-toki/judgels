@@ -1,7 +1,7 @@
 package judgels.jophiel;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.role.SuperadminRoleStore;
 import judgels.jophiel.session.SessionStore;

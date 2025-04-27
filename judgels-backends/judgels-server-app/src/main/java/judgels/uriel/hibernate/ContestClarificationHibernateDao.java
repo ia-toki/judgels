@@ -1,9 +1,9 @@
 package judgels.uriel.hibernate;
 
+import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
 import judgels.persistence.UnmodifiableModel_;

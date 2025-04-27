@@ -2,8 +2,8 @@ package judgels.uriel.contest.problem;
 
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.PROBLEM;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;

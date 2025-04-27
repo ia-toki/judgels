@@ -2,8 +2,8 @@ package judgels.uriel.contest.contestant;
 
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.CONTESTANT;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestDivisions;

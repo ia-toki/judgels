@@ -1,9 +1,9 @@
 package judgels.uriel.contest.rating;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.UserRating;
 
 public class ContestRatingComputer {

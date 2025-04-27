@@ -1,6 +1,6 @@
 package judgels.michael.index;
 
-import javax.ws.rs.FormParam;
+import jakarta.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
 public class LoginForm extends HtmlForm {

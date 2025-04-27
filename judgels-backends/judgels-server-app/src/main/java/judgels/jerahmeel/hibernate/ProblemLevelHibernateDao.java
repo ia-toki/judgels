@@ -1,12 +1,12 @@
 package judgels.jerahmeel.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
+import jakarta.persistence.Tuple;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
-import javax.persistence.Tuple;
 import judgels.jerahmeel.persistence.ProblemLevelDao;
 import judgels.jerahmeel.persistence.ProblemLevelModel;
 import judgels.persistence.hibernate.HibernateDao;

@@ -1,17 +1,17 @@
 package judgels.sandalphon.hibernate;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDaoData;

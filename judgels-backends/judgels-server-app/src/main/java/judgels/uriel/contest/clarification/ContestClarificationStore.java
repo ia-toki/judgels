@@ -1,8 +1,8 @@
 package judgels.uriel.contest.clarification;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.clarification.ContestClarification;

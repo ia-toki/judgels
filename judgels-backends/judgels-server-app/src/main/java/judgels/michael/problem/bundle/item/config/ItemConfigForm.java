@@ -1,8 +1,8 @@
 package judgels.michael.problem.bundle.item.config;
 
+import jakarta.ws.rs.FormParam;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
 public class ItemConfigForm extends HtmlForm {

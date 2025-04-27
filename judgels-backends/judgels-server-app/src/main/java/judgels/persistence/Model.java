@@ -1,8 +1,8 @@
 package judgels.persistence;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import java.time.Instant;
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @MappedSuperclass

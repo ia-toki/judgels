@@ -1,6 +1,6 @@
 package judgels.uriel.contest.scoreboard;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.contest.scoreboard.bundle.BundleScoreboardProcessor;
 import judgels.uriel.contest.scoreboard.gcj.GcjScoreboardProcessor;

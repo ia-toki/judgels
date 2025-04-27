@@ -4,6 +4,8 @@ import static judgels.uriel.hibernate.ContestRoleHibernateDao.isPublic;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.userCanView;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.userParticipated;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.criteria.Expression;
 import java.io.PrintWriter;
 import java.time.Clock;
 import java.time.Duration;
@@ -11,8 +13,6 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.persistence.criteria.Expression;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.Model_;
 import judgels.persistence.hibernate.HibernateDaoData;

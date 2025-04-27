@@ -2,13 +2,13 @@ package judgels.jerahmeel.chapter.lesson;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLesson;
 import judgels.jerahmeel.persistence.ChapterLessonDao;
 import judgels.jerahmeel.persistence.ChapterLessonModel;

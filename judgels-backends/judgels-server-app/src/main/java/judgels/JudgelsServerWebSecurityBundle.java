@@ -1,9 +1,9 @@
 package judgels;
 
-import io.dropwizard.ConfiguredBundle;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.core.ConfiguredBundle;
+import io.dropwizard.core.setup.Environment;
+import jakarta.servlet.DispatcherType;
 import java.util.EnumSet;
-import javax.servlet.DispatcherType;
 import judgels.WebSecurityConfiguration.CorsConfiguration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 
