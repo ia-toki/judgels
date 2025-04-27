@@ -102,7 +102,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
 
         return currentSession().createQuery(cq).getResultList()
                 .stream()
-                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> (long) tuple.get(1, Integer.class)));
     }
 
     @Override
