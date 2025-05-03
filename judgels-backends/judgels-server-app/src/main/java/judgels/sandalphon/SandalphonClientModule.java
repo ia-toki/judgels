@@ -2,8 +2,8 @@ package judgels.sandalphon;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
-import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.sandalphon.lesson.LessonFs;

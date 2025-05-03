@@ -2,9 +2,9 @@ package judgels.jophiel.user.avatar;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
-import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;

@@ -1,7 +1,7 @@
 package judgels.jerahmeel.hibernate;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
 import judgels.jerahmeel.persistence.CourseModel_;

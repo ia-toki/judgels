@@ -1,8 +1,8 @@
 package judgels.uriel.persistence;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")

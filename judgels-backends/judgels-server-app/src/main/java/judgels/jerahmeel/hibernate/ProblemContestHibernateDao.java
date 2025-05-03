@@ -1,7 +1,7 @@
 package judgels.jerahmeel.hibernate;
 
+import jakarta.inject.Inject;
 import java.util.List;
-import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ProblemContestDao;
 import judgels.jerahmeel.persistence.ProblemContestModel;
 import judgels.jerahmeel.persistence.ProblemContestModel_;

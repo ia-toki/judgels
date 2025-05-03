@@ -1,5 +1,10 @@
 package judgels.jerahmeel.hibernate;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.time.Clock;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,11 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
@@ -102,7 +102,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
 
         return currentSession().createQuery(cq).getResultList()
                 .stream()
-                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> (long) tuple.get(1, Integer.class)));
     }
 
     @Override

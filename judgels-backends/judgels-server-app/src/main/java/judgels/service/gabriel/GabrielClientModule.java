@@ -2,7 +2,7 @@ package judgels.service.gabriel;
 
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Named;
+import jakarta.inject.Named;
 import judgels.gabriel.api.GabrielClientConfiguration;
 
 @Module

@@ -1,9 +1,9 @@
 package judgels.jerahmeel.problem;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.Map;
 import java.util.Set;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.problem.ProblemSetProblemInfo;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;

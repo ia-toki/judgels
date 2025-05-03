@@ -3,11 +3,11 @@ package judgels.persistence.hibernate;
 import static judgels.persistence.CriteriaPredicate.literalFalse;
 
 import io.dropwizard.hibernate.AbstractDAO;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
-import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.UnmodifiableDao;

@@ -2,10 +2,10 @@ package judgels.uriel.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.ws.rs.core.Form;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.core.Form;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;

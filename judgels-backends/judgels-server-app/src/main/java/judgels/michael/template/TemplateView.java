@@ -1,6 +1,6 @@
 package judgels.michael.template;
 
-import io.dropwizard.views.View;
+import io.dropwizard.views.common.View;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;

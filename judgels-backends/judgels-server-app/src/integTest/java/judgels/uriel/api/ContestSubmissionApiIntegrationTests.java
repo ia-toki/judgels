@@ -1,8 +1,8 @@
 package judgels.uriel.api;
 
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static java.util.stream.Collectors.toList;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static org.assertj.core.api.Assertions.assertThat;
 

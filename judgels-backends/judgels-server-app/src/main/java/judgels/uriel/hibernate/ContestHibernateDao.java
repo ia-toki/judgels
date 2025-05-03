@@ -4,6 +4,8 @@ import static judgels.uriel.hibernate.ContestRoleHibernateDao.isPublic;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.userCanView;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.userParticipated;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.criteria.Expression;
 import java.io.PrintWriter;
 import java.time.Clock;
 import java.time.Duration;
@@ -11,14 +13,11 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.persistence.criteria.Expression;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.Model_;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import judgels.persistence.hibernate.OpaqueLiteralExpression;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
@@ -137,10 +136,9 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
     static CriteriaPredicate<ContestModel> isActive(Clock clock) {
         return (cb, cq, root) -> {
-            Expression<Instant> endTime = cb.function("timestampadd", Instant.class,
-                    new OpaqueLiteralExpression(cb, "second"),
-                    cb.quot(root.get(ContestModel_.duration), 1000.0),
-                    root.get(ContestModel_.beginTime));
+            Expression<Instant> endTime = cb.function("from_unixtime", Instant.class, cb.sum(
+                    cb.function("unix_timestamp", Long.class, root.get(ContestModel_.beginTime)),
+                    cb.quot(root.get(ContestModel_.duration), 1000L)));
 
             return cb.greaterThanOrEqualTo(endTime, cb.literal(clock.instant()));
         };
@@ -148,10 +146,9 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
     static CriteriaPredicate<ContestModel> isEnded(Clock clock) {
         return (cb, cq, root) -> {
-            Expression<Instant> endTime = cb.function("timestampadd", Instant.class,
-                    new OpaqueLiteralExpression(cb, "second"),
-                    cb.quot(root.get(ContestModel_.duration), 1000.0),
-                    root.get(ContestModel_.beginTime));
+            Expression<Instant> endTime = cb.function("from_unixtime", Instant.class, cb.sum(
+                    cb.function("unix_timestamp", Long.class, root.get(ContestModel_.beginTime)),
+                    cb.quot(root.get(ContestModel_.duration), 1000L)));
 
             return cb.lessThan(endTime, cb.literal(clock.instant()));
         };
@@ -165,10 +162,9 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
             Instant beforeCurrentInstant = currentInstant.minus(Duration.ofSeconds(30));
 
             Expression<Instant> beginTime = root.get(ContestModel_.beginTime);
-            Expression<Instant> endTime = cb.function("timestampadd", Instant.class,
-                    new OpaqueLiteralExpression(cb, "second"),
-                    cb.quot(root.get(ContestModel_.duration), 1000.0),
-                    beginTime);
+            Expression<Instant> endTime = cb.function("from_unixtime", Instant.class, cb.sum(
+                    cb.function("unix_timestamp", Long.class, beginTime),
+                    cb.quot(root.get(ContestModel_.duration), 1000L)));
 
             return cb.and(
                     cb.greaterThanOrEqualTo(endTime, cb.literal(beforeCurrentInstant)),

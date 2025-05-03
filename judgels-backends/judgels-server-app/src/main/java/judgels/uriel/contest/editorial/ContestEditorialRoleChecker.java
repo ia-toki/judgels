@@ -1,6 +1,6 @@
 package judgels.uriel.contest.editorial;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.module.ContestModuleStore;

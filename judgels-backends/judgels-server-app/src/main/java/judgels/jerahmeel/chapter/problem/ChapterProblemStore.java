@@ -6,13 +6,13 @@ import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;

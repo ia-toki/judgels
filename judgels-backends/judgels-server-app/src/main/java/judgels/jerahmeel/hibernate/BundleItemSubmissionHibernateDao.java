@@ -1,6 +1,6 @@
 package judgels.jerahmeel.hibernate;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.BundleItemSubmissionModel;
 import judgels.persistence.hibernate.HibernateDaoData;

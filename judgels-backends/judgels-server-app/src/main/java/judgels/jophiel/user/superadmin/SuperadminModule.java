@@ -3,8 +3,8 @@ package judgels.jophiel.user.superadmin;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Singleton;
 import judgels.jophiel.role.SuperadminRoleStore;
 import judgels.jophiel.user.UserStore;
 

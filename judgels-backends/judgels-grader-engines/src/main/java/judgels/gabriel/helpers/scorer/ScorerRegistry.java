@@ -1,9 +1,9 @@
 package judgels.gabriel.helpers.scorer;
 
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nullable;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.Scorer;

@@ -1,7 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.persistence.ContestScoreboardDao;
 import judgels.uriel.persistence.ContestScoreboardModel;

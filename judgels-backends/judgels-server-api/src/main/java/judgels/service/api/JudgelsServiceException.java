@@ -1,7 +1,7 @@
 package judgels.service.api;
 
+import jakarta.ws.rs.core.Response;
 import java.util.Map;
-import javax.ws.rs.core.Response;
 
 public class JudgelsServiceException extends RuntimeException {
     private final int code;

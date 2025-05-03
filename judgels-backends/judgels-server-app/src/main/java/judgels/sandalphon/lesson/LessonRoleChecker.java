@@ -1,7 +1,7 @@
 package judgels.sandalphon.lesson;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jophiel.api.actor.Actor;
 import judgels.sandalphon.api.lesson.Lesson;
 import judgels.sandalphon.api.resource.Partner;

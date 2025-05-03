@@ -1,12 +1,12 @@
 package judgels.sandalphon.problem.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.List;
-import javax.inject.Inject;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingConfig;

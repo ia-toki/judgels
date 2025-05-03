@@ -3,8 +3,8 @@ package judgels.sandalphon.submission.programming;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.Sets;
+import jakarta.ws.rs.ForbiddenException;
 import java.util.Set;
-import javax.ws.rs.ForbiddenException;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.OutputOnlyOverrides;
 import judgels.gabriel.api.SubmissionSource;

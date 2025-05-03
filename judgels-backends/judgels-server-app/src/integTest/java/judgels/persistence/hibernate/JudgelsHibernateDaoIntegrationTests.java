@@ -3,11 +3,11 @@ package judgels.persistence.hibernate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.JidPrefix;
 import judgels.persistence.JudgelsModel;

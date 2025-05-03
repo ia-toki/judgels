@@ -3,7 +3,7 @@ package judgels.uriel.tasks;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.sandalphon.persistence.ProblemDao;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestClarificationDao;

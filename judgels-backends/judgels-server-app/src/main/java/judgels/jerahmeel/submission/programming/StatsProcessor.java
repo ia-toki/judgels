@@ -1,9 +1,9 @@
 package judgels.jerahmeel.submission.programming;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.TestCaseResult;
