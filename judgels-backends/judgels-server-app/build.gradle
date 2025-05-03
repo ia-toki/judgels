@@ -22,9 +22,13 @@ dependencies {
     implementation "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r"
+
     implementation ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
         exclude group: "joda-time", module: "joda-time"
     }
+    implementation "javax.xml.bind:jaxb-api:$awsJaxbVersion"
+    implementation "org.glassfish.jaxb:jaxb-runtime:$awsJaxbVersion"
+
     implementation "io.dropwizard:dropwizard-assets:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
