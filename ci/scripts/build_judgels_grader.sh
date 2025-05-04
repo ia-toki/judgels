@@ -13,4 +13,4 @@ cd -
 cd "$(dirname "$0")"/../ansible
 
 ansible --version
-ansible-playbook playbooks/build-judgels-grader.yml
+ansible-playbook  -e app_version=3.0.0-alpha playbooks/build-judgels-grader.yml

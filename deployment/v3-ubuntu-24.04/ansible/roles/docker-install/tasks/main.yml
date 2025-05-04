@@ -1,0 +1,9 @@
+- name: Install docker
+  apt:
+    name: python3-docker
+    state: present
+
+- name: Install docker.io
+  apt:
+    name: docker.io
+    state: present

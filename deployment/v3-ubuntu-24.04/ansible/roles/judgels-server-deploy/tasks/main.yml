@@ -1,0 +1,36 @@
+- name: Generate judgels server config
+  template:
+    src: "{{ playbook_dir }}/../conf/judgels-server.yml.j2"
+    dest: /opt/judgels/server/var/conf/judgels-server.yml
+    mode: '0644'
+  tags: config
+  register: judgels_server_config
+
+- name: Pull judgels server image
+  docker_image:
+    name: ghcr.io/ia-toki/judgels/server
+    tag: "{{ app_version | default('latest', true) }}"
+    source: pull
+    force_source: "{{ app_version | default('latest', true) == 'latest' }}"
+  tags: config
+
+- name: Run a judgels server container
+  docker_container:
+    name: judgels-server
+    image: "ghcr.io/ia-toki/judgels/server:{{ app_version | default('latest', true) }}"
+    restart: "{{ judgels_server_config.changed }}"
+    restart_policy: on-failure
+    restart_retries: 3
+    log_driver: json-file
+    log_options:
+      max-size: 256m
+      max-file: "2"
+    network_mode: host
+    volumes:
+      - "/opt/judgels/server/var:/judgels/server/var"
+    env:
+      JAVA_OPTS: "{{ java_opts_judgels_server | default('', true) }}"
+      JUDGELS_SERVER_APP_OPTS: >-
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/judgels/server/var/log
+  tags: config
