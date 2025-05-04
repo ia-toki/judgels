@@ -1,10 +1,9 @@
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import jophielReducer from '../../../../modules/jophiel/jophielReducer';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import RegisterPage from './RegisterPage';
 
@@ -19,12 +18,7 @@ describe('RegisterPage', () => {
     registerActions.getWebConfig.mockReturnValue(() => Promise.resolve({ useRecaptcha: false }));
     registerActions.registerUser.mockReturnValue(() => Promise.resolve());
 
-    const store = createStore(
-      combineReducers({
-        jophiel: jophielReducer,
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(() => {}, applyMiddleware(thunk));
 
     wrapper = mount(
       <Provider store={store}>
