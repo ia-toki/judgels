@@ -1,10 +1,10 @@
-package judgels.fs.duplex;
+package tlx.fs.duplex;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import judgels.fs.FsConfiguration;
-import judgels.fs.aws.AwsFsConfiguration;
 import org.immutables.value.Value;
+import tlx.fs.aws.AwsFsConfiguration;
 
 @JsonTypeName("duplex")
 @Value.Style(passAnnotations = JsonTypeName.class)

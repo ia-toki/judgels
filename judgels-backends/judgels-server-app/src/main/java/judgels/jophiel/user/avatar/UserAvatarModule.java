@@ -7,8 +7,8 @@ import java.nio.file.Path;
 import java.util.Optional;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
-import judgels.fs.aws.AwsConfiguration;
 import judgels.service.JudgelsBaseDataDir;
+import tlx.fs.aws.AwsConfiguration;
 
 @Module
 public class UserAvatarModule {
