@@ -3,7 +3,6 @@ package judgels.jophiel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.fs.aws.AwsModule;
 import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.mailer.MailerModule;
@@ -32,6 +31,7 @@ import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import tlx.fs.aws.AwsModule;
 
 @Component(modules = {
         // Judgels service

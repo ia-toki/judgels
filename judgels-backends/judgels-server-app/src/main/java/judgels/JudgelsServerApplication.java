@@ -7,7 +7,6 @@ import io.dropwizard.core.setup.Environment;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
-import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -40,6 +39,7 @@ import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
+import tlx.fs.aws.AwsModule;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
     private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();

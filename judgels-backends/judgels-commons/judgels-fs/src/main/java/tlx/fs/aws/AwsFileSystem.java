@@ -1,4 +1,4 @@
-package judgels.fs.aws;
+package tlx.fs.aws;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

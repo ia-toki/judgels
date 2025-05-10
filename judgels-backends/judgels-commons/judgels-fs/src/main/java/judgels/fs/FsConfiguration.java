@@ -2,9 +2,9 @@ package judgels.fs;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import judgels.fs.aws.AwsFsConfiguration;
-import judgels.fs.duplex.DuplexFsConfiguration;
 import judgels.fs.local.LocalFsConfiguration;
+import tlx.fs.aws.AwsFsConfiguration;
+import tlx.fs.duplex.DuplexFsConfiguration;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({

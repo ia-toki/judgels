@@ -1,4 +1,4 @@
-package judgels.uriel.tasks;
+package tlx.uriel.tasks;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.servlets.tasks.Task;

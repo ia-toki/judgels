@@ -1,4 +1,4 @@
-package judgels.fs.aws;
+package tlx.fs.aws;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
-import judgels.fs.aws.AwsConfiguration;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.stats.StatsConfiguration;
@@ -32,6 +31,7 @@ import judgels.service.JudgelsScheduler;
 import judgels.uriel.persistence.ContestProgrammingGradingDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 import judgels.uriel.submission.UrielSubmissionStore;
+import tlx.fs.aws.AwsConfiguration;
 
 @Module
 public class SubmissionModule {
