@@ -1,4 +1,4 @@
-package judgels.jophiel.user.rating;
+package tlx.jophiel.user.rating;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -15,10 +15,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.util.List;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
-import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.user.UserRoleChecker;
+import judgels.jophiel.user.rating.UserRatingStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import tlx.jophiel.api.user.rating.UserRatingUpdateData;
 
 @Path("/api/v2/user-rating")
 public class UserRatingResource {

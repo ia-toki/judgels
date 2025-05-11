@@ -17,7 +17,6 @@ import judgels.jophiel.user.account.UserResetPasswordModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.avatar.UserAvatarResource;
 import judgels.jophiel.user.info.UserInfoResource;
-import judgels.jophiel.user.rating.UserRatingResource;
 import judgels.jophiel.user.registration.web.UserRegistrationWebResource;
 import judgels.jophiel.user.role.UserRoleResource;
 import judgels.jophiel.user.search.UserSearchResource;
@@ -46,9 +45,9 @@ import tlx.fs.aws.AwsModule;
 
         // 3rd parties
         AuthModule.class,
-        AwsModule.class,
         MailerModule.class,
         RecaptchaModule.class,
+        AwsModule.class,
 
         // Features
         SuperadminModule.class,
@@ -67,10 +66,10 @@ public interface JophielComponent {
     UserAvatarResource userAvatarResource();
     UserInfoResource userProfileResource();
     UserRegistrationWebResource userRegistrationWebResource();
-    UserRatingResource userRatingResource();
     UserRoleResource userRoleResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
+    tlx.jophiel.user.rating.UserRatingResource userRatingResource();
 
     JudgelsScheduler scheduler();
     SessionCleaner sessionCleaner();

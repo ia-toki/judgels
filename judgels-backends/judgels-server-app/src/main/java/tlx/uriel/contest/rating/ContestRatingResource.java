@@ -1,4 +1,4 @@
-package judgels.uriel.contest.rating;
+package tlx.uriel.contest.rating;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;

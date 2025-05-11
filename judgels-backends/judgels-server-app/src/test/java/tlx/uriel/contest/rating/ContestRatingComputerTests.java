@@ -1,4 +1,4 @@
-package judgels.uriel.contest.rating;
+package tlx.uriel.contest.rating;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

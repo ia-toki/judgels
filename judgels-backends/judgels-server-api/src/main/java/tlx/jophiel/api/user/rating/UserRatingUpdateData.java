@@ -1,8 +1,9 @@
-package judgels.jophiel.api.user.rating;
+package tlx.jophiel.api.user.rating;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Instant;
 import java.util.Map;
+import judgels.jophiel.api.user.rating.UserRating;
 import org.immutables.value.Value;
 
 @Value.Immutable
