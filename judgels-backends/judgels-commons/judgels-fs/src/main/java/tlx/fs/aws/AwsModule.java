@@ -1,4 +1,4 @@
-package judgels.fs.aws;
+package tlx.fs.aws;
 
 import dagger.Module;
 import dagger.Provides;

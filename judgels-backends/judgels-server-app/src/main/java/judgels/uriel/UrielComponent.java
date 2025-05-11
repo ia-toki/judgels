@@ -3,7 +3,6 @@ package judgels.uriel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -43,6 +42,7 @@ import judgels.uriel.submission.programming.SubmissionModule;
 import judgels.uriel.tasks.DumpContestTask;
 import judgels.uriel.tasks.ReplaceProblemTask;
 import judgels.uriel.tasks.UrielTaskModule;
+import tlx.fs.aws.AwsModule;
 
 @Component(modules = {
         // Judgels service
