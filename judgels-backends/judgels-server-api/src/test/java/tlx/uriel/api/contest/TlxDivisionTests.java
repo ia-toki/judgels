@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest;
+package tlx.uriel.api.contest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,7 @@ import java.util.Optional;
 import judgels.jophiel.api.user.rating.UserRating;
 import org.junit.jupiter.api.Test;
 
-class ContestDivisionTests {
+class TlxDivisionTests {
     @Test
     void is_rating_in_division_2() {
         test(0, 2, true);
@@ -33,6 +33,6 @@ class ContestDivisionTests {
             rating = Optional.of(
                     new UserRating.Builder().publicRating(publicRating).hiddenRating(publicRating).build());
         }
-        assertThat(ContestDivisions.isRatingInDivision(rating, division)).isEqualTo(result);
+        assertThat(TlxDivisions.isRatingInDivision(rating, division)).isEqualTo(result);
     }
 }

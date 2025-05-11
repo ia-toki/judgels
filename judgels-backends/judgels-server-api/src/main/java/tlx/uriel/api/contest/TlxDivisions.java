@@ -1,13 +1,14 @@
-package judgels.uriel.api.contest;
+package tlx.uriel.api.contest;
 
 import java.util.Optional;
 import judgels.jophiel.api.user.rating.UserRating;
+import tlx.jophiel.api.user.rating.TlxRating;
 
-public class ContestDivisions {
-    private ContestDivisions() {}
+public class TlxDivisions {
+    private TlxDivisions() {}
 
     public static boolean isRatingInDivision(Optional<UserRating> rating, int division) {
-        int publicRating = rating.map(UserRating::getPublicRating).orElse(UserRating.INITIAL_RATING);
+        int publicRating = rating.map(UserRating::getPublicRating).orElse(TlxRating.INITIAL_RATING);
         if (division == 2) {
             return publicRating < 2000;
         }
