@@ -1,4 +1,4 @@
-package judgels.fs.duplex;
+package tlx.fs.duplex;
 
 import java.io.File;
 import java.io.InputStream;
@@ -6,8 +6,8 @@ import java.nio.file.Path;
 import java.util.List;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
-import judgels.fs.aws.AwsFileSystem;
 import judgels.fs.local.LocalFileSystem;
+import tlx.fs.aws.AwsFileSystem;
 
 public final class DuplexFileSystem implements FileSystem {
     private final LocalFileSystem local;

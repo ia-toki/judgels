@@ -3,8 +3,6 @@ package judgels.jophiel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
-import judgels.fs.aws.AwsConfiguration;
-import judgels.fs.aws.AwsFsConfiguration;
 import judgels.jophiel.auth.AuthConfiguration;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
@@ -15,6 +13,8 @@ import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.jophiel.user.web.WebConfiguration;
 import judgels.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
+import tlx.fs.aws.AwsConfiguration;
+import tlx.fs.aws.AwsFsConfiguration;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJophielConfiguration.class)
