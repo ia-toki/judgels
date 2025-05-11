@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestDivisions;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
 import judgels.uriel.api.contest.module.DivisionModuleConfig;
 import judgels.uriel.contest.ContestRoleChecker;
@@ -14,6 +13,7 @@ import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.ContestRoleDao;
+import tlx.uriel.api.contest.TlxDivisions;
 
 public class ContestContestantRoleChecker {
     private final ContestRoleChecker contestRoleChecker;
@@ -86,6 +86,6 @@ public class ContestContestantRoleChecker {
         if (!config.isPresent()) {
             return true;
         }
-        return ContestDivisions.isRatingInDivision(rating, config.get().getDivision());
+        return TlxDivisions.isRatingInDivision(rating, config.get().getDivision());
     }
 }

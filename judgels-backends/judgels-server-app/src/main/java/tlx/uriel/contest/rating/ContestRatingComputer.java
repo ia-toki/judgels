@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import judgels.jophiel.api.user.rating.UserRating;
+import tlx.jophiel.api.user.rating.TlxRating;
 
 public class ContestRatingComputer {
     @Inject
@@ -66,7 +67,7 @@ public class ContestRatingComputer {
     }
 
     private static double getScore(int N, double hiddenA, double hiddenB) {
-        return Math.max(10.0, (sigmoid(Math.sqrt(hiddenB / hiddenA)) - .7) * log2(N) * UserRating.INITIAL_RATING);
+        return Math.max(10.0, (sigmoid(Math.sqrt(hiddenB / hiddenA)) - .7) * log2(N) * TlxRating.INITIAL_RATING);
     }
 
     private static double sigmoid(double x) {

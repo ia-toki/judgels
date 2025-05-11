@@ -40,6 +40,7 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.RawContestScoreboard;
+import tlx.jophiel.api.user.rating.TlxRating;
 
 @Path("/api/v2/contest-rating")
 public class ContestRatingResource {
@@ -121,8 +122,8 @@ public class ContestRatingResource {
         for (Map.Entry<String, Profile> entry : profilesMap.entrySet()) {
             String contestantJid = entry.getKey();
             Optional<UserRating> rating = entry.getValue().getRating();
-            int publicRating = rating.map(UserRating::getPublicRating).orElse(UserRating.INITIAL_RATING);
-            int hiddenRating = rating.map(UserRating::getHiddenRating).orElse(UserRating.INITIAL_RATING);
+            int publicRating = rating.map(UserRating::getPublicRating).orElse(TlxRating.INITIAL_RATING);
+            int hiddenRating = rating.map(UserRating::getHiddenRating).orElse(TlxRating.INITIAL_RATING);
 
             publicRatingsMap.put(contestantJid, publicRating);
             hiddenRatingsMap.put(contestantJid, hiddenRating);
