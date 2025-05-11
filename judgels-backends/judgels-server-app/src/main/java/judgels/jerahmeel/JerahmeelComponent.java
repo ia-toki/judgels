@@ -20,13 +20,9 @@ import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
-import judgels.jerahmeel.tasks.DeleteProblemTask;
 import judgels.jerahmeel.tasks.JerahmeelTaskModule;
-import judgels.jerahmeel.tasks.MoveProblemToChapterTask;
-import judgels.jerahmeel.tasks.MoveProblemToProblemSetTask;
 import judgels.jerahmeel.tasks.RefreshContestStatsTask;
 import judgels.jerahmeel.tasks.RefreshProblemSetStatsTask;
-import judgels.jerahmeel.tasks.UploadDuplexSubmissionsToAwsTask;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -39,7 +35,6 @@ import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
-import tlx.fs.aws.AwsModule;
 
 @Component(modules = {
         // Judgels service
@@ -57,14 +52,15 @@ import tlx.fs.aws.AwsModule;
 
         // 3rd parties
         RabbitMQModule.class,
-        AwsModule.class,
         SandalphonClientModule.class,
         GabrielClientModule.class,
+        tlx.fs.aws.AwsModule.class,
 
         // Features
-        JerahmeelTaskModule.class,
         SubmissionModule.class,
-        ItemSubmissionModule.class})
+        ItemSubmissionModule.class,
+        JerahmeelTaskModule.class,
+        tlx.jerahmeel.tasks.JerahmeelTaskModule.class})
 @Singleton
 public interface JerahmeelComponent {
     ArchiveResource archiveResource();
@@ -85,10 +81,10 @@ public interface JerahmeelComponent {
     JudgelsScheduler scheduler();
     GradingResponsePoller gradingResponsePoller();
 
-    DeleteProblemTask deleteProblemTask();
-    MoveProblemToChapterTask moveProblemToChapterTask();
-    MoveProblemToProblemSetTask moveProblemToProblemSetTask();
     RefreshContestStatsTask refreshContestStatsTask();
     RefreshProblemSetStatsTask refreshProblemSetStatsTask();
-    UploadDuplexSubmissionsToAwsTask uploadDuplexSubmissionsToAwsTask();
+    tlx.jerahmeel.tasks.DeleteProblemTask deleteProblemTask();
+    tlx.jerahmeel.tasks.MoveProblemToChapterTask moveProblemToChapterTask();
+    tlx.jerahmeel.tasks.MoveProblemToProblemSetTask moveProblemToProblemSetTask();
+    tlx.jerahmeel.tasks.UploadDuplexSubmissionsToAwsTask uploadDuplexSubmissionsToAwsTask();
 }
