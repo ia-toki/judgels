@@ -1,11 +1,11 @@
-package judgels.jophiel.api;
+package tlx.jophiel.api;
 
 import java.time.Instant;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.jophiel.UserRatingClient;
-import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
+import tlx.jophiel.UserRatingClient;
+import tlx.jophiel.api.user.rating.UserRatingUpdateData;
 
 public class UserRatingApiPermissionIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserRatingClient userRatingClient = createClient(UserRatingClient.class);
