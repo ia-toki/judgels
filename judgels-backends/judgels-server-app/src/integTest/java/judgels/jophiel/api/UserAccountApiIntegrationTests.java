@@ -14,9 +14,9 @@ import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.account.PasswordResetData;
-import judgels.jophiel.api.user.account.UserRegistrationData;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
+import tlx.jophiel.api.user.account.UserRegistrationData;
 
 class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserClient userClient = createClient(UserClient.class);

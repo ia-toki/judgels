@@ -1,11 +1,11 @@
-package judgels.jophiel.user.registration.web;
+package tlx.jophiel.user.registration.web;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.jophiel.JophielConfiguration;
-import judgels.recaptcha.web.RecaptchaWebConfig;
 import org.immutables.value.Value;
+import tlx.recaptcha.web.RecaptchaWebConfig;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserRegistrationWebConfig.class)

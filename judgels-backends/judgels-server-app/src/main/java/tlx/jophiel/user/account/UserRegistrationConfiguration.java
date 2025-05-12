@@ -1,4 +1,4 @@
-package judgels.jophiel.user.account;
+package tlx.jophiel.user.account;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import judgels.jophiel.EmailTemplate;

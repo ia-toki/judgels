@@ -5,7 +5,7 @@ import feign.Param;
 import feign.RequestLine;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.account.PasswordResetData;
-import judgels.jophiel.api.user.account.UserRegistrationData;
+import tlx.jophiel.api.user.account.UserRegistrationData;
 
 public interface UserAccountClient {
     @RequestLine("POST /api/v2/user-account/register")

@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.jophiel.auth.google.GoogleAuth;
+import tlx.jophiel.auth.google.GoogleAuth;
 
 @Module
 public class AuthModule {

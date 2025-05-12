@@ -17,16 +17,13 @@ import judgels.jophiel.JophielConfiguration;
 import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.session.SessionModule;
-import judgels.jophiel.user.account.UserRegistrationModule;
 import judgels.jophiel.user.account.UserResetPasswordModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
-import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.WebModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
-import judgels.recaptcha.RecaptchaModule;
 import judgels.sandalphon.DaggerSandalphonComponent;
 import judgels.sandalphon.SandalphonComponent;
 import judgels.sandalphon.SandalphonConfiguration;
@@ -40,6 +37,9 @@ import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 import tlx.fs.aws.AwsModule;
+import tlx.jophiel.user.account.UserRegistrationModule;
+import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
+import tlx.recaptcha.RecaptchaModule;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
     private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();

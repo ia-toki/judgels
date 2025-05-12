@@ -6,15 +6,15 @@ import java.util.Optional;
 import judgels.jophiel.auth.AuthConfiguration;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
-import judgels.jophiel.user.account.UserRegistrationConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.jophiel.user.web.WebConfiguration;
-import judgels.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
 import tlx.fs.aws.AwsConfiguration;
 import tlx.fs.aws.AwsFsConfiguration;
+import tlx.jophiel.user.account.UserRegistrationConfiguration;
+import tlx.recaptcha.RecaptchaConfiguration;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJophielConfiguration.class)
