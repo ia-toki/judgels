@@ -41,7 +41,6 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
-import judgels.jophiel.user.account.UserRegistrationConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
@@ -62,6 +61,7 @@ import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import tlx.jophiel.user.account.UserRegistrationConfiguration;
 
 public abstract class BaseJudgelsApiIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;

@@ -12,10 +12,11 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.account.GoogleUserRegistrationData;
 import judgels.jophiel.api.user.account.PasswordResetData;
-import judgels.jophiel.api.user.account.UserRegistrationData;
 import judgels.jophiel.user.UserStore;
+import tlx.jophiel.api.user.account.GoogleUserRegistrationData;
+import tlx.jophiel.api.user.account.UserRegistrationData;
+import tlx.jophiel.user.account.UserRegisterer;
 
 @Path("/api/v2/user-account")
 public class UserAccountResource {

@@ -18,12 +18,12 @@ import judgels.jophiel.api.session.GoogleCredentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.auth.google.GoogleAuth;
 import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import tlx.jophiel.auth.google.GoogleAuth;
 
 @Path("/api/v2/session")
 public class SessionResource {

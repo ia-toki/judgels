@@ -1,8 +1,8 @@
-package judgels.recaptcha.web;
+package tlx.recaptcha.web;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
+import tlx.recaptcha.RecaptchaConfiguration;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableRecaptchaWebConfig.class)

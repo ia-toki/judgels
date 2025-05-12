@@ -1,15 +1,16 @@
-package judgels.jophiel.user.account;
+package tlx.jophiel.user.account;
 
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.jophiel.auth.google.GoogleAuth;
 import judgels.jophiel.mailer.Mailer;
 import judgels.jophiel.user.UserStore;
+import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.jophiel.user.info.UserInfoStore;
-import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
-import judgels.recaptcha.RecaptchaVerifier;
+import tlx.jophiel.auth.google.GoogleAuth;
+import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
+import tlx.recaptcha.RecaptchaVerifier;
 
 @Module
 public class UserRegistrationModule {
