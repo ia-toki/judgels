@@ -6,10 +6,10 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 
 @Module
-public class RecaptchaModule {
+public class TlxRecaptchaModule {
     private final Optional<RecaptchaConfiguration> config;
 
-    public RecaptchaModule(Optional<RecaptchaConfiguration> config) {
+    public TlxRecaptchaModule(Optional<RecaptchaConfiguration> config) {
         this.config = config;
     }
 

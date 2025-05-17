@@ -6,10 +6,10 @@ import jakarta.inject.Singleton;
 import java.util.Optional;
 
 @Module
-public class AwsModule {
+public class TlxAwsModule {
     private final Optional<AwsConfiguration> config;
 
-    public AwsModule(Optional<AwsConfiguration> config) {
+    public TlxAwsModule(Optional<AwsConfiguration> config) {
         this.config = config;
     }
 

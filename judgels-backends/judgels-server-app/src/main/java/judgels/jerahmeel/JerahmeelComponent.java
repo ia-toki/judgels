@@ -35,6 +35,7 @@ import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
+import tlx.fs.aws.TlxAwsModule;
 
 @Component(modules = {
         // Judgels service
@@ -54,12 +55,13 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         RabbitMQModule.class,
         SandalphonClientModule.class,
         GabrielClientModule.class,
-        tlx.fs.aws.AwsModule.class,
 
         // Features
         SubmissionModule.class,
         ItemSubmissionModule.class,
         JerahmeelTaskModule.class,
+
+        TlxAwsModule.class,
         tlx.jerahmeel.tasks.JerahmeelTaskModule.class})
 @Singleton
 public interface JerahmeelComponent {
@@ -83,8 +85,9 @@ public interface JerahmeelComponent {
 
     RefreshContestStatsTask refreshContestStatsTask();
     RefreshProblemSetStatsTask refreshProblemSetStatsTask();
-    tlx.jerahmeel.tasks.DeleteProblemTask deleteProblemTask();
-    tlx.jerahmeel.tasks.MoveProblemToChapterTask moveProblemToChapterTask();
-    tlx.jerahmeel.tasks.MoveProblemToProblemSetTask moveProblemToProblemSetTask();
-    tlx.jerahmeel.tasks.UploadDuplexSubmissionsToAwsTask uploadDuplexSubmissionsToAwsTask();
+
+    tlx.jerahmeel.tasks.DeleteProblemTask tlxDeleteProblemTask();
+    tlx.jerahmeel.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
+    tlx.jerahmeel.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();
+    tlx.jerahmeel.tasks.UploadDuplexSubmissionsToAwsTask tlxUploadDuplexSubmissionsToAwsTask();
 }
