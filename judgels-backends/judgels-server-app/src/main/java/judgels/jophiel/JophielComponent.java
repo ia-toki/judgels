@@ -27,6 +27,9 @@ import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import tlx.fs.aws.TlxAwsModule;
+import tlx.jophiel.user.account.TlxUserRegistrationModule;
+import tlx.recaptcha.TlxRecaptchaModule;
 
 @Component(modules = {
         // Judgels service
@@ -42,8 +45,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         // 3rd parties
         AuthModule.class,
         MailerModule.class,
-        tlx.fs.aws.AwsModule.class,
-        tlx.recaptcha.RecaptchaModule.class,
 
         // Features
         SuperadminModule.class,
@@ -51,7 +52,11 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         UserResetPasswordModule.class,
         SessionModule.class,
         WebModule.class,
-        tlx.jophiel.user.account.UserRegistrationModule.class})
+
+        // TLX
+        TlxAwsModule.class,
+        TlxRecaptchaModule.class,
+        TlxUserRegistrationModule.class})
 @Singleton
 public interface JophielComponent {
     ProfileResource profileResource();
@@ -64,9 +69,10 @@ public interface JophielComponent {
     UserRoleResource userRoleResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
-    tlx.jophiel.user.rating.UserRatingResource userRatingResource();
-    tlx.jophiel.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 
     JudgelsScheduler scheduler();
     SessionCleaner sessionCleaner();
+
+    tlx.jophiel.user.rating.UserRatingResource tlxUserRatingResource();
+    tlx.jophiel.user.registration.web.UserRegistrationWebResource tlxUserRegistrationWebResource();
 }

@@ -13,11 +13,11 @@ import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
 import tlx.recaptcha.RecaptchaVerifier;
 
 @Module
-public class UserRegistrationModule {
+public class TlxUserRegistrationModule {
     private final UserRegistrationConfiguration config;
     private final UserRegistrationWebConfig webConfig;
 
-    public UserRegistrationModule(UserRegistrationConfiguration config, UserRegistrationWebConfig webConfig) {
+    public TlxUserRegistrationModule(UserRegistrationConfiguration config, UserRegistrationWebConfig webConfig) {
         this.config = config;
         this.webConfig = webConfig;
     }

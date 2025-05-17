@@ -40,6 +40,7 @@ import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 import judgels.uriel.tasks.DumpContestTask;
 import judgels.uriel.tasks.UrielTaskModule;
+import tlx.fs.aws.TlxAwsModule;
 
 @Component(modules = {
         // Judgels service
@@ -58,7 +59,6 @@ import judgels.uriel.tasks.UrielTaskModule;
         RabbitMQModule.class,
         SandalphonClientModule.class,
         GabrielClientModule.class,
-        tlx.fs.aws.AwsModule.class,
 
         // Features
         FileModule.class,
@@ -67,6 +67,9 @@ import judgels.uriel.tasks.UrielTaskModule;
         ContestLogModule.class,
         ContestScoreboardUpdaterModule.class,
         UrielTaskModule.class,
+
+        // TLX
+        TlxAwsModule.class,
         tlx.uriel.tasks.UrielTaskModule.class})
 @Singleton
 public interface UrielComponent {
@@ -86,7 +89,6 @@ public interface UrielComponent {
     ContestSubmissionResource contestProgrammingSubmissionResource();
     ContestSupervisorResource contestSupervisorResource();
     ContestWebResource contestWebResource();
-    tlx.uriel.contest.rating.ContestRatingResource contestRatingResource();
 
     JudgelsScheduler scheduler();
     ContestLogPoller contestLogPoller();
@@ -94,5 +96,7 @@ public interface UrielComponent {
     GradingResponsePoller gradingResponsePoller();
 
     DumpContestTask dumpContestTask();
-    tlx.uriel.tasks.ReplaceProblemTask replaceProblemTask();
+
+    tlx.uriel.contest.rating.ContestRatingResource tlxContestRatingResource();
+    tlx.uriel.tasks.ReplaceProblemTask tlxReplaceProblemTask();
 }
