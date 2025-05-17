@@ -5,22 +5,17 @@ import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWra
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import { isTLX } from '../../conf';
 import RatingsPage from './ratings/RatingsPage/RatingsPage';
 
 function SystemRoutes() {
   const sidebarItems = [
-    ...(isTLX()
-      ? [
-          {
-            id: 'ratings',
-            titleIcon: <TimelineLineChart />,
-            title: 'Ratings',
-            routeComponent: Route,
-            component: RatingsPage,
-          },
-        ]
-      : []),
+    {
+      id: 'ratings',
+      titleIcon: <TimelineLineChart />,
+      title: 'Ratings',
+      routeComponent: Route,
+      component: RatingsPage,
+    },
   ];
 
   const contentWithSidebarProps = {

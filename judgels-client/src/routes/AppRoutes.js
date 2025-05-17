@@ -30,7 +30,7 @@ const appRoutes = [
       path: '/system',
       component: LazySystemRoutes,
     },
-    visible: role => role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin,
+    visible: role => isTLX() && (role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin),
   },
   {
     id: 'contests',
