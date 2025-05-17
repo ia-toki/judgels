@@ -61,11 +61,13 @@ describe('validations', () => {
   });
 
   test('MaxFileSize300KB', () => {
+    expect(MaxFileSize300KB(undefined)).toBeUndefined();
     expect(MaxFileSize300KB({ size: 500000 })).toBeTruthy();
     expect(MaxFileSize300KB({ size: 300000 })).toBeUndefined();
   });
 
   test('MaxFileSize10MB', () => {
+    expect(MaxFileSize10MB(undefined)).toBeUndefined();
     expect(MaxFileSize10MB({ size: 11000000 })).toBeTruthy();
     expect(MaxFileSize10MB({ size: 10000000 })).toBeUndefined();
   });
