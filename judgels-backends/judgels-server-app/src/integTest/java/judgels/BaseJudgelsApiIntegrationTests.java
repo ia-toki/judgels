@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import judgels.app.JudgelsAppConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;

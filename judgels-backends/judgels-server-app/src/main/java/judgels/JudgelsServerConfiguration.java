@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
 import java.util.Optional;
+import judgels.app.JudgelsAppConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import org.immutables.value.Value;
 
