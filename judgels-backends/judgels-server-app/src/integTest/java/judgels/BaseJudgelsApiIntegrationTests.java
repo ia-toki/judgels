@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import judgels.app.BaseJudgelsAppIntegrationTests;
+import judgels.app.JudgelsAppConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
@@ -63,7 +65,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import tlx.jophiel.user.account.UserRegistrationConfiguration;
 
-public abstract class BaseJudgelsApiIntegrationTests {
+public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;
     private static Path baseDataDir;
 
@@ -91,6 +93,8 @@ public abstract class BaseJudgelsApiIntegrationTests {
                 .build();
 
         baseDataDir = Files.createTempDirectory("judgels");
+
+        setEditionAsTLX();
 
         JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
                 .name("Judgels")

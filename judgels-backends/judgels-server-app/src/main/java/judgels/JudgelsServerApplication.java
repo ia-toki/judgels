@@ -7,6 +7,8 @@ import io.dropwizard.core.setup.Environment;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
+import judgels.app.JudgelsApp;
+import judgels.app.JudgelsAppEdition;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -63,6 +65,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     @Override
     public void run(JudgelsServerApplicationConfiguration config, Environment env) throws Exception {
+        JudgelsApp.initialize(config.getJudgelsConfig().getAppConfig());
+
         runMichael(config, env);
         runJophiel(config, env);
         runSandalphon(config, env);
@@ -155,7 +159,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 component.sessionCleaner(),
                 Duration.ofDays(1));
 
-        if (true /* TLX */) {
+        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
             env.jersey().register(component.tlxUserRatingResource());
             env.jersey().register(component.tlxUserRegistrationWebResource());
         }
@@ -217,7 +221,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestBundleSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
 
-        if (true /* TLX */) {
+        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
             env.jersey().register(component.tlxContestRatingResource());
         }
 
@@ -239,7 +243,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         env.admin().addTask(component.dumpContestTask());
 
-        if (true /* TLX */) {
+        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
             env.admin().addTask(component.tlxReplaceProblemTask());
         }
     }
@@ -287,7 +291,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.admin().addTask(component.refreshContestStatsTask());
         env.admin().addTask(component.refreshProblemSetStatsTask());
 
-        if (true /* TLX */) {
+        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
             env.admin().addTask(component.tlxDeleteProblemTask());
             env.admin().addTask(component.tlxMoveProblemToChapterTask());
             env.admin().addTask(component.tlxMoveProblemToProblemSetTask());
