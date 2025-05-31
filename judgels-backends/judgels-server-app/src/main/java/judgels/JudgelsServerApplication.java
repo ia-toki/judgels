@@ -160,6 +160,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 Duration.ofDays(1));
 
         if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
+            env.jersey().register(component.tlxSessionResource());
             env.jersey().register(component.tlxUserRatingResource());
             env.jersey().register(component.tlxUserRegistrationWebResource());
         }
