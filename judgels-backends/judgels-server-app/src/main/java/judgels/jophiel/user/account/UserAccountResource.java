@@ -17,6 +17,7 @@ import judgels.jophiel.user.UserStore;
 import tlx.jophiel.api.user.account.GoogleUserRegistrationData;
 import tlx.jophiel.api.user.account.UserRegistrationData;
 import tlx.jophiel.user.account.UserRegisterer;
+import tlx.jophiel.user.account.UserRegistrationEmailStore;
 
 @Path("/api/v2/user-account")
 public class UserAccountResource {

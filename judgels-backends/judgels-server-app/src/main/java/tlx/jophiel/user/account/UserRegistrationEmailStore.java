@@ -1,4 +1,4 @@
-package judgels.jophiel.user.account;
+package tlx.jophiel.user.account;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
