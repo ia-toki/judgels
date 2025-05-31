@@ -39,7 +39,7 @@ import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 import tlx.fs.aws.TlxAwsModule;
-import tlx.jophiel.user.account.TlxUserRegistrationModule;
+import tlx.jophiel.user.registration.TlxUserRegistrationModule;
 import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
 import tlx.recaptcha.TlxRecaptchaModule;
 
@@ -161,6 +161,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
             env.jersey().register(component.tlxSessionResource());
+            env.jersey().register(component.tlxUserAccountResource());
             env.jersey().register(component.tlxUserRatingResource());
             env.jersey().register(component.tlxUserRegistrationWebResource());
         }

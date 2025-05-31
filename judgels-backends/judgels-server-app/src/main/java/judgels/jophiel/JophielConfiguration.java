@@ -13,7 +13,7 @@ import judgels.jophiel.user.web.WebConfiguration;
 import org.immutables.value.Value;
 import tlx.fs.aws.AwsConfiguration;
 import tlx.fs.aws.AwsFsConfiguration;
-import tlx.jophiel.user.account.UserRegistrationConfiguration;
+import tlx.jophiel.user.registration.UserRegistrationConfiguration;
 import tlx.recaptcha.RecaptchaConfiguration;
 
 @Value.Immutable

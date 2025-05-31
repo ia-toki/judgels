@@ -63,7 +63,7 @@ import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import tlx.jophiel.user.account.UserRegistrationConfiguration;
+import tlx.jophiel.user.registration.UserRegistrationConfiguration;
 
 public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;

@@ -1,4 +1,4 @@
-package tlx.jophiel.user.account;
+package tlx.jophiel.user.registration;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import jakarta.ws.rs.ForbiddenException;
@@ -8,7 +8,6 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.jophiel.user.info.UserInfoStore;
 import tlx.jophiel.api.user.account.GoogleUserRegistrationData;
 import tlx.jophiel.api.user.account.UserRegistrationData;
