@@ -1,4 +1,4 @@
-package tlx.jophiel.user.account;
+package tlx.jophiel.user.registration;
 
 import judgels.jophiel.EmailTemplate;
 import judgels.jophiel.api.user.User;

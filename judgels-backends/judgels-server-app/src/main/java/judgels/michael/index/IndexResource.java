@@ -24,10 +24,10 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import tlx.jophiel.auth.google.GoogleAuth;
+import tlx.jophiel.user.registration.UserRegistrationEmailStore;
 
 @Path("/")
 public class IndexResource extends BaseResource {

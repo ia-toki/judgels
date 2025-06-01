@@ -11,15 +11,18 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import judgels.app.JudgelsApp;
+import judgels.app.JudgelsAppEdition;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import tlx.jophiel.api.session.TlxSessionErrors;
+import tlx.jophiel.user.registration.UserRegistrationEmailStore;
 
 @Path("/api/v2/session")
 public class SessionResource {
@@ -43,8 +46,10 @@ public class SessionResource {
                     userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                     .orElseThrow(ForbiddenException::new));
 
-        if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
-            throw SessionErrors.userNotActivated(user.getEmail());
+        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
+            if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
+                throw TlxSessionErrors.userNotActivated(user.getEmail());
+            }
         }
 
         if (!roleChecker.canAdminister(user.getJid())) {

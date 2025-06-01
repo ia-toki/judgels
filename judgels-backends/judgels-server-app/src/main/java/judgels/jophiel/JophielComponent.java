@@ -28,7 +28,7 @@ import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import tlx.fs.aws.TlxAwsModule;
-import tlx.jophiel.user.account.TlxUserRegistrationModule;
+import tlx.jophiel.user.registration.TlxUserRegistrationModule;
 import tlx.recaptcha.TlxRecaptchaModule;
 
 @Component(modules = {
@@ -74,6 +74,7 @@ public interface JophielComponent {
     SessionCleaner sessionCleaner();
 
     tlx.jophiel.session.TlxSessionResource tlxSessionResource();
+    tlx.jophiel.user.account.TlxUserAccountResource tlxUserAccountResource();
     tlx.jophiel.user.rating.UserRatingResource tlxUserRatingResource();
     tlx.jophiel.user.registration.web.UserRegistrationWebResource tlxUserRegistrationWebResource();
 }
