@@ -28,6 +28,10 @@ public class JudgelsApp {
         return edition;
     }
 
+    public static boolean isTLX() {
+        return edition == JudgelsAppEdition.TLX;
+    }
+
     // Visible for testing
     static void setEdition(JudgelsAppEdition edition) {
         JudgelsApp.edition = edition;
