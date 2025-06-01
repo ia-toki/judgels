@@ -12,7 +12,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import judgels.app.JudgelsApp;
-import judgels.app.JudgelsAppEdition;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionErrors;
@@ -46,7 +45,7 @@ public class SessionResource {
                     userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                     .orElseThrow(ForbiddenException::new));
 
-        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
+        if (JudgelsApp.isTLX()) {
             if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
                 throw TlxSessionErrors.userNotActivated(user.getEmail());
             }

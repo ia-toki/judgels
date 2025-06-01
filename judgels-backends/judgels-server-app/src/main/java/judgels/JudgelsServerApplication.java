@@ -8,7 +8,6 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
 import judgels.app.JudgelsApp;
-import judgels.app.JudgelsAppEdition;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -159,7 +158,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 component.sessionCleaner(),
                 Duration.ofDays(1));
 
-        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
+        if (JudgelsApp.isTLX()) {
             env.jersey().register(component.tlxSessionResource());
             env.jersey().register(component.tlxUserAccountResource());
             env.jersey().register(component.tlxUserRatingResource());
@@ -223,7 +222,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestBundleSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
 
-        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
+        if (JudgelsApp.isTLX()) {
             env.jersey().register(component.tlxContestRatingResource());
         }
 
@@ -245,7 +244,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         env.admin().addTask(component.dumpContestTask());
 
-        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
+        if (JudgelsApp.isTLX()) {
             env.admin().addTask(component.tlxReplaceProblemTask());
         }
     }
@@ -293,7 +292,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.admin().addTask(component.refreshContestStatsTask());
         env.admin().addTask(component.refreshProblemSetStatsTask());
 
-        if (JudgelsApp.getEdition() == JudgelsAppEdition.TLX) {
+        if (JudgelsApp.isTLX()) {
             env.admin().addTask(component.tlxDeleteProblemTask());
             env.admin().addTask(component.tlxMoveProblemToChapterTask());
             env.admin().addTask(component.tlxMoveProblemToProblemSetTask());
