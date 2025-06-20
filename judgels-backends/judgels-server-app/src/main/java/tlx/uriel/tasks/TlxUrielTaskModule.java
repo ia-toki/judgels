@@ -11,8 +11,8 @@ import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 
 @Module
-public class UrielTaskModule {
-    private UrielTaskModule() {}
+public class TlxUrielTaskModule {
+    private TlxUrielTaskModule() {}
 
     @Provides
     @Singleton

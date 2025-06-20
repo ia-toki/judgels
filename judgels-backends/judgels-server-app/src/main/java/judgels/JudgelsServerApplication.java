@@ -37,10 +37,10 @@ import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
-import tlx.fs.aws.TlxAwsModule;
-import tlx.jophiel.user.registration.TlxUserRegistrationModule;
+import tlx.fs.aws.AwsModule;
+import tlx.jophiel.user.registration.UserRegistrationModule;
 import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
-import tlx.recaptcha.TlxRecaptchaModule;
+import tlx.recaptcha.RecaptchaModule;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
     private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();
@@ -121,7 +121,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JophielConfiguration jophielConfig = config.getJophielConfig();
 
-        JophielComponent component = DaggerJophielComponent.builder()
+        var componentBuilder = DaggerJophielComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
@@ -131,15 +131,18 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .userAvatarModule(new UserAvatarModule(jophielConfig.getUserAvatarConfig()))
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
-                .webModule(new WebModule(jophielConfig.getWebConfig()))
+                .webModule(new WebModule(jophielConfig.getWebConfig()));
 
-                .tlxAwsModule(new TlxAwsModule(jophielConfig.getAwsConfig()))
-                .tlxRecaptchaModule(new TlxRecaptchaModule(jophielConfig.getRecaptchaConfig()))
-                .tlxUserRegistrationModule(new TlxUserRegistrationModule(
-                        jophielConfig.getUserRegistrationConfig(),
-                        UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
+        if (JudgelsApp.isTLX()) {
+            componentBuilder
+                    .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
+                    .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
+                    .userRegistrationModule(new UserRegistrationModule(
+                            jophielConfig.getUserRegistrationConfig(),
+                            UserRegistrationWebConfig.fromServerConfig(jophielConfig)));
+        }
 
-                .build();
+        JophielComponent component = componentBuilder.build();
 
         component.superadminCreator().ensureSuperadminExists();
 
@@ -192,18 +195,21 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         UrielConfiguration urielConfig = config.getUrielConfig();
 
-        UrielComponent component = DaggerUrielComponent.builder()
+        var componentBuilder = DaggerUrielComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(urielConfig.getGabrielConfig()))
                 .fileModule(new FileModule(urielConfig.getFileConfig()))
-                .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(urielConfig.getSubmissionConfig()))
+                .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(urielConfig.getSubmissionConfig()));
 
-                .tlxAwsModule(new TlxAwsModule(urielConfig.getAwsConfig()))
+        if (JudgelsApp.isTLX()) {
+            componentBuilder
+                    .awsModule(new AwsModule(urielConfig.getAwsConfig()));
+        }
 
-                .build();
+        UrielComponent component = componentBuilder.build();
 
         env.jersey().register(component.contestResource());
         env.jersey().register(component.contestWebResource());
@@ -253,7 +259,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
 
-        JerahmeelComponent component = DaggerJerahmeelComponent.builder()
+        var componentBuilder = DaggerJerahmeelComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
@@ -262,11 +268,14 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
                         jerahmeelConfig.getSubmissionConfig(),
                         jerahmeelConfig.getStatsConfig()))
-                .itemSubmissionModule(new ItemSubmissionModule(jerahmeelConfig.getStatsConfig()))
+                .itemSubmissionModule(new ItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
-                .tlxAwsModule(new TlxAwsModule(jerahmeelConfig.getAwsConfig()))
+        if (JudgelsApp.isTLX()) {
+            componentBuilder
+                    .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()));
+        }
 
-                .build();
+        JerahmeelComponent component = componentBuilder.build();
 
         env.jersey().register(component.archiveResource());
         env.jersey().register(component.curriculumResource());
