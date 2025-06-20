@@ -25,17 +25,8 @@ public interface JophielConfiguration {
     @JsonProperty("mailer")
     Optional<MailerConfiguration> getMailerConfig();
 
-    @JsonProperty("recaptcha")
-    Optional<RecaptchaConfiguration> getRecaptchaConfig();
-
-    @JsonProperty("aws")
-    Optional<AwsConfiguration> getAwsConfig();
-
     @JsonProperty("userAvatar")
     UserAvatarConfiguration getUserAvatarConfig();
-
-    @JsonProperty("userRegistration")
-    UserRegistrationConfiguration getUserRegistrationConfig();
 
     @JsonProperty("userResetPassword")
     UserResetPasswordConfiguration getUserResetPasswordConfig();
@@ -49,16 +40,27 @@ public interface JophielConfiguration {
     @JsonProperty("web")
     WebConfiguration getWebConfig();
 
+    // TLX
+
+    @JsonProperty("aws")
+    Optional<AwsConfiguration> getAwsConfig();
+
+    @JsonProperty("recaptcha")
+    Optional<RecaptchaConfiguration> getRecaptchaConfig();
+
+    @JsonProperty("userRegistration")
+    Optional<UserRegistrationConfiguration> getUserRegistrationConfig();
+
     @Value.Check
     default void check() {
         if (getUserAvatarConfig().getFs() instanceof AwsFsConfiguration && !getAwsConfig().isPresent()) {
             throw new IllegalStateException("aws config is required by userAvatar config");
         }
 
-        if (getUserRegistrationConfig().getUseRecaptcha() && !getRecaptchaConfig().isPresent()) {
+        if (getUserRegistrationConfig().isPresent() && getUserRegistrationConfig().get().getUseRecaptcha() && !getRecaptchaConfig().isPresent()) {
             throw new IllegalStateException("recaptcha config is required by userRegistration config");
         }
-        if (getUserRegistrationConfig().getEnabled() && !getMailerConfig().isPresent()) {
+        if (getUserRegistrationConfig().isPresent() && getUserRegistrationConfig().get().getEnabled() && !getMailerConfig().isPresent()) {
             throw new IllegalStateException("mailer config is required by userRegistration config");
         }
 

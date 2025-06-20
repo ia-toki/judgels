@@ -15,11 +15,15 @@ public interface UserRegistrationWebConfig {
     @JsonProperty("recaptcha")
     Optional<RecaptchaWebConfig> getRecaptchaConfig();
 
-    static UserRegistrationWebConfig fromServerConfig(JophielConfiguration config) {
-        return new UserRegistrationWebConfig.Builder()
-                .useRecaptcha(config.getUserRegistrationConfig().getUseRecaptcha())
+    static Optional<UserRegistrationWebConfig> fromServerConfig(JophielConfiguration config) {
+        if (config.getUserRegistrationConfig().isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new UserRegistrationWebConfig.Builder()
+                .useRecaptcha(config.getUserRegistrationConfig().get().getUseRecaptcha())
                 .recaptchaConfig(config.getRecaptchaConfig().map(RecaptchaWebConfig::fromServerConfig))
-                .build();
+                .build());
     }
 
     class Builder extends ImmutableUserRegistrationWebConfig.Builder {}

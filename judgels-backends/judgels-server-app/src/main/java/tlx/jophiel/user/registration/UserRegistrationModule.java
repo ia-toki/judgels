@@ -12,17 +12,25 @@ import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
 import tlx.recaptcha.RecaptchaVerifier;
 
 @Module
-public class TlxUserRegistrationModule {
-    private final UserRegistrationConfiguration config;
-    private final UserRegistrationWebConfig webConfig;
+public class UserRegistrationModule {
+    private final Optional<UserRegistrationConfiguration> config;
+    private final Optional<UserRegistrationWebConfig> webConfig;
 
-    public TlxUserRegistrationModule(UserRegistrationConfiguration config, UserRegistrationWebConfig webConfig) {
+    public UserRegistrationModule() {
+        this.config = Optional.empty();
+        this.webConfig = Optional.empty();
+    }
+
+    public UserRegistrationModule(
+            Optional<UserRegistrationConfiguration> config,
+            Optional<UserRegistrationWebConfig> webConfig) {
+
         this.config = config;
         this.webConfig = webConfig;
     }
 
     @Provides
-    UserRegistrationWebConfig webConfig() {
+    Optional<UserRegistrationWebConfig> webConfig() {
         return webConfig;
     }
 
@@ -36,12 +44,12 @@ public class TlxUserRegistrationModule {
             Optional<RecaptchaVerifier> recaptchaVerifier,
             Optional<GoogleAuth> googleAuth) {
 
-        if (!config.getEnabled()) {
+        if (config.isEmpty() || !config.get().getEnabled()) {
             return Optional.empty();
         }
 
         Optional<RecaptchaVerifier> actualRecaptchaVerifier = recaptchaVerifier;
-        if (!config.getUseRecaptcha()) {
+        if (!config.get().getUseRecaptcha()) {
             actualRecaptchaVerifier = Optional.empty();
         }
 
@@ -49,7 +57,7 @@ public class TlxUserRegistrationModule {
                 userStore,
                 userInfoStore,
                 userRegistrationEmailStore,
-                new UserRegistrationEmailMailer(mailer.get(), config.getActivationEmailTemplate()),
+                new UserRegistrationEmailMailer(mailer.get(), config.get().getActivationEmailTemplate()),
                 actualRecaptchaVerifier,
                 googleAuth));
     }

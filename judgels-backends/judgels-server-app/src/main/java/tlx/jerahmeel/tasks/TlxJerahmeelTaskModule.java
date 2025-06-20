@@ -19,8 +19,8 @@ import judgels.sandalphon.persistence.ProblemDao;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 
 @Module
-public class JerahmeelTaskModule {
-    private JerahmeelTaskModule() {}
+public class TlxJerahmeelTaskModule {
+    private TlxJerahmeelTaskModule() {}
 
     @Provides
     @Singleton

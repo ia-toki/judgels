@@ -16,14 +16,16 @@ public interface UrielConfiguration {
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
 
-    @JsonProperty("aws")
-    Optional<AwsConfiguration> getAwsConfig();
-
     @JsonProperty("submission")
     SubmissionConfiguration getSubmissionConfig();
 
     @JsonProperty("file")
     FileConfiguration getFileConfig();
+
+    // TLX
+
+    @JsonProperty("aws")
+    Optional<AwsConfiguration> getAwsConfig();
 
     @Value.Check
     default void check() {

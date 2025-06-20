@@ -15,14 +15,16 @@ public interface JerahmeelConfiguration {
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
 
-    @JsonProperty("aws")
-    Optional<AwsConfiguration> getAwsConfig();
-
     @JsonProperty("submission")
     SubmissionConfiguration getSubmissionConfig();
 
     @JsonProperty("stats")
     StatsConfiguration getStatsConfig();
+
+    // TLX
+
+    @JsonProperty("aws")
+    Optional<AwsConfiguration> getAwsConfig();
 
     class Builder extends ImmutableJerahmeelConfiguration.Builder {}
 }

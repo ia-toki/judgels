@@ -27,9 +27,9 @@ import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
-import tlx.fs.aws.TlxAwsModule;
-import tlx.jophiel.user.registration.TlxUserRegistrationModule;
-import tlx.recaptcha.TlxRecaptchaModule;
+import tlx.fs.aws.AwsModule;
+import tlx.jophiel.user.registration.UserRegistrationModule;
+import tlx.recaptcha.RecaptchaModule;
 
 @Component(modules = {
         // Judgels service
@@ -54,9 +54,9 @@ import tlx.recaptcha.TlxRecaptchaModule;
         WebModule.class,
 
         // TLX
-        TlxAwsModule.class,
-        TlxRecaptchaModule.class,
-        TlxUserRegistrationModule.class})
+        AwsModule.class,
+        RecaptchaModule.class,
+        UserRegistrationModule.class})
 @Singleton
 public interface JophielComponent {
     ProfileResource profileResource();
