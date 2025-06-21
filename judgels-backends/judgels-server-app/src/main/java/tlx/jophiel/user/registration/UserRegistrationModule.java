@@ -4,12 +4,12 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
+import judgels.contrib.recaptcha.RecaptchaVerifier;
 import judgels.jophiel.mailer.Mailer;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.info.UserInfoStore;
 import tlx.jophiel.auth.google.GoogleAuth;
 import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
-import tlx.recaptcha.RecaptchaVerifier;
 
 @Module
 public class UserRegistrationModule {

@@ -8,6 +8,8 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
 import judgels.app.JudgelsApp;
+import judgels.contrib.fs.aws.AwsModule;
+import judgels.contrib.recaptcha.RecaptchaModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -37,10 +39,8 @@ import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
-import tlx.fs.aws.AwsModule;
 import tlx.jophiel.user.registration.UserRegistrationModule;
 import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
-import tlx.recaptcha.RecaptchaModule;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
     private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();

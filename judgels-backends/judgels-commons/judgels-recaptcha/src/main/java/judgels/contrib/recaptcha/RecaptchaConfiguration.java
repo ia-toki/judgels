@@ -1,4 +1,4 @@
-package tlx.recaptcha;
+package judgels.contrib.recaptcha;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

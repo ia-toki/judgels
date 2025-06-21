@@ -1,4 +1,4 @@
-package tlx.recaptcha;
+package judgels.contrib.recaptcha;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 

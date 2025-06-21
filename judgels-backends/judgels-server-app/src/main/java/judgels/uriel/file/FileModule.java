@@ -5,10 +5,10 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
+import judgels.contrib.fs.aws.AwsConfiguration;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.service.JudgelsBaseDataDir;
-import tlx.fs.aws.AwsConfiguration;
 
 @Module
 public class FileModule {
