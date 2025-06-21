@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.fs.FileSystem;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ChapterDao;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
@@ -13,10 +12,7 @@ import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
-import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
-import judgels.jerahmeel.submission.programming.SubmissionFs;
 import judgels.sandalphon.persistence.ProblemDao;
-import judgels.sandalphon.submission.programming.SubmissionStore;
 
 @Module
 public class TlxJerahmeelTaskModule {
@@ -104,22 +100,5 @@ public class TlxJerahmeelTaskModule {
                         chapterProblemDao,
                         problemSetProblemDao,
                         programmingSubmissionDao});
-    }
-
-    @Provides
-    @Singleton
-    static UploadDuplexSubmissionsToAwsTask uploadDuplexSubmissionsToAwsTask(
-            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            @SubmissionFs FileSystem submissionFs,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore) {
-
-        return unitOfWorkAwareProxyFactory.create(
-                UploadDuplexSubmissionsToAwsTask.class,
-                new Class<?>[] {
-                        FileSystem.class,
-                        SubmissionStore.class},
-                new Object[] {
-                        submissionFs,
-                        submissionStore});
     }
 }
