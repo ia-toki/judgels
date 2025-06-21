@@ -19,6 +19,7 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
+import judgels.contrib.jophiel.auth.google.GoogleAuth;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.session.SessionStore;
@@ -26,7 +27,6 @@ import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
-import tlx.jophiel.auth.google.GoogleAuth;
 import tlx.jophiel.user.registration.UserRegistrationEmailStore;
 
 @Path("/")

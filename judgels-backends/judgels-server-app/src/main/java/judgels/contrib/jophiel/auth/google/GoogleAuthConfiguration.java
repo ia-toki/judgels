@@ -1,4 +1,4 @@
-package tlx.jophiel.auth.google;
+package judgels.contrib.jophiel.auth.google;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
