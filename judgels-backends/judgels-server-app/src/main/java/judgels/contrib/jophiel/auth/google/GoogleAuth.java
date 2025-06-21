@@ -1,4 +1,4 @@
-package tlx.jophiel.auth.google;
+package judgels.contrib.jophiel.auth.google;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
