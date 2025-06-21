@@ -3,6 +3,7 @@ package judgels.jerahmeel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
+import judgels.contrib.fs.aws.AwsModule;
 import judgels.jerahmeel.archive.ArchiveResource;
 import judgels.jerahmeel.chapter.ChapterResource;
 import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
@@ -35,7 +36,6 @@ import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
-import tlx.fs.aws.AwsModule;
 import tlx.jerahmeel.tasks.TlxJerahmeelTaskModule;
 
 @Component(modules = {
