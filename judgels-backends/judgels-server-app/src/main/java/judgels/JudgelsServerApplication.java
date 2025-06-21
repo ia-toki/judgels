@@ -9,6 +9,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
 import judgels.app.JudgelsApp;
 import judgels.contrib.fs.aws.AwsModule;
+import judgels.contrib.jophiel.auth.AuthModule;
 import judgels.contrib.recaptcha.RecaptchaModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
@@ -17,7 +18,6 @@ import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jophiel.DaggerJophielComponent;
 import judgels.jophiel.JophielComponent;
 import judgels.jophiel.JophielConfiguration;
-import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.session.SessionModule;
 import judgels.jophiel.user.account.UserResetPasswordModule;
@@ -125,7 +125,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
                 .userAvatarModule(new UserAvatarModule(jophielConfig.getUserAvatarConfig()))
@@ -135,6 +134,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         if (JudgelsApp.isTLX()) {
             componentBuilder
+                    .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                     .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
                     .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                     .userRegistrationModule(new UserRegistrationModule(

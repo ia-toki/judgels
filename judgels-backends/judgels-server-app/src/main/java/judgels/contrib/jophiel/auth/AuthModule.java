@@ -1,4 +1,4 @@
-package judgels.jophiel.auth;
+package judgels.contrib.jophiel.auth;
 
 import dagger.Module;
 import dagger.Provides;

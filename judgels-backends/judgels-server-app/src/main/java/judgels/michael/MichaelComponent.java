@@ -3,7 +3,7 @@ package judgels.michael;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.jophiel.auth.AuthModule;
+import judgels.contrib.jophiel.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.account.role.RoleResource;
