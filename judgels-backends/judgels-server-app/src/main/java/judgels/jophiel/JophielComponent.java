@@ -4,8 +4,8 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.contrib.fs.aws.AwsModule;
+import judgels.contrib.jophiel.auth.AuthModule;
 import judgels.contrib.recaptcha.RecaptchaModule;
-import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.profile.ProfileResource;
@@ -43,7 +43,6 @@ import tlx.jophiel.user.registration.UserRegistrationModule;
         JophielHibernateDaoModule.class,
 
         // 3rd parties
-        AuthModule.class,
         MailerModule.class,
 
         // Features
@@ -54,6 +53,7 @@ import tlx.jophiel.user.registration.UserRegistrationModule;
         WebModule.class,
 
         // TLX
+        AuthModule.class,
         AwsModule.class,
         RecaptchaModule.class,
         UserRegistrationModule.class})
