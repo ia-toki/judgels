@@ -10,7 +10,9 @@ import java.time.Duration;
 import judgels.app.JudgelsApp;
 import judgels.contrib.fs.aws.AwsModule;
 import judgels.contrib.jophiel.auth.AuthModule;
-import judgels.contrib.recaptcha.RecaptchaModule;
+import judgels.contrib.jophiel.user.registration.UserRegistrationModule;
+import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaModule;
+import judgels.contrib.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -39,8 +41,6 @@ import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
-import tlx.jophiel.user.registration.UserRegistrationModule;
-import tlx.jophiel.user.registration.web.UserRegistrationWebConfig;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
     private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();
@@ -125,6 +125,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
+                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
                 .userAvatarModule(new UserAvatarModule(jophielConfig.getUserAvatarConfig()))
@@ -134,7 +135,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         if (JudgelsApp.isTLX()) {
             componentBuilder
-                    .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                     .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
                     .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                     .userRegistrationModule(new UserRegistrationModule(

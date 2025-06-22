@@ -1,4 +1,4 @@
-package tlx.jophiel.user.registration;
+package judgels.contrib.jophiel.user.registration;
 
 import jakarta.inject.Inject;
 import java.util.Optional;

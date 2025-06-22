@@ -1,4 +1,4 @@
-package tlx.jophiel.user.registration.web;
+package judgels.contrib.jophiel.user.registration.web;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkFound;

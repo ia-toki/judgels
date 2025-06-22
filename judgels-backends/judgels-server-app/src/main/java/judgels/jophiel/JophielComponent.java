@@ -5,7 +5,8 @@ import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.contrib.fs.aws.AwsModule;
 import judgels.contrib.jophiel.auth.AuthModule;
-import judgels.contrib.recaptcha.RecaptchaModule;
+import judgels.contrib.jophiel.user.registration.UserRegistrationModule;
+import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.profile.ProfileResource;
@@ -29,7 +30,6 @@ import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
-import tlx.jophiel.user.registration.UserRegistrationModule;
 
 @Component(modules = {
         // Judgels service
@@ -76,5 +76,5 @@ public interface JophielComponent {
     tlx.jophiel.session.TlxSessionResource tlxSessionResource();
     tlx.jophiel.user.account.TlxUserAccountResource tlxUserAccountResource();
     tlx.jophiel.user.rating.UserRatingResource tlxUserRatingResource();
-    tlx.jophiel.user.registration.web.UserRegistrationWebResource tlxUserRegistrationWebResource();
+    judgels.contrib.jophiel.user.registration.web.UserRegistrationWebResource tlxUserRegistrationWebResource();
 }
