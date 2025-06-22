@@ -1,4 +1,4 @@
-package tlx.jophiel.user.rating;
+package judgels.contrib.jophiel.user.rating;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
