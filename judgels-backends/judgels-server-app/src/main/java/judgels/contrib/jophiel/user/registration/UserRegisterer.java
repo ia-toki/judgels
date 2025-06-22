@@ -1,11 +1,11 @@
-package tlx.jophiel.user.registration;
+package judgels.contrib.jophiel.user.registration;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
 import java.util.Optional;
 import judgels.contrib.jophiel.auth.google.GoogleAuth;
-import judgels.contrib.recaptcha.RecaptchaVerifier;
+import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaVerifier;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.info.UserInfo;

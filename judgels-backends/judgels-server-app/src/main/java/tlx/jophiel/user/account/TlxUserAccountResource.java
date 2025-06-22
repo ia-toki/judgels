@@ -11,12 +11,12 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
+import judgels.contrib.jophiel.user.registration.UserRegisterer;
+import judgels.contrib.jophiel.user.registration.UserRegistrationEmailStore;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.user.UserStore;
 import tlx.jophiel.api.user.account.GoogleUserRegistrationData;
 import tlx.jophiel.api.user.account.UserRegistrationData;
-import tlx.jophiel.user.registration.UserRegisterer;
-import tlx.jophiel.user.registration.UserRegistrationEmailStore;
 
 @Path("/api/v2/user-account")
 public class TlxUserAccountResource {

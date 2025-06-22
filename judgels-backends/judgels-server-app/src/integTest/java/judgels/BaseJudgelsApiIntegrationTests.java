@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
+import judgels.contrib.jophiel.user.registration.UserRegistrationConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
@@ -63,7 +64,6 @@ import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import tlx.jophiel.user.registration.UserRegistrationConfiguration;
 
 public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;

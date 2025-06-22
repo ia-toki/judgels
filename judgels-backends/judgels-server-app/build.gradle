@@ -6,7 +6,6 @@ apply plugin: 'application'
 dependencies {
     implementation project(':judgels-commons:judgels-fs')
     implementation project(':judgels-commons:judgels-messaging')
-    implementation project(':judgels-commons:judgels-recaptcha')
     implementation project(':judgels-commons:judgels-service-core')
     implementation project(':judgels-grader-api')
     implementation project(':judgels-grader-engines')
@@ -28,6 +27,7 @@ dependencies {
     }
     implementation "javax.xml.bind:jaxb-api:$awsJaxbVersion"
     implementation "org.glassfish.jaxb:jaxb-runtime:$awsJaxbVersion"
+    implementation "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
 
     implementation "io.dropwizard:dropwizard-assets:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"

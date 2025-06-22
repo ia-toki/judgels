@@ -1,9 +1,9 @@
-package tlx.jophiel.user.registration.web;
+package judgels.contrib.jophiel.user.registration.web;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
-import judgels.contrib.recaptcha.web.RecaptchaWebConfig;
+import judgels.contrib.jophiel.user.registration.recaptcha.web.RecaptchaWebConfig;
 import judgels.jophiel.JophielConfiguration;
 import org.immutables.value.Value;
 
