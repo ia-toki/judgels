@@ -1,4 +1,4 @@
-package tlx.jophiel.session;
+package judgels.contrib.jophiel.session;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkFound;
@@ -20,12 +20,12 @@ import judgels.jophiel.user.UserStore;
 import tlx.jophiel.api.session.GoogleCredentials;
 
 @Path("/api/v2/session")
-public class TlxSessionResource {
+public class ContribSessionResource {
     @Inject protected UserStore userStore;
     @Inject protected SessionStore sessionStore;
     @Inject protected Optional<GoogleAuth> googleAuth;
 
-    @Inject public TlxSessionResource() {}
+    @Inject public ContribSessionResource() {}
 
     @POST
     @Path("/login-google")

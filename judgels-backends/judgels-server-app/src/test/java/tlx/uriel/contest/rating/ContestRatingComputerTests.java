@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
+import judgels.contrib.uriel.contest.rating.ContestRatingComputer;
 import judgels.jophiel.api.user.rating.UserRating;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

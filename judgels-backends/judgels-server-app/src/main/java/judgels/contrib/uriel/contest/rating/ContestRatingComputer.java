@@ -1,4 +1,4 @@
-package tlx.uriel.contest.rating;
+package judgels.contrib.uriel.contest.rating;
 
 import com.google.common.collect.ImmutableMap;
 import jakarta.inject.Inject;

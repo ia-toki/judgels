@@ -1,4 +1,4 @@
-package tlx.jophiel.user.account;
+package judgels.contrib.jophiel.user.account;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkFound;
@@ -19,12 +19,12 @@ import tlx.jophiel.api.user.account.GoogleUserRegistrationData;
 import tlx.jophiel.api.user.account.UserRegistrationData;
 
 @Path("/api/v2/user-account")
-public class TlxUserAccountResource {
+public class ContribUserAccountResource {
     @Inject protected UserStore userStore;
     @Inject protected Optional<UserRegisterer> userRegisterer;
     @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
 
-    @Inject public TlxUserAccountResource() {}
+    @Inject public ContribUserAccountResource() {}
 
     @POST
     @Path("/register")
