@@ -73,8 +73,8 @@ public interface JophielComponent {
     JudgelsScheduler scheduler();
     SessionCleaner sessionCleaner();
 
-    judgels.contrib.jophiel.session.ContribSessionResource tlxSessionResource();
-    judgels.contrib.jophiel.user.account.ContribUserAccountResource tlxUserAccountResource();
-    judgels.contrib.jophiel.user.rating.UserRatingResource tlxUserRatingResource();
-    judgels.contrib.jophiel.user.registration.web.UserRegistrationWebResource tlxUserRegistrationWebResource();
+    judgels.contrib.jophiel.session.SessionWithGoogleResource sessionWithGoogleResource();
+    judgels.contrib.jophiel.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
+    judgels.contrib.jophiel.user.rating.UserRatingResource userRatingResource();
+    judgels.contrib.jophiel.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 }

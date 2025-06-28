@@ -1,4 +1,4 @@
-package tlx.jophiel.api;
+package judgels.contrib.jophiel.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

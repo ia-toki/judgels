@@ -98,6 +98,7 @@ public interface UrielComponent {
 
     DumpContestTask dumpContestTask();
 
-    judgels.contrib.uriel.contest.rating.ContestRatingResource tlxContestRatingResource();
+    judgels.contrib.uriel.contest.rating.ContestRatingResource contestRatingResource();
+
     tlx.uriel.tasks.ReplaceProblemTask tlxReplaceProblemTask();
 }
