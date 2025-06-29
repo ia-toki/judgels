@@ -12,6 +12,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import judgels.app.JudgelsApp;
+import judgels.contrib.jophiel.api.session.SessionWithRegistrationErrors;
 import judgels.contrib.jophiel.user.registration.UserRegistrationEmailStore;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
@@ -21,7 +22,6 @@ import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import tlx.jophiel.api.session.TlxSessionErrors;
 
 @Path("/api/v2/session")
 public class SessionResource {
@@ -47,7 +47,7 @@ public class SessionResource {
 
         if (JudgelsApp.isTLX()) {
             if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
-                throw TlxSessionErrors.userNotActivated(user.getEmail());
+                throw SessionWithRegistrationErrors.userNotActivated(user.getEmail());
             }
         }
 

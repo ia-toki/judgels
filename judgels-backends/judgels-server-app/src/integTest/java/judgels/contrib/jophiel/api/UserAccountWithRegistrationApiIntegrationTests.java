@@ -7,16 +7,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.contrib.jophiel.UserAccountWithRegistrationClient;
+import judgels.contrib.jophiel.api.session.SessionWithRegistrationErrors;
+import judgels.contrib.jophiel.api.user.account.UserRegistrationData;
 import judgels.jophiel.SessionClient;
 import judgels.jophiel.api.session.Credentials;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
-import tlx.jophiel.TlxUserAccountClient;
-import tlx.jophiel.api.session.TlxSessionErrors;
-import tlx.jophiel.api.user.account.UserRegistrationData;
 
 class UserAccountWithRegistrationApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final TlxUserAccountClient accountClient = createClient(TlxUserAccountClient.class);
+    private final UserAccountWithRegistrationClient accountClient = createClient(UserAccountWithRegistrationClient.class);
     private final SessionClient sessionClient = createClient(SessionClient.class);
 
     @Test
@@ -35,7 +35,7 @@ class UserAccountWithRegistrationApiIntegrationTests extends BaseJudgelsApiInteg
 
         // log in before activation
         assertForbidden(() -> sessionClient.logIn(credentials))
-                .hasMessageContaining(TlxSessionErrors.USER_NOT_ACTIVATED);
+                .hasMessageContaining(SessionWithRegistrationErrors.USER_NOT_ACTIVATED);
 
         // read activation email
         String email = readEmail(wiser, 0);

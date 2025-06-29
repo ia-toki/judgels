@@ -1,12 +1,12 @@
-package tlx.jophiel;
+package judgels.contrib.jophiel;
 
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import judgels.contrib.jophiel.api.user.account.UserRegistrationData;
 import judgels.jophiel.api.user.User;
-import tlx.jophiel.api.user.account.UserRegistrationData;
 
-public interface TlxUserAccountClient {
+public interface UserAccountWithRegistrationClient {
     @RequestLine("POST /api/v2/user-account/register")
     @Headers("Content-Type: application/json")
     User registerUser(UserRegistrationData data);

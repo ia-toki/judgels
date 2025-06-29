@@ -1,4 +1,4 @@
-package tlx.jophiel.api.session;
+package judgels.contrib.jophiel.api.session;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
