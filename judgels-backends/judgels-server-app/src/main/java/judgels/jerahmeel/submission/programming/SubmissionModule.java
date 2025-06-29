@@ -9,9 +9,8 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import judgels.contrib.fs.aws.AwsConfiguration;
 import judgels.fs.FileSystem;
-import judgels.fs.FileSystems;
+import judgels.fs.local.LocalFileSystem;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.stats.StatsConfiguration;
@@ -35,19 +34,24 @@ import judgels.uriel.submission.UrielSubmissionStore;
 
 @Module
 public class SubmissionModule {
-    private final SubmissionConfiguration config;
     private final StatsConfiguration statsConfig;
+    private final Optional<FileSystem> fs;
 
-    public SubmissionModule(SubmissionConfiguration config, StatsConfiguration statsConfig) {
-        this.config = config;
+    public SubmissionModule(StatsConfiguration statsConfig) {
         this.statsConfig = statsConfig;
+        this.fs = Optional.empty();
+    }
+
+    public SubmissionModule(StatsConfiguration statsConfig, FileSystem fs) {
+        this.statsConfig = statsConfig;
+        this.fs = Optional.of(fs);
     }
 
     @Provides
     @Singleton
     @SubmissionFs
-    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig, @JudgelsBaseDataDir Path baseDataDir) {
-        return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("submissions"));
+    FileSystem submissionFs(@JudgelsBaseDataDir Path baseDataDir) {
+        return fs.orElse(new LocalFileSystem(baseDataDir.resolve("submissions")));
     }
 
     @Provides

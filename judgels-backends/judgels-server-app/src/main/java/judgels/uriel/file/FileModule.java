@@ -5,23 +5,26 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
-import judgels.contrib.fs.aws.AwsConfiguration;
 import judgels.fs.FileSystem;
-import judgels.fs.FileSystems;
+import judgels.fs.local.LocalFileSystem;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class FileModule {
-    private final FileConfiguration config;
+    private final Optional<FileSystem> fs;
 
-    public FileModule(FileConfiguration config) {
-        this.config = config;
+    public FileModule() {
+        this.fs = Optional.empty();
+    }
+
+    public FileModule(FileSystem fs) {
+        this.fs = Optional.of(fs);
     }
 
     @Provides
     @Singleton
     @FileFs
-    FileSystem fileFs(Optional<AwsConfiguration> awsConfig, @JudgelsBaseDataDir Path baseDataDir) {
-        return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("files"));
+    FileSystem fileFs(@JudgelsBaseDataDir Path baseDataDir) {
+        return fs.orElse(new LocalFileSystem(baseDataDir.resolve("files")));
     }
 }

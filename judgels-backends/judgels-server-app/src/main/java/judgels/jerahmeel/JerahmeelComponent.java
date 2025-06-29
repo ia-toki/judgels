@@ -3,7 +3,6 @@ package judgels.jerahmeel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.contrib.fs.aws.AwsModule;
 import judgels.jerahmeel.archive.ArchiveResource;
 import judgels.jerahmeel.chapter.ChapterResource;
 import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
@@ -63,7 +62,6 @@ import tlx.jerahmeel.tasks.TlxJerahmeelTaskModule;
         JerahmeelTaskModule.class,
 
         // TLX
-        AwsModule.class,
         TlxJerahmeelTaskModule.class})
 @Singleton
 public interface JerahmeelComponent {

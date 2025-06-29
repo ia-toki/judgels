@@ -3,7 +3,6 @@ package judgels.uriel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.contrib.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -70,7 +69,6 @@ import tlx.uriel.tasks.TlxUrielTaskModule;
         UrielTaskModule.class,
 
         // TLX
-        AwsModule.class,
         TlxUrielTaskModule.class})
 @Singleton
 public interface UrielComponent {

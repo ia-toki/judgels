@@ -3,7 +3,6 @@ package judgels.jophiel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.contrib.fs.aws.AwsModule;
 import judgels.contrib.jophiel.auth.AuthModule;
 import judgels.contrib.jophiel.user.registration.UserRegistrationModule;
 import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaModule;
@@ -54,7 +53,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 
         // TLX
         AuthModule.class,
-        AwsModule.class,
         RecaptchaModule.class,
         UserRegistrationModule.class})
 @Singleton
