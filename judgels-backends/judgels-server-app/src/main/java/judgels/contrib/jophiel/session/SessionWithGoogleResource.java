@@ -20,12 +20,12 @@ import judgels.jophiel.user.UserStore;
 import tlx.jophiel.api.session.GoogleCredentials;
 
 @Path("/api/v2/session")
-public class ContribSessionResource {
+public class SessionWithGoogleResource {
     @Inject protected UserStore userStore;
     @Inject protected SessionStore sessionStore;
     @Inject protected Optional<GoogleAuth> googleAuth;
 
-    @Inject public ContribSessionResource() {}
+    @Inject public SessionWithGoogleResource() {}
 
     @POST
     @Path("/login-google")

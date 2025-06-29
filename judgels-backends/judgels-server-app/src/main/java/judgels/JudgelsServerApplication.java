@@ -162,10 +162,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 Duration.ofDays(1));
 
         if (JudgelsApp.isTLX()) {
-            env.jersey().register(component.tlxSessionResource());
-            env.jersey().register(component.tlxUserAccountResource());
-            env.jersey().register(component.tlxUserRatingResource());
-            env.jersey().register(component.tlxUserRegistrationWebResource());
+            env.jersey().register(component.sessionWithGoogleResource());
+            env.jersey().register(component.userAccountWithRegistrationResource());
+            env.jersey().register(component.userRatingResource());
+            env.jersey().register(component.userRegistrationWebResource());
         }
     }
 
@@ -229,7 +229,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestSupervisorResource());
 
         if (JudgelsApp.isTLX()) {
-            env.jersey().register(component.tlxContestRatingResource());
+            env.jersey().register(component.contestRatingResource());
         }
 
         component.scheduler().scheduleWithFixedDelay(

@@ -19,12 +19,12 @@ import tlx.jophiel.api.user.account.GoogleUserRegistrationData;
 import tlx.jophiel.api.user.account.UserRegistrationData;
 
 @Path("/api/v2/user-account")
-public class ContribUserAccountResource {
+public class UserAccountWithRegistrationResource {
     @Inject protected UserStore userStore;
     @Inject protected Optional<UserRegisterer> userRegisterer;
     @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
 
-    @Inject public ContribUserAccountResource() {}
+    @Inject public UserAccountWithRegistrationResource() {}
 
     @POST
     @Path("/register")

@@ -1,4 +1,4 @@
-package tlx.jophiel.api;
+package judgels.contrib.jophiel.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -15,7 +15,7 @@ import tlx.jophiel.TlxUserAccountClient;
 import tlx.jophiel.api.session.TlxSessionErrors;
 import tlx.jophiel.api.user.account.UserRegistrationData;
 
-class TlxUserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
+class UserAccountWithRegistrationApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final TlxUserAccountClient accountClient = createClient(TlxUserAccountClient.class);
     private final SessionClient sessionClient = createClient(SessionClient.class);
 
