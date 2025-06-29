@@ -1,12 +1,12 @@
-package tlx.jophiel.api.session;
+package judgels.contrib.jophiel.api.session;
 
 import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
 import judgels.service.api.JudgelsServiceException;
 
-public class TlxSessionErrors {
-    private TlxSessionErrors() {}
+public class SessionWithRegistrationErrors {
+    private SessionWithRegistrationErrors() {}
 
     public static final String USER_NOT_ACTIVATED = "Jophiel:UserNotActivated";
 

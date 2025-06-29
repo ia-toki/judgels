@@ -11,13 +11,13 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
+import judgels.contrib.jophiel.api.session.GoogleCredentials;
 import judgels.contrib.jophiel.auth.google.GoogleAuth;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
-import tlx.jophiel.api.session.GoogleCredentials;
 
 @Path("/api/v2/session")
 public class SessionWithGoogleResource {

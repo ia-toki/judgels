@@ -4,6 +4,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
 import java.util.Optional;
+import judgels.contrib.jophiel.api.user.account.GoogleUserRegistrationData;
+import judgels.contrib.jophiel.api.user.account.UserRegistrationData;
 import judgels.contrib.jophiel.auth.google.GoogleAuth;
 import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaVerifier;
 import judgels.jophiel.api.user.User;
@@ -11,8 +13,6 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.info.UserInfoStore;
-import tlx.jophiel.api.user.account.GoogleUserRegistrationData;
-import tlx.jophiel.api.user.account.UserRegistrationData;
 
 public class UserRegisterer {
     private final UserStore userStore;

@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.contrib.jophiel.UserRatingClient;
+import judgels.contrib.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import org.junit.jupiter.api.Test;
-import tlx.jophiel.UserRatingClient;
-import tlx.jophiel.api.user.rating.UserRatingUpdateData;
 
 public class UserRatingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserRatingClient userRatingClient = createClient(UserRatingClient.class);

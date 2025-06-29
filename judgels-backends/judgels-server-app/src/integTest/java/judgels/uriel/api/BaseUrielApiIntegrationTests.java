@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.contrib.jophiel.UserRatingClient;
+import judgels.contrib.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.sandalphon.api.problem.Problem;
@@ -41,8 +43,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import tlx.jophiel.UserRatingClient;
-import tlx.jophiel.api.user.rating.UserRatingUpdateData;
 
 public abstract class BaseUrielApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     protected static final String ADMIN = "admin";

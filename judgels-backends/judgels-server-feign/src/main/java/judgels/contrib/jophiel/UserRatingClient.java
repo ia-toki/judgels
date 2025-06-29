@@ -1,11 +1,11 @@
-package tlx.jophiel;
+package judgels.contrib.jophiel;
 
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import java.util.List;
+import judgels.contrib.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
-import tlx.jophiel.api.user.rating.UserRatingUpdateData;
 
 public interface UserRatingClient {
     @RequestLine("POST /api/v2/user-rating")

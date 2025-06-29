@@ -1,4 +1,4 @@
-package tlx.jophiel.api.user.account;
+package judgels.contrib.jophiel.api.user.account;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
