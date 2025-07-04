@@ -8,7 +8,9 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
 import judgels.app.JudgelsApp;
-import judgels.contrib.fs.aws.AwsModule;
+import judgels.contrib.fs.aws.AwsConfiguration;
+import judgels.contrib.fs.aws.AwsFileSystem;
+import judgels.contrib.fs.aws.AwsFsConfiguration;
 import judgels.contrib.jophiel.auth.AuthModule;
 import judgels.contrib.jophiel.user.registration.UserRegistrationModule;
 import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaModule;
@@ -23,7 +25,6 @@ import judgels.jophiel.JophielConfiguration;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.session.SessionModule;
 import judgels.jophiel.user.account.UserResetPasswordModule;
-import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.WebModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
@@ -39,7 +40,6 @@ import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.uriel.DaggerUrielComponent;
 import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
-import judgels.uriel.file.FileModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
@@ -128,14 +128,12 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
-                .userAvatarModule(new UserAvatarModule(jophielConfig.getUserAvatarConfig()))
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
                 .webModule(new WebModule(jophielConfig.getWebConfig()));
 
         if (JudgelsApp.isTLX()) {
             componentBuilder
-                    .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
                     .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                     .userRegistrationModule(new UserRegistrationModule(
                             jophielConfig.getUserRegistrationConfig(),
@@ -200,14 +198,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(urielConfig.getGabrielConfig()))
-                .fileModule(new FileModule(urielConfig.getFileConfig()))
-                .submissionModule(new judgels.uriel.submission.programming.SubmissionModule(urielConfig.getSubmissionConfig()));
-
-        if (JudgelsApp.isTLX()) {
-            componentBuilder
-                    .awsModule(new AwsModule(urielConfig.getAwsConfig()));
-        }
+                .gabrielClientModule(new GabrielClientModule(urielConfig.getGabrielConfig()));
 
         UrielComponent component = componentBuilder.build();
 
@@ -265,14 +256,16 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(jerahmeelConfig.getGabrielConfig()))
-                .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(
-                        jerahmeelConfig.getSubmissionConfig(),
-                        jerahmeelConfig.getStatsConfig()))
+                .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(jerahmeelConfig.getStatsConfig()))
                 .itemSubmissionModule(new ItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
         if (JudgelsApp.isTLX()) {
-            componentBuilder
-                    .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()));
+            if (jerahmeelConfig.getAwsConfig().isPresent() && jerahmeelConfig.getSubmissionConfig().getFs() instanceof AwsFsConfiguration) {
+                AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
+                AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().getFs();
+                AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
+                componentBuilder.submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
+            }
         }
 
         JerahmeelComponent component = componentBuilder.build();

@@ -45,7 +45,6 @@ import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
-import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.jophiel.user.web.WebConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
@@ -55,7 +54,6 @@ import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.service.feign.FeignClients;
 import judgels.uriel.UrielConfiguration;
-import judgels.uriel.file.FileConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -116,7 +114,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                         .build())
                 .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
                 .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
-                .userAvatarConfig(UserAvatarConfiguration.DEFAULT)
                 .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT)
                 .sessionConfig(SessionConfiguration.DEFAULT)
                 .webConfig(WebConfiguration.DEFAULT)
@@ -124,8 +121,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
 
         UrielConfiguration urielConfig = new UrielConfiguration.Builder()
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
-                .submissionConfig(judgels.uriel.submission.programming.SubmissionConfiguration.DEFAULT)
-                .fileConfig(FileConfiguration.DEFAULT)
                 .build();
 
         SandalphonConfiguration sandalphonConfig = new SandalphonConfiguration.Builder()

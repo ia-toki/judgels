@@ -55,10 +55,6 @@ judgels:
 #    password: guest
 
 jophiel:
-  userAvatar:
-    fs:
-      type: local
-
   userRegistration:
     enabled: false
     useRecaptcha: false
@@ -100,14 +96,6 @@ uriel:
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: uriel-grading-response
-
-  submission:
-    fs:
-      type: local
-
-  file:
-    fs:
-      type: local
 
 jerahmeel:
   gabriel:

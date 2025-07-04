@@ -5,23 +5,26 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
-import judgels.contrib.fs.aws.AwsConfiguration;
 import judgels.fs.FileSystem;
-import judgels.fs.FileSystems;
+import judgels.fs.local.LocalFileSystem;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class UserAvatarModule {
-    private final UserAvatarConfiguration config;
+    private final Optional<FileSystem> fs;
 
-    public UserAvatarModule(UserAvatarConfiguration config) {
-        this.config = config;
+    public UserAvatarModule() {
+        this.fs = Optional.empty();
+    }
+
+    public UserAvatarModule(FileSystem fs) {
+        this.fs = Optional.of(fs);
     }
 
     @Provides
     @Singleton
     @UserAvatarFs
-    FileSystem userAvatarFs(Optional<AwsConfiguration> awsConfig, @JudgelsBaseDataDir Path baseDataDir) {
-        return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("user-avatars"));
+    FileSystem userAvatarFs(@JudgelsBaseDataDir Path baseDataDir) {
+        return fs.orElse(new LocalFileSystem(baseDataDir.resolve("user-avatars")));
     }
 }
