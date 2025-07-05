@@ -1,4 +1,4 @@
-package judgels.jophiel.persistence;
+package judgels.contrib.jophiel.persistence;
 
 import java.util.Optional;
 import judgels.persistence.Dao;

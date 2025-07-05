@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import judgels.contrib.jophiel.persistence.UserRatingEventDao;
+import judgels.contrib.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.persistence.UserRatingDao;
-import judgels.jophiel.persistence.UserRatingEventDao;
-import judgels.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.persistence.UserRatingModel;
 import judgels.persistence.api.Page;
 
