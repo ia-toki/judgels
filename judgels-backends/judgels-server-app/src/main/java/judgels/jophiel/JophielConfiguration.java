@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.contrib.jophiel.auth.AuthConfiguration;
-import judgels.contrib.jophiel.user.registration.UserRegistrationConfiguration;
-import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaConfiguration;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
@@ -35,10 +33,10 @@ public interface JophielConfiguration {
     WebConfiguration getWebConfig();
 
     @JsonProperty("recaptcha")
-    Optional<RecaptchaConfiguration> getRecaptchaConfig();
+    Optional<judgels.contrib.jophiel.recaptcha.RecaptchaConfiguration> getRecaptchaConfig();
 
     @JsonProperty("userRegistration")
-    Optional<UserRegistrationConfiguration> getUserRegistrationConfig();
+    Optional<judgels.contrib.jophiel.user.registration.UserRegistrationConfiguration> getUserRegistrationConfig();
 
     @Value.Check
     default void check() {

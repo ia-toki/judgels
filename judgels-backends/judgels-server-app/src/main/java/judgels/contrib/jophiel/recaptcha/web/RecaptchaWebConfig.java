@@ -1,7 +1,7 @@
-package judgels.contrib.jophiel.user.registration.recaptcha.web;
+package judgels.contrib.jophiel.recaptcha.web;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaConfiguration;
+import judgels.contrib.jophiel.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

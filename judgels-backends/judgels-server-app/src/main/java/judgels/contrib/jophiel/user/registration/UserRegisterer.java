@@ -7,7 +7,7 @@ import java.util.Optional;
 import judgels.contrib.jophiel.api.user.account.GoogleUserRegistrationData;
 import judgels.contrib.jophiel.api.user.account.UserRegistrationData;
 import judgels.contrib.jophiel.auth.google.GoogleAuth;
-import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaVerifier;
+import judgels.contrib.jophiel.recaptcha.RecaptchaVerifier;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.info.UserInfo;
