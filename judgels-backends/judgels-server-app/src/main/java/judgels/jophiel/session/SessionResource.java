@@ -11,8 +11,9 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import judgels.app.JudgelsApp;
+import java.util.Optional;
 import judgels.contrib.jophiel.api.session.SessionWithRegistrationErrors;
+import judgels.contrib.jophiel.user.registration.UserRegistrationConfiguration;
 import judgels.contrib.jophiel.user.registration.UserRegistrationEmailStore;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
@@ -28,6 +29,7 @@ public class SessionResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
+    @Inject protected Optional<UserRegistrationConfiguration> userRegistrationConfig;
     @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
     @Inject protected SessionStore sessionStore;
     @Inject protected SessionConfiguration sessionConfiguration;
@@ -45,7 +47,7 @@ public class SessionResource {
                     userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                     .orElseThrow(ForbiddenException::new));
 
-        if (JudgelsApp.isTLX()) {
+        if (userRegistrationConfig.isPresent()) {
             if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
                 throw SessionWithRegistrationErrors.userNotActivated(user.getEmail());
             }

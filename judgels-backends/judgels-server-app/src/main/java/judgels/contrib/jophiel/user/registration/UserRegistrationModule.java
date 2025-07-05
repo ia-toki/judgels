@@ -30,7 +30,12 @@ public class UserRegistrationModule {
     }
 
     @Provides
-    Optional<UserRegistrationWebConfig> webConfig() {
+    Optional<UserRegistrationConfiguration> userRegistrationConfig() {
+        return config;
+    }
+
+    @Provides
+    Optional<UserRegistrationWebConfig> userRegistrationWebConfig() {
         return webConfig;
     }
 
