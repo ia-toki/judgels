@@ -5,7 +5,7 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import judgels.contrib.jophiel.auth.google.GoogleAuth;
-import judgels.contrib.jophiel.user.registration.recaptcha.RecaptchaVerifier;
+import judgels.contrib.jophiel.recaptcha.RecaptchaVerifier;
 import judgels.contrib.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.jophiel.mailer.Mailer;
 import judgels.jophiel.user.UserStore;
