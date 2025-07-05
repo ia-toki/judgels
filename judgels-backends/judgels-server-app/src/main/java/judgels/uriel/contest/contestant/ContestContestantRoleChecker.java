@@ -4,6 +4,7 @@ import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermissio
 
 import jakarta.inject.Inject;
 import java.util.Optional;
+import judgels.contrib.uriel.contest.rating.ContestRatingProvider;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
@@ -13,12 +14,12 @@ import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.ContestRoleDao;
-import tlx.uriel.api.contest.TlxDivisions;
 
 public class ContestContestantRoleChecker {
     private final ContestRoleChecker contestRoleChecker;
     private final ContestRoleDao contestRoleDao;
     private final ContestTimer contestTimer;
+    private final ContestRatingProvider ratingProvider;
     private final ContestModuleStore moduleStore;
     private final ContestSupervisorStore supervisorStore;
 
@@ -27,11 +28,13 @@ public class ContestContestantRoleChecker {
             ContestRoleChecker contestRoleChecker,
             ContestRoleDao contestRoleDao,
             ContestTimer contestTimer,
+            ContestRatingProvider ratingProvider,
             ContestModuleStore moduleStore,
             ContestSupervisorStore supervisorStore) {
 
         this.contestRoleChecker = contestRoleChecker;
         this.contestTimer = contestTimer;
+        this.ratingProvider = ratingProvider;
         this.contestRoleDao = contestRoleDao;
         this.moduleStore = moduleStore;
         this.supervisorStore = supervisorStore;
@@ -86,6 +89,6 @@ public class ContestContestantRoleChecker {
         if (!config.isPresent()) {
             return true;
         }
-        return TlxDivisions.isRatingInDivision(rating, config.get().getDivision());
+        return ratingProvider.isRatingInDivision(rating, config.get().getDivision());
     }
 }

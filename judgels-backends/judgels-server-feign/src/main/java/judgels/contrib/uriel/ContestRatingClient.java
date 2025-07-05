@@ -1,9 +1,9 @@
-package judgels.uriel;
+package judgels.contrib.uriel;
 
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
-import judgels.uriel.api.contest.rating.ContestsPendingRatingResponse;
+import judgels.contrib.uriel.api.contest.rating.ContestsPendingRatingResponse;
 
 public interface ContestRatingClient {
     @RequestLine("GET /api/v2/contest-rating/pending")

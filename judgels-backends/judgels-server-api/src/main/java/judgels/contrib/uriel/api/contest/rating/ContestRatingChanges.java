@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest.rating;
+package judgels.contrib.uriel.api.contest.rating;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
