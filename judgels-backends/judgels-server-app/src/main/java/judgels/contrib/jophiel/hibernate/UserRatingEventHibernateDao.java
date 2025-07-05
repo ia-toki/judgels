@@ -1,12 +1,12 @@
-package judgels.jophiel.hibernate;
+package judgels.contrib.jophiel.hibernate;
 
 import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import judgels.jophiel.persistence.UserRatingEventDao;
-import judgels.jophiel.persistence.UserRatingEventModel;
-import judgels.jophiel.persistence.UserRatingEventModel_;
+import judgels.contrib.jophiel.persistence.UserRatingEventDao;
+import judgels.contrib.jophiel.persistence.UserRatingEventModel;
+import judgels.contrib.jophiel.persistence.UserRatingEventModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 

@@ -1,4 +1,4 @@
-package judgels.jophiel.persistence;
+package judgels.contrib.jophiel.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

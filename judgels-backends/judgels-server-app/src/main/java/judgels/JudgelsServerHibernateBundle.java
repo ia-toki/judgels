@@ -19,9 +19,7 @@ import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.UserInfoModel;
 import judgels.jophiel.persistence.UserModel;
-import judgels.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.persistence.UserRatingModel;
-import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.jophiel.persistence.UserRoleModel;
 import judgels.sandalphon.persistence.BundleGradingModel;
@@ -55,10 +53,10 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 UserModel.class,
                 UserInfoModel.class,
                 UserRatingModel.class,
-                UserRatingEventModel.class,
-                UserRegistrationEmailModel.class,
                 UserResetPasswordModel.class,
                 UserRoleModel.class,
+                judgels.contrib.jophiel.persistence.UserRatingEventModel.class,
+                judgels.contrib.jophiel.persistence.UserRegistrationEmailModel.class,
 
                 // Sandalphon
                 BundleGradingModel.class,
