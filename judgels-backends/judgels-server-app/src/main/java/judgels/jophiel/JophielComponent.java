@@ -3,9 +3,6 @@ package judgels.jophiel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.contrib.jophiel.auth.AuthModule;
-import judgels.contrib.jophiel.recaptcha.RecaptchaModule;
-import judgels.contrib.jophiel.user.registration.UserRegistrationModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.profile.ProfileResource;
@@ -51,10 +48,9 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         SessionModule.class,
         WebModule.class,
 
-        // TLX
-        AuthModule.class,
-        RecaptchaModule.class,
-        UserRegistrationModule.class})
+        judgels.contrib.jophiel.auth.AuthModule.class,
+        judgels.contrib.jophiel.recaptcha.RecaptchaModule.class,
+        judgels.contrib.jophiel.user.registration.UserRegistrationModule.class})
 @Singleton
 public interface JophielComponent {
     ProfileResource profileResource();

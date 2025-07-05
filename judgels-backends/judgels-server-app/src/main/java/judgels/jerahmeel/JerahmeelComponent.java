@@ -35,7 +35,6 @@ import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
-import tlx.jerahmeel.tasks.TlxJerahmeelTaskModule;
 
 @Component(modules = {
         // Judgels service
@@ -61,8 +60,7 @@ import tlx.jerahmeel.tasks.TlxJerahmeelTaskModule;
         ItemSubmissionModule.class,
         JerahmeelTaskModule.class,
 
-        // TLX
-        TlxJerahmeelTaskModule.class})
+        tlx.jerahmeel.tasks.TlxJerahmeelTaskModule.class})
 @Singleton
 public interface JerahmeelComponent {
     ArchiveResource archiveResource();

@@ -40,7 +40,6 @@ import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 import judgels.uriel.tasks.DumpContestTask;
 import judgels.uriel.tasks.UrielTaskModule;
-import tlx.uriel.tasks.TlxUrielTaskModule;
 
 @Component(modules = {
         // Judgels service
@@ -68,8 +67,7 @@ import tlx.uriel.tasks.TlxUrielTaskModule;
         ContestScoreboardUpdaterModule.class,
         UrielTaskModule.class,
 
-        // TLX
-        TlxUrielTaskModule.class})
+        tlx.uriel.tasks.TlxUrielTaskModule.class})
 @Singleton
 public interface UrielComponent {
     ContestAnnouncementResource contestAnnouncementResource();

@@ -3,7 +3,6 @@ package judgels.jerahmeel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
-import judgels.contrib.fs.aws.AwsConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
@@ -21,10 +20,8 @@ public interface JerahmeelConfiguration {
     @JsonProperty("stats")
     StatsConfiguration getStatsConfig();
 
-    // TLX
-
     @JsonProperty("aws")
-    Optional<AwsConfiguration> getAwsConfig();
+    Optional<judgels.contrib.fs.aws.AwsConfiguration> getAwsConfig();
 
     class Builder extends ImmutableJerahmeelConfiguration.Builder {}
 }
