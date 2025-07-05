@@ -7,7 +7,6 @@ import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -16,10 +15,15 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import judgels.contrib.uriel.api.contest.rating.ContestRating;
+import judgels.contrib.uriel.api.contest.rating.ContestRatingChanges;
+import judgels.contrib.uriel.api.contest.rating.ContestRatingHistoryResponse;
+import judgels.contrib.uriel.api.contest.rating.ContestsPendingRatingResponse;
 import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.RatingEvent;
@@ -29,10 +33,6 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestInfo;
-import judgels.uriel.api.contest.rating.ContestRating;
-import judgels.uriel.api.contest.rating.ContestRatingChanges;
-import judgels.uriel.api.contest.rating.ContestRatingHistoryResponse;
-import judgels.uriel.api.contest.rating.ContestsPendingRatingResponse;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.ContestRoleChecker;
@@ -40,7 +40,6 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.RawContestScoreboard;
-import tlx.jophiel.api.user.rating.TlxRating;
 
 @Path("/api/v2/contest-rating")
 public class ContestRatingResource {
@@ -49,7 +48,7 @@ public class ContestRatingResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestScoreboardStore scoreboardStore;
     @Inject protected ContestScoreboardBuilder scoreboardBuilder;
-    @Inject protected ContestRatingComputer ratingComputer;
+    @Inject protected ContestRatingProvider ratingProvider;
     @Inject protected JophielClient jophielClient;
 
     @Inject public ContestRatingResource() {}
@@ -114,24 +113,20 @@ public class ContestRatingResource {
 
         Map<String, Profile> profilesMap = jophielClient.getProfiles(ranksMap.keySet(), contest.getBeginTime());
 
-        Map<String, Integer> publicRatingsMap = Maps.newHashMap();
-        Map<String, Integer> hiddenRatingsMap = Maps.newHashMap();
-
         List<String> contestantJids = Lists.newArrayList();
+        Map<String, UserRating> currentRatingsMap = new HashMap<>();
 
         for (Map.Entry<String, Profile> entry : profilesMap.entrySet()) {
             String contestantJid = entry.getKey();
             Optional<UserRating> rating = entry.getValue().getRating();
-            int publicRating = rating.map(UserRating::getPublicRating).orElse(TlxRating.INITIAL_RATING);
-            int hiddenRating = rating.map(UserRating::getHiddenRating).orElse(TlxRating.INITIAL_RATING);
 
-            publicRatingsMap.put(contestantJid, publicRating);
-            hiddenRatingsMap.put(contestantJid, hiddenRating);
             contestantJids.add(contestantJid);
+            if (rating.isPresent()) {
+                currentRatingsMap.put(contestantJid, rating.get());
+            }
         }
 
-        Map<String, UserRating> ratingsMap =
-                ratingComputer.compute(contestantJids, ranksMap, publicRatingsMap, hiddenRatingsMap);
+        Map<String, UserRating> ratingsMap = ratingProvider.getUpdatedRatings(contestantJids, ranksMap, currentRatingsMap);
 
         return new ContestRatingChanges.Builder()
                 .ratingsMap(ratingsMap)

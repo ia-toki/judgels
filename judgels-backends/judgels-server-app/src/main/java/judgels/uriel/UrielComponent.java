@@ -3,6 +3,7 @@ package judgels.uriel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
+import judgels.contrib.uriel.contest.rating.ContestRatingModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -65,6 +66,7 @@ import judgels.uriel.tasks.UrielTaskModule;
         ItemSubmissionModule.class,
         ContestLogModule.class,
         ContestScoreboardUpdaterModule.class,
+        ContestRatingModule.class,
         UrielTaskModule.class,
 
         tlx.uriel.tasks.TlxUrielTaskModule.class})

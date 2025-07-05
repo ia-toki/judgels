@@ -15,6 +15,7 @@ import judgels.contrib.jophiel.auth.AuthModule;
 import judgels.contrib.jophiel.recaptcha.RecaptchaModule;
 import judgels.contrib.jophiel.user.registration.UserRegistrationModule;
 import judgels.contrib.jophiel.user.registration.web.UserRegistrationWebConfig;
+import judgels.contrib.uriel.contest.rating.ContestRatingModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -41,6 +42,7 @@ import judgels.uriel.DaggerUrielComponent;
 import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
 import org.eclipse.jetty.server.session.SessionHandler;
+import tlx.uriel.contest.rating.TlxContestRatingProvider;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
     private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();
@@ -199,6 +201,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(urielConfig.getGabrielConfig()));
+
+        if (JudgelsApp.isTLX()) {
+            componentBuilder
+                    .contestRatingModule(new ContestRatingModule(new TlxContestRatingProvider()));
+        }
 
         UrielComponent component = componentBuilder.build();
 
