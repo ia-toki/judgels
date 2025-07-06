@@ -15,6 +15,7 @@ import judgels.jophiel.user.account.UserResetPasswordModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.avatar.UserAvatarResource;
 import judgels.jophiel.user.info.UserInfoResource;
+import judgels.jophiel.user.rating.UserRatingResource;
 import judgels.jophiel.user.role.UserRoleResource;
 import judgels.jophiel.user.search.UserSearchResource;
 import judgels.jophiel.user.superadmin.SuperadminCreator;
@@ -60,6 +61,7 @@ public interface JophielComponent {
     UserAccountResource userAccountResource();
     UserAvatarResource userAvatarResource();
     UserInfoResource userProfileResource();
+    UserRatingResource userRatingResource();
     UserRoleResource userRoleResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
@@ -69,6 +71,5 @@ public interface JophielComponent {
 
     judgels.contrib.jophiel.session.SessionWithGoogleResource sessionWithGoogleResource();
     judgels.contrib.jophiel.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
-    judgels.contrib.jophiel.user.rating.UserRatingResource userRatingResource();
     judgels.contrib.jophiel.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 }

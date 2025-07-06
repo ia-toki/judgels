@@ -1,4 +1,4 @@
-package judgels.contrib.jophiel.persistence;
+package judgels.jophiel.persistence;
 
 import java.time.Instant;
 import java.util.Collection;

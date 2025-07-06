@@ -152,6 +152,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userProfileResource());
+        env.jersey().register(component.userRatingResource());
         env.jersey().register(component.userRoleResource());
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
@@ -164,7 +165,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         if (JudgelsApp.isTLX()) {
             env.jersey().register(component.sessionWithGoogleResource());
             env.jersey().register(component.userAccountWithRegistrationResource());
-            env.jersey().register(component.userRatingResource());
             env.jersey().register(component.userRegistrationWebResource());
         }
     }
