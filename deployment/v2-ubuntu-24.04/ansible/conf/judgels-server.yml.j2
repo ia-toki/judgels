@@ -80,6 +80,21 @@ jophiel:
     secretKey: {{ recaptcha_secretKey }}
 {% endif %}
 
+{% if jophiel_aws_accessKey is defined %}
+  aws:
+    accessKey: {{ jophiel_aws_accessKey }}
+    secretKey: {{ jophiel_aws_secretKey }}
+    s3BucketRegionId: {{ jophiel_aws_s3BucketRegionId }}
+    cloudFrontBaseUrl: {{ jophiel_aws_cloudFrontBaseUrl }}
+{% endif %}
+
+  userAvatar:
+    fs:
+      type: {{ jophiel_userAvatar_fs_type | default('local', true) }}
+{% if jophiel_userAvatar_fs_type | default('local', true) != 'local' %}
+      s3BucketName: {{ jophiel_userAvatar_fs_s3BucketName }}
+{% endif %}
+
   userRegistration:
     enabled: {{ jophiel_userRegistration_enabled | default(false, true) }}
 {% if jophiel_userRegistration_enabled | default(false, true) %}
@@ -131,6 +146,27 @@ uriel:
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: uriel-grading-response
+
+{% if uriel_aws_accessKey is defined %}
+  aws:
+    accessKey: {{ uriel_aws_accessKey }}
+    secretKey: {{ uriel_aws_secretKey }}
+    s3BucketRegionId: {{ uriel_aws_s3BucketRegionId }}
+{% endif %}
+
+  submission:
+    fs:
+      type: {{ uriel_submission_fs_type | default('local', true) }}
+{% if uriel_submission_fs_type | default('local', true) != 'local' %}
+      s3BucketName: {{ uriel_submission_fs_s3BucketName }}
+{% endif %}
+
+  file:
+    fs:
+      type: {{ uriel_file_fs_type | default('local', true) }}
+{% if uriel_file_fs_type | default('local', true) != 'local' %}
+      s3BucketName: {{ uriel_file_fs_s3BucketName }}
+{% endif %}
 
 jerahmeel:
   gabriel:
