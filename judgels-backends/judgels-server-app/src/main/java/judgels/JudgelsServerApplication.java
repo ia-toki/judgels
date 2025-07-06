@@ -267,11 +267,13 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .itemSubmissionModule(new ItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
         if (JudgelsApp.isTLX()) {
-            if (jerahmeelConfig.getAwsConfig().isPresent() && jerahmeelConfig.getSubmissionConfig().getFs() instanceof AwsFsConfiguration) {
-                AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
-                AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().getFs();
-                AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
-                componentBuilder.submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
+            if (jerahmeelConfig.getSubmissionConfig().isPresent()) {
+                if (jerahmeelConfig.getAwsConfig().isPresent() && jerahmeelConfig.getSubmissionConfig().get().getFs() instanceof AwsFsConfiguration) {
+                    AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
+                    AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().get().getFs();
+                    AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
+                    componentBuilder.submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
+                }
             }
         }
 

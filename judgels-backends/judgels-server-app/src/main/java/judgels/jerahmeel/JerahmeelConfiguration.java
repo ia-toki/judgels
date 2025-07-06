@@ -15,7 +15,7 @@ public interface JerahmeelConfiguration {
     GabrielClientConfiguration getGabrielConfig();
 
     @JsonProperty("submission")
-    SubmissionConfiguration getSubmissionConfig();
+    Optional<SubmissionConfiguration> getSubmissionConfig();
 
     @JsonProperty("stats")
     StatsConfiguration getStatsConfig();
