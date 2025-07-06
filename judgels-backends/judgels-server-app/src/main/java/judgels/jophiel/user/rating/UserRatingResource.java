@@ -1,4 +1,4 @@
-package judgels.contrib.jophiel.user.rating;
+package judgels.jophiel.user.rating;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -17,7 +17,6 @@ import java.util.List;
 import judgels.contrib.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.user.UserRoleChecker;
-import judgels.jophiel.user.rating.UserRatingStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 

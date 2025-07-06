@@ -55,7 +55,7 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 UserRatingModel.class,
                 UserResetPasswordModel.class,
                 UserRoleModel.class,
-                judgels.contrib.jophiel.persistence.UserRatingEventModel.class,
+                judgels.jophiel.persistence.UserRatingEventModel.class,
                 judgels.contrib.jophiel.persistence.UserRegistrationEmailModel.class,
 
                 // Sandalphon
