@@ -14,11 +14,11 @@ public interface JerahmeelConfiguration {
     @JsonProperty("gabriel")
     GabrielClientConfiguration getGabrielConfig();
 
-    @JsonProperty("submission")
-    Optional<SubmissionConfiguration> getSubmissionConfig();
-
     @JsonProperty("stats")
     StatsConfiguration getStatsConfig();
+
+    @JsonProperty("submission")
+    Optional<SubmissionConfiguration> getSubmissionConfig();
 
     @JsonProperty("aws")
     Optional<judgels.contrib.fs.aws.AwsConfiguration> getAwsConfig();
