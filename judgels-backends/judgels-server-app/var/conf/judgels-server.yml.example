@@ -55,15 +55,6 @@ judgels:
 #    password: guest
 
 jophiel:
-  userRegistration:
-    enabled: false
-    useRecaptcha: false
-    activationEmailTemplate:
-      subject: Activate your account
-      body: |
-        <p>Dear {{username}},</p>
-        <p><a href="http://localhost:3000/activate/{{emailCode}}">Click here</a> to activate your account.</p>
-
   userResetPassword:
     enabled: false
     requestEmailTemplate:
