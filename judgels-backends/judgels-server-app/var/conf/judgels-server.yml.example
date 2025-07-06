@@ -102,9 +102,5 @@ jerahmeel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: jerahmeel-grading-response
 
-  submission:
-    fs:
-      type: local
-
   stats:
     enabled: false

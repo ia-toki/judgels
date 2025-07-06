@@ -129,7 +129,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
 
         JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
-                .submissionConfig(judgels.jerahmeel.submission.programming.SubmissionConfiguration.DEFAULT)
                 .statsConfig(StatsConfiguration.DEFAULT)
                 .build();
 
