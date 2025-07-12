@@ -307,7 +307,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.admin().addTask(component.tlxDeleteProblemTask());
             env.admin().addTask(component.tlxMoveProblemToChapterTask());
             env.admin().addTask(component.tlxMoveProblemToProblemSetTask());
-            env.admin().addTask(component.tlxUploadLocalSubmissionsToAwsTask());
         }
     }
 }
