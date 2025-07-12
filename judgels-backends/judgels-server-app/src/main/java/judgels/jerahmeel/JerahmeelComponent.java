@@ -87,4 +87,5 @@ public interface JerahmeelComponent {
     tlx.jerahmeel.tasks.DeleteProblemTask tlxDeleteProblemTask();
     tlx.jerahmeel.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
     tlx.jerahmeel.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();
+    tlx.jerahmeel.tasks.UploadLocalSubmissionsToAwsTask tlxUploadLocalSubmissionsToAwsTask();
 }
