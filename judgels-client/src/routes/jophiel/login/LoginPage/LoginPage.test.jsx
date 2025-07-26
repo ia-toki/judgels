@@ -29,12 +29,10 @@ describe('LoginPage', () => {
 
   test('form', () => {
     const usernameOrEmail = wrapper.find('input[name="usernameOrEmail"]');
-    usernameOrEmail.getDOMNode().value = 'user';
-    usernameOrEmail.simulate('input');
+    usernameOrEmail.prop('onChange')({ target: { value: 'user' } });
 
     const password = wrapper.find('input[name="password"]');
-    password.getDOMNode().value = 'pass';
-    password.simulate('input');
+    password.prop('onChange')({ target: { value: 'pass' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

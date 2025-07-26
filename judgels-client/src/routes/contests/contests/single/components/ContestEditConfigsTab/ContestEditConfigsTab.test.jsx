@@ -75,48 +75,37 @@ describe('ContestEditConfigsTab', () => {
         button.simulate('click');
 
         const icpcWrongSubmissionPenalty = wrapper.find('input[name="icpcWrongSubmissionPenalty"]');
-        icpcWrongSubmissionPenalty.getDOMNode().value = '25';
-        icpcWrongSubmissionPenalty.simulate('input');
+        icpcWrongSubmissionPenalty.prop('onChange')({ target: { value: '25' } });
 
         const scoreboardIsIncognito = wrapper.find('input[name="scoreboardIsIncognito"]');
-        scoreboardIsIncognito.getDOMNode().checked = true;
-        scoreboardIsIncognito.simulate('change');
+        scoreboardIsIncognito.prop('onChange')({ target: { checked: true } });
 
         const clarificationTimeLimitDuration = wrapper.find('input[name="clarificationTimeLimitDuration"]');
-        clarificationTimeLimitDuration.getDOMNode().value = '2h 5m';
-        clarificationTimeLimitDuration.simulate('input');
+        clarificationTimeLimitDuration.prop('onChange')({ target: { value: '2h 5m' } });
 
         const divisionDivision = wrapper.find('input[name="divisionDivision"]');
-        divisionDivision.getDOMNode().value = '2';
-        divisionDivision.simulate('input');
+        divisionDivision.prop('onChange')({ target: { value: '2' } });
 
         const frozenScoreboardFreezeTime = wrapper.find('input[name="frozenScoreboardFreezeTime"]');
-        frozenScoreboardFreezeTime.getDOMNode().value = '1h 5m';
-        frozenScoreboardFreezeTime.simulate('input');
+        frozenScoreboardFreezeTime.prop('onChange')({ target: { value: '1h 5m' } });
 
         const frozenScoreboardIsOfficialAllowed = wrapper.find('input[name="frozenScoreboardIsOfficialAllowed"]');
-        frozenScoreboardIsOfficialAllowed.getDOMNode().checked = true;
-        frozenScoreboardIsOfficialAllowed.simulate('change');
+        frozenScoreboardIsOfficialAllowed.prop('onChange')({ target: { checked: true } });
 
         const mergedScoreboardPreviousContestJid = wrapper.find('input[name="mergedScoreboardPreviousContestJid"]');
-        mergedScoreboardPreviousContestJid.getDOMNode().value = 'JIDCONT12345';
-        mergedScoreboardPreviousContestJid.simulate('input');
+        mergedScoreboardPreviousContestJid.prop('onChange')({ target: { value: 'JIDCONT12345' } });
 
         const externalScoreboardReceiverUrl = wrapper.find('input[name="externalScoreboardReceiverUrl"]');
-        externalScoreboardReceiverUrl.getDOMNode().value = 'http://new.external.scoreboard';
-        externalScoreboardReceiverUrl.simulate('input');
+        externalScoreboardReceiverUrl.prop('onChange')({ target: { value: 'http://new.external.scoreboard' } });
 
         const externalScoreboardReceiverSecret = wrapper.find('input[name="externalScoreboardReceiverSecret"]');
-        externalScoreboardReceiverSecret.getDOMNode().value = 'the_new_secret';
-        externalScoreboardReceiverSecret.simulate('input');
+        externalScoreboardReceiverSecret.prop('onChange')({ target: { value: 'the_new_secret' } });
 
         const virtualDuration = wrapper.find('input[name="virtualDuration"]');
-        virtualDuration.getDOMNode().value = '5h 5m';
-        virtualDuration.simulate('input');
+        virtualDuration.prop('onChange')({ target: { value: '5h 5m' } });
 
         const editorialPreface = wrapper.find('textarea[name="editorialPreface"]');
-        editorialPreface.getDOMNode().value = '<p>Thank you for your participation.</p>';
-        editorialPreface.simulate('input');
+        editorialPreface.prop('onChange')({ target: { value: '<p>Thank you for your participation.</p>' } });
 
         const form = wrapper.find('form');
         form.simulate('submit');

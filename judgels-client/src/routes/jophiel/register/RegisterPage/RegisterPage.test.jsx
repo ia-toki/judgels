@@ -34,24 +34,19 @@ describe('RegisterPage', () => {
     wrapper.update();
 
     const username = wrapper.find('input[name="username"]');
-    username.getDOMNode().value = 'user';
-    username.simulate('input');
+    username.prop('onChange')({ target: { value: 'user' } });
 
     const name = wrapper.find('input[name="name"]');
-    name.getDOMNode().value = 'name';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'name' } });
 
     const email = wrapper.find('input[name="email"]');
-    email.getDOMNode().value = 'email@domain.com';
-    email.simulate('input');
+    email.prop('onChange')({ target: { value: 'email@domain.com' } });
 
     const password = wrapper.find('input[name="password"]');
-    password.getDOMNode().value = 'pass';
-    password.simulate('input');
+    password.prop('onChange')({ target: { value: 'pass' } });
 
     const confirmPassword = wrapper.find('input[name="confirmPassword"]');
-    confirmPassword.getDOMNode().value = 'pass';
-    confirmPassword.simulate('input');
+    confirmPassword.prop('onChange')({ target: { value: 'pass' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

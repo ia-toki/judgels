@@ -42,27 +42,22 @@ describe('ProblemSetEditDialog', () => {
   test('edit dialog form', () => {
     const slug = wrapper.find('input[name="slug"]');
     expect(slug.prop('value')).toEqual('problemset');
-    slug.getDOMNode().value = 'new-problemset';
-    slug.simulate('input');
+    slug.prop('onChange')({ target: { value: 'new-problemset' } });
 
     const name = wrapper.find('input[name="name"]');
     expect(name.prop('value')).toEqual('Problem Set');
-    name.getDOMNode().value = 'New Problem Set';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New Problem Set' } });
 
     const archiveSlug = wrapper.find('input[name="archiveSlug"]');
     expect(archiveSlug.prop('value')).toEqual('archive');
-    archiveSlug.getDOMNode().value = 'new-archive';
-    archiveSlug.simulate('input');
+    archiveSlug.prop('onChange')({ target: { value: 'new-archive' } });
 
     const description = wrapper.find('textarea[name="description"]');
     expect(description.prop('value')).toEqual('This is a problem set');
-    description.getDOMNode().value = 'New description';
-    description.simulate('input');
+    description.prop('onChange')({ target: { value: 'New description' } });
 
     const contestTime = wrapper.find('input[name="contestTime"]');
-    contestTime.getDOMNode().value = '2100-01-01 00:00';
-    contestTime.simulate('input');
+    contestTime.prop('onChange')({ target: { value: '2100-01-01 00:00' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

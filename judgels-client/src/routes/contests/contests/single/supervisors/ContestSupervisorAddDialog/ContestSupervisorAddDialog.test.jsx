@@ -32,8 +32,7 @@ describe('ContestSupervisorAddDialog', () => {
     button.simulate('click');
 
     const usernames = wrapper.find('textarea[name="usernames"]');
-    usernames.getDOMNode().value = 'andi\n\nbudi\n caca  \n';
-    usernames.simulate('input');
+    usernames.prop('onChange')({ target: { value: 'andi\n\nbudi\n caca  \n' } });
 
     const announcementPermission = wrapper.find('input[name="managementPermissions.Announcements"]');
     announcementPermission.getDOMNode().checked = true;

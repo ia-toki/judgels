@@ -34,24 +34,19 @@ describe('ProblemSetCreateDialog', () => {
     button.simulate('click');
 
     const slug = wrapper.find('input[name="slug"]');
-    slug.getDOMNode().value = 'new-problemSet';
-    slug.simulate('input');
+    slug.prop('onChange')({ target: { value: 'new-problemSet' } });
 
     const name = wrapper.find('input[name="name"]');
-    name.getDOMNode().value = 'New problemSet';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New problemSet' } });
 
     const archiveSlug = wrapper.find('input[name="archiveSlug"]');
-    archiveSlug.getDOMNode().value = 'New archive';
-    archiveSlug.simulate('input');
+    archiveSlug.prop('onChange')({ target: { value: 'New archive' } });
 
     const description = wrapper.find('textarea[name="description"]');
-    description.getDOMNode().value = 'New description';
-    description.simulate('input');
+    description.prop('onChange')({ target: { value: 'New description' } });
 
     const contestTime = wrapper.find('input[name="contestTime"]');
-    contestTime.getDOMNode().value = '2100-01-01 00:00';
-    contestTime.simulate('input');
+    contestTime.prop('onChange')({ target: { value: '2100-01-01 00:00' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');
