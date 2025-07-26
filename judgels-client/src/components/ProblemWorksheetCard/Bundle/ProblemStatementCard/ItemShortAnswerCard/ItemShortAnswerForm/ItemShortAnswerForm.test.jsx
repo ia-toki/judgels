@@ -56,14 +56,13 @@ describe('ItemShortAnswerForm', () => {
         answerButton.simulate('submit');
 
         const textInput = wrapper.find('input');
-        textInput.getDOMNode().value = '1';
-        textInput.simulate('input');
+        textInput.prop('onChange')({ target: { value: '1' } });
       });
 
       test('fill the answer with wrong format will render the new help text', () => {
         const textInput = wrapper.find('input');
-        textInput.getDOMNode().value = 'answer';
-        textInput.simulate('input');
+        textInput.prop('onChange')({ target: { value: 'answer' } });
+        wrapper.update();
         const helpText = wrapper.find('div').at(1).text();
         expect(helpText).toContain('Wrong answer format!');
       });
@@ -117,8 +116,7 @@ describe('ItemShortAnswerForm', () => {
       beforeEach(() => {
         const textInput = wrapper.find('input');
         textInput.simulate('click');
-        textInput.getDOMNode().value = '2';
-        textInput.simulate('input');
+        textInput.prop('onChange')({ target: { value: '2' } });
       });
 
       test('change the answer with right format', () => {
@@ -128,8 +126,8 @@ describe('ItemShortAnswerForm', () => {
 
       test('change the answer with wrong format', () => {
         const textInput = wrapper.find('input');
-        textInput.getDOMNode().value = 'answer';
-        textInput.simulate('input');
+        textInput.prop('onChange')({ target: { value: 'answer' } });
+        wrapper.update();
         const helpText = wrapper.find('div').at(1).text();
         expect(helpText).toContain('Wrong answer format!');
       });

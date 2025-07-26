@@ -33,8 +33,7 @@ describe('ContestClarificationAnswerBox', () => {
 
   test('form', () => {
     const answer = wrapper.find('textarea[name="answer"]');
-    answer.getDOMNode().value = 'Yes.';
-    answer.simulate('input');
+    answer.prop('onChange')({ target: { value: 'Yes.' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

@@ -31,8 +31,7 @@ describe('ContestContestantAddDialog', () => {
     button.simulate('click');
 
     const usernames = wrapper.find('textarea[name="usernames"]');
-    usernames.getDOMNode().value = 'andi\n\nbudi\n caca  \n';
-    usernames.simulate('input');
+    usernames.prop('onChange')({ target: { value: 'andi\n\nbudi\n caca  \n' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

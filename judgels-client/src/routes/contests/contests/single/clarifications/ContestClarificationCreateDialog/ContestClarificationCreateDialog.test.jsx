@@ -39,12 +39,10 @@ describe('ContestClarificationCreateDialog', () => {
     // topicJid.simulate('click');
 
     const title = wrapper.find('input[name="title"]');
-    title.getDOMNode().value = 'Snack';
-    title.simulate('input');
+    title.prop('onChange')({ target: { value: 'Snack' } });
 
     const question = wrapper.find('textarea[name="question"]');
-    question.getDOMNode().value = 'Is snack provided?';
-    question.simulate('input');
+    question.prop('onChange')({ target: { value: 'Is snack provided?' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

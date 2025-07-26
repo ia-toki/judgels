@@ -53,8 +53,8 @@ describe('ItemEssayForm', () => {
         const answerButton = wrapper.find('form');
         answerButton.simulate('submit');
         const textarea = wrapper.find('textarea');
-        textarea.getDOMNode().value = 'answer';
-        textarea.simulate('input');
+        textarea.prop('onChange')({ target: { value: 'answer' } });
+        wrapper.update();
       });
 
       test("textarea value should be 'answer'", () => {
@@ -118,8 +118,8 @@ describe('ItemEssayForm', () => {
         const changeButton = wrapper.find('form');
         await changeButton.simulate('submit');
         const textarea = wrapper.find('textarea').first();
-        textarea.getDOMNode().value = 'answer';
-        textarea.simulate('input');
+        textarea.prop('onChange')({ target: { value: 'answer' } });
+        wrapper.update();
       });
 
       test("textarea value should be 'answer'", () => {
