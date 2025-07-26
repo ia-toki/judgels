@@ -1,6 +1,6 @@
 import HTMLReactParser from 'html-react-parser';
-import render from 'preact-render-to-string';
 import { Component } from 'react';
+import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router';
 
 import { UserRef } from '../UserRef/UserRef';
@@ -23,7 +23,7 @@ export class HtmlText extends Component {
         const profile = profilesMap[userJid];
         str = str.replace(
           '[user:' + profile.username + ']',
-          render(
+          renderToString(
             <StaticRouter>
               <UserRef profile={profile} />
             </StaticRouter>

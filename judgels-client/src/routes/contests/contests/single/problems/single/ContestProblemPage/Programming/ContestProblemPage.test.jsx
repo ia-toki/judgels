@@ -1,7 +1,7 @@
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
-import { act } from 'preact/test-utils';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';

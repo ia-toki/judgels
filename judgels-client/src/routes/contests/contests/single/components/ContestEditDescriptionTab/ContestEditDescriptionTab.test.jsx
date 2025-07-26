@@ -40,8 +40,7 @@ describe('ContestEditDescriptionTab', () => {
 
     const description = wrapper.find('textarea[name="description"]');
     expect(description.prop('value')).toEqual('current description');
-    description.getDOMNode().value = 'new description';
-    description.simulate('input');
+    description.prop('onChange')({ target: { value: 'new description' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

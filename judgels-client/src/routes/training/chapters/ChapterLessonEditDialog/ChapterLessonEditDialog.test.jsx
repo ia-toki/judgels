@@ -58,8 +58,7 @@ describe('ChapterLessonEditDialog', () => {
     const lessonsField = wrapper.find('textarea[name="lessons"]');
     expect(lessonsField.prop('value')).toEqual('A,slug-1\nB,slug-2');
 
-    lessonsField.getDOMNode().value = 'P, slug-3\n  Q,slug-4  ';
-    lessonsField.simulate('input');
+    lessonsField.prop('onChange')({ target: { value: 'P, slug-3\n  Q,slug-4  ' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

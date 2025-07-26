@@ -30,16 +30,13 @@ describe('CourseCreateDialog', () => {
     button.simulate('click');
 
     const slug = wrapper.find('input[name="slug"]');
-    slug.getDOMNode().value = 'new-course';
-    slug.simulate('input');
+    slug.prop('onChange')({ target: { value: 'new-course' } });
 
     const name = wrapper.find('input[name="name"]');
-    name.getDOMNode().value = 'New course';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New course' } });
 
     const description = wrapper.find('textarea[name="description"]');
-    description.getDOMNode().value = 'New description';
-    description.simulate('input');
+    description.prop('onChange')({ target: { value: 'New description' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

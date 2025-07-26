@@ -32,8 +32,7 @@ describe('ChapterCreateDialog', () => {
     wrapper.update();
 
     const name = wrapper.find('input[name="name"]');
-    name.getDOMNode().value = 'New Chapter';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New Chapter' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

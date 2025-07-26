@@ -31,8 +31,7 @@ describe('SearchBox', () => {
 
   const submit = value => {
     const content = wrapper.find('input[name="content"]');
-    content.getDOMNode().value = value;
-    content.simulate('input');
+    content.prop('onChange')({ target: { value } });
     wrapper.find('form').simulate('submit');
   };
 
