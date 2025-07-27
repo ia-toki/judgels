@@ -2,6 +2,8 @@ import { ConnectedRouter } from 'connected-react-router';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
+import 'typeface-open-sans';
+import 'typeface-roboto';
 
 import { initGA } from './ga';
 import { history, persistor, store } from './modules/store';
@@ -9,9 +11,6 @@ import { history, persistor, store } from './modules/store';
 import './styles/index.scss';
 
 import App from './routes/App';
-
-require('typeface-open-sans');
-require('typeface-roboto');
 
 initGA(history);
 

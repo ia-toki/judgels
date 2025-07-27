@@ -37,18 +37,15 @@ describe('CourseEditDialog', () => {
   test('edit dialog form', async () => {
     const slug = wrapper.find('input[name="slug"]');
     expect(slug.prop('value')).toEqual('course');
-    slug.getDOMNode().value = 'new-course';
-    slug.simulate('input');
+    slug.prop('onChange')({ target: { value: 'new-course' } });
 
     const name = wrapper.find('input[name="name"]');
     expect(name.prop('value')).toEqual('Course');
-    name.getDOMNode().value = 'New course';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New course' } });
 
     const description = wrapper.find('textarea[name="description"]');
     expect(description.prop('value')).toEqual('This is a course');
-    description.getDOMNode().value = 'New description';
-    description.simulate('input');
+    description.prop('onChange')({ target: { value: 'New description' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

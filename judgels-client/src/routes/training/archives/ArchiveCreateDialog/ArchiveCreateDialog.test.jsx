@@ -30,20 +30,16 @@ describe('ArchiveCreateDialog', () => {
     button.simulate('click');
 
     const slug = wrapper.find('input[name="slug"]');
-    slug.getDOMNode().value = 'new-archive';
-    slug.simulate('input');
+    slug.prop('onChange')({ target: { value: 'new-archive' } });
 
     const name = wrapper.find('input[name="name"]');
-    name.getDOMNode().value = 'New archive';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New archive' } });
 
     const category = wrapper.find('input[name="category"]');
-    category.getDOMNode().value = 'New category';
-    category.simulate('input');
+    category.prop('onChange')({ target: { value: 'New category' } });
 
     const description = wrapper.find('textarea[name="description"]');
-    description.getDOMNode().value = 'New description';
-    description.simulate('input');
+    description.prop('onChange')({ target: { value: 'New description' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

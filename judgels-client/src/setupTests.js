@@ -1,13 +1,14 @@
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-preact-pure';
 import nock from 'nock';
-import ReactDOM from 'react-dom';
 
 configure({ adapter: new Adapter() });
 
 nock.disableNetConnect();
 
-ReactDOM.createPortal = el => el;
+window.setImmediate = function (fn) {
+  setTimeout(fn, 0);
+};
 
 window.conf = {
   mode: 'TLX',

@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import { act } from 'preact/test-utils';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';

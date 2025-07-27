@@ -1,3 +1,4 @@
+import { PortalProvider } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { PureComponent } from 'react';
 import DocumentTitle from 'react-document-title';
@@ -24,12 +25,6 @@ class App extends PureComponent {
     setGAUser(this.props.userJid);
   }
 
-  getChildContext() {
-    return {
-      blueprintPortalClassName: this.props.isDarkMode ? 'bp5-dark' : 'bp5-light',
-    };
-  }
-
   render() {
     const { isDarkMode, title, role } = this.props;
 
@@ -42,12 +37,14 @@ class App extends PureComponent {
           <Announcements />
           <Header items={visibleAppRoutes} homeRoute={homeRoute} />
           <AppContent>
-            <Switch>
-              {visibleAppRoutes.map(item => (
-                <Route key={item.id} {...item.route} />
-              ))}
-              <Route {...homeRoute.route} />
-            </Switch>
+            <PortalProvider portalClassName={isDarkMode ? 'bp5-dark' : 'bp5-light'}>
+              <Switch>
+                {visibleAppRoutes.map(item => (
+                  <Route key={item.id} {...item.route} />
+                ))}
+                <Route {...homeRoute.route} />
+              </Switch>
+            </PortalProvider>
             <Footer />
           </AppContent>
         </div>
