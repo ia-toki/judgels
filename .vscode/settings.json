@@ -6,12 +6,9 @@
             "source.fixAll": "explicit"
         }
     },
-    "[javascript]": {
+    "[javascript][javascriptreact][scss]": {
         "editor.tabSize": 2,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascriptreact]": {
-        "editor.tabSize": 2,
+        "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "java.format.enabled": false,
