@@ -1,9 +1,8 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
 
-const baseURL = `${APP_CONFIG.apiUrl}/admins`;
+const baseURL = `/api/v2/admins`;
 
 export const urielAdminAPI = {
   getAdmins: (token, page) => {

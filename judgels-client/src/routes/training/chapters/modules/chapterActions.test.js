@@ -24,7 +24,7 @@ describe('chapterActions', () => {
     const params = { name: 'new-chapter' };
 
     it('calls API to create chapter', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .options(`/chapters`)
         .reply(200)
@@ -39,7 +39,7 @@ describe('chapterActions', () => {
     const params = { name: 'New Name' };
 
     it('calls API to update chapter', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .options(`/chapters/${chapterJid}`)
         .reply(200)
@@ -56,7 +56,7 @@ describe('chapterActions', () => {
     };
 
     it('calls API to get chapters', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/chapters`)
         .reply(200, responseBody);
@@ -72,7 +72,7 @@ describe('chapterActions', () => {
     };
 
     it('calls API to get problems', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/chapters/${chapterJid}/problems`)
         .reply(200, responseBody);
@@ -86,7 +86,7 @@ describe('chapterActions', () => {
     const params = [];
 
     it('calls API to set problems', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .options(`/chapters/${chapterJid}/problems`)
         .reply(200)
@@ -103,7 +103,7 @@ describe('chapterActions', () => {
     };
 
     it('calls API to get lessons', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/chapters/${chapterJid}/lessons`)
         .reply(200, responseBody);
@@ -117,7 +117,7 @@ describe('chapterActions', () => {
     const params = [];
 
     it('calls API to set lessons', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .options(`/chapters/${chapterJid}/lessons`)
         .reply(200)

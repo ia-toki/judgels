@@ -1,9 +1,8 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
 
-export const baseProblemsURL = `${APP_CONFIG.apiUrl}/problems`;
+export const baseProblemsURL = `/api/v2/problems`;
 
 export const problemAPI = {
   getProblems: (token, tags, page) => {

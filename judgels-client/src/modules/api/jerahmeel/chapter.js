@@ -1,7 +1,6 @@
-import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
 
-export const baseChaptersURL = `${APP_CONFIG.apiUrl}/chapters`;
+export const baseChaptersURL = `/api/v2/chapters`;
 
 export function baseChapterURL(chapterJid) {
   return `${baseChaptersURL}/${chapterJid}`;

@@ -1,9 +1,8 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
 
-const baseURL = `${APP_CONFIG.apiUrl}/contest-history`;
+const baseURL = `/api/v2/contest-history`;
 
 export const contestHistoryAPI = {
   getPublicHistory: username => {

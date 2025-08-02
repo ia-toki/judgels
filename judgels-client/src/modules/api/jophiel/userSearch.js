@@ -1,7 +1,6 @@
-import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
 
-const baseURL = `${APP_CONFIG.apiUrl}/user-search`;
+const baseURL = `/api/v2/user-search`;
 
 export const userSearchAPI = {
   usernameExists: username => {

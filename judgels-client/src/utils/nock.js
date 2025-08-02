@@ -3,16 +3,16 @@ import nock from 'nock';
 import { APP_CONFIG } from '../conf';
 
 export function nockJophiel() {
-  return nock(APP_CONFIG.apiUrl).defaultReplyHeaders({
+  return nock('http://localhost:80/api/v2').defaultReplyHeaders({
     'access-control-allow-origin': '*',
     'access-control-allow-headers': 'authorization',
   });
 }
 
 export function nockUriel() {
-  return nock(APP_CONFIG.apiUrl).defaultReplyHeaders({ 'access-control-allow-origin': '*' });
+  return nock('http://localhost:80/api/v2').defaultReplyHeaders({ 'access-control-allow-origin': '*' });
 }
 
 export function nockJerahmeel() {
-  return nock(APP_CONFIG.apiUrl).defaultReplyHeaders({ 'access-control-allow-origin': '*' });
+  return nock('http://localhost:80/api/v2').defaultReplyHeaders({ 'access-control-allow-origin': '*' });
 }

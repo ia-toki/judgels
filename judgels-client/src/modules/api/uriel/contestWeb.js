@@ -1,4 +1,3 @@
-import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
 
 export const ContestTab = {
@@ -33,7 +32,7 @@ export const ContestState = {
   Paused: 'PAUSED',
 };
 
-const baseURL = `${APP_CONFIG.apiUrl}/contest-web`;
+const baseURL = `/api/v2/contest-web`;
 
 export const contestWebAPI = {
   getContestBySlugWithWebConfig: (token, contestSlug) => {

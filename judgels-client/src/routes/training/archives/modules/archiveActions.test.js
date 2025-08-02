@@ -27,7 +27,7 @@ describe('archiveActions', () => {
 
     describe('when the slug does not already exist', () => {
       it('calls API to create archive', async () => {
-        nock(APP_CONFIG.apiUrl)
+        nock('http://localhost:80/api/v2')
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/archives`)
           .reply(200)
@@ -40,7 +40,7 @@ describe('archiveActions', () => {
 
     describe('when the slug already exists', () => {
       it('throws SubmissionError', async () => {
-        nock(APP_CONFIG.apiUrl)
+        nock('http://localhost:80/api/v2')
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/archives`)
           .reply(200)
@@ -59,7 +59,7 @@ describe('archiveActions', () => {
       const params = { name: 'New Name' };
 
       it('calls API to update archive', async () => {
-        nock(APP_CONFIG.apiUrl)
+        nock('http://localhost:80/api/v2')
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/archives/${archiveJid}`)
           .reply(200)
@@ -75,7 +75,7 @@ describe('archiveActions', () => {
 
       describe('when the slug does not already exist', () => {
         it('calls API to update archive', async () => {
-          nock(APP_CONFIG.apiUrl)
+          nock('http://localhost:80/api/v2')
             .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
             .options(`/archives/${archiveJid}`)
             .reply(200)
@@ -88,7 +88,7 @@ describe('archiveActions', () => {
 
       describe('when the slug already exists', () => {
         it('throws SubmissionError', async () => {
-          nock(APP_CONFIG.apiUrl)
+          nock('http://localhost:80/api/v2')
             .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
             .options(`/archives/${archiveJid}`)
             .reply(200)
@@ -109,7 +109,7 @@ describe('archiveActions', () => {
     };
 
     it('calls API to get archives', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/archives`)
         .reply(200, responseBody);

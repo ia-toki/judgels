@@ -1,7 +1,6 @@
-import { APP_CONFIG } from '../../../conf';
 import { post } from '../http';
 
-const baseURL = `${APP_CONFIG.apiUrl}/user-rating`;
+const baseURL = `/api/v2/user-rating`;
 
 export const userRatingAPI = {
   updateRatings: (token, data) => {

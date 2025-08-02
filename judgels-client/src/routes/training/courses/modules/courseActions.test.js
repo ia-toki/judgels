@@ -27,7 +27,7 @@ describe('courseActions', () => {
 
     describe('when the slug does not already exist', () => {
       it('calls API to create course', async () => {
-        nock(APP_CONFIG.apiUrl)
+        nock('http://localhost:80/api/v2')
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/courses`)
           .reply(200)
@@ -40,7 +40,7 @@ describe('courseActions', () => {
 
     describe('when the slug already exists', () => {
       it('throws SubmissionError', async () => {
-        nock(APP_CONFIG.apiUrl)
+        nock('http://localhost:80/api/v2')
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/courses`)
           .reply(200)
@@ -61,7 +61,7 @@ describe('courseActions', () => {
       const params = { name: 'New Name' };
 
       it('calls API to update course', async () => {
-        nock(APP_CONFIG.apiUrl)
+        nock('http://localhost:80/api/v2')
           .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
           .options(`/courses/${courseJid}`)
           .reply(200)
@@ -77,7 +77,7 @@ describe('courseActions', () => {
 
       describe('when the slug does not already exist', () => {
         it('calls API to update course', async () => {
-          nock(APP_CONFIG.apiUrl)
+          nock('http://localhost:80/api/v2')
             .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
             .options(`/courses/${courseJid}`)
             .reply(200)
@@ -90,7 +90,7 @@ describe('courseActions', () => {
 
       describe('when the slug already exists', () => {
         it('throws SubmissionError', async () => {
-          nock(APP_CONFIG.apiUrl)
+          nock('http://localhost:80/api/v2')
             .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
             .options(`/courses/${courseJid}`)
             .reply(200)
@@ -111,7 +111,7 @@ describe('courseActions', () => {
     };
 
     it('calls API to get courses', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/courses`)
         .reply(200, responseBody);
@@ -127,7 +127,7 @@ describe('courseActions', () => {
     };
 
     it('calls API to get chapters', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get(`/courses/${courseJid}/chapters`)
         .reply(200, responseBody);
@@ -141,7 +141,7 @@ describe('courseActions', () => {
     const params = [];
 
     it('calls API to set chapters', async () => {
-      nock(APP_CONFIG.apiUrl)
+      nock('http://localhost:80/api/v2')
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .options(`/courses/${courseJid}/chapters`)
         .reply(200)

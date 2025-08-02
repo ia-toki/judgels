@@ -1,6 +1,5 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from '../../../conf';
 import { get, post, put } from '../http';
 
 export const ContestStyle = {
@@ -17,7 +16,7 @@ export const ContestErrors = {
   ClarificationAlreadyAnswered: 'Uriel:ClarificationAlreadyAnswered',
 };
 
-export const baseContestsURL = `${APP_CONFIG.apiUrl}/contests`;
+export const baseContestsURL = `/api/v2/contests`;
 
 export function baseContestURL(contestJid) {
   return `${baseContestsURL}/${contestJid}`;
