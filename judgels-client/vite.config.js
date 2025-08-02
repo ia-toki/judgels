@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
@@ -9,10 +9,10 @@ export default defineConfig({
       targets: [
         {
           src: 'node_modules/tinymce/*',
-          dest: 'tinymce'
-        }
-      ]
-    })
+          dest: 'tinymce',
+        },
+      ],
+    }),
   ],
 
   define: {
@@ -23,6 +23,12 @@ export default defineConfig({
     port: 3000,
     host: '0.0.0.0',
     open: false,
+    proxy: {
+      '/api/v2': {
+        target: 'http://localhost:9101',
+        changeOrigin: true,
+      },
+    },
   },
 
   build: {

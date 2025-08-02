@@ -1,11 +1,10 @@
-import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
 
 export const ArchiveErrors = {
   SlugAlreadyExists: 'Jerahmeel:ArchiveSlugAlreadyExists',
 };
 
-export const baseArchivesURL = `${APP_CONFIG.apiUrl}/archives`;
+export const baseArchivesURL = `/api/v2/archives`;
 
 export function baseArchiveURL(archiveJid) {
   return `${baseArchivesURL}/${archiveJid}`;

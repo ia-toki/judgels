@@ -1,6 +1,5 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
 
 export const ProblemSetErrors = {
@@ -9,7 +8,7 @@ export const ProblemSetErrors = {
   ContestSlugsNotAllowed: 'Jerahmeel:ContestSlugsNotAllowed',
 };
 
-export const baseProblemSetsURL = `${APP_CONFIG.apiUrl}/problemsets`;
+export const baseProblemSetsURL = `/api/v2/problemsets`;
 
 export function baseProblemSetURL(problemSetJid) {
   return `${baseProblemSetsURL}/${problemSetJid}`;

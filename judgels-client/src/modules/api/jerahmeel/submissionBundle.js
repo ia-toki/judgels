@@ -1,9 +1,8 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
 
-export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/submissions/bundle`;
+export const baseSubmissionsURL = `/api/v2/submissions/bundle`;
 
 export const submissionBundleAPI = {
   getSubmissions: (token, containerJid, username, problemAlias, page) => {

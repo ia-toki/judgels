@@ -1,4 +1,3 @@
-import { APP_CONFIG } from '../../../conf';
 import { post } from '../http';
 
 export const SessionErrors = {
@@ -7,7 +6,7 @@ export const SessionErrors = {
   LogoutDisabled: 'Jophiel:LogoutDisabled',
 };
 
-const baseUrl = `${APP_CONFIG.apiUrl}/session`;
+const baseUrl = `/api/v2/session`;
 
 export const sessionAPI = {
   logIn: (usernameOrEmail, password) => {
