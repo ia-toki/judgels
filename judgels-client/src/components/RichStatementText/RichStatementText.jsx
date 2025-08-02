@@ -8,6 +8,7 @@ import { HtmlText } from '../HtmlText/HtmlText';
 import { SourceCode } from '../SourceCode/SourceCode';
 
 import './RichStatementText.scss';
+import 'katex/dist/katex.min.css';
 
 export class RichStatementText extends Component {
   ref;
@@ -32,8 +33,6 @@ export class RichStatementText extends Component {
   }
 
   async typesetKatex() {
-    await require('katex/dist/katex.min.css');
-
     if (!this.ref.current) {
       return;
     }
