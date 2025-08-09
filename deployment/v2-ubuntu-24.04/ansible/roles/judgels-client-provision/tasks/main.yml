@@ -1,0 +1,15 @@
+- name: Create judgels client persistence mount source
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /opt/judgels/client/var
+    - /opt/judgels/client/var/conf
+
+- name: Allow judgels client traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: '5000'
+    proto: tcp
+    comment: judgels client
