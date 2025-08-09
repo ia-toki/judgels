@@ -1,6 +1,6 @@
 import HTMLReactParser from 'html-react-parser';
-import render from 'preact-render-to-string';
 import { Component, createRef } from 'react';
+import { renderToString } from 'react-dom/server';
 import { connect } from 'react-redux';
 
 import { selectIsDarkMode } from '../../modules/webPrefs/webPrefsSelectors';
@@ -8,6 +8,7 @@ import { HtmlText } from '../HtmlText/HtmlText';
 import { SourceCode } from '../SourceCode/SourceCode';
 
 import './RichStatementText.scss';
+import 'katex/dist/katex.min.css';
 
 export class RichStatementText extends Component {
   ref;
@@ -32,8 +33,6 @@ export class RichStatementText extends Component {
   }
 
   async typesetKatex() {
-    await require('katex/dist/katex.min.css');
-
     if (!this.ref.current) {
       return;
     }
@@ -64,7 +63,7 @@ export class RichStatementText extends Component {
     let str = children;
 
     str = str.replace(/<pre data-lang="(.+?)">(.*?)<\/pre>/gs, (match, lang, code) => {
-      return render(
+      return renderToString(
         <SourceCode isDarkMode={isDarkMode} language={lang} showLineNumbers={false}>
           {HTMLReactParser(code.trim())}
         </SourceCode>

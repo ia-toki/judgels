@@ -1,0 +1,34 @@
+- name: Pull rabbitmq image
+  docker_image:
+    name: rabbitmq:3.13.7-management-alpine
+    source: pull
+
+- name: Run a rabbitmq container
+  docker_container:
+    name: rabbitmq
+    image: rabbitmq:3.13.7-management-alpine
+    restart: yes
+    restart_policy: on-failure
+    restart_retries: 3
+    log_driver: json-file
+    log_options:
+      max-size: 256m
+      max-file: "2"
+    network_mode: host
+    env:
+      RABBITMQ_DEFAULT_USER: "{{ rabbitmq_username }}"
+      RABBITMQ_DEFAULT_PASS: "{{ rabbitmq_password }}"
+
+- name: Allow rabbitmq traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "5672"
+    proto: tcp
+    comment: rabbitmq
+
+- name: Allow rabbitmq management traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "15672"
+    proto: tcp
+    comment: rabbitmq management

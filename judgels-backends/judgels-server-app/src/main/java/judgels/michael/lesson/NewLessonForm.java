@@ -1,6 +1,6 @@
 package judgels.michael.lesson;
 
-import javax.ws.rs.FormParam;
+import jakarta.ws.rs.FormParam;
 import judgels.michael.template.HtmlForm;
 
 public class NewLessonForm extends HtmlForm {

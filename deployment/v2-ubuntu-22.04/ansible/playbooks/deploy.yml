@@ -1,0 +1,28 @@
+- hosts: core
+  gather_facts: false
+  roles:
+    - name: mysql-install
+    - name: phpmyadmin-deploy
+    - name: rabbitmq-deploy
+    - name: judgels-server-migrate
+    - name: judgels-server-deploy
+    - name: judgels-client-deploy
+    - name: nginx-certbot-deploy
+      vars:
+        domains:
+          - name: judgels-server-api
+            fqdn: "{{ nginx_domain_judgels_server_api }}"
+            config_template: "{{ playbook_dir }}/../conf/nginx-judgels-server-api.conf.j2"
+          - name: judgels-server-admin
+            fqdn: "{{ nginx_domain_judgels_server_admin }}"
+            config_template: "{{ playbook_dir }}/../conf/nginx-judgels-server-admin.conf.j2"
+            auth_basic_user: "{{ nginx_domain_judgels_server_admin_auth_basic_user | default('') }}"
+            auth_basic_pass: "{{ nginx_domain_judgels_server_admin_auth_basic_pass | default('') }}"
+          - name: judgels-client
+            fqdn: "{{ nginx_domain_judgels_client }}"
+            config_template: "{{ playbook_dir }}/../conf/nginx-judgels-client.conf.j2"
+
+- hosts: grader
+  gather_facts: false
+  roles:
+    - name: judgels-grader-deploy

@@ -1,6 +1,6 @@
 package judgels.sandalphon.problem.bundle;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 
 public class ItemProcessorRegistry {

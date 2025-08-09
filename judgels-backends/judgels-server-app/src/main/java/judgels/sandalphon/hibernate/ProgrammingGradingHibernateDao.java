@@ -1,6 +1,6 @@
 package judgels.sandalphon.hibernate;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.sandalphon.persistence.ProgrammingGradingDao;
 import judgels.sandalphon.persistence.ProgrammingGradingModel;

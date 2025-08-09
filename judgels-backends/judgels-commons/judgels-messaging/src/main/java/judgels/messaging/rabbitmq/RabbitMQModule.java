@@ -3,8 +3,8 @@ package judgels.messaging.rabbitmq;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Singleton;
 import judgels.messaging.MessageClient;
 
 @Module

@@ -1,0 +1,94 @@
+<div style="margin-bottom: 5px">
+  <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#problem-tagging-guide-modal">
+    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+    Tagging guide
+  </button>
+</div>
+
+
+<div class="modal fade" id="problem-tagging-guide-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Problem tagging guide</h3>
+      </div>
+      <div class="modal-body help-modal-body">
+        <ol>
+          <li>Consider all intended solutions. For each solution, pick one or more appropriate tags, based on the following rules:<ol type="a">
+            <li><code>constructive</code><ul>
+              <li>Pick this tag if the solution is to <strong>creatively</strong> construct <strong>any solution</strong> which satisfies the provided criteria, out of (usually) <strong>many possible solutions</strong>.</li>
+              <li>Don&#39;t pick this tag if the solution heavily relies on a well-known algorithm/technique. The emphasis here is &quot;creatively&quot;.</li>
+              <li>Usually, <strong>interactive</strong> problems will have this tag, because usually it requires creative solutions.</li>
+            </ul>
+            </li>
+            <li><code>data structure</code><ul>
+              <li><code>compression</code><ul>
+                <li>Pick this tag if the solution requires &quot;compressing&quot; coordinates / array positions.</li>
+              </ul>
+              </li>
+              <li><code>fenwick tree</code><ul>
+                <li>Pick this tag if the solution can use either Fenwick tree or segment tree, e.g. just for <strong>standard range query</strong> capability.</li>
+                <li>If we pick this tag, don&#39;t pick the <code>segment tree</code> tag.</li>
+              </ul>
+              </li>
+              <li><code>segment tree</code><ul>
+                <li>Pick this tag if the solution needs segment tree with <strong>lazy propagation</strong>.</li>
+              </ul>
+              </li>
+              <li><code>prefix sum</code><ul>
+                <li>Pick this tag if prefix sum is the <strong>main idea</strong> of the solution.</li>
+                <li>Don&#39;t pick this tag if prefix sum is just for <strong>optimizing</strong> larger DP transition.</li>
+              </ul>
+              </li>
+            </ul>
+            </li>
+            <li><code>dynamic programming</code><ul>
+              <li><code>combinatorics</code><ul>
+                <li>Pick this tag if the DP is about counting number of ways.</li>
+                <li>Pick this tag if the DP needs counting the number of ways to solve the problem. Example: printing K-th lexicographically smallest sequence.</li>
+              </ul>
+              </li>
+              <li><code>tree</code><ul>
+                <li>If we pick this tag, don&#39;t pick the <code>tree</code> tag.</li>
+              </ul>
+              </li>
+            </ul>
+            </li>
+            <li><code>implementation</code><ul>
+              <li>Pick this tag if the solution is to (almost) exactly do what the problem statement <strong>literally says</strong>.</li>
+              <li>Don&#39;t pick this tag if there is one or more additional steps/insights needed. This tag is intended for beginners to practice implementing code. </li>
+            </ul>
+            </li>
+            <li><code>math</code><ul>
+              <li><code>combinatorics</code><ul>
+                <li>Pick this tag if the problem is about counting number of ways.</li>
+                <li>If <code>dp:combinatorics</code> is already picked, don&#39;t pick this tag.</li>
+              </ul>
+              </li>
+              <li><code>number theory</code><ul>
+                <li>Pick this tag is the problem requires knowledge of properties of integers.</li>
+              </ul>
+              </li>
+            </ul>
+            </li>
+          </ol>
+          </li>
+          <li>For each of these tags, if it is picked, at least a subtag must be picked. If there are no appropriate subtag, <strong>DON&#39;T</strong> pick the tag at all (or contact <strong>fushar</strong> to add a new subtag):<ol type="a">
+            <li><code>data structure</code></li>
+            <li><code>searching</code></li>
+            <li><code>optimization trick</code></li>
+          </ol>
+          </li>
+          <li>Finally, also pick the <code>ad hoc</code> tag if the set of the tags (possibly empty) is a subset of the following:<ol type="a">
+            <li><code>bitwise operation</code></li>
+            <li><code>constructive</code></li>
+          </ol>
+          </li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

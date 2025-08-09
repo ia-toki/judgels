@@ -1,7 +1,7 @@
 package judgels.jerahmeel;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.jerahmeel.archive.ArchiveStore;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;

@@ -39,23 +39,19 @@ describe('ArchiveEditDialog', () => {
   test('edit dialog form', async () => {
     const slug = wrapper.find('input[name="slug"]');
     expect(slug.prop('value')).toEqual('archive');
-    slug.getDOMNode().value = 'new-archive';
-    slug.simulate('input');
+    slug.prop('onChange')({ target: { value: 'new-archive' } });
 
     const name = wrapper.find('input[name="name"]');
     expect(name.prop('value')).toEqual('Archive');
-    name.getDOMNode().value = 'New archive';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New archive' } });
 
     const category = wrapper.find('input[name="category"]');
     expect(category.prop('value')).toEqual('Category');
-    category.getDOMNode().value = 'New category';
-    category.simulate('input');
+    category.prop('onChange')({ target: { value: 'New category' } });
 
     const description = wrapper.find('textarea[name="description"]');
     expect(description.prop('value')).toEqual('This is a archive');
-    description.getDOMNode().value = 'New description';
-    description.simulate('input');
+    description.prop('onChange')({ target: { value: 'New description' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

@@ -1,10 +1,10 @@
 package judgels.uriel.contest.log;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Queue;
-import javax.inject.Inject;
-import javax.inject.Named;
 import judgels.persistence.ActorProvider;
 import judgels.uriel.api.contest.log.ContestLog;
 

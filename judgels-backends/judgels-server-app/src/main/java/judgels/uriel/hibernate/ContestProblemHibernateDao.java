@@ -4,8 +4,11 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 
 import com.google.common.collect.ImmutableSet;
+import jakarta.inject.Inject;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
@@ -14,6 +17,7 @@ import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 import judgels.uriel.persistence.ContestProblemModel_;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel> implements ContestProblemDao {
     @Inject
@@ -38,6 +42,47 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
         return selectByContestJid(contestJid)
                 .where(columnEq(ContestProblemModel_.alias, problemAlias))
                 .unique();
+    }
+
+    @Override
+    public void updateProblemJid(String oldProblemJid, String newProblemJid) {
+        Query<?> query = currentSession().createQuery(
+                "UPDATE uriel_contest_problem "
+                        + "SET problemJid = :newProblemJid "
+                        + "WHERE problemJid = :oldProblemJid");
+
+        query.setParameter("newProblemJid", newProblemJid);
+        query.setParameter("oldProblemJid", oldProblemJid);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void dump(PrintWriter output, String contestJid) {
+        List<ContestProblemModel> results = selectByContestJid(contestJid).orderBy(Model_.ID, OrderDir.ASC).all();
+        if (results.isEmpty()) {
+            return;
+        }
+
+        output.write("INSERT IGNORE INTO uriel_contest_problem (contestJid, problemJid, alias, status, submissionsLimit, points, createdBy, createdAt, updatedBy, updatedAt) VALUES\n");
+
+        for (int i = 0; i < results.size(); i++) {
+            ContestProblemModel m = results.get(i);
+            if (i > 0) {
+                output.write(",\n");
+            }
+            output.write(String.format("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    escape(m.contestJid),
+                    escape(m.problemJid),
+                    escape(m.alias),
+                    escape(m.status),
+                    escape(m.submissionsLimit),
+                    escape(m.points),
+                    escape(m.createdBy),
+                    escape(m.createdAt),
+                    escape(m.updatedBy),
+                    escape(m.updatedAt)));
+        }
+        output.write(";\n");
     }
 
     private static class ContestProblemHibernateQueryBuilder extends HibernateQueryBuilder<ContestProblemModel> implements ContestProblemQueryBuilder {

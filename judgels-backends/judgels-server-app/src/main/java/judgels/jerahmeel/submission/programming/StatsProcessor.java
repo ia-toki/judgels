@@ -1,9 +1,9 @@
 package judgels.jerahmeel.submission.programming;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.TestCaseResult;
@@ -29,12 +29,6 @@ public class StatsProcessor implements SubmissionConsumer {
     private final StatsUserDao statsUserDao;
     private final StatsUserProblemDao statsUserProblemDao;
 
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    static class ProblemStatsResult {
-        int scoreDiff;
-        boolean becomesAccepted;
-    }
-
     @Inject
     public StatsProcessor(
             ChapterProblemDao chapterProblemDao,
@@ -58,21 +52,18 @@ public class StatsProcessor implements SubmissionConsumer {
             return;
         }
 
-        ProblemStatsResult res = processProblemStats(submission);
-        if (res == null) {
-            return;
+        if (processProblemStats(submission)) {
+            processUserStats(submission);
         }
-
-        processUserStats(submission, res.scoreDiff);
     }
 
-    private ProblemStatsResult processProblemStats(Submission s) {
+    private boolean processProblemStats(Submission s) {
         if (!s.getLatestGrading().isPresent()) {
-            return null;
+            return false;
         }
         Grading grading = s.getLatestGrading().get();
         if (!grading.getDetails().isPresent()) {
-            return null;
+            return false;
         }
         GradingResultDetails details = grading.getDetails().get();
 
@@ -93,7 +84,6 @@ public class StatsProcessor implements SubmissionConsumer {
         boolean isNowAccepted = isAccepted(grading.getVerdict(), grading.getScore());
 
         Verdict verdict = isNowAccepted ? Verdict.ACCEPTED : grading.getVerdict();
-        int scoreDiff = grading.getScore();
 
         Optional<StatsUserProblemModel> maybeModel =
                 statsUserProblemDao.selectByUserJidAndProblemJid(s.getUserJid(), s.getProblemJid());
@@ -102,11 +92,7 @@ public class StatsProcessor implements SubmissionConsumer {
             StatsUserProblemModel model = maybeModel.get();
             model.submissionJid = s.getJid();
 
-            scoreDiff = grading.getScore() - model.score;
             isAlreadyAccepted = isAccepted(Verdicts.fromCode(model.verdict), model.score);
-            if (isAlreadyAccepted) {
-                scoreDiff = Math.max(0, scoreDiff);
-            }
 
             if (!isAlreadyAccepted || grading.getScore() >= model.score) {
                 model.verdict = verdict.getCode();
@@ -135,22 +121,21 @@ public class StatsProcessor implements SubmissionConsumer {
             statsUserProblemDao.insert(model);
         }
 
-        ProblemStatsResult result = new ProblemStatsResult();
-        result.scoreDiff = scoreDiff;
-        result.becomesAccepted = !isAlreadyAccepted && isNowAccepted;
-        return result;
+        return true;
     }
 
-    private void processUserStats(Submission s, int scoreDiff) {
+    private void processUserStats(Submission s) {
+        int totalScore = statsUserProblemDao.selectTotalScoreByUserJid(s.getUserJid());
+
         Optional<StatsUserModel> maybeModel = statsUserDao.selectByUserJid(s.getUserJid());
         if (maybeModel.isPresent()) {
             StatsUserModel model = maybeModel.get();
-            model.score += scoreDiff;
+            model.score = totalScore;
             statsUserDao.update(model);
         } else {
             StatsUserModel model = new StatsUserModel();
             model.userJid = s.getUserJid();
-            model.score = scoreDiff;
+            model.score = totalScore;
             statsUserDao.insert(model);
         }
     }

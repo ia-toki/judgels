@@ -1,8 +1,8 @@
 package judgels.jophiel.user.account;
 
+import jakarta.inject.Inject;
 import java.time.Duration;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.service.RandomCodeGenerator;

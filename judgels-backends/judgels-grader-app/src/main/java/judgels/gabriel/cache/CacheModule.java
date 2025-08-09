@@ -2,7 +2,7 @@ package judgels.gabriel.cache;
 
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Module
 public class CacheModule {

@@ -2,12 +2,12 @@ package judgels.jerahmeel.archive;
 
 import static java.util.stream.Collectors.toList;
 
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.archive.Archive;
 import judgels.jerahmeel.api.archive.ArchiveCreateData;
 import judgels.jerahmeel.api.archive.ArchiveErrors;

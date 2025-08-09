@@ -1,6 +1,7 @@
 package judgels.jerahmeel.api.chapter.problem.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.SubmissionSource;
@@ -18,6 +19,7 @@ public interface ChapterProblemWorksheet extends judgels.jerahmeel.api.chapter.p
     Set<ProblemSkeleton> getSkeletons();
     Optional<Submission> getLastSubmission();
     Optional<SubmissionSource> getLastSubmissionSource();
+    List<List<String>> getProblemSetProblemPaths();
     ProblemProgress getProgress();
     Optional<ProblemEditorialInfo> getEditorial();
 

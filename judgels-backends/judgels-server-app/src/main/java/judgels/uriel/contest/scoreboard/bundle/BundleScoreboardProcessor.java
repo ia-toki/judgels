@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -61,6 +62,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             Map<String, Profile> profilesMap,
+            Map<String, ScoringConfig> scoringConfigsMap,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Map<String, Instant> freezeTimesMap) {

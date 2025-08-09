@@ -1,5 +1,6 @@
 package judgels.jophiel.user;
 
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.info.UserInfo;

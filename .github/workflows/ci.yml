@@ -3,14 +3,14 @@ name: ci
 on:
   push:
     branches:
-      - "*"
+      - "**"
   pull_request:
     branches:
       - master
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     services:
       rabbitmq:
         image: rabbitmq
@@ -23,14 +23,14 @@ jobs:
 
       - id: changed-files
         name: Check changed files
-        run: python3 ci/check-changed-files.py | bash
+        run: python3 ci/scripts/check-changed-files.py | bash
 
       - name: Set up JDK
         if: steps.changed-files.outputs.gradle == '1'
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: "11"
+          java-version: "17"
           cache: gradle
 
       - name: Test judgels-commons
@@ -89,7 +89,7 @@ jobs:
   build:
     needs: test
     if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
       CONTAINER_REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
@@ -105,14 +105,14 @@ jobs:
 
       - id: changed-files
         name: Check changed files
-        run: python3 ci/check-changed-files.py | bash
+        run: python3 ci/scripts/check-changed-files.py | bash
 
       - name: Set up JDK
         if: steps.changed-files.outputs.gradle == '1'
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: "11"
+          java-version: "17"
           cache: gradle
 
       - name: Set up node
@@ -138,19 +138,19 @@ jobs:
 
       - name: Build judgels-server
         if: steps.changed-files.outputs.judgels-server == '1'
-        run: ./deployment/scripts/build_judgels_server.sh
+        run: ./ci/scripts/build_judgels_server.sh
 
       - name: Build judgels-client
         if: steps.changed-files.outputs.judgels-client == '1'
-        run: ./deployment/scripts/build_judgels_client.sh
+        run: ./ci/scripts/build_judgels_client.sh
 
       - name: Build judgels-grader
         if: steps.changed-files.outputs.judgels-grader == '1'
-        run: ./deployment/scripts/build_judgels_grader.sh
+        run: ./ci/scripts/build_judgels_grader.sh
 
   deploy-web:
     if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       WEB_HOST: ${{ secrets.WEB_HOST }}
       WEB_KNOWN_HOSTS: ${{ secrets.WEB_KNOWN_HOSTS }}
@@ -162,7 +162,7 @@ jobs:
 
       - id: changed-files
         name: Check changed files
-        run: python3 ci/check-changed-files.py | bash
+        run: python3 ci/scripts/check-changed-files.py | bash
 
       - name: Set up node
         if: steps.changed-files.outputs.web == '1'
@@ -190,8 +190,9 @@ jobs:
 
   deploy-tlx-staging:
     needs: build
-    if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
-    runs-on: ubuntu-22.04
+    # if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
+    if: False
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -209,25 +210,25 @@ jobs:
 
       - id: changed-files
         name: Check changed files
-        run: python3 ci/check-changed-files.py | bash
+        run: python3 ci/scripts/check-changed-files.py | bash
 
       - name: Deploy judgels-server
         if: steps.changed-files.outputs.judgels-server == '1'
         run: |
           eval "$(ssh-agent -s)"
           ssh-add deployment/ansible/env/deployment_rsa
-          ./deployment/scripts/deploy_judgels_server.sh
+          ./ci/scripts/deploy_judgels_server.sh
 
       - name: Deploy judgels-client
         if: steps.changed-files.outputs.judgels-client == '1'
         run: |
           eval "$(ssh-agent -s)"
           ssh-add deployment/ansible/env/deployment_rsa
-          ./deployment/scripts/deploy_judgels_client.sh
+          ./ci/scripts/deploy_judgels_client.sh
 
       - name: Deploy judgels-grader
         if: steps.changed-files.outputs.judgels-grader == '1'
         run: |
           eval "$(ssh-agent -s)"
           ssh-add deployment/ansible/env/deployment_rsa
-          ./deployment/scripts/deploy_judgels_grader.sh
+          ./ci/scripts/deploy_judgels_grader.sh

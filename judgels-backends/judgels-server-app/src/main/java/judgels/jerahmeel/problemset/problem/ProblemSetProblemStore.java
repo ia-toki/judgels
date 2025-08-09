@@ -3,6 +3,8 @@ package judgels.jerahmeel.problemset.problem;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,10 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.persistence.ProblemContestDao;
 import judgels.jerahmeel.persistence.ProblemContestModel;
+import judgels.jerahmeel.persistence.ProblemSetDao;
+import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel_;
@@ -22,11 +25,17 @@ import judgels.persistence.api.OrderDir;
 import judgels.sandalphon.api.problem.ProblemType;
 
 public class ProblemSetProblemStore {
+    private final ProblemSetDao problemSetDao;
     private final ProblemSetProblemDao problemDao;
     private final ProblemContestDao problemContestDao;
 
     @Inject
-    public ProblemSetProblemStore(ProblemSetProblemDao problemDao, ProblemContestDao problemContestDao) {
+    public ProblemSetProblemStore(
+            ProblemSetDao problemSetDao,
+            ProblemSetProblemDao problemDao,
+            ProblemContestDao problemContestDao) {
+
+        this.problemSetDao = problemSetDao;
         this.problemDao = problemDao;
         this.problemContestDao = problemContestDao;
     }
@@ -126,6 +135,29 @@ public class ProblemSetProblemStore {
             model.type = type.name();
             return fromModel(problemDao.insert(model), contestJids);
         }
+    }
+
+    public Map<String, List<List<String>>> getProblemSetProblemPathsMap(Collection<String> problemJids) {
+        List<ProblemSetProblemModel> models = problemDao.selectAllByProblemJids(problemJids);
+
+        List<String> problemSetJids = Lists.transform(models, m -> m.problemSetJid);
+        Map<String, ProblemSetModel> problemSetModelsMap = problemSetDao.selectByJids(problemSetJids);
+
+        Map<String, List<List<String>>> problemSetProblemPathsMap = new HashMap<>();
+        for (ProblemSetProblemModel m : models) {
+            if (!problemSetModelsMap.containsKey(m.problemSetJid)) {
+                continue;
+            }
+            ProblemSetModel problemSetModel = problemSetModelsMap.get(m.problemSetJid);
+            List<String> path = List.of(problemSetModel.slug, m.alias);
+            problemSetProblemPathsMap.putIfAbsent(m.problemJid, new ArrayList<>());
+            problemSetProblemPathsMap.get(m.problemJid).add(path);
+        }
+        return Map.copyOf(problemSetProblemPathsMap);
+    }
+
+    public List<List<String>> getProblemSetProblemPaths(String problemJid) {
+        return getProblemSetProblemPathsMap(List.of(problemJid)).getOrDefault(problemJid, List.of());
     }
 
     private void upsertProblemContests(String problemJid, List<String> contestJids) {

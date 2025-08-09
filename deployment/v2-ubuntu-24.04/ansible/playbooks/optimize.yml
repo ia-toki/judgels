@@ -1,0 +1,10 @@
+- hosts: all
+  gather_facts: false
+  roles:
+    - name: docker-optimize
+
+- hosts: core
+  gather_facts: false
+  roles:
+    - name: mysql-optimize
+    - name: nginx-optimize

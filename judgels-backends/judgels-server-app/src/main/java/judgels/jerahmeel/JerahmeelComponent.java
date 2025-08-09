@@ -1,9 +1,8 @@
 package judgels.jerahmeel;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.archive.ArchiveResource;
 import judgels.jerahmeel.chapter.ChapterResource;
 import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
@@ -19,12 +18,11 @@ import judgels.jerahmeel.problemset.problem.ProblemSetProblemResource;
 import judgels.jerahmeel.stats.UserStatsResource;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
-import judgels.jerahmeel.submission.programming.ContestStatsTask;
-import judgels.jerahmeel.submission.programming.ProblemSetStatsTask;
-import judgels.jerahmeel.submission.programming.StatsModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
-import judgels.jerahmeel.submission.programming.SubmissionsDuplexToAwsTask;
+import judgels.jerahmeel.tasks.JerahmeelTaskModule;
+import judgels.jerahmeel.tasks.RefreshContestStatsTask;
+import judgels.jerahmeel.tasks.RefreshProblemSetStatsTask;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -54,15 +52,15 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
         // 3rd parties
         RabbitMQModule.class,
-        AwsModule.class,
         SandalphonClientModule.class,
         GabrielClientModule.class,
 
         // Features
         SubmissionModule.class,
         ItemSubmissionModule.class,
-        StatsModule.class
-})
+        JerahmeelTaskModule.class,
+
+        tlx.jerahmeel.tasks.TlxJerahmeelTaskModule.class})
 @Singleton
 public interface JerahmeelComponent {
     ArchiveResource archiveResource();
@@ -82,7 +80,11 @@ public interface JerahmeelComponent {
 
     JudgelsScheduler scheduler();
     GradingResponsePoller gradingResponsePoller();
-    ProblemSetStatsTask problemSetStatsTask();
-    ContestStatsTask contestStatsTask();
-    SubmissionsDuplexToAwsTask submissionsDuplexToAwsTask();
+
+    RefreshContestStatsTask refreshContestStatsTask();
+    RefreshProblemSetStatsTask refreshProblemSetStatsTask();
+
+    tlx.jerahmeel.tasks.DeleteProblemTask tlxDeleteProblemTask();
+    tlx.jerahmeel.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
+    tlx.jerahmeel.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();
 }

@@ -2,8 +2,12 @@ package judgels.uriel.hibernate;
 
 import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
 
+import jakarta.inject.Inject;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
+import judgels.persistence.Model_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
@@ -33,6 +37,34 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
         return selectByContestJid(contestJid)
                 .where(columnEq(ContestContestantModel_.userJid, userJid))
                 .unique();
+    }
+
+    @Override
+    public void dump(PrintWriter output, String contestJid) {
+        List<ContestContestantModel> results = selectByContestJid(contestJid).orderBy(Model_.ID, OrderDir.ASC).all();
+        if (results.isEmpty()) {
+            return;
+        }
+
+        output.write("INSERT IGNORE INTO uriel_contest_contestant (contestJid, userJid, status, contestStartTime, finalRank, createdBy, createdAt, updatedBy, updatedAt) VALUES\n");
+
+        for (int i = 0; i < results.size(); i++) {
+            ContestContestantModel m = results.get(i);
+            if (i > 0) {
+                output.write(",\n");
+            }
+            output.write(String.format("(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    escape(m.contestJid),
+                    escape(m.userJid),
+                    escape(m.status),
+                    escape(m.contestStartTime),
+                    escape(m.finalRank),
+                    escape(m.createdBy),
+                    escape(m.createdAt),
+                    escape(m.updatedBy),
+                    escape(m.updatedAt)));
+        }
+        output.write(";\n");
     }
 
     private static class ContestContestantHibernateQueryBuilder extends HibernateQueryBuilder<ContestContestantModel> implements ContestContestantQueryBuilder {

@@ -15,13 +15,13 @@ server:
         archivedFileCount: 14
 
 database:
-  driverClass: com.mysql.jdbc.Driver
+  driverClass: com.mysql.cj.jdbc.Driver
   url: jdbc:mysql://localhost/judgels?useSSL=false
   user: judgels
   password: judgels
   properties:
     charSet: UTF-8
-    hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate.dialect: org.hibernate.dialect.MySQLDialect
     hibernate.generate_statistics: false
     hibernate.query.plan_cache_max_size: 64
     hibernate.query.plan_parameter_metadata_max_size: 32
@@ -55,19 +55,6 @@ judgels:
 #    password: guest
 
 jophiel:
-  userAvatar:
-    fs:
-      type: local
-
-  userRegistration:
-    enabled: false
-    useRecaptcha: false
-    activationEmailTemplate:
-      subject: Activate your account
-      body: |
-        <p>Dear {{username}},</p>
-        <p><a href="http://localhost:3000/activate/{{emailCode}}">Click here</a> to activate your account.</p>
-
   userResetPassword:
     enabled: false
     requestEmailTemplate:
@@ -101,22 +88,10 @@ uriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: uriel-grading-response
 
-  submission:
-    fs:
-      type: local
-
-  file:
-    fs:
-      type: local
-
 jerahmeel:
   gabriel:
     gradingRequestQueueName: gabriel-grading-request
     gradingResponseQueueName: jerahmeel-grading-response
-
-  submission:
-    fs:
-      type: local
 
   stats:
     enabled: false

@@ -12,6 +12,7 @@ import org.immutables.value.Value;
 public interface ChapterProblemsResponse {
     List<ChapterProblem> getData();
     Map<String, ProblemInfo> getProblemsMap();
+    Map<String, List<List<String>>> getProblemSetProblemPathsMap();
     Map<String, ProblemProgress> getProblemProgressesMap();
 
     class Builder extends ImmutableChapterProblemsResponse.Builder {}

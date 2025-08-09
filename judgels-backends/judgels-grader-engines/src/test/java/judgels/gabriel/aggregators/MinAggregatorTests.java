@@ -62,7 +62,7 @@ class MinAggregatorTests {
                 new TestCaseVerdict.Builder().verdict(Verdict.SKIPPED).build());
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
-        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 0.0));
+        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.SKIPPED, 0.0));
         assertThat(result.getTestCasePoints()).containsExactly("*", "*", "?");
     }
 
@@ -70,24 +70,24 @@ class MinAggregatorTests {
     void aggregate_min_ok_points() {
         List<TestCaseVerdict> testCaseVerdicts = ImmutableList.of(
                 new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build(),
-                new TestCaseVerdict.Builder().verdict(Verdict.OK).points(20.0).build(),
+                new TestCaseVerdict.Builder().verdict(Verdict.OK).points(20.5).build(),
                 new TestCaseVerdict.Builder().verdict(Verdict.OK).points(30.0).build());
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
-        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 20.0));
-        assertThat(result.getTestCasePoints()).containsExactly("*", "20.0", "30.0");
+        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 20.5));
+        assertThat(result.getTestCasePoints()).containsExactly("*", "20.5", "30");
     }
 
     @Test
     void aggregate_min_ok_percentage() {
         List<TestCaseVerdict> testCaseVerdicts = ImmutableList.of(
                 new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build(),
-                new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(25).build(),
+                new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(12.5).build(),
                 new TestCaseVerdict.Builder().verdict(Verdict.OK).percentage(50).build());
 
         AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
-        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 17.5));
-        assertThat(result.getTestCasePoints()).containsExactly("*", "17.5", "35.0");
+        assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 8.75));
+        assertThat(result.getTestCasePoints()).containsExactly("*", "12.5%", "50%");
     }
 
     @Test

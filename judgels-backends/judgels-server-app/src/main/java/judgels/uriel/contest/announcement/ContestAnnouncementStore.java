@@ -1,8 +1,8 @@
 package judgels.uriel.contest.announcement;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;

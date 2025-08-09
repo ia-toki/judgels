@@ -1,0 +1,29 @@
+- hosts: all
+  gather_facts: false
+  roles:
+    - name: python-install
+    - name: docker-install
+    - name: ufw-install
+
+- hosts: core
+  gather_facts: false
+  roles:
+    - name: mysql-install
+    - name: nginx-install
+
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - name: judgels-grader-keypair
+
+- hosts: core
+  gather_facts: false
+  roles:
+    - name: judgels-server-provision
+    - name: judgels-client-provision
+
+- hosts: grader
+  gather_facts: false
+  roles:
+    - name: isolate-provision
+    - name: judgels-grader-provision

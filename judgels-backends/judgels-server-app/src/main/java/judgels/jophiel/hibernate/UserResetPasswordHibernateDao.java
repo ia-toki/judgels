@@ -1,11 +1,11 @@
 package judgels.jophiel.hibernate;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.persistence.metamodel.SingularAttribute;
 import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.jophiel.persistence.UserResetPasswordModel_;

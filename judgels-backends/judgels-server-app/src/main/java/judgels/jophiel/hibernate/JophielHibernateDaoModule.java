@@ -7,7 +7,6 @@ import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserInfoDao;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingEventDao;
-import judgels.jophiel.persistence.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserRoleDao;
 
@@ -35,13 +34,9 @@ public class JophielHibernateDaoModule {
         return dao;
     }
 
-    @Provides
-    static UserRatingEventDao userRatingEventDao(UserRatingEventHibernateDao dao) {
-        return dao;
-    }
 
     @Provides
-    static UserRegistrationEmailDao userRegistrationEmailDao(UserRegistrationEmailHibernateDao dao) {
+    static UserRatingEventDao userRatingEventDao(UserRatingEventHibernateDao dao) {
         return dao;
     }
 
@@ -52,6 +47,13 @@ public class JophielHibernateDaoModule {
 
     @Provides
     static UserRoleDao userRoleDao(UserRoleHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static judgels.contrib.jophiel.persistence.UserRegistrationEmailDao userRegistrationEmailDao(
+            judgels.contrib.jophiel.hibernate.UserRegistrationEmailHibernateDao dao) {
+
         return dao;
     }
 }

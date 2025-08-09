@@ -165,8 +165,7 @@ export function ContestEditConfigsTable({ config }) {
         title: 'Freeze time',
         value: (
           <>
-            <FormattedDuration value={scoreboardFreezeTime} />
-            (before contest end time)
+            <FormattedDuration value={scoreboardFreezeTime} /> (before contest end time)
           </>
         ),
       },

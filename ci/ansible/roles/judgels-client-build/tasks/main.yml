@@ -1,0 +1,10 @@
+- name: Build judgels client image and push it to GitHub container registry
+  docker_image:
+    source: build
+    force_source: yes
+    name: "ghcr.io/ia-toki/judgels/client:{{ app_version | default('latest', true) }}"
+    push: yes
+    build:
+      path: "{{ playbook_dir }}/../../../judgels-client/dist"
+      args:
+        VCS_REF: "{{ lookup('env', 'GITHUB_SHA') }}"

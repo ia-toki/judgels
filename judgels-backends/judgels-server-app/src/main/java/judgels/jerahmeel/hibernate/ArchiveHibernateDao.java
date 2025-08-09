@@ -1,7 +1,7 @@
 package judgels.jerahmeel.hibernate;
 
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ArchiveDao;
 import judgels.jerahmeel.persistence.ArchiveModel;
 import judgels.jerahmeel.persistence.ArchiveModel_;

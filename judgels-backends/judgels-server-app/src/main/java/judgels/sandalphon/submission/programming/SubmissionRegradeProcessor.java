@@ -1,7 +1,7 @@
 package judgels.sandalphon.submission.programming;
 
+import jakarta.inject.Inject;
 import java.util.Map;
-import javax.inject.Inject;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;

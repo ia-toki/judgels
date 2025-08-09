@@ -1,9 +1,9 @@
 package judgels.uriel;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.fs.aws.AwsModule;
+import judgels.contrib.uriel.contest.rating.ContestRatingModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
@@ -28,7 +28,6 @@ import judgels.uriel.contest.log.ContestLogResource;
 import judgels.uriel.contest.manager.ContestManagerResource;
 import judgels.uriel.contest.module.ContestModuleResource;
 import judgels.uriel.contest.problem.ContestProblemResource;
-import judgels.uriel.contest.rating.ContestRatingResource;
 import judgels.uriel.contest.scoreboard.ContestScoreboardPoller;
 import judgels.uriel.contest.scoreboard.ContestScoreboardResource;
 import judgels.uriel.contest.scoreboard.ContestScoreboardUpdaterModule;
@@ -40,6 +39,8 @@ import judgels.uriel.file.FileModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
+import judgels.uriel.tasks.DumpContestTask;
+import judgels.uriel.tasks.UrielTaskModule;
 
 @Component(modules = {
         // Judgels service
@@ -56,7 +57,6 @@ import judgels.uriel.submission.programming.SubmissionModule;
 
         // 3rd parties
         RabbitMQModule.class,
-        AwsModule.class,
         SandalphonClientModule.class,
         GabrielClientModule.class,
 
@@ -65,7 +65,11 @@ import judgels.uriel.submission.programming.SubmissionModule;
         SubmissionModule.class,
         ItemSubmissionModule.class,
         ContestLogModule.class,
-        ContestScoreboardUpdaterModule.class})
+        ContestScoreboardUpdaterModule.class,
+        ContestRatingModule.class,
+        UrielTaskModule.class,
+
+        tlx.uriel.tasks.TlxUrielTaskModule.class})
 @Singleton
 public interface UrielComponent {
     ContestAnnouncementResource contestAnnouncementResource();
@@ -79,7 +83,6 @@ public interface UrielComponent {
     ContestManagerResource contestManagerResource();
     ContestModuleResource contestModuleResource();
     ContestProblemResource contestProblemResource();
-    ContestRatingResource contestRatingResource();
     ContestResource contestResource();
     ContestScoreboardResource contestScoreboardResource();
     ContestSubmissionResource contestProgrammingSubmissionResource();
@@ -90,4 +93,10 @@ public interface UrielComponent {
     ContestLogPoller contestLogPoller();
     ContestScoreboardPoller contestScoreboardPoller();
     GradingResponsePoller gradingResponsePoller();
+
+    DumpContestTask dumpContestTask();
+
+    judgels.contrib.uriel.contest.rating.ContestRatingResource contestRatingResource();
+
+    tlx.uriel.tasks.ReplaceProblemTask tlxReplaceProblemTask();
 }

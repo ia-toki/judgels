@@ -2,8 +2,8 @@ package judgels.jophiel.mailer;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.inject.Singleton;
 import java.util.Optional;
-import javax.inject.Singleton;
 
 @Module
 public class MailerModule {

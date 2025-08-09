@@ -1,0 +1,7 @@
+- hosts: core
+  gather_facts: false
+  roles:
+    - name: phpmyadmin-deploy
+      vars:
+        phpmyadmin_version: '5.2.2'
+        phpmyadmin_blowfish_secret: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"

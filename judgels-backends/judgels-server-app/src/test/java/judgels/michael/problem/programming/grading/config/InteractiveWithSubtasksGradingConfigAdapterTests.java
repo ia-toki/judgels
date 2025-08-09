@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import judgels.fs.FileInfo;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
@@ -107,6 +108,32 @@ public class InteractiveWithSubtasksGradingConfigAdapterTests extends BaseGradin
                                 TestCase.of("hello_1_2.in", "", ImmutableSet.of(1, 2)))),
                         TestGroup.of(2, ImmutableList.of(
                                 TestCase.of("hello_2_1.in", "", ImmutableSet.of(2))))))
+                .build());
+    }
+
+    @Test
+    void test_auto_population_single_subtask() {
+        InteractiveWithSubtasksGradingConfig config = new InteractiveWithSubtasksGradingConfig.Builder()
+                .timeLimit(2000)
+                .memoryLimit(65536)
+                .subtaskPoints(List.of(30, 70))
+                .build();
+
+        List<FileInfo> testDataFiles = List.of(
+                createFile("hello_sample_1.in"),
+                createFile("hello_1.in"),
+                createFile("hello_2.in"));
+
+        InteractiveWithSubtasksGradingConfig populatedConfig = (InteractiveWithSubtasksGradingConfig) adapter.autoPopulateTestData(config, testDataFiles);
+        assertThat(populatedConfig).isEqualTo(new InteractiveWithSubtasksGradingConfig.Builder()
+                .from(config)
+                .testData(List.of(
+                        TestGroup.of(0, List.of(
+                                TestCase.of("hello_sample_1.in", "", Set.of(0, 1)))),
+                        TestGroup.of(1, List.of(
+                                TestCase.of("hello_1.in", "", Set.of(1)),
+                                TestCase.of("hello_2.in", "", Set.of(1))))))
+                .subtaskPoints(List.of(100))
                 .build());
     }
 }

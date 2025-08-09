@@ -1,0 +1,64 @@
+- hosts: core
+  gather_facts: true
+  vars:
+    db_dump_file: /opt/judgels/server/var/tmp/judgels-{{ ansible_date_time.epoch }}.sql
+  tasks:
+    - name: Create temporary database dump directory
+      file:
+        path: /opt/judgels/server/var/tmp
+        state: directory
+
+    - name: Dump judgels database to file
+      mysql_db:
+        state: dump
+        login_host: localhost
+        login_user: "{{ db_username }}"
+        login_password: "{{ db_password }}"
+        name:
+          - judgels
+        target: "{{ db_dump_file }}"
+
+    - name: Create MySQL directory
+      file:
+        path: "{{ dump_dir }}/mysql"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download judgels database dump file
+      synchronize:
+        mode: pull
+        src: "{{ db_dump_file }}"
+        dest: "{{ dump_dir }}/mysql/"
+    
+    - name: Download MySQL logs
+      synchronize:
+        mode: pull
+        src: /var/log/mysql/
+        dest: "{{ dump_dir }}/mysql"
+
+    - name: Create judgels-server directory
+      file:
+        path: "{{ dump_dir }}/judgels-server"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download judgels-server data
+      synchronize:
+        mode: pull
+        src: /opt/judgels/server/var/data/
+        dest: "{{ dump_dir }}/judgels-server"
+
+    - name: Create system directory
+      file:
+        path: "{{ dump_dir }}/system"
+        state: directory
+      delegate_to: localhost
+      connection: local
+
+    - name: Download system logs
+      synchronize:
+        mode: pull
+        src: /var/log/auth.log
+        dest: "{{ dump_dir }}/system"

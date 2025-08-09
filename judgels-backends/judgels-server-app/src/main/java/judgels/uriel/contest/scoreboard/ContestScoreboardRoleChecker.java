@@ -3,7 +3,7 @@ package judgels.uriel.contest.scoreboard;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SCOREBOARD;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;

@@ -21,16 +21,17 @@ public final class MinAggregator implements Aggregator {
                 aggregatedVerdict = verdict;
             }
 
-            String points;
+            String points = "";
             if (verdict == Verdict.OK) {
                 double okPoints = 0.0;
                 if (testCaseVerdict.getPercentage().isPresent()) {
                     okPoints = testCaseVerdict.getPercentage().get() * subtaskPoints / 100.0;
+                    points = PointUtils.formatPoints(testCaseVerdict.getPercentage().get()) + "%";
                 } else if (testCaseVerdict.getPoints().isPresent()) {
                     okPoints = testCaseVerdict.getPoints().get();
+                    points = PointUtils.formatPoints(okPoints);
                 }
                 aggregatedPoints = Math.min(aggregatedPoints, okPoints);
-                points = "" + okPoints;
             } else if (verdict == Verdict.ACCEPTED) {
                 points = "*";
             } else if (verdict == Verdict.SKIPPED) {
@@ -42,9 +43,6 @@ public final class MinAggregator implements Aggregator {
             }
 
             testCasePoints.add(points);
-        }
-        if (aggregatedVerdict == Verdict.SKIPPED) {
-            aggregatedVerdict = Verdict.OK;
         }
 
         return new AggregationResult.Builder()

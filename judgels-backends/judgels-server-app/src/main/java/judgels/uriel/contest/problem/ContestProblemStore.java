@@ -5,6 +5,7 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;

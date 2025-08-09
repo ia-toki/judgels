@@ -1,6 +1,10 @@
 package judgels.uriel.hibernate;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+import java.io.PrintWriter;
+import java.util.List;
+import judgels.persistence.Model_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
@@ -18,6 +22,34 @@ public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<Contest
     @Override
     public ContestAnnouncementQueryBuilder selectByContestJid(String contestJid) {
         return new ContestAnnouncementHibernateQueryBuilder(currentSession(), contestJid);
+    }
+
+    @Override
+    public void dump(PrintWriter output, String contestJid) {
+        List<ContestAnnouncementModel> results = selectByContestJid(contestJid).orderBy(Model_.ID, OrderDir.ASC).all();
+        if (results.isEmpty()) {
+            return;
+        }
+
+        output.write("INSERT IGNORE INTO uriel_contest_announcement (jid, contestJid, title, content, status, createdBy, createdAt, updatedBy, updatedAt) VALUES\n");
+
+        for (int i = 0; i < results.size(); i++) {
+            ContestAnnouncementModel m = results.get(i);
+            if (i > 0) {
+                output.write(",\n");
+            }
+            output.write(String.format("(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    escape(m.jid),
+                    escape(m.contestJid),
+                    escape(m.title),
+                    escape(m.content),
+                    escape(m.status),
+                    escape(m.createdBy),
+                    escape(m.createdAt),
+                    escape(m.updatedBy),
+                    escape(m.updatedAt)));
+        }
+        output.write(";\n");
     }
 
     private static class ContestAnnouncementHibernateQueryBuilder extends HibernateQueryBuilder<ContestAnnouncementModel> implements ContestAnnouncementQueryBuilder {

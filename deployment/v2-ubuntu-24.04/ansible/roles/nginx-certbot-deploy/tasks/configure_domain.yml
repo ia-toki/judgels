@@ -1,0 +1,74 @@
+- name: Check whether a letsencrypt SSL certificate already exists for the domain
+  stat:
+    path: /etc/letsencrypt/live/{{ domain.fqdn | mandatory }}/cert.pem
+  register: letsencrypt_certificate
+
+- name: Add nginx letsencrypt domain config
+  template:
+    src: letsencrypt.j2
+    dest: /etc/nginx/sites-available/{{ domain.name | mandatory }}
+    owner: www-data
+    group: www-data
+    mode: 0644
+  when: not letsencrypt_certificate.stat.exists
+  notify: Reload nginx
+
+- name: Enable nginx letsencrypt domain config
+  file:
+    src: /etc/nginx/sites-available/{{ domain.name | mandatory }}
+    dest: /etc/nginx/sites-enabled/{{ domain.name | mandatory }}
+    owner: www-data
+    group: www-data
+    state: link
+  when: not letsencrypt_certificate.stat.exists
+
+- name: Reload nginx to apply domain config
+  service:
+    name: nginx
+    state: reloaded
+  when: not letsencrypt_certificate.stat.exists
+
+- name: Generate SSL certificate using certbot
+  command: |
+    certbot certonly \
+      --webroot \
+      --email {{ nginx_certbot_email | mandatory }} \
+      --agree-tos \
+      --webroot-path=/var/lib/letsencrypt \
+      -d {{ domain.fqdn | mandatory }} \
+      --non-interactive
+  when: not letsencrypt_certificate.stat.exists
+  notify: Reload nginx
+
+- name: Set up basic auth
+  when: domain.auth_basic_user is defined and domain.auth_basic_user != ""
+  block:
+    - name: Install passlib
+      package:
+        name: python3-passlib
+        state: present
+
+    - name: Generate basic auth
+      htpasswd:
+        path: /etc/nginx/passwords/{{ domain.name | mandatory }}
+        name: "{{ domain.auth_basic_user }}"
+        password: "{{ domain.auth_basic_pass }}"
+      notify: Reload nginx
+
+- name: Add nginx domain config
+  template:
+    src: "{{ domain.config_template | mandatory }}"
+    dest: /etc/nginx/sites-available/{{ domain.name | mandatory }}
+    owner: www-data
+    group: www-data
+    mode: 0644
+  notify: Reload nginx
+
+- name: Enable nginx domain config
+  file:
+    src: /etc/nginx/sites-available/{{ domain.name | mandatory }}
+    dest: /etc/nginx/sites-enabled/{{ domain.name | mandatory }}
+    owner: www-data
+    group: www-data
+    state: link
+  notify: Reload nginx

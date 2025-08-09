@@ -1,11 +1,11 @@
 package judgels.uriel.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
 import java.time.Clock;
 import java.util.Map;
-import javax.inject.Inject;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.ExternalScoreboardData;

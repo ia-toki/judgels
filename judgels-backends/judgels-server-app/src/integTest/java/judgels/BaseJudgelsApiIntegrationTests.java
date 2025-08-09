@@ -1,6 +1,6 @@
 package judgels;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
@@ -10,21 +10,26 @@ import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
-import com.palantir.websecurity.WebSecurityConfiguration;
+import io.dropwizard.core.server.DefaultServerFactory;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.testing.DropwizardTestSupport;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.Response;
+import judgels.app.BaseJudgelsAppIntegrationTests;
+import judgels.app.JudgelsAppConfiguration;
+import judgels.contrib.jophiel.user.registration.UserRegistrationConfiguration;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jerahmeel.stats.StatsConfiguration;
@@ -39,9 +44,7 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.role.UserRole;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.session.SessionConfiguration;
-import judgels.jophiel.user.account.UserRegistrationConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
-import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.jophiel.user.web.WebConfiguration;
 import judgels.sandalphon.SandalphonConfiguration;
@@ -51,7 +54,6 @@ import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.service.feign.FeignClients;
 import judgels.uriel.UrielConfiguration;
-import judgels.uriel.file.FileConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -61,7 +63,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-public abstract class BaseJudgelsApiIntegrationTests {
+public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;
     private static Path baseDataDir;
 
@@ -78,14 +80,19 @@ public abstract class BaseJudgelsApiIntegrationTests {
     static void startApp() throws Exception {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
-        dbConfig.setUrl("jdbc:h2:mem:./judgels");
+        dbConfig.setUrl("jdbc:h2:mem:test");
         dbConfig.setProperties(ImmutableMap.<String, String>builder()
                 .put(DIALECT, H2Dialect.class.getName())
                 .put(HBM2DDL_AUTO, "create")
                 .put(GENERATE_STATISTICS, "false")
                 .build());
 
+        WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
+                .build();
+
         baseDataDir = Files.createTempDirectory("judgels");
+
+        setEditionAsTLX();
 
         JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
                 .name("Judgels")
@@ -107,7 +114,6 @@ public abstract class BaseJudgelsApiIntegrationTests {
                         .build())
                 .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
                 .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
-                .userAvatarConfig(UserAvatarConfiguration.DEFAULT)
                 .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT)
                 .sessionConfig(SessionConfiguration.DEFAULT)
                 .webConfig(WebConfiguration.DEFAULT)
@@ -115,8 +121,6 @@ public abstract class BaseJudgelsApiIntegrationTests {
 
         UrielConfiguration urielConfig = new UrielConfiguration.Builder()
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
-                .submissionConfig(judgels.uriel.submission.programming.SubmissionConfiguration.DEFAULT)
-                .fileConfig(FileConfiguration.DEFAULT)
                 .build();
 
         SandalphonConfiguration sandalphonConfig = new SandalphonConfiguration.Builder()
@@ -125,18 +129,29 @@ public abstract class BaseJudgelsApiIntegrationTests {
 
         JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
                 .gabrielConfig(GabrielClientConfiguration.DEFAULT)
-                .submissionConfig(judgels.jerahmeel.submission.programming.SubmissionConfiguration.DEFAULT)
                 .statsConfig(StatsConfiguration.DEFAULT)
                 .build();
 
         JudgelsServerApplicationConfiguration config = new JudgelsServerApplicationConfiguration(
                 dbConfig,
-                WebSecurityConfiguration.DEFAULT,
+                webSecurityConfig,
                 judgelsConfig,
                 jophielConfig,
                 sandalphonConfig,
                 urielConfig,
-                jerahmeelConfig);
+                jerahmeelConfig) {
+            {
+                DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
+
+                HttpConnectorFactory appConnector = new HttpConnectorFactory();
+                appConnector.setPort(9090);
+                serverFactory.setApplicationConnectors(List.of(appConnector));
+
+                HttpConnectorFactory adminConnector = new HttpConnectorFactory();
+                adminConnector.setPort(9091);
+                serverFactory.setAdminConnectors(List.of(adminConnector));
+            }
+        };
 
         support = new DropwizardTestSupport<>(JudgelsServerApplication.class, config);
         support.before();
@@ -171,9 +186,11 @@ public abstract class BaseJudgelsApiIntegrationTests {
     }
 
     protected static <T> T createClient(Class<T> clientClass) {
-        return FeignClients.create(
-                clientClass,
-                "http://localhost:" + support.getLocalPort());
+        return FeignClients.create(clientClass, getLocalUrl());
+    }
+
+    protected static String getLocalUrl() {
+        return "http://localhost:" + support.getLocalPort();
     }
 
     protected static void assertPermitted(ThrowingCallable callable) {

@@ -82,12 +82,56 @@ export function SubmissionDetails({
         )}
         <p>
           {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} /> {separator}{' '}
-          {getGradingLanguageName(gradingLanguage)} {separator}{' '}
+          {!isOutputOnly(gradingEngine) && (
+            <>
+              {getGradingLanguageName(gradingLanguage)} {separator}{' '}
+            </>
+          )}
           <span className="general-info__time">
             <FormattedDate value={time} showSeconds />
           </span>
         </p>
       </div>
+    );
+  };
+
+  const renderScore = score => {
+    let formattedScore = score;
+
+    if (score.startsWith('*')) {
+      formattedScore = '✓' + score.substring(1);
+    } else if (score.startsWith('X')) {
+      formattedScore = '✕' + score.substring(1);
+    }
+
+    if (formattedScore.includes(' [')) {
+      const [points, feedback] = formattedScore.split(' [', 2);
+      return (
+        <>
+          {points}{' '}
+          <span style="display: inline-block">
+            {'['}
+            {feedback}
+          </span>
+        </>
+      );
+    }
+
+    return formattedScore;
+  };
+
+  const renderSubtaskScore = score => {
+    if (Number.isInteger(score)) {
+      return <span className="subtask-score">{score}</span>;
+    }
+
+    const integer = Math.trunc(score);
+    const decimal = (score - integer).toString().replace('0.', '.');
+    return (
+      <>
+        <span className="subtask-score">{integer}</span>
+        <span className="subtask-score-decimal">{decimal}</span>
+      </>
     );
   };
 
@@ -105,7 +149,7 @@ export function SubmissionDetails({
               <span className="subtask-verdict">
                 <VerdictTag verdictCode={subtaskResult.verdict.code} />
               </span>
-              <span className="subtask-score">{subtaskResult.score}</span>
+              {renderSubtaskScore(subtaskResult.score)}
             </h5>
           </summary>
 
@@ -136,7 +180,7 @@ export function SubmissionDetails({
                         </td>
                         <td>{renderExecutionTime(testCaseResult)}</td>
                         <td>{renderExecutionMemory(testCaseResult)}</td>
-                        <td>{testCaseResult.score}</td>
+                        <td>{renderScore(testCaseResult.score)}</td>
                       </tr>
                     );
                   })
@@ -200,7 +244,7 @@ export function SubmissionDetails({
                     </td>
                     <td>{renderExecutionTime(result)}</td>
                     <td>{renderExecutionMemory(result)}</td>
-                    <td>{result.score}</td>
+                    <td>{renderScore(result.score)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -257,7 +301,7 @@ export function SubmissionDetails({
                       </td>
                       <td>{renderExecutionTime(result)}</td>
                       <td>{renderExecutionMemory(result)}</td>
-                      <td>{result.score}</td>
+                      <td>{renderScore(result.score)}</td>
                     </tr>
                   ));
                 })}

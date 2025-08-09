@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import judgels.fs.FileSystem;
-import judgels.fs.FileSystems;
-import judgels.fs.aws.AwsConfiguration;
+import judgels.fs.local.LocalFileSystem;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.stats.StatsConfiguration;
@@ -35,19 +34,24 @@ import judgels.uriel.submission.UrielSubmissionStore;
 
 @Module
 public class SubmissionModule {
-    private final SubmissionConfiguration config;
     private final StatsConfiguration statsConfig;
+    private final Optional<FileSystem> fs;
 
-    public SubmissionModule(SubmissionConfiguration config, StatsConfiguration statsConfig) {
-        this.config = config;
+    public SubmissionModule(StatsConfiguration statsConfig) {
         this.statsConfig = statsConfig;
+        this.fs = Optional.empty();
+    }
+
+    public SubmissionModule(StatsConfiguration statsConfig, FileSystem fs) {
+        this.statsConfig = statsConfig;
+        this.fs = Optional.of(fs);
     }
 
     @Provides
     @Singleton
     @SubmissionFs
-    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig, @JudgelsBaseDataDir Path baseDataDir) {
-        return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("submissions"));
+    FileSystem submissionFs(@JudgelsBaseDataDir Path baseDataDir) {
+        return fs.orElse(new LocalFileSystem(baseDataDir.resolve("submissions")));
     }
 
     @Provides
@@ -104,23 +108,6 @@ public class SubmissionModule {
 
         ExecutorService executorService = scheduler.createExecutorService("jerahmeel-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(submissionStore, executorService, processor);
-    }
-
-    @Provides
-    @Singleton
-    static SubmissionsDuplexToAwsTask submissionsDuplexToAwsTask(
-            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            @SubmissionFs FileSystem submissionFs,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore) {
-
-        return unitOfWorkAwareProxyFactory.create(
-                SubmissionsDuplexToAwsTask.class,
-                new Class<?>[] {
-                        FileSystem.class,
-                        SubmissionStore.class},
-                new Object[] {
-                        submissionFs,
-                        submissionStore});
     }
 
     @Provides

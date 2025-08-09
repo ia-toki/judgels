@@ -1,5 +1,10 @@
 package judgels.jerahmeel.hibernate;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.time.Clock;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,11 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
@@ -19,6 +19,7 @@ import judgels.jerahmeel.persistence.StatsUserProblemModel_;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
+import org.hibernate.query.Query;
 
 public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemModel> implements StatsUserProblemDao {
     private final Clock clock;
@@ -101,7 +102,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
 
         return currentSession().createQuery(cq).getResultList()
                 .stream()
-                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> (long) tuple.get(1, Integer.class)));
     }
 
     @Override
@@ -163,8 +164,14 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public long selectTotalScoreByUserJid(String userJid) {
-        return 0;
+    public int selectTotalScoreByUserJid(String userJid) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+        Root<StatsUserProblemModel> root = cq.from(getEntityClass());
+
+        cq.select(cb.sum(root.get(StatsUserProblemModel_.score)));
+        cq.where(cb.equal(root.get(StatsUserProblemModel_.userJid), userJid));
+        return currentSession().createQuery(cq).getSingleResult();
     }
 
     @Override
@@ -186,5 +193,15 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
         return currentSession().createQuery(cq).getResultList()
                 .stream()
                 .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+    }
+
+    @Override
+    public void deleteAllByProblemJid(String problemJid) {
+        Query<?> query = currentSession().createQuery(
+                "DELETE FROM jerahmeel_stats_user_problem  "
+                        + "WHERE problemJid = :problemJid");
+
+        query.setParameter("problemJid", problemJid);
+        query.executeUpdate();
     }
 }

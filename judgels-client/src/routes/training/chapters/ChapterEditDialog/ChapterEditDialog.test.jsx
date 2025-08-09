@@ -35,8 +35,7 @@ describe('ChapterEditDialog', () => {
   test('edit dialog form', () => {
     const name = wrapper.find('input[name="name"]');
     expect(name.prop('value')).toEqual('Chapter');
-    name.getDOMNode().value = 'New chapter';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'New chapter' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

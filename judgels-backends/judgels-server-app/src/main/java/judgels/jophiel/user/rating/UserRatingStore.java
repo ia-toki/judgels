@@ -1,13 +1,13 @@
 package judgels.jophiel.user.rating;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.RatingEvent;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingEvent;

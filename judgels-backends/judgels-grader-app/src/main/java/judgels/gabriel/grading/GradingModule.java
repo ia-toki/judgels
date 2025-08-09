@@ -3,13 +3,13 @@ package judgels.gabriel.grading;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import judgels.messaging.MessageClient;
 import judgels.service.JudgelsBaseDataDir;
 

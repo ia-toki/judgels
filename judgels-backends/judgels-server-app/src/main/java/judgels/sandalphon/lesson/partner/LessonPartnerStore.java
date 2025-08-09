@@ -2,13 +2,13 @@ package judgels.sandalphon.lesson.partner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.sandalphon.api.lesson.partner.LessonPartnerConfig;
 import judgels.sandalphon.api.resource.Partner;
 import judgels.sandalphon.api.resource.PartnerPermission;

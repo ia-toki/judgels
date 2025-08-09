@@ -1,9 +1,9 @@
 package judgels.jophiel.hibernate;
 
+import jakarta.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
 import judgels.jophiel.persistence.UserModel_;

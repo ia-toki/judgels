@@ -226,7 +226,7 @@ class BatchWithSubtasksGradingEngineIntegrationTests extends BlackboxGradingEngi
                                 2,
                                 testCaseResult(ACCEPTED, "*", 2),
                                 testCaseResult(ACCEPTED, "*", 2),
-                                testCaseResult(OK, "10.0", 2))),
+                                testCaseResult(OK, "10", 2))),
                 ImmutableList.of(
                         subtaskResult(1, ACCEPTED, 30),
                         subtaskResult(2, OK, 10)));

@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.jophiel.UserRatingClient;
+import judgels.contrib.jophiel.UserRatingClient;
+import judgels.contrib.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.rating.UserRating;
-import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.sandalphon.api.problem.Problem;
 import judgels.uriel.ContestClient;
 import judgels.uriel.ContestContestantClient;
@@ -140,7 +140,7 @@ public abstract class BaseUrielApiIntegrationTests extends BaseJudgelsApiIntegra
         Configuration config = new Configuration();
         config.setProperty(DIALECT, H2Dialect.class.getName());
         config.setProperty(DRIVER, Driver.class.getName());
-        config.setProperty(URL, "jdbc:h2:mem:./judgels");
+        config.setProperty(URL, "jdbc:h2:mem:test");
         config.setProperty(GENERATE_STATISTICS, "false");
 
         SessionFactory sessionFactory = config.buildSessionFactory();

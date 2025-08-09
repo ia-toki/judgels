@@ -48,13 +48,11 @@ public class SingleSourceFileCompiler implements Compiler {
         if (result.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {
             File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
-                String compilationOutput = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
                 FileUtils.forceDelete(outputFile);
                 FileUtils.copyFileToDirectory(sandbox.getFile(executableFilename), compilationDir);
 
                 return new CompilationResult.Builder()
                         .isSuccessful(true)
-                        .putOutputs(sourceKey, compilationOutput)
                         .build();
             } catch (IOException e) {
                 throw new CompilationException(e);

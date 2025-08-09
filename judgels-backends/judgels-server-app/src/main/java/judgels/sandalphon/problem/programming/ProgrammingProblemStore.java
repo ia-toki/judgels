@@ -1,16 +1,18 @@
 package judgels.sandalphon.problem.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.List;
-import javax.inject.Inject;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.Osn2024Hacks;
+import judgels.gabriel.api.ScoringConfig;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.base.BaseProblemStore;
@@ -48,6 +50,9 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
     public GradingConfig getGradingConfig(String userJid, String problemJid) {
         String gradingEngine = problemFs.readFromFile(getGradingEngineFilePath(userJid, problemJid));
         String gradingConfig = problemFs.readFromFile(getGradingConfigFilePath(userJid, problemJid));
+
+        // HACK for OSN 2024
+        gradingConfig = Osn2024Hacks.checkForHack(problemJid, gradingConfig);
 
         try {
             return GradingEngineRegistry.getInstance().get(gradingEngine).parseConfig(mapper, gradingConfig);
@@ -135,6 +140,10 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
                 .gradingLanguageRestriction(getLanguageRestriction(null, problemJid))
                 .gradingLastUpdateTime(getGradingLastUpdateTime(null, problemJid))
                 .build();
+    }
+
+    public ScoringConfig getProgrammingProblemScoringConfig(String problemJid) {
+        return getGradingConfig(null, problemJid).getScoringConfig().orElse(ScoringConfig.DEFAULT);
     }
 
     private void updateGradingLastUpdateTime(String userJid, String problemJid) {

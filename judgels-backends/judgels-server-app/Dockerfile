@@ -1,14 +1,14 @@
-FROM alpine:3.18.0
+FROM alpine:3.21.3
 
-RUN apk --no-cache add openjdk11-jdk openjdk11-jmods
-RUN /usr/lib/jvm/java-11-openjdk/bin/jlink \
+RUN apk --no-cache add binutils openjdk17-jdk openjdk17-jmods
+RUN /usr/lib/jvm/java-17-openjdk/bin/jlink \
     --add-modules \
-        java.base,java.desktop,java.naming,java.sql,java.management,java.instrument,jdk.crypto.ec \
+        java.base,java.desktop,java.naming,java.sql,java.management,java.instrument,jdk.crypto.ec,jdk.unsupported \
     --compress 2 --strip-debug --no-header-files --no-man-pages \
     --output "/judgels/java"
 
 
-FROM alpine:3.18.0
+FROM alpine:3.21.3
 
 ENV JAVA_HOME=/judgels/java
 ENV PATH="$PATH:$JAVA_HOME/bin"

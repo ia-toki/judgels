@@ -47,13 +47,11 @@ describe('ContestAnnouncementEditDialog', () => {
 
     const title = wrapper.find('input[name="title"]');
     expect(title.prop('value')).toEqual('Snack');
-    title.getDOMNode().value = 'Snack [edited]';
-    title.simulate('input');
+    title.prop('onChange')({ target: { value: 'Snack [edited]' } });
 
     const content = wrapper.find('textarea[name="content"]');
     expect(content.prop('value')).toEqual('Snack is provided.');
-    content.getDOMNode().value = 'Snack is NOT provided.';
-    content.simulate('input');
+    content.prop('onChange')({ target: { value: 'Snack is NOT provided.' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

@@ -5,7 +5,8 @@ dependencies {
     api project(':judgels-grader-api')
 
     api "com.google.code.findbugs:jsr305:$findbugsJsr305Version"
-    api "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
+    api "jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion"
+    api "jakarta.ws.rs:jakarta.ws.rs-api:$jakartaRsApiVersion"
 
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 

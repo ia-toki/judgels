@@ -1,5 +1,6 @@
 package judgels.sandalphon.persistence;
 
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -11,4 +12,6 @@ public interface BaseProgrammingGradingDao<M extends AbstractProgrammingGradingM
     Optional<M> selectLatestBySubmissionJid(String submissionJid);
     Map<String, M> selectAllLatestBySubmissionJids(Collection<String> submissionJids);
     Map<String, M> selectAllLatestWithDetailsBySubmissionJids(Collection<String> submissionJids);
+    void deleteAllByProblemJid(String problemJid);
+    void dump(PrintWriter output, Collection<String> submissionJids);
 }

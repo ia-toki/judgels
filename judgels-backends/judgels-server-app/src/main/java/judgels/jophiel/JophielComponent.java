@@ -1,10 +1,8 @@
 package judgels.jophiel;
 
 import dagger.Component;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.fs.aws.AwsModule;
-import judgels.jophiel.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.profile.ProfileResource;
@@ -13,20 +11,17 @@ import judgels.jophiel.session.SessionModule;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
 import judgels.jophiel.user.account.UserAccountResource;
-import judgels.jophiel.user.account.UserRegistrationModule;
 import judgels.jophiel.user.account.UserResetPasswordModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.avatar.UserAvatarResource;
 import judgels.jophiel.user.info.UserInfoResource;
 import judgels.jophiel.user.rating.UserRatingResource;
-import judgels.jophiel.user.registration.web.UserRegistrationWebResource;
 import judgels.jophiel.user.role.UserRoleResource;
 import judgels.jophiel.user.search.UserSearchResource;
 import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.UserWebResource;
 import judgels.jophiel.user.web.WebModule;
-import judgels.recaptcha.RecaptchaModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
@@ -45,18 +40,18 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         JophielHibernateDaoModule.class,
 
         // 3rd parties
-        AuthModule.class,
-        AwsModule.class,
         MailerModule.class,
-        RecaptchaModule.class,
 
         // Features
         SuperadminModule.class,
         UserAvatarModule.class,
-        UserRegistrationModule.class,
         UserResetPasswordModule.class,
         SessionModule.class,
-        WebModule.class})
+        WebModule.class,
+
+        judgels.contrib.jophiel.auth.AuthModule.class,
+        judgels.contrib.jophiel.recaptcha.RecaptchaModule.class,
+        judgels.contrib.jophiel.user.registration.UserRegistrationModule.class})
 @Singleton
 public interface JophielComponent {
     ProfileResource profileResource();
@@ -66,7 +61,6 @@ public interface JophielComponent {
     UserAccountResource userAccountResource();
     UserAvatarResource userAvatarResource();
     UserInfoResource userProfileResource();
-    UserRegistrationWebResource userRegistrationWebResource();
     UserRatingResource userRatingResource();
     UserRoleResource userRoleResource();
     UserSearchResource userSearchResource();
@@ -74,4 +68,8 @@ public interface JophielComponent {
 
     JudgelsScheduler scheduler();
     SessionCleaner sessionCleaner();
+
+    judgels.contrib.jophiel.session.SessionWithGoogleResource sessionWithGoogleResource();
+    judgels.contrib.jophiel.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
+    judgels.contrib.jophiel.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 }

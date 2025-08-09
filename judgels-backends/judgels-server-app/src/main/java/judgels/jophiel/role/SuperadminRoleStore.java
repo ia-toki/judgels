@@ -1,6 +1,6 @@
 package judgels.jophiel.role;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 public class SuperadminRoleStore {
     private static String superadminUserJid;

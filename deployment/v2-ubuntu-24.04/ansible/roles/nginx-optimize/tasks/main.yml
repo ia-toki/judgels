@@ -1,0 +1,5 @@
+- name: Generate nginx config optimization
+  template:
+    src: "{{ playbook_dir}}/../conf/nginx.conf.j2"
+    dest: /etc/nginx/conf.d/judgels.conf
+  notify: Reload nginx

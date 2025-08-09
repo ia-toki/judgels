@@ -314,7 +314,7 @@
   <div class="row">
     <@forms.formField offset=true>
       <@ui.buttonLink size="sm" to="config/auto-populate">
-        Auto-populate test data based on tcframe format
+        Auto-populate test data based on TCFrame format
       </@ui.buttonLink>
     </@forms.formField>
   </div>

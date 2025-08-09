@@ -1,15 +1,20 @@
 package judgels.sandalphon.hibernate;
 
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.persistence.JudgelsModel_;
+import judgels.persistence.Model_;
 import judgels.persistence.UnmodifiableModel_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
@@ -55,6 +60,52 @@ public abstract class AbstractProgrammingSubmissionHibernateDao<M extends Abstra
         return currentSession().createQuery(cq).getResultList()
                 .stream()
                 .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+    }
+
+    @Override
+    public void updateContainerJid(String problemJid, String containerJid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateProblemJid(String oldProblemJid, String newProblemJid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void deleteAllByProblemJid(String problemJid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Collection<String> dump(PrintWriter output, String containerJid) {
+        List<M> results = select().whereContainerIs(containerJid).orderBy(Model_.ID, OrderDir.ASC).all();
+        if (results.isEmpty()) {
+            return List.of();
+        }
+
+        output.write("INSERT IGNORE INTO uriel_contest_programming_submission (jid, problemJid, containerJid, gradingEngine, gradingLanguage, createdBy, createdAt, updatedBy, updatedAt) VALUES\n");
+
+        List<String> submissionJids = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            M m = results.get(i);
+            if (i > 0) {
+                output.write(",\n");
+            }
+            output.write(String.format("(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    escape(m.jid),
+                    escape(m.problemJid),
+                    escape(m.containerJid),
+                    escape(m.gradingEngine),
+                    escape(m.gradingLanguage),
+                    escape(m.createdBy),
+                    escape(m.createdAt),
+                    escape(m.updatedBy),
+                    escape(m.updatedAt)));
+            submissionJids.add(m.jid);
+        }
+        output.write(";\n");
+        return submissionJids;
     }
 
     private static class AbstractProgrammingSubmissionHibernateQueryBuilder<M extends AbstractProgrammingSubmissionModel> extends HibernateQueryBuilder<M> implements BaseProgrammingSubmissionQueryBuilder<M> {

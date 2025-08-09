@@ -5,14 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Instant;
 import java.util.List;
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.contrib.jophiel.UserRatingClient;
+import judgels.contrib.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.ProfileClient;
 import judgels.jophiel.UserClient;
-import judgels.jophiel.UserRatingClient;
 import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.rating.UserRating;
-import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import org.junit.jupiter.api.Test;
 
 public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

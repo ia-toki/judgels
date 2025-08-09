@@ -3,6 +3,7 @@ package judgels.sandalphon.api.problem.bundle;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.NoClass;
 import java.util.Optional;
 import org.immutables.value.Value;
 
@@ -18,13 +19,14 @@ public interface Item {
             use = JsonTypeInfo.Id.NAME,
             include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type",
-            visible = true
+            visible = true,
+            defaultImpl = NoClass.class
     )
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = ImmutableStatementItemConfig.class),
-            @JsonSubTypes.Type(value = ImmutableMultipleChoiceItemConfig.class),
-            @JsonSubTypes.Type(value = ImmutableShortAnswerItemConfig.class),
-            @JsonSubTypes.Type(value = ImmutableEssayItemConfig.class)
+            @JsonSubTypes.Type(value = StatementItemConfig.class),
+            @JsonSubTypes.Type(value = MultipleChoiceItemConfig.class),
+            @JsonSubTypes.Type(value = ShortAnswerItemConfig.class),
+            @JsonSubTypes.Type(value = EssayItemConfig.class)
     })
     ItemConfig getConfig();
 

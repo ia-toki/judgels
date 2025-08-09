@@ -11,10 +11,8 @@ import judgels.jophiel.SessionClient;
 import judgels.jophiel.UserAccountClient;
 import judgels.jophiel.UserClient;
 import judgels.jophiel.api.session.Credentials;
-import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.account.PasswordResetData;
-import judgels.jophiel.api.user.account.UserRegistrationData;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 
@@ -22,71 +20,6 @@ class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserClient userClient = createClient(UserClient.class);
     private final UserAccountClient accountClient = createClient(UserAccountClient.class);
     private final SessionClient sessionClient = createClient(SessionClient.class);
-
-    @Test
-    void register_activate_user() {
-        Wiser wiser = new Wiser();
-        wiser.setPort(9250);
-        wiser.start();
-
-        accountClient.registerUser(new UserRegistrationData.Builder()
-                .username("beta")
-                .name("Beta")
-                .password("pass")
-                .email("beta@domain.com")
-                .build());
-        Credentials credentials = Credentials.of("beta", "pass");
-
-        // log in before activation
-        assertForbidden(() -> sessionClient.logIn(credentials))
-                .hasMessageContaining(SessionErrors.USER_NOT_ACTIVATED);
-
-        // read activation email
-        String email = readEmail(wiser, 0);
-        String emailCode = extractEmailCode(email);
-
-        accountClient.activateUser(emailCode);
-
-        // log in after activation
-        assertPermitted(() -> sessionClient.logIn(credentials));
-
-        wiser.stop();
-    }
-
-    @Test
-    void resend_activation_email() {
-        Wiser wiser = new Wiser();
-        wiser.setPort(9250);
-        wiser.start();
-
-        // resend activation email with nonexistent code
-        assertNotFound(() -> accountClient.resendActivationEmail("nonexistent"));
-
-        accountClient.registerUser(new UserRegistrationData.Builder()
-                .username("alfa")
-                .name("Alfa")
-                .password("pass")
-                .email("alfa@domain.com")
-                .build());
-
-        String email = readEmail(wiser, 0);
-        String emailCode1 = extractEmailCode(email);
-
-        // resend activation email
-        assertPermitted(() -> accountClient.resendActivationEmail("alfa@domain.com"));
-
-        email = readEmail(wiser, 1);
-        String emailCode2 = extractEmailCode(email);
-        assertThat(emailCode2).isEqualTo(emailCode1);
-
-        // log in after activation
-        assertPermitted(() -> accountClient.activateUser(emailCode2));
-
-        // resend activation email with expired code
-        assertNotFound(() -> accountClient.resendActivationEmail("alfa@domain.com"));
-
-        wiser.stop();
-    }
 
     @Test
     void reset_password() {

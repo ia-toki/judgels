@@ -49,21 +49,17 @@ describe('ContestEditGeneralTab', () => {
 
     const slug = wrapper.find('input[name="slug"]');
     expect(slug.prop('value')).toEqual('contest-a');
-    slug.getDOMNode().value = 'contest-b';
-    slug.simulate('input');
+    slug.prop('onChange')({ target: { value: 'contest-b' } });
 
     const name = wrapper.find('input[name="name"]');
     expect(name.prop('value')).toEqual('Contest A');
-    name.getDOMNode().value = 'Contest B';
-    name.simulate('input');
+    name.prop('onChange')({ target: { value: 'Contest B' } });
 
     const beginTime = wrapper.find('input[name="beginTime"]');
-    beginTime.getDOMNode().value = '2018-09-10 17:00';
-    beginTime.simulate('input');
+    beginTime.prop('onChange')({ target: { value: '2018-09-10 17:00' } });
 
     const duration = wrapper.find('input[name="duration"]');
-    duration.getDOMNode().value = '6h';
-    duration.simulate('input');
+    duration.prop('onChange')({ target: { value: '6h' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');

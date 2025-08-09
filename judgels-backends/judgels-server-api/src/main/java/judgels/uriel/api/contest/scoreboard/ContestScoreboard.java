@@ -24,11 +24,11 @@ public interface ContestScoreboard {
             defaultImpl = NoClass.class
     )
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = ImmutableBundleScoreboard.class),
-            @JsonSubTypes.Type(value = ImmutableGcjScoreboard.class),
-            @JsonSubTypes.Type(value = ImmutableIcpcScoreboard.class),
-            @JsonSubTypes.Type(value = ImmutableIoiScoreboard.class),
-            @JsonSubTypes.Type(value = ImmutableTrocScoreboard.class)
+            @JsonSubTypes.Type(value = BundleScoreboard.class),
+            @JsonSubTypes.Type(value = GcjScoreboard.class),
+            @JsonSubTypes.Type(value = IcpcScoreboard.class),
+            @JsonSubTypes.Type(value = IoiScoreboard.class),
+            @JsonSubTypes.Type(value = TrocScoreboard.class)
     })
     Scoreboard getScoreboard();
 

@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "judgels-server",
+            "request": "launch",
+            "projectName": "judgels-server-app",
+            "cwd": "${workspaceFolder}/judgels-backends/judgels-server-app",
+            "mainClass": "judgels.JudgelsServerApplication",
+            "args": ["server", "var/conf/judgels-server.yml"]
+        },
+        {
+            "type": "java",
+            "name": "judgels-grader",
+            "request": "launch",
+            "projectName": "judgels-grader-app",
+            "cwd": "${workspaceFolder}/judgels-backends/judgels-grader-app",
+            "mainClass": "judgels.JudgelsGraderApplication",
+            "args": ["server", "var/conf/judgels-grader.yml"]
+        }
+    ]
+}

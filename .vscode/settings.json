@@ -1,0 +1,21 @@
+{
+    "[java]": {
+        "editor.tabSize": 4,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit"
+        }
+    },
+    "[javascript][javascriptreact][scss]": {
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "java.format.enabled": false,
+    "java.completion.importOrder": [
+        "#",
+        ""
+    ],
+    "files.trimTrailingWhitespace": true,
+    "editor.formatOnSave": true
+}

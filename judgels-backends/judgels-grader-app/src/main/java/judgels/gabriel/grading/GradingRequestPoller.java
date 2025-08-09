@@ -1,9 +1,9 @@
 package judgels.gabriel.grading;
 
+import jakarta.inject.Provider;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
-import javax.inject.Provider;
 import judgels.messaging.MessageClient;
 import judgels.messaging.api.Message;
 import org.slf4j.Logger;

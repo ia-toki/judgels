@@ -1,8 +1,8 @@
 package judgels.uriel.contest.log;
 
 import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
@@ -62,7 +62,7 @@ public class ContestLogStore {
                 .problemJid(Optional.ofNullable(model.problemJid))
                 .userJid(model.createdBy)
                 .time(model.createdAt)
-                .ipAddress(model.createdIp)
+                .ipAddress(Optional.ofNullable(model.createdIp))
                 .build();
     }
 }

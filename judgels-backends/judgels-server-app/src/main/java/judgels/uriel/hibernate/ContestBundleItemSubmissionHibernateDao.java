@@ -1,6 +1,6 @@
 package judgels.uriel.hibernate;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.sandalphon.hibernate.AbstractBundleItemSubmissionHibernateDao;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;

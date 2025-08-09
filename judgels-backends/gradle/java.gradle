@@ -2,6 +2,12 @@ apply plugin: 'idea'
 apply plugin: 'java-library'
 apply plugin: 'checkstyle'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 tasks.withType(Test) {
     useJUnitPlatform()
 }
@@ -11,7 +17,7 @@ tasks.withType(Copy) {
 }
 
 dependencies {
+    testImplementation "org.junit.platform:junit-platform-launcher:$junitPlatformLauncherVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
 }
-

@@ -1,7 +1,7 @@
 package judgels;
 
-import io.dropwizard.Application;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.core.Application;
+import io.dropwizard.core.setup.Environment;
 import judgels.gabriel.DaggerGabrielComponent;
 import judgels.gabriel.GabrielComponent;
 import judgels.gabriel.GabrielConfiguration;

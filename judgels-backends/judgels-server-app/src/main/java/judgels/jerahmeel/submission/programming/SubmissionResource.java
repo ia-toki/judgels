@@ -1,9 +1,9 @@
 package judgels.jerahmeel.submission.programming;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.buildDarkImageResponseFromText;
 import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
@@ -12,23 +12,23 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
@@ -178,31 +178,35 @@ public class SubmissionResource {
 
         String containerJid = submission.getContainerJid();
         String problemJid = submission.getProblemJid();
+        String userJid = submission.getUserJid();
 
         List<String> containerPath;
         String containerName;
         String problemAlias;
+        boolean canViewSource;
+
         if (SubmissionUtils.isProblemSet(containerJid)) {
             ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(containerJid));
             ProblemSetProblem problem = checkFound(problemSetProblemStore.getProblem(problemSet.getJid(), problemJid));
             containerPath = checkFound(problemSetStore.getProblemSetPathByJid(containerJid));
             containerName = problemSet.getName();
             problemAlias = problem.getAlias();
+            canViewSource = submissionRoleChecker.canViewProblemSetSource(actorJid, userJid, problemJid);
         } else {
             Chapter chapter = checkFound(chapterStore.getChapterByJid(containerJid));
             ChapterProblem problem = checkFound(chapterProblemStore.getProblem(problemJid));
             containerPath = checkFound(chapterStore.getChapterPathByJid(containerJid));
             containerName = chapter.getName();
             problemAlias = problem.getAlias();
+            canViewSource = submissionRoleChecker.canViewChapterSource(actorJid, userJid, problemJid);
         }
 
         ProblemInfo problem = sandalphonClient.getProblem(submission.getProblemJid());
 
-        String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(jophielClient.getProfile(userJid)));
 
         SubmissionWithSource submissionWithSource;
-        if (submissionRoleChecker.canViewSource(actorJid, submission.getUserJid())) {
+        if (canViewSource) {
             SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
             submissionWithSource = new SubmissionWithSource.Builder()
                     .submission(submission)

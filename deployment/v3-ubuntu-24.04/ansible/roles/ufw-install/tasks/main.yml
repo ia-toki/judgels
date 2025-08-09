@@ -1,0 +1,14 @@
+- name: Install ufw
+  apt:
+    name:
+      - ufw
+    state: present
+
+- name: Allow SSH traffic through the firewall
+  ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Enable the firewall
+  ufw:
+    state: enabled

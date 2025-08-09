@@ -1,8 +1,8 @@
 package judgels.jerahmeel.problemset.problem;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -10,24 +10,24 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import judgels.jerahmeel.api.problem.ProblemDifficulty;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemTopStats;
@@ -262,6 +262,7 @@ public class ProblemSetProblemResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ProblemEditorialResponse getProblemEditorial(
+            @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @PathParam("problemSetJid") String problemSetJid,
             @PathParam("problemAlias") String problemAlias,
@@ -270,7 +271,7 @@ public class ProblemSetProblemResource {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
-        ProblemEditorialInfo editorial = checkFound(sandalphonClient.getProblemEditorial(problem.getProblemJid(), uriInfo.getBaseUri(), language));
+        ProblemEditorialInfo editorial = checkFound(sandalphonClient.getProblemEditorial(req, uriInfo, problem.getProblemJid(), language));
         return new ProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();

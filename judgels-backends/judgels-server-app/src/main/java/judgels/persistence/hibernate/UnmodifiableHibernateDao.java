@@ -3,10 +3,11 @@ package judgels.persistence.hibernate;
 import static judgels.persistence.CriteriaPredicate.literalFalse;
 
 import io.dropwizard.hibernate.AbstractDAO;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.time.Clock;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
-import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.UnmodifiableDao;
@@ -75,5 +76,43 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
             return literalFalse();
         }
         return (cb, cq, root) -> root.get(column).in(values);
+    }
+
+    protected static String escape(String val) {
+        if (val == null) {
+            return "NULL";
+        }
+        return "'" + val
+                .replace("\\", "\\\\")
+                .replace("'", "\\'")
+                .replace("\"", "\\\"")
+                .replace("\t", "\\t")
+                .replace("\r", "\\r")
+                .replace("\n", "\\n")
+                + "'";
+    }
+
+    protected static String escape(Integer val) {
+        if (val == null) {
+            return "NULL";
+        }
+        return "" + val;
+    }
+
+    protected static String escape(long val) {
+        return "" + val;
+    }
+
+    protected static String escape(boolean val) {
+        return "b'" + (val ? '1' : '0') + "'";
+    }
+
+    protected static String escape(Instant val) {
+        if (val == null) {
+            return "NULL";
+        }
+
+        String valString = val.toString().replace("T", " ").replace("Z", "");
+        return "'" + valString + "'";
     }
 }

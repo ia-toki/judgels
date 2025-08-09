@@ -29,6 +29,8 @@ import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.GradingSource;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.SandboxFactory;
+import judgels.gabriel.api.ScoringConfig;
+import judgels.gabriel.api.ScoringRoundingMode;
 import judgels.gabriel.api.Subtask;
 import judgels.gabriel.api.SubtaskResult;
 import judgels.gabriel.api.SubtaskVerdict;
@@ -333,9 +335,18 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
             throw new GradingException(e);
         }
 
+        ScoringConfig scoringConfig = config.getScoringConfig().orElse(ScoringConfig.DEFAULT);
+
+        int score;
+        if (scoringConfig.getRoundingMode() == ScoringRoundingMode.ROUND) {
+            score = (int) Math.round(gradingVerdict.getPoints());
+        } else {
+            score = (int) Math.floor(gradingVerdict.getPoints());
+        }
+
         return new GradingResult.Builder()
                 .verdict(gradingVerdict.getVerdict())
-                .score((int) Math.round(gradingVerdict.getPoints()))
+                .score(score)
                 .details(detailsString)
                 .build();
     }

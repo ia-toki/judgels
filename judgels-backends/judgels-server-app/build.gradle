@@ -6,7 +6,6 @@ apply plugin: 'application'
 dependencies {
     implementation project(':judgels-commons:judgels-fs')
     implementation project(':judgels-commons:judgels-messaging')
-    implementation project(':judgels-commons:judgels-recaptcha')
     implementation project(':judgels-commons:judgels-service-core')
     implementation project(':judgels-grader-api')
     implementation project(':judgels-grader-engines')
@@ -16,25 +15,29 @@ dependencies {
     implementation "com.google.api-client:google-api-client:$googleApiClientVersion"
     implementation "com.google.guava:guava:$guavaVersion"
     implementation "commons-io:commons-io:2.4"
-    implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
     implementation "org.apache.commons:commons-email:$apacheCommonsEmailVersion"
     implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
     implementation "org.apache.commons:commons-rng-core:$apacheCommonsRngVersion"
     implementation "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r"
+
     implementation ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
         exclude group: "joda-time", module: "joda-time"
     }
+    implementation "javax.xml.bind:jaxb-api:$awsJaxbVersion"
+    implementation "org.glassfish.jaxb:jaxb-runtime:$awsJaxbVersion"
+    implementation "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
+
     implementation "io.dropwizard:dropwizard-assets:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
     implementation "io.dropwizard:dropwizard-views-freemarker:$dropwizardVersion"
+    implementation "jakarta.inject:jakarta.inject-api:$jakartaInjectApiVersion"
+    implementation "jakarta.persistence:jakarta.persistence-api:$jakartaPersistenceApiVersion"
 
-    implementation "io.dropwizard-bundles:dropwizard-webjars-bundle:$dropwizardWebJarsBundleVersion"
-    implementation 'javax.inject:javax.inject:1'
     implementation 'org.webjars:bootstrap:3.3.4'
     implementation 'org.webjars:jquery:2.1.4'
     implementation 'org.webjars:ckeditor:4.19.0'
@@ -61,10 +64,10 @@ dependencies {
     integTestImplementation project(':judgels-server-feign')
 
     integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
-    integTestImplementation "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
+    integTestImplementation "jakarta.ws.rs:jakarta.ws.rs-api:$jakartaRsApiVersion"
     integTestImplementation "org.subethamail:subethasmtp-wiser:$wiserVersion"
 
-    integTestRuntimeOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+    integTestRuntimeOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 
     integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     integTestAnnotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"

@@ -1,11 +1,11 @@
 package judgels.uriel.contest;
 
 import com.google.common.collect.Ordering;
+import jakarta.inject.Inject;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
-import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;

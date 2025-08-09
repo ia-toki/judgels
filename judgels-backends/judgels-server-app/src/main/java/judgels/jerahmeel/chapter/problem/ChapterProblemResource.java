@@ -1,30 +1,30 @@
 package judgels.jerahmeel.chapter.problem;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
@@ -34,6 +34,7 @@ import judgels.jerahmeel.api.chapter.problem.ChapterProblemsResponse;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.resource.ChapterResourceStore;
+import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.role.RoleChecker;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
@@ -53,7 +54,8 @@ public class ChapterProblemResource {
     @Inject protected RoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterResourceStore resourceStore;
-    @Inject protected ChapterProblemStore problemStore;
+    @Inject protected ChapterProblemStore chapterProblemStore;
+    @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected StatsStore statsStore;
     @Inject @JerahmeelSubmissionStore protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
@@ -90,7 +92,7 @@ public class ChapterProblemResource {
                         .build())
                 .collect(Collectors.toList());
 
-        problemStore.setProblems(chapterJid, setData);
+        chapterProblemStore.setProblems(chapterJid, setData);
     }
 
     @GET
@@ -103,15 +105,17 @@ public class ChapterProblemResource {
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
-        List<ChapterProblem> problems = problemStore.getProblems(chapterJid);
+        List<ChapterProblem> problems = chapterProblemStore.getProblems(chapterJid);
 
         var problemJids = Lists.transform(problems, ChapterProblem::getProblemJid);
         Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
+        Map<String, List<List<String>>> problemSetProblemPathsMap = problemSetProblemStore.getProblemSetProblemPathsMap(problemJids);
         Map<String, ProblemProgress> problemProgressesMap = statsStore.getProblemProgressesMap(actorJid, problemJids);
 
         return new ChapterProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemsMap)
+                .problemSetProblemPathsMap(problemSetProblemPathsMap)
                 .problemProgressesMap(problemProgressesMap)
                 .build();
     }
@@ -131,7 +135,7 @@ public class ChapterProblemResource {
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
-        ChapterProblem problem = checkFound(problemStore.getProblemByAlias(chapterJid, problemAlias));
+        ChapterProblem problem = checkFound(chapterProblemStore.getProblemByAlias(chapterJid, problemAlias));
         String problemJid = problem.getProblemJid();
         ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
 
@@ -141,9 +145,10 @@ public class ChapterProblemResource {
 
         List<Optional<String>> previousAndNextResourcePaths =
                 resourceStore.getPreviousAndNextResourcePathsForProblem(chapterJid, problemAlias);
+        List<List<String>> problemSetProblemPaths = problemSetProblemStore.getProblemSetProblemPaths(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid);
         Optional<ProblemEditorialInfo> editorial = progress.getVerdict().equals(Verdict.ACCEPTED.getCode())
-                ? sandalphonClient.getProblemEditorial(problemJid, uriInfo.getBaseUri(), language)
+                ? sandalphonClient.getProblemEditorial(req, uriInfo, problemJid, language)
                 : Optional.empty();
 
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
@@ -169,6 +174,7 @@ public class ChapterProblemResource {
                     .skeletons(sandalphonClient.getProgrammingProblemSkeletons(problemJid))
                     .lastSubmission(lastSubmission)
                     .lastSubmissionSource(lastSubmissionSource)
+                    .problemSetProblemPaths(problemSetProblemPaths)
                     .progress(progress)
                     .editorial(editorial)
                     .build();

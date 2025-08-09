@@ -1,7 +1,6 @@
 package judgels.sandalphon.resource;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class WorldLanguageRegistry {
@@ -12,7 +11,7 @@ public final class WorldLanguageRegistry {
 
     @SuppressWarnings("checkstyle:MethodLength")
     private WorldLanguageRegistry() {
-        registry = Maps.newLinkedHashMap();
+        registry = new LinkedHashMap<>();
         registry.put("af-ZA", "Afrikaans (af-ZA)");
         registry.put("ak-GH", "Akan (ak-GH)");
         registry.put("am-ET", "Amharic (am-ET)");
@@ -127,6 +126,8 @@ public final class WorldLanguageRegistry {
         registry.put("zh-Hant-MO", "Chinese (zh-Hant-MO)");
         registry.put("zh-Hant-TW", "Chinese (zh-Hant-TW)");
         registry.put("zu-ZA", "Zulu (zu-ZA)");
+        registry.put("zz-Backup-01", "Backup 1 (zz-Backup-01)");
+        registry.put("zz-Backup-02", "Backup 2 (zz-Backup-02)");
     }
 
     public static WorldLanguageRegistry getInstance() {
@@ -134,7 +135,7 @@ public final class WorldLanguageRegistry {
     }
 
     public Map<String, String> getLanguages() {
-        return ImmutableMap.copyOf(registry);
+        return new LinkedHashMap<>(registry);
     }
 
     public String getDisplayLanguage(String languageCode) {
