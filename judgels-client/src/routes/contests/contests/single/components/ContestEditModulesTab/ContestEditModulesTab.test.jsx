@@ -32,7 +32,8 @@ describe('ContestEditModulesTab', () => {
     );
   });
 
-  test('tab', () => {
+  test('tab', async () => {
+    await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
 
     expect(wrapper.find('h5').map(h5 => h5.text())).toEqual([

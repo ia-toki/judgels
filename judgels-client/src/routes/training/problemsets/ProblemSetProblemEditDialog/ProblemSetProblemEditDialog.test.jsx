@@ -65,7 +65,8 @@ describe('ProblemSetProblemEditDialog', () => {
     );
   });
 
-  test('edit problems dialog form', () => {
+  test('edit problems dialog form', async () => {
+    await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
 
     const button = wrapper.find('button[data-key="edit"]');

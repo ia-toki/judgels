@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 
 import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
 import { AnswerState } from '../../../itemStatement';
@@ -56,7 +57,9 @@ describe('ItemShortAnswerForm', () => {
         answerButton.simulate('submit');
 
         const textInput = wrapper.find('input');
-        textInput.prop('onChange')({ target: { value: '1' } });
+        act(() => {
+          textInput.prop('onChange')({ target: { value: '1' } });
+        });
       });
 
       test('fill the answer with wrong format will render the new help text', () => {
@@ -116,7 +119,9 @@ describe('ItemShortAnswerForm', () => {
       beforeEach(() => {
         const textInput = wrapper.find('input');
         textInput.simulate('click');
-        textInput.prop('onChange')({ target: { value: '2' } });
+        act(() => {
+          textInput.prop('onChange')({ target: { value: '2' } });
+        });
       });
 
       test('change the answer with right format', () => {

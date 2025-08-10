@@ -59,6 +59,7 @@ describe('RegisterPage', () => {
     });
 
     await new Promise(resolve => setImmediate(resolve));
+    await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
 
     expect(wrapper.find(RegisterForm)).toHaveLength(0);

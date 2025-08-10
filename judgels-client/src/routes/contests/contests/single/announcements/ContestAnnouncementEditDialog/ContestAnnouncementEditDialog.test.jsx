@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -45,16 +46,18 @@ describe('ContestAnnouncementEditDialog', () => {
     // const status = wrapper.find('button[data-key="status"]');
     // status.simulate('click');
 
-    const title = wrapper.find('input[name="title"]');
-    expect(title.prop('value')).toEqual('Snack');
-    title.prop('onChange')({ target: { value: 'Snack [edited]' } });
+    act(() => {
+      const title = wrapper.find('input[name="title"]');
+      expect(title.prop('value')).toEqual('Snack');
+      title.prop('onChange')({ target: { value: 'Snack [edited]' } });
 
-    const content = wrapper.find('textarea[name="content"]');
-    expect(content.prop('value')).toEqual('Snack is provided.');
-    content.prop('onChange')({ target: { value: 'Snack is NOT provided.' } });
+      const content = wrapper.find('textarea[name="content"]');
+      expect(content.prop('value')).toEqual('Snack is provided.');
+      content.prop('onChange')({ target: { value: 'Snack is NOT provided.' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onUpdateAnnouncement).toHaveBeenCalledWith('contestJid', 'announcementJid123', {
       title: 'Snack [edited]',

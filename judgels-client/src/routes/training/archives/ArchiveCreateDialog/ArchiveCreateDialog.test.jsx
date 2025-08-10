@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -26,23 +27,29 @@ describe('ArchiveCreateDialog', () => {
   });
 
   test('create dialog form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
 
-    const slug = wrapper.find('input[name="slug"]');
-    slug.prop('onChange')({ target: { value: 'new-archive' } });
+    wrapper.update();
 
-    const name = wrapper.find('input[name="name"]');
-    name.prop('onChange')({ target: { value: 'New archive' } });
+    act(() => {
+      const slug = wrapper.find('input[name="slug"]');
+      slug.prop('onChange')({ target: { value: 'new-archive' } });
 
-    const category = wrapper.find('input[name="category"]');
-    category.prop('onChange')({ target: { value: 'New category' } });
+      const name = wrapper.find('input[name="name"]');
+      name.prop('onChange')({ target: { value: 'New archive' } });
 
-    const description = wrapper.find('textarea[name="description"]');
-    description.prop('onChange')({ target: { value: 'New description' } });
+      const category = wrapper.find('input[name="category"]');
+      category.prop('onChange')({ target: { value: 'New category' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const description = wrapper.find('textarea[name="description"]');
+      description.prop('onChange')({ target: { value: 'New description' } });
+
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onCreateArchive).toHaveBeenCalledWith({
       slug: 'new-archive',

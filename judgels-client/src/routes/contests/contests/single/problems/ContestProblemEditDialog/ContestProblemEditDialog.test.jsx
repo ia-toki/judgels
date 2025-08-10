@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -58,18 +59,22 @@ describe('ContestProblemEditDialog', () => {
   });
 
   test('form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
 
     wrapper.update();
 
-    const problemsField = wrapper.find('textarea[name="problems"]');
-    expect(problemsField.prop('value')).toEqual('A,pp1\nB,pp2,OPEN,10\nC,pp3,CLOSED\nD,pp4,CLOSED,10');
+    act(() => {
+      const problemsField = wrapper.find('textarea[name="problems"]');
+      expect(problemsField.prop('value')).toEqual('A,pp1\nB,pp2,OPEN,10\nC,pp3,CLOSED\nD,pp4,CLOSED,10');
 
-    problemsField.prop('onChange')({ target: { value: 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20' } });
+      problemsField.prop('onChange')({ target: { value: 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onSetProblems).toHaveBeenCalledWith('contestJid', [
       {

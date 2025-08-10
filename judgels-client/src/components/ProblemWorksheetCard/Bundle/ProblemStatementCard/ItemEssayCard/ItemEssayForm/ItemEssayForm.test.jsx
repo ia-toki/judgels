@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 
 import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
 import { AnswerState } from '../../../itemStatement';
@@ -53,7 +54,9 @@ describe('ItemEssayForm', () => {
         const answerButton = wrapper.find('form');
         answerButton.simulate('submit');
         const textarea = wrapper.find('textarea');
-        textarea.prop('onChange')({ target: { value: 'answer' } });
+        act(() => {
+          textarea.prop('onChange')({ target: { value: 'answer' } });
+        });
         wrapper.update();
       });
 
@@ -118,7 +121,9 @@ describe('ItemEssayForm', () => {
         const changeButton = wrapper.find('form');
         await changeButton.simulate('submit');
         const textarea = wrapper.find('textarea').first();
-        textarea.prop('onChange')({ target: { value: 'answer' } });
+        act(() => {
+          textarea.prop('onChange')({ target: { value: 'answer' } });
+        });
         wrapper.update();
       });
 
