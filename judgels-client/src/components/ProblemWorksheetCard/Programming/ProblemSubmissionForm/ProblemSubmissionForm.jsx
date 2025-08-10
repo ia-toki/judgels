@@ -87,9 +87,9 @@ export default function ProblemSubmissionForm({
     return <Field component={FormTableSelect2} {...field} />;
   };
 
-  const isSubmitButtonDisabled = (values) => {
+  const isSubmitButtonDisabled = values => {
     return !values.sourceTexts && Object.keys(values.sourceFiles ?? {}).length !== keys.length;
-  }
+  };
 
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues}>
@@ -103,7 +103,13 @@ export default function ProblemSubmissionForm({
               {renderGradingLanguageFields()}
             </tbody>
           </table>
-          <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} disabled={isSubmitButtonDisabled(values)} />
+          <Button
+            type="submit"
+            text="Submit"
+            intent={Intent.PRIMARY}
+            loading={submitting}
+            disabled={isSubmitButtonDisabled(values)}
+          />
         </form>
       )}
     </Form>
