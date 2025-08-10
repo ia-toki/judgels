@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 
 import { isOutputOnly } from '../../../../modules/api/gabriel/engine';
 import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
+import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor.jsx';
 import { FormTableFileInput } from '../../../forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from '../../../forms/FormTableSelect2/FormTableSelect2';
 import {
@@ -38,6 +39,16 @@ export default function ProblemSubmissionForm({
     );
   };
 
+  const keys = Object.keys(sourceKeys);
+
+  const isSingleSourceCode = keys.length === 1 && sourceKeys[keys[0]] === 'Source code';
+
+  const renderSourceEditor = gradingLanguage => {
+    const key = keys[0];
+    const fieldText = { name: 'sourceTexts.' + key };
+    return <Field component={FormAceEditor} gradingLanguage={gradingLanguage} {...fieldText} />;
+  };
+
   const renderSourceFields = () => {
     let maxFileSize;
     if (isOutputOnly(gradingEngine)) {
@@ -46,16 +57,18 @@ export default function ProblemSubmissionForm({
       maxFileSize = MaxFileSize300KB;
     }
 
-    return Object.keys(sourceKeys)
-      .sort()
-      .map(key => {
-        const field = {
-          name: 'sourceFiles.' + key,
-          label: sourceKeys[key],
-          validate: composeValidators(Required, maxFileSize, CompatibleFilenameExtensionForGradingLanguage),
-        };
-        return <Field key={key} component={FormTableFileInput} {...field} />;
-      });
+    return keys.sort().map(key => {
+      const fieldFile = {
+        name: 'sourceFiles.' + key,
+        label: isSingleSourceCode ? '... or submit source code file' : sourceKeys[key],
+        validate: composeValidators(maxFileSize, CompatibleFilenameExtensionForGradingLanguage),
+      };
+      return (
+        <>
+          <Field key={key} component={FormTableFileInput} {...fieldFile} />
+        </>
+      );
+    });
   };
 
   const renderGradingLanguageFields = () => {
@@ -74,18 +87,29 @@ export default function ProblemSubmissionForm({
     return <Field component={FormTableSelect2} {...field} />;
   };
 
+  const isSubmitButtonDisabled = values => {
+    return !values.sourceTexts && Object.keys(values.sourceFiles ?? {}).length !== keys.length;
+  };
+
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues}>
-      {({ handleSubmit, submitting }) => (
+      {({ values, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           {renderWarning()}
+          {isSingleSourceCode && renderSourceEditor(values.gradingLanguage)}
           <table className="programming-problem-submission-form__table">
             <tbody>
               {renderSourceFields()}
               {renderGradingLanguageFields()}
             </tbody>
           </table>
-          <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />
+          <Button
+            type="submit"
+            text="Submit"
+            intent={Intent.PRIMARY}
+            loading={submitting}
+            disabled={isSubmitButtonDisabled(values)}
+          />
         </form>
       )}
     </Form>

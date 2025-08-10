@@ -1,11 +1,15 @@
 .programming-problem-submission-form__table {
-  width: 300px;
+  width: 100%;
+}
 
-  .bp5-form-group {
-    width: 120px;
-  }
+.programming-problem-submission-form__table_key {
+  width: 120px;
 }
 
 .programming-problem-submission-form__warning {
   margin-bottom: 10px;
+}
+
+form > .form-group-editor {
+  height: 300px;
 }
