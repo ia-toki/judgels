@@ -46,6 +46,7 @@ describe('CoursesPage', () => {
     );
 
     await new Promise(resolve => setImmediate(resolve));
+    await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
   };
 

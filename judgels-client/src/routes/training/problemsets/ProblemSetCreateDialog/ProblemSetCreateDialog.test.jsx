@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
@@ -30,26 +31,32 @@ describe('ProblemSetCreateDialog', () => {
   });
 
   test('create dialog form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
 
-    const slug = wrapper.find('input[name="slug"]');
-    slug.prop('onChange')({ target: { value: 'new-problemSet' } });
+    wrapper.update();
 
-    const name = wrapper.find('input[name="name"]');
-    name.prop('onChange')({ target: { value: 'New problemSet' } });
+    act(() => {
+      const slug = wrapper.find('input[name="slug"]');
+      slug.prop('onChange')({ target: { value: 'new-problemSet' } });
 
-    const archiveSlug = wrapper.find('input[name="archiveSlug"]');
-    archiveSlug.prop('onChange')({ target: { value: 'New archive' } });
+      const name = wrapper.find('input[name="name"]');
+      name.prop('onChange')({ target: { value: 'New problemSet' } });
 
-    const description = wrapper.find('textarea[name="description"]');
-    description.prop('onChange')({ target: { value: 'New description' } });
+      const archiveSlug = wrapper.find('input[name="archiveSlug"]');
+      archiveSlug.prop('onChange')({ target: { value: 'New archive' } });
 
-    const contestTime = wrapper.find('input[name="contestTime"]');
-    contestTime.prop('onChange')({ target: { value: '2100-01-01 00:00' } });
+      const description = wrapper.find('textarea[name="description"]');
+      description.prop('onChange')({ target: { value: 'New description' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const contestTime = wrapper.find('input[name="contestTime"]');
+      contestTime.prop('onChange')({ target: { value: '2100-01-01 00:00' } });
+
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onCreateProblemSet).toHaveBeenCalledWith({
       slug: 'new-problemSet',

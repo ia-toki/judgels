@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -24,14 +25,20 @@ describe('ContestCreateDialog', () => {
   });
 
   test('form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
 
-    const slug = wrapper.find('input[name="slug"]');
-    slug.prop('onChange')({ target: { value: 'new-contest' } });
+    wrapper.update();
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    act(() => {
+      const slug = wrapper.find('input[name="slug"]');
+      slug.prop('onChange')({ target: { value: 'new-contest' } });
+
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onCreateContest).toHaveBeenCalledWith({ slug: 'new-contest' });
   });

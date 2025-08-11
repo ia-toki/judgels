@@ -44,7 +44,8 @@ describe('ContestRegistrantsDialog', () => {
     );
   });
 
-  test('table', () => {
+  test('table', async () => {
+    await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
 
     expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([

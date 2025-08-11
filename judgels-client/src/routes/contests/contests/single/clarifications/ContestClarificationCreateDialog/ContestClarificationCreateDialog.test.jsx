@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -29,8 +30,12 @@ describe('ContestClarificationCreateDialog', () => {
   });
 
   test('form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
+
+    wrapper.update();
 
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478
@@ -38,14 +43,16 @@ describe('ContestClarificationCreateDialog', () => {
     // const topicJid = wrapper.find('button[data-key="topicJid"]');
     // topicJid.simulate('click');
 
-    const title = wrapper.find('input[name="title"]');
-    title.prop('onChange')({ target: { value: 'Snack' } });
+    act(() => {
+      const title = wrapper.find('input[name="title"]');
+      title.prop('onChange')({ target: { value: 'Snack' } });
 
-    const question = wrapper.find('textarea[name="question"]');
-    question.prop('onChange')({ target: { value: 'Is snack provided?' } });
+      const question = wrapper.find('textarea[name="question"]');
+      question.prop('onChange')({ target: { value: 'Is snack provided?' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onCreateClarification).toHaveBeenCalledWith('contestJid', {
       topicJid: 'contestJid',

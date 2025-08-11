@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -43,26 +44,32 @@ describe('ContestEditGeneralTab', () => {
     );
   });
 
-  test('form', async () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+  test('form', () => {
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
 
-    const slug = wrapper.find('input[name="slug"]');
-    expect(slug.prop('value')).toEqual('contest-a');
-    slug.prop('onChange')({ target: { value: 'contest-b' } });
+    wrapper.update();
 
-    const name = wrapper.find('input[name="name"]');
-    expect(name.prop('value')).toEqual('Contest A');
-    name.prop('onChange')({ target: { value: 'Contest B' } });
+    act(() => {
+      const slug = wrapper.find('input[name="slug"]');
+      expect(slug.prop('value')).toEqual('contest-a');
+      slug.prop('onChange')({ target: { value: 'contest-b' } });
 
-    const beginTime = wrapper.find('input[name="beginTime"]');
-    beginTime.prop('onChange')({ target: { value: '2018-09-10 17:00' } });
+      const name = wrapper.find('input[name="name"]');
+      expect(name.prop('value')).toEqual('Contest A');
+      name.prop('onChange')({ target: { value: 'Contest B' } });
 
-    const duration = wrapper.find('input[name="duration"]');
-    duration.prop('onChange')({ target: { value: '6h' } });
+      const beginTime = wrapper.find('input[name="beginTime"]');
+      beginTime.prop('onChange')({ target: { value: '2018-09-10 17:00' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const duration = wrapper.find('input[name="duration"]');
+      duration.prop('onChange')({ target: { value: '6h' } });
+
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(contestActions.updateContest).toHaveBeenCalledWith('contestJid', 'contest-a', {
       slug: 'contest-b',

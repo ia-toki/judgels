@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -26,20 +27,26 @@ describe('CourseCreateDialog', () => {
   });
 
   test('create dialog form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
 
-    const slug = wrapper.find('input[name="slug"]');
-    slug.prop('onChange')({ target: { value: 'new-course' } });
+    wrapper.update();
 
-    const name = wrapper.find('input[name="name"]');
-    name.prop('onChange')({ target: { value: 'New course' } });
+    act(() => {
+      const slug = wrapper.find('input[name="slug"]');
+      slug.prop('onChange')({ target: { value: 'new-course' } });
 
-    const description = wrapper.find('textarea[name="description"]');
-    description.prop('onChange')({ target: { value: 'New description' } });
+      const name = wrapper.find('input[name="name"]');
+      name.prop('onChange')({ target: { value: 'New course' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const description = wrapper.find('textarea[name="description"]');
+      description.prop('onChange')({ target: { value: 'New description' } });
+
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onCreateCourse).toHaveBeenCalledWith({
       slug: 'new-course',

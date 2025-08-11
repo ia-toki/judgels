@@ -1,5 +1,5 @@
-import { expect } from '@jest/globals';
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -40,27 +40,29 @@ describe('ProblemSetEditDialog', () => {
   });
 
   test('edit dialog form', () => {
-    const slug = wrapper.find('input[name="slug"]');
-    expect(slug.prop('value')).toEqual('problemset');
-    slug.prop('onChange')({ target: { value: 'new-problemset' } });
+    act(() => {
+      const slug = wrapper.find('input[name="slug"]');
+      expect(slug.prop('value')).toEqual('problemset');
+      slug.prop('onChange')({ target: { value: 'new-problemset' } });
 
-    const name = wrapper.find('input[name="name"]');
-    expect(name.prop('value')).toEqual('Problem Set');
-    name.prop('onChange')({ target: { value: 'New Problem Set' } });
+      const name = wrapper.find('input[name="name"]');
+      expect(name.prop('value')).toEqual('Problem Set');
+      name.prop('onChange')({ target: { value: 'New Problem Set' } });
 
-    const archiveSlug = wrapper.find('input[name="archiveSlug"]');
-    expect(archiveSlug.prop('value')).toEqual('archive');
-    archiveSlug.prop('onChange')({ target: { value: 'new-archive' } });
+      const archiveSlug = wrapper.find('input[name="archiveSlug"]');
+      expect(archiveSlug.prop('value')).toEqual('archive');
+      archiveSlug.prop('onChange')({ target: { value: 'new-archive' } });
 
-    const description = wrapper.find('textarea[name="description"]');
-    expect(description.prop('value')).toEqual('This is a problem set');
-    description.prop('onChange')({ target: { value: 'New description' } });
+      const description = wrapper.find('textarea[name="description"]');
+      expect(description.prop('value')).toEqual('This is a problem set');
+      description.prop('onChange')({ target: { value: 'New description' } });
 
-    const contestTime = wrapper.find('input[name="contestTime"]');
-    contestTime.prop('onChange')({ target: { value: '2100-01-01 00:00' } });
+      const contestTime = wrapper.find('input[name="contestTime"]');
+      contestTime.prop('onChange')({ target: { value: '2100-01-01 00:00' } });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onUpdateProblemSet).toHaveBeenCalledWith(problemSet.jid, {
       slug: 'new-problemset',

@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
 import createMockStore from 'redux-mock-store';
@@ -27,8 +28,12 @@ describe('ContestAnnouncementCreateDialog', () => {
   });
 
   test('form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    act(() => {
+      const button = wrapper.find('button');
+      button.simulate('click');
+    });
+
+    wrapper.update();
 
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478
@@ -36,18 +41,20 @@ describe('ContestAnnouncementCreateDialog', () => {
     // const status = wrapper.find('button[data-key="status"]');
     // status.simulate('click');
 
-    const title = wrapper.find('input[name="title"]');
-    title.prop('onChange')({
-      target: { value: 'Snack' },
-    });
+    act(() => {
+      const title = wrapper.find('input[name="title"]');
+      title.prop('onChange')({
+        target: { value: 'Snack' },
+      });
 
-    const content = wrapper.find('textarea[name="content"]');
-    content.prop('onChange')({
-      target: { value: 'Snack is provided.' },
-    });
+      const content = wrapper.find('textarea[name="content"]');
+      content.prop('onChange')({
+        target: { value: 'Snack is provided.' },
+      });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+      const form = wrapper.find('form');
+      form.simulate('submit');
+    });
 
     expect(onCreateAnnouncement).toHaveBeenCalledWith('contestJid', {
       title: 'Snack',
