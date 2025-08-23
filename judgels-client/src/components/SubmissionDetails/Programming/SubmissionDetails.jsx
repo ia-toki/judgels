@@ -109,7 +109,7 @@ export function SubmissionDetails({
       return (
         <>
           {points}{' '}
-          <span style="display: inline-block">
+          <span style={{ display: 'inline-block' }}>
             {'['}
             {feedback}
           </span>
