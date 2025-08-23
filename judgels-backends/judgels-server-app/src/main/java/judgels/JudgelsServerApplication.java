@@ -34,6 +34,8 @@ import judgels.michael.MichaelComponent;
 import judgels.sandalphon.DaggerSandalphonComponent;
 import judgels.sandalphon.SandalphonComponent;
 import judgels.sandalphon.SandalphonConfiguration;
+import judgels.sealtiel.DaggerSealtielComponent;
+import judgels.sealtiel.SealtielComponent;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -70,6 +72,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         runMichael(config, env);
         runJophiel(config, env);
+        runSealtiel(config, env);
         runSandalphon(config, env);
         runUriel(config, env);
         runJerahmeel(config, env);
@@ -167,6 +170,15 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.jersey().register(component.userAccountWithRegistrationResource());
             env.jersey().register(component.userRegistrationWebResource());
         }
+    }
+
+    private void runSealtiel(JudgelsServerApplicationConfiguration config, Environment env) {
+        SealtielComponent component = DaggerSealtielComponent.builder()
+                .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
+                .build();
+
+        env.admin().addTask(component.receiveGradingRequestTask());
+        env.admin().addTask(component.sendGradingResponseTask());
     }
 
     private void runSandalphon(JudgelsServerApplicationConfiguration config, Environment env) {

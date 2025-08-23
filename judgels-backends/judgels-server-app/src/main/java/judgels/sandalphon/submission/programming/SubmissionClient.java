@@ -4,7 +4,7 @@ import static judgels.sandalphon.submission.programming.SubmissionUtils.checkAll
 import static judgels.sandalphon.submission.programming.SubmissionUtils.checkGradingLanguageAllowed;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import jakarta.transaction.Synchronization;
 import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.LanguageRestriction;
@@ -13,6 +13,7 @@ import judgels.messaging.MessageClient;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
+import org.hibernate.context.internal.ManagedSessionContext;
 
 public class SubmissionClient {
     private final SubmissionStore submissionStore;
@@ -83,14 +84,29 @@ public class SubmissionClient {
                 .gradingOptions(options)
                 .build();
 
-        try {
-            messageClient.sendMessage(
-                    gradingResponseQueueName,
-                    gradingRequestQueueName,
-                    GradingRequest.class.getSimpleName(),
-                    mapper.writeValueAsString(gradingRequest));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                   // Register a callback to fire AFTER commit succeeds
+        ManagedSessionContext.currentSession()
+            .getTransaction()
+            .registerSynchronization(new Synchronization() {
+                @Override
+                public void beforeCompletion() {}
+
+                @Override
+                public void afterCompletion(int status) {
+                    if (status == javax.transaction.Status.STATUS_COMMITTED) {
+                        //
+                    }
+                }
+            });
+
+        // try {
+        //     messageClient.sendMessage(
+        //             gradingResponseQueueName,
+        //             gradingRequestQueueName,
+        //             GradingRequest.class.getSimpleName(),
+        //             mapper.writeValueAsString(gradingRequest));
+        // } catch (IOException e) {
+        //     throw new RuntimeException(e);
+        // }
     }
 }
