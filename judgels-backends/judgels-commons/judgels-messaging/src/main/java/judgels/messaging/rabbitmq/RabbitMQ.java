@@ -1,6 +1,5 @@
 package judgels.messaging.rabbitmq;
 
-import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
@@ -8,13 +7,13 @@ import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RabbitMQ {
+public class RabbitMQ implements AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQ.class);
+    private static final Object connectionLock = new Object();
+
+    private static volatile Connection connection;
 
     private final ConnectionFactory connectionFactory;
-
-    private volatile Connection connection;
-    private volatile Channel channel;
 
     public RabbitMQ(RabbitMQConfiguration config) {
         ConnectionFactory factory = new ConnectionFactory();
@@ -27,15 +26,27 @@ public class RabbitMQ {
         this.connectionFactory = factory;
     }
 
-    public synchronized RabbitMQChannel createChannel() throws IOException, TimeoutException {
+    public Connection getConnection() throws IOException, TimeoutException {
         if (connection == null || !connection.isOpen()) {
-            connection = connectionFactory.newConnection();
-            LOGGER.info("Created a new connection to RabbitMQ");
+            synchronized (connectionLock) {
+                if (connection == null || !connection.isOpen()) {
+                    LOGGER.info("Creating a new connection to RabbitMQ...");
+                    connection = connectionFactory.newConnection();
+                    LOGGER.info("Created a new connection to RabbitMQ");
+                }
+            }
         }
-        if (channel == null || !channel.isOpen()) {
-            channel = connection.createChannel();
-            LOGGER.info("Created a new channel to RabbitMQ");
+        return connection;
+    }
+
+    @Override
+    public void close() throws IOException {
+        synchronized (connectionLock) {
+            if (connection != null && connection.isOpen()) {
+                LOGGER.info("Closing the connection to RabbitMQ...");
+                connection.close();
+                LOGGER.info("Closed the connection to RabbitMQ");
+            }
         }
-        return new RabbitMQChannel(channel);
     }
 }

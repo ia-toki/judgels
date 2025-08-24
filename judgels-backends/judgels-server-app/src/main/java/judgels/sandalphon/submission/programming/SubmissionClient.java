@@ -4,6 +4,7 @@ import static judgels.sandalphon.submission.programming.SubmissionUtils.checkAll
 import static judgels.sandalphon.submission.programming.SubmissionUtils.checkGradingLanguageAllowed;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Synchronization;
 import java.io.IOException;
 import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.GradingRequest;
@@ -13,8 +14,11 @@ import judgels.messaging.MessageClient;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 public class SubmissionClient {
+    private final SessionFactory sessionFactory;
     private final SubmissionStore submissionStore;
     private final String gradingRequestQueueName;
     private final String gradingResponseQueueName;
@@ -22,12 +26,14 @@ public class SubmissionClient {
     private final ObjectMapper mapper;
 
     public SubmissionClient(
+            SessionFactory sessionFactory,
             SubmissionStore submissionStore,
             String gradingRequestQueueName,
             String gradingResponseQueueName,
             MessageClient messageClient,
             ObjectMapper mapper) {
 
+        this.sessionFactory = sessionFactory;
         this.submissionStore = submissionStore;
         this.gradingRequestQueueName = gradingRequestQueueName;
         this.gradingResponseQueueName = gradingResponseQueueName;
@@ -83,6 +89,25 @@ public class SubmissionClient {
                 .gradingOptions(options)
                 .build();
 
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            session.getTransaction().registerSynchronization(new Synchronization() {
+                @Override
+                public void beforeCompletion() {}
+
+                @Override
+                public void afterCompletion(int status) {
+                    if (status == jakarta.transaction.Status.STATUS_COMMITTED) {
+                        sendGradingRequest(gradingRequest);
+                    }
+                }
+            });
+        } catch (org.hibernate.HibernateException e) { // not in a transaction
+            sendGradingRequest(gradingRequest);
+        }
+    }
+
+    private void sendGradingRequest(GradingRequest gradingRequest) {
         try {
             messageClient.sendMessage(
                     gradingResponseQueueName,

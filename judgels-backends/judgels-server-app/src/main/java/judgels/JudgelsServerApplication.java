@@ -185,9 +185,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.lessonResource());
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            component.scheduler().scheduleOnce(
-                    "sandalphon-grading-response-poller",
-                    component.gradingResponsePoller());
+            env.lifecycle().manage(component.gradingResponsePoller());
         }
     }
 
@@ -241,9 +239,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 Duration.ofSeconds(3));
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            component.scheduler().scheduleOnce(
-                    "uriel-grading-response-poller",
-                    component.gradingResponsePoller());
+            env.lifecycle().manage(component.gradingResponsePoller());
         }
 
         env.admin().addTask(component.dumpContestTask());
@@ -295,9 +291,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userStatsResource());
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            component.scheduler().scheduleOnce(
-                    "jerahmeel-grading-response-poller",
-                    component.gradingResponsePoller());
+            env.lifecycle().manage(component.gradingResponsePoller());
         }
 
         env.admin().addTask(component.refreshContestStatsTask());
