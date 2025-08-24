@@ -51,7 +51,7 @@ public class UserCreator {
 
 
         for (String optionalHeader : headerMap.keySet()) {
-            if (!Set.of("jid", "username", "password", "email", "name", "country").contains(optionalHeader)) {
+            if (!Set.of("jid", "username", "password", "email", "name", "country", "institution_name", "institution_city", "institution_province").contains(optionalHeader)) {
                 result.errorMessage = Optional.of("'" + optionalHeader + "' header is not allowed.");
                 return result;
             }
@@ -127,6 +127,9 @@ public class UserCreator {
             UserInfo.Builder info = new UserInfo.Builder().from(existingInfo);
             getCsvValue(headerMap, line, "name").ifPresent(info::name);
             getCsvValue(headerMap, line, "country").ifPresent(info::country);
+            getCsvValue(headerMap, line, "institution_name").ifPresent(info::institutionName);
+            getCsvValue(headerMap, line, "institution_city").ifPresent(info::institutionCity);
+            getCsvValue(headerMap, line, "institution_province").ifPresent(info::institutionProvince);
             infoStore.upsertInfo(user.getJid(), info.build());
 
             if (headerMap.containsKey("password")) {
