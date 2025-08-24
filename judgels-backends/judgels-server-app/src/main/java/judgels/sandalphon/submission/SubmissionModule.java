@@ -26,6 +26,7 @@ import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
+import org.hibernate.SessionFactory;
 
 @Module
 public class SubmissionModule {
@@ -56,6 +57,7 @@ public class SubmissionModule {
     @Provides
     @Singleton
     static SubmissionClient submissionClient(
+            SessionFactory sessionFactory,
             SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
@@ -63,6 +65,7 @@ public class SubmissionModule {
             ObjectMapper mapper) {
 
         return new SubmissionClient(
+                sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
                 gradingResponseQueueName,

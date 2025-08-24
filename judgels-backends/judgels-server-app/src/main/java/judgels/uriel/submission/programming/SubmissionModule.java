@@ -29,6 +29,7 @@ import judgels.service.JudgelsScheduler;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestProgrammingGradingDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
+import org.hibernate.SessionFactory;
 
 @Module
 public class SubmissionModule {
@@ -74,6 +75,7 @@ public class SubmissionModule {
     @Provides
     @Singleton
     static SubmissionClient submissionClient(
+            SessionFactory sessionFactory,
             SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
@@ -81,6 +83,7 @@ public class SubmissionModule {
             ObjectMapper mapper) {
 
         return new SubmissionClient(
+                sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
                 gradingResponseQueueName,
