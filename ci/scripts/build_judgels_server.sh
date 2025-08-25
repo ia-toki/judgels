@@ -13,4 +13,4 @@ cd -
 cd "$(dirname "$0")"/../ansible
 
 ansible --version
-ansible-playbook playbooks/build-judgels-server.yml
+ansible-playbook -e app_version=osnp-2025 playbooks/build-judgels-server.yml
