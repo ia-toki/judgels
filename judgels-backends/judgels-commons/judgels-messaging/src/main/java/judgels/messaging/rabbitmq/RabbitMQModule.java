@@ -6,6 +6,7 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import judgels.messaging.MessageClient;
+import judgels.messaging.MessageListener;
 
 @Module
 public class RabbitMQModule {
@@ -21,7 +22,18 @@ public class RabbitMQModule {
 
     @Provides
     @Singleton
-    MessageClient messageClient(ObjectMapper objectMapper) {
-        return new MessageClient(new RabbitMQ(config), objectMapper);
+    RabbitMQ rabbitMQ() {
+        return new RabbitMQ(config);
+    }
+
+    @Provides
+    @Singleton
+    MessageClient messageClient(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
+        return new MessageClient(objectMapper, rabbitMQ);
+    }
+
+    @Provides
+    MessageListener messageListener(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
+        return new MessageListener(objectMapper, rabbitMQ);
     }
 }

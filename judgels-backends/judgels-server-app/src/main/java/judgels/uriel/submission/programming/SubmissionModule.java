@@ -9,9 +9,11 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.messaging.MessageClient;
+import judgels.messaging.MessageListener;
 import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
@@ -106,12 +108,16 @@ public class SubmissionModule {
     @Singleton
     static GradingResponsePoller gradingResponsePoller(
             JudgelsScheduler scheduler,
+            MessageListener messageListener,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
-            MessageClient messageClient,
             GradingResponseProcessor processor) {
 
         ExecutorService executorService = scheduler.createExecutorService("uriel-grading-response-processor-%d", 10);
-        return new GradingResponsePoller(gradingResponseQueueName, messageClient, executorService, processor);
+        return new GradingResponsePoller(
+                messageListener,
+                gradingResponseQueueName,
+                (ThreadPoolExecutor) executorService,
+                processor);
     }
 
     @Provides
@@ -119,20 +125,17 @@ public class SubmissionModule {
     static GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
-            SubmissionStore submissionStore,
-            MessageClient messageClient) {
+            SubmissionStore submissionStore) {
 
         return unitOfWorkAwareProxyFactory.create(
                 GradingResponseProcessor.class,
                 new Class<?>[] {
                         ObjectMapper.class,
                         SubmissionStore.class,
-                        MessageClient.class,
                         SubmissionConsumer.class},
                 new Object[] {
                         mapper,
                         submissionStore,
-                        messageClient,
                         new NoOpSubmissionConsumer()});
     }
 }
