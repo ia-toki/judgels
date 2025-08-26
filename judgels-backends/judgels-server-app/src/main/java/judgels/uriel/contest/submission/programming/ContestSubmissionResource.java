@@ -211,12 +211,14 @@ public class ContestSubmissionResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public SubmissionInfo getSubmissionInfo(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("userJid") String userJid,
             @QueryParam("problemJid") String problemJid) {
 
+        String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAll(contest));
+        checkAllowed(submissionRoleChecker.canViewAll(actorJid, contest));
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
@@ -230,12 +232,14 @@ public class ContestSubmissionResource {
     @Produces("image/png")
     @UnitOfWork(readOnly = true)
     public Response getSubmissionSourceImage(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("userJid") String userJid,
             @QueryParam("problemJid") String problemJid) {
 
+        String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAll(contest));
+        checkAllowed(submissionRoleChecker.canViewAll(actorJid, contest));
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
@@ -249,12 +253,14 @@ public class ContestSubmissionResource {
     @Produces("image/png")
     @UnitOfWork(readOnly = true)
     public Response getSubmissionSourceDarkImage(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("userJid") String userJid,
             @QueryParam("problemJid") String problemJid) {
 
+        String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAll(contest));
+        checkAllowed(submissionRoleChecker.canViewAll(actorJid, contest));
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));

@@ -49,7 +49,10 @@ public class ContestSubmissionRoleChecker {
                 && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canViewAll(Contest contest) {
+    public boolean canViewAll(String userJid, Contest contest) {
+        if (canSupervise(userJid, contest)) {
+            return true;
+        }
         return contestTimer.hasEnded(contest) && contestRoleChecker.canView(Actors.GUEST, contest);
     }
 
