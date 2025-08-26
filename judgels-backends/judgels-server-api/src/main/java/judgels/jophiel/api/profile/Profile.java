@@ -9,6 +9,8 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableProfile.class)
 public interface Profile {
     String getUsername();
+    Optional<String> getInstitutionName();
+    Optional<String> getInstitutionProvince();
     Optional<String> getCountry();
     Optional<UserRating> getRating();
 

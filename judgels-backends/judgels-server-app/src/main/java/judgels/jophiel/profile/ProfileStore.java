@@ -51,6 +51,8 @@ public class ProfileStore {
                 .collect(Collectors.toMap(e -> e.getKey(), e -> new Profile.Builder()
                         .username(e.getValue().getUsername())
                         .country(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getCountry))
+                        .institutionName(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getInstitutionName))
+                        .institutionProvince(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getInstitutionProvince))
                         .rating(Optional.ofNullable(ratings.get(e.getKey())))
                         .build()));
     }

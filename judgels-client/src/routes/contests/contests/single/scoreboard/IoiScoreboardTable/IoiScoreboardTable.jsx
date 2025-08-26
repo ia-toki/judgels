@@ -23,6 +23,11 @@ export function IoiScoreboardTable({
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
         <UserRef profile={profilesMap[entry.contestantJid]} showFlag />
+        <span style={{ fontSize: 10, float: 'right' }}>
+          {profilesMap[entry.contestantJid].institutionName}
+          <br />
+          {profilesMap[entry.contestantJid].institutionProvince}
+        </span>
       </td>,
       <td key="totalScores">
         <span className="top">{entry.totalScores}</span>
