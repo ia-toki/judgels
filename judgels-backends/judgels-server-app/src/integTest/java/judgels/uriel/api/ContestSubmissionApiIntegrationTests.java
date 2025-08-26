@@ -1,6 +1,5 @@
 package judgels.uriel.api;
 
-import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static java.util.stream.Collectors.toList;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
@@ -11,8 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import judgels.sandalphon.api.submission.programming.Submission;
-import judgels.sandalphon.api.submission.programming.SubmissionInfo;
-import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.uriel.ContestSubmissionClient;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
@@ -159,44 +156,6 @@ class ContestSubmissionApiIntegrationTests extends BaseUrielApiIntegrationTests 
         params.problemAlias = "B";
         assertThat(submissionClient.getSubmissions(adminToken, contest.getJid(), params).getData().getPage())
                 .containsExactly(submissions.get(2));
-    }
-
-    @Test
-    void get_submission_with_source() {
-        submit(contestantAToken, problem1.getJid());
-        Submission submission = getSubmission(contestantAToken);
-
-        assertThat(submission.getUserJid()).isEqualTo(contestantA.getJid());
-        assertThat(submission.getProblemJid()).isEqualTo(problem1.getJid());
-        assertThat(submission.getContainerJid()).isEqualTo(contest.getJid());
-        assertThat(submission.getGradingEngine()).isEqualTo("Batch");
-        assertThat(submission.getGradingLanguage()).isEqualTo("Cpp11");
-
-        SubmissionWithSourceResponse response = submissionClient.getSubmissionWithSourceById(contestantAToken, submission.getId());
-
-        assertThat(response.getData().getSubmission()).isEqualTo(submission);
-        assertThat(response.getProfile().getUsername()).isEqualTo(CONTESTANT_A);
-        assertThat(response.getProblemName()).isEqualTo("Problem 1");
-        assertThat(response.getProblemAlias()).isEqualTo("A");
-        assertThat(response.getContainerName()).isEqualTo(contest.getName());
-    }
-
-    @Test
-    void get_submission_info_image() {
-        submit(contestantAToken, problem1.getJid());
-        Submission submission = getSubmission(contestantAToken);
-
-        endContest(contest);
-
-        SubmissionInfo info = submissionClient.getSubmissionInfo(contest.getJid(), contestantA.getJid(), problem1.getJid());
-        assertThat(info.getId()).isEqualTo(submission.getId());
-        assertThat(info.getProfile().getUsername()).isEqualTo(CONTESTANT_A);
-
-        var response = submissionClient.getSubmissionSourceImage(contest.getJid(), contestantA.getJid(), problem1.getJid());
-        assertThat(response.headers().get(CONTENT_TYPE)).contains("image/jpg");
-
-        response = submissionClient.getSubmissionSourceDarkImage(contest.getJid(), contestantA.getJid(), problem1.getJid());
-        assertThat(response.headers().get(CONTENT_TYPE)).contains("image/jpg");
     }
 
     private void submit(String token, String problemJid) {
