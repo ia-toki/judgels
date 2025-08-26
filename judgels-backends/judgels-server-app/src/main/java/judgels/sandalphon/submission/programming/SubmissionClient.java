@@ -89,25 +89,33 @@ public class SubmissionClient {
                 .gradingOptions(options)
                 .build();
 
-        Session session = sessionFactory.getCurrentSession();
-        session.getTransaction().registerSynchronization(new Synchronization() {
-            @Override
-            public void beforeCompletion() {}
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            session.getTransaction().registerSynchronization(new Synchronization() {
+                @Override
+                public void beforeCompletion() {}
 
-            @Override
-            public void afterCompletion(int status) {
-                if (status == jakarta.transaction.Status.STATUS_COMMITTED) {
-                    try {
-                        messageClient.sendMessage(
-                                gradingResponseQueueName,
-                                gradingRequestQueueName,
-                                GradingRequest.class.getSimpleName(),
-                                mapper.writeValueAsString(gradingRequest));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                @Override
+                public void afterCompletion(int status) {
+                    if (status == jakarta.transaction.Status.STATUS_COMMITTED) {
+                        sendGradingRequest(gradingRequest);
                     }
                 }
-            }
-        });
+            });
+        } catch (org.hibernate.HibernateException e) { // not in a transaction
+            sendGradingRequest(gradingRequest);
+        }
+    }
+
+    private void sendGradingRequest(GradingRequest gradingRequest) {
+        try {
+            messageClient.sendMessage(
+                    gradingResponseQueueName,
+                    gradingRequestQueueName,
+                    GradingRequest.class.getSimpleName(),
+                    mapper.writeValueAsString(gradingRequest));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
