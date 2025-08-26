@@ -3,7 +3,6 @@ package judgels.uriel.contest.submission;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SUBMISSION;
 
 import jakarta.inject.Inject;
-import judgels.service.actor.Actors;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
@@ -49,11 +48,8 @@ public class ContestSubmissionRoleChecker {
                 && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canViewAll(String userJid, Contest contest) {
-        if (canSupervise(userJid, contest)) {
-            return true;
-        }
-        return contestTimer.hasEnded(contest) && contestRoleChecker.canView(Actors.GUEST, contest);
+    public boolean canViewAll(Contest contest) {
+        return true;
     }
 
     public boolean canSupervise(String userJid, Contest contest) {

@@ -64,7 +64,7 @@ public class ContestScoreboardResource {
         boolean canSupervise = scoreboardRoleChecker.canSupervise(actorJid, contest);
         boolean canViewOfficialAndFrozen = scoreboardRoleChecker.canViewOfficialAndFrozen(actorJid, contest);
         boolean canViewClosedProblems = scoreboardRoleChecker.canViewClosedProblems(actorJid, contest);
-        boolean canViewSubmissions = submissionRoleChecker.canViewAll(actorJid, contest);
+        boolean canViewSubmissions = submissionRoleChecker.canViewAll(contest);
         ContestScoreboardConfig config = new ContestScoreboardConfig.Builder()
                 .canViewOfficialAndFrozen(canViewOfficialAndFrozen)
                 .canViewClosedProblems(canViewClosedProblems)
