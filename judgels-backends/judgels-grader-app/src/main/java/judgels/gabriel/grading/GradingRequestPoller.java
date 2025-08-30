@@ -1,70 +1,47 @@
 package judgels.gabriel.grading;
 
+import io.dropwizard.lifecycle.Managed;
 import jakarta.inject.Provider;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
-import judgels.messaging.MessageClient;
-import judgels.messaging.api.Message;
+import judgels.messaging.MessageListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GradingRequestPoller implements Runnable {
+public class GradingRequestPoller implements Managed {
     private static final Logger LOGGER = LoggerFactory.getLogger(GradingRequestPoller.class);
 
+    private final MessageListener messageListener;
     private final ThreadPoolExecutor executorService;
     private final String queueName;
-    private final MessageClient messageClient;
     private final Provider<GradingWorker> workerFactory;
 
     public GradingRequestPoller(
+            MessageListener messageListener,
             ThreadPoolExecutor executorService,
             String queueName,
-            MessageClient messageClient,
             Provider<GradingWorker> workerFactory) {
 
+        this.messageListener = messageListener;
         this.executorService = executorService;
         this.queueName = queueName;
-        this.messageClient = messageClient;
         this.workerFactory = workerFactory;
     }
 
     @Override
-    public void run() {
-        while (true) {
-            try {
-                if (executorService.getQueue().remainingCapacity() == 0) {
-                    sleep(2 * 1000);
-                    continue;
-                }
-
-                Optional<Message> maybeMessage = messageClient.receiveMessage(queueName);
-                if (maybeMessage.isEmpty()) {
-                    sleep(2 * 1000);
-                    continue;
-                }
-
-                Message message = maybeMessage.get();
+    public void start() throws Exception {
+        try {
+            messageListener.start(queueName, executorService, message -> {
                 GradingWorker worker = workerFactory.get();
-
-                CompletableFuture.runAsync(() -> worker.process(message), executorService)
-                        .exceptionally(e -> {
-                            LOGGER.error("Failed to process message: " + message, e);
-                            return null;
-                        });
-
-                sleep((long) (Math.random() * 1000));
-            } catch (Throwable e) {
-                LOGGER.error("Failed to run grading request poller", e);
-            }
+                worker.process(message);
+            });
+        } catch (Exception e) {
+            LOGGER.error("Failed to run grading request poller", e);
+            throw e;
         }
     }
 
-    private void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    @Override
+    public void stop() {
+        messageListener.stop();
     }
 }

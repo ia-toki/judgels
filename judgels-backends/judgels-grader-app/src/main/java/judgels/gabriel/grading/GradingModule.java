@@ -7,10 +7,9 @@ import jakarta.inject.Named;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
-import judgels.messaging.MessageClient;
+import judgels.messaging.MessageListener;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module
@@ -37,19 +36,18 @@ public class GradingModule {
     @Provides
     @Singleton
     GradingRequestPoller gradingRequestPoller(
-            MessageClient messageClient,
+            MessageListener messageListener,
             Provider<GradingWorker> workerFactory) {
 
         ExecutorService executorService = lifecycleEnv.executorService("grading-worker-%d")
                 .maxThreads(config.getNumWorkerThreads())
                 .minThreads(config.getNumWorkerThreads())
-                .workQueue(new ArrayBlockingQueue<>(config.getNumWorkerThreads()))
                 .build();
 
         return new GradingRequestPoller(
+                messageListener,
                 (ThreadPoolExecutor) executorService,
                 config.getGradingRequestQueueName(),
-                messageClient,
                 workerFactory);
     }
 }

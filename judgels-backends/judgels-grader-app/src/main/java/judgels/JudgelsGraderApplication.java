@@ -10,7 +10,6 @@ import judgels.gabriel.cache.CacheModule;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.isolate.IsolateModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
-import judgels.service.JudgelsScheduler;
 
 public class JudgelsGraderApplication extends Application<JudgelsGraderApplicationConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -19,11 +18,10 @@ public class JudgelsGraderApplication extends Application<JudgelsGraderApplicati
 
     @Override
     public void run(JudgelsGraderApplicationConfiguration config, Environment env) throws Exception {
-        JudgelsScheduler scheduler = new JudgelsScheduler(env.lifecycle());
-        runGabriel(config, env, scheduler);
+        runGabriel(config, env);
     }
 
-    private void runGabriel(JudgelsGraderApplicationConfiguration config, Environment env, JudgelsScheduler scheduler) {
+    private void runGabriel(JudgelsGraderApplicationConfiguration config, Environment env) {
         JudgelsGraderConfiguration judgelsConfig = config.getJudgelsConfig();
         GabrielConfiguration gabrielConfig = config.getGabrielConfig();
 
@@ -35,8 +33,6 @@ public class JudgelsGraderApplication extends Application<JudgelsGraderApplicati
                 .cacheModule(new CacheModule(gabrielConfig.getCacheConfig()))
                 .build();
 
-        scheduler.scheduleOnce(
-                "gabriel-grading-request-poller",
-                component.gradingRequestPoller());
+        env.lifecycle().manage(component.gradingRequestPoller());
     }
 }

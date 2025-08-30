@@ -168,7 +168,6 @@ public class GradingWorker {
                     message.getSourceQueueName(),
                     "GradingResponse",
                     MAPPER.writeValueAsString(response));
-            messageClient.confirmMessage(message.getId());
         }  catch (IOException e) {
             throw new RuntimeException("Grading result failed to send!", e);
         }

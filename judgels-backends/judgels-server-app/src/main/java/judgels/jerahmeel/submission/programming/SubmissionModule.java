@@ -9,6 +9,7 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
@@ -16,6 +17,7 @@ import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.jerahmeel.stats.StatsConfiguration;
 import judgels.jerahmeel.submission.JerahmeelSubmissionStore;
 import judgels.messaging.MessageClient;
+import judgels.messaging.MessageListener;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
@@ -31,6 +33,7 @@ import judgels.service.JudgelsScheduler;
 import judgels.uriel.persistence.ContestProgrammingGradingDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 import judgels.uriel.submission.UrielSubmissionStore;
+import org.hibernate.SessionFactory;
 
 @Module
 public class SubmissionModule {
@@ -85,6 +88,7 @@ public class SubmissionModule {
     @Provides
     @Singleton
     static SubmissionClient submissionClient(
+            SessionFactory sessionFactory,
             @JerahmeelSubmissionStore SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
@@ -92,6 +96,7 @@ public class SubmissionModule {
             ObjectMapper mapper) {
 
         return new SubmissionClient(
+                sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
                 gradingResponseQueueName,
@@ -114,12 +119,16 @@ public class SubmissionModule {
     @Singleton
     static GradingResponsePoller gradingResponsePoller(
             JudgelsScheduler scheduler,
+            MessageListener messageListener,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
-            MessageClient messageClient,
             GradingResponseProcessor processor) {
 
         ExecutorService executorService = scheduler.createExecutorService("jerahmeel-grading-response-processor-%d", 10);
-        return new GradingResponsePoller(gradingResponseQueueName, messageClient, executorService, processor);
+        return new GradingResponsePoller(
+                messageListener,
+                gradingResponseQueueName,
+                (ThreadPoolExecutor) executorService,
+                processor);
     }
 
     @Provides
@@ -128,7 +137,6 @@ public class SubmissionModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
             @JerahmeelSubmissionStore SubmissionStore submissionStore,
-            MessageClient messageClient,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -136,12 +144,10 @@ public class SubmissionModule {
                 new Class<?>[] {
                         ObjectMapper.class,
                         SubmissionStore.class,
-                        MessageClient.class,
                         SubmissionConsumer.class},
                 new Object[] {
                         mapper,
                         submissionStore,
-                        messageClient,
                         statsConfig.getEnabled() ? statsProcessor : new NoOpSubmissionConsumer()});
     }
 }
