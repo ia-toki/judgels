@@ -16,6 +16,7 @@ import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import org.hibernate.SessionFactory;
 
 @Module
 public class ContestScoreboardUpdaterModule {
@@ -26,6 +27,7 @@ public class ContestScoreboardUpdaterModule {
     static ContestScoreboardPoller contestScoreboardPoller(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             JudgelsScheduler scheduler,
+            SessionFactory sessionFactory,
             ContestStore contestStore,
             ContestScoreboardUpdater contestScoreboardUpdater) {
 
@@ -34,10 +36,12 @@ public class ContestScoreboardUpdaterModule {
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardPoller.class,
                 new Class<?>[] {
+                        SessionFactory.class,
                         ContestStore.class,
                         ExecutorService.class,
                         ContestScoreboardUpdater.class},
                 new Object[] {
+                        sessionFactory,
                         contestStore,
                         executorService,
                         contestScoreboardUpdater});
