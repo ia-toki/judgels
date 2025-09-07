@@ -119,13 +119,12 @@ describe('IcpcScoreboardTable', () => {
     ]);
   });
 
-  describe('shows submission as image', () => {
-    describe('when canViewSubmissions', () => {
-      const contestJid = 'contest-jid';
-      const onOpenSubmissionImage = jest.fn();
+  describe('clicking a submission cell', () => {
+    describe('when onClickSubmissionCell is passed', () => {
+      const onClickSubmissionCell = jest.fn();
 
       beforeEach(() => {
-        const props = { scoreboard, profilesMap, contestJid, onOpenSubmissionImage, canViewSubmissions: true };
+        const props = { scoreboard, profilesMap, onClickSubmissionCell };
         wrapper = mount(
           <MemoryRouter>
             <IcpcScoreboardTable {...props} />
@@ -136,33 +135,13 @@ describe('IcpcScoreboardTable', () => {
       test('shows submission for attempted cell', () => {
         wrapper.find('tbody').childAt(0).childAt(3).simulate('click');
 
-        expect(onOpenSubmissionImage).toHaveBeenCalledWith(contestJid, 'JIDUSER2', 'JIDPROG1');
+        expect(onClickSubmissionCell).toHaveBeenCalledWith('JIDUSER2', 'JIDPROG1');
       });
 
       test('does not show submission for unattempted cell', () => {
         wrapper.find('tbody').childAt(0).childAt(6).simulate('click');
 
-        expect(onOpenSubmissionImage).not.toBeCalled();
-      });
-    });
-
-    describe('when not canViewSubmissions', () => {
-      const contestJid = 'contest-jid';
-      const onOpenSubmissionImage = jest.fn();
-
-      beforeEach(() => {
-        const props = { scoreboard, profilesMap, contestJid, onOpenSubmissionImage, canViewSubmissions: false };
-        wrapper = mount(
-          <MemoryRouter>
-            <IcpcScoreboardTable {...props} />
-          </MemoryRouter>
-        );
-      });
-
-      test('does not show submission', () => {
-        wrapper.find('tbody').childAt(0).childAt(3).simulate('click');
-
-        expect(onOpenSubmissionImage).not.toBeCalled();
+        expect(onClickSubmissionCell).not.toBeCalled();
       });
     });
   });

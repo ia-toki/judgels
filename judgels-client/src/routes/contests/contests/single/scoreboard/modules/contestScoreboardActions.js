@@ -1,3 +1,4 @@
+import { NotFoundError } from '../../../../../../modules/api/error';
 import { contestScoreboardAPI } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { contestSubmissionProgrammingAPI } from '../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
@@ -30,5 +31,27 @@ export function getSubmissionSourceImage(contestJid, userJid, problemJid) {
 export function getSubmissionInfo(contestJid, userJid, problemJid) {
   return async () => {
     return await contestSubmissionProgrammingAPI.getSubmissionInfo(contestJid, userJid, problemJid);
+  };
+}
+
+export function getUserProblemSubmissions(contestJid, userJid, problemJid) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    return await contestSubmissionProgrammingAPI.getUserProblemSubmissions(token, contestJid, userJid, problemJid);
+  };
+}
+
+export function getSubmissionWithSource(contestJid, submissionId, language) {
+  return async (dispatch, getState) => {
+    const token = selectToken(getState());
+    const submissionWithSource = await contestSubmissionProgrammingAPI.getSubmissionWithSource(
+      token,
+      submissionId,
+      language
+    );
+    if (contestJid !== submissionWithSource.data.submission.containerJid) {
+      throw new NotFoundError();
+    }
+    return submissionWithSource;
   };
 }

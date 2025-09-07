@@ -6,14 +6,7 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './IcpcScoreboardTable.scss';
 
-export function IcpcScoreboardTable({
-  userJid,
-  contestJid,
-  scoreboard: { state, content },
-  profilesMap,
-  onOpenSubmissionImage,
-  canViewSubmissions,
-}) {
+export function IcpcScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap, onClickSubmissionCell }) {
   const renderData = () => {
     const rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
@@ -71,13 +64,13 @@ export function IcpcScoreboardTable({
           ? '?'
           : '' + penalty;
 
-    const clickable = canViewSubmissions && attempted;
+    const clickable = !!onClickSubmissionCell && attempted;
 
     return (
       <td
         key={idx}
         className={classNames(className, clickable ? 'clickable' : {})}
-        onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
+        onClick={() => clickable && onClickSubmissionCell(contestantJid, problemJid)}
       >
         <span className="top">{shownAttempts}</span>
         <span className="bottom">{shownPenalty}</span>

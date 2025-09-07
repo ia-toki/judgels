@@ -11,6 +11,11 @@ export const contestSubmissionProgrammingAPI = {
     return get(`${baseURL}?${params}`, token);
   },
 
+  getUserProblemSubmissions: (token, contestJid, userJid, problemJid) => {
+    const params = stringify({ contestJid, userJid, problemJid });
+    return get(`${baseURL}/user-problem?${params}`, token);
+  },
+
   getSubmissionWithSource: (token, submissionId, language) => {
     const params = stringify({ language });
     return get(`${baseURL}/id/${submissionId}?${params}`, token);

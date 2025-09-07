@@ -6,14 +6,7 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './GcjScoreboardTable.scss';
 
-export function GcjScoreboardTable({
-  userJid,
-  contestJid,
-  scoreboard: { state, content },
-  profilesMap,
-  onOpenSubmissionImage,
-  canViewSubmissions,
-}) {
+export function GcjScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap, onClickSubmissionCell }) {
   const renderData = () => {
     let rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
@@ -61,13 +54,13 @@ export function GcjScoreboardTable({
       attempted = false;
     }
 
-    const clickable = canViewSubmissions && attempted;
+    const clickable = !!onClickSubmissionCell && attempted;
 
     return (
       <td
         key={idx}
         className={classNames(className, clickable ? 'clickable' : {})}
-        onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
+        onClick={() => clickable && onClickSubmissionCell(contestantJid, problemJid)}
       >
         <span className="top">{renderAttempts(attempts, state)}</span>
         <span className="bottom">{renderPenalty(penalty, state)}</span>

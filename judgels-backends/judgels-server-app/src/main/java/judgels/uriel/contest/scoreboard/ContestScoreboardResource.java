@@ -69,6 +69,7 @@ public class ContestScoreboardResource {
                 .canViewOfficialAndFrozen(canViewOfficialAndFrozen)
                 .canViewClosedProblems(canViewClosedProblems)
                 .canViewSubmissions(canViewSubmissions)
+                .canViewSubmissionDetails(canSupervise)
                 .canRefresh(canManage)
                 .build();
 

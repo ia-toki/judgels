@@ -33,8 +33,6 @@ export class ContestProblemPage extends Component {
       this.props.statementLanguage
     );
 
-    console.log({ defaultLanguage, languages, problem, totalSubmissions, worksheet });
-
     this.setState({
       defaultLanguage,
       languages,
