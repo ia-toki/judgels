@@ -16,6 +16,7 @@ import { ContestScoreboardType } from '../../../../../../modules/api/uriel/conte
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectContest } from '../../../modules/contestSelectors';
 import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardPage';
+import ContestUserProblemSubmissionsDialog from '../ContestUserProblemSubmissionsDialog/ContestUserProblemSubmissionsDialog';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
@@ -42,8 +43,10 @@ export class ContestScoreboardPage extends Component {
       lastRefreshScoreboardTime: 0,
       isForceRefreshButtonLoading: false,
       isSubmissionImageDialogOpen: false,
+      isSubmissionsDialogOpen: false,
       submissionImageUrl: undefined,
       submissionDialogTitle: '',
+      submissionsDialogProps: undefined,
     };
   }
 
@@ -68,18 +71,32 @@ export class ContestScoreboardPage extends Component {
           pageSize={ContestScoreboardPage.PAGE_SIZE}
           onChangePage={this.onChangePage}
         />
-        <SubmissionImageDialog
-          isOpen={this.state.isSubmissionImageDialogOpen}
-          onClose={this.toggleSubmissionImageDialog}
-          title={this.state.submissionDialogTitle}
-          imageUrl={this.state.submissionImageUrl}
-        />
+        {this.state.isSubmissionImageDialogOpen && (
+          <SubmissionImageDialog
+            onClose={this.toggleSubmissionImageDialog}
+            title={this.state.submissionDialogTitle}
+            imageUrl={this.state.submissionImageUrl}
+          />
+        )}
+        {this.state.isSubmissionsDialogOpen && (
+          <ContestUserProblemSubmissionsDialog
+            onClose={this.toggleSubmissionsDialog}
+            {...this.state.submissionsDialogProps}
+          />
+        )}
       </ContentCard>
     );
   }
 
   toggleSubmissionImageDialog = () => {
-    this.setState({ isSubmissionImageDialogOpen: !this.state.isSubmissionImageDialogOpen });
+    this.setState(prevState => ({ isSubmissionImageDialogOpen: !prevState.isSubmissionImageDialogOpen }));
+  };
+
+  toggleSubmissionsDialog = props => {
+    this.setState(prevState => ({
+      isSubmissionsDialogOpen: !prevState.isSubmissionsDialogOpen,
+      submissionsDialogProps: props,
+    }));
   };
 
   onChangePage = async nextPage => {
@@ -215,12 +232,37 @@ export class ContestScoreboardPage extends Component {
     this.props.onAppendRoute(queries);
   };
 
-  onOpenSubmissionImage = async (contestJid, contestantJid, problemJid) => {
+  openSubmissionsDialog = (contestantJid, problemJid) => {
+    const {
+      profilesMap,
+      data: { scoreboard },
+    } = this.state.response[0];
+
+    const profile = profilesMap[contestantJid];
+
+    const problemIndex = scoreboard.state.problemJids.indexOf(problemJid);
+    const problemAlias = scoreboard.state.problemAliases[problemIndex];
+
+    this.toggleSubmissionsDialog({
+      userJid: contestantJid,
+      problemJid,
+      title: `Submissions by ${profile.username} for problem ${problemAlias}`,
+    });
+  };
+
+  openSubmissionImage = async (contestantJid, problemJid) => {
+    const {
+      data: { scoreboard },
+    } = this.state.response[0];
+
+    const problemIndex = scoreboard.state.problemJids.indexOf(problemJid);
+    const problemAlias = scoreboard.state.problemAliases[problemIndex];
+
     const [info, submissionImageUrl] = await Promise.all([
-      this.props.onGetSubmissionInfo(contestJid, contestantJid, problemJid),
-      this.props.onGetSubmissionSourceImage(contestJid, contestantJid, problemJid),
+      this.props.onGetSubmissionInfo(this.props.contest.jid, contestantJid, problemJid),
+      this.props.onGetSubmissionSourceImage(this.props.contest.jid, contestantJid, problemJid),
     ]);
-    const submissionDialogTitle = `Submission #${info.id} (${info.profile.username})`;
+    const submissionDialogTitle = `Submission #${info.id} by ${info.profile.username} for problem ${problemAlias}`;
     this.setState({ submissionImageUrl, submissionDialogTitle });
     this.toggleSubmissionImageDialog();
   };
@@ -241,14 +283,20 @@ export class ContestScoreboardPage extends Component {
     const {
       data: scoreboard,
       profilesMap,
-      config: { canViewSubmissions },
+      config: { canViewSubmissions, canViewSubmissionDetails },
     } = response[0];
+
+    let onClickSubmissionCell;
+    if (canViewSubmissionDetails) {
+      onClickSubmissionCell = this.openSubmissionsDialog;
+    } else if (canViewSubmissions) {
+      onClickSubmissionCell = this.openSubmissionImage;
+    }
+
     if (this.props.contest.style === ContestStyle.TROC) {
       return (
         <TrocScoreboardTable
           userJid={this.props.userJid}
-          contestJid={this.props.contest.jid}
-          onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
           canViewSubmissions={canViewSubmissions}
@@ -258,22 +306,18 @@ export class ContestScoreboardPage extends Component {
       return (
         <IcpcScoreboardTable
           userJid={this.props.userJid}
-          contestJid={this.props.contest.jid}
-          onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
-          canViewSubmissions={canViewSubmissions}
+          onClickSubmissionCell={onClickSubmissionCell}
         />
       );
     } else if (this.props.contest.style === ContestStyle.IOI) {
       return (
         <IoiScoreboardTable
           userJid={this.props.userJid}
-          contestJid={this.props.contest.jid}
-          onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
-          canViewSubmissions={canViewSubmissions}
+          onClickSubmissionCell={onClickSubmissionCell}
         />
       );
     } else if (this.props.contest.style === ContestStyle.Bundle) {
@@ -288,11 +332,9 @@ export class ContestScoreboardPage extends Component {
       return (
         <GcjScoreboardTable
           userJid={this.props.userJid}
-          contestJid={this.props.contest.jid}
-          onOpenSubmissionImage={this.onOpenSubmissionImage}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
-          canViewSubmissions={canViewSubmissions}
+          onClickSubmissionCell={onClickSubmissionCell}
         />
       );
     } else {

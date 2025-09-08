@@ -178,6 +178,25 @@ public class BaseSubmissionStore<
     }
 
     @Override
+    public List<Submission> getUserProblemSubmissions(
+            String containerJid,
+            String userJid,
+            String problemJid) {
+
+        List<SM> submissionModels = submissionDao
+                .select()
+                .whereContainerIs(containerJid)
+                .whereAuthorIs(userJid)
+                .whereProblemIs(problemJid)
+                .all();
+
+        var submissionJids = Lists.transform(submissionModels, m -> m.jid);
+        Map<String, GM> gradingModels = gradingDao.selectAllLatestWithDetailsBySubmissionJids(submissionJids);
+
+        return Lists.transform(submissionModels, sm -> submissionFromModels(sm, gradingModels.get(sm.jid)));
+    }
+
+    @Override
     public Optional<Submission> getLatestSubmission(
             Optional<String> containerJid,
             Optional<String> userJid,

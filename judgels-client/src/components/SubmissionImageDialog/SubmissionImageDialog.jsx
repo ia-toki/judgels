@@ -2,11 +2,11 @@ import { Card, Classes, Dialog } from '@blueprintjs/core';
 
 import './SubmissionImageDialog.scss';
 
-export function SubmissionImageDialog({ isOpen, onClose, title, imageUrl }) {
+export function SubmissionImageDialog({ onClose, title, imageUrl }) {
   return (
     <Dialog
       className="submission-image-dialog"
-      isOpen={isOpen}
+      isOpen
       onClose={onClose}
       title={title}
       canOutsideClickClose={true}

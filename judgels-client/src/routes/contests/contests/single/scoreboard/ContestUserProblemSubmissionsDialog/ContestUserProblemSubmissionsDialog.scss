@@ -1,0 +1,27 @@
+.contest-user-problem-submissions-dialog {
+  width: 800px;
+
+  details summary {
+    cursor: pointer;
+  }
+
+  details summary > * {
+    display: inline-block;
+    margin-left: 5px;
+    margin-bottom: 0;
+  }
+
+  .details-heading {
+    margin-right: 10px;
+  }
+
+  .details-content {
+    margin-top: 15px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .contest-user-problem-submissions-dialog {
+    width: inherit;
+  }
+}

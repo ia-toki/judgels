@@ -32,6 +32,7 @@ export function SubmissionDetails({
   onDownload,
   hideSource,
   hideSourceFilename,
+  onClickViewSource,
   showLoaderWhenPending,
 }) {
   const hasSubtasks = latestGrading && latestGrading.details && latestGrading.details.subtaskResults.length > 1;
@@ -81,12 +82,20 @@ export function SubmissionDetails({
           </h4>
         )}
         <p>
-          {grading && <GradingVerdictTag grading={grading} />} {separator} <UserRef profile={profile} /> {separator}{' '}
-          {!isOutputOnly(gradingEngine) && (
+          {grading && <GradingVerdictTag grading={grading} />}
+          {profile && (
             <>
-              {getGradingLanguageName(gradingLanguage)} {separator}{' '}
+              {' '}
+              {separator} <UserRef profile={profile} />
             </>
           )}
+          {!isOutputOnly(gradingEngine) && (
+            <>
+              {' '}
+              {separator} {getGradingLanguageName(gradingLanguage)}
+            </>
+          )}{' '}
+          {separator}{' '}
           <span className="general-info__time">
             <FormattedDate value={time} showSeconds />
           </span>
@@ -350,6 +359,17 @@ export function SubmissionDetails({
         return (
           <ContentCard>
             <Lock /> &nbsp;<small>You cannot view other's solution before solving this problem in this course.</small>
+          </ContentCard>
+        );
+      }
+
+      if (onClickViewSource) {
+        const isLoading = source === null;
+        return (
+          <ContentCard>
+            <Button small disabled={isLoading} loading={isLoading} onClick={onClickViewSource}>
+              View source
+            </Button>
           </ContentCard>
         );
       }

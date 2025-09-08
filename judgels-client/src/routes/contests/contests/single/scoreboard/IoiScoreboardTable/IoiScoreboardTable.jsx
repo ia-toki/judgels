@@ -5,14 +5,7 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './IoiScoreboardTable.scss';
 
-export function IoiScoreboardTable({
-  userJid,
-  contestJid,
-  onOpenSubmissionImage,
-  scoreboard: { state, content },
-  profilesMap,
-  canViewSubmissions,
-}) {
+export function IoiScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap, onClickSubmissionCell }) {
   const renderData = () => {
     const rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
@@ -40,12 +33,12 @@ export function IoiScoreboardTable({
   };
 
   const renderProblemCell = (idx, score, contestantJid, problemJid) => {
-    const clickable = canViewSubmissions && score !== null;
+    const clickable = !!onClickSubmissionCell && score !== null;
 
     return (
       <td
         className={classNames(clickable ? 'clickable' : {})}
-        onClick={() => clickable && onOpenSubmissionImage(contestJid, contestantJid, problemJid)}
+        onClick={() => clickable && onClickSubmissionCell(contestantJid, problemJid)}
         key={idx}
       >
         {score === null ? '-' : score}

@@ -33,6 +33,10 @@ public interface SubmissionStore {
             Optional<String> problemJid,
             int pageNumber,
             int pageSize);
+    List<Submission> getUserProblemSubmissions(
+            String containerJid,
+            String userJid,
+            String problemJid);
     Optional<Submission> getLatestSubmission(
             Optional<String> containerJid,
             Optional<String> userJid,

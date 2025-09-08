@@ -61,6 +61,7 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.programming.ContestSubmissionsResponse;
+import judgels.uriel.api.contest.submission.programming.ContestUserProblemSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.log.ContestLogger;
@@ -167,6 +168,35 @@ public class ContestSubmissionResource {
                 .config(config)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
+                .build();
+    }
+
+    @GET
+    @Path("/user-problem")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public ContestUserProblemSubmissionsResponse getUserProblemSubmissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") String userJid,
+            @QueryParam("problemJid") String problemJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canSupervise(actorJid, contest));
+
+        List<Submission> submissions = submissionStore.getUserProblemSubmissions(
+                contest.getJid(),
+                userJid,
+                problemJid);
+
+        Optional<SubmissionSource> latestSubmissionSource = submissions.isEmpty()
+                ? Optional.empty()
+                : Optional.of(submissionSourceBuilder.fromPastSubmission(submissions.get(0).getJid(), true));
+
+        return new ContestUserProblemSubmissionsResponse.Builder()
+                .data(submissions)
+                .latestSubmissionSource(latestSubmissionSource)
                 .build();
     }
 
