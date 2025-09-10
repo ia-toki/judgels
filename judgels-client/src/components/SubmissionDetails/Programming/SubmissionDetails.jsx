@@ -331,7 +331,7 @@ export function SubmissionDetails({
         return 'N/A';
       }
       if (executionResult.isKilled) {
-        return '> ' + executionResult.time + ' ms';
+        return '> ' + executionResult.wallTime + ' ms';
       }
     }
     return executionResult.time + ' ms';
