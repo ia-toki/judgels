@@ -26,6 +26,7 @@ import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.ExternalScoreboardModuleConfig;
@@ -124,7 +125,10 @@ public class ContestScoreboardUpdater {
         Set<ContestContestant> contestants = ImmutableSet.copyOf(contestantsMap.values());
         Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
         Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJidsSet, contest.getBeginTime());
-        Map<String, ScoringConfig> scoringConfigsMap = sandalphonClient.getProgrammingProblemScoringConfigs(problemJidsSet);
+
+        Map<String, ScoringConfig> scoringConfigsMap = contest.getStyle() == ContestStyle.BUNDLE
+                ? Map.of()
+                : sandalphonClient.getProgrammingProblemScoringConfigs(problemJidsSet);
 
         ScoreboardState state = new ScoreboardState.Builder()
                 .problemJids(problemJids)
