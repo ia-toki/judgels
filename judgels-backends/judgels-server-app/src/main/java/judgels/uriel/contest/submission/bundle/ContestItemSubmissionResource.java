@@ -57,15 +57,9 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 
 @Path("/api/v2/contests/submissions/bundle")
 public class ContestItemSubmissionResource {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContestItemSubmissionResource.class);
-    private static final Marker ITEM_SUBMISSION_MARKER = MarkerFactory.getMarker("ITEM_SUBMISSION");
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ActorChecker actorChecker;
@@ -189,12 +183,6 @@ public class ContestItemSubmissionResource {
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
                     data.getContainerJid(), data.getProblemJid(), data.getItemJid(), actorJid);
-
-            LOGGER.info(
-                    ITEM_SUBMISSION_MARKER,
-                    "Empty answer submitted by {} for item {} in problem {} and contest {}",
-                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContainerJid()
-            );
         } else {
             Grading grading = itemSubmissionGraderRegistry
                     .get(item.get().getType())
@@ -207,13 +195,6 @@ public class ContestItemSubmissionResource {
                     data.getAnswer(),
                     grading,
                     actorJid
-            );
-
-            LOGGER.info(
-                    ITEM_SUBMISSION_MARKER,
-                    "Answer '{}' submitted by {} for item {} in problem {} and contest {}, verdict {}, score {}",
-                    data.getAnswer(), actorJid, data.getItemJid(), data.getProblemJid(), data.getContainerJid(),
-                    grading.getVerdict(), grading.getScore()
             );
         }
     }
