@@ -5,12 +5,12 @@ import java.util.Comparator;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardEntry;
 import judgels.uriel.contest.scoreboard.ScoreboardEntryComparator;
 
-public final class UsingTotalAnsweredItemsBundleScoreboardEntryComparator implements
+public final class UsingTotalScoresBundleScoreboardEntryComparator implements
         ScoreboardEntryComparator<BundleScoreboardEntry> {
 
     @Override
     public int compareWithoutTieBreakerForEqualRanks(BundleScoreboardEntry entry1, BundleScoreboardEntry entry2) {
-        return Integer.compare(entry2.getTotalAnsweredItems(), entry1.getTotalAnsweredItems());
+        return Integer.compare(entry2.getTotalScores(), entry1.getTotalScores());
     }
 
     @Override

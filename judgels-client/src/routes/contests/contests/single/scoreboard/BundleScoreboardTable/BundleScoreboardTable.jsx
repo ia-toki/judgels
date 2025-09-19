@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './BundleScoreboardPage.scss';
+import './BundleScoreboardTable.scss';
 
 export function BundleScoreboardTable({ userJid, scoreboard, profilesMap }) {
   const renderData = content => {
@@ -17,11 +17,11 @@ export function BundleScoreboardTable({ userJid, scoreboard, profilesMap }) {
       <td key="contestantJid" className="contestant-cell">
         <UserRef profile={profilesMap[entry.contestantJid]} />
       </td>,
-      <td key="totalAnsweredItems">
-        <strong>{entry.totalAnsweredItems}</strong>
+      <td key="totalScores">
+        <strong>{entry.totalScores}</strong>
       </td>,
     ];
-    const problemCells = entry.answeredItems.map((item, i) => renderProblemCell(i, item));
+    const problemCells = entry.scores.map((score, i) => renderProblemCell(i, score));
     cells = [...cells, ...problemCells];
     return (
       <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === userJid })}>
@@ -30,8 +30,8 @@ export function BundleScoreboardTable({ userJid, scoreboard, profilesMap }) {
     );
   };
 
-  const renderProblemCell = (idx, answered) => {
-    return <td key={idx}>{answered}</td>;
+  const renderProblemCell = (idx, score) => {
+    return <td key={idx}>{score}</td>;
   };
 
   return (

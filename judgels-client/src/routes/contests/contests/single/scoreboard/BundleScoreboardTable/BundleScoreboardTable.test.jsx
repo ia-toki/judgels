@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router';
 
-import { BundleScoreboardTable } from './BundleScoreboardPage';
+import { BundleScoreboardTable } from './BundleScoreboardTable';
 
 describe('BundleScoreboardTable', () => {
   let wrapper;
@@ -16,14 +16,14 @@ describe('BundleScoreboardTable', () => {
         {
           rank: 1,
           contestantJid: 'JIDUSER1',
-          answeredItems: [12, 3],
-          totalAnsweredItems: 15,
+          scores: [12, 3],
+          totalScores: 15,
         },
         {
           rank: 2,
           contestantJid: 'JIDUSER2',
-          answeredItems: [10, 2],
-          totalAnsweredItems: 12,
+          scores: [10, 2],
+          totalScores: 12,
         },
       ],
     },

@@ -15,7 +15,7 @@ import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectContest } from '../../../modules/contestSelectors';
-import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardPage';
+import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardTable';
 import ContestUserProblemSubmissionsDialog from '../ContestUserProblemSubmissionsDialog/ContestUserProblemSubmissionsDialog';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
