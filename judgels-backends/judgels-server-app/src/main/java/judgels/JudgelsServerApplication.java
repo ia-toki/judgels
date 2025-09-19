@@ -100,6 +100,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.problemStatementRenderResourceInEditProblemStatement());
         env.jersey().register(component.problemStatementRenderResourceInViewProgrammingProblemStatement());
         env.jersey().register(component.problemStatementRenderResourceInViewBundleProblemStatement());
+        env.jersey().register(component.problemStatementRenderResourceInViewBundleItemProblemStatement());
         env.jersey().register(component.problemPartnerResource());
         env.jersey().register(component.problemEditorialResource());
         env.jersey().register(component.problemEditorialRenderResourceInEditProblemEditorial());

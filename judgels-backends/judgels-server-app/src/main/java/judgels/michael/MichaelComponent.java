@@ -66,6 +66,7 @@ public interface MichaelComponent {
     ProblemStatementRenderResources.InEditProblemStatement problemStatementRenderResourceInEditProblemStatement();
     ProblemStatementRenderResources.InViewProgrammingProblemStatement problemStatementRenderResourceInViewProgrammingProblemStatement();
     ProblemStatementRenderResources.InViewBundleProblemStatement problemStatementRenderResourceInViewBundleProblemStatement();
+    ProblemStatementRenderResources.InViewBundleItemProblemStatement problemStatementRenderResourceInViewBundleItemProblemStatement();
     ProblemPartnerResource problemPartnerResource();
     ProblemEditorialResource problemEditorialResource();
     ProblemEditorialRenderResources.InEditProblemEditorial problemEditorialRenderResourceInEditProblemEditorial();
