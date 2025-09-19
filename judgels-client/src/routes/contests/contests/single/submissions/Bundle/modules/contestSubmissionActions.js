@@ -43,6 +43,6 @@ export function regradeSubmissions(contestJid, username, problemAlias) {
     const token = selectToken(getState());
     await contestSubmissionBundleAPI.regradeSubmissions(token, contestJid, username, undefined, problemAlias);
 
-    toastActions.showSuccessToast('Regrade in progress.');
+    toastActions.showSuccessToast('Regraded.');
   };
 }

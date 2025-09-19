@@ -128,11 +128,10 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
     }
 
     @Override
-    public List<ItemSubmission> markSubmissionsForRegrade(
+    public List<ItemSubmission> getSubmissionsForRegrade(
             Optional<String> containerJid,
             Optional<String> userJid,
-            Optional<String> problemJid,
-            Optional<Integer> batchSize) {
+            Optional<String> problemJid) {
 
         BaseBundleItemSubmissionQueryBuilder<M> query = submissionDao.select();
 
@@ -149,24 +148,7 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
         List<M> submissionModels = query
                 .orderBy(AbstractBundleItemSubmissionModel_.PROBLEM_JID, OrderDir.ASC)
                 .all();
-        List<ItemSubmission> submissions = Lists.transform(submissionModels, this::fromModel);
-
-        int counter = 0;
-        for (M submissionModel : submissionModels) {
-            submissionModel.verdict = Verdict.PENDING_REGRADE.name();
-            submissionModel.score = null;
-            submissionDao.persist(submissionModel);
-
-            // Occasionally flush to prevent out-of-memory errors due to Hibernate session cache overflowing
-            counter++;
-            if (counter > batchSize.orElse(50)) {
-                submissionDao.flush();
-                submissionDao.clear();
-                counter = 0;
-            }
-        }
-
-        return submissions;
+        return Lists.transform(submissionModels, this::fromModel);
     }
 
     @Override
@@ -193,4 +175,3 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
                 .build();
     }
 }
-
