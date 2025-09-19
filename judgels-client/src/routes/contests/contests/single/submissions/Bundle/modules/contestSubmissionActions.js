@@ -38,15 +38,6 @@ export function getLatestSubmissions(contestJid, problemAlias) {
   };
 }
 
-export function regradeSubmission(submissionJid) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    await contestSubmissionBundleAPI.regradeSubmission(token, submissionJid);
-
-    toastActions.showSuccessToast('Submission regraded.');
-  };
-}
-
 export function regradeSubmissions(contestJid, username, problemAlias) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
