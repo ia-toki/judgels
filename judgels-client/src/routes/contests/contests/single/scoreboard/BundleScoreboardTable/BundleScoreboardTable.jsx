@@ -5,7 +5,7 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './BundleScoreboardTable.scss';
 
-export function BundleScoreboardTable({ userJid, scoreboard, profilesMap }) {
+export function BundleScoreboardTable({ userJid, scoreboard, profilesMap, onClickTotalScoresCell }) {
   const renderData = content => {
     let rows = content.entries.map(renderRow);
     return <tbody>{rows}</tbody>;
@@ -17,7 +17,7 @@ export function BundleScoreboardTable({ userJid, scoreboard, profilesMap }) {
       <td key="contestantJid" className="contestant-cell">
         <UserRef profile={profilesMap[entry.contestantJid]} />
       </td>,
-      <td key="totalScores">
+      <td key="totalScores" className="clickable" onClick={() => onClickTotalScoresCell(entry.contestantJid)}>
         <strong>{entry.totalScores}</strong>
       </td>,
     ];

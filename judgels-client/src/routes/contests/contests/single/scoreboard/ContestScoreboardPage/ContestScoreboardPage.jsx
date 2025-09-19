@@ -267,6 +267,14 @@ export class ContestScoreboardPage extends Component {
     this.toggleSubmissionImageDialog();
   };
 
+  openSubmissionSummary = contestantJid => {
+    const { contest, onPush } = this.props;
+    const { profilesMap } = this.state.response[0];
+
+    const profile = profilesMap[contestantJid];
+    onPush(`/contests/${contest.slug}/submissions/users/${profile.username}`);
+  };
+
   renderScoreboard = () => {
     const { response } = this.state;
     if (!response) {
@@ -326,6 +334,7 @@ export class ContestScoreboardPage extends Component {
           userJid={this.props.userJid}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
+          onClickTotalScoresCell={this.openSubmissionSummary}
         />
       );
     } else if (this.props.contest.style === ContestStyle.GCJ) {
@@ -354,6 +363,7 @@ const mapDispatchToProps = {
   onGetSubmissionSourceImage: contestScoreboardActions.getSubmissionSourceImage,
   onGetSubmissionInfo: contestScoreboardActions.getSubmissionInfo,
   onAppendRoute: queries => push({ search: stringify(queries) }),
+  onPush: push,
 };
 
 export default withBreadcrumb('Scoreboard')(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));
