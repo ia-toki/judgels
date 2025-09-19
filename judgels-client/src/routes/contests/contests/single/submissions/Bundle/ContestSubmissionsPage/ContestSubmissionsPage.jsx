@@ -109,9 +109,6 @@ export class ContestSubmissionsPage extends Component {
                   <Link to={`/contests/${contest.slug}/submissions/users/${profilesMap[item.userJid].username}`}>
                     <Button icon={<Search />} intent={Intent.NONE} small />
                   </Link>
-                  {canManage && (
-                    <Button icon={<Refresh />} intent={Intent.NONE} small onClick={this.onClickRegrade(item.jid)} />
-                  )}
                 </ButtonGroup>
               </td>
             </tr>
@@ -143,13 +140,6 @@ export class ContestSubmissionsPage extends Component {
 
   onClickRegrade = submissionJid => {
     return () => this.onRegrade(submissionJid);
-  };
-
-  onRegrade = async submissionJid => {
-    await this.props.onRegrade(submissionJid);
-    const { username, problemAlias } = this.state.filter;
-    const queries = parse(this.props.location.search);
-    await this.refreshSubmissions(username, problemAlias, queries.page);
   };
 
   onRegradeAll = async () => {
@@ -213,7 +203,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onGetSubmissions: contestSubmissionActions.getSubmissions,
-  onRegrade: contestSubmissionActions.regradeSubmission,
   onRegradeAll: contestSubmissionActions.regradeSubmissions,
   onAppendRoute: queries => push({ search: stringify(queries) }),
 };
