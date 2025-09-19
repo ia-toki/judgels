@@ -135,15 +135,15 @@ public class BundleScoreboardProcessorTests {
                     new BundleScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c1")
-                            .answeredItems(ImmutableList.of(1, 2))
-                            .totalAnsweredItems(3)
+                            .scores(ImmutableList.of(-1, 8))
+                            .totalScores(7)
                             .lastAnsweredTime(Instant.ofEpochSecond(600))
                             .build(),
                     new BundleScoreboardEntry.Builder()
                             .rank(2)
                             .contestantJid("c2")
-                            .answeredItems(ImmutableList.of(1, 0))
-                            .totalAnsweredItems(1)
+                            .scores(ImmutableList.of(-1, 0))
+                            .totalScores(-1)
                             .lastAnsweredTime(Instant.ofEpochSecond(501))
                             .build());
         }
@@ -152,7 +152,7 @@ public class BundleScoreboardProcessorTests {
         class Sorting {
 
             @Test
-            void total_answered_items_over_last_answered_time() {
+            void total_scores_over_last_answered_time() {
                 List<ItemSubmission> submissions = ImmutableList.of(
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
@@ -211,15 +211,15 @@ public class BundleScoreboardProcessorTests {
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
-                                .answeredItems(ImmutableList.of(1, 1))
-                                .totalAnsweredItems(2)
+                                .scores(ImmutableList.of(4, 4))
+                                .totalScores(8)
                                 .lastAnsweredTime(Instant.ofEpochSecond(300))
                                 .build(),
                         new BundleScoreboardEntry.Builder()
                                 .rank(2)
                                 .contestantJid("c2")
-                                .answeredItems(ImmutableList.of(1, 0))
-                                .totalAnsweredItems(1)
+                                .scores(ImmutableList.of(-1, 0))
+                                .totalScores(-1)
                                 .lastAnsweredTime(Instant.ofEpochSecond(400))
                                 .build());
             }
@@ -244,13 +244,13 @@ public class BundleScoreboardProcessorTests {
                                 .containerJid("JIDC")
                                 .jid("JIDS-5")
                                 .itemJid("JIDITEM-1")
-                                .answer("b")
+                                .answer("d")
                                 .time(Instant.ofEpochSecond(400))
                                 .userJid("c2")
                                 .problemJid("p1")
                                 .grading(new Grading.Builder()
                                         .verdict(Verdict.WRONG_ANSWER)
-                                        .score(-1)
+                                        .score(4)
                                         .build())
                                 .build()
                 );
@@ -271,15 +271,15 @@ public class BundleScoreboardProcessorTests {
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
-                                .answeredItems(ImmutableList.of(1, 0))
-                                .totalAnsweredItems(1)
+                                .scores(ImmutableList.of(4, 0))
+                                .totalScores(4)
                                 .lastAnsweredTime(Instant.ofEpochSecond(400))
                                 .build(),
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
-                                .answeredItems(ImmutableList.of(1, 0))
-                                .totalAnsweredItems(1)
+                                .scores(ImmutableList.of(4, 0))
+                                .totalScores(4)
                                 .lastAnsweredTime(Instant.ofEpochSecond(300))
                                 .build());
             }

@@ -31,14 +31,14 @@ public interface BundleScoreboard extends Scoreboard {
     @Value.Immutable
     @JsonDeserialize(as = ImmutableBundleScoreboardEntry.class)
     interface BundleScoreboardEntry extends ScoreboardEntry {
-        List<Integer> getAnsweredItems();
-        int getTotalAnsweredItems();
+        int getTotalScores();
+        List<Integer> getScores();
         Optional<Instant> getLastAnsweredTime();
 
         @JsonIgnore
         @Override
         default boolean hasSubmission() {
-            return getTotalAnsweredItems() > 0;
+            return getLastAnsweredTime().isPresent();
         }
 
         class Builder extends ImmutableBundleScoreboardEntry.Builder {}

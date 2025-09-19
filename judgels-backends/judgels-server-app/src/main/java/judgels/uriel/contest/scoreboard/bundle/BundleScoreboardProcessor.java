@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -75,15 +76,20 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
 
         List<BundleScoreboardEntry> entries = contestantJids.stream()
                 .map(contestantJid -> {
-                    List<Integer> contestantAnsweredItems = problemJids.stream()
-                            .map(problemJid -> submissionsByUserJid
-                                    .getOrDefault(contestantJid, Collections.emptyList())
-                                    .stream()
-                                    .filter(submission -> submission.getProblemJid().equals(problemJid))
-                                    .count()
-                            )
-                            .map(c -> c.intValue())
-                            .collect(Collectors.toList());
+                    Map<String, Double> scoresMap = new HashMap<>();
+                    problemJids.forEach(p -> scoresMap.putIfAbsent(p, 0.0));
+
+                    for (ItemSubmission submission : submissionsByUserJid.getOrDefault(contestantJid, List.of())) {
+                        if (!scoresMap.containsKey(submission.getProblemJid())) {
+                            continue;
+                        }
+                        if (submission.getGrading().isEmpty() || submission.getGrading().get().getScore().isEmpty()) {
+                            continue;
+                        }
+                        scoresMap.put(
+                                submission.getProblemJid(),
+                                scoresMap.get(submission.getProblemJid()) + submission.getGrading().get().getScore().get());
+                    }
 
                     Optional<Instant> lastAnsweredTime = submissionsByUserJid
                             .getOrDefault(contestantJid, Collections.emptyList())
@@ -91,17 +97,25 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                             .map(ItemSubmission::getTime)
                             .max(Instant::compareTo);
 
+                    double totalScores = 0;
+                    for (double score : scoresMap.values()) {
+                        totalScores += score;
+                    }
+
                     return new BundleScoreboardEntry.Builder()
                             .rank(0)
                             .contestantJid(contestantJid)
-                            .answeredItems(contestantAnsweredItems)
-                            .totalAnsweredItems(contestantAnsweredItems.stream().mapToInt(Integer::intValue).sum())
+                            .scores(problemJids
+                                    .stream()
+                                    .map(jid -> (int) (double) scoresMap.get(jid))
+                                    .collect(Collectors.toList()))
+                            .totalScores((int) totalScores)
                             .lastAnsweredTime(lastAnsweredTime)
                             .build();
                 })
                 .collect(Collectors.toList());
 
-        entries = sortEntriesAndAssignRanks(new UsingTotalAnsweredItemsBundleScoreboardEntryComparator(), entries);
+        entries = sortEntriesAndAssignRanks(new UsingTotalScoresBundleScoreboardEntryComparator(), entries);
         return new ScoreboardProcessResult.Builder()
                 .entries(entries)
                 .incrementalContent(new BundleScoreboardIncrementalContent())
@@ -117,7 +131,7 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
     }
 
     private static List<BundleScoreboardEntry> sortEntriesAndAssignRanks(
-            UsingTotalAnsweredItemsBundleScoreboardEntryComparator comparator,
+            UsingTotalScoresBundleScoreboardEntryComparator comparator,
             List<BundleScoreboardEntry> entries) {
 
         entries.sort(comparator);
