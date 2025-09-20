@@ -8,7 +8,6 @@ import { AnswerState, StatementButtonText } from '../../../itemStatement';
 import './ItemShortAnswerForm.scss';
 
 export default class ItemShortAnswerForm extends PureComponent {
-  _input;
   state = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
@@ -18,10 +17,6 @@ export default class ItemShortAnswerForm extends PureComponent {
     previousWrongFormat: this.props.answerState === AnswerState.NotAnswered,
     wrongFormat: this.props.answerState === AnswerState.NotAnswered,
   };
-
-  componentDidUpdate() {
-    this._input.focus();
-  }
 
   renderHelpText() {
     switch (this.state.answerState) {
@@ -150,7 +145,6 @@ export default class ItemShortAnswerForm extends PureComponent {
         onChange={this.onTextInputChange}
         onClick={this.onTextInputClick}
         readOnly={readOnly}
-        ref={input => (this._input = input)}
         className={`text-input ${readOnlyClass} ${classNames(Classes.INPUT)}`}
       />
     );
