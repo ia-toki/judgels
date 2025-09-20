@@ -29,9 +29,12 @@ export function SubmissionDetails({
             <FormattedAnswer answer={submission.answer} type={itemTypesMap[itemJid]} />
           </td>
           {canViewGrading && (
-            <td className="col-fit">
-              {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
-            </td>
+            <>
+              <td className="col-fit">
+                {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
+              </td>
+              <td className="col-fit">{submission.grading ? submission.grading.score : '-'}</td>
+            </>
           )}
         </tr>
       );
@@ -40,7 +43,12 @@ export function SubmissionDetails({
         <tr key={itemJid}>
           <td className="col-item-num">{index + 1}</td>
           <td>-</td>
-          {canViewGrading && <td className="col-fit">-</td>}
+          {canViewGrading && (
+            <>
+              <td className="col-fit">-</td>
+              <td className="col-fit">-</td>
+            </>
+          )}
         </tr>
       );
     }
@@ -80,7 +88,12 @@ export function SubmissionDetails({
           <tr>
             <th className="col-item-num">No.</th>
             <th>Answer</th>
-            {canViewGrading && <th className="col-fit">Verdict</th>}
+            {canViewGrading && (
+              <>
+                <th className="col-fit">Verdict</th>
+                <th className="col-fit">Score</th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>{itemJids.map(renderSingleRow)}</tbody>
