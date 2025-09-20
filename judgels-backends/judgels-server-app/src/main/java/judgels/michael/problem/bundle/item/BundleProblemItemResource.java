@@ -16,7 +16,9 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import judgels.jophiel.api.actor.Actor;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.problem.bundle.item.config.ItemConfigAdapter;
@@ -40,10 +42,15 @@ public class BundleProblemItemResource extends BaseBundleProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canView(actor, problem));
 
+        String defaultLanguage = statementStore.getStatementDefaultLanguage(actor.getUserJid(), problem.getJid());
+
         List<BundleItem> items = itemStore.getNumberedItems(actor.getUserJid(), problem.getJid());
+        Map<String, ItemConfig> itemConfigs = items.stream().collect(Collectors.toMap(
+                item -> item.getJid(),
+                item -> itemStore.getItemConfig(actor.getUserJid(), problem.getJid(), item, defaultLanguage, defaultLanguage)));
 
         HtmlTemplate template = newProblemItemTemplate(actor, problem);
-        return new ListItemsView(template, items, roleChecker.canEdit(actor, problem));
+        return new ListItemsView(template, items, itemConfigs, roleChecker.canEdit(actor, problem));
     }
 
     @POST
