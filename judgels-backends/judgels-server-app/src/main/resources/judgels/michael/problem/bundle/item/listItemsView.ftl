@@ -23,6 +23,9 @@
           <th style="min-width: 50px">No.</th>
           <th>Type</th>
           <th>Internal note</th>
+          <th>Pts</th>
+          <th>Format</th>
+          <th>Answer</th>
           <th class="col-fit"></th>
         </tr>
       </thead>
@@ -32,6 +35,38 @@
             <td class="col-fit">${item.number.isPresent()?then(item.number.get(), "")}</td>
             <td>${itemTypes[item.type]}</td>
             <td>${item.meta}</td>
+            <td>
+              <#if item.type != "STATEMENT">
+                ${itemConfigs[item.jid].score}
+                <#if item.type != "ESSAY" && itemConfigs[item.jid].penalty != 0>
+                  (${itemConfigs[item.jid].penalty})
+                </#if>
+              </#if>
+            </td>
+            <td>
+              <#if item.type == "MULTIPLE_CHOICE">
+                <#list itemConfigs[item.jid].choices as choice>
+                  ${choice.alias}
+                </#list>
+              <#elseif item.type == "SHORT_ANSWER">
+                ${itemConfigs[item.jid].inputValidationRegex}
+              </#if>
+            </td>
+            <td>
+              <#if item.type == "MULTIPLE_CHOICE">
+                <#list itemConfigs[item.jid].choices as choice>
+                  <#if choice.isCorrect.present>
+                    <#if choice.isCorrect.get()>
+                      ${choice.alias}
+                    </#if>
+                  </#if>
+                </#list>
+              <#elseif item.type == "SHORT_ANSWER">
+                <#if itemConfigs[item.jid].gradingRegex.present>
+                  ${itemConfigs[item.jid].gradingRegex.get()}
+                </#if>
+              </#if>
+            </td>
             <td class="col-fit">
               <@ui.buttonLink size="xs" to="items/${item.jid}">Manage</@ui.buttonLink>
               <#if canEdit>
