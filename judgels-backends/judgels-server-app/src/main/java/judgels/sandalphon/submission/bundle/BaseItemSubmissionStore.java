@@ -34,7 +34,8 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
             int pageNumber,
             int pageSize) {
 
-        BaseBundleItemSubmissionQueryBuilder<M> query = submissionDao.select();
+        BaseBundleItemSubmissionQueryBuilder<M> query = submissionDao.select()
+                .whereContainerIs(containerJid);
 
         if (createdBy.isPresent()) {
             query.whereAuthorIs(createdBy.get());
