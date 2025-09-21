@@ -46,8 +46,8 @@ public class TlxContestRatingProvider implements ContestRatingProvider {
         int N = contestantJids.size();
         for (String cA : contestantJids) {
             int rankA = ranksMap.get(cA);
-            double hiddenA = currentRatingsMap.get(cA).getHiddenRating();
-            double publicA = currentRatingsMap.get(cA).getPublicRating();
+            double hiddenA = hiddenRatingsMap.get(cA);
+            double publicA = publicRatingsMap.get(cA);
 
             double delta = 0;
             for (String cB : contestantJids) {
