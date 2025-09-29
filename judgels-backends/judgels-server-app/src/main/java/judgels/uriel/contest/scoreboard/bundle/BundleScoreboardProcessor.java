@@ -1,7 +1,5 @@
 package judgels.uriel.contest.scoreboard.bundle;
 
-import static java.util.stream.Collectors.toSet;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -9,6 +7,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +17,6 @@ import judgels.gabriel.api.ScoringConfig;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
-import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard;
@@ -57,19 +55,25 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
 
     @Override
     public ScoreboardProcessResult process(
-            Contest contest,
             ScoreboardState scoreboardState,
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
-            Set<ContestContestant> contestants,
+            Map<String, Set<ContestContestant>> contestContestantsMap,
+            Map<String, Instant> contestBeginTimesMap,
+            Map<String, Instant> contestFreezeTimesMap,
+            Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
-            Map<String, ScoringConfig> scoringConfigsMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions,
-            Map<String, Instant> freezeTimesMap) {
+            List<ItemSubmission> bundleItemSubmissions) {
 
         List<String> problemJids = scoreboardState.getProblemJids();
-        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
+
+        Set<String> contestantJids = new HashSet<>();
+        for (var entry : contestContestantsMap.entrySet()) {
+            for (ContestContestant contestant : entry.getValue()) {
+                contestantJids.add(contestant.getUserJid());
+            }
+        }
 
         Map<String, List<ItemSubmission>> submissionsByUserJid = bundleItemSubmissions.stream()
                 .collect(Collectors.groupingBy(ItemSubmission::getUserJid));

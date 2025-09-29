@@ -57,13 +57,19 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build());
 
+        private Map<String, Set<ContestContestant>> contestContestantsMap = Map.of(
+                contest.getJid(), contestants);
+
+        private Map<String, Instant> contestBeginTimesMap = Map.of(
+                contest.getJid(), contest.getBeginTime());
+
+        private Map<String, ScoringConfig> problemScoringConfigsMap = Map.of(
+                "p1", ScoringConfig.DEFAULT,
+                "p2", ScoringConfig.DEFAULT);
+
         private Map<String, Profile> profilesMap = ImmutableMap.of(
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
-
-        private Map<String, ScoringConfig> scoringConfigsMap = Map.of(
-                "p1", ScoringConfig.DEFAULT,
-                "p2", ScoringConfig.DEFAULT);
 
         @Test
         void time_calculation() {
@@ -77,16 +83,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     createSubmission(7, 920, "c2", "p1", 0, Verdict.COMPILATION_ERROR));
 
             ScoreboardProcessResult result = scoreboardProcessor.process(
-                    contest,
                     state,
                     Optional.empty(),
                     styleModuleConfig,
-                    contestants,
+                    contestContestantsMap,
+                    contestBeginTimesMap,
+                    Map.of(),
+                    problemScoringConfigsMap,
                     profilesMap,
-                    scoringConfigsMap,
                     submissions,
-                    ImmutableList.of(),
-                    Map.of());
+                    List.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                     new IcpcScoreboardEntry.Builder()
@@ -130,16 +136,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
             @Test
             void base_case() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -182,16 +188,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         .build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -237,16 +243,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         createSubmission(3, 900, "c2", "p1", 100, Verdict.ACCEPTED));
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -288,16 +294,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         createSubmission(2, 900, "c1", "p1", 100, Verdict.ACCEPTED));
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -342,6 +348,9 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                                 .build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
+                contestContestantsMap = Map.of(
+                        contest.getJid(), contestants);
+
                 profilesMap = ImmutableMap.of(
                         "c1", new Profile.Builder().username("c1").build(),
                         "c2", new Profile.Builder().username("c2").build(),
@@ -353,16 +362,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         createSubmission(3, 900, "c3", "p1", 100, Verdict.ACCEPTED));
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -419,6 +428,9 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         new ContestContestant.Builder().userJid("c2").build(),
                         new ContestContestant.Builder().userJid("c3").build());
 
+                contestContestantsMap = Map.of(
+                        contest.getJid(), contestants);
+
                 profilesMap = ImmutableMap.of(
                         "c1", new Profile.Builder().username("c1").build(),
                         "c2", new Profile.Builder().username("c2").build(),
@@ -430,16 +442,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         createSubmission(3, 900, "c3", "p2", 0, Verdict.WRONG_ANSWER));
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -492,7 +504,7 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
 
         @Nested
         class PendingAfterFreeze {
-            private Map<String, Instant> freezeTimesMap = Map.of(contest.getJid(), Instant.ofEpochSecond(500));
+            private Map<String, Instant> contestFreezeTimesMap = Map.of(contest.getJid(), Instant.ofEpochSecond(500));
 
             private List<Submission> baseSubmissions = ImmutableList.of(
                     createSubmission(1, 100, "c1", "p1", 100, Verdict.ACCEPTED),
@@ -502,16 +514,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
             @Test
             void no_pending() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        contestFreezeTimesMap,
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         baseSubmissions,
-                        ImmutableList.of(),
-                        freezeTimesMap);
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -554,16 +566,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         .build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        contestFreezeTimesMap,
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        freezeTimesMap);
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -606,16 +618,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         .build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        contestFreezeTimesMap,
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        freezeTimesMap);
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -658,16 +670,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         .build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        contestFreezeTimesMap,
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        freezeTimesMap);
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -744,16 +756,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
             @Test
             void empty_initial_incremental_content() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IcpcScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
@@ -777,16 +789,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
             @Test
             void empty_new_submissions() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.of(incrementalContent),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
-                        ImmutableList.of(),
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of(),
+                        List.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IcpcScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -797,16 +809,16 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
             @Test
             void existing_incremental_content() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.of(incrementalContent),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IcpcScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
