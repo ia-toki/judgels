@@ -1,8 +1,6 @@
 package judgels.uriel.contest.scoreboard.icpc;
 
 import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
@@ -11,6 +9,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +22,6 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
-import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -65,23 +63,30 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
 
     @Override
     public ScoreboardProcessResult process(
-            Contest contest,
             ScoreboardState scoreboardState,
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
-            Set<ContestContestant> contestants,
+            Map<String, Set<ContestContestant>> contestContestantsMap,
+            Map<String, Instant> contestBeginTimesMap,
+            Map<String, Instant> contestFreezeTimesMap,
+            Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
-            Map<String, ScoringConfig> scoringConfigsMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions,
-            Map<String, Instant> freezeTimesMap) {
+            List<ItemSubmission> bundleItemSubmissions) {
 
         IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
-        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
-        Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream()
-                .collect(toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
+
+        Set<String> contestantJids = new HashSet<>();
+        Map<String, Map<String, Optional<Instant>>> contestantStartTimesMap = new HashMap<>();
+        for (var entry : contestContestantsMap.entrySet()) {
+            contestantStartTimesMap.put(entry.getKey(), new HashMap<>());
+            for (ContestContestant contestant : entry.getValue()) {
+                contestantJids.add(contestant.getUserJid());
+                contestantStartTimesMap.get(entry.getKey()).put(contestant.getUserJid(), contestant.getContestStartTime());
+            }
+        }
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
         contestantJids.forEach(c -> submissionsMap.put(c, new ArrayList<>()));
@@ -144,7 +149,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                     continue;
                 }
 
-                if (submission.getTime().isBefore(freezeTimesMap.getOrDefault(submission.getContainerJid(), Instant.MAX))) {
+                if (submission.getTime().isBefore(contestFreezeTimesMap.getOrDefault(submission.getContainerJid(), Instant.MAX))) {
                     Verdict verdict = submission.getLatestGrading().get().getVerdict();
                     if (verdict.equals(Verdict.PENDING) || verdict.equals(Verdict.COMPILATION_ERROR)) {
                         continue;
@@ -154,8 +159,8 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
 
                     long penalty = computePenalty(
                             submission.getTime(),
-                            contestantStartTimesMap.get(contestantJid),
-                            contest.getBeginTime());
+                            contestantStartTimesMap.get(submission.getContainerJid()).get(contestantJid),
+                            contestBeginTimesMap.get(submission.getContainerJid()));
 
                     if (verdict.equals(Verdict.ACCEPTED)) {
                         if (submission.getJid().equals(currentFirstToSolveSubmissionJids.get(problemJid))) {

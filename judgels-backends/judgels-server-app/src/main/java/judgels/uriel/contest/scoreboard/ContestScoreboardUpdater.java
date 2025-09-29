@@ -1,18 +1,18 @@
 package judgels.uriel.contest.scoreboard;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -97,38 +97,34 @@ public class ContestScoreboardUpdater {
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
         StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contest.getJid(), contest.getStyle());
 
-        Optional<String> previousContestJid = contestModulesConfig.getMergedScoreboard()
-                .flatMap(c -> c.getPreviousContestJid());
+        Optional<String> previousContestJid = contestModulesConfig.getMergedScoreboard().flatMap(c -> c.getPreviousContestJid());
 
-        List<ContestProblem> problems = Lists.newArrayList();
-        Map<String, ContestContestant> contestantsMap = new HashMap<>();
+        List<ContestProblem> problems = new ArrayList<>();
+        Map<String, Set<ContestContestant>> contestContestantsMap = new HashMap<>();
+        Set<String> contestantJidsSet = new HashSet<>();
 
         if (previousContestJid.isPresent()) {
             problems.addAll(problemStore.getProblems(previousContestJid.get()));
+            contestContestantsMap.put(previousContestJid.get(), new HashSet<>());
             for (ContestContestant contestant : contestantStore.getApprovedContestants(previousContestJid.get())) {
-                contestantsMap.put(contestant.getUserJid(), contestant);
+                contestContestantsMap.get(previousContestJid.get()).add(contestant);
+                contestantJidsSet.add(contestant.getUserJid());
             }
         }
 
         problems.addAll(problemStore.getProblems(contest.getJid()));
+        contestContestantsMap.put(contest.getJid(), new HashSet<>());
         for (ContestContestant contestant : contestantStore.getApprovedContestants(contest.getJid())) {
-            contestantsMap.put(contestant.getUserJid(), contestant);
+            contestContestantsMap.get(contest.getJid()).add(contestant);
+            contestantJidsSet.add(contestant.getUserJid());
         }
 
         List<String> problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
-        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
+        Set<String> problemJidsSet = Set.copyOf(problemJids);
         List<String> problemAliases = Lists.transform(problems, ContestProblem::getAlias);
         Optional<List<Integer>> problemPoints = problems.stream().anyMatch(p -> p.getPoints().isPresent())
                 ? Optional.of(Lists.transform(problems, p -> p.getPoints().orElse(0)))
                 : Optional.empty();
-
-        Set<ContestContestant> contestants = ImmutableSet.copyOf(contestantsMap.values());
-        Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJidsSet, contest.getBeginTime());
-
-        Map<String, ScoringConfig> scoringConfigsMap = contest.getStyle() == ContestStyle.BUNDLE
-                ? Map.of()
-                : sandalphonClient.getProgrammingProblemScoringConfigs(problemJidsSet);
 
         ScoreboardState state = new ScoreboardState.Builder()
                 .problemJids(problemJids)
@@ -140,7 +136,7 @@ public class ContestScoreboardUpdater {
                 .style(contest.getStyle())
                 .beginTime(contest.getBeginTime())
                 .duration(contest.getDuration())
-                .contestants(contestants)
+                .contestants(contestContestantsMap.get(contest.getJid()))
                 .problemJids(problemJids)
                 .problemPoints(problemPoints)
                 .styleModuleConfig(styleModuleConfig)
@@ -181,22 +177,38 @@ public class ContestScoreboardUpdater {
                 .filter(s -> contestantJidsSet.contains(s.getUserJid()))
                 .collect(toList());
 
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJidsSet, contest.getBeginTime());
+
+        Map<String, ScoringConfig> problemScoringConfigsMap = contest.getStyle() == ContestStyle.BUNDLE
+                ? Map.of()
+                : sandalphonClient.getProgrammingProblemScoringConfigs(problemJidsSet);
+
+
         Map<ContestScoreboardType, Scoreboard> scoreboards = new HashMap<>();
         Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents = new HashMap<>();
 
-        Map<String, Instant> freezeTimesMap = new HashMap<>();
+        Map<String, Instant> contestBeginTimesMap = new HashMap<>();
+        contestBeginTimesMap.put(contest.getJid(), contest.getEndTime());
+        if (previousContestJid.isPresent()) {
+            Optional<Contest> previousContest = contestStore.getContestByJid(previousContestJid.get());
+            if (previousContest.isPresent()) {
+                contestBeginTimesMap.put(previousContest.get().getJid(), previousContest.get().getEndTime());
+            }
+        }
+
+        Map<String, Instant> contestFreezeTimesMap = new HashMap<>();
         for (ContestScoreboardType type : new ContestScoreboardType[]{OFFICIAL, FROZEN}) {
             if (type == FROZEN) {
-                putFreezeTime(freezeTimesMap, contest);
+                putFreezeTime(contestFreezeTimesMap, contest);
 
                 if (previousContestJid.isPresent()) {
                     Optional<Contest> previousContest = contestStore.getContestByJid(previousContestJid.get());
                     if (previousContest.isPresent()) {
-                        putFreezeTime(freezeTimesMap, previousContest.get());
+                        putFreezeTime(contestFreezeTimesMap, previousContest.get());
                     }
                 }
 
-                if (freezeTimesMap.isEmpty()) {
+                if (contestFreezeTimesMap.isEmpty()) {
                     continue;
                 }
             }
@@ -205,16 +217,16 @@ public class ContestScoreboardUpdater {
                     incrementalMark.getIncrementalContents().get(type));
 
             ScoreboardProcessResult result = processor.process(
-                    contest,
                     state,
                     incrementalContent,
                     styleModuleConfig,
-                    contestants,
+                    contestContestantsMap,
+                    contestBeginTimesMap,
+                    contestFreezeTimesMap,
+                    problemScoringConfigsMap,
                     profilesMap,
-                    scoringConfigsMap,
                     programmingSubmissions,
-                    bundleItemSubmissions,
-                    freezeTimesMap);
+                    bundleItemSubmissions);
 
             Scoreboard scoreboard = processor.create(state, result.getEntries());
 

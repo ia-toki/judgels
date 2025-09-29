@@ -10,7 +10,6 @@ import judgels.gabriel.api.ScoringConfig;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
-import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
@@ -24,16 +23,16 @@ public interface ScoreboardProcessor {
     boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig);
 
     ScoreboardProcessResult process(
-            Contest contest,
             ScoreboardState scoreboardState,
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
-            Set<ContestContestant> contestants,
+            Map<String, Set<ContestContestant>> contestContestantsMap,
+            Map<String, Instant> contestBeginTimesMap,
+            Map<String, Instant> contestFreezeTimesMap,
+            Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
-            Map<String, ScoringConfig> scoringConfigsMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions,
-            Map<String, Instant> freezeTimesMap);
+            List<ItemSubmission> bundleItemSubmissions);
 
     ScoreboardEntry clearEntryRank(ScoreboardEntry entry);
 }

@@ -59,13 +59,19 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(10)).build());
 
+        private Map<String, Set<ContestContestant>> contestContestantsMap = Map.of(
+                contest.getJid(), contestants);
+
+        private Map<String, Instant> contestBeginTimesMap = Map.of(
+                contest.getJid(), contest.getBeginTime());
+
+        private Map<String, ScoringConfig> problemScoringConfigsMap = Map.of(
+                "p1", ScoringConfig.DEFAULT,
+                "p2", ScoringConfig.DEFAULT);
+
         private Map<String, Profile> profilesMap = ImmutableMap.of(
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
-
-        private Map<String, ScoringConfig> scoringConfigsMap = Map.of(
-                "p1", ScoringConfig.DEFAULT,
-                "p2", ScoringConfig.DEFAULT);
 
         @Test
         void time_calculation() {
@@ -75,16 +81,16 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     createMilliSubmission(3, 25, "c1", "p1", 0, Verdict.WRONG_ANSWER));
 
             ScoreboardProcessResult result = scoreboardProcessor.process(
-                    contest,
                     state,
                     Optional.empty(),
                     styleModuleConfig,
-                    contestants,
+                    contestContestantsMap,
+                    contestBeginTimesMap,
+                    Map.of(),
+                    problemScoringConfigsMap,
                     profilesMap,
-                    scoringConfigsMap,
                     submissions,
-                    ImmutableList.of(),
-                    Map.of());
+                    List.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                     new IoiScoreboardEntry.Builder()
@@ -115,22 +121,24 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
         @Test
         void frozen() {
+            Map<String, Instant> contestFreezeTimesMap = Map.of(contest.getJid(), Instant.ofEpochMilli(23));
+
             List<Submission> submissions = ImmutableList.of(
                     createMilliSubmission(1, 20, "c2", "p1", 78, Verdict.TIME_LIMIT_EXCEEDED),
                     createMilliSubmission(2, 22, "c1", "p2", 50, Verdict.OK),
                     createMilliSubmission(3, 25, "c1", "p2", 90, Verdict.WRONG_ANSWER));
 
             ScoreboardProcessResult result = scoreboardProcessor.process(
-                    contest,
                     state,
                     Optional.empty(),
                     styleModuleConfig,
-                    contestants,
+                    contestContestantsMap,
+                    contestBeginTimesMap,
+                    contestFreezeTimesMap,
+                    problemScoringConfigsMap,
                     profilesMap,
-                    scoringConfigsMap,
                     submissions,
-                    ImmutableList.of(),
-                    Map.of(contest.getJid(), Instant.ofEpochMilli(23)));
+                    List.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                     new IoiScoreboardEntry.Builder()
@@ -177,7 +185,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             IoiScoreboardIncrementalContent incrementalContent = new IoiScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
-                    .putLastAffectingPenaltiesByContestantJid("c1", 200L)
+                    .putLastAffectingPenaltiesMapsByContestantJid("c1", Map.of(contest.getJid(), 200L))
                     .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", empty(), "p2", of(15)))
                     .putMaxScorePerSubtaskMapsByContestantJid(
                             "c1",
@@ -187,16 +195,16 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             @Test
             void empty_initial_incremental_content() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -226,8 +234,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(10)
-                        .putLastAffectingPenaltiesByContestantJid("c1", 395)
-                        .putLastAffectingPenaltiesByContestantJid("c2", 490)
+                        .putLastAffectingPenaltiesMapsByContestantJid("c1", Map.of(contest.getJid(), 395L))
+                        .putLastAffectingPenaltiesMapsByContestantJid("c2", Map.of(contest.getJid(), 490L))
                         .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(75), "p2", empty()))
                         .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
                         .putMaxScorePerSubtaskMapsByContestantJid("c1", ImmutableMap.of(
@@ -242,16 +250,16 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             @Test
             void existing_incremental_content() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.of(incrementalContent),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -281,8 +289,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(10)
-                        .putLastAffectingPenaltiesByContestantJid("c1", 395)
-                        .putLastAffectingPenaltiesByContestantJid("c2", 490)
+                        .putLastAffectingPenaltiesMapsByContestantJid("c1", Map.of(contest.getJid(), 395L))
+                        .putLastAffectingPenaltiesMapsByContestantJid("c2", Map.of(contest.getJid(), 490L))
                         .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(75), "p2", of(15)))
                         .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
                         .putMaxScorePerSubtaskMapsByContestantJid("c1", ImmutableMap.of(
@@ -304,16 +312,16 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             @Test
             void base_case() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -350,16 +358,16 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -391,25 +399,58 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
         @Nested
         class LastAffectingPenalty {
-            private List<Submission> submissions = ImmutableList.of(
+            private ScoreboardState state = new ScoreboardState.Builder()
+                    .addProblemJids("p0", "p1", "p2")
+                    .addProblemAliases("X", "A", "B")
+                    .build();
+
+            private Contest previousContest = new Contest.Builder()
+                    .beginTime(Instant.ofEpochMilli(1))
+                    .duration(Duration.ofMillis(3))
+                    .id(0)
+                    .jid("JIDPREVC")
+                    .name("contest-name")
+                    .slug("contest-slug")
+                    .style(ContestStyle.IOI)
+                    .build();
+
+            private Map<String, Set<ContestContestant>> contestContestantsMap = Map.of(
+                    previousContest.getJid(), Set.of(new ContestContestant.Builder().userJid("c2").build()),
+                    contest.getJid(), contestants);
+
+            private Map<String, Instant> contestBeginTimesMap = Map.of(
+                    previousContest.getJid(), previousContest.getBeginTime(),
+                    contest.getJid(), contest.getBeginTime());
+
+            private Map<String, ScoringConfig> problemScoringConfigsMap = Map.of(
+                    "p0", ScoringConfig.DEFAULT,
+                    "p1", ScoringConfig.DEFAULT,
+                    "p2", ScoringConfig.DEFAULT);
+
+            private List<Submission> submissions = List.of(
+                    new Submission.Builder()
+                            .from(createMilliSubmission(0, 3, "c2", "p0", 50, Verdict.OK))
+                            .containerJid(previousContest.getJid())
+                            .build(),
+
                     createMilliSubmission(1, 20, "c2", "p1", 50, Verdict.TIME_LIMIT_EXCEEDED),
-                    createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK));
+                    createMilliSubmission(2, 20, "c1", "p2", 100, Verdict.OK));
 
             @Test
             void sorted_without_last_affecting_penalty() {
                 styleModuleConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -419,10 +460,11 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                 .contestantRating(0)
                                 .addScores(
                                         Optional.of(50),
+                                        Optional.of(50),
                                         Optional.empty()
                                 )
-                                .totalScores(50)
-                                .lastAffectingPenalty(10)
+                                .totalScores(100)
+                                .lastAffectingPenalty(12)
                                 .build(),
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
@@ -431,9 +473,10 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                 .contestantRating(0)
                                 .addScores(
                                         Optional.empty(),
-                                        Optional.of(50)
+                                        Optional.empty(),
+                                        Optional.of(100)
                                 )
-                                .totalScores(50)
+                                .totalScores(100)
                                 .lastAffectingPenalty(15)
                                 .build());
             }
@@ -443,16 +486,16 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                 styleModuleConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build();
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
@@ -462,10 +505,11 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                 .contestantRating(0)
                                 .addScores(
                                         Optional.of(50),
+                                        Optional.of(50),
                                         Optional.empty()
                                 )
-                                .totalScores(50)
-                                .lastAffectingPenalty(10)
+                                .totalScores(100)
+                                .lastAffectingPenalty(12)
                                 .build(),
                         new IoiScoreboardEntry.Builder()
                                 .rank(2)
@@ -474,9 +518,10 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                 .contestantRating(0)
                                 .addScores(
                                         Optional.empty(),
-                                        Optional.of(50)
+                                        Optional.empty(),
+                                        Optional.of(100)
                                 )
-                                .totalScores(50)
+                                .totalScores(100)
                                 .lastAffectingPenalty(15)
                                 .build());
             }
@@ -498,6 +543,9 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(300)).build(),
                     new ContestContestant.Builder().userJid("c3").build());
 
+            Map<String, Set<ContestContestant>> contestContestantsMap = Map.of(
+                    contest.getJid(), contestants);
+
             Map<String, Profile> profilesMap = ImmutableMap.of(
                     "c1", new Profile.Builder().username("c1").build(),
                     "c2", new Profile.Builder().username("c2").build(),
@@ -505,8 +553,8 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             IoiScoreboardIncrementalContent incrementalContent = new IoiScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
-                    .putLastAffectingPenaltiesByContestantJid("c2", 75L)
-                    .putLastAffectingPenaltiesByContestantJid("c3", 90L)
+                    .putLastAffectingPenaltiesMapsByContestantJid("c2", Map.of(contest.getJid(), 75L))
+                    .putLastAffectingPenaltiesMapsByContestantJid("c3", Map.of(contest.getJid(), 90L))
                     .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", empty(), "p2", of(90)))
                     .putScoresMapsByContestantJid("c3", ImmutableMap.of("p1", of(20), "p2", of(30)))
                     .build();
@@ -514,21 +562,21 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             @Test
             void empty_initial_incremental_content() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
-                        .putLastAffectingPenaltiesByContestantJid("c1", 395L)
-                        .putLastAffectingPenaltiesByContestantJid("c2", 200L)
+                        .putLastAffectingPenaltiesMapsByContestantJid("c1", Map.of(contest.getJid(), 395L))
+                        .putLastAffectingPenaltiesMapsByContestantJid("c2", Map.of(contest.getJid(), 200L))
                         .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(100), "p2", empty()))
                         .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
                         .putMaxScorePerSubtaskMapsByContestantJid("c1", ImmutableMap.of(
@@ -543,16 +591,16 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             @Test
             void empty_new_submissions() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.of(incrementalContent),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
-                        ImmutableList.of(),
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of(),
+                        List.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -563,22 +611,22 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             @Test
             void existing_incremental_content() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.of(incrementalContent),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        Map.of(),
+                        problemScoringConfigsMap,
                         profilesMap,
-                        scoringConfigsMap,
                         submissions,
-                        ImmutableList.of(),
-                        Map.of());
+                        List.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
-                        .putLastAffectingPenaltiesByContestantJid("c1", 395L)
-                        .putLastAffectingPenaltiesByContestantJid("c2", 200L)
-                        .putLastAffectingPenaltiesByContestantJid("c3", 90L)
+                        .putLastAffectingPenaltiesMapsByContestantJid("c1", Map.of(contest.getJid(), 395L))
+                        .putLastAffectingPenaltiesMapsByContestantJid("c2", Map.of(contest.getJid(), 200L))
+                        .putLastAffectingPenaltiesMapsByContestantJid("c3", Map.of(contest.getJid(), 90L))
                         .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(100), "p2", empty()))
                         .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
                         .putScoresMapsByContestantJid("c3", ImmutableMap.of("p1", of(20), "p2", of(30)))

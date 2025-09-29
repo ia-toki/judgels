@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import judgels.gabriel.api.ScoringConfig;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
@@ -54,13 +53,17 @@ public class BundleScoreboardProcessorTests {
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").build());
 
+        private Map<String, Set<ContestContestant>> contestContestantsMap = Map.of(
+                contest.getJid(), contestants);
+
+        private Map<String, Instant> contestBeginTimesMap = Map.of(
+                contest.getJid(), contest.getBeginTime());
+
+        private Map<String, Instant> contestFreezeTimesMap = Map.of();
+
         private Map<String, Profile> profilesMap = ImmutableMap.of(
                 "c1", new Profile.Builder().username("c1").build(),
                 "c2", new Profile.Builder().username("c2").build());
-
-        private Map<String, ScoringConfig> scoringConfigsMap = Map.of(
-                "p1", ScoringConfig.DEFAULT,
-                "p2", ScoringConfig.DEFAULT);
 
         @Test
         void latest_answered_time_calculation() {
@@ -120,16 +123,16 @@ public class BundleScoreboardProcessorTests {
             );
 
             ScoreboardProcessResult result = scoreboardProcessor.process(
-                    contest,
                     state,
                     Optional.empty(),
                     styleModuleConfig,
-                    contestants,
+                    contestContestantsMap,
+                    contestBeginTimesMap,
+                    contestFreezeTimesMap,
+                    Map.of(),
                     profilesMap,
-                    scoringConfigsMap,
-                    ImmutableList.of(),
-                    submissions,
-                    Map.of());
+                    List.of(),
+                    submissions);
 
             assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                     new BundleScoreboardEntry.Builder()
@@ -196,16 +199,16 @@ public class BundleScoreboardProcessorTests {
                 );
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        contestFreezeTimesMap,
+                        Map.of(),
                         profilesMap,
-                        scoringConfigsMap,
-                        ImmutableList.of(),
-                        submissions,
-                        Map.of());
+                        List.of(),
+                        submissions);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()
@@ -256,16 +259,16 @@ public class BundleScoreboardProcessorTests {
                 );
 
                 ScoreboardProcessResult result = scoreboardProcessor.process(
-                        contest,
                         state,
                         Optional.empty(),
                         styleModuleConfig,
-                        contestants,
+                        contestContestantsMap,
+                        contestBeginTimesMap,
+                        contestFreezeTimesMap,
+                        Map.of(),
                         profilesMap,
-                        scoringConfigsMap,
-                        ImmutableList.of(),
-                        submissions,
-                        Map.of());
+                        List.of(),
+                        submissions);
 
                 assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()
