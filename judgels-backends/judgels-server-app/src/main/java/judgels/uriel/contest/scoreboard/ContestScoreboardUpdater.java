@@ -188,11 +188,11 @@ public class ContestScoreboardUpdater {
         Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents = new HashMap<>();
 
         Map<String, Instant> contestBeginTimesMap = new HashMap<>();
-        contestBeginTimesMap.put(contest.getJid(), contest.getEndTime());
+        contestBeginTimesMap.put(contest.getJid(), contest.getBeginTime());
         if (previousContestJid.isPresent()) {
             Optional<Contest> previousContest = contestStore.getContestByJid(previousContestJid.get());
             if (previousContest.isPresent()) {
-                contestBeginTimesMap.put(previousContest.get().getJid(), previousContest.get().getEndTime());
+                contestBeginTimesMap.put(previousContest.get().getJid(), previousContest.get().getBeginTime());
             }
         }
 
