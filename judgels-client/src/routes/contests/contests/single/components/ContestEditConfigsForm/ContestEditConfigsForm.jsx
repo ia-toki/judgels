@@ -21,7 +21,6 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     const allowAllLanguagesField = {
       name: 'trocAllowAllLanguages',
       label: '(all)',
-      onChange: this.toggleAllowAllLanguagesCheckbox,
     };
     const allowedLanguageFields = gradingLanguages.map(lang => ({
       name: 'trocAllowedLanguages.' + lang,
