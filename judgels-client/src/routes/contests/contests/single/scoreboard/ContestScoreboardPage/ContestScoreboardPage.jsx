@@ -308,6 +308,7 @@ export class ContestScoreboardPage extends Component {
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
           canViewSubmissions={canViewSubmissions}
+          onClickSubmissionCell={onClickSubmissionCell}
         />
       );
     } else if (this.props.contest.style === ContestStyle.ICPC) {
