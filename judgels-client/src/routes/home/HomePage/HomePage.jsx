@@ -8,7 +8,6 @@ import { APP_CONFIG, isTLX } from '../../../conf';
 import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
-import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersWidget';
 
 import './HomePage.scss';
 
@@ -50,10 +49,7 @@ function HomePage({ isLoggedIn }) {
         <div className="home-widget-row__two-thirds">
           <ActiveContestsWidget />
         </div>
-        <div className="home-widget-row__one-third">
-          {isTLX() && <TopRatingsWidget />}
-          {isTLX() && <TopScorersWidget />}
-        </div>
+        <div className="home-widget-row__one-third">{isTLX() && <TopRatingsWidget />}</div>
         <div className="clearfix" />
       </div>
     );
