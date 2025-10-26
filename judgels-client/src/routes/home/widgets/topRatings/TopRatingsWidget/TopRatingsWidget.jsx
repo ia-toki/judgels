@@ -16,7 +16,7 @@ class TopRatingsWidget extends Component {
   };
 
   async componentDidMount() {
-    const profiles = await this.props.onGetTopRatedProfiles(1, 5);
+    const profiles = await this.props.onGetTopRatedProfiles(1, 10);
     this.setState({ profiles });
   }
 
