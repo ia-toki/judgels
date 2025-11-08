@@ -10,6 +10,7 @@ import {
 import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
 import { constructProblemName } from '../../../modules/api/sandalphon/problem';
+import { copyTextToClipboard, isClipboardWriteTextSupported } from '../../../modules/clipboard/clipboard.js';
 import { decodeBase64 } from '../../../utils/base64';
 import { ContentCard } from '../../ContentCard/ContentCard';
 import { FormattedDate } from '../../FormattedDate/FormattedDate';
@@ -387,36 +388,50 @@ export function SubmissionDetails({
     const { details, verdict } = grading;
     const { submissionFiles } = source;
 
-    const sourceFiles = Object.keys(submissionFiles).map(key => {
-      const sourceCode = decodeBase64(submissionFiles[key].content);
-      const onCopy = () => navigator.clipboard.writeText(sourceCode);
+    const renderSourceFileHeading = key => {
+      if (!isClipboardWriteTextSupported()) {
+        return (
+          !hideSourceFilename && (
+            <h5>
+              {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
+            </h5>
+          )
+        );
+      }
 
+      const onCopy = () => copyTextToClipboard(decodeBase64(submissionFiles[key].content));
       return (
-        <ContentCard key={key}>
-          <div>
-            {!hideSourceFilename && (
-              <h5 className="source-filename">
-                {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
-              </h5>
-            )}
-            <Button small className="source-copy" icon={<Clipboard />} onClick={onCopy}>
-              Copy
-            </Button>
-            <div className="clearfix" />
-          </div>
-          <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>{sourceCode}</SourceCode>
-          {verdict.code === VerdictCode.CE &&
-            details &&
-            details.compilationOutputs &&
-            details.compilationOutputs[key] !== undefined && (
-              <div className="compilation-output">
-                <h5>Compilation Output</h5>
-                <pre>{details.compilationOutputs[key]}</pre>
-              </div>
-            )}
-        </ContentCard>
+        <div>
+          {!hideSourceFilename && (
+            <h5 className="source-filename">
+              {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
+            </h5>
+          )}
+          <Button small className="source-copy" icon={<Clipboard />} onClick={onCopy}>
+            Copy
+          </Button>
+          <div className="clearfix" />
+        </div>
       );
-    });
+    };
+
+    const sourceFiles = Object.keys(submissionFiles).map(key => (
+      <ContentCard key={key}>
+        {renderSourceFileHeading(key)}
+        <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
+          {decodeBase64(submissionFiles[key].content)}
+        </SourceCode>
+        {verdict.code === VerdictCode.CE &&
+          details &&
+          details.compilationOutputs &&
+          details.compilationOutputs[key] !== undefined && (
+            <div className="compilation-output">
+              <h5>Compilation Output</h5>
+              <pre>{details.compilationOutputs[key]}</pre>
+            </div>
+          )}
+      </ContentCard>
+    ));
 
     const defaultCompilationOutputs =
       verdict.code === VerdictCode.CE &&
