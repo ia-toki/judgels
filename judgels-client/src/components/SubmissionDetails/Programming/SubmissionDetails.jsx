@@ -1,5 +1,5 @@
 import { Button, HTMLTable, ProgressBar } from '@blueprintjs/core';
-import { Download, Lock } from '@blueprintjs/icons';
+import { Clipboard, Download, Lock } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
@@ -387,27 +387,36 @@ export function SubmissionDetails({
     const { details, verdict } = grading;
     const { submissionFiles } = source;
 
-    const sourceFiles = Object.keys(submissionFiles).map(key => (
-      <ContentCard key={key}>
-        {!hideSourceFilename && (
-          <h5>
-            {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
-          </h5>
-        )}
-        <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
-          {decodeBase64(submissionFiles[key].content)}
-        </SourceCode>
-        {verdict.code === VerdictCode.CE &&
-          details &&
-          details.compilationOutputs &&
-          details.compilationOutputs[key] !== undefined && (
-            <div className="compilation-output">
-              <h5>Compilation Output</h5>
-              <pre>{details.compilationOutputs[key]}</pre>
-            </div>
-          )}
-      </ContentCard>
-    ));
+    const sourceFiles = Object.keys(submissionFiles).map(key => {
+      const sourceCode = decodeBase64(submissionFiles[key].content);
+      const onCopy = () => navigator.clipboard.writeText(sourceCode);
+
+      return (
+        <ContentCard key={key}>
+          <div>
+            {!hideSourceFilename && (
+              <h5 className="source-heading">
+                {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
+              </h5>
+            )}
+            <Button small className="source-download" icon={<Clipboard />} onClick={onCopy}>
+              Copy
+            </Button>
+            <div className="clearfix" />
+          </div>
+          <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>{sourceCode}</SourceCode>
+          {verdict.code === VerdictCode.CE &&
+            details &&
+            details.compilationOutputs &&
+            details.compilationOutputs[key] !== undefined && (
+              <div className="compilation-output">
+                <h5>Compilation Output</h5>
+                <pre>{details.compilationOutputs[key]}</pre>
+              </div>
+            )}
+        </ContentCard>
+      );
+    });
 
     const defaultCompilationOutputs =
       verdict.code === VerdictCode.CE &&
