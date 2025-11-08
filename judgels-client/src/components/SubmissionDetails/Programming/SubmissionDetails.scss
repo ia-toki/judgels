@@ -49,11 +49,13 @@
     margin-top: 10px;
   }
 
-  .source-heading {
+  .source-heading,
+  .source-filename {
     float: left;
   }
 
-  .source-download {
+  .source-download,
+  .source-copy {
     margin-left: 10px;
     float: left;
   }
