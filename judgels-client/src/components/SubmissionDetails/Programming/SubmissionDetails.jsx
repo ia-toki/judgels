@@ -395,11 +395,11 @@ export function SubmissionDetails({
         <ContentCard key={key}>
           <div>
             {!hideSourceFilename && (
-              <h5 className="source-heading">
+              <h5 className="source-filename">
                 {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
               </h5>
             )}
-            <Button small className="source-download" icon={<Clipboard />} onClick={onCopy}>
+            <Button small className="source-copy" icon={<Clipboard />} onClick={onCopy}>
               Copy
             </Button>
             <div className="clearfix" />
