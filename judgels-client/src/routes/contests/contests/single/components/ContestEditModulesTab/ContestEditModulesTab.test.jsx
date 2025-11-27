@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -13,9 +13,7 @@ jest.mock('../../modules/contestModuleActions');
 jest.mock('../../modules/contestWebActions');
 
 describe('ContestEditModulesTab', () => {
-  let wrapper;
-
-  beforeEach(() => {
+  beforeEach(async () => {
     contestWebActions.getContestByJidWithWebConfig.mockReturnValue(() => Promise.resolve());
     contestModuleActions.getModules.mockReturnValue(() => Promise.resolve(['REGISTRATION', 'CLARIFICATION', 'FILE']));
 
@@ -25,18 +23,20 @@ describe('ContestEditModulesTab', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <ContestEditModulesTab />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ContestEditModulesTab />
+        </Provider>
+      )
     );
   });
 
-  test('tab', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
+  test('tab', () => {
+    const modules = screen.getAllByRole('heading', { level: 5 });
+    expect(modules).toHaveLength(12);
 
-    expect(wrapper.find('h5').map(h5 => h5.text())).toEqual([
+    expect(screen.getAllByRole('heading', { level: 5 }).map(h5 => h5.textContent)).toEqual([
       'Registration',
       'Clarification',
       'File',

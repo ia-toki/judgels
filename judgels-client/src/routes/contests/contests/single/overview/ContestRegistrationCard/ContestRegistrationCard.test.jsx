@@ -1,6 +1,5 @@
-import { mount } from 'enzyme';
+import { act, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
@@ -16,9 +15,7 @@ jest.mock('../../modules/contestWebActions');
 jest.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrationCard', () => {
-  let wrapper;
-
-  const render = async () => {
+  const renderComponent = async () => {
     contestWebActions.getWebConfig.mockReturnValue(() => Promise.resolve());
     contestContestantActions.getApprovedContestantsCount.mockReturnValue(() => Promise.resolve(10));
 
@@ -33,15 +30,13 @@ describe('ContestRegistrationCard', () => {
     store.dispatch(PutToken('token'));
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <ContestRegistrationCard />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ContestRegistrationCard />
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe.each`
@@ -53,12 +48,16 @@ describe('ContestRegistrationCard', () => {
   `('text', ({ contestantState, stateText, actionText }) => {
     beforeEach(async () => {
       contestContestantActions.getMyContestantState.mockReturnValue(() => Promise.resolve(contestantState));
-      await render();
+      await renderComponent();
     });
 
     it(`shows correct texts when contestant state is ${contestantState}`, () => {
-      expect(wrapper.find('span.contest-registration-card__state').map(n => n.text())).toEqual(stateText);
-      expect(wrapper.find('button.contest-registration-card__action').map(n => n.text())).toEqual(actionText);
+      const container = document.body;
+      const stateElements = container.querySelectorAll('span.contest-registration-card__state');
+      const actionButtons = container.querySelectorAll('button.contest-registration-card__action');
+
+      expect([...stateElements].map(el => el.textContent)).toEqual(stateText);
+      expect([...actionButtons].map(el => el.textContent)).toEqual(actionText);
     });
   });
 });

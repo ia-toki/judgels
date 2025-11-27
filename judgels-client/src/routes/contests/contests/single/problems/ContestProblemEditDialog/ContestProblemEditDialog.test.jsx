@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -8,8 +8,6 @@ import { ContestProblemEditDialog } from './ContestProblemEditDialog';
 
 describe('ContestProblemEditDialog', () => {
   let onSetProblems;
-  let wrapper;
-
   const problems = [
     {
       alias: 'A',
@@ -51,30 +49,27 @@ describe('ContestProblemEditDialog', () => {
       problems,
       onSetProblems,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestProblemEditDialog {...props} />
       </Provider>
     );
   });
 
-  test('form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    act(() => {
-      const problemsField = wrapper.find('textarea[name="problems"]');
-      expect(problemsField.prop('value')).toEqual('A,pp1\nB,pp2,OPEN,10\nC,pp3,CLOSED\nD,pp4,CLOSED,10');
+    const problems = screen.getByRole('textbox');
+    expect(problems).toHaveValue('A,pp1\nB,pp2,OPEN,10\nC,pp3,CLOSED\nD,pp4,CLOSED,10');
 
-      problemsField.prop('onChange')({ target: { value: 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20' } });
+    await user.clear(problems);
+    await user.type(problems, 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /save/i });
+    await user.click(submitButton);
 
     expect(onSetProblems).toHaveBeenCalledWith('contestJid', [
       {

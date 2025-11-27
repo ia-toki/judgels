@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -15,11 +15,7 @@ import * as contestEditorialActions from '../modules/contestEditorialActions';
 jest.mock('../modules/contestEditorialActions');
 
 describe('ContestEditorialPage', () => {
-  let wrapper;
-  let problems;
-  let canManage;
-
-  const render = async () => {
+  const renderComponent = async () => {
     contestEditorialActions.getEditorial.mockReturnValue(() =>
       Promise.resolve({
         preface: '<p>Thanks for participating.</p>',
@@ -107,27 +103,24 @@ describe('ContestEditorialPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid' }));
     store.dispatch(PutEditorialLanguage('en'));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestEditorialPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestEditorialPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('content', () => {
     beforeEach(async () => {
-      await render();
+      await renderComponent();
     });
 
     it('shows the editorial', () => {
-      const text = wrapper.find('.contest-editorial').text();
-      expect(text).toEqual(
+      expect(document.querySelector('.contest-editorial')).toHaveTextContent(
         '' +
           'Thanks for participating.' +
           'A. Soal AHello. This is editorial for problem A' +

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -14,11 +14,10 @@ import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmi
 jest.mock('../modules/chapterProblemSubmissionActions');
 
 describe('ChapterProblemSubmissionsPage', () => {
-  let wrapper;
   let submissions;
   let canManage;
 
-  const render = async () => {
+  const renderComponent = async () => {
     chapterProblemSubmissionActions.getSubmissions.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -59,20 +58,18 @@ describe('ChapterProblemSubmissionsPage', () => {
       })
     );
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}>
-          <Route
-            path="/courses/courseSlug/chapter/chapter-1/problems/A/submissions"
-            component={ChapterProblemSubmissionsPage}
-          />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}>
+            <Route
+              path="/courses/courseSlug/chapter/chapter-1/problems/A/submissions"
+              component={ChapterProblemSubmissionsPage}
+            />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('action buttons', () => {
@@ -83,27 +80,23 @@ describe('ChapterProblemSubmissionsPage', () => {
     describe('when not canManage', () => {
       beforeEach(async () => {
         canManage = false;
-        await render();
+        await renderComponent();
       });
 
       it('shows no buttons', () => {
-        expect(wrapper.find('.action-buttons').find('button')).toHaveLength(0);
+        expect(document.querySelectorAll('.action-buttons button')).toHaveLength(0);
       });
     });
 
     describe('when canManage', () => {
       beforeEach(async () => {
         canManage = true;
-        await render();
+        await renderComponent();
       });
 
       it('shows action buttons', () => {
-        expect(
-          wrapper
-            .find('.action-buttons')
-            .find('button')
-            .map(b => b.text())
-        ).toEqual(['Regrade all pages']);
+        const buttons = document.querySelectorAll('.action-buttons button');
+        expect([...buttons].map(button => button.textContent)).toEqual(['Regrade all pages']);
       });
     });
   });
@@ -112,12 +105,13 @@ describe('ChapterProblemSubmissionsPage', () => {
     describe('when there are no submissions', () => {
       beforeEach(async () => {
         submissions = [];
-        await render();
+        canManage = false;
+        await renderComponent();
       });
 
       it('shows placeholder text and no submissions', () => {
-        expect(wrapper.text()).toContain('No submissions.');
-        expect(wrapper.find('tr')).toHaveLength(0);
+        expect(screen.getByText(/no submissions/i)).toBeInTheDocument();
+        expect(screen.queryByRole('row')).not.toBeInTheDocument();
       });
     });
 
@@ -152,27 +146,41 @@ describe('ChapterProblemSubmissionsPage', () => {
       describe('when not canManage', () => {
         beforeEach(async () => {
           canManage = false;
-          await render();
+          await renderComponent();
         });
 
         it('shows the submissions', () => {
-          expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().trim()))).toEqual([
-            [],
-            ['20', 'username1', 'C++17', 'Accepted', '1 day ago', 'search'],
-            ['10', 'username2', 'C++17', '', '2 days ago', 'search'],
-          ]);
+          const rows = screen.getAllByRole('row').slice(1);
+          expect(rows).toHaveLength(2);
+
+          expect(
+            within(rows[0])
+              .getAllByRole('cell')
+              .map(td => td.textContent.trim())
+          ).toEqual(['20', 'username1', 'C++17', 'Accepted', '1 day ago', 'search']);
+          expect(
+            within(rows[1])
+              .getAllByRole('cell')
+              .map(td => td.textContent.trim())
+          ).toEqual(['10', 'username2', 'C++17', '', '2 days ago', 'search']);
         });
       });
 
       describe('when canManage', () => {
         beforeEach(async () => {
           canManage = true;
-          await render();
+          await renderComponent();
         });
 
         it('shows the submissions', () => {
-          expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().replace(/\s+/g, ' ').trim()))).toEqual([
-            [],
+          const rows = screen.getAllByRole('row').slice(1);
+          expect(
+            rows.map(row =>
+              within(row)
+                .getAllByRole('cell')
+                .map(cell => cell.textContent.replace(/\s+/g, ' ').trim())
+            )
+          ).toEqual([
             ['20 refresh', 'username1', 'C++17', 'Accepted', '1 day ago', 'search'],
             ['10 refresh', 'username2', 'C++17', '', '2 days ago', 'search'],
           ]);

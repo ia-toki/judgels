@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -6,7 +6,6 @@ import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 import { ItemShortAnswerCard } from './ItemShortAnswerCard';
 
 describe('ItemShortAnswerCard', () => {
-  let wrapper;
   const itemConfig = {
     statement: 'statement',
     score: 4,
@@ -26,7 +25,7 @@ describe('ItemShortAnswerCard', () => {
 
   beforeEach(() => {
     const store = createMockStore()({});
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ItemShortAnswerCard {...props} />
       </Provider>
@@ -34,7 +33,6 @@ describe('ItemShortAnswerCard', () => {
   });
 
   it('should render item statement', () => {
-    const text = wrapper.find('div').map(div => div.text());
-    expect(text).toContain('1.statement');
+    expect(screen.getByText((_, el) => el.textContent === '1.statement')).toBeInTheDocument();
   });
 });

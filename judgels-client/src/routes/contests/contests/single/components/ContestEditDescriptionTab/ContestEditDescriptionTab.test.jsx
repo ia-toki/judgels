@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -11,9 +12,7 @@ import * as contestActions from '../../../modules/contestActions';
 jest.mock('../../../modules/contestActions');
 
 describe('ContestEditDescriptionTab', () => {
-  let wrapper;
-
-  beforeEach(() => {
+  beforeEach(async () => {
     contestActions.getContestDescription.mockReturnValue(() =>
       Promise.resolve({
         description: 'current description',
@@ -27,23 +26,28 @@ describe('ContestEditDescriptionTab', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <ContestEditDescriptionTab />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ContestEditDescriptionTab />
+        </Provider>
+      )
     );
   });
 
   test('contest edit description tab form', async () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+    const user = userEvent.setup();
 
-    const description = wrapper.find('textarea[name="description"]');
-    expect(description.prop('value')).toEqual('current description');
-    description.prop('onChange')({ target: { value: 'new description' } });
+    const button = screen.getByRole('button', { name: /edit/i });
+    await user.click(button);
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const description = screen.getByRole('textbox');
+    expect(description).toHaveValue('current description');
+    await user.clear(description);
+    await user.type(description, 'new description');
+
+    const submitButton = screen.getByRole('button', { name: /save/i });
+    await user.click(submitButton);
 
     expect(contestActions.updateContestDescription).toHaveBeenCalledWith('contestJid', 'new description');
   });

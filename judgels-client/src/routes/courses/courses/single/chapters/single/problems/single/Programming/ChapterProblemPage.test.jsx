@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -11,8 +11,6 @@ import chapterProblemReducer from '../modules/chapterProblemReducer';
 import ChapterProblemPage from './ChapterProblemPage';
 
 describe('ChapterProblemProgrammingPage', () => {
-  let wrapper;
-
   beforeEach(async () => {
     const worksheet = {
       problem: {
@@ -63,19 +61,16 @@ describe('ChapterProblemProgrammingPage', () => {
     );
     store.dispatch(PutStatementLanguage('en'));
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <ChapterProblemPage worksheet={worksheet} renderNavigation={renderNavigation} />
         </MemoryRouter>
       </Provider>
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   });
 
   test('page', () => {
-    expect(wrapper.text()).toContain('This is problem description');
+    expect(screen.getByText('This is problem description')).toBeInTheDocument();
   });
 });

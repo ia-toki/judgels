@@ -1,10 +1,9 @@
-import { mount } from 'enzyme';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { BundleScoreboardTable } from './BundleScoreboardTable';
 
 describe('BundleScoreboardTable', () => {
-  let wrapper;
   const scoreboard = {
     state: {
       problemJids: ['JIDBUND1', 'JIDBUND2'],
@@ -36,7 +35,7 @@ describe('BundleScoreboardTable', () => {
 
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
-    wrapper = mount(
+    render(
       <MemoryRouter>
         <BundleScoreboardTable {...props} />
       </MemoryRouter>
@@ -44,22 +43,21 @@ describe('BundleScoreboardTable', () => {
   });
 
   test('ranks', () => {
-    const ranks = wrapper
-      .find('tbody')
-      .children()
-      .map(tr => tr.childAt(0).text());
+    const rows = screen.getAllByRole('row').slice(1);
+    const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
     expect(ranks).toEqual(['1', '2']);
   });
 
   describe('incognito ranks', () => {
     beforeEach(() => {
+      cleanup();
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = {
         ...scoreboard,
         content: { entries: incognitoEntries },
       };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
-      wrapper = mount(
+      render(
         <MemoryRouter>
           <BundleScoreboardTable {...props} />
         </MemoryRouter>
@@ -67,26 +65,24 @@ describe('BundleScoreboardTable', () => {
     });
 
     it('only shows question marks', () => {
-      const ranks = wrapper
-        .find('tbody')
-        .children()
-        .map(tr => tr.childAt(0).text());
+      const rows = screen.getAllByRole('row').slice(1);
+      const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
       expect(ranks).toEqual(['?', '?']);
     });
   });
 
   test('display names', () => {
-    const ranks = wrapper
-      .find('tbody')
-      .children()
-      .map(tr => tr.childAt(1).text());
-    expect(ranks).toEqual(['username1', 'username2']);
+    const rows = screen.getAllByRole('row').slice(1);
+    const names = rows.map(row => within(row).getAllByRole('cell')[1].textContent);
+    expect(names).toEqual(['username1', 'username2']);
   });
 
   test('display score', () => {
-    const mapCell = td => td.text();
-    const mapRow = tr => [3, 4].map(x => tr.childAt(x)).map(mapCell);
-    const score = wrapper.find('tbody').children().map(mapRow);
+    const rows = screen.getAllByRole('row').slice(1);
+    const score = rows.map(row => {
+      const cells = within(row).getAllByRole('cell');
+      return [cells[3], cells[4]].map(cell => cell.textContent);
+    });
     expect(score).toEqual([
       ['12', '3'],
       ['10', '2'],
@@ -94,9 +90,8 @@ describe('BundleScoreboardTable', () => {
   });
 
   test('display points', () => {
-    const mapCell = td => td.text();
-    const mapRow = tr => [3, 4].map(x => tr.childAt(x)).map(mapCell);
-    const points = wrapper.find('thead').children().map(mapRow);
-    expect(points).toEqual([['A', 'B']]);
+    const headerCells = screen.getAllByRole('columnheader');
+    const points = [headerCells[3], headerCells[4]].map(cell => cell.textContent);
+    expect(points).toEqual(['A', 'B']);
   });
 });

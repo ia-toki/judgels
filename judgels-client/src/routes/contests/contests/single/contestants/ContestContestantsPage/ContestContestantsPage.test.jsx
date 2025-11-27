@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,11 +12,10 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 jest.mock('../../modules/contestContestantActions');
 
 describe('ContestContestantsPage', () => {
-  let wrapper;
   let contestants;
   let canManage;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestContestantActions.getContestants.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -38,17 +37,15 @@ describe('ContestContestantsPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestContestantsPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestContestantsPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('action buttons', () => {
@@ -59,22 +56,24 @@ describe('ContestContestantsPage', () => {
     describe('when not canManage', () => {
       beforeEach(async () => {
         canManage = false;
-        await render();
+        await renderComponent();
       });
 
       it('shows no buttons', () => {
-        expect(wrapper.find('button')).toHaveLength(0);
+        expect(screen.queryByRole('button', { name: /add contestants/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /remove contestants/i })).not.toBeInTheDocument();
       });
     });
 
     describe('when canManage', () => {
       beforeEach(async () => {
         canManage = true;
-        await render();
+        await renderComponent();
       });
 
       it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['Add contestants', 'Remove contestants']);
+        expect(screen.getByRole('button', { name: /add contestants/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /remove contestants/i })).toBeInTheDocument();
       });
     });
   });
@@ -83,12 +82,12 @@ describe('ContestContestantsPage', () => {
     describe('when there are no contestants', () => {
       beforeEach(async () => {
         contestants = [];
-        await render();
+        await renderComponent();
       });
 
       it('shows placeholder text and no contestants', () => {
-        expect(wrapper.text()).toContain('No contestants.');
-        expect(wrapper.find('tr')).toHaveLength(0);
+        expect(screen.getByText(/no contestants/i)).toBeInTheDocument();
+        expect(screen.queryByRole('row')).not.toBeInTheDocument();
       });
     });
 
@@ -102,11 +101,12 @@ describe('ContestContestantsPage', () => {
             userJid: 'userJid2',
           },
         ];
-        await render();
+        await renderComponent();
       });
 
       it('shows the contestants', () => {
-        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
+        const rows = screen.getAllByRole('row');
+        expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
           [],
           ['1', 'username1'],
           ['2', 'username2'],

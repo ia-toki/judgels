@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
@@ -10,8 +10,6 @@ import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
 describe('ProblemSetCreateDialog', () => {
   let onGetProblemSetConfig;
   let onCreateProblemSet;
-  let wrapper;
-
   beforeEach(() => {
     onCreateProblemSet = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
@@ -21,7 +19,7 @@ describe('ProblemSetCreateDialog', () => {
       onGetProblemSetConfig,
       onCreateProblemSet,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <ProblemSetCreateDialog {...props} />
@@ -30,33 +28,30 @@ describe('ProblemSetCreateDialog', () => {
     );
   });
 
-  test('create dialog form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('create dialog form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    act(() => {
-      const slug = wrapper.find('input[name="slug"]');
-      slug.prop('onChange')({ target: { value: 'new-problemSet' } });
+    const slug = screen.getByRole('textbox', { name: /^slug/i });
+    await user.type(slug, 'new-problemSet');
 
-      const name = wrapper.find('input[name="name"]');
-      name.prop('onChange')({ target: { value: 'New problemSet' } });
+    const name = screen.getByRole('textbox', { name: /name/i });
+    await user.type(name, 'New problemSet');
 
-      const archiveSlug = wrapper.find('input[name="archiveSlug"]');
-      archiveSlug.prop('onChange')({ target: { value: 'New archive' } });
+    const archiveSlug = screen.getByRole('textbox', { name: /archive slug/i });
+    await user.type(archiveSlug, 'New archive');
 
-      const description = wrapper.find('textarea[name="description"]');
-      description.prop('onChange')({ target: { value: 'New description' } });
+    const description = screen.getByRole('textbox', { name: /description/i });
+    await user.type(description, 'New description');
 
-      const contestTime = wrapper.find('input[name="contestTime"]');
-      contestTime.prop('onChange')({ target: { value: '2100-01-01 00:00' } });
+    const contestTime = document.querySelector('input[name="contestTime"]');
+    await user.clear(contestTime);
+    await user.type(contestTime, '2100-01-01 00:00');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /create/i });
+    await user.click(submitButton);
 
     expect(onCreateProblemSet).toHaveBeenCalledWith({
       slug: 'new-problemSet',

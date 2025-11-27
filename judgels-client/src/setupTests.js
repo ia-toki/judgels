@@ -1,12 +1,9 @@
-import Adapter from '@cfaester/enzyme-adapter-react-18';
-import { configure } from 'enzyme';
+import '@testing-library/jest-dom';
 import nock from 'nock';
 import { TextDecoder, TextEncoder } from 'node:util';
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-
-configure({ adapter: new Adapter() });
 
 nock.disableNetConnect();
 

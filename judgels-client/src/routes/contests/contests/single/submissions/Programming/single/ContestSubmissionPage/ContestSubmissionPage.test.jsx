@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -14,8 +14,6 @@ import * as contestSubmissionActions from '../../modules/contestSubmissionAction
 jest.mock('../../modules/contestSubmissionActions');
 
 describe('ContestSubmissionPage', () => {
-  let wrapper;
-
   beforeEach(async () => {
     contestSubmissionActions.getSubmissionWithSource.mockReturnValue(() =>
       Promise.resolve({
@@ -43,19 +41,21 @@ describe('ContestSubmissionPage', () => {
     );
     store.dispatch(PutStatementLanguage('en'));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/contest/contestSlug/submissions/submissions/10']}>
-          <Route path="/contest/contestSlug/submissions/submissions/:submissionId" component={ContestSubmissionPage} />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['/contest/contestSlug/submissions/submissions/10']}>
+            <Route
+              path="/contest/contestSlug/submissions/submissions/:submissionId"
+              component={ContestSubmissionPage}
+            />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   });
 
   test('page', () => {
-    expect(wrapper.text()).toContain('Submission #10');
+    expect(screen.getByText(/Submission #10/)).toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,11 +12,10 @@ import * as contestManagerActions from '../modules/contestManagerActions';
 jest.mock('../modules/contestManagerActions');
 
 describe('ContestManagersPage', () => {
-  let wrapper;
   let managers;
   let canManage;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestManagerActions.getManagers.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -38,17 +37,15 @@ describe('ContestManagersPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestManagersPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestManagersPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('action buttons', () => {
@@ -59,22 +56,24 @@ describe('ContestManagersPage', () => {
     describe('when not canManage', () => {
       beforeEach(async () => {
         canManage = false;
-        await render();
+        await renderComponent();
       });
 
       it('shows no buttons', () => {
-        expect(wrapper.find('button')).toHaveLength(0);
+        expect(screen.queryByRole('button', { name: /add managers/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /remove managers/i })).not.toBeInTheDocument();
       });
     });
 
     describe('when canManage', () => {
       beforeEach(async () => {
         canManage = true;
-        await render();
+        await renderComponent();
       });
 
       it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['Add managers', 'Remove managers']);
+        expect(screen.getByRole('button', { name: /add managers/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /remove managers/i })).toBeInTheDocument();
       });
     });
   });
@@ -83,12 +82,12 @@ describe('ContestManagersPage', () => {
     describe('when there are no managers', () => {
       beforeEach(async () => {
         managers = [];
-        await render();
+        await renderComponent();
       });
 
       it('shows placeholder text and no managers', () => {
-        expect(wrapper.text()).toContain('No managers.');
-        expect(wrapper.find('tr')).toHaveLength(0);
+        expect(screen.getByText(/no managers/i)).toBeInTheDocument();
+        expect(screen.queryByRole('row')).not.toBeInTheDocument();
       });
     });
 
@@ -102,12 +101,12 @@ describe('ContestManagersPage', () => {
             userJid: 'userJid2',
           },
         ];
-        await render();
+        await renderComponent();
       });
 
       it('shows the managers', () => {
-        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
-          [],
+        const rows = screen.getAllByRole('row').slice(1);
+        expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
           ['username1'],
           ['username2'],
         ]);

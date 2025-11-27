@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -17,10 +17,9 @@ import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSu
 jest.mock('../../modules/chapterProblemSubmissionActions');
 
 describe('ChapterProblemSubmissionPage', () => {
-  let wrapper;
   let source = {};
 
-  const render = async () => {
+  const renderComponent = async () => {
     chapterProblemSubmissionActions.getSubmissionWithSource.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -53,26 +52,25 @@ describe('ChapterProblemSubmissionPage', () => {
     );
     store.dispatch(PutStatementLanguage('en'));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1/submissions/10']}>
-          <Route
-            path="/courses/courseSlug/chapter/chapter-1/submissions/:submissionId"
-            component={ChapterProblemSubmissionPage}
-          />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1/submissions/10']}>
+            <Route
+              path="/courses/courseSlug/chapter/chapter-1/submissions/:submissionId"
+              component={ChapterProblemSubmissionPage}
+            />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   beforeEach(async () => {
-    await render();
+    await renderComponent();
   });
 
   test('page', () => {
-    expect(wrapper.text()).toContain('Submission #10');
+    expect(screen.getByText('Submission #10')).toBeInTheDocument();
   });
 });

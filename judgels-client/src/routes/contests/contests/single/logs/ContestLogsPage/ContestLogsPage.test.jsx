@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,10 +12,9 @@ import * as contestLogActions from '../modules/contestLogActions';
 jest.mock('../modules/contestLogActions');
 
 describe('ContestLogsPage', () => {
-  let wrapper;
   let logs;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestLogActions.getLogs.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -42,28 +41,26 @@ describe('ContestLogsPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestLogsPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestLogsPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('when there are no logs', () => {
     beforeEach(async () => {
       logs = [];
-      await render();
+      await renderComponent();
     });
 
     it('shows placeholder text and no logs', () => {
-      expect(wrapper.text()).toContain('No logs.');
-      expect(wrapper.find('tr')).toHaveLength(0);
+      expect(screen.getByText(/no logs/i)).toBeInTheDocument();
+      expect(screen.queryByRole('row')).not.toBeInTheDocument();
     });
   });
 
@@ -84,12 +81,12 @@ describe('ContestLogsPage', () => {
           time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
         },
       ];
-      await render();
+      await renderComponent();
     });
 
     it('shows the logs', () => {
-      expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
-        [],
+      const rows = screen.getAllByRole('row').slice(1);
+      expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
         ['username1', 'OPEN_PROBLEM', 'A', '1 day ago '],
         ['username2', 'OPEN_CLARIFICATIONS', '', '1 day ago '],
       ]);

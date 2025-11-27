@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -6,7 +7,6 @@ import { ContestManagerRemoveDialog } from './ContestManagerRemoveDialog';
 
 describe('ContestManagerRemoveDialog', () => {
   let onDeleteManagers;
-  let wrapper;
 
   beforeEach(() => {
     onDeleteManagers = jest.fn().mockReturnValue(Promise.resolve({ deletedManagerProfilesMap: {} }));
@@ -17,22 +17,24 @@ describe('ContestManagerRemoveDialog', () => {
       contest: { jid: 'contestJid' },
       onDeleteManagers,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestManagerRemoveDialog {...props} />
       </Provider>
     );
   });
 
-  test('form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    const usernames = wrapper.find('textarea[name="usernames"]');
-    usernames.prop('onChange')({ target: { value: 'andi\n\nbudi\n caca  \n' } });
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const usernames = screen.getByRole('textbox');
+    await user.type(usernames, 'andi\n\nbudi\n caca  \n');
+
+    const submitButton = screen.getByRole('button', { name: /remove$/i });
+    await user.click(submitButton);
 
     expect(onDeleteManagers).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
   });

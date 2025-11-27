@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,10 +12,9 @@ import * as courseActions from '../modules/courseActions';
 jest.mock('../modules/courseActions');
 
 describe('CoursesPage', () => {
-  let wrapper;
   let courses;
 
-  const render = async () => {
+  const renderComponent = async () => {
     courseActions.getCourses.mockReturnValue(() =>
       Promise.resolve({
         data: courses,
@@ -37,28 +36,26 @@ describe('CoursesPage', () => {
       applyMiddleware(thunk)
     );
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/courses']}>
-          <Route path="/courses" component={CoursesPage} />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['/courses']}>
+            <Route path="/courses" component={CoursesPage} />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('when there are no courses', () => {
     beforeEach(async () => {
       courses = [];
-      await render();
+      await renderComponent();
     });
 
     it('shows placeholder text and no courses', () => {
-      expect(wrapper.text()).toContain('No courses.');
-      expect(wrapper.find('a')).toHaveLength(0);
+      expect(screen.getByText(/no courses/i)).toBeInTheDocument();
+      expect(screen.queryByRole('link')).not.toBeInTheDocument();
     });
   });
 
@@ -78,15 +75,21 @@ describe('CoursesPage', () => {
           description: 'This is course 2',
         },
       ];
-      await render();
+      await renderComponent();
     });
 
     it('shows the courses', () => {
-      const cards = wrapper.find('a');
-      expect(cards.map(card => [card.find('h4').text(), card.props().href, card.find('.html-text').text()])).toEqual([
-        ['Course 12 / 6 problems completed', '/courses/course-1', 'This is course 1'],
-        ['Course 2', '/courses/course-2', 'This is course 2'],
-      ]);
+      const links = screen.getAllByRole('link');
+      expect(links).toHaveLength(2);
+
+      expect(within(links[0]).getByRole('heading', { level: 4 })).toHaveTextContent('Course 1');
+      expect(within(links[0]).getByRole('heading', { level: 4 })).toHaveTextContent('2 / 6 problems completed');
+      expect(links[0]).toHaveAttribute('href', '/courses/course-1');
+      expect(links[0]).toHaveTextContent('This is course 1');
+
+      expect(within(links[1]).getByRole('heading', { level: 4 })).toHaveTextContent('Course 2');
+      expect(links[1]).toHaveAttribute('href', '/courses/course-2');
+      expect(links[1]).toHaveTextContent('This is course 2');
     });
   });
 });

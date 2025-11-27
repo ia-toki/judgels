@@ -34,7 +34,7 @@ function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
 
     return (
       <small>
-        <p className="pagination__helper-text" data-key="pagination-helper-text">
+        <p className="pagination__helper-text">
           Showing {start}..{Math.min(end, totalCount)} of {totalCount} results
         </p>
       </small>

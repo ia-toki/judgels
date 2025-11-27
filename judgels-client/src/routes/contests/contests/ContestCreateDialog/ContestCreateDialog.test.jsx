@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -7,7 +7,6 @@ import { ContestCreateDialog } from './ContestCreateDialog';
 
 describe('ContestCreateDialog', () => {
   let onCreateContest;
-  let wrapper;
 
   beforeEach(() => {
     onCreateContest = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -17,28 +16,24 @@ describe('ContestCreateDialog', () => {
     const props = {
       onCreateContest,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    act(() => {
-      const slug = wrapper.find('input[name="slug"]');
-      slug.prop('onChange')({ target: { value: 'new-contest' } });
+    const slug = screen.getByRole('textbox');
+    await user.type(slug, 'new-contest');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /create/i });
+    await user.click(submitButton);
 
     expect(onCreateContest).toHaveBeenCalledWith({ slug: 'new-contest' });
   });

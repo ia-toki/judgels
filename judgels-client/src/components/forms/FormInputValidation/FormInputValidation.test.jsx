@@ -1,19 +1,18 @@
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import { FormInputValidation } from './FormInputValidation';
 
 describe('FormInputValidation', () => {
-  let wrapper;
   let touched;
   let valid;
   let error;
 
-  const render = () => {
+  const renderComponent = () => {
     const props = {
       meta: { touched, valid, error },
     };
 
-    wrapper = shallow(<FormInputValidation {...props} />);
+    render(<FormInputValidation {...props} />);
   };
 
   beforeEach(() => {
@@ -24,11 +23,11 @@ describe('FormInputValidation', () => {
 
   describe('when the input is first rendered', () => {
     beforeEach(() => {
-      render();
+      renderComponent();
     });
 
     it('does not show any errors', () => {
-      expect(wrapper.find('.form-text-input-error')).toHaveLength(0);
+      expect(screen.queryByText('Required')).not.toBeInTheDocument();
     });
   });
 
@@ -36,11 +35,11 @@ describe('FormInputValidation', () => {
     beforeEach(() => {
       touched = true;
       valid = true;
-      render();
+      renderComponent();
     });
 
     it('does not show any errors', () => {
-      expect(wrapper.find('.form-text-input-error')).toHaveLength(0);
+      expect(screen.queryByText('Required')).not.toBeInTheDocument();
     });
   });
 
@@ -48,11 +47,11 @@ describe('FormInputValidation', () => {
     beforeEach(() => {
       touched = true;
       valid = false;
-      render();
+      renderComponent();
     });
 
     it('shows the error', () => {
-      expect(wrapper.find('.form-text-input-error').text()).toEqual('Required');
+      expect(screen.getByText('Required')).toBeInTheDocument();
     });
   });
 });

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,12 +12,11 @@ import * as contestAnnouncementActions from '../modules/contestAnnouncementActio
 jest.mock('../modules/contestAnnouncementActions');
 
 describe('ContestAnnouncementsPage', () => {
-  let wrapper;
   let announcements;
   let canSupervise;
   let canManage;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestAnnouncementActions.getAnnouncements.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -40,17 +39,15 @@ describe('ContestAnnouncementsPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestAnnouncementsPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestAnnouncementsPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('action buttons', () => {
@@ -61,22 +58,22 @@ describe('ContestAnnouncementsPage', () => {
     describe('when not canManage', () => {
       beforeEach(async () => {
         canManage = false;
-        await render();
+        await renderComponent();
       });
 
       it('shows no buttons', () => {
-        expect(wrapper.find('button')).toHaveLength(0);
+        expect(screen.queryByRole('button', { name: /new announcement/i })).not.toBeInTheDocument();
       });
     });
 
     describe('when canManage', () => {
       beforeEach(async () => {
         canManage = true;
-        await render();
+        await renderComponent();
       });
 
       it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['New announcement']);
+        expect(screen.getByRole('button', { name: /new announcement/i })).toBeInTheDocument();
       });
     });
   });
@@ -85,12 +82,12 @@ describe('ContestAnnouncementsPage', () => {
     describe('when there are no announcements', () => {
       beforeEach(async () => {
         announcements = [];
-        await render();
+        await renderComponent();
       });
 
       it('shows placeholder text and no announcements', () => {
-        expect(wrapper.text()).toContain('No announcements.');
-        expect(wrapper.find('div.contest-announcement-card')).toHaveLength(0);
+        expect(screen.getByText(/no announcements/i)).toBeInTheDocument();
+        expect(document.querySelectorAll('div.contest-announcement-card')).toHaveLength(0);
       });
     });
 
@@ -118,21 +115,20 @@ describe('ContestAnnouncementsPage', () => {
         beforeEach(async () => {
           canSupervise = false;
           canManage = false;
-          await render();
+          await renderComponent();
         });
 
         it('shows the announcements', () => {
-          const cards = wrapper.find('div.contest-announcement-card');
-          expect(
-            cards.map(card => [
-              card.find('h5').text(),
-              card.find('p').text().replace(/\s+/g, ' '),
-              card.find('.html-text').text(),
-            ])
-          ).toEqual([
-            ['Title 1', 'published 1 day ago ', 'Content 1'],
-            ['Title 2', 'published 1 day ago ', 'Content 2'],
-          ]);
+          const announcements = document.querySelectorAll('div.contest-announcement-card');
+          expect(announcements).toHaveLength(2);
+
+          expect(within(announcements[0]).getByRole('heading')).toHaveTextContent('Title 1');
+          expect(within(announcements[0]).getByText('Content 1')).toBeInTheDocument();
+          expect(announcements[0].querySelector('small')).toHaveTextContent(/published 1 day ago$/);
+
+          expect(within(announcements[1]).getByRole('heading')).toHaveTextContent('Title 2');
+          expect(within(announcements[1]).getByText('Content 2')).toBeInTheDocument();
+          expect(announcements[1].querySelector('small')).toHaveTextContent(/published 1 day ago$/);
         });
       });
 
@@ -140,21 +136,20 @@ describe('ContestAnnouncementsPage', () => {
         beforeEach(async () => {
           canSupervise = true;
           canManage = false;
-          await render();
+          await renderComponent();
         });
 
         it('shows the announcements', () => {
-          const cards = wrapper.find('div.contest-announcement-card');
-          expect(
-            cards.map(card => [
-              card.find('h5').text(),
-              card.find('p').text().replace(/\s+/g, ' '),
-              card.find('.html-text').text(),
-            ])
-          ).toEqual([
-            ['Title 1', 'published 1 day ago by username1 ', 'Content 1'],
-            ['Title 2', 'published 1 day ago by username2 ', 'Content 2'],
-          ]);
+          const announcements = document.querySelectorAll('div.contest-announcement-card');
+          expect(announcements).toHaveLength(2);
+
+          expect(within(announcements[0]).getByRole('heading')).toHaveTextContent('Title 1');
+          expect(within(announcements[0]).getByText('Content 1')).toBeInTheDocument();
+          expect(announcements[0].querySelector('small')).toHaveTextContent(/published 1 day ago by username1$/);
+
+          expect(within(announcements[1]).getByRole('heading')).toHaveTextContent('Title 2');
+          expect(within(announcements[1]).getByText('Content 2')).toBeInTheDocument();
+          expect(announcements[1].querySelector('small')).toHaveTextContent(/published 1 day ago by username2$/);
         });
       });
 
@@ -162,21 +157,20 @@ describe('ContestAnnouncementsPage', () => {
         beforeEach(async () => {
           canSupervise = true;
           canManage = true;
-          await render();
+          await renderComponent();
         });
 
         it('shows the announcements', () => {
-          const cards = wrapper.find('div.contest-announcement-card');
-          expect(
-            cards.map(card => [
-              card.find('h5').text(),
-              card.find('p').text().replace(/\s+/g, ' '),
-              card.find('.html-text').text(),
-            ])
-          ).toEqual([
-            ['Title 1', 'published 1 day ago by username1 Edit', 'Content 1'],
-            ['Title 2', 'published 1 day ago by username2 Edit', 'Content 2'],
-          ]);
+          const announcements = document.querySelectorAll('div.contest-announcement-card');
+          expect(announcements).toHaveLength(2);
+
+          expect(within(announcements[0]).getByRole('heading')).toHaveTextContent('Title 1');
+          expect(within(announcements[0]).getByText('Content 1')).toBeInTheDocument();
+          expect(announcements[0].querySelector('small')).toHaveTextContent(/published 1 day ago by username1 Edit$/);
+
+          expect(within(announcements[1]).getByRole('heading')).toHaveTextContent('Title 2');
+          expect(within(announcements[1]).getByText('Content 2')).toBeInTheDocument();
+          expect(announcements[1].querySelector('small')).toHaveTextContent(/published 1 day ago by username2 Edit$/);
         });
       });
     });

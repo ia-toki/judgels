@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -8,8 +8,6 @@ import { CourseCreateDialog } from './CourseCreateDialog';
 describe('CourseCreateDialog', () => {
   let onGetCourseConfig;
   let onCreateCourse;
-  let wrapper;
-
   beforeEach(() => {
     onCreateCourse = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
@@ -19,34 +17,30 @@ describe('CourseCreateDialog', () => {
       onGetCourseConfig,
       onCreateCourse,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <CourseCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('create dialog form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('create dialog form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    act(() => {
-      const slug = wrapper.find('input[name="slug"]');
-      slug.prop('onChange')({ target: { value: 'new-course' } });
+    const slug = screen.getByRole('textbox', { name: /slug/i });
+    await user.type(slug, 'new-course');
 
-      const name = wrapper.find('input[name="name"]');
-      name.prop('onChange')({ target: { value: 'New course' } });
+    const name = screen.getByRole('textbox', { name: /name/i });
+    await user.type(name, 'New course');
 
-      const description = wrapper.find('textarea[name="description"]');
-      description.prop('onChange')({ target: { value: 'New description' } });
+    const description = screen.getByRole('textbox', { name: /description/i });
+    await user.type(description, 'New description');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /create/i });
+    await user.click(submitButton);
 
     expect(onCreateCourse).toHaveBeenCalledWith({
       slug: 'new-course',

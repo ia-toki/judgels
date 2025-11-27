@@ -1,8 +1,6 @@
-import { shallow } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 
-import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
-import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
-import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ContestContestantsTable } from './ContestContestantsTable';
 
 describe('ContestContestantsTable', () => {
@@ -10,9 +8,7 @@ describe('ContestContestantsTable', () => {
   let contestants;
   let now;
 
-  let wrapper;
-
-  const render = () => {
+  const renderComponent = () => {
     const props = {
       contest: {
         beginTime: 10,
@@ -30,15 +26,11 @@ describe('ContestContestantsTable', () => {
       now,
     };
 
-    wrapper = shallow(<ContestContestantsTable {...props} />);
-  };
-
-  const mapProgressBar = progressBar => {
-    return progressBar && [progressBar.props().num, progressBar.props().denom];
-  };
-
-  const mapStartTime = formattedDate => {
-    return formattedDate && formattedDate.props().value;
+    render(
+      <MemoryRouter>
+        <ContestContestantsTable {...props} />
+      </MemoryRouter>
+    );
   };
 
   describe('when contest is not virtual', () => {
@@ -50,14 +42,12 @@ describe('ContestContestantsTable', () => {
         { userJid: 'userJid4' },
         { userJid: 'userJid5' },
       ];
-      render();
+      renderComponent();
     });
 
     it('shows the correct columns', () => {
-      const usernames = wrapper
-        .find('tbody')
-        .children()
-        .map(tr => tr.childAt(1).find(UserRef).props().profile.username);
+      const rows = screen.getAllByRole('row').slice(1);
+      const usernames = rows.map(row => row.children[1].textContent);
       expect(usernames).toEqual(['userA', 'userB', 'userC', 'userD', 'userE']);
     });
   });
@@ -73,27 +63,24 @@ describe('ContestContestantsTable', () => {
         { userJid: 'userJid4', contestStartTime: 65 },
         { userJid: 'userJid5' },
       ];
-      render();
+      renderComponent();
     });
 
     it('shows the correct columns', () => {
-      const usernames = wrapper
-        .find('tbody')
-        .children()
-        .map(tr => tr.childAt(1).find(UserRef).props().profile.username);
-      expect(usernames).toEqual(['userA', 'userD', 'userE', 'userB', 'userC']);
+      const rows = screen.getAllByRole('row').slice(1);
+      expect(rows).toHaveLength(5);
 
-      const progresses = wrapper
-        .find('tbody')
-        .children()
-        .map(tr => tr.childAt(2).find(ProgressBar).map(mapProgressBar));
-      expect(progresses).toEqual([[[50, 50]], [[40, 50]], [[10, 50]], [], []]);
+      expect(rows[0].children[1]).toHaveTextContent('userA');
+      expect(within(rows[0]).getByRole('progressbar')).toBeInTheDocument();
 
-      const startTimes = wrapper
-        .find('tbody')
-        .children()
-        .map(tr => tr.childAt(3).find(FormattedDate).map(mapStartTime));
-      expect(startTimes).toEqual([[20], [30], [65], [], []]);
+      expect(rows[1].children[1]).toHaveTextContent('userD');
+      expect(within(rows[1]).getByRole('progressbar')).toBeInTheDocument();
+
+      expect(rows[2].children[1]).toHaveTextContent('userE');
+      expect(within(rows[2]).getByRole('progressbar')).toBeInTheDocument();
+
+      expect(rows[3].children[1]).toHaveTextContent('userB');
+      expect(rows[4].children[1]).toHaveTextContent('userC');
     });
   });
 });

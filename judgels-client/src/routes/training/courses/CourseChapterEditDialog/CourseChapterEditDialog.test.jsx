@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -11,8 +12,6 @@ const course = {
 describe('CourseChapterEditDialog', () => {
   let onGetChapters;
   let onSetChapters;
-  let wrapper;
-
   const chapters = [
     {
       alias: 'A',
@@ -24,7 +23,7 @@ describe('CourseChapterEditDialog', () => {
     },
   ];
 
-  beforeEach(() => {
+  beforeEach(async () => {
     onGetChapters = jest.fn().mockReturnValue(Promise.resolve({ data: chapters, chaptersMap: {} }));
     onSetChapters = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
@@ -37,27 +36,29 @@ describe('CourseChapterEditDialog', () => {
       onGetChapters,
       onSetChapters,
     };
-    wrapper = mount(
-      <Provider store={store}>
-        <CourseChapterEditDialog {...props} />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <CourseChapterEditDialog {...props} />
+        </Provider>
+      )
     );
   });
 
   test('edit chapters dialog form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
+    const user = userEvent.setup();
 
-    const button = wrapper.find('button[data-key="edit"]');
-    button.simulate('click');
+    const editButton = screen.getByRole('button', { name: /edit/i });
+    await user.click(editButton);
 
-    const chaptersField = wrapper.find('textarea[name="chapters"]');
-    expect(chaptersField.prop('value')).toEqual('A,jid-1\nB,jid-2');
+    const chaptersField = screen.getByRole('textbox', { name: /chapters/i });
+    expect(chaptersField).toHaveValue('A,jid-1\nB,jid-2');
 
-    chaptersField.prop('onChange')({ target: { value: 'P, jid-3\n  Q,jid-4  ' } });
+    await user.clear(chaptersField);
+    await user.type(chaptersField, 'P, jid-3\n  Q,jid-4  ');
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const submitButton = screen.getByRole('button', { name: /save/i });
+    await user.click(submitButton);
 
     expect(onSetChapters).toHaveBeenCalledWith(course.jid, [
       {

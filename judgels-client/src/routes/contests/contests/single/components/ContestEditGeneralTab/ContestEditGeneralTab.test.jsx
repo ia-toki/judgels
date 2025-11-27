@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -17,8 +17,6 @@ jest.mock('../../../modules/contestActions');
 jest.mock('../../modules/contestWebActions');
 
 describe('ContestEditGeneralTab', () => {
-  let wrapper;
-
   beforeEach(() => {
     contestWebActions.getContestByJidWithWebConfig.mockReturnValue(() => Promise.resolve({}));
     contestActions.updateContest.mockReturnValue(() => Promise.resolve({}));
@@ -37,39 +35,38 @@ describe('ContestEditGeneralTab', () => {
       })
     );
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestEditGeneralTab />
       </Provider>
     );
   });
 
-  test('form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button', { name: /edit/i });
+    await user.click(button);
 
-    act(() => {
-      const slug = wrapper.find('input[name="slug"]');
-      expect(slug.prop('value')).toEqual('contest-a');
-      slug.prop('onChange')({ target: { value: 'contest-b' } });
+    const slug = document.querySelector('input[name="slug"]');
+    expect(slug).toHaveValue('contest-a');
+    await user.clear(slug);
+    await user.type(slug, 'contest-b');
 
-      const name = wrapper.find('input[name="name"]');
-      expect(name.prop('value')).toEqual('Contest A');
-      name.prop('onChange')({ target: { value: 'Contest B' } });
+    const name = document.querySelector('input[name="name"]');
+    expect(name).toHaveValue('Contest A');
+    await user.clear(name);
+    await user.type(name, 'Contest B');
 
-      const beginTime = wrapper.find('input[name="beginTime"]');
-      beginTime.prop('onChange')({ target: { value: '2018-09-10 17:00' } });
+    const beginTime = document.querySelector('input[name="beginTime"]');
+    await user.clear(beginTime);
+    await user.type(beginTime, '2018-09-10 17:00');
 
-      const duration = wrapper.find('input[name="duration"]');
-      duration.prop('onChange')({ target: { value: '6h' } });
+    const duration = document.querySelector('input[name="duration"]');
+    await user.clear(duration);
+    await user.type(duration, '6h');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(contestActions.updateContest).toHaveBeenCalledWith('contestJid', 'contest-a', {
       slug: 'contest-b',

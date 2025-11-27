@@ -13,7 +13,7 @@ export function FormRichTextArea({ rows, input, label, meta }) {
       <Suspense fallback={null}>
         <LazyTinyMCETextArea onChange={input.onChange} />
       </Suspense>
-      <textarea rows={rows} {...input} className="tinymce" />
+      <textarea id={input.name} rows={rows} {...input} className="tinymce" />
       <FormInputValidation meta={meta} />
     </FormGroup>
   );

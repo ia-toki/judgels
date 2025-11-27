@@ -11,6 +11,7 @@ export function FormTextArea({ input, label, labelHelper, meta, autoFocus, rows,
     <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)} labelInfo={labelHelper}>
       <textarea
         {...input}
+        id={input.name}
         className={classNames(Classes.INPUT, 'form-textarea', getIntentClassName(meta), {
           'form-textarea--code': isCode,
         })}

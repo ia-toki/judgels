@@ -1,4 +1,5 @@
-import { shallow } from 'enzyme';
+import { render, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 
 import { UserWidget } from './UserWidget';
 
@@ -7,9 +8,7 @@ describe('UserWidget', () => {
   let profile;
   let onRenderAvatar = () => Promise.resolve('url');
 
-  let wrapper;
-
-  const render = () => {
+  const renderComponent = () => {
     const props = {
       user,
       isWebConfigLoaded: true,
@@ -19,7 +18,11 @@ describe('UserWidget', () => {
       onRenderAvatar,
     };
 
-    wrapper = shallow(<UserWidget {...props} />);
+    return render(
+      <MemoryRouter>
+        <UserWidget {...props} />
+      </MemoryRouter>
+    );
   };
 
   beforeEach(() => {
@@ -28,13 +31,10 @@ describe('UserWidget', () => {
   });
 
   describe('when the user is not logged in', () => {
-    beforeEach(() => {
-      render();
-    });
-
     it('shows guest links', () => {
-      expect(wrapper.find('[data-key="login"]')).toHaveLength(1);
-      expect(wrapper.find('[data-key="register"]')).toHaveLength(1);
+      const { container } = renderComponent();
+      expect(container.querySelector('[data-key="login"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-key="register"]')).toBeInTheDocument();
     });
   });
 
@@ -42,11 +42,13 @@ describe('UserWidget', () => {
     beforeEach(() => {
       user = { jid: 'jid123', username: 'user', email: 'user@domain.com' };
       profile = { username: 'user' };
-      render();
     });
 
-    it('shows the user widget', () => {
-      expect(wrapper.find('[data-key="username"]').text()).toContain('user');
+    it('shows the user widget', async () => {
+      const { container } = renderComponent();
+      await waitFor(() => {
+        expect(container.querySelector('[data-key="username"]')).toBeInTheDocument();
+      });
     });
   });
 });

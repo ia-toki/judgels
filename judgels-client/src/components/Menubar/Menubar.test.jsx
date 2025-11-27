@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
@@ -7,14 +8,13 @@ import Menubar from './Menubar';
 
 describe('Menubar', () => {
   let store;
-  let wrapper;
 
   const FirstComponent = () => <div />;
   const SecondComponent = () => <div />;
   const ThirdComponent = () => <div />;
   const HomeComponent = () => <div />;
 
-  const render = (childPath, withHome, parentRoute) => {
+  const renderComponent = (childPath, withHome, parentRoute) => {
     const props = {
       items: [
         {
@@ -57,7 +57,7 @@ describe('Menubar', () => {
 
     const initialPath = parentRoute === '/' ? childPath : parentRoute + childPath;
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[initialPath]}>
           <Route path={parentRoute} component={component} />
@@ -72,64 +72,66 @@ describe('Menubar', () => {
 
   describe('when the child path is present', () => {
     beforeEach(() => {
-      render('/second', false, '/parent');
+      renderComponent('/second', false, '/parent');
     });
 
     it('shows menubar items with the correct texts', () => {
-      const items = wrapper.find('[role="tab"]');
+      const items = screen.getAllByRole('tab');
       expect(items).toHaveLength(3);
 
-      expect(items.at(0).text()).toEqual('First');
-      expect(items.at(1).text()).toEqual('Second');
-      expect(items.at(2).text()).toEqual('Third');
+      expect(items[0]).toHaveTextContent('First');
+      expect(items[1]).toHaveTextContent('Second');
+      expect(items[2]).toHaveTextContent('Third');
     });
 
     it('has the correct active item', () => {
-      const items = wrapper.find('[role="tab"]');
+      const items = screen.getAllByRole('tab');
 
-      expect(items.at(0).prop('aria-selected')).toEqual(false);
-      expect(items.at(1).prop('aria-selected')).toEqual(true);
-      expect(items.at(2).prop('aria-selected')).toEqual(false);
+      expect(items[0]).toHaveAttribute('aria-selected', 'false');
+      expect(items[1]).toHaveAttribute('aria-selected', 'true');
+      expect(items[2]).toHaveAttribute('aria-selected', 'false');
     });
 
     it('has the correct links', () => {
-      const link = wrapper.find('[role="tab"]').at(2).find('a');
-      expect(link.props().href).toEqual('/parent/third');
+      const items = screen.getAllByRole('tab');
+      const link = within(items[2]).getByRole('link');
+      expect(link).toHaveAttribute('href', '/parent/third');
     });
   });
 
   describe('when the home path is present', () => {
     beforeEach(() => {
-      render('/', true, '/parent');
+      renderComponent('/', true, '/parent');
     });
 
     it('shows menubar items with the correct texts', () => {
-      const items = wrapper.find('[role="tab"]');
+      const items = screen.getAllByRole('tab');
       expect(items).toHaveLength(4);
 
-      expect(items.at(0).text()).toEqual('Home');
-      expect(items.at(1).text()).toEqual('First');
-      expect(items.at(2).text()).toEqual('Second');
-      expect(items.at(3).text()).toEqual('Third');
+      expect(items[0]).toHaveTextContent('Home');
+      expect(items[1]).toHaveTextContent('First');
+      expect(items[2]).toHaveTextContent('Second');
+      expect(items[3]).toHaveTextContent('Third');
     });
   });
 
   describe('when the parent path is empty', () => {
     beforeEach(() => {
-      render('/second', false, '/');
+      renderComponent('/second', false, '/');
     });
 
     it('has the correct active item', () => {
-      const items = wrapper.find('[role="tab"]');
+      const items = screen.getAllByRole('tab');
 
-      expect(items.at(0).prop('aria-selected')).toEqual(false);
-      expect(items.at(1).prop('aria-selected')).toEqual(true);
-      expect(items.at(2).prop('aria-selected')).toEqual(false);
+      expect(items[0]).toHaveAttribute('aria-selected', 'false');
+      expect(items[1]).toHaveAttribute('aria-selected', 'true');
+      expect(items[2]).toHaveAttribute('aria-selected', 'false');
     });
 
     it('has the correct links', () => {
-      const link = wrapper.find('[role="tab"]').at(2).find('a');
-      expect(link.props().href).toEqual('/third');
+      const items = screen.getAllByRole('tab');
+      const link = within(items[2]).getByRole('link');
+      expect(link).toHaveAttribute('href', '/third');
     });
   });
 });

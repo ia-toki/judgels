@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -7,7 +7,6 @@ import { ContestClarificationCreateDialog } from './ContestClarificationCreateDi
 
 describe('ContestClarificationCreateDialog', () => {
   let onCreateClarification;
-  let wrapper;
 
   beforeEach(() => {
     onCreateClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -22,37 +21,35 @@ describe('ContestClarificationCreateDialog', () => {
       statementLanguage: 'en',
       onCreateClarification,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestClarificationCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button');
+    await user.click(button);
+
+    await screen.findByRole('dialog');
 
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478
 
-    // const topicJid = wrapper.find('button[data-key="topicJid"]');
-    // topicJid.simulate('click');
+    // const topicJid = screen.getByRole('button', { name: /topic/i });
+    // await user.click(topicJid);
 
-    act(() => {
-      const title = wrapper.find('input[name="title"]');
-      title.prop('onChange')({ target: { value: 'Snack' } });
+    const title = screen.getByRole('textbox', { name: /title/i });
+    await user.type(title, 'Snack');
 
-      const question = wrapper.find('textarea[name="question"]');
-      question.prop('onChange')({ target: { value: 'Is snack provided?' } });
+    const question = screen.getByRole('textbox', { name: /question/i });
+    await user.type(question, 'Is snack provided?');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /submit/i });
+    await user.click(submitButton);
 
     expect(onCreateClarification).toHaveBeenCalledWith('contestJid', {
       topicJid: 'contestJid',

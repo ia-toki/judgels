@@ -1,12 +1,11 @@
-import { mount } from 'enzyme';
+import { cleanup, render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 
 import { IcpcScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { IcpcScoreboardTable } from './IcpcScoreboardTable';
 
 describe('IcpcScoreboardTable', () => {
-  let wrapper;
-
   const scoreboard = {
     state: {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3', 'JIDPROG4'],
@@ -54,7 +53,7 @@ describe('IcpcScoreboardTable', () => {
 
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
-    wrapper = mount(
+    render(
       <MemoryRouter>
         <IcpcScoreboardTable {...props} />
       </MemoryRouter>
@@ -62,19 +61,18 @@ describe('IcpcScoreboardTable', () => {
   });
 
   test('ranks', () => {
-    const ranks = wrapper
-      .find('tbody')
-      .children()
-      .map(tr => tr.childAt(0).text());
+    const rows = screen.getAllByRole('row').slice(1);
+    const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
     expect(ranks).toEqual(['1', '2']);
   });
 
   describe('incognito ranks', () => {
     beforeEach(() => {
+      cleanup();
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
-      wrapper = mount(
+      render(
         <MemoryRouter>
           <IcpcScoreboardTable {...props} />
         </MemoryRouter>
@@ -82,20 +80,16 @@ describe('IcpcScoreboardTable', () => {
     });
 
     it('only shows question marks', () => {
-      const ranks = wrapper
-        .find('tbody')
-        .children()
-        .map(tr => tr.childAt(0).text());
+      const rows = screen.getAllByRole('row').slice(1);
+      const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
       expect(ranks).toEqual(['?', '?']);
     });
   });
 
   test('display names', () => {
-    const ranks = wrapper
-      .find('tbody')
-      .children()
-      .map(tr => tr.childAt(1).text());
-    expect(ranks).toEqual(['username2', 'username1']);
+    const rows = screen.getAllByRole('row').slice(1);
+    const names = rows.map(row => within(row).getAllByRole('cell')[1].textContent);
+    expect(names).toEqual(['username2', 'username1']);
   });
 
   test('points', () => {
@@ -109,10 +103,16 @@ describe('IcpcScoreboardTable', () => {
             : td === 'frozen'
               ? 'F '
               : '';
-    const mapCell = td =>
-      getColor(td.prop('className')) + td.find('span.top').text() + '/' + td.find('span.bottom').text();
-    const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
-    const points = wrapper.find('tbody').children().map(mapRow);
+    const rows = screen.getAllByRole('row').slice(1);
+    const points = rows.map(row => {
+      const cells = within(row).getAllByRole('cell');
+      return [cells[2], cells[3], cells[4], cells[5], cells[6]].map(cell => {
+        const className = cell.className;
+        const top = cell.querySelector('span.top')?.textContent;
+        const bottom = cell.querySelector('span.bottom')?.textContent;
+        return getColor(className) + top + '/' + bottom;
+      });
+    });
     expect(points).toEqual([
       ['3/66', 'G 1/3', 'D 3/14', 'D 1/9', '-/-'],
       ['1/17', 'R 1/-', 'G 1/17', 'F ?/?', 'R 3/-'],
@@ -124,22 +124,31 @@ describe('IcpcScoreboardTable', () => {
       const onClickSubmissionCell = jest.fn();
 
       beforeEach(() => {
+        cleanup();
         const props = { scoreboard, profilesMap, onClickSubmissionCell };
-        wrapper = mount(
+        render(
           <MemoryRouter>
             <IcpcScoreboardTable {...props} />
           </MemoryRouter>
         );
       });
 
-      test('shows submission for attempted cell', () => {
-        wrapper.find('tbody').childAt(0).childAt(3).simulate('click');
+      test('shows submission for attempted cell', async () => {
+        const user = userEvent.setup();
+        const rows = screen.getAllByRole('row').slice(1);
+
+        const firstRowCells = within(rows[0]).getAllByRole('cell');
+        await user.click(firstRowCells[3]);
 
         expect(onClickSubmissionCell).toHaveBeenCalledWith('JIDUSER2', 'JIDPROG1');
       });
 
-      test('does not show submission for unattempted cell', () => {
-        wrapper.find('tbody').childAt(0).childAt(6).simulate('click');
+      test('does not show submission for unattempted cell', async () => {
+        const user = userEvent.setup();
+        const rows = screen.getAllByRole('row').slice(1);
+
+        const firstRowCells = within(rows[0]).getAllByRole('cell');
+        await user.click(firstRowCells[6]);
 
         expect(onClickSubmissionCell).not.toBeCalled();
       });

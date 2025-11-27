@@ -1,17 +1,17 @@
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { push } from 'connected-react-router';
-import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
 import MenuItemLink from './MenuItemLink';
 
 describe('MenuItemLink', () => {
-  let wrapper;
   let store;
 
   beforeEach(() => {
     store = createMockStore()({});
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MenuItemLink text="Account" to="/account" />
       </Provider>
@@ -19,11 +19,13 @@ describe('MenuItemLink', () => {
   });
 
   it('shows the text', () => {
-    expect(wrapper.text()).toEqual('Account');
+    expect(screen.getByText('Account')).toBeInTheDocument();
   });
 
-  it('pushes new location when clicked', () => {
-    wrapper.find('a').simulate('click');
+  it('pushes new location when clicked', async () => {
+    const user = userEvent.setup();
+    const link = screen.getByRole('menuitem', { name: /Account/i });
+    await user.click(link);
     expect(store.getActions()).toContainEqual(push('/account'));
   });
 });

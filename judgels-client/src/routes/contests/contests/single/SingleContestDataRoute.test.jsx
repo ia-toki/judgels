@@ -1,5 +1,5 @@
+import { act, render } from '@testing-library/react';
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -20,7 +20,7 @@ jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 describe('SingleContestDataRoute', () => {
   let history;
 
-  const render = currentPath => {
+  const renderComponent = currentPath => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
 
     const store = createStore(
@@ -31,7 +31,7 @@ describe('SingleContestDataRoute', () => {
       applyMiddleware(thunk, routerMiddleware(history))
     );
 
-    mount(
+    render(
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <Route path="/contests/:contestSlug" component={SingleContestDataRoute} />
@@ -51,16 +51,21 @@ describe('SingleContestDataRoute', () => {
   });
 
   test('navigation', async () => {
-    render('/contests/ioi');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      renderComponent('/contests/ioi');
+    });
+
     expect(contestWebActions.getContestBySlugWithWebConfig).toHaveBeenCalledWith('ioi');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/contests/ioi', 'Contest 123');
 
-    history.push('/contests/ioi/');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      history.push('/contests/ioi/');
+    });
 
-    history.push('/other');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      history.push('/other');
+    });
+
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/contests/ioi/');
     expect(contestActions.clearContest).toHaveBeenCalled();
     expect(contestWebActions.clearWebConfig).toHaveBeenCalled();

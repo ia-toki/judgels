@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,10 +12,9 @@ import * as contestSupervisorActions from '../../modules/contestSupervisorAction
 jest.mock('../../modules/contestSupervisorActions');
 
 describe('ContestSupervisorsPage', () => {
-  let wrapper;
   let supervisors;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestSupervisorActions.getSupervisors.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -34,27 +33,26 @@ describe('ContestSupervisorsPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestSupervisorsPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestSupervisorsPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('action buttons', () => {
     beforeEach(async () => {
       supervisors = [];
-      await render();
+      await renderComponent();
     });
 
     it('shows action buttons', () => {
-      expect(wrapper.find('button').map(b => b.text())).toEqual(['Add/update supervisors', 'Remove supervisors']);
+      expect(screen.getByRole('button', { name: /add\/update supervisors/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /remove supervisors/i })).toBeInTheDocument();
     });
   });
 
@@ -62,12 +60,13 @@ describe('ContestSupervisorsPage', () => {
     describe('when there are no supervisors', () => {
       beforeEach(async () => {
         supervisors = [];
-        await render();
+        await renderComponent();
       });
 
       it('shows placeholder text and no supervisors', () => {
-        expect(wrapper.text()).toContain('No supervisors.');
-        expect(wrapper.find('tr')).toHaveLength(0);
+        expect(screen.getByText(/no supervisors/i)).toBeInTheDocument();
+        const rows = screen.queryAllByRole('row');
+        expect(rows).toHaveLength(0);
       });
     });
 
@@ -83,12 +82,18 @@ describe('ContestSupervisorsPage', () => {
             managementPermissions: ['ALL'],
           },
         ];
-        await render();
+        await renderComponent();
       });
 
       it('shows the supervisors', () => {
-        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
-          [],
+        const rows = screen.getAllByRole('row').slice(1);
+        expect(
+          rows.map(row =>
+            within(row)
+              .queryAllByRole('cell')
+              .map(cell => cell.textContent)
+          )
+        ).toEqual([
           ['username1', 'ANNCPROB'],
           ['username2', 'ALL'],
         ]);

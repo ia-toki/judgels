@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -12,9 +12,7 @@ import * as contestActions from '../../../modules/contestActions';
 jest.mock('../../../modules/contestActions');
 
 describe('ContestOverviewPage', () => {
-  let wrapper;
-
-  const render = async () => {
+  const renderComponent = async () => {
     contestActions.getContestDescription.mockReturnValue(() =>
       Promise.resolve({
         description: 'Contest description',
@@ -30,24 +28,22 @@ describe('ContestOverviewPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <ContestOverviewPage />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ContestOverviewPage />
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('description', () => {
     beforeEach(async () => {
-      await render();
+      await renderComponent();
     });
 
     it('shows the description', () => {
-      expect(wrapper.find('.html-text').text()).toEqual('Contest description');
+      expect(screen.getByText('Contest description')).toBeInTheDocument();
     });
   });
 });
